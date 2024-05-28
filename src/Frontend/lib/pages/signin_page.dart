@@ -1,20 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 // import 'package:flutter/widgets.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
-import 'package:firstapp/signin_page.dart';
+import 'package:firstapp/pages/login_page.dart';
+import 'package:firstapp/pages/home_page.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class SigninPage extends StatefulWidget {
+  const SigninPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<SigninPage> createState() => _SigninPage();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _SigninPage extends State<SigninPage> {
   late Color myColor;
   late Size mediaSize;
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
   bool rememberUser = false;
 
   @override
@@ -78,31 +82,49 @@ class _LoginPageState extends State<LoginPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Login to Your Account',
+          'Create a New Account',
           style: TextStyle(
             fontSize: 24,
             color: Colors.black,
             fontWeight: FontWeight.w500,
           ),
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 30),
+        _buildInputField(
+          nameController,
+          label: "Name",
+          icon: Icons.person,
+        ),
+        const SizedBox(height: 30),
         _buildInputField(
           emailController,
           label: "Email",
           icon: Icons.email,
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 20),
         _buildInputField(
           passwordController,
           label: "Password",
           icon: Icons.lock,
           isPassword: true,
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 20),
+        _buildInputField(
+          confirmPasswordController,
+          label: "Confirm Password",
+          icon: Icons.lock,
+          isPassword: true,
+        ),
+        const SizedBox(height: 30),
         SizedBox(
           width: double.infinity,
           child: ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => HomePage()),
+              );
+            },
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color.fromARGB(255, 255, 255, 255),
               shape: RoundedRectangleBorder(
@@ -111,7 +133,7 @@ class _LoginPageState extends State<LoginPage> {
               padding: EdgeInsets.symmetric(vertical: 16),
             ),
             child: Text(
-              'Login',
+              'Sign up',
               style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0)),
             ),
           ),
@@ -120,22 +142,22 @@ class _LoginPageState extends State<LoginPage> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _buildGreyText("Don't have an account yet?"),
+            _buildGreyText("Already have an account?"),
             TextButton(
               onPressed: () {
-                 Navigator.push(
+                Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => SigninPage()),
+                  MaterialPageRoute(builder: (context) => LoginPage()),
                 );
               },
               child: Text(
-                'Sign up',
+                'Log in',
                 style: TextStyle(color: Colors.black),
               ),
             ),
           ],
         ),
-        const SizedBox(height: 110),
+        const SizedBox(height: 20),
         Center(
           child: _buildGreyText("Or sign in with"),
         ),

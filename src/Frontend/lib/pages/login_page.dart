@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 // import 'package:flutter/widgets.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
+import 'package:firstapp/pages/signin_page.dart';
+import 'package:firstapp/pages/home_page.dart';
 
-class SigninPage extends StatefulWidget {
-  const SigninPage({super.key});
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
 
   @override
-  State<SigninPage> createState() => _SigninPage();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-class _SigninPage extends State<SigninPage> {
+class _LoginPageState extends State<LoginPage> {
   late Color myColor;
   late Size mediaSize;
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  TextEditingController nameController = TextEditingController();
-  TextEditingController confirmPasswordController = TextEditingController();
   bool rememberUser = false;
 
   @override
@@ -87,37 +86,29 @@ class _SigninPage extends State<SigninPage> {
             fontWeight: FontWeight.w500,
           ),
         ),
-        const SizedBox(height: 30),
-        _buildInputField(
-          nameController,
-          label: "name",
-          icon: Icons.person,
-        ),
-        const SizedBox(height: 30),
+        const SizedBox(height: 10),
         _buildInputField(
           emailController,
           label: "Email",
           icon: Icons.email,
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 10),
         _buildInputField(
           passwordController,
           label: "Password",
           icon: Icons.lock,
           isPassword: true,
         ),
-        const SizedBox(height: 20),
-        _buildInputField(
-          confirmPasswordController,
-          label: "Confirm Password",
-          icon: Icons.lock,
-          isPassword: true,
-        ),
-        const SizedBox(height: 30),
+        const SizedBox(height: 10),
         SizedBox(
           width: double.infinity,
           child: ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => HomePage()),
+              );
+            },
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color.fromARGB(255, 255, 255, 255),
               shape: RoundedRectangleBorder(
@@ -137,7 +128,12 @@ class _SigninPage extends State<SigninPage> {
           children: [
             _buildGreyText("Don't have an account yet?"),
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                 Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SigninPage()),
+                );
+              },
               child: Text(
                 'Sign up',
                 style: TextStyle(color: Colors.black),
@@ -145,7 +141,7 @@ class _SigninPage extends State<SigninPage> {
             ),
           ],
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 110),
         Center(
           child: _buildGreyText("Or sign in with"),
         ),
