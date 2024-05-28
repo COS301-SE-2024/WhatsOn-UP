@@ -126,7 +126,7 @@ This will manage creation, deletion, updating, and viewing of user accounts and 
 |:---:|:---:|:---:|:---:|:---:|
 |request type|yes|string|`get_upcoming_events`|The type of API request|
 |auth_token|yes|string|`<valid token>`|The auth token used to identify the user|
-|return|yes|string/array|{{`[event_id\|title\|description\|time\|attendees\|organizer\|location]`}}|The results to be returned from the API|
+|return|yes|string/array|{{`[event_id\|title\|description\|time\|attendees\|organizer\|location\|images]`}}|The results to be returned from the API|
 |filter|no|JSON|A JSON object with key-value pairs of filter options|filter used to select which events should be returned|
 
 **Request Example 1**
@@ -216,7 +216,7 @@ This will manage creation, deletion, updating, and viewing of user accounts and 
 |request type|yes|string|`get_saved_events`|The type of API request|
 |auth_token|yes|string|`<valid token>`|The auth token used to identify the user|
 |user_id|yes|string|`<user id>`|The id of the current user|
-|return|yes|string/array|{{`[event_id\|title\|description\|time\|attendees\|organizer\|location]`}}|The results to be returned from the API|
+|return|yes|string/array|{{`[event_id\|title\|description\|time\|attendees\|organizer\|location\|images]`}}|The results to be returned from the API|
 |filter|no|JSON|A JSON object with key-value pairs of filter options|filter used to select which saved events should be returned|
 
 **Request Example 1**
@@ -225,7 +225,7 @@ This will manage creation, deletion, updating, and viewing of user accounts and 
     "request": "get_saved_events",
     "auth_token": "<token>",
     "user_id": {{uid001}},
-    "return": ["event_id", "title", "description"]
+    "return": ["event_id", "title", "description", "event_type"]
 }
 ```
 
@@ -241,17 +241,20 @@ This will manage creation, deletion, updating, and viewing of user accounts and 
             {
                 "event_id": {{004}},
                 "title": "Campus wedding",
-                "description": "watch two star-crossed lovers get together right here on hatfield campus"
+                "description": "watch two star-crossed lovers get together right here on hatfield campus",
+                "event_type": "Workshop"
             },
             {
                 "event_id": {{006}},
                 "title": "Blood drive"
-                "description": "Donate blood in the student centre"
+                "description": "Donate blood on hatfield campus - in the student centre",
+                "event_type": "Career fair"
             },
             {
                 "event_id": {{003}},
                 "title": "Some other event"
-                "description": "You have no reason to not attend"
+                "description": "You have no reason to not attend",
+                "event_type": "Career fair"
             }
         ]
     }
@@ -263,9 +266,10 @@ This will manage creation, deletion, updating, and viewing of user accounts and 
 {
     "request": "get_upcoming_events",
     "auth_token": "<token>",
-    "return": ["event_id", "title", "attendees"],
+    "return": ["event_id", "title", "description", "event_type"],
     "filter": {
-        "description": "star-crossed"
+        "description": "On Hatfield Campus",
+        "event_type": "Workshop"
     }
 }
 ```
@@ -280,7 +284,8 @@ This will manage creation, deletion, updating, and viewing of user accounts and 
             {
                 "event_id": {{004}},
                 "title": "Campus wedding",
-                "description": "watch two star-crossed lovers get together right here on hatfield campus"
+                "description": "watch two star-crossed lovers get together right here on hatfield campus",
+                "event_type": "workshop"
             }
         ]
     }
