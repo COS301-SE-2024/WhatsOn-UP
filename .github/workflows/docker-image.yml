@@ -7,19 +7,12 @@ on:
     branches: [ "main", "develop" ]
 
 jobs:
-
   build:
-
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout the code
         uses: actions/checkout@v4
     
-      - name: Change directory to the Dockerfile location
-        run: cd src/Backend
-    
       - name: Build the Docker image
-        run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
-
-    
+        run: docker build -t backend -f src/Backend/Dockerfile src/Backend/
