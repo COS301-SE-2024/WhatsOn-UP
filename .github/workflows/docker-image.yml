@@ -13,6 +13,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Build the Docker image
-      run: src/Backend/docker build -t backend  . 
+      - name: Checkout the code
+        uses: actions/checkout@v4
+    
+      - name: Change directory to the Dockerfile location
+        run: cd src/Backend/docker
+    
+      - name: Build the Docker image
+        run: docker build -t backend .
+    
