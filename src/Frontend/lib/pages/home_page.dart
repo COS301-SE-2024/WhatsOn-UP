@@ -4,6 +4,7 @@ import  'package:firstapp/pages/calendar_page.dart';
 import  'package:firstapp/pages/explore_page.dart';
 import 'package:firstapp/pages/settings_page.dart';
 import 'package:firstapp/widgets/nav_bar.dart';
+import 'package:firstapp/pages/event_card.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -18,7 +19,12 @@ class _HomePageState extends State<HomePage> {
       _selectedIndex = index;
     });
   }
-
+final List<Event> events = [
+    Event(nameOfEvent: 'something1', dateAndTime: '2024/05/28', location: 'braam', imageUrl: 'https://picsum.photos/200'),
+    Event(nameOfEvent: 'something2', dateAndTime: '2024/05/29', location: 'jozi', imageUrl: 'https://picsum.photos/200'),
+    Event(nameOfEvent: 'something3', dateAndTime: '2024/05/30', location: 'pta', imageUrl: 'https://picsum.photos/200'),
+    Event(nameOfEvent: 'something4', dateAndTime: '2024/05/31', location: 'soweto', imageUrl: 'https://picsum.photos/200'),
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -145,17 +151,8 @@ class _HomePageState extends State<HomePage> {
             crossAxisCount: 2,
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
-            children: List.generate(4, (index) {
-              return Card(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.explore, size: 48.0),
-                    SizedBox(height: 8.0),
-                    Text('Category ${index + 1}'),
-                  ],
-                ),
-              );
+            children: List.generate(events.length, (index) {
+             return EventCard(event: events[index]);
             }),
           ),
         ],
