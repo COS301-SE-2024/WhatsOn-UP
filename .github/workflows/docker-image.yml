@@ -17,7 +17,7 @@ jobs:
         uses: actions/checkout@v4
     
       - name: Change directory to the Dockerfile location
-        run: cd src/Backend/docker
+        run: cd src/Backend
     
       - name: Build the Docker image
         run: docker build -t backend .
