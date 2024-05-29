@@ -1,12 +1,11 @@
-FROM ubuntu:latest
-
-RUN apt update && apt install -y default-jdk maven
+FROM devforce123/backend:latest
 
 WORKDIR /home/ubuntu
 
-COPY . .
+RUN ./gradlew build
+# RUN ./gradlew test
 
-RUN mvn clean install
+CMD ["./gradlew", "bootRun"]
 
-CMD java -jar target/Backend-0.0.1-SNAPSHOT.jar
+
 
