@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(primaryColor: Colors.black),
       home: AnimatedSplashScreen(
-        splash: Center(
+        splash: const Center(
           child: Text(
             'WhatsOn@UP',
             style: TextStyle(
