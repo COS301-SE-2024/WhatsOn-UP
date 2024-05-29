@@ -20,6 +20,7 @@ class _SigninPage extends State<SigninPage> {
   TextEditingController nameController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
   bool rememberUser = false;
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +32,7 @@ class _SigninPage extends State<SigninPage> {
         backgroundColor: Colors.transparent,
         body: Stack(
           children: [
-            Positioned(top: 80, child: _buildTop()),
+            Positioned(top: 90, child: _buildTop()),
             Positioned(bottom: 0, child: _buildBottom()),
           ],
         ),
@@ -78,119 +79,168 @@ class _SigninPage extends State<SigninPage> {
   }
 
   Widget _buildForm() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Create a New Account',
-          style: TextStyle(
-            fontSize: 24,
-            color: Colors.black,
-            fontWeight: FontWeight.w500,
+    return Form(
+      key: _formKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Create a New Account',
+            style: TextStyle(
+              fontSize: 24,
+              color: Colors.black,
+              fontWeight: FontWeight.w500,
+            ),
           ),
-        ),
-        const SizedBox(height: 30),
-        _buildInputField(
-          nameController,
-          label: "Name",
-          icon: Icons.person,
-        ),
-        const SizedBox(height: 30),
-        _buildInputField(
-          emailController,
-          label: "Email",
-          icon: Icons.email,
-        ),
-        const SizedBox(height: 20),
-        _buildInputField(
-          passwordController,
-          label: "Password",
-          icon: Icons.lock,
-          isPassword: true,
-        ),
-        const SizedBox(height: 20),
-        _buildInputField(
-          confirmPasswordController,
-          label: "Confirm Password",
-          icon: Icons.lock,
-          isPassword: true,
-        ),
-        const SizedBox(height: 30),
-        SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => HomePage()),
-              );
+          const SizedBox(height: 30),
+          _buildInputField(
+            nameController,
+            label: "Name",
+            icon: Icons.person,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter your name';
+              }
+              return null;
             },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
+          ),
+          const SizedBox(height: 30),
+          _buildInputField(
+            emailController,
+            label: "Email",
+            icon: Icons.email,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter your email';
+              }
+              final regex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
+              if (!regex.hasMatch(value)) {
+                return 'Enter a valid email address';
+              }
+              return null;
+            },
+          ),
+          const SizedBox(height: 20),
+          _buildInputField(
+            passwordController,
+            label: "Password",
+            icon: Icons.lock,
+            isPassword: true,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter your password';
+              }
+              if (value.length < 6) {
+                return 'Password must be at least 6 characters';
+              }
+              return null;
+            },
+          ),
+          const SizedBox(height: 20),
+          _buildInputField(
+            confirmPasswordController,
+            label: "Confirm Password",
+            icon: Icons.lock,
+            isPassword: true,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please confirm your password';
+              }
+              if (value != passwordController.text) {
+                return 'Passwords do not match';
+              }
+              return null;
+            },
+          ),
+          const SizedBox(height: 30),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () {
+                if (_formKey.currentState!.validate()) {
+                  // backend processing-user data will be saved here
+                  final user = User(
+                    name: nameController.text,
+                    email: emailController.text,
+                    password: passwordController.text,
+                  );
+                  print(user);
+
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => HomePage()),
+                  );
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                padding: EdgeInsets.symmetric(vertical: 16),
               ),
-              padding: EdgeInsets.symmetric(vertical: 16),
-            ),
-            child: Text(
-              'Sign up',
-              style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0)),
+              child: Text(
+                'Sign up',
+                style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0)),
+              ),
             ),
           ),
-        ),
-        const SizedBox(height: 10),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _buildGreyText("Already have an account?"),
-            TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => LoginPage()),
-                );
-              },
-              child: Text(
-                'Log in',
-                style: TextStyle(color: Colors.black),
+          const SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _buildGreyText("Already have an account?"),
+              TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => LoginPage()),
+                  );
+                },
+                child: Text(
+                  'Log in',
+                  style: TextStyle(color: Colors.black),
+                ),
               ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 20),
-        Center(
-          child: _buildGreyText("Or sign in with"),
-        ),
-        const SizedBox(height: 10),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            IconButton(
+            ],
+          ),
+          const SizedBox(height: 20),
+          Center(
+            child: _buildGreyText("Or sign in with"),
+          ),
+          const SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              IconButton(
                 icon: Image(
                   width: 32,
                   height: 32,
                   image: Svg('assets/images/google-icon.svg'),
                 ),
-                onPressed: () {}),
-            IconButton(
+                onPressed: () {},
+              ),
+              IconButton(
                 icon: Image(
                   width: 32,
                   height: 32,
                   image: Svg('assets/images/apple-icon.svg'),
                 ),
-                onPressed: () {}),
-          ],
-        ),
-        const SizedBox(height: 10),
-        Center(
-          child: Center(
-            child: TextButton(
-              onPressed: () {},
-              child: _buildGreyText("Sign in as a guest user"),
+                onPressed: () {},
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Center(
+            child: Center(
+              child: TextButton(
+                onPressed: () {},
+                child: _buildGreyText("Sign in as a guest user"),
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -206,8 +256,9 @@ class _SigninPage extends State<SigninPage> {
     required String label,
     required IconData icon,
     bool isPassword = false,
+    String? Function(String?)? validator,
   }) {
-    return TextField(
+    return TextFormField(
       controller: controller,
       decoration: InputDecoration(
         labelText: label,
@@ -227,6 +278,24 @@ class _SigninPage extends State<SigninPage> {
         ),
       ),
       obscureText: isPassword,
+      validator: validator,
     );
+  }
+}
+
+class User {
+  final String name;
+  final String email;
+  final String password;
+
+  User({
+    required this.name,
+    required this.email,
+    required this.password,
+  });
+
+  @override
+  String toString() {
+    return 'User(name: $name, email: $email, password: $password)';
   }
 }

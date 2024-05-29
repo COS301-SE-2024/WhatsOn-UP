@@ -10,7 +10,10 @@ class RsvpEventsPage extends StatelessWidget {
         title: const Text('RSVP Events'),
       ),
       body: const Center(
-        child: Text('RSVP Events Page - Coming soon'),
+        child: ListTile(
+      title: Text('ListTile with red background'),
+      tileColor: Colors.red,
+    ),
       ),
     );
   }
