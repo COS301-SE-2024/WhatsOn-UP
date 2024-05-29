@@ -25,7 +25,6 @@ class EventCard extends StatelessWidget {
       margin: EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 0.0),
       child: Container(
         width: 30.0,
-        
         child: Padding(
           padding: const EdgeInsets.all(12.0),
           child: Column(
@@ -37,7 +36,6 @@ class EventCard extends StatelessWidget {
                 width: double.infinity,
                 fit: BoxFit.cover,
               ),
-      
               Text(
                 event.nameOfEvent,
                 style: TextStyle(
@@ -45,7 +43,7 @@ class EventCard extends StatelessWidget {
                   color: Colors.black,
                 ),
               ),
-                 SizedBox(height: 8.0),
+              SizedBox(height: 8.0),
               Text(
                 event.dateAndTime,
                 style: TextStyle(
@@ -53,16 +51,15 @@ class EventCard extends StatelessWidget {
                   color: Colors.grey,
                 ),
               ),
-     
-        Row(
-          mainAxisSize: MainAxisSize.min,
+              Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Icon(
-                    Icons.location_on, 
+                    Icons.location_on,
                     size: 20.0,
                     color: Colors.grey,
                   ),
-            
+
                   Expanded(
                     child: Text(
                       event.location,
@@ -72,24 +69,21 @@ class EventCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                   IconButton(
-                      icon: Icon(
-                        Icons.bookmark_border,
-                        size: 20.0,
-                        color: Colors.grey,
-                      ),
-                      onPressed: () {
-                        
-                      },
-                   )
+                  IconButton(
+                    icon: Icon(
+                      Icons.bookmark_border,
+                      size: 20.0,
+                      color: Colors.grey,
+                    ),
+                    onPressed: () {},
+                  )
                   // Icon(
-                  //   Icons.bookmark_border, 
+                  //   Icons.bookmark_border,
                   //   size: 20.0,
                   //   color: Colors.grey,
                   // ),
                 ],
               ),
-              
             ],
           ),
         ),

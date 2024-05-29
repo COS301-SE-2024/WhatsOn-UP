@@ -1,5 +1,6 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:firstapp/pages/login_page.dart';
+import 'package:firstapp/widgets/event_card_RSVP.dart';
 
 import 'package:flutter/material.dart';
 import 'package:firstapp/pages/signin_page.dart';

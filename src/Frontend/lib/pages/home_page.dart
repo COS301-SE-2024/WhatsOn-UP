@@ -4,7 +4,7 @@ import  'package:firstapp/pages/calendar_page.dart';
 import  'package:firstapp/pages/explore_page.dart';
 import 'package:firstapp/pages/settings_page.dart';
 import 'package:firstapp/widgets/nav_bar.dart';
-import 'package:firstapp/pages/event_card.dart';
+import 'package:firstapp/widgets/event_card.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -148,12 +148,12 @@ final List<Event> events = [
             ),
           ),
           SizedBox(
-            height: 250.0, // Set the height of the horizontal scrolling area
+            height: 250.0, 
             child: GridView.builder(
               scrollDirection: Axis.horizontal,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 1,
-                childAspectRatio: 1 / 1.2, // Adjust aspect ratio as needed
+                childAspectRatio: 1 / 1.2, 
               ),
               itemCount: events.length,
               itemBuilder: (context, index) {
@@ -161,7 +161,7 @@ final List<Event> events = [
               },
             ),
           ),
-Padding(
+            Padding(
             padding: const EdgeInsets.all(10.0),
             child: Text(
               'Saved',
@@ -172,12 +172,12 @@ Padding(
             ),
           ),
           SizedBox(
-            height: 250.0, // Set the height of the horizontal scrolling area
+            height: 250.0, 
             child: GridView.builder(
               scrollDirection: Axis.horizontal,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 1,
-                childAspectRatio: 1 / 1.2, // Adjust aspect ratio as needed
+               
               ),
               itemCount: events.length,
               itemBuilder: (context, index) {
