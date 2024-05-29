@@ -147,13 +147,43 @@ final List<Event> events = [
               ),
             ),
           ),
-          GridView.count(
-            crossAxisCount: 2,
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            children: List.generate(events.length, (index) {
-             return EventCard(event: events[index]);
-            }),
+          SizedBox(
+            height: 250.0, // Set the height of the horizontal scrolling area
+            child: GridView.builder(
+              scrollDirection: Axis.horizontal,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 1,
+                childAspectRatio: 1 / 1.2, // Adjust aspect ratio as needed
+              ),
+              itemCount: events.length,
+              itemBuilder: (context, index) {
+                return EventCard(event: events[index]);
+              },
+            ),
+          ),
+Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Text(
+              'Saved',
+              style: TextStyle(
+                fontSize: 18.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 250.0, // Set the height of the horizontal scrolling area
+            child: GridView.builder(
+              scrollDirection: Axis.horizontal,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 1,
+                childAspectRatio: 1 / 1.2, // Adjust aspect ratio as needed
+              ),
+              itemCount: events.length,
+              itemBuilder: (context, index) {
+                return EventCard(event: events[index]);
+              },
+            ),
           ),
         ],
       ),
