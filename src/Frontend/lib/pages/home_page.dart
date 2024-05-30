@@ -20,10 +20,10 @@ class _HomePageState extends State<HomePage> {
     });
   }
 final List<Event> events = [
-    Event(nameOfEvent: 'something1', dateAndTime: '2024/05/28', location: 'braam', imageUrl: 'https://picsum.photos/200'),
-    Event(nameOfEvent: 'something2', dateAndTime: '2024/05/29', location: 'jozi', imageUrl: 'https://picsum.photos/200'),
-    Event(nameOfEvent: 'something3', dateAndTime: '2024/05/30', location: 'pta', imageUrl: 'https://picsum.photos/200'),
-    Event(nameOfEvent: 'something4', dateAndTime: '2024/05/31', location: 'soweto', imageUrl: 'https://picsum.photos/200'),
+    Event(nameOfEvent: 'something1', dateAndTime: '2024/05/28', location: 'braam', imageUrls: ['https://picsum.photos/200', 'https://picsum.photos/200', 'https://picsum.photos/200'], description: 'This is a test description for Event 1'),
+    Event(nameOfEvent: 'something2', dateAndTime: '2024/05/29', location: 'jozi', imageUrls: ['https://picsum.photos/200'], description: 'This is a test description for Event 2'),
+    Event(nameOfEvent: 'something3', dateAndTime: '2024/05/30', location: 'pta', imageUrls: ['https://picsum.photos/200', 'https://picsum.photos/200'], description: 'This is a test description for Event 3'),
+    Event(nameOfEvent: 'something4', dateAndTime: '2024/05/31', location: 'soweto', imageUrls: ['https://picsum.photos/200', 'https://picsum.photos/200', 'https://picsum.photos/200', 'https://picsum.photos/200', 'https://picsum.photos/200'], description: 'This is a test description for Event 4'),
   ];
   @override
   Widget build(BuildContext context) {
@@ -44,13 +44,13 @@ final List<Event> events = [
       case 0:
         return _buildHomePage();
       case 1:
-        return RsvpEventsPage();
+        return const RsvpEventsPage();
       case 2:
-        return CalendarPage();
+        return const CalendarPage();
       case 3:
-        return ExplorePage();
+        return const ExplorePage();
       case 4:
-        return SettingsPage();
+        return const SettingsPage();
       default:
         return _buildHomePage();
     }
@@ -61,8 +61,8 @@ final List<Event> events = [
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
+          const Padding(
+            padding: EdgeInsets.all(16.0),
             child: Text(
               'Welcome, Username',
               style: TextStyle(
@@ -78,18 +78,18 @@ final List<Event> events = [
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  const Text(
                     'Featured Events',
                     style: TextStyle(
                       fontSize: 18.0,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 8.0),
+                  const SizedBox(height: 8.0),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Column(
+                      const Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
@@ -105,15 +105,15 @@ final List<Event> events = [
                         onPressed: () {
                           // Handle event RSVP
                         },
-                        child: Text('RSVP'),
+                        child: const Text('RSVP'),
                       ),
                     ],
                   ),
-                  SizedBox(height: 16.0),
+                  const SizedBox(height: 16.0),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Column(
+                      const Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
@@ -129,7 +129,7 @@ final List<Event> events = [
                         onPressed: () {
                           // Handle event RSVP
                         },
-                        child: Text('RSVP'),
+                        child: const Text('RSVP'),
                       ),
                     ],
                   ),
@@ -137,8 +137,8 @@ final List<Event> events = [
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
+          const Padding(
+            padding: EdgeInsets.all(16.0),
             child: Text(
               'Explore More',
               style: TextStyle(
@@ -151,7 +151,7 @@ final List<Event> events = [
             height: 250.0, // Set the height of the horizontal scrolling area
             child: GridView.builder(
               scrollDirection: Axis.horizontal,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 1,
                 childAspectRatio: 1 / 1.2, // Adjust aspect ratio as needed
               ),
@@ -161,8 +161,8 @@ final List<Event> events = [
               },
             ),
           ),
-Padding(
-            padding: const EdgeInsets.all(10.0),
+          const Padding(
+            padding: EdgeInsets.all(10.0),
             child: Text(
               'Saved',
               style: TextStyle(
@@ -175,7 +175,7 @@ Padding(
             height: 250.0, // Set the height of the horizontal scrolling area
             child: GridView.builder(
               scrollDirection: Axis.horizontal,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 1,
                 childAspectRatio: 1 / 1.2, // Adjust aspect ratio as needed
               ),

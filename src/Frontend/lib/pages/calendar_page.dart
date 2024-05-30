@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:intl/intl.dart';
 
 class CalendarPage extends StatefulWidget {
   const CalendarPage({super.key});
@@ -75,7 +76,6 @@ class _CalendarPageState extends State<CalendarPage> {
     return groupedEvents;
   }
 
-
   List<dynamic> _getEventsForDay(DateTime day) {
     return _groupedEvents[day] ?? [];
   }
@@ -88,6 +88,10 @@ class _CalendarPageState extends State<CalendarPage> {
       }
     });
     return events;
+  }
+
+  String _formatMonth(DateTime date) {
+    return DateFormat.yMMMM().format(date);
   }
 
   @override
@@ -125,8 +129,26 @@ class _CalendarPageState extends State<CalendarPage> {
               });
             },
             eventLoader: _getEventsForDay,
+            calendarBuilders: CalendarBuilders(
+              markerBuilder: (context, date, events) {
+                if (events.isNotEmpty) {
+                  return Positioned(
+                    right: 1,
+                    bottom: 1,
+                    child: Container(
+                      width: 8,
+                      height: 8,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.blue,
+                      ),
+                    ),
+                  );
+                }
+                return null;
+              },
+            ),
             calendarStyle: const CalendarStyle(
-              markersMaxCount: 1,
               todayTextStyle: TextStyle(color: Colors.white),
               todayDecoration: BoxDecoration(
                 color: Colors.blue,
@@ -143,13 +165,13 @@ class _CalendarPageState extends State<CalendarPage> {
             ),
           ),
           const SizedBox(height: 16.0),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.0),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                "Your RSVP'd Events this Month",
-                style: TextStyle(
+                "Your RSVP'd Events for ${_formatMonth(_focusedDay)}",
+                style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
@@ -231,4 +253,3 @@ class _CalendarPageState extends State<CalendarPage> {
     );
   }
 }
-

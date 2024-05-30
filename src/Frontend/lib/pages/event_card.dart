@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:firstapp/pages/detailed_event_page.dart';
 
 class Event {
   final String nameOfEvent;
   final String dateAndTime;
   final String location;
-  final String imageUrl;
+  final List<String> imageUrls;
+  final String description;
 
   Event({
     required this.nameOfEvent,
     required this.dateAndTime,
     required this.location,
-    required this.imageUrl,
+    required this.imageUrls,
+    required this.description,
   });
 }
 
@@ -21,8 +24,17 @@ class EventCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 0.0),
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => DetailedEventPage(event: event),
+          ),
+        );
+      },
+      child: Card(
+      margin: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 0.0),
       child: Container(
         width: 30.0,
         
@@ -32,7 +44,7 @@ class EventCard extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Image.network(
-                event.imageUrl,
+                event.imageUrls[0],
                 height: 120.0,
                 width: double.infinity,
                 fit: BoxFit.cover,
@@ -40,15 +52,15 @@ class EventCard extends StatelessWidget {
       
               Text(
                 event.nameOfEvent,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 18.0,
                   color: Colors.black,
                 ),
               ),
-                 SizedBox(height: 8.0),
+                 const SizedBox(height: 8.0),
               Text(
                 event.dateAndTime,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 14.0,
                   color: Colors.grey,
                 ),
@@ -57,7 +69,7 @@ class EventCard extends StatelessWidget {
         Row(
           mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.location_on, 
                     size: 20.0,
                     color: Colors.grey,
@@ -66,14 +78,14 @@ class EventCard extends StatelessWidget {
                   Expanded(
                     child: Text(
                       event.location,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 14.0,
                         color: Colors.grey,
                       ),
                     ),
                   ),
                    IconButton(
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.bookmark_border,
                         size: 20.0,
                         color: Colors.grey,
@@ -94,6 +106,7 @@ class EventCard extends StatelessWidget {
           ),
         ),
       ),
+    ),
     );
   }
 }
