@@ -1,26 +1,27 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class Event {
   final String nameOfEvent;
+  final String dateAndTime;
+  final String location;
   final String imageUrl;
 
   Event({
     required this.nameOfEvent,
+    required this.dateAndTime,
+    required this.location,
     required this.imageUrl,
   });
 }
 
-class EventCard extends StatelessWidget {
+class EventCardE extends StatelessWidget {
   final Event event;
-  final Function(String, String) removeEvent;
 
-  EventCard({required this.event, required this.removeEvent});
+  EventCardE({required this.event});
 
   @override
   Widget build(BuildContext context) {
-    
-      return Card(
+    return Card(
       child: Container(
         width: 200,
         height: 265,
@@ -61,60 +62,51 @@ class EventCard extends StatelessWidget {
                  
                 ),
               ),
-                SizedBox(
-              width: 100, // Adjust the width as needed
-              height: 20, // Adjust the height as needed
-              child: ElevatedButton(
-                onPressed: () {
-              showDeleteDialog(context);
-           },
-             style: ElevatedButton.styleFrom(
-             padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 5.0), // Adjust the padding as needed
-           ),
-    child: Text('Cancel'),
-  ),
-)
+                SizedBox(height: 4.0),
+               Text(
+                event.dateAndTime,
+                style: TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
+                 
+                ),
+              ),
+              SizedBox(height: 6.0),
+
+
+               Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.location_on,
+                    size: 20.0,
+                    color: Colors.grey,
+                  ),
+
+                  Expanded(
+                    child: Text(
+                      event.location,
+                      style: TextStyle(
+                        fontSize: 14.0,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(
+                      Icons.bookmark_border,
+                      size: 20.0,
+                      color: Colors.grey,
+                    ),
+                    onPressed: () {},
+                  )
+            ]
+            )
+             
           ],
           ),
         ),
       ),
     );
-   
-
-
-
-
-
-
-
   }
-
-void showDeleteDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return CupertinoAlertDialog(
-          title: Text('Delete Event'),
-          content: Text('Are you sure you want to delete this event?'),
-          actions: <Widget>[
-            CupertinoDialogAction(
-              child: Text('Cancel'),
-              onPressed: () => Navigator.pop(context),
-            ),
-            CupertinoDialogAction(
-              child: Text('Delete'),
-              onPressed: () {
-                removeEvent(event.nameOfEvent, event.imageUrl);
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-
-
-
 }

@@ -33,22 +33,26 @@ class _RsvpEventsPageState extends State<RsvpEventsPage> {
       appBar: AppBar(
         title: const Text('RSVP Events'),
       ),
-      body: Center(
-        child: GridView.builder(
-          itemCount: events.length,
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-           
-            
-          ),
-          itemBuilder: (context, index) {
-            return EventCard(
-              event: events[index],
-              removeEvent: removeEvent,
-            );
-          },
-        ),
+      body:Center(
+        child: events.isEmpty
+            ? const Text(
+                "You haven't RSVPED any event",
+                style: TextStyle(fontSize: 18),
+              )
+            : GridView.builder(
+                itemCount: events.length,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                ),
+                itemBuilder: (context, index) {
+                  return EventCard(
+                    event: events[index],
+                    removeEvent: removeEvent,
+                  );
+                },
+              ),
       ),
     );
+    
   }
 }

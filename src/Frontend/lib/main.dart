@@ -1,15 +1,18 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
+import 'package:firstapp/pages/home_page.dart';
 import 'package:firstapp/pages/login_page.dart';
+import 'package:firstapp/pages/rsvp_events_page.dart';
 import 'package:firstapp/widgets/event_card_RSVP.dart';
 
 import 'package:flutter/material.dart';
 import 'package:firstapp/pages/signin_page.dart';
 import 'package:firstapp/screens/splash.dart';
+import 'package:firstapp/widgets/eventcard.dart';
 
 void main() {
   runApp(const MyApp());
 }
-
+ 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -19,19 +22,21 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(primaryColor: Colors.black),
-      home: AnimatedSplashScreen(
-        splash: Center(
-          child: Text(
-            'WhatsOn@UP',
-            style: TextStyle(
-              fontSize: 50,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-        nextScreen: LoginPage(),
-        splashTransition: SplashTransition.slideTransition,
-      ),
+      home: HomePage(),
+      
+      //  AnimatedSplashScreen(
+      //   splash: Center(
+      //     child: Text(
+      //       'WhatsOn@UP',
+      //       style: TextStyle(
+      //         fontSize: 50,
+      //         fontWeight: FontWeight.bold,
+      //       ),
+      //     ),
+      //   ),
+      //   nextScreen: LoginPage(),
+      //   splashTransition: SplashTransition.slideTransition,
+      // ),
       debugShowCheckedModeBanner: false,
     );
   }

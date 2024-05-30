@@ -1,10 +1,11 @@
+import 'package:firstapp/widgets/eventcard.dart';
 import 'package:flutter/material.dart';
 import 'package:firstapp/pages/rsvp_events_page.dart';
 import  'package:firstapp/pages/calendar_page.dart';
 import  'package:firstapp/pages/explore_page.dart';
 import 'package:firstapp/pages/settings_page.dart';
 import 'package:firstapp/widgets/nav_bar.dart';
-import 'package:firstapp/widgets/event_card.dart';
+// import 'package:firstapp/widgets/eventcard.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -157,7 +158,7 @@ final List<Event> events = [
               ),
               itemCount: events.length,
               itemBuilder: (context, index) {
-                return EventCard(event: events[index]);
+                return EventCardE(event: events[index]);
               },
             ),
           ),
@@ -181,7 +182,7 @@ final List<Event> events = [
               ),
               itemCount: events.length,
               itemBuilder: (context, index) {
-                return EventCard(event: events[index]);
+                return EventCardE(event: events[index]);
               },
             ),
           ),
