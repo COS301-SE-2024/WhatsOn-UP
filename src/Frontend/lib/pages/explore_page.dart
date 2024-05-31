@@ -5,13 +5,26 @@ class ExplorePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Explore'),
-      ),
-      body: const Center(
-        child: Text('Explore Page - Coming soon'),
-      ),
+    return const Scaffold(
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Text(
+                'Explore',
+                style: TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+          ),
+          SizedBox(height: 350,),
+          Center(
+            child: Text('Explore Page - Coming soon'),
+          ),
+        ]
+      )
     );
   }
 }

@@ -97,11 +97,19 @@ class _CalendarPageState extends State<CalendarPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Calendar'),
-      ),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          const Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Text(
+                'Calendar',
+                style: TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+          ),
           TableCalendar(
             firstDay: DateTime.utc(2023, 1, 1),
             lastDay: DateTime.utc(2030, 12, 31),
@@ -235,7 +243,8 @@ class _CalendarPageState extends State<CalendarPage> {
                                   const SizedBox(width: 16.0),
                                   const Icon(Icons.people, size: 16),
                                   const SizedBox(width: 4.0),
-                                  Text('${event['attendees']} Attendees'),
+                                  Text(event['attendees']),
+                                  // Text('${event['attendees']} Attendees'), // Removed this because the "attendees" text caused overflow on smaller screens
                                 ],
                               ),
                             ],
