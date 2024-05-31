@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter/cupertino.dart';
 class Event {
   final String nameOfEvent;
   final String imageUrl;
@@ -32,7 +32,7 @@ class EventCard extends StatelessWidget {
             color: Colors.grey.withOpacity(0.5),
             spreadRadius:5,
             blurRadius:10,
-            offset: Offset(0, 3),
+            offset: const Offset(0, 3),
 
            ),
            ],
@@ -42,7 +42,7 @@ class EventCard extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Column(
             children:[
-              SizedBox(height: 7.0),
+              const SizedBox(height: 7.0),
               Container(
                 
                 child:ClipRRect(
@@ -50,12 +50,13 @@ class EventCard extends StatelessWidget {
                   child: Image.network(event.imageUrl,
                 height: 120.0,
                 width: double.infinity,
-                fit: BoxFit.cover,),
+                fit: BoxFit.cover,
+                 errorBuilder: (context, error, stackTrace) => Icon(Icons.error, size: 120.0),),
                 ),
               ),
                 Text(
                 event.nameOfEvent,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 23.0,
                   fontWeight: FontWeight.bold,
                  
@@ -69,9 +70,9 @@ class EventCard extends StatelessWidget {
               showDeleteDialog(context);
            },
              style: ElevatedButton.styleFrom(
-             padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 5.0), // Adjust the padding as needed
+             padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 5.0), // Adjust the padding as needed
            ),
-    child: Text('Cancel'),
+    child: const Text('Cancel'),
   ),
 )
           ],
@@ -94,16 +95,17 @@ void showDeleteDialog(BuildContext context) {
       context: context,
       builder: (BuildContext context) {
         return CupertinoAlertDialog(
-          title: Text('Delete Event'),
-          content: Text('Are you sure you want to delete this event?'),
+          title: const Text('Delete Event'),
+          content: const Text('Are you sure you want to delete this event?'),
           actions: <Widget>[
             CupertinoDialogAction(
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
               onPressed: () => Navigator.pop(context),
             ),
             CupertinoDialogAction(
-              child: Text('Delete'),
+              child: const Text('Delete'),
               onPressed: () {
+                print("Deleting event: ${event.nameOfEvent}");
                 removeEvent(event.nameOfEvent, event.imageUrl);
                 Navigator.pop(context);
               },

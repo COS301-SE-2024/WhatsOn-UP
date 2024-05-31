@@ -21,10 +21,10 @@ class _HomePageState extends State<HomePage> {
     });
   }
 final List<Event> events = [
-    Event(nameOfEvent: 'something1', dateAndTime: '2024/05/28', location: 'braam', imageUrls: ['https://picsum.photos/200', 'https://picsum.photos/200', 'https://picsum.photos/200'], description: 'This is a test description for Event 1'),
-    Event(nameOfEvent: 'something2', dateAndTime: '2024/05/29', location: 'jozi', imageUrls: ['https://picsum.photos/200'], description: 'This is a test description for Event 2'),
-    Event(nameOfEvent: 'something3', dateAndTime: '2024/05/30', location: 'pta', imageUrls: ['https://picsum.photos/200', 'https://picsum.photos/200'], description: 'This is a test description for Event 3'),
-    Event(nameOfEvent: 'something4', dateAndTime: '2024/05/31', location: 'soweto', imageUrls: ['https://picsum.photos/200', 'https://picsum.photos/200', 'https://picsum.photos/200', 'https://picsum.photos/200', 'https://picsum.photos/200'], description: 'This is a test description for Event 4'),
+    Event(nameOfEvent: 'something1', dateAndTime: '2024/05/28', location: 'braam', imageUrls: ['https://source.unsplash.com/random/200x200?sig=1', 'https://source.unsplash.com/random/200x200?sig=1', 'https://source.unsplash.com/random/200x200?sig=1'], description: 'This is a test description for Event 1'),
+    Event(nameOfEvent: 'something2', dateAndTime: '2024/05/29', location: 'jozi', imageUrls: ['https://source.unsplash.com/random/200x200?sig=2'], description: 'This is a test description for Event 2'),
+    Event(nameOfEvent: 'something3', dateAndTime: '2024/05/30', location: 'pta', imageUrls: ['https://source.unsplash.com/random/200x200?sig=3', 'https://source.unsplash.com/random/200x200?sig=3'], description: 'This is a test description for Event 3'),
+    Event(nameOfEvent: 'something4', dateAndTime: '2024/05/31', location: 'soweto', imageUrls: ['https://source.unsplash.com/random/200x200?sig=4', 'https://source.unsplash.com/random/200x200?sig=4', 'https://source.unsplash.com/random/200x200?sig=4', 'https://source.unsplash.com/random/200x200?sig=4', 'https://source.unsplash.com/random/200x200?sig=4'], description: 'This is a test description for Event 4'),
   ];
   @override
   Widget build(BuildContext context) {
@@ -154,7 +154,7 @@ final List<Event> events = [
               scrollDirection: Axis.horizontal,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 1,
-                childAspectRatio: 1 / 1.2, 
+                
               ),
               itemCount: events.length,
               itemBuilder: (context, index) {

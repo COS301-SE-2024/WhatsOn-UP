@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:firstapp/pages/event_card.dart';
+import 'package:firstapp/widgets/event_card.dart';
 
 
 class DetailedEventPage extends StatefulWidget {

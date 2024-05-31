@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firstapp/widgets/event_card_RSVP.dart';
 
@@ -10,14 +11,14 @@ class RsvpEventsPage extends StatefulWidget {
 
 class _RsvpEventsPageState extends State<RsvpEventsPage> {
   List<Event> events = [
-    Event(nameOfEvent: 'something1', imageUrl: 'https://picsum.photos/200'),
-    Event(nameOfEvent: 'something2', imageUrl: 'https://picsum.photos/200'),
-    Event(nameOfEvent: 'something3', imageUrl: 'https://picsum.photos/200'),
-    Event(nameOfEvent: 'something4', imageUrl: 'https://picsum.photos/200'),
-    Event(nameOfEvent: 'something5', imageUrl: 'https://picsum.photos/200'),
-    Event(nameOfEvent: 'something6', imageUrl: 'https://picsum.photos/200'),
-    Event(nameOfEvent: 'something7', imageUrl: 'https://picsum.photos/200'),
-    Event(nameOfEvent: 'something8', imageUrl: 'https://picsum.photos/200'),
+    Event(nameOfEvent: 'something1', imageUrl: 'https://source.unsplash.com/random/200x200?sig=1'),
+    Event(nameOfEvent: 'something2', imageUrl: 'https://source.unsplash.com/random/200x200?sig=2'),
+    Event(nameOfEvent: 'something3', imageUrl: 'https://source.unsplash.com/random/200x200?sig=3'),
+    Event(nameOfEvent: 'something4', imageUrl: 'https://source.unsplash.com/random/200x200?sig=4'),
+    Event(nameOfEvent: 'something5', imageUrl: 'https://source.unsplash.com/random/200x200?sig=5'),
+    Event(nameOfEvent: 'something6', imageUrl: 'https://source.unsplash.com/random/200x200?sig=6'),
+    Event(nameOfEvent: 'something7', imageUrl: 'https://source.unsplash.com/random/200x200?sig=7'),
+    Event(nameOfEvent: 'something8', imageUrl: 'https://source.unsplash.com/random/200x200?sig=8'),
   ];
 
   void removeEvent(String nameOfEvent, String imageUrl) {
@@ -25,6 +26,9 @@ class _RsvpEventsPageState extends State<RsvpEventsPage> {
       events.removeWhere((event) =>
           event.nameOfEvent == nameOfEvent && event.imageUrl == imageUrl);
     });
+   
+       print("Event removed: $nameOfEvent");
+     
   }
 
   @override
