@@ -5,18 +5,19 @@ import lombok.AllArgsConstructor
 import lombok.Builder
 import lombok.Data
 import lombok.NoArgsConstructor
-import org.springframework.security.core.GrantedAuthority
-import org.springframework.security.core.userdetails.UserDetails
+//import org.springframework.security.core.GrantedAuthority
+//import org.springframework.security.core.authority.SimpleGrantedAuthority
+//import org.springframework.security.core.userdetails.UserDetails
 import java.time.LocalDateTime
 import java.util.*
 
 @Data
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
-@Table(name = "user")
-class User: UserDetails{
+@Table(name = "`user`")
+class UserModel(email: String, password: String){
+    constructor() : this("", "") {}
+
     @Id
     @GeneratedValue
     @Column(columnDefinition = "UUID")
@@ -31,7 +32,7 @@ class User: UserDetails{
     var password: String = ""
 
     @Enumerated(EnumType.STRING)
-    var role: Role = Role.GUEST
+    var role: Role = Role.GENERAL
 
     var active: Boolean = false
 
@@ -50,15 +51,15 @@ class User: UserDetails{
         updatedAt = LocalDateTime.now()
     }
 
-    override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
-        return listOf(new SimpleGrantedAuthority("ROLE_${role.name}")).toMutableList()
-    }
-
-    override fun getPassword(): String {
-        return password
-    }
-
-    override fun getUsername(): String {
-        return email
-    }
+//    override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
+//        return listOf(SimpleGrantedAuthority("ROLE_${role.name}")).toMutableList()
+//    }
+//
+//    override fun getUsername(): String {
+//        return email
+//    }
+//
+//    override fun getPassword(): String {
+//        return user_password
+//    }
 }

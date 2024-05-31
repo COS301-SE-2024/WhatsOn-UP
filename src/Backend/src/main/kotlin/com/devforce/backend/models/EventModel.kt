@@ -1,6 +1,6 @@
 package com.devforce.backend.event
 
-import com.devforce.backend.models.User
+import com.devforce.backend.models.UserModel
 import jakarta.persistence.*
 import lombok.AllArgsConstructor
 import lombok.Builder
@@ -11,11 +11,11 @@ import java.util.*
 
 @Data
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "event")
-class Event {
+@NoArgsConstructor
+@AllArgsConstructor
+class EventModel{
     @Id
     @GeneratedValue
     @Column(columnDefinition = "UUID")
@@ -33,9 +33,7 @@ class Event {
     var createdAt: LocalDateTime = LocalDateTime.now()
     var updatedAt: LocalDateTime = LocalDateTime.now()
 
-    @ManyToOne
-    @JoinColumn(name = "host_id")
-    var host: User? = null
+    var hosts: String = ""
 
     var location: String = ""
     var startTime: LocalDateTime = LocalDateTime.now()
@@ -44,17 +42,13 @@ class Event {
     var maxAttendees: Int = 0
     var isPrivate: Boolean = false
 
-    @ManyToOne
-    @JoinColumn(name = "creator_id")
-    var creator: User? = null
-
     @ManyToMany
     @JoinTable(
         name = "event_attendees",
         joinColumns = [JoinColumn(name = "event_id")],
         inverseJoinColumns = [JoinColumn(name = "user_id")]
     )
-    var attendees: Set<User> = HashSet()
+    var attendees: Set<UserModel> = HashSet()
 
     @ManyToMany
     @JoinTable(
@@ -62,7 +56,7 @@ class Event {
         joinColumns = [JoinColumn(name = "event_id")],
         inverseJoinColumns = [JoinColumn(name = "user_id")]
     )
-    var invitees: Set<User> = HashSet()
+    var invitees: Set<UserModel> = HashSet()
 
     @PrePersist
     fun prePersist() {
