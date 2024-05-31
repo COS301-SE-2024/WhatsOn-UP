@@ -1,10 +1,12 @@
-package com.devforce.backend.user
+package com.devforce.backend.models
 
 import jakarta.persistence.*
 import lombok.AllArgsConstructor
 import lombok.Builder
 import lombok.Data
 import lombok.NoArgsConstructor
+import org.springframework.security.core.GrantedAuthority
+import org.springframework.security.core.userdetails.UserDetails
 import java.time.LocalDateTime
 import java.util.*
 
@@ -13,14 +15,15 @@ import java.util.*
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "users")
-class User {
+@Table(name = "user")
+class User: UserDetails{
     @Id
     @GeneratedValue
     @Column(columnDefinition = "UUID")
     var id: UUID = UUID.randomUUID()
 
-    var name: String = ""
+    var firstName: String = ""
+    var lastName: String = ""
 
     @Column(unique = true)
     var email: String = ""
@@ -46,11 +49,16 @@ class User {
     fun preUpdate() {
         updatedAt = LocalDateTime.now()
     }
-}
 
-enum class Role {
-    GUEST,
-    GENERAL,
-    HOST,
-    ADMIN
+    override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
+        return listOf(new SimpleGrantedAuthority("ROLE_${role.name}")).toMutableList()
+    }
+
+    override fun getPassword(): String {
+        return password
+    }
+
+    override fun getUsername(): String {
+        return email
+    }
 }
