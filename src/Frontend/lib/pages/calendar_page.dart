@@ -163,7 +163,7 @@ class _CalendarPageState extends State<CalendarPage> {
                 shape: BoxShape.circle,
               ),
               selectedDecoration: BoxDecoration(
-                color: Colors.orange,
+                color: Color.fromARGB(255, 149, 137, 74),
                 shape: BoxShape.circle,
               ),
               markerDecoration: BoxDecoration(

@@ -34,7 +34,7 @@ final List<Event> events = [
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: Colors.grey[200],
+        // color: Colors.grey[200],
         child: _getSelectedPage(_selectedIndex),
       ),
       bottomNavigationBar: NavBar(

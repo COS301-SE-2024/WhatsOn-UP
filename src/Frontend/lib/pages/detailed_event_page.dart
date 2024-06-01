@@ -31,6 +31,10 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final dotColour = theme.brightness == Brightness.dark ? const Color.fromARGB(255, 116, 116, 116) : Colors.grey;
+    final activeDotColour = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.event.nameOfEvent),
@@ -54,10 +58,13 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
               items: widget.event.imageUrls.map((url) {
                 return Builder(
                   builder: (BuildContext context) {
-                    return Image.network(
-                      url,
-                      fit: BoxFit.cover,
-                      width: double.infinity,
+                    return ClipRRect(
+                      borderRadius: BorderRadius.circular(16.0),
+                      child: Image.network(
+                        url,
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                      ),
                     );
                   },
                 );
@@ -74,8 +81,8 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: _currentImageIndex == index
-                        ? Colors.black
-                        : Colors.grey,
+                        ? activeDotColour
+                        : dotColour
                   ),
                 );
               }).toList(),

@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
+
 class Event {
   final String nameOfEvent;
   final String imageUrl;
@@ -19,47 +19,57 @@ class EventCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
-      return Card(
+    final theme = Theme.of(context);
+    final cardColour = theme.colorScheme.surface;
+    final textColour = theme.colorScheme.onSurface;
+
+    return Card(
+      color: cardColour,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+      ),
       child: Container(
         width: 200,
         height: 265,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: cardColour,
           borderRadius: BorderRadius.circular(15),
-          boxShadow:[
-           BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            spreadRadius:5,
-            blurRadius:10,
-            offset: const Offset(0, 3),
-
-           ),
-           ],
-
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 5,
+              blurRadius: 10,
+              offset: const Offset(0, 3),
+            ),
+          ],
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Column(
-            children:[
+            children: [
               const SizedBox(height: 7.0),
               Container(
-                
-                child:ClipRRect(
+                child: ClipRRect(
                   borderRadius: BorderRadius.circular(16.0),
-                  child: Image.network(event.imageUrl,
-                height: 120.0,
-                width: double.infinity,
-                fit: BoxFit.cover,
-                 errorBuilder: (context, error, stackTrace) => Icon(Icons.error, size: 120.0),),
+                  child: Image.network(
+                    event.imageUrl,
+                    height: 120.0,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) => Icon(
+                      Icons.error,
+                      size: 120.0,
+                      color: textColour,
+                    ),
+                  ),
                 ),
               ),
-                Text(
+              Text(
                 event.nameOfEvent,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 23.0,
                   fontWeight: FontWeight.bold,
-                 
+                  color: textColour,
                 ),
               ),
                 SizedBox(
@@ -80,17 +90,9 @@ class EventCard extends StatelessWidget {
         ),
       ),
     );
-   
-
-
-
-
-
-
-
   }
 
-void showDeleteDialog(BuildContext context) {
+  void showDeleteDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -115,8 +117,4 @@ void showDeleteDialog(BuildContext context) {
       },
     );
   }
-
-
-
-
 }
