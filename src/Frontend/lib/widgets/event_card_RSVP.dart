@@ -63,14 +63,14 @@ class EventCard extends StatelessWidget {
                 ),
               ),
                 SizedBox(
-              width: 100, // Adjust the width as needed
-              height: 20, // Adjust the height as needed
+              width: 100,
+              height: 20, 
               child: ElevatedButton(
                 onPressed: () {
               showDeleteDialog(context);
            },
              style: ElevatedButton.styleFrom(
-             padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 5.0), // Adjust the padding as needed
+             padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 5.0), 
            ),
     child: const Text('Cancel'),
   ),

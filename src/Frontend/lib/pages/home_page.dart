@@ -5,6 +5,10 @@ import  'package:firstapp/pages/calendar_page.dart';
 import  'package:firstapp/pages/explore_page.dart';
 import 'package:firstapp/pages/settings_page.dart';
 import 'package:firstapp/widgets/nav_bar.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:firstapp/pages/searchbar.dart';
+import 'package:firstapp/pages/data_search.dart';
+import 'package:firstapp/pages/profilePage.dart';
 // import 'package:firstapp/widgets/eventcard.dart';
 
 class HomePage extends StatefulWidget {
@@ -62,82 +66,116 @@ final List<Event> events = [
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Text(
-              'Welcome, Username',
-              style: TextStyle(
-                fontSize: 24.0,
-                fontWeight: FontWeight.bold,
-              ),
+          Row(
+  children: [
+    Padding(
+      padding: EdgeInsets.all(16.0),
+       child: GestureDetector(
+        onTap: () {
+          // Navigate to another page when the profile icon is tapped
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => ProfilePage(profileImageUrl:'https://example.com/your-profile-image.jpg')),
+          );
+        },
+        child: CircleAvatar(
+          backgroundImage: NetworkImage('https://example.com/profile-image.jpg'), // Replace the URL with your profile image URL
+          radius: 24.0, // Adjust the size of the profile icon as needed
+        ),
+      ),
+      
+    ),
+    Text(
+      'Welcome, Username',
+      style: TextStyle(
+        fontSize: 24.0,
+        fontWeight: FontWeight.bold,
+      ),
+    ),
+  ],
+),
+        
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 8.0),
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.black),
+              borderRadius: BorderRadius.circular(8.0),
+             
+            ),
+            child: IconButton(
+              onPressed: () {
+                showSearch(context: context, delegate: DataSearch());
+              },
+              icon: Icon(Icons.search),
             ),
           ),
-          Card(
-            margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Featured Events',
-                    style: TextStyle(
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 8.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Event 1',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text('Date: 01/06/2024'),
-                        ],
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          // Handle event RSVP
-                        },
-                        child: const Text('RSVP'),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Event 2',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text('Date: 15/06/2024'),
-                        ],
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          // Handle event RSVP
-                        },
-                        child: const Text('RSVP'),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
+          //  Widget062(),
+          // Card(
+          //   margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+          //   child: Padding(
+          //     padding: const EdgeInsets.all(16.0),
+          //     child: Column(
+          //       crossAxisAlignment: CrossAxisAlignment.start,
+          //       children: [
+          //         const Text(
+          //           'Featured Events',
+          //           style: TextStyle(
+          //             fontSize: 18.0,
+          //             fontWeight: FontWeight.bold,
+          //           ),
+          //         ),
+          //         const SizedBox(height: 8.0),
+          //         Row(
+          //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //           children: [
+          //             const Column(
+          //               crossAxisAlignment: CrossAxisAlignment.start,
+          //               children: [
+          //                 Text(
+          //                   'Event 1',
+          //                   style: TextStyle(
+          //                     fontWeight: FontWeight.bold,
+          //                   ),
+          //                 ),
+          //                 Text('Date: 01/06/2024'),
+          //               ],
+          //             ),
+          //             ElevatedButton(
+          //               onPressed: () {
+          //                 // Handle event RSVP
+          //               },
+          //               child: const Text('RSVP'),
+          //             ),
+          //           ],
+          //         ),
+          //         const SizedBox(height: 16.0),
+          //         Row(
+          //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //           children: [
+          //             const Column(
+          //               crossAxisAlignment: CrossAxisAlignment.start,
+          //               children: [
+          //                 Text(
+          //                   'Event 2',
+          //                   style: TextStyle(
+          //                     fontWeight: FontWeight.bold,
+          //                   ),
+          //                 ),
+          //                 Text('Date: 15/06/2024'),
+          //               ],
+          //             ),
+          //             ElevatedButton(
+          //               onPressed: () {
+          //                 // Handle event RSVP
+          //               },
+          //               child: const Text('RSVP'),
+          //             ),
+          //           ],
+          //         ),
+          //       ],
+          //     ),
+          //   ),
+          // ),
           const Padding(
             padding: EdgeInsets.all(16.0),
             child: Text(
