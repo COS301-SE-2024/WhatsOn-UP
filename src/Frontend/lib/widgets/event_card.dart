@@ -1,3 +1,4 @@
+import 'package:firstapp/pages/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firstapp/pages/detailed_event_page.dart';
 
@@ -24,91 +25,105 @@ class EventCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final cardColour = theme.colorScheme.surface;
+    final textColour = theme.colorScheme.onSurface;
+
     return GestureDetector(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => DetailedEventPage(event: event),
-            ),
-          );
-        },
-        child: Card(
-          child: Container(
-            width: 200,
-            height: 265,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(15),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
-                  spreadRadius: 5,
-                  blurRadius: 10,
-                  offset: const Offset(0, 3),
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => DetailedEventPage(event: event),
+          ),
+        );
+      },
+      child: Card(
+        color: cardColour,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: Container(
+          width: 200,
+          height: 265,
+          decoration: BoxDecoration(
+            color: cardColour,
+            borderRadius: BorderRadius.circular(15),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.3),
+                spreadRadius: 4,
+                blurRadius: 3,
+                offset: const Offset(0, 0),
+              ),
+            ],
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Column(
+              children: [
+                const SizedBox(height: 7.0),
+                Container(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(16.0),
+                    child: Image.network(
+                      event.imageUrls[0],
+                      height: 120.0,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
-              ],
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Column(
-                children: [
-                  const SizedBox(height: 7.0),
-                  Container(
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(16.0),
-                      child: Image.network(
-                        event.imageUrls[0],
-                        height: 120.0,
-                        width: double.infinity,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
+                Text(
+                  event.nameOfEvent,
+                  style: TextStyle(
+                    fontSize: 23.0,
+                    fontWeight: FontWeight.bold,
+                    color: textColour,
                   ),
-                  Text(
-                    event.nameOfEvent,
-                    style: const TextStyle(
-                      fontSize: 23.0,
-                      fontWeight: FontWeight.bold,
-                    ),
+                ),
+                const SizedBox(height: 4.0),
+                Text(
+                  event.dateAndTime,
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.bold,
+                    color: textColour,
                   ),
-                  const SizedBox(height: 4.0),
-                  Text(
-                    event.dateAndTime,
-                    style: const TextStyle(
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 6.0),
-                  Row(mainAxisSize: MainAxisSize.min, children: [
-                    const Icon(
+                ),
+                const SizedBox(height: 6.0),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
                       Icons.location_on,
                       size: 20.0,
-                      color: Colors.grey,
+                      color: textColour,
                     ),
                     Expanded(
                       child: Text(
                         event.location,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 14.0,
-                          color: Colors.grey,
+                          color: textColour,
                         ),
                       ),
                     ),
                     IconButton(
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.bookmark_border,
                         size: 20.0,
-                        color: Colors.grey,
+                        color: textColour,
                       ),
                       onPressed: () {},
-                    )
-                  ])
-                ],
-              ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
-        ));
+        ),
+      ),
+    );
   }
 }

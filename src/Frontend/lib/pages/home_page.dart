@@ -5,7 +5,6 @@ import  'package:firstapp/pages/calendar_page.dart';
 import  'package:firstapp/pages/explore_page.dart';
 import 'package:firstapp/pages/settings_page.dart';
 import 'package:firstapp/widgets/nav_bar.dart';
-// import 'package:firstapp/widgets/eventcard.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -30,7 +29,7 @@ final List<Event> events = [
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: Colors.grey[200],
+        // color: Colors.grey[200],
         child: _getSelectedPage(_selectedIndex),
       ),
       bottomNavigationBar: NavBar(

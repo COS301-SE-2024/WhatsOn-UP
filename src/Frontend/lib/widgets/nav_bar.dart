@@ -33,9 +33,9 @@ class NavBar extends StatelessWidget {
       ],
       onTap: onItemTapped,
       type: BottomNavigationBarType.fixed,
-      backgroundColor: const Color.fromARGB(255, 0, 0, 0),
-      selectedItemColor: Color.fromARGB(255, 112, 112, 112),
-      unselectedItemColor: Colors.grey[300],
+      backgroundColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
+      selectedItemColor: Theme.of(context).bottomNavigationBarTheme.selectedItemColor,
+      unselectedItemColor: Theme.of(context).bottomNavigationBarTheme.unselectedItemColor,
       currentIndex: selectedIndex,
     );
   }

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:firstapp/widgets/theme_manager.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -12,6 +14,9 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final borderColor = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
+
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -28,7 +33,7 @@ class _SettingsPageState extends State<SettingsPage> {
             const SizedBox(height: 20),
             Container(
               decoration: BoxDecoration(
-                border: Border.all(color: Colors.black),
+                border: Border.all(color: borderColor),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Column(
@@ -118,50 +123,62 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
+
   Widget _buildThemeToggle() {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          isLightTheme = !isLightTheme;
-        });
-      },
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          Container(
-            width: 60,
-            height: 30,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
-              color: isLightTheme ? Colors.grey[300] : Colors.black,
-            ),
-            child: Stack(
-              children: [
-                AnimatedPositioned(
-                  duration: const Duration(milliseconds: 200),
-                  curve: Curves.easeInOut,
-                  left: isLightTheme ? 0 : 30,
-                  right: isLightTheme ? 30 : 0,
-                  child: Container(
-                    width: 30,
-                    height: 30,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.grey[700],
-                    ),
-                    child: Icon(
-                      isLightTheme ? Icons.wb_sunny : Icons.nights_stay,
-                      color: isLightTheme ? Colors.yellow : Colors.white,
-                    ),
-                  ),
+    return Consumer<ThemeNotifier>(
+      builder: (context, themeNotifier, child) {
+        bool isLightTheme = themeNotifier.getTheme() == themeNotifier.lightTheme;
+
+        return GestureDetector(
+          onTap: () {
+            setState(() {
+              if (isLightTheme) {
+                themeNotifier.setDarkMode();
+              } else {
+                themeNotifier.setLightMode();
+              }
+              isLightTheme = !isLightTheme;
+            });
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Container(
+                width: 60,
+                height: 30,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  color: isLightTheme ? Colors.grey[300] : Colors.black,
                 ),
-              ],
-            ),
+                child: Stack(
+                  children: [
+                    AnimatedPositioned(
+                      duration: const Duration(milliseconds: 200),
+                      curve: Curves.easeInOut,
+                      left: isLightTheme ? 0 : 30,
+                      right: isLightTheme ? 30 : 0,
+                      child: Container(
+                        width: 30,
+                        height: 30,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.grey[700],
+                        ),
+                        child: Icon(
+                          isLightTheme ? Icons.wb_sunny : Icons.nights_stay,
+                          color: isLightTheme ? Colors.yellow : Colors.white,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              // const SizedBox(width: 8),
+              // Text(isLightTheme ? 'Light' : 'Dark'),
+            ],
           ),
-          // const SizedBox(width: 8),
-          // Text(isLightTheme ? 'Light' : 'Dark'),
-        ],
-      ),
+        );
+      },
     );
   }
 }
