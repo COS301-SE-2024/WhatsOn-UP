@@ -4,7 +4,7 @@ import 'package:firstapp/pages/rsvp_events_page.dart';
 import 'package:flutter/cupertino.dart';
 
 void main() {
-  testWidgets('RsvpEventsPage should display events and remove them correctly', (WidgetTester tester) async {
+  testWidgets('RsvpEventsPage should display events and remove them correctly using the popup modal', (WidgetTester tester) async {
     await tester.pumpWidget(
       MaterialApp(
         home: RsvpEventsPage(),
@@ -18,11 +18,12 @@ void main() {
     await tester.pumpAndSettle();
 
     
-      expect(find.text('something1'), findsNothing);
-      expect(find.text('something2'), findsOneWidget);
-      expect(find.text('something3'), findsOneWidget);
-      expect(find.text('something4'), findsOneWidget);
-      expect(find.text('something5'), findsOneWidget);
+      expect(find.text('Event name 1'), findsNothing);
+      expect(find.text('Event name 2'), findsOneWidget);
+      expect(find.text('Event name 3'), findsOneWidget);
+      expect(find.text('Event name 4'), findsOneWidget);
+      expect(find.text('Event name 5'), findsOneWidget);
+   
  //when you check something6 something7 it fails
     
   });

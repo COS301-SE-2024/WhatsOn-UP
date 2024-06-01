@@ -20,19 +20,19 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(primaryColor: Colors.black),
-       home:HomePage(), //AnimatedSplashScreen(
-      //   splash: const Center(
-      //     child: Text(
-      //       'WhatsOn@UP',
-      //       style: TextStyle(
-      //         fontSize: 50,
-      //         fontWeight: FontWeight.bold,
-      //       ),
-      //     ),
-      //   ),
-      //   nextScreen: const LoginPage(),
-      //   splashTransition: SplashTransition.slideTransition,
-      // ),
+       home: AnimatedSplashScreen(
+      splash: const Center(
+         child: Text(
+             'WhatsOn@UP',
+           style: TextStyle(
+          fontSize: 50,
+           fontWeight: FontWeight.bold,
+       ),
+         ),
+       ),
+       nextScreen: const LoginPage(),
+       splashTransition: SplashTransition.slideTransition,
+       ),
       debugShowCheckedModeBanner: false,
     );
   }

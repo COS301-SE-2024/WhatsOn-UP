@@ -11,14 +11,14 @@ class RsvpEventsPage extends StatefulWidget {
 
 class _RsvpEventsPageState extends State<RsvpEventsPage> {
   List<Event> events = [
-    Event(nameOfEvent: 'something1', imageUrl: 'https://source.unsplash.com/random/200x200?sig=1'),
-    Event(nameOfEvent: 'something2', imageUrl: 'https://source.unsplash.com/random/200x200?sig=2'),
-    Event(nameOfEvent: 'something3', imageUrl: 'https://source.unsplash.com/random/200x200?sig=3'),
-    Event(nameOfEvent: 'something4', imageUrl: 'https://source.unsplash.com/random/200x200?sig=4'),
-    Event(nameOfEvent: 'something5', imageUrl: 'https://source.unsplash.com/random/200x200?sig=5'),
-    Event(nameOfEvent: 'something6', imageUrl: 'https://source.unsplash.com/random/200x200?sig=6'),
-    Event(nameOfEvent: 'something7', imageUrl: 'https://source.unsplash.com/random/200x200?sig=7'),
-    Event(nameOfEvent: 'something8', imageUrl: 'https://source.unsplash.com/random/200x200?sig=8'),
+    Event(nameOfEvent: 'Event name 1', imageUrl: 'https://source.unsplash.com/random/200x200?sig=1'),
+    Event(nameOfEvent: 'Event name 2', imageUrl: 'https://source.unsplash.com/random/200x200?sig=2'),
+    Event(nameOfEvent: 'Event name 3', imageUrl: 'https://source.unsplash.com/random/200x200?sig=3'),
+    Event(nameOfEvent: 'Event name 4', imageUrl: 'https://source.unsplash.com/random/200x200?sig=4'),
+    Event(nameOfEvent: 'Event name 5', imageUrl: 'https://source.unsplash.com/random/200x200?sig=5'),
+    Event(nameOfEvent: 'Event name 6', imageUrl: 'https://source.unsplash.com/random/200x200?sig=6'),
+    Event(nameOfEvent: 'Event name 7', imageUrl: 'https://source.unsplash.com/random/200x200?sig=7'),
+    Event(nameOfEvent: 'Event name 8', imageUrl: 'https://source.unsplash.com/random/200x200?sig=8'),
   ];
 
   void removeEvent(String nameOfEvent, String imageUrl) {
