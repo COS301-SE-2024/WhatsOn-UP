@@ -2,11 +2,9 @@ FROM devforce123/backend:latest
 
 WORKDIR /home/ubuntu
 
-#RUN ./gradlew build
-# RUN ./gradlew test
+COPY . .
 
+RUN ./gradlew build
 
-
-
-
-
+# Command to run the application
+CMD ["./gradlew", "bootRun"]

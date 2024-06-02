@@ -7,7 +7,6 @@ import lombok.Data
 import lombok.NoArgsConstructor
 //import org.springframework.security.core.GrantedAuthority
 //import org.springframework.security.core.authority.SimpleGrantedAuthority
-//import org.springframework.security.core.userdetails.UserDetails
 import java.time.LocalDateTime
 import java.util.*
 
@@ -15,16 +14,14 @@ import java.util.*
 @Builder
 @Entity
 @Table(name = "`user`")
-class UserModel(email: String, password: String){
-    constructor() : this("", "") {}
+class UserModel{
 
     @Id
     @GeneratedValue
     @Column(columnDefinition = "UUID")
     var id: UUID = UUID.randomUUID()
 
-    var firstName: String = ""
-    var lastName: String = ""
+    var name: String = ""
 
     @Column(unique = true)
     var email: String = ""
@@ -39,6 +36,15 @@ class UserModel(email: String, password: String){
     var createdAt: LocalDateTime = LocalDateTime.now()
 
     var updatedAt: LocalDateTime = LocalDateTime.now()
+
+    @ManyToMany
+    @JoinTable(
+        name = "saved_events",
+        joinColumns = [JoinColumn(name = "event_id")],
+        inverseJoinColumns = [JoinColumn(name = "user_id")]
+    )
+    var savedEvents: Set<UserModel> = HashSet()
+
 
     @PrePersist
     fun prePersist() {

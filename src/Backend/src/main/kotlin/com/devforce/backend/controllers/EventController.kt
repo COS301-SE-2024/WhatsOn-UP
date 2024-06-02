@@ -3,6 +3,7 @@ package com.devforce.backend.controllers
 import com.devforce.backend.event.EventModel
 import com.devforce.backend.repos.EventRepo
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDateTime
@@ -14,9 +15,15 @@ class EventController {
     lateinit var eventRepository: EventRepo
 
     @GetMapping("/get_events")
-    fun getEvents(): List<EventModel> {
-        return eventRepository.findAll()
+    fun getEvents(): ResponseEntity<Any> {
+        return try {
+            val events = eventRepository.findAll()
+            ResponseEntity.ok(ApiResponse("success", System.currentTimeMillis(), events))
+        } catch (e: Exception) {
+            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponse("error", System.currentTimeMillis(), "An error occurred while retrieving events"))
+        }
     }
+
 
     @PostMapping("/add_event")
     fun addEvent(@RequestBody eventData: Map<String, String>): ResponseEntity<Any> {
@@ -27,7 +34,7 @@ class EventController {
 
         // Validate required fields
         if (name.isNullOrEmpty() || description.isNullOrEmpty() || startTime.isNullOrEmpty() || endTime.isNullOrEmpty()) {
-            return ResponseEntity.badRequest().body(ApiResponse("error", "Name, description, start time, and end time are required"))
+            return ResponseEntity.badRequest().body(ApiResponse("error", System.currentTimeMillis(), "Name, description, start time, and end time are required"))
         }
 
         return try {
@@ -44,44 +51,46 @@ class EventController {
                 isPrivate = eventData["isPrivate"]?.toBoolean() ?: false
             }
             val savedEvent = eventRepository.save(event)
-            ResponseEntity.ok(savedEvent)
+            ResponseEntity.ok(ApiResponse("success", System.currentTimeMillis(), mapOf("event" to savedEvent)))
         } catch (e: IllegalArgumentException) {
-            ResponseEntity.badRequest().body(ApiResponse("error", "Invalid date format"))
+            ResponseEntity.badRequest().body(ApiResponse("error", System.currentTimeMillis(), "Invalid date format"))
         }
     }
+
 
     @PostMapping("/delete_event")
     fun deleteEvent(@RequestBody eventData: Map<String, String>): ResponseEntity<ApiResponse> {
         val eventId = eventData["eventId"]
         if (eventId.isNullOrEmpty()) {
-            return ResponseEntity.badRequest().body(ApiResponse("error", "Event ID is required"))
+            return ResponseEntity.badRequest().body(ApiResponse("error", System.currentTimeMillis(),  "Event ID is required"))
         }
 
         return try {
             val uuid = UUID.fromString(eventId)
             if (eventRepository.existsById(uuid)) {
                 eventRepository.deleteById(uuid)
-                ResponseEntity.ok(ApiResponse("success", "Event deleted successfully"))
+                ResponseEntity.ok(ApiResponse("success", System.currentTimeMillis(), "Event deleted successfully"))
             } else {
-                ResponseEntity.status(404).body(ApiResponse("error", "Event not found"))
+                ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse("error", System.currentTimeMillis(), "Event not found"))
             }
         } catch (e: IllegalArgumentException) {
-            ResponseEntity.badRequest().body(ApiResponse("error", "Invalid Event ID format"))
+            ResponseEntity.badRequest().body(ApiResponse("error", System.currentTimeMillis(), "Invalid Event ID format"))
         }
     }
+
 
     @PostMapping("/update_event")
     fun updateEvent(@RequestBody eventData: Map<String, String>): ResponseEntity<Any> {
         val eventId = eventData["eventId"]
         if (eventId.isNullOrEmpty()) {
-            return ResponseEntity.badRequest().body(ApiResponse("error", "Event ID is required"))
+            return ResponseEntity.badRequest().body(ApiResponse("error", System.currentTimeMillis(), "Event ID is required"))
         }
 
         return try {
             val uuid = UUID.fromString(eventId)
             val event = eventRepository.findById(uuid).orElse(null)
             if (event == null) {
-                ResponseEntity.status(404).body(ApiResponse("error", "Event not found"))
+                ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse("error", System.currentTimeMillis(), "Event not found"))
             } else {
                 event.name = eventData["name"] ?: event.name
                 event.description = eventData["description"] ?: event.description
@@ -97,7 +106,8 @@ class EventController {
                 ResponseEntity.ok(updatedEvent)
             }
         } catch (e: IllegalArgumentException) {
-            ResponseEntity.badRequest().body(ApiResponse("error", "Invalid Event ID format"))
+            ResponseEntity.badRequest().body(ApiResponse("error", System.currentTimeMillis(), "Invalid Event ID format"))
         }
     }
+
 }
