@@ -136,7 +136,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ],
           ),
-
+          SizedBox(height: 20.0),
           // Container(
           //   padding: const EdgeInsets.symmetric(horizontal: 8.0),
           //   decoration: BoxDecoration(
@@ -288,6 +288,7 @@ class _HomePageState extends State<HomePage> {
           //     ),
           //   ),
           // ),
+          SizedBox(height: 20.0),
           const Padding(
             padding: EdgeInsets.all(16.0),
             child: Text(
@@ -311,6 +312,7 @@ class _HomePageState extends State<HomePage> {
               },
             ),
           ),
+          SizedBox(height: 20.0),
           const Padding(
             padding: EdgeInsets.all(10.0),
             child: Text(
