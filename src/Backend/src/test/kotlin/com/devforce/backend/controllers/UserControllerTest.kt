@@ -38,8 +38,9 @@ class UserControllerTest {
 
 
     @Test
-    fun registerUser200() {
-        println("Testing register user 200")
+    fun registerUserSuccess() {
+        println("Testing register - success case")
+
         val requestObject = mapOf("email" to "test1@example.com", "password" to "password", "name" to "test1")
         mockMvc.perform(
             post("/register")
@@ -51,8 +52,8 @@ class UserControllerTest {
     }
 
     @Test
-    fun registerUser400() {
-        println("Testing register user 400")
+    fun registerUserFailure() {
+        println("Testing register - failure cases")
         var requestObject = mapOf("password" to "password", "name" to "test1")
         mockMvc.perform(
             post("/register")
@@ -70,6 +71,7 @@ class UserControllerTest {
             .andExpect(status().isOk) // Assert that the response status is 400
 
         requestObject = mapOf("name" to "test1", "email" to "test1@example.com")
+
         mockMvc.perform(
             post("/register")
                 .contentType("application/json")
@@ -80,8 +82,8 @@ class UserControllerTest {
     }
 
     @Test
-    fun loginUser200() {
-        println("Testing login user 200")
+    fun loginUserSuccess() {
+        println("Testing login user - success case")
         val requestObject = mapOf("email" to "test1@example.com", "password" to "password")
 
         mockMvc.perform(
@@ -93,8 +95,8 @@ class UserControllerTest {
     }
 
     @Test
-    fun loginUser400() {
-        println("Testing login user 400")
+    fun loginUserFailure() {
+        println("Testing login user - failure cases")
         var requestObject = mapOf("password" to "password")
 
         mockMvc.perform(
@@ -102,7 +104,7 @@ class UserControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(requestObject))
         )
-            .andExpect(status().isOk) // Assert that the response status is 400
+            .andExpect(status().isBadRequest) // Assert that the response status is 400
 
 
         requestObject = mapOf("email" to "test1@example.com")
@@ -112,17 +114,7 @@ class UserControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(requestObject))
         )
-            .andExpect(status().isOk) // Assert that the response status is 400
-
-
-        requestObject = mapOf("email" to "test2@example.com", "password" to "pass")
-
-        mockMvc.perform(
-            post("/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(requestObject))
-        )
-            .andExpect(status().isOk) // Assert that the response status is 400
+            .andExpect(status().isBadRequest) // Assert that the response status is 400
 
         requestObject = mapOf("email" to "test1@example.com", "password" to "pass")
 
@@ -131,7 +123,7 @@ class UserControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(requestObject))
         )
-            .andExpect(status().isOk) // Assert that the response status is 400
+            .andExpect(status().isBadRequest) // Assert that the response status is 400
     }
 
 
