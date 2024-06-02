@@ -1,7 +1,7 @@
 
-
+import 'package:firstapp/pages/login_page.dart';
 import 'package:flutter/material.dart';
-
+import 'package:firstapp/pages/application_event.dart';
 class ProfilePage extends StatelessWidget {
   final String profileImageUrl;
 
@@ -59,7 +59,10 @@ class ProfilePage extends StatelessWidget {
                    
                     text: 'Create event application',
                     onTap: () {
-                      // Handle profile tap
+                     Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => ApplicationEvent()),
+          );
                     },
                   ),
                   _buildDivider(),
@@ -83,7 +86,10 @@ class ProfilePage extends StatelessWidget {
                   _buildProfileOption(
                     text: 'Logout',
                     onTap: () {
-                      // Handle privacy tap
+                      Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const LoginPage()),
+          );
                     },
                   ),
                   

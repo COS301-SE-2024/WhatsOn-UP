@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firstapp/widgets/theme_manager.dart';
+import 'package:firstapp/pages/profilePage.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -42,7 +43,10 @@ class _SettingsPageState extends State<SettingsPage> {
                     icon: Icons.person,
                     text: 'Profile',
                     onTap: () {
-                      // Handle profile tap
+                    Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ProfilePage(profileImageUrl:'https://example.com/your-profile-image.jpg')),
+                   );
                     },
                   ),
                   _buildDivider(),

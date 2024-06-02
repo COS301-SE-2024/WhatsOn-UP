@@ -1,8 +1,8 @@
 import 'package:firstapp/widgets/event_card.dart';
 import 'package:flutter/material.dart';
 import 'package:firstapp/pages/rsvp_events_page.dart';
-import  'package:firstapp/pages/calendar_page.dart';
-import  'package:firstapp/pages/explore_page.dart';
+import 'package:firstapp/pages/calendar_page.dart';
+import 'package:firstapp/pages/explore_page.dart';
 import 'package:firstapp/pages/settings_page.dart';
 import 'package:firstapp/widgets/nav_bar.dart';
 import 'package:flutter/cupertino.dart';
@@ -24,11 +24,45 @@ class _HomePageState extends State<HomePage> {
       _selectedIndex = index;
     });
   }
-final List<Event> events = [
-    Event(nameOfEvent: 'Event name 1', dateAndTime: '2024/05/28', location: 'braam', imageUrls: ['https://source.unsplash.com/random/200x200?sig=1', 'https://source.unsplash.com/random/200x200?sig=1', 'https://source.unsplash.com/random/200x200?sig=1'], description: 'This is a test description for Event 1'),
-    Event(nameOfEvent: 'Event name 2', dateAndTime: '2024/05/29', location: 'jozi', imageUrls: ['https://source.unsplash.com/random/200x200?sig=2'], description: 'This is a test description for Event 2'),
-    Event(nameOfEvent: 'Event name 3', dateAndTime: '2024/05/30', location: 'pta', imageUrls: ['https://source.unsplash.com/random/200x200?sig=3', 'https://source.unsplash.com/random/200x200?sig=3'], description: 'This is a test description for Event 3'),
-    Event(nameOfEvent: 'Event name 4', dateAndTime: '2024/05/31', location: 'soweto', imageUrls: ['https://source.unsplash.com/random/200x200?sig=4', 'https://source.unsplash.com/random/200x200?sig=4', 'https://source.unsplash.com/random/200x200?sig=4', 'https://source.unsplash.com/random/200x200?sig=4', 'https://source.unsplash.com/random/200x200?sig=4'], description: 'This is a test description for Event 4'),
+
+  final List<Event> events = [
+    Event(
+        nameOfEvent: 'Event name 1',
+        dateAndTime: '2024/05/28',
+        location: 'braam',
+        imageUrls: [
+          'https://source.unsplash.com/random/200x200?sig=1',
+          'https://source.unsplash.com/random/200x200?sig=1',
+          'https://source.unsplash.com/random/200x200?sig=1'
+        ],
+        description: 'This is a test description for Event 1'),
+    Event(
+        nameOfEvent: 'Event name 2',
+        dateAndTime: '2024/05/29',
+        location: 'jozi',
+        imageUrls: ['https://source.unsplash.com/random/200x200?sig=2'],
+        description: 'This is a test description for Event 2'),
+    Event(
+        nameOfEvent: 'Event name 3',
+        dateAndTime: '2024/05/30',
+        location: 'pta',
+        imageUrls: [
+          'https://source.unsplash.com/random/200x200?sig=3',
+          'https://source.unsplash.com/random/200x200?sig=3'
+        ],
+        description: 'This is a test description for Event 3'),
+    Event(
+        nameOfEvent: 'Event name 4',
+        dateAndTime: '2024/05/31',
+        location: 'soweto',
+        imageUrls: [
+          'https://source.unsplash.com/random/200x200?sig=4',
+          'https://source.unsplash.com/random/200x200?sig=4',
+          'https://source.unsplash.com/random/200x200?sig=4',
+          'https://source.unsplash.com/random/200x200?sig=4',
+          'https://source.unsplash.com/random/200x200?sig=4'
+        ],
+        description: 'This is a test description for Event 4'),
   ];
   @override
   Widget build(BuildContext context) {
@@ -67,40 +101,43 @@ final List<Event> events = [
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-  children: [
-    Padding(
-      padding: EdgeInsets.all(16.0),
-       child: GestureDetector(
-        onTap: () {
-          // Navigate to another page when the profile icon is tapped
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => ProfilePage(profileImageUrl:'https://example.com/your-profile-image.jpg')),
-          );
-        },
-        child: CircleAvatar(
-          backgroundImage: NetworkImage('https://example.com/profile-image.jpg'), // Replace the URL with your profile image URL
-          radius: 24.0, // Adjust the size of the profile icon as needed
-        ),
-      ),
-      
-    ),
-    Text(
-      'Welcome, Username',
-      style: TextStyle(
-        fontSize: 24.0,
-        fontWeight: FontWeight.bold,
-      ),
-    ),
-  ],
-),
-        
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 8.0),
+            children: [
+              Padding(
+                padding: EdgeInsets.all(16.0),
+                child: GestureDetector(
+                  onTap: () {
+                    // Navigate to another page when the profile icon is tapped
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ProfilePage(
+                              profileImageUrl:
+                                  'https://example.com/your-profile-image.jpg')),
+                    );
+                  },
+                  child: CircleAvatar(
+                    backgroundImage: NetworkImage(
+                        'https://example.com/profile-image.jpg'), // Replace the URL with your profile image URL
+                    radius:
+                        24.0, // Adjust the size of the profile icon as needed
+                  ),
+                ),
+              ),
+              Text(
+                'Welcome, Username',
+                style: TextStyle(
+                  fontSize: 24.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 8.0),
             decoration: BoxDecoration(
               border: Border.all(color: Colors.black),
               borderRadius: BorderRadius.circular(8.0),
-             
             ),
             child: IconButton(
               onPressed: () {
@@ -187,12 +224,11 @@ final List<Event> events = [
             ),
           ),
           SizedBox(
-            height: 250.0, 
+            height: 250.0,
             child: GridView.builder(
               scrollDirection: Axis.horizontal,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 1,
-                
               ),
               itemCount: events.length,
               itemBuilder: (context, index) {
@@ -211,12 +247,11 @@ final List<Event> events = [
             ),
           ),
           SizedBox(
-            height: 250.0, 
+            height: 250.0,
             child: GridView.builder(
               scrollDirection: Axis.horizontal,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 1,
-               
               ),
               itemCount: events.length,
               itemBuilder: (context, index) {

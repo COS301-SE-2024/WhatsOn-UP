@@ -51,7 +51,7 @@ class _RsvpEventsPageState extends State<RsvpEventsPage> {
             child: Center(
               child: events.isEmpty
                   ? const Text(
-                      "You haven't RSVPED any event",
+                      "You have not made any reservations",
                       style: TextStyle(fontSize: 18),
                     )
                   : GridView.builder(
