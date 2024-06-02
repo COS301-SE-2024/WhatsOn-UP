@@ -79,16 +79,19 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _buildForm() {
+    final theme = Theme.of(context);
+    final signupTextColour = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
+
     return Form(
       key: _formKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
+          const Text(
             'Login to Your Account',
             style: TextStyle(
               fontSize: 24,
-              color: Colors.black,
+              // color: Colors.black,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -129,15 +132,16 @@ class _LoginPageState extends State<LoginPage> {
             child: ElevatedButton(
               onPressed: _simulateLogin,
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+                // backgroundColor: const Color.fromARGB(255, 255, 255, 255),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),
-                padding: EdgeInsets.symmetric(vertical: 16),
+                padding: const EdgeInsets.symmetric(vertical: 16),
               ),
               child: Text(
                 'Login',
-                style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0)),
+                // style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0)),
+                style: TextStyle(color: signupTextColour),
               ),
             ),
           ),
@@ -150,12 +154,13 @@ class _LoginPageState extends State<LoginPage> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => SigninPage()),
+                    MaterialPageRoute(builder: (context) => const SigninPage()),
                   );
                 },
                 child: Text(
                   'Sign up',
-                  style: TextStyle(color: Colors.black),
+                  // style: TextStyle(color: Colors.black),
+                  style: TextStyle(color: signupTextColour),
                 ),
               ),
             ],
@@ -169,14 +174,14 @@ class _LoginPageState extends State<LoginPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               IconButton(
-                  icon: Image(
+                  icon: const Image(
                     width: 32,
                     height: 32,
                     image: Svg('assets/images/google-icon.svg'),
                   ),
                   onPressed: () {}),
               IconButton(
-                  icon: Image(
+                  icon: const Image(
                     width: 32,
                     height: 32,
                     image: Svg('assets/images/apple-icon.svg'),
@@ -216,19 +221,19 @@ class _LoginPageState extends State<LoginPage> {
       controller: controller,
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: TextStyle(color: Colors.grey),
+        labelStyle: const TextStyle(color: Colors.grey),
         prefixIcon: Icon(icon, color: Colors.grey),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(color: Colors.grey),
+          borderSide: const BorderSide(color: Colors.grey),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(color: Colors.grey),
+          borderSide: const BorderSide(color: Colors.grey),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(color: Colors.black),
+          borderSide: const BorderSide(color: Colors.black),
         ),
       ),
       obscureText: isPassword,
@@ -269,7 +274,7 @@ class _LoginPageState extends State<LoginPage> {
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text('Invalid email or password'),
           ),
         );

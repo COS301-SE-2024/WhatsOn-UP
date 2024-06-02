@@ -26,12 +26,12 @@ class _ApplicationEventState extends State<ApplicationEvent> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
-        title: Text('Create Event'),
+        title: const Text('Create Event'),
       ),
       body: _buildForm(),
     );
@@ -45,26 +45,26 @@ class _ApplicationEventState extends State<ApplicationEvent> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               'Event Details',
               style: TextStyle(
                 fontSize: 24,
-                color: Colors.black,
+                // color: Colors.black,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             _buildInputField(eventNameController, label: 'Event Name'),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             _buildInputField(eventDescriptionController, label: 'Description'),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             _buildDateTimePicker(),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 showSubmitDialog(context);
               },
-              child: Text('Submit'),
+              child: const Text('Submit'),
             ),
           ],
         ),
@@ -80,7 +80,7 @@ class _ApplicationEventState extends State<ApplicationEvent> {
       controller: controller,
       decoration: InputDecoration(
         labelText: label,
-        border: OutlineInputBorder(),
+        border: const OutlineInputBorder(),
       ),
       validator: (value) {
         if (value == null || value.isEmpty) {
@@ -92,34 +92,38 @@ class _ApplicationEventState extends State<ApplicationEvent> {
   }
 
   Widget _buildDateTimePicker() {
+    final theme = Theme.of(context);
+    final dateAndTimeColour = theme.brightness == Brightness.dark ? const Color.fromARGB(255, 58, 132, 218) : const Color.fromARGB(255, 13, 73, 151);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Select Date:'),
-        SizedBox(height: 10),
+        const Text('Select Date:'),
+        const SizedBox(height: 10),
         Row(
           children: [
-            Icon(Icons.calendar_today),
-            SizedBox(width: 10),
+            const Icon(Icons.calendar_today),
+            const SizedBox(width: 10),
             TextButton(
               onPressed: () => _selectDate(context),
               child: Text(
                 '${selectedDate.day}/${selectedDate.month}/${selectedDate.year}',
+                style: TextStyle(color: dateAndTimeColour),
               ),
             ),
           ],
         ),
-        SizedBox(height: 20),
-        Text('Select Time:'),
-        SizedBox(height: 10),
+        const SizedBox(height: 20),
+        const Text('Select Time:'),
+        const SizedBox(height: 10),
         Row(
           children: [
-            Icon(Icons.access_time),
-            SizedBox(width: 10),
+            const Icon(Icons.access_time),
+            const SizedBox(width: 10),
             TextButton(
               onPressed: () => _selectTime(context),
               child: Text(
                 '${selectedTime.format(context)}',
+                style: TextStyle(color: dateAndTimeColour),
               ),
             ),
           ],
@@ -161,7 +165,7 @@ class _ApplicationEventState extends State<ApplicationEvent> {
       Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => ProfilePage(
+            builder: (context) => const ProfilePage(
                 profileImageUrl: 'https://example.com/your-profile-image.jpg')),
       );
       print('Event Name: $eventName');

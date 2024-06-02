@@ -96,6 +96,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildHomePage() {
+    final theme = Theme.of(context);
+    final borderColour = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
+    final textColour = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
+
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -103,19 +107,19 @@ class _HomePageState extends State<HomePage> {
           Row(
             children: [
               Padding(
-                padding: EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(16.0),
                 child: GestureDetector(
                   onTap: () {
                     // Navigate to another page when the profile icon is tapped
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => ProfilePage(
+                          builder: (context) => const ProfilePage(
                               profileImageUrl:
                                   'https://example.com/your-profile-image.jpg')),
                     );
                   },
-                  child: CircleAvatar(
+                  child: const CircleAvatar(
                     backgroundImage: NetworkImage(
                         'https://example.com/profile-image.jpg'), // Replace the URL with your profile image URL
                     radius:
@@ -123,7 +127,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
-              Text(
+              const Text(
                 'Welcome, Username',
                 style: TextStyle(
                   fontSize: 24.0,
@@ -133,19 +137,90 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
 
+          // Container(
+          //   padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          //   decoration: BoxDecoration(
+          //     border: Border.all(color: borderColour),
+          //     borderRadius: BorderRadius.circular(8.0),
+          //   ),
+          //   child: IconButton(
+          //     onPressed: () {
+          //       showSearch(context: context, delegate: DataSearch());
+          //     },
+          //     icon: const Icon(Icons.search),
+          //   ),
+          // ),
+
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 8.0),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.black),
-              borderRadius: BorderRadius.circular(8.0),
-            ),
-            child: IconButton(
-              onPressed: () {
-                showSearch(context: context, delegate: DataSearch());
-              },
-              icon: Icon(Icons.search),
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.27,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: borderColour),
+                        borderRadius: BorderRadius.circular(16.0),
+                      ),
+                      child: TextButton.icon(
+                        onPressed: () {
+                          showSearch(
+                            context: context,
+                            delegate: DataSearch(),
+                          );
+                        },
+                        icon: Icon(Icons.search, color: textColour),
+                        label: Text('Search',
+                            style: TextStyle(
+                              color: textColour,
+                            )),
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 35.0),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.27,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: borderColour),
+                        borderRadius: BorderRadius.circular(16.0),
+                      ),
+                      child: TextButton.icon(
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text('Filter Options'),
+                                content:
+                                    Text('Coming soon'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text('Close'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                        icon: Icon(Icons.filter_list, color: textColour),
+                        label: Text('Filter',
+                            style: TextStyle(
+                              color: textColour,
+                            )),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
+
           //  Widget062(),
           // Card(
           //   margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
