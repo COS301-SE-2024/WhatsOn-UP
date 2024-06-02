@@ -79,6 +79,9 @@ class _SigninPage extends State<SigninPage> {
   }
 
   Widget _buildForm() {
+    final theme = Theme.of(context);
+    final loginTextColour = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
+
     return Form(
       key: _formKey,
       child: Column(
@@ -88,7 +91,7 @@ class _SigninPage extends State<SigninPage> {
             'Create a New Account',
             style: TextStyle(
               fontSize: 24,
-              color: Colors.black,
+              // color: Colors.black,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -173,7 +176,7 @@ class _SigninPage extends State<SigninPage> {
                 }
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+                // backgroundColor: const Color.fromARGB(255, 255, 255, 255),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),
@@ -181,7 +184,8 @@ class _SigninPage extends State<SigninPage> {
               ),
               child: Text(
                 'Sign up',
-                style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0)),
+                // style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0)),
+                style: TextStyle(color: loginTextColour),
               ),
             ),
           ),
@@ -199,7 +203,8 @@ class _SigninPage extends State<SigninPage> {
                 },
                 child: Text(
                   'Log in',
-                  style: TextStyle(color: Colors.black),
+                  // style: TextStyle(color: Colors.black),
+                  style: TextStyle(color: loginTextColour),
                 ),
               ),
             ],

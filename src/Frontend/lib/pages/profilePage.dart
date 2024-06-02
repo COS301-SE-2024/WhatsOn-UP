@@ -9,6 +9,9 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final borderColour = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Profile'),
@@ -50,7 +53,7 @@ class ProfilePage extends StatelessWidget {
               const SizedBox(height: 10),
                Container(
               decoration: BoxDecoration(
-                border: Border.all(color: Colors.black),
+                border: Border.all(color: borderColour),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Column(

@@ -16,7 +16,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final borderColor = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
+    final borderColour = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
 
     return Scaffold(
       body: Padding(
@@ -34,7 +34,7 @@ class _SettingsPageState extends State<SettingsPage> {
             const SizedBox(height: 20),
             Container(
               decoration: BoxDecoration(
-                border: Border.all(color: borderColor),
+                border: Border.all(color: borderColour),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Column(

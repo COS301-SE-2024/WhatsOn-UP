@@ -30,9 +30,12 @@ class ThemeNotifier with ChangeNotifier {
       titleTextStyle: TextStyle(color: Colors.white, fontSize: 20),
     ),
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-      backgroundColor: lightPrimaryColor,
+      // backgroundColor: lightPrimaryColor,
+      // selectedItemColor: lightSecondaryColor,
+      // unselectedItemColor: Colors.white,
+      backgroundColor: Colors.white,
       selectedItemColor: lightSecondaryColor,
-      unselectedItemColor: Colors.white,
+      unselectedItemColor: Color.fromARGB(255, 47, 86, 194),
     ),
     elevatedButtonTheme: const ElevatedButtonThemeData(
       style: ButtonStyle(
@@ -58,9 +61,12 @@ class ThemeNotifier with ChangeNotifier {
       titleTextStyle: TextStyle(color: Colors.white, fontSize: 20),
     ),
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-      backgroundColor: darkPrimaryColor,
+      // backgroundColor: darkPrimaryColor,
+      // selectedItemColor: darkSecondaryColor,
+      // unselectedItemColor: Colors.white,
+      backgroundColor: Color.fromARGB(255, 18, 18, 18),
       selectedItemColor: darkSecondaryColor,
-      unselectedItemColor: Colors.white,
+      unselectedItemColor: Color.fromARGB(255, 79, 114, 207),
     ),
     elevatedButtonTheme: const ElevatedButtonThemeData(
       style: ButtonStyle(
