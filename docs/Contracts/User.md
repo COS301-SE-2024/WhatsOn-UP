@@ -86,7 +86,6 @@
     ```
 
 -----
-Here are examples of how you can use the API endpoints described for the `/register` and `/login` routes:
 
 ### Example 1: Register a User
 #### Request:
@@ -158,5 +157,3 @@ Content-Type: application/json
   "message": "Invalid email or password"
 }
 ```
-
-These examples demonstrate how to register a user and login with the registered credentials, along with possible responses for both successful and error scenarios.

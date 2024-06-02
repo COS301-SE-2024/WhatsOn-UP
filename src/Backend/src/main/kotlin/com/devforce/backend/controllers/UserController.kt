@@ -15,6 +15,7 @@ class UserController {
 
     @PostMapping("/register")
     fun registerUser(@RequestBody userData: Map<String, String>): ResponseEntity<Any> {
+        println(userData)
         val email = userData["email"] ?: return ResponseEntity.badRequest().body(ApiResponse("error", System.currentTimeMillis(),"Email is required"))
         val password = userData["password"] ?: return ResponseEntity.badRequest().body(ApiResponse("error", System.currentTimeMillis(), "Password is required"))
         val name = userData["name"] ?: return ResponseEntity.badRequest().body(ApiResponse("error", System.currentTimeMillis(),"Name is required"))

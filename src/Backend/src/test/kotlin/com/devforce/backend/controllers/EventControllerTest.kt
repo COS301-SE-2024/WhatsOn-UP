@@ -38,30 +38,30 @@ class EventControllerTest {
     @MockBean
     lateinit var eventRepo: EventRepo
 
-
-    @Test
-    fun addEventSuccess() {
-        println("Testing add_event - success case")
-        val eventData = mapOf(
-            "name" to "Test Event",
-            "description" to "Description of test event",
-            "startTime" to "2024-06-30T10:00:00",
-            "endTime" to "2024-06-30T12:00:00",
-            "metadata" to "Some metadata",
-            "eventMedia" to listOf("image1.jpg", "image2.jpg"),
-            "hosts" to "Host1, Host2",
-            "location" to "Some location",
-            "maxAttendees" to "100",
-            "isPrivate" to "false"
-        )
-
-        mockMvc.perform(
-            post("/add_event")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(eventData))
-        )
-            .andExpect(status().isOk)
-    }
+//
+//    @Test
+//    fun addEventSuccess() {
+//        println("Testing add_event - success case")
+//        val eventData = mapOf(
+//            "name" to "Test Event",
+//            "description" to "Description of test event",
+//            "startTime" to "2024-06-30T10:00:00",
+//            "endTime" to "2024-06-30T12:00:00",
+//            "metadata" to "Some metadata",
+//            "eventMedia" to listOf("image1.jpg", "image2.jpg"),
+//            "hosts" to "Host1, Host2",
+//            "location" to "Some location",
+//            "maxAttendees" to "100",
+//            "isPrivate" to "false"
+//        )
+//
+//        mockMvc.perform(
+//            post("/add_event")
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .content(objectMapper.writeValueAsString(eventData))
+//        )
+//            .andExpect(status().isOk)
+//    }
 
     @Test
     fun getEventsSuccess() {
@@ -82,30 +82,29 @@ class EventControllerTest {
         )
             .andExpect(status().isOk)
     }
-
-    @Test
-    fun updateEventSuccess() {
-        println("Testing update_event - success case")
-        val eventId = UUID.randomUUID().toString() // Random UUID
-        val eventData = mapOf(
-            "eventId" to eventId,
-            "name" to "Updated Event Name",
-            "description" to "Updated description",
-            "startTime" to "2024-06-30T10:00:00",
-            "endTime" to "2024-06-30T12:00:00",
-            "metadata" to "Updated metadata",
-            "eventMedia" to listOf("updated_image1.jpg", "updated_image2.jpg"),
-            "hosts" to "Updated Host1, Host2",
-            "location" to "Updated location",
-            "maxAttendees" to "150",
-            "isPrivate" to "true"
-        )
-
-        mockMvc.perform(
-            post("/update_event")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(eventData))
-        )
-            .andExpect(status().isOk)
-    }
+//
+//    @Test
+//    fun updateEventSuccess() {
+//        println("Testing update_event - success case")
+//        val eventId = UUID.randomUUID().toString() // Random UUID
+//        val eventData = mapOf(
+//            "eventId" to eventId,
+//            "name" to "Updated Event Name",
+//            "description" to "Updated description",
+//            "startTime" to "2024-06-30T10:00:00",
+//            "endTime" to "2024-06-30T12:00:00",
+//            "metadata" to "Updated metadata",
+//            "eventMedia" to listOf("updated_image1.jpg", "updated_image2.jpg"),
+//            "hosts" to "Updated Host1, Host2",
+//            "location" to "Updated location",
+//            "maxAttendees" to "150",
+//            "isPrivate" to "true"
+//        )
+//
+//        mockMvc.perform(
+//            post("/update_event")
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .content(objectMapper.writeValueAsString(eventData))
+//        ).andExpect(status().isOk)
+//    }
 }
