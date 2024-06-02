@@ -1,6 +1,6 @@
-# User Contract
+# API Contract
 
-
+## UserController
 ### POST /register
 
 **Request:**
