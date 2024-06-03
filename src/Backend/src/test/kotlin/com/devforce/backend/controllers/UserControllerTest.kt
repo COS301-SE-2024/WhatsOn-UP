@@ -18,7 +18,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 @SpringBootTest
 @AutoConfigureMockMvc
 class UserControllerTest {
-
     @Autowired
     lateinit var mockMvc: MockMvc
 
@@ -44,6 +43,7 @@ class UserControllerTest {
         println("Testing register - success case")
 
         val requestObject = mapOf("email" to "test1@example.com", "password" to "password", "name" to "test1")
+
         mockMvc.perform(
             post("/register")
                 .contentType("application/json")

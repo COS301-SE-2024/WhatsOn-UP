@@ -1,4 +1,4 @@
-name: Flutter Build
+name: Flutter
 
 on:
   push:
@@ -12,17 +12,36 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    container:
-      image: mobiledevops/flutter-sdk-image:3.16.3
-
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Set up Flutter
+      - name: Setup Flutter SDK
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.16.3'
+          flutter-version: '3.13.6'  # Use the latest stable version or a specific version that matches your Dart SDK requirements
 
-      - name: Flutter Build
-        run: flutter build apk
+      - name: Print working directory
+        run: pwd
+
+      - name: List directory contents
+        run: ls -al
+        working-directory: src/Frontend
+
+      - name: Print Flutter and Dart versions
+        run: |
+          flutter --version
+          dart --version
+        working-directory: src/Frontend
+
+      - name: Install dependencies
+        working-directory: src/Frontend
+        run: flutter pub get
+
+      - name: Analyze project source
+        working-directory: src/Frontend
+        run: dart analyze
+
+      - name: Run tests
+        working-directory: src/Frontend
+        run: flutter test
