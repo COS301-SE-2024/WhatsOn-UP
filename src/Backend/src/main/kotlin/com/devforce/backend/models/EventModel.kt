@@ -1,4 +1,4 @@
-package com.devforce.backend.event
+package com.devforce.backend.models
 
 import com.devforce.backend.models.UserModel
 import jakarta.persistence.*
