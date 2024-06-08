@@ -17,17 +17,12 @@ class UserModel{
     @Column(columnDefinition = "UUID")
     var id: UUID = UUID.randomUUID()
 
-    var name: String = ""
+    var fullName: String = ""
 
     @Column(unique = true)
-    var email: String = ""
+    var username: String = "" //This is the user email
 
     var password: String = ""
-
-    @Enumerated(EnumType.STRING)
-    var role: Role = Role.GENERAL
-
-    var active: Boolean = false
 
     var createdAt: LocalDateTime = LocalDateTime.now()
 
@@ -35,12 +30,19 @@ class UserModel{
 
     @ManyToMany
     @JoinTable(
+        name = "user_roles",
+        joinColumns = [JoinColumn(name = "user_id")],
+        inverseJoinColumns = [JoinColumn(name = "role_id")]
+    )
+    var roles: Set<RoleModel> = HashSet()
+
+    @ManyToMany
+    @JoinTable(
         name = "saved_events",
-        joinColumns = [JoinColumn(name = "event_id")],
-        inverseJoinColumns = [JoinColumn(name = "user_id")]
+        joinColumns = [JoinColumn(name = "user_id")],
+        inverseJoinColumns = [JoinColumn(name = "event_id")]
     )
     var savedEvents: Set<UserModel> = HashSet()
-
 
     @PrePersist
     fun prePersist() {
@@ -53,15 +55,4 @@ class UserModel{
         updatedAt = LocalDateTime.now()
     }
 
-//    override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
-//        return listOf(SimpleGrantedAuthority("ROLE_${role.name}")).toMutableList()
-//    }
-//
-//    override fun getUsername(): String {
-//        return email
-//    }
-//
-//    override fun getPassword(): String {
-//        return user_password
-//    }
 }
