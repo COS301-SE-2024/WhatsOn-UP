@@ -7,6 +7,7 @@ import com.devforce.backend.services.AuthService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -27,4 +28,21 @@ class AuthController {
     fun loginUser(@RequestBody userDTO: LoginDto): ResponseEntity<ResponseDTO> {
         return authService.loginUser(userDTO)
     }
+
+    @PostMapping("/refresh_token")
+    fun refreshToken(@RequestBody token: String): ResponseEntity<ResponseDTO> {
+        return authService.refreshToken(token)
+    }
+
+    @PostMapping("/logout")
+    fun logoutUser(@RequestBody token: String): ResponseEntity<ResponseDTO> {
+        return authService.logoutUser(token)
+    }
+
+
+    @PostMapping("/get_user")
+    fun getUser(@RequestBody token: String): ResponseEntity<ResponseDTO> {
+        return authService.getUser(token)
+    }
+
 }

@@ -1,6 +1,8 @@
 package com.devforce.backend.config
 
 import com.devforce.backend.security.CustomUserDetailsService
+import com.devforce.backend.security.JwtAuthFilter
+import com.devforce.backend.security.JwtEntryPoint
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -14,28 +16,41 @@ import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import org.springframework.web.cors.CorsConfiguration
+import org.springframework.web.cors.CorsConfigurationSource
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-class UserAuthConfig {
+class AuthConfig {
+
+    @Autowired
+    lateinit var jwtEntryPoint: JwtEntryPoint
 
     @Autowired
     lateinit var customUserDetailsService: CustomUserDetailsService
 
-    @Throws(Exception::class)
     @Bean
+    @Throws(Exception::class)
     fun defaultSecurityFilterChain(http: HttpSecurity): SecurityFilterChain {
-        http.invoke {
+        http {
             httpBasic {}
             sessionManagement {
                 sessionCreationPolicy = SessionCreationPolicy.STATELESS
             }
-
-            cors {disable()}
-            csrf {disable()}
+            exceptionHandling {
+                authenticationEntryPoint = jwtEntryPoint
+            }
+            cors {
+                configurationSource = corsConfigurationSource()
+            }
+            csrf {
+                disable()
+            }
         }
-
+        http.addFilterBefore(jwtAuthFilter(), UsernamePasswordAuthenticationFilter::class.java)
         return http.build()
     }
 
@@ -46,7 +61,25 @@ class UserAuthConfig {
     }
 
     @Bean
-    fun passwordEncoder(): PasswordEncoder{
+    fun passwordEncoder(): PasswordEncoder {
         return BCryptPasswordEncoder()
+    }
+
+    @Bean
+    fun jwtAuthFilter(): JwtAuthFilter {
+        return JwtAuthFilter()
+    }
+
+    @Bean
+    fun corsConfigurationSource(): CorsConfigurationSource {
+        val configuration = CorsConfiguration().apply {
+            allowedOrigins = mutableListOf("http://localhost:3000")
+            allowedMethods = mutableListOf("GET", "POST", "PUT", "DELETE", "OPTIONS")
+            allowedHeaders = mutableListOf("*")
+            allowCredentials = true
+        }
+        val source = UrlBasedCorsConfigurationSource()
+        source.registerCorsConfiguration("/**", configuration)
+        return source
     }
 }
