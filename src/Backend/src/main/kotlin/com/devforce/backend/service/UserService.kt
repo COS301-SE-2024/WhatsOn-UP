@@ -1,7 +1,7 @@
-package com.devforce.backend.services
+package com.devforce.backend.service
 
-import com.devforce.backend.dtos.ResponseDto
-import com.devforce.backend.dtos.UpdateUserDto
+import com.devforce.backend.dto.ResponseDto
+import com.devforce.backend.dto.UpdateUserDto
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import java.util.*

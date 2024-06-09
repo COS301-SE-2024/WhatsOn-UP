@@ -1,8 +1,8 @@
-package com.devforce.backend.controllers
+package com.devforce.backend.controller
 
-import com.devforce.backend.dtos.ResponseDto
-import com.devforce.backend.dtos.UpdateUserDto
-import com.devforce.backend.services.UserService
+import com.devforce.backend.dto.ResponseDto
+import com.devforce.backend.dto.UpdateUserDto
+import com.devforce.backend.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize

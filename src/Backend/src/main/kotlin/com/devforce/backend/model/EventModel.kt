@@ -1,6 +1,5 @@
-package com.devforce.backend.models
+package com.devforce.backend.model
 
-import com.devforce.backend.models.UserModel
 import jakarta.persistence.*
 import lombok.AllArgsConstructor
 import lombok.Builder

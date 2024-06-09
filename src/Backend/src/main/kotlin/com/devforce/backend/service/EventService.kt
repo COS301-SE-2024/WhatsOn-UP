@@ -1,8 +1,8 @@
-package com.devforce.backend.services
+package com.devforce.backend.service
 
-import com.devforce.backend.dtos.CreateEventDto
-import com.devforce.backend.dtos.ResponseDto
-import com.devforce.backend.dtos.UpdateEventDto
+import com.devforce.backend.dto.CreateEventDto
+import com.devforce.backend.dto.ResponseDto
+import com.devforce.backend.dto.UpdateEventDto
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime

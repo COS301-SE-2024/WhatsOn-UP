@@ -1,4 +1,4 @@
-package com.devforce.backend.dtos
+package com.devforce.backend.dto
 
 data class CreateEventDto(
     val name: String,

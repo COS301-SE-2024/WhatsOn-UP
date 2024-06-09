@@ -1,6 +1,6 @@
 package com.devforce.backend.security
 
-import com.devforce.backend.repos.UserRepo
+import com.devforce.backend.repo.UserRepo
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.User

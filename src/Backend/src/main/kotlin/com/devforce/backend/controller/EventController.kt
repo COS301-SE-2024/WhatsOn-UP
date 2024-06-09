@@ -1,9 +1,9 @@
-package com.devforce.backend.controllers
+package com.devforce.backend.controller
 
-import com.devforce.backend.dtos.CreateEventDto
-import com.devforce.backend.dtos.ResponseDto
-import com.devforce.backend.dtos.UpdateEventDto
-import com.devforce.backend.services.EventService
+import com.devforce.backend.dto.CreateEventDto
+import com.devforce.backend.dto.ResponseDto
+import com.devforce.backend.dto.UpdateEventDto
+import com.devforce.backend.service.EventService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize

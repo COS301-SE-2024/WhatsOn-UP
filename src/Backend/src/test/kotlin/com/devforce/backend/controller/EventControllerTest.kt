@@ -1,7 +1,7 @@
-package com.devforce.backend.controllers
+package com.devforce.backend.controller
 
-import com.devforce.backend.repos.EventRepo
-import com.devforce.backend.repos.UserRepo
+import com.devforce.backend.repo.EventRepo
+import com.devforce.backend.repo.UserRepo
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired

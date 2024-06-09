@@ -1,6 +1,6 @@
-package com.devforce.backend.repos
+package com.devforce.backend.repo
 
-import com.devforce.backend.models.EventModel
+import com.devforce.backend.model.EventModel
 import org.springframework.data.jpa.repository.JpaRepository
 import java.util.*
 

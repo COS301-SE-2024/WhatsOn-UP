@@ -1,4 +1,4 @@
-package com.devforce.backend.models
+package com.devforce.backend.model
 
 import jakarta.persistence.*
 import lombok.Builder
@@ -27,6 +27,9 @@ class UserModel{
     private var createdAt: LocalDateTime = LocalDateTime.now()
 
     private var updatedAt: LocalDateTime = LocalDateTime.now()
+
+    var jwtToken: String = ""
+    var refreshToken: String = ""
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id")
