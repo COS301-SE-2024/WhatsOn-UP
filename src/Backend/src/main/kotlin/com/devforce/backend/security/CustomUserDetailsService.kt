@@ -16,9 +16,11 @@ class CustomUserDetailsService: UserDetailsService {
     lateinit var userRepo: UserRepo
 
     override fun loadUserByUsername(email: String): UserDetails {
-        val user = userRepo.findByUsername(email)
+        val user = userRepo.findByEmail(email)
             ?: throw UsernameNotFoundException("User not found")
-        val authorities = user.roles.map { SimpleGrantedAuthority(it.name) }
-        return User(user.username, user.password, authorities)
+
+        val roleName = user.role?.name ?: "GENERAL"
+        val authorities = setOf(SimpleGrantedAuthority(roleName))
+        return User(user.email, user.password, authorities)
     }
 }

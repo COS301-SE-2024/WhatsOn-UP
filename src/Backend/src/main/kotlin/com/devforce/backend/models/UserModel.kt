@@ -20,21 +20,17 @@ class UserModel{
     var fullName: String = ""
 
     @Column(unique = true)
-    var username: String = "" //This is the user email
+    var email: String = "" //This is the user email
 
     var password: String = ""
 
-    var createdAt: LocalDateTime = LocalDateTime.now()
+    private var createdAt: LocalDateTime = LocalDateTime.now()
 
-    var updatedAt: LocalDateTime = LocalDateTime.now()
+    private var updatedAt: LocalDateTime = LocalDateTime.now()
 
-    @ManyToMany
-    @JoinTable(
-        name = "user_roles",
-        joinColumns = [JoinColumn(name = "user_id")],
-        inverseJoinColumns = [JoinColumn(name = "role_id")]
-    )
-    var roles: Set<RoleModel> = HashSet()
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "role_id")
+    var role: RoleModel? = null
 
     @ManyToMany
     @JoinTable(

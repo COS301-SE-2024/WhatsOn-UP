@@ -5,6 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository
 import java.util.UUID
 
 interface UserRepo : JpaRepository<UserModel, UUID> {
-    fun findByUsernameAndPassword(email: String, password: String): UserModel?
-    fun findByUsername(email: String): UserModel?
+    fun findByEmail(email: String): UserModel?
 }

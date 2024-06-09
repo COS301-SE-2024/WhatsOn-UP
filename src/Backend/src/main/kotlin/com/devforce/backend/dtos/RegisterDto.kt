@@ -1,8 +1,8 @@
-package com.devforce.backend.Dtos
+package com.devforce.backend.dtos
 
 
 data class RegisterDto(
-    val username: String,
+    val email: String,
     val password: String,
     val fullName: String
 )

@@ -1,6 +1,6 @@
-package com.devforce.backend.Dtos
+package com.devforce.backend.dtos
 
-data class ResponseDTO(
+data class ResponseDto(
     val status: String,
     val timestamp: Long,
     val body: Any

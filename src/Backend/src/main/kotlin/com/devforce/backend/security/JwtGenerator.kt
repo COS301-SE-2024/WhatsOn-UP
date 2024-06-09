@@ -10,11 +10,11 @@ import java.util.*
 @Component
 class JwtGenerator {
     fun generateToken(authentication: Authentication): String{
-        val username = authentication.name
+        val email = authentication.name
         val currentDate = Date()
         val expirationDate = Date(currentDate.time + EXPIRY)
         val token = Jwts.builder()
-            .setSubject(username)
+            .setSubject(email)
             .setIssuedAt(currentDate)
             .setExpiration(expirationDate)
             .signWith(io.jsonwebtoken.SignatureAlgorithm.HS512, SECRET)
