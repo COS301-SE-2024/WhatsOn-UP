@@ -1,17 +1,21 @@
-# WhatsOn-UP
 
-<p align="center">
+<p align="center" style="width:300px;height:300px;">
   <img src="docs/team-images/Logo.png" />
 </p>
+<h1 align="center"> WhatsOn@UP </h1>
 
-
+![GitHub issues](https://img.shields.io/github/issues/COS301-SE-2024/WhatsOn-UP)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/COS301-SE-2024/WhatsOn-UP)
+![GitHub Languages](https://img.shields.io/github/languages/count/COS301-SE-2024/WhatsOn-UP)
+![GitHub Last Commit](https://img.shields.io/github/last-commit/COS301-SE-2024/WhatsOn-UP)
+![GitHub RepoSize](https://img.shields.io/github/repo-size/COS301-SE-2024/WhatsOn-UP)
 ## Project description
 WhatsOn@UP system aims to be a central hub for all University of Pretoria events, providing a centralized platform for students and guests to easily find and manage events.
 
 ## Links
 [Demo](https://youtu.be/Zxwq3aW9ctU?si=zDBVisABTy_0_pVk)
 
-<table>
+<table align="center">
   <tr>
     <th>Video</th>
     <td><a href="https://drive.google.com/file/d/1NjTF3Wyfv0JfyUvZUSzZ3Qs84BKFjVUM/view?usp=sharing">Recorded demo video</a></td>
@@ -34,15 +38,16 @@ WhatsOn@UP system aims to be a central hub for all University of Pretoria events
   </tr>
 </table>
 
-
-## Project status
 ## Tech Stack
-![Flutter Badge](https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=Flutter&logoColor=white)
-![NestJS Badge](https://img.shields.io/badge/NestJS-E0234E?style=for-the-badge&logo=NestJS&logoColor=white)
-![Postgresql Badge](https://img.shields.io/badge/postgresql-4169E1?style=for-the-badge&logo=postgresql&logoColor=%23FFFFFF)
-![Jest Badge](https://img.shields.io/badge/jest-C21325?style=for-the-badge&logo=jest&logoColor=%23FFFFFF)
-![Node Badge](https://img.shields.io/badge/nodedotjs-%235FA04E?style=for-the-badge&logo=nodedotjs&logoColor=%23FFFFFF)
-![Amazonaws Badge](https://img.shields.io/badge/amazonaws-%23232F3E?style=for-the-badge&logo=amazonaws&logoColor=%23FFFFFF)
+<div align="center">
+  <h3 >Frontend</h3>
+
+  [![our frontend skills](https://skillicons.dev/icons?i=flutter,dart,swift)](https://skillicons.dev)
+
+  <h3 >Backend</h3>
+
+  [![our backend skills](https://skillicons.dev/icons?i=spring,kotlin,postgresql,gradle,aws)](https://skillicons.dev)
+</div>
 
 
 ## Team Members and Roles
