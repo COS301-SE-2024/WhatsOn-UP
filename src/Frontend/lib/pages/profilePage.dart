@@ -2,10 +2,13 @@
 import 'package:firstapp/pages/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firstapp/pages/application_event.dart';
+import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 class ProfilePage extends StatelessWidget {
   final String profileImageUrl;
+  final String userName;
+  final String userEmail;
 
-  const ProfilePage({required this.profileImageUrl}); // Constructor to initialize final variable
+  const ProfilePage({required this.profileImageUrl,required this.userName, required this.userEmail}); // Constructor to initialize final variable
 
   @override
   Widget build(BuildContext context) {
@@ -14,6 +17,7 @@ class ProfilePage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(onPressed: (){}, icon: const Icon(LineAwesomeIcons.angle_left_solid)),
         title: Text('Profile'),
         actions: [
           // onPressed:(){}, Icon(LineAwesomeIcons.moon)
@@ -34,10 +38,16 @@ class ProfilePage extends StatelessWidget {
               ),
               const SizedBox(height: 10,),
               Text(
-                'Name',
+                userName,
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 20),
+              SizedBox(height: 8),
+              Text(
+                userEmail,
+                style: TextStyle(fontSize: 18),
+              ),
+              SizedBox(height: 20),
               SizedBox(
                 width: 200,
                 child: ElevatedButton(
@@ -64,7 +74,9 @@ class ProfilePage extends StatelessWidget {
                     onTap: () {
                      Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => ApplicationEvent()),
+            MaterialPageRoute(builder: (context) => ApplicationEvent(profileImageUrl: profileImageUrl,
+              userName: userName,
+              userEmail: userEmail,)),
           );
                     },
                   ),

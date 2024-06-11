@@ -12,11 +12,23 @@ import 'package:firstapp/pages/profilePage.dart';
 // import 'package:firstapp/widgets/eventcard.dart';
 
 class HomePage extends StatefulWidget {
+  final String profileImageUrl;
+  final String userName;
+  final String userEmail;
+  const HomePage(
+      {
+        Key? key,
+        required this.profileImageUrl,
+        required this.userName,
+        required this.userEmail,
+      }
+      ): super(key: key);
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
@@ -89,7 +101,9 @@ class _HomePageState extends State<HomePage> {
       case 3:
         return const ExplorePage();
       case 4:
-        return const SettingsPage();
+        return  SettingsPage( profileImageUrl: widget.profileImageUrl,
+          userName: widget.userName,
+          userEmail: widget.userEmail,);
       default:
         return _buildHomePage();
     }
@@ -114,21 +128,24 @@ class _HomePageState extends State<HomePage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const ProfilePage(
-                              profileImageUrl:
-                                  'https://example.com/your-profile-image.jpg')),
+                          builder: (context) =>  ProfilePage(
+                            profileImageUrl: widget.profileImageUrl,
+                            userName: widget.userName,
+                            userEmail: widget.userEmail,
+                          ),
+                      ),
                     );
                   },
-                  child: const CircleAvatar(
+                  child:  CircleAvatar(
                     backgroundImage: NetworkImage(
-                        'https://example.com/profile-image.jpg'), // Replace the URL with your profile image URL
+                        widget.profileImageUrl), // Replace the URL with your profile image URL
                     radius:
                         24.0, // Adjust the size of the profile icon as needed
                   ),
                 ),
               ),
-              const Text(
-                'Welcome, Username',
+               Text(
+                'Welcome, ${widget.userName}',
                 style: TextStyle(
                   fontSize: 24.0,
                   fontWeight: FontWeight.bold,

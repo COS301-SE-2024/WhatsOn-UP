@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:firstapp/pages/signin_page.dart';
 import 'package:firstapp/pages/home_page.dart';
+import 'package:http/http.dart' as http;
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -130,7 +133,7 @@ class _LoginPageState extends State<LoginPage> {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: _simulateLogin,
+              onPressed: _login,
               style: ElevatedButton.styleFrom(
                 // backgroundColor: const Color.fromARGB(255, 255, 255, 255),
                 shape: RoundedRectangleBorder(
@@ -262,20 +265,53 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void _simulateLogin() {
+  Future<void> _login() async {
     if (_formKey.currentState!.validate()) {
       String email = emailController.text;
       String password = passwordController.text;
 
-      if (email == testingEmail && password == testingPassword) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => HomePage()),
+      // Replace with your API URL
+      final url = Uri.parse('http://localhost:8080/api/auth/login');
+
+      try {
+        final response = await http.post(
+          url,
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: jsonEncode(<String, String>{
+            'email': email,
+            'password': password,
+          }),
         );
-      } else {
+
+        if (response.statusCode == 200) {
+          final Map<String, dynamic> data = jsonDecode(response.body);
+          String userName = data['userName'];
+          // String profileImageUrl = data['profileImageUrl'];
+          String userEmail = data['email'];
+
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => HomePage(
+                userName: userName,
+                profileImageUrl: "http/example",
+                userEmail: userEmail,
+              ),
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Invalid email or password'),
+            ),
+          );
+        }
+      } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Invalid email or password'),
+          SnackBar(
+            content: Text('An error occurred: $e'),
           ),
         );
       }

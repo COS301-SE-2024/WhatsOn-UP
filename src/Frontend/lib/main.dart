@@ -9,6 +9,7 @@ import 'package:firstapp/pages/signin_page.dart';
 import 'package:firstapp/screens/splash.dart';
 import 'package:provider/provider.dart';
 import 'package:firstapp/pages/settings_page.dart';
+import 'package:firstapp/pages/profilePage.dart';
 
 
 

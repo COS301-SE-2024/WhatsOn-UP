@@ -171,7 +171,7 @@ class _SigninPage extends State<SigninPage> {
 
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => HomePage()),
+                    MaterialPageRoute(builder: (context) => LoginPage()),
                   );
                 }
               },
