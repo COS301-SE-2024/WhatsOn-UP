@@ -31,6 +31,8 @@ class UserModel{
     var jwtToken: String = ""
     var refreshToken: String = ""
 
+//    var userProfile: String = ""
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id")
     var role: RoleModel? = null
