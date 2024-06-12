@@ -36,6 +36,9 @@ class AuthService {
     @Autowired
     lateinit var jwtGenerator: JwtGenerator
 
+    @Autowired
+    lateinit var checkJwt: CheckJwt
+
     fun registerUser(userDTO: RegisterDto): ResponseEntity<ResponseDto> {
         if (userRepo.findByEmail(userDTO.email) != null) {
             return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Email is already taken"))
@@ -87,8 +90,9 @@ class AuthService {
     }
 
     fun refreshToken(jwtToken: String, refreshToken: String): ResponseEntity<ResponseDto> {
-        if (!jwtGenerator.validateToken(jwtToken)) {
-            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Invalid token"))
+        val response = checkJwt.check(jwtToken)
+        if (response != null) {
+            return response
         }
 
         val refreshedDto = jwtGenerator.refreshToken(jwtToken, refreshToken)
@@ -97,14 +101,9 @@ class AuthService {
     }
 
     fun logoutUser(token: String): ResponseEntity<ResponseDto> {
-        if (!jwtGenerator.validateToken(token)) {
-            return ResponseEntity.badRequest().body(
-                ResponseDto(
-                    "error",
-                    System.currentTimeMillis(),
-                    "Invalid token"
-                )
-            )
+        val response = checkJwt.check(token)
+        if (response != null) {
+            return response
         }
 
         val email = jwtGenerator.getUsernameFromToken(token)
@@ -127,8 +126,9 @@ class AuthService {
 
 
     fun getUser(token: String): ResponseEntity<ResponseDto> {
-        if (!jwtGenerator.validateToken(token)) {
-            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Invalid token"))
+        val response = checkJwt.check(token)
+        if (response != null) {
+            return response
         }
 
         val email = jwtGenerator.getUsernameFromToken(token)
@@ -151,13 +151,13 @@ class AuthService {
     }
 
     fun deleteUser(token: String): ResponseEntity<ResponseDto> {
-        if (!jwtGenerator.validateToken(token)) {
-            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Invalid token"))
+        val response = checkJwt.check(token)
+        if (response != null) {
+            return response
         }
 
         val email = jwtGenerator.getUsernameFromToken(token)
         val user = userRepo.findByEmail(email)!!
-
         userRepo.delete(user)
 
         return ResponseEntity.ok(

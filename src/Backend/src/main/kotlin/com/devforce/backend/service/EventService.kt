@@ -1,8 +1,10 @@
 package com.devforce.backend.service
 
-import com.devforce.backend.dto.CreateEventDto
-import com.devforce.backend.dto.ResponseDto
-import com.devforce.backend.dto.UpdateEventDto
+import com.devforce.backend.dto.*
+import com.devforce.backend.model.EventModel
+import com.devforce.backend.repo.EventRepo
+import com.devforce.backend.repo.UserRepo
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
@@ -10,40 +12,67 @@ import java.util.*
 
 @Service
 class EventService {
-    // To do: Implement function to create a new event
-    fun createEvent(createEventDto: CreateEventDto): ResponseEntity<ResponseDto> {
-        // Implementation goes here
-        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Method needs to be implemented"))
+    @Autowired
+    lateinit var checkJwt: CheckJwt
+
+    @Autowired
+    lateinit var userRepo: UserRepo
+
+    @Autowired
+    lateinit var eventRepo: EventRepo
+
+
+
+    fun createEvent(createEventDto: CreateEventDto, token: String): ResponseEntity<ResponseDto> {
+        val response = checkJwt.check(token)
+        if (response != null) {
+            return response
+        }
+
+        val email = checkJwt.jwtGenerator.getUsernameFromToken(token)
+        val user = userRepo.findByEmail(email)!!
+
+        val event = EventModel().apply {
+            this.title = createEventDto.title
+            this.description = createEventDto.description
+            this.startTime = createEventDto.startDate
+            this.endTime = createEventDto.endDate
+            this.location = createEventDto.location
+            this.maxAttendees = createEventDto.maxParticipants ?: 10
+            this.metadata = createEventDto.metadata ?: ""
+            this.isPrivate = createEventDto.isPrivate ?: false
+            this.hosts = setOf(user)
+        }
+
+        eventRepo.save(event)
+        
+        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Event added successfully"))
         )
     }
 
     // To do: Implement function to retrieve all events
     fun getAllEvents(): ResponseEntity<ResponseDto> {
         // Implementation goes here
-        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Method needs to be implemented"))
+        val events = eventRepo.findAll()
+        val eventsDto = events.map { event -> AllEventsDto(event) }
+        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto)
         )
     }
 
     // To do: Implement function to update an existing event
     fun updateEvent(id: UUID, updateEventDto: UpdateEventDto): ResponseEntity<ResponseDto> {
         // Implementation goes here
-        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Method needs to be implemented"))
+        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Event updated successfully"))
         )
     }
 
     // To do: Implement function to delete an event
     fun deleteEvent(id: UUID): ResponseEntity<ResponseDto> {
-        // Implementation goes here
+
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Method needs to be implemented"))
         )
     }
 
-    // To do: Implement function to retrieve a specific event by ID
-    fun getEvent(id: UUID): ResponseEntity<ResponseDto> {
-        // Implementation goes here
-        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Method needs to be implemented"))
-        )
-    }
 
     // To do: Implement function to search events based on criteria
     fun searchEvents(

@@ -54,7 +54,8 @@ class UserController {
 
     @PutMapping("/update_profile")
     @PreAuthorize("isAuthenticated()")
-    fun updateProfile(@RequestBody user: UpdateUserDto): ResponseEntity<ResponseDto> {
-        return userService.updateProfile(user)
+    fun updateProfile(@RequestBody userDto: UpdateUserDto, @RequestHeader("Authorization") token: String): ResponseEntity<ResponseDto> {
+        return userService.updateProfile(userDto, token)
     }
+
 }

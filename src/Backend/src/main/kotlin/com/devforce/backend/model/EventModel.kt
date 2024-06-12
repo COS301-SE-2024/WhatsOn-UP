@@ -20,7 +20,7 @@ class EventModel{
     @Column(columnDefinition = "UUID")
     var id: UUID = UUID.randomUUID()
 
-    var name: String = ""
+    var title: String = ""
     var description: String = ""
     var metadata: String = ""
 
@@ -32,14 +32,20 @@ class EventModel{
     private var createdAt: LocalDateTime = LocalDateTime.now()
     private var updatedAt: LocalDateTime = LocalDateTime.now()
 
-    var hosts: String = ""
-
     var location: String = ""
     var startTime: LocalDateTime = LocalDateTime.now()
     var endTime: LocalDateTime = LocalDateTime.now()
 
     var maxAttendees: Int = 0
     var isPrivate: Boolean = false
+
+    @ManyToMany
+    @JoinTable(
+        name = "event_hosts",
+        joinColumns = [JoinColumn(name = "event_id")],
+        inverseJoinColumns = [JoinColumn(name = "user_id")]
+    )
+    var hosts: Set<UserModel> = HashSet()
 
     @ManyToMany
     @JoinTable(
