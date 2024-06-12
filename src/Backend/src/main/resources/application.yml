@@ -12,3 +12,11 @@ spring:
         format_sql: true
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+  data:
+    elasticsearch:
+      client:
+        reactive:
+          endpoints: localhost:9200  # Elasticsearch server
+      repositories:
+        enabled: true
