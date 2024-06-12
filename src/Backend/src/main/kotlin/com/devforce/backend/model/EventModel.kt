@@ -17,7 +17,7 @@ import java.util.*
 @NoArgsConstructor
 @AllArgsConstructor
 @Document(indexName = "events")
-class EventModel{
+class EventModel {
     @jakarta.persistence.Id
     @ESId
     @GeneratedValue
@@ -37,7 +37,6 @@ class EventModel{
     private var updatedAt: LocalDateTime = LocalDateTime.now()
 
     var hosts: String = ""
-
     var location: String = ""
     var startTime: LocalDateTime = LocalDateTime.now()
     var endTime: LocalDateTime = LocalDateTime.now()
@@ -71,6 +70,7 @@ class EventModel{
     fun preUpdate() {
         updatedAt = LocalDateTime.now()
     }
+
     fun getEsId(): String {
         return id.toString()
     }
