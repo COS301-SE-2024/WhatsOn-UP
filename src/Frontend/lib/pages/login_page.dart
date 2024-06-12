@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:firstapp/pages/signin_page.dart';
 import 'package:firstapp/pages/home_page.dart';
+import 'package:firstapp/services/LoginServices.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -267,18 +268,36 @@ class _LoginPageState extends State<LoginPage> {
       String email = emailController.text;
       String password = passwordController.text;
 
-      if (email == testingEmail && password == testingPassword) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => HomePage()),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Invalid email or password'),
-          ),
-        );
-      }
+      // Call the postRequest function
+      postRequest(email, password).then((response) {
+        if (response['error'] != null) {
+          // ScaffoldMessenger.of(context).showSnackBar(
+          //   SnackBar(
+          //     content: Text('An error occurred: ${response['error']}'),
+          //   ),
+          // );
+          print('An error occurred: ${response['error']}');
+        } else {
+          // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(builder: (context) => HomePage()),
+          // );
+          print('Login successful');
+        }
+      });
+
+      // if (email == testingEmail && password == testingPassword) {
+      //   Navigator.push(
+      //     context,
+      //     MaterialPageRoute(builder: (context) => HomePage()),
+      //   );
+      // } else {
+      //   ScaffoldMessenger.of(context).showSnackBar(
+      //     const SnackBar(
+      //       content: Text('Invalid email or password'),
+      //     ),
+      //   );
+      // }
     }
   }
 }
