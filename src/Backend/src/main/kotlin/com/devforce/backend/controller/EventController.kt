@@ -50,8 +50,8 @@ class EventController {
     fun searchEvents(
         @RequestParam(required = false) title: String?,
         @RequestParam(required = false) description: String?,
-        @RequestParam(required = false) startDate: LocalDateTime?,
-        @RequestParam(required = false) endDate: LocalDateTime?
+        @RequestParam(required = false) startDate: Long?,
+        @RequestParam(required = false) endDate: Long?
     ): ResponseEntity<ResponseDto> {
         return eventService.searchEvents(title, description, startDate, endDate)
     }
