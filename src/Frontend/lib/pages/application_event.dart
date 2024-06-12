@@ -4,14 +4,17 @@ import 'package:flutter/cupertino.dart';
 
 class ApplicationEvent extends StatefulWidget {
 
-  final String profileImageUrl;
+  // final String profileImageUrl;
   final String userName;
   final String userEmail;
+  // final String role;
   const ApplicationEvent({
     Key? key,
-    required this.profileImageUrl,
+    // required this.profileImageUrl,
     required this.userName,
     required this.userEmail,
+
+    // required this.role,
   }): super(key: key);
   @override
   State<ApplicationEvent> createState() => _ApplicationEventState();
@@ -174,9 +177,10 @@ class _ApplicationEventState extends State<ApplicationEvent> {
         context,
         MaterialPageRoute(
             builder: (context) =>  ProfilePage(
-              profileImageUrl: widget.profileImageUrl,
+              // profileImageUrl: widget.profileImageUrl,
               userName: widget.userName,
               userEmail: widget.userEmail,
+              // role: widget.role,
             ),
         ),
       );

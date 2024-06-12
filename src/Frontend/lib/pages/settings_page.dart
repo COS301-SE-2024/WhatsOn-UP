@@ -5,14 +5,16 @@ import 'package:firstapp/pages/profilePage.dart';
 
 class SettingsPage extends StatefulWidget {
 
-  final String profileImageUrl;
+  // final String profileImageUrl;
   final String userName;
   final String userEmail;
+  // final String role;
   const SettingsPage({
     Key? key,
-    required this.profileImageUrl,
+    // required this.profileImageUrl,
     required this.userName,
     required this.userEmail,
+    // required this.role;
   }): super(key: key);
 
   @override
@@ -55,9 +57,10 @@ class _SettingsPageState extends State<SettingsPage> {
                     Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => ProfilePage(
-                      profileImageUrl: widget.profileImageUrl,
+                      // profileImageUrl: //widget.profileImageUrl,
                       userName: widget.userName,
                       userEmail: widget.userEmail,
+                      // role: widget.role;
                     ),),
                    );
                     },

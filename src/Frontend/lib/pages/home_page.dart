@@ -12,15 +12,17 @@ import 'package:firstapp/pages/profilePage.dart';
 // import 'package:firstapp/widgets/eventcard.dart';
 
 class HomePage extends StatefulWidget {
-  final String profileImageUrl;
+  // final String profileImageUrl;
   final String userName;
   final String userEmail;
+  // final String role;
   const HomePage(
       {
         Key? key,
-        required this.profileImageUrl,
+        // required this.profileImageUrl,
         required this.userName,
         required this.userEmail,
+        //  required this.role;
       }
       ): super(key: key);
   @override
@@ -101,9 +103,11 @@ class _HomePageState extends State<HomePage> {
       case 3:
         return const ExplorePage();
       case 4:
-        return  SettingsPage( profileImageUrl: widget.profileImageUrl,
+         return  SettingsPage( //profileImageUrl: widget.profileImageUrl,
           userName: widget.userName,
-          userEmail: widget.userEmail,);
+          userEmail: widget.userEmail,
+           // role:widget.role;
+         );
       default:
         return _buildHomePage();
     }
@@ -129,16 +133,17 @@ class _HomePageState extends State<HomePage> {
                       context,
                       MaterialPageRoute(
                           builder: (context) =>  ProfilePage(
-                            profileImageUrl: widget.profileImageUrl,
+                            // profileImageUrl: widget.profileImageUrl,
                             userName: widget.userName,
                             userEmail: widget.userEmail,
+                            // role: widget.role,
                           ),
                       ),
                     );
                   },
                   child:  CircleAvatar(
                     backgroundImage: NetworkImage(
-                        widget.profileImageUrl), // Replace the URL with your profile image URL
+                        "http/image"), // Replace the URL with your profile image URL
                     radius:
                         24.0, // Adjust the size of the profile icon as needed
                   ),
@@ -154,19 +159,6 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
           SizedBox(height: 20.0),
-          // Container(
-          //   padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          //   decoration: BoxDecoration(
-          //     border: Border.all(color: borderColour),
-          //     borderRadius: BorderRadius.circular(8.0),
-          //   ),
-          //   child: IconButton(
-          //     onPressed: () {
-          //       showSearch(context: context, delegate: DataSearch());
-          //     },
-          //     icon: const Icon(Icons.search),
-          //   ),
-          // ),
 
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),

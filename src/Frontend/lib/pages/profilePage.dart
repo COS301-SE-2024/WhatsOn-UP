@@ -4,11 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:firstapp/pages/application_event.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 class ProfilePage extends StatelessWidget {
-  final String profileImageUrl;
+  // final String profileImageUrl;
   final String userName;
   final String userEmail;
 
-  const ProfilePage({required this.profileImageUrl,required this.userName, required this.userEmail}); // Constructor to initialize final variable
+  const ProfilePage({
+  // required this.profileImageUrl,
+   required this.userName,
+  required this.userEmail}); // Constructor to initialize final variable
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +20,7 @@ class ProfilePage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(onPressed: (){}, icon: const Icon(LineAwesomeIcons.angle_left_solid)),
+        leading: IconButton(onPressed: (){ Navigator.pop(context);}, icon: const Icon(LineAwesomeIcons.angle_left_solid)),
         title: Text('Profile'),
         actions: [
           // onPressed:(){}, Icon(LineAwesomeIcons.moon)
@@ -32,7 +35,7 @@ class ProfilePage extends StatelessWidget {
                 width: 120,
                 height: 120,
                 child: CircleAvatar(
-                  backgroundImage: NetworkImage(profileImageUrl),
+                  backgroundImage: NetworkImage("http.example"),
                   radius: 24.0,
                 ),
               ),
@@ -74,7 +77,8 @@ class ProfilePage extends StatelessWidget {
                     onTap: () {
                      Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => ApplicationEvent(profileImageUrl: profileImageUrl,
+            MaterialPageRoute(builder: (context) => ApplicationEvent(
+              //profileImageUrl: profileImageUrl,
               userName: userName,
               userEmail: userEmail,)),
           );
@@ -149,5 +153,5 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  
+
 }
