@@ -1,13 +1,17 @@
 FROM devforce123/backend:latest
 
+RUN rm -rf /home/ubuntu/*
+
 WORKDIR /home/ubuntu
 
 COPY . .
 
 RUN chmod +x ./gradlew
 
-RUN ./gradlew build
-RUN ./gradlew test
+RUN sed -i 's/\r//' gradlew
 
-# Command to run the application
+RUN ./gradlew build
+
+EXPOSE 8080
 CMD ["./gradlew", "bootRun"]
+

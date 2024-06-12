@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:firstapp/pages/signin_page.dart';
 import 'package:firstapp/pages/home_page.dart';
-import 'package:http/http.dart' as http;
+import 'package:firstapp/services/LoginServices.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -271,50 +271,80 @@ class _LoginPageState extends State<LoginPage> {
       String password = passwordController.text;
 
       // Replace with your API URL
-      final url = Uri.parse('http://localhost:8080/api/auth/login');
+      // final url = Uri.parse('http://localhost:8080/api/auth/login');
 
-      try {
-        final response = await http.post(
-          url,
-          headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8',
-          },
-          body: jsonEncode(<String, String>{
-            'email': email,
-            'password': password,
-          }),
-        );
+      // try {
+      //   final response = await http.post(
+      //     url,
+      //     headers: <String, String>{
+      //       'Content-Type': 'application/json; charset=UTF-8',
+      //     },
+      //     body: jsonEncode(<String, String>{
+      //       'email': email,
+      //       'password': password,
+      //     }),
+      //   );
 
-        if (response.statusCode == 200) {
-          final Map<String, dynamic> data = jsonDecode(response.body);
-          String userName = data['userName'];
-          // String profileImageUrl = data['profileImageUrl'];
-          String userEmail = data['email'];
+      //   if (response.statusCode == 200) {
+      //     final Map<String, dynamic> data = jsonDecode(response.body);
+      //     String userName = data['userName'];
+      //     // String profileImageUrl = data['profileImageUrl'];
+      //     String userEmail = data['email'];
 
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => HomePage(
-                userName: userName,
-                profileImageUrl: "http/example",
-                userEmail: userEmail,
-              ),
-            ),
-          );
+      //     Navigator.push(
+      //       context,
+      //       MaterialPageRoute(
+      //         builder: (context) => HomePage(
+      //           userName: userName,
+      //           profileImageUrl: "http/example",
+      //           userEmail: userEmail,
+      //         ),
+      //       ),
+      //     );
+      //   } else {
+      //     ScaffoldMessenger.of(context).showSnackBar(
+      //       const SnackBar(
+      //         content: Text('Invalid email or password'),
+      //       ),
+      //     );
+      //   }
+      // } catch (e) {
+      //   ScaffoldMessenger.of(context).showSnackBar(
+      //     SnackBar(
+      //       content: Text('An error occurred: $e'),
+      //     ),
+      //   );
+      // }
+      // Call the postRequest function
+      postRequest(email, password).then((response) {
+        if (response['error'] != null) {
+          // ScaffoldMessenger.of(context).showSnackBar(
+          //   SnackBar(
+          //     content: Text('An error occurred: ${response['error']}'),
+          //   ),
+          // );
+          print('An error occurred: ${response['error']}');
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Invalid email or password'),
-            ),
-          );
+          // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(builder: (context) => HomePage()),
+          // );
+          print('Login successful');
         }
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('An error occurred: $e'),
-          ),
-        );
-      }
+      });
+
+      // if (email == testingEmail && password == testingPassword) {
+      //   Navigator.push(
+      //     context,
+      //     MaterialPageRoute(builder: (context) => HomePage()),
+      //   );
+      // } else {
+      //   ScaffoldMessenger.of(context).showSnackBar(
+      //     const SnackBar(
+      //       content: Text('Invalid email or password'),
+      //     ),
+      //   );
+      // }
     }
   }
 }

@@ -1,6 +1,5 @@
-package com.devforce.backend.models
+package com.devforce.backend.model
 
-import com.devforce.backend.models.UserModel
 import jakarta.persistence.*
 import lombok.AllArgsConstructor
 import lombok.Builder
@@ -23,15 +22,15 @@ class EventModel{
 
     var name: String = ""
     var description: String = ""
-    var metadata: String = "" // You can store metadata/tags as a JSON string or any other appropriate format
+    var metadata: String = ""
 
     @ElementCollection
     @CollectionTable(name = "event_media", joinColumns = [JoinColumn(name = "event_id")])
     @Column(name = "media_link")
     var eventMedia: List<String> = ArrayList()
 
-    var createdAt: LocalDateTime = LocalDateTime.now()
-    var updatedAt: LocalDateTime = LocalDateTime.now()
+    private var createdAt: LocalDateTime = LocalDateTime.now()
+    private var updatedAt: LocalDateTime = LocalDateTime.now()
 
     var hosts: String = ""
 
