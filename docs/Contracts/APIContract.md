@@ -7,7 +7,7 @@
 - Method: POST
 - Path: /register
 - Headers: Content-Type: application/json
-- Body: 
+- Data: 
   ```json
   {
     "email": "string",
@@ -19,7 +19,7 @@
 **Responses:**
 - 200 OK
   - Content-Type: application/json
-  - Body:
+  - Data:
     ```json
     {
       "status": "success",
@@ -34,7 +34,7 @@
     ```
 - 400 Bad Request
   - Content-Type: application/json
-  - Body:
+  - Data:
     ```json
     {
       "status": "error",
@@ -49,7 +49,7 @@
 - Method: POST
 - Path: /login
 - Headers: Content-Type: application/json
-- Body:
+- Data:
   ```json
   {
     "email": "string",
@@ -60,7 +60,7 @@
 **Responses:**
 - 200 OK
   - Content-Type: application/json
-  - Body:
+  - Data:
     ```json
     {
       "status": "success",
@@ -75,7 +75,7 @@
     ```
 - 400 Bad Request
   - Content-Type: application/json
-  - Body:
+  - Data:
     ```json
     {
       "status": "error",
@@ -95,7 +95,7 @@
 **Responses:**
 - 200 OK
   - Content-Type: application/json
-  - Body:
+  - Data:
     ```json
     {
       "status": "success",
@@ -119,7 +119,7 @@
     ```
 - 500 Internal Server Error
   - Content-Type: application/json
-  - Body:
+  - Data:
     ```json
     {
       "status": "error",
@@ -134,7 +134,7 @@
 - Method: POST
 - Path: /add_event
 - Headers: Content-Type: application/json
-- Body:
+- Data:
   ```json
   {
     "name": "string",
@@ -153,7 +153,7 @@
 **Responses:**
 - 200 OK
   - Content-Type: application/json
-  - Body:
+  - Data:
     ```json
     {
       "status": "success",
@@ -177,7 +177,7 @@
     ```
 - 400 Bad Request
   - Content-Type: application/json
-  - Body:
+  - Data:
     ```json
     {
       "status": "error",
@@ -192,7 +192,7 @@
 - Method: POST
 - Path: /delete_event
 - Headers: Content-Type: application/json
-- Body:
+- Data:
   ```json
   {
     "eventId": "string (UUID)"
@@ -202,7 +202,7 @@
 **Responses:**
 - 200 OK
   - Content-Type: application/json
-  - Body:
+  - Data:
     ```json
     {
       "status": "success",
@@ -212,7 +212,7 @@
     ```
 - 404 Not Found
   - Content-Type: application/json
-  - Body:
+  - Data:
     ```json
     {
       "status": "error",
@@ -222,7 +222,7 @@
     ```
 - 400 Bad Request
   - Content-Type: application/json
-  - Body:
+  - Data:
     ```json
     {
       "status": "error",
@@ -237,7 +237,7 @@
 - Method: POST
 - Path: /update_event
 - Headers: Content-Type: application/json
-- Body:
+- Data:
   ```json
   {
     "eventId": "string (UUID)",
@@ -257,7 +257,7 @@
 **Responses:**
 - 200 OK
   - Content-Type: application/json
-  - Body:
+  - Data:
     ```json
     {
       "id": "string",
@@ -275,7 +275,7 @@
     ```
 - 404 Not Found
   - Content-Type: application/json
-  - Body:
+  - Data:
     ```json
     {
       "status": "error",
@@ -285,7 +285,7 @@
     ```
 - 400 Bad Request
   - Content-Type: application/json
-  - Body:
+  - Data:
     ```json
     {
       "status": "error",
