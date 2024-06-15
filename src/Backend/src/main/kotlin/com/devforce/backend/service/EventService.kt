@@ -5,8 +5,9 @@ import com.devforce.backend.dto.ResponseDto
 import com.devforce.backend.dto.UpdateEventDto
 import com.devforce.backend.model.EventModel
 import com.devforce.backend.repo.EventRepo
-import com.devforce.backend.repo.EventSearchRepo
+import com.devforce.backend.repo.elasticSearch.EventElasticsearchRepo
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
@@ -17,8 +18,8 @@ import java.util.*
 
 @Service
 class EventService @Autowired constructor(
-    private val eventRepo: EventRepo,
-    private val eventSearchRepo: EventSearchRepo
+    @Qualifier("customEventRepo")  private val eventRepo: EventRepo,
+    @Qualifier("customEventElasticsearchRepo") private val eventElasticsearchRepo: EventElasticsearchRepo
 ) {
 
     // To do: Implement function to create a new event
@@ -35,11 +36,9 @@ class EventService @Autowired constructor(
             isPrivate = event.isPrivate
         }
         val savedEvent = eventRepo.save(eventModel)
-        eventSearchRepo.save(savedEvent)
+        eventElasticsearchRepo.save(savedEvent)
         return ResponseEntity.ok().body(ResponseDto("Event created successfully", System.currentTimeMillis(), savedEvent))
     }
-
-
 
     // To do: Implement function to retrieve all events
     fun getAllEvents(): ResponseEntity<ResponseDto> {
@@ -62,23 +61,20 @@ class EventService @Autowired constructor(
             updateEventDto.isPrivate?.let { isPrivate = it }
         }
         val updatedEvent = eventRepo.save(existingEvent)
-        eventSearchRepo.save(updatedEvent)
+        eventElasticsearchRepo.save(updatedEvent)
         return ResponseEntity.ok(ResponseDto("Event updated successfully", System.currentTimeMillis(), updatedEvent))
     }
-
 
     // To do: Implement function to delete an event
     fun deleteEvent(id: UUID): ResponseEntity<ResponseDto> {
         if (eventRepo.existsById(id)) {
             eventRepo.deleteById(id)
-            eventSearchRepo.deleteById(id.toString())
+            eventElasticsearchRepo.deleteById(id.toString())
             return ResponseEntity.ok(ResponseDto("Event deleted successfully", System.currentTimeMillis(), emptyMap<String, Any>()))
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseDto("Event not found", System.currentTimeMillis(), mapOf("id" to id.toString())))
         }
     }
-
-
 
     fun getEvent(id: UUID): ResponseEntity<ResponseDto> {
         val event = eventRepo.findById(id)
@@ -88,8 +84,6 @@ class EventService @Autowired constructor(
             ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseDto("Event not found", System.currentTimeMillis(), mapOf("id" to id.toString())))
         }
     }
-
-
 
     // To do: Implement function to search events based on criteria
     fun searchEvents(
@@ -101,10 +95,10 @@ class EventService @Autowired constructor(
         val results = mutableListOf<EventModel>()
 
         if (!title.isNullOrBlank()) {
-            results.addAll(eventSearchRepo.findByName(title))
+            results.addAll(eventElasticsearchRepo.findByName(title))
         }
         if (!description.isNullOrBlank()) {
-            results.addAll(eventSearchRepo.findByDescription(description))
+            results.addAll(eventElasticsearchRepo.findByDescription(description))
         }
         // Implement search by date range logic if needed
 
