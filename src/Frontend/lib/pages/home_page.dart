@@ -9,6 +9,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:firstapp/pages/searchbar.dart';
 import 'package:firstapp/pages/data_search.dart';
 import 'package:firstapp/pages/profilePage.dart';
+
+import '../screens/SearchScreen.dart';
 // import 'package:firstapp/widgets/eventcard.dart';
 
 class HomePage extends StatefulWidget {
@@ -65,40 +67,12 @@ class _HomePageState extends State<HomePage> {
         description: 'This is a test description for Event 4'),
   ];
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        // color: Colors.grey[200],
-        child: _getSelectedPage(_selectedIndex),
-      ),
-      bottomNavigationBar: NavBar(
-        selectedIndex: _selectedIndex,
-        onItemTapped: _onItemTapped,
-      ),
-    );
-  }
-
-  Widget _getSelectedPage(int index) {
-    switch (index) {
-      case 0:
-        return _buildHomePage();
-      case 1:
-        return const RsvpEventsPage();
-      case 2:
-        return const CalendarPage();
-      case 3:
-        return const ExplorePage();
-      case 4:
-        return const SettingsPage();
-      default:
-        return _buildHomePage();
-    }
-  }
-
   Widget _buildHomePage() {
     final theme = Theme.of(context);
-    final borderColour = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
-    final textColour = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
+    final borderColour =
+    theme.brightness == Brightness.dark ? Colors.white : Colors.black;
+    final textColour =
+    theme.brightness == Brightness.dark ? Colors.white : Colors.black;
 
     return SingleChildScrollView(
       child: Column(
@@ -114,16 +88,16 @@ class _HomePageState extends State<HomePage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const ProfilePage(
-                              profileImageUrl:
-                                  'https://example.com/your-profile-image.jpg')),
+                        builder: (context) => const ProfilePage(
+                            profileImageUrl:
+                            'https://example.com/your-profile-image.jpg'),
+                      ),
                     );
                   },
                   child: const CircleAvatar(
                     backgroundImage: NetworkImage(
-                        'https://example.com/profile-image.jpg'), // Replace the URL with your profile image URL
-                    radius:
-                        24.0, // Adjust the size of the profile icon as needed
+                        'https://example.com/profile-image.jpg'),
+                    radius: 24.0,
                   ),
                 ),
               ),
@@ -137,20 +111,6 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
           SizedBox(height: 20.0),
-          // Container(
-          //   padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          //   decoration: BoxDecoration(
-          //     border: Border.all(color: borderColour),
-          //     borderRadius: BorderRadius.circular(8.0),
-          //   ),
-          //   child: IconButton(
-          //     onPressed: () {
-          //       showSearch(context: context, delegate: DataSearch());
-          //     },
-          //     icon: const Icon(Icons.search),
-          //   ),
-          // ),
-
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: Center(
@@ -166,9 +126,12 @@ class _HomePageState extends State<HomePage> {
                       ),
                       child: TextButton.icon(
                         onPressed: () {
-                          showSearch(
-                            context: context,
-                            delegate: DataSearch(),
+                          // Navigate to SearchScreen when Search button is pressed
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SearchScreen(),
+                            ),
                           );
                         },
                         icon: Icon(Icons.search, color: textColour),
@@ -194,8 +157,7 @@ class _HomePageState extends State<HomePage> {
                             builder: (BuildContext context) {
                               return AlertDialog(
                                 title: Text('Filter Options'),
-                                content:
-                                    Text('Coming soon'),
+                                content: Text('Coming soon'),
                                 actions: [
                                   TextButton(
                                     onPressed: () {
@@ -220,74 +182,6 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-
-          //  Widget062(),
-          // Card(
-          //   margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-          //   child: Padding(
-          //     padding: const EdgeInsets.all(16.0),
-          //     child: Column(
-          //       crossAxisAlignment: CrossAxisAlignment.start,
-          //       children: [
-          //         const Text(
-          //           'Featured Events',
-          //           style: TextStyle(
-          //             fontSize: 18.0,
-          //             fontWeight: FontWeight.bold,
-          //           ),
-          //         ),
-          //         const SizedBox(height: 8.0),
-          //         Row(
-          //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //           children: [
-          //             const Column(
-          //               crossAxisAlignment: CrossAxisAlignment.start,
-          //               children: [
-          //                 Text(
-          //                   'Event 1',
-          //                   style: TextStyle(
-          //                     fontWeight: FontWeight.bold,
-          //                   ),
-          //                 ),
-          //                 Text('Date: 01/06/2024'),
-          //               ],
-          //             ),
-          //             ElevatedButton(
-          //               onPressed: () {
-          //                 // Handle event RSVP
-          //               },
-          //               child: const Text('RSVP'),
-          //             ),
-          //           ],
-          //         ),
-          //         const SizedBox(height: 16.0),
-          //         Row(
-          //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //           children: [
-          //             const Column(
-          //               crossAxisAlignment: CrossAxisAlignment.start,
-          //               children: [
-          //                 Text(
-          //                   'Event 2',
-          //                   style: TextStyle(
-          //                     fontWeight: FontWeight.bold,
-          //                   ),
-          //                 ),
-          //                 Text('Date: 15/06/2024'),
-          //               ],
-          //             ),
-          //             ElevatedButton(
-          //               onPressed: () {
-          //                 // Handle event RSVP
-          //               },
-          //               child: const Text('RSVP'),
-          //             ),
-          //           ],
-          //         ),
-          //       ],
-          //     ),
-          //   ),
-          // ),
           SizedBox(height: 20.0),
           const Padding(
             padding: EdgeInsets.all(16.0),
@@ -339,5 +233,11 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    throw UnimplementedError();
   }
 }
