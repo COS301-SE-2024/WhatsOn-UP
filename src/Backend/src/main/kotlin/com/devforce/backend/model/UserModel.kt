@@ -15,7 +15,7 @@ class UserModel{
     @Id
     @GeneratedValue
     @Column(columnDefinition = "UUID")
-    var id: UUID = UUID.randomUUID()
+    var userId: UUID = UUID.randomUUID()
 
     var fullName: String = ""
 

@@ -19,7 +19,7 @@ data class AllEventsDto(
     val invitees: List<PartialUser>
 ) {
     constructor(event: EventModel) : this(
-        id = event.id.toString(),
+        id = event.eventId.toString(),
         title = event.title,
         description = event.description,
         metadata = event.metadata,

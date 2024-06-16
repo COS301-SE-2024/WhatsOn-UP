@@ -137,8 +137,9 @@ class AuthService {
         val userCreds = mapOf(
             "email" to user.email,
             "role" to user.role?.name,
-            "id" to user.id,
-            "fullName" to user.fullName
+            "id" to user.userId,
+            "fullName" to user.fullName,
+            "profileImage" to user.profileImage
         )
 
         return ResponseEntity.ok(

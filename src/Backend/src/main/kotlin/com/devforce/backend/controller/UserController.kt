@@ -39,26 +39,30 @@ class UserController {
 
     @PutMapping("rspv_event/{id}")
     @PreAuthorize("isAuthenticated()")
-    fun rspvEvent(@PathVariable id: UUID): ResponseEntity<ResponseDto> {
-        return userService.rspvEvent(id)
+    fun rspvEvent(@PathVariable id: UUID,@RequestHeader("Authorization") token: String): ResponseEntity<ResponseDto> {
+        val jwtToken = token.substring(7)
+        return userService.rspvEvent(id, jwtToken)
     }
 
     @GetMapping("/get_rspv_events")
     @PreAuthorize("isAuthenticated()")
-    fun getRspvEvents(): ResponseEntity<ResponseDto> {
-        return userService.getRspvEvents()
+    fun getRspvEvents(@RequestHeader("Authorization") token: String): ResponseEntity<ResponseDto> {
+        val jwtToken = token.substring(7)
+        return userService.getRspvEvents(jwtToken)
     }
 
     @DeleteMapping("/delete_rspv_event/{id}")
     @PreAuthorize("isAuthenticated()")
-    fun deleteRspvEvent(@PathVariable id: UUID): ResponseEntity<ResponseDto> {
-        return userService.deleteRspvEvent(id)
+    fun deleteRspvEvent(@PathVariable id: UUID, @RequestHeader("Authorization") token: String): ResponseEntity<ResponseDto> {
+        val jwtToken = token.substring(7)
+        return userService.deleteRspvEvent(id, jwtToken)
     }
 
     @PutMapping("/update_profile")
     @PreAuthorize("isAuthenticated()")
     fun updateProfile(@RequestBody userDto: UpdateUserDto, @RequestHeader("Authorization") token: String): ResponseEntity<ResponseDto> {
-        return userService.updateProfile(userDto, token)
+        val jwtToken = token.substring(7)
+        return userService.updateProfile(userDto, jwtToken)
     }
 
 }

@@ -18,7 +18,7 @@ class EventModel{
     @Id
     @GeneratedValue
     @Column(columnDefinition = "UUID")
-    var id: UUID = UUID.randomUUID()
+    var eventId: UUID = UUID.randomUUID()
 
     var title: String = ""
     var description: String = ""
@@ -53,7 +53,7 @@ class EventModel{
         joinColumns = [JoinColumn(name = "event_id")],
         inverseJoinColumns = [JoinColumn(name = "user_id")]
     )
-    var attendees: Set<UserModel> = HashSet()
+    var attendees: MutableSet<UserModel> = HashSet()
 
     @ManyToMany
     @JoinTable(
@@ -61,7 +61,7 @@ class EventModel{
         joinColumns = [JoinColumn(name = "event_id")],
         inverseJoinColumns = [JoinColumn(name = "user_id")]
     )
-    var invitees: Set<UserModel> = HashSet()
+    var invitees: MutableSet<UserModel> = HashSet()
 
     @PrePersist
     fun prePersist() {
