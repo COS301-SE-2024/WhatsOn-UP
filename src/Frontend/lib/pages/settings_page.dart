@@ -4,7 +4,18 @@ import 'package:firstapp/widgets/theme_manager.dart';
 import 'package:firstapp/pages/profilePage.dart';
 
 class SettingsPage extends StatefulWidget {
-  const SettingsPage({super.key});
+
+  // final String profileImageUrl;
+  final String userName;
+  final String userEmail;
+  // final String role;
+  const SettingsPage({
+    Key? key,
+    // required this.profileImageUrl,
+    required this.userName,
+    required this.userEmail,
+    // required this.role;
+  }): super(key: key);
 
   @override
   _SettingsPageState createState() => _SettingsPageState();
@@ -45,7 +56,12 @@ class _SettingsPageState extends State<SettingsPage> {
                     onTap: () {
                     Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => ProfilePage(profileImageUrl:'https://example.com/your-profile-image.jpg')),
+                    MaterialPageRoute(builder: (context) => ProfilePage(
+                      // profileImageUrl: //widget.profileImageUrl,
+                      userName: widget.userName,
+                      userEmail: widget.userEmail,
+                      // role: widget.role;
+                    ),),
                    );
                     },
                   ),

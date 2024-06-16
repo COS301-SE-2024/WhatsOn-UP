@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:firstapp/pages/signin_page.dart';
 import 'package:firstapp/pages/home_page.dart';
 import 'package:firstapp/services/LoginServices.dart';
+
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -10,6 +13,8 @@ class LoginPage extends StatefulWidget {
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
+int _selectedIndex = 0;
+
 
 class _LoginPageState extends State<LoginPage> {
   late Color myColor;
@@ -20,8 +25,7 @@ class _LoginPageState extends State<LoginPage> {
 
   final _formKey = GlobalKey<FormState>();
 
-  final String testingEmail = 'DevForce@gmail.com';
-  final String testingPassword = 'password123';
+
 
   @override
   Widget build(BuildContext context) {
@@ -131,7 +135,7 @@ class _LoginPageState extends State<LoginPage> {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: _simulateLogin,
+              onPressed: _login,
               style: ElevatedButton.styleFrom(
                 // backgroundColor: const Color.fromARGB(255, 255, 255, 255),
                 shape: RoundedRectangleBorder(
@@ -263,41 +267,33 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void _simulateLogin() {
+  Future<void> _login() async {
     if (_formKey.currentState!.validate()) {
       String email = emailController.text;
       String password = passwordController.text;
 
-      // Call the postRequest function
+
       postRequest(email, password).then((response) {
         if (response['error'] != null) {
-          // ScaffoldMessenger.of(context).showSnackBar(
-          //   SnackBar(
-          //     content: Text('An error occurred: ${response['error']}'),
-          //   ),
-          // );
+
           print('An error occurred: ${response['error']}');
         } else {
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(builder: (context) => HomePage()),
-          // );
+          String fullName = response['body']['user']['fullName']?? 'Unknown';
+          String userEmail = response['body']['user']['email'] ?? 'Unknown';
+          //String UserId=response['body']['user']['id']?? 'Unknown';
+              Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => HomePage(
+              userName:  fullName,
+              userEmail: userEmail,
+            // userId:UserId
+            )),
+          );
           print('Login successful');
         }
       });
 
-      // if (email == testingEmail && password == testingPassword) {
-      //   Navigator.push(
-      //     context,
-      //     MaterialPageRoute(builder: (context) => HomePage()),
-      //   );
-      // } else {
-      //   ScaffoldMessenger.of(context).showSnackBar(
-      //     const SnackBar(
-      //       content: Text('Invalid email or password'),
-      //     ),
-      //   );
-      // }
+
     }
   }
 }

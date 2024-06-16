@@ -2,10 +2,21 @@
 import 'package:firstapp/pages/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firstapp/pages/application_event.dart';
+import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+import 'package:firstapp/pages/editProfile_page.dart';
 class ProfilePage extends StatelessWidget {
-  final String profileImageUrl;
-
-  const ProfilePage({required this.profileImageUrl}); // Constructor to initialize final variable
+  // final String profileImageUrl;
+  final String userName;
+  final String userEmail;
+  // final String role;
+  //final String userId;
+  const ProfilePage({
+  // required this.profileImageUrl,
+   required this.userName,
+  required this.userEmail,
+  // required this.role;
+    //required this.userId;
+  }); // Constructor to initialize final variable
 
   @override
   Widget build(BuildContext context) {
@@ -14,6 +25,7 @@ class ProfilePage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(onPressed: (){ Navigator.pop(context);}, icon: const Icon(LineAwesomeIcons.angle_left_solid)),
         title: Text('Profile'),
         actions: [
           // onPressed:(){}, Icon(LineAwesomeIcons.moon)
@@ -28,20 +40,36 @@ class ProfilePage extends StatelessWidget {
                 width: 120,
                 height: 120,
                 child: CircleAvatar(
-                  backgroundImage: NetworkImage(profileImageUrl),
+                  backgroundImage: NetworkImage("http.example"),
                   radius: 24.0,
                 ),
               ),
               const SizedBox(height: 10,),
               Text(
-                'Name',
+                userName,
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 20),
+              SizedBox(height: 8),
+              Text(
+                userEmail,
+                style: TextStyle(fontSize: 18),
+              ),
+              SizedBox(height: 20),
               SizedBox(
                 width: 200,
                 child: ElevatedButton(
-                  onPressed: (){},
+                  onPressed: (){
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => EditprofilePage( //editProfile
+                        //profileImageUrl: profileImageUrl,
+                        userName: userName,
+                        userEmail: userEmail,
+                       // UserId:userId,
+                      )),
+                    );
+                  },
                   style: ElevatedButton.styleFrom(
                     shape: const StadiumBorder()
                   ),
@@ -64,7 +92,10 @@ class ProfilePage extends StatelessWidget {
                     onTap: () {
                      Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => ApplicationEvent()),
+            MaterialPageRoute(builder: (context) => ApplicationEvent(
+              //profileImageUrl: profileImageUrl,
+              userName: userName,
+              userEmail: userEmail,)),
           );
                     },
                   ),
@@ -137,5 +168,5 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  
+
 }
