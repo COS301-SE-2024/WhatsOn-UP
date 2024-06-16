@@ -1,11 +1,11 @@
-name: CI for Develop Branch
+name: Docker Image CI
 
 on:
-  push:
-    branches:
-      - develop
   pull_request:
-    branches:
+    branches: 
+      - develop
+  push:
+    branches: 
       - develop
 
 jobs:
@@ -18,8 +18,10 @@ jobs:
     
       # Authenticate with Docker Hub
       - name: Log into Docker Hub
-        run: echo "${{ secrets.DOCKER_TOKEN }}" | docker login -u devforce123 --password-stdin
+        env:
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_TOKEN }}
+        run: echo $DOCKER_PASSWORD | docker login -u devforce123 --password-stdin
 
       # Build the Docker image
-      - name: Build and Test Docker image
+      - name: Build Docker image
         run: docker build -t devforce123/backend:2.0 -f src/Backend/Dockerfile src/Backend/
