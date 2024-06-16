@@ -142,47 +142,7 @@ class _EditprofilePage extends State<EditprofilePage> {
 
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: () {
-                if (_formKey.currentState!.validate()) {
-                  // backend processing-user data will be saved here
-                  if(!nameController.text.isEmpty)
-                  {
-                      adjustedName=nameController.text;
-                  }
-                  else if(nameController.text.isEmpty){
-                    adjustedName=widget.userName;
-                  }
-                  else if(!emailController.text.isEmpty){
-                    adjustedEmail=emailController.text;
-                  }
-                  else if(emailController.text.isEmpty){
-                    adjustedEmail=widget.userEmail;
-                  }
-                  else if(!passwordController.text.isEmpty){
-                    adjustedPassword=passwordController.text;
-                  }
-                  else if(passwordController.text.isEmpty){
-                    //find password by id
-                  }
-                  final user = User(
-                    name: adjustedName,
-                    email: adjustedEmail,
-                    password:adjustedPassword,
-                  );
-                  print(user);
-
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => ProfilePage(
-                      // profileImageUrl: widget.profileImageUrl,
-                      userName: widget.userName,
-                      userEmail: widget.userEmail,
-                      // role: widget.role,
-                      //userId: widget.userId,
-                    ),),
-                  );
-                }
-              },
+              onPressed: _EditUser,
               style: ElevatedButton.styleFrom(
                 // backgroundColor: const Color.fromARGB(255, 255, 255, 255),
                 shape: RoundedRectangleBorder(
@@ -269,6 +229,7 @@ class _EditprofilePage extends State<EditprofilePage> {
         }
         else if(passwordController.text.isEmpty){
           //find password by id
+
         }
         final user = User(
           name: adjustedName,
