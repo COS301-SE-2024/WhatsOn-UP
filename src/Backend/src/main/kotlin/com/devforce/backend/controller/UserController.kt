@@ -10,27 +10,30 @@ import org.springframework.web.bind.annotation.*
 import java.util.*
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/user")
 class UserController {
     @Autowired
     lateinit var userService: UserService
 
     @PutMapping("/save_event/{id}")
     @PreAuthorize("isAuthenticated()")
-    fun saveEvent(@PathVariable id: UUID): ResponseEntity<ResponseDto> {
-        return userService.saveEvent(id)
+    fun saveEvent(@PathVariable id: UUID, @RequestHeader("Authorization") token: String): ResponseEntity<ResponseDto> {
+        val jwtToken = token.substring(7)
+        return userService.saveEvent(id, jwtToken)
     }
 
     @DeleteMapping("/delete_saved_event/{id}")
     @PreAuthorize("isAuthenticated()")
-    fun deleteSavedEvent(@PathVariable id: UUID): ResponseEntity<ResponseDto> {
-        return userService.deleteSavedEvent(id)
+    fun deleteSavedEvent(@PathVariable id: UUID, @RequestHeader("Authorization") token: String): ResponseEntity<ResponseDto> {
+        val jwtToken = token.substring(7)
+        return userService.deleteSavedEvent(id, jwtToken)
     }
 
     @GetMapping("/get_saved_events")
     @PreAuthorize("isAuthenticated()")
-    fun getSavedEvents(): ResponseEntity<ResponseDto> {
-        return userService.getSavedEvents()
+    fun getSavedEvents(@RequestHeader("Authorization") token: String): ResponseEntity<ResponseDto> {
+        val jwtToken = token.substring(7)
+        return userService.getSavedEvents(jwtToken)
     }
 
 

@@ -43,7 +43,7 @@ class UserModel{
         joinColumns = [JoinColumn(name = "user_id")],
         inverseJoinColumns = [JoinColumn(name = "event_id")]
     )
-    var savedEvents: Set<UserModel> = HashSet()
+    var savedEvents: MutableSet<EventModel> = HashSet()
 
     @PrePersist
     fun prePersist() {
