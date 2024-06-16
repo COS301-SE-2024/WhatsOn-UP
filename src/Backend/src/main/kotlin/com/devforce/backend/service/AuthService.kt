@@ -95,9 +95,20 @@ class AuthService {
             return response
         }
 
-        val refreshedDto = jwtGenerator.refreshToken(jwtToken, refreshToken)
+        val expiry = jwtGenerator.checkExpiry(jwtToken)
 
-        return ResponseEntity.ok(refreshedDto)
+        if (!expiry) {
+            val refreshedDto = jwtGenerator.refreshToken(jwtToken, refreshToken)
+            return ResponseEntity.ok(refreshedDto)
+        }
+
+        return ResponseEntity.ok(
+            ResponseDto(
+                "success",
+                System.currentTimeMillis(),
+                "Token is still valid"
+            )
+        )
     }
 
     fun logoutUser(token: String): ResponseEntity<ResponseDto> {
