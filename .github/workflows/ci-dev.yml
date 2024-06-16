@@ -1,0 +1,25 @@
+name: CI for Develop Branch
+
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    branches:
+      - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v4
+    
+      # Authenticate with Docker Hub
+      - name: Log into Docker Hub
+        run: echo "${{ secrets.DOCKER_TOKEN }}" | docker login -u devforce123 --password-stdin
+
+      # Build the Docker image
+      - name: Build and Test Docker image
+        run: docker build -t devforce123/backend:2.0 -f src/Backend/Dockerfile src/Backend/

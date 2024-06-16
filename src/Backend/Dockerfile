@@ -14,7 +14,8 @@ RUN sed -i 's/\r//' gradlew
 
 # Run Gradle build with necessary environment variables
 # Make sure to run tests and build the application separately
-RUN ./gradlew build
+RUN ./gradlew assemble
+RUN ./gradlew test
 
 # Expose the port
 EXPOSE 8080
