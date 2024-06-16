@@ -16,6 +16,7 @@ class HomePage extends StatefulWidget {
   final String userName;
   final String userEmail;
   // final String role;
+  //final String UserId;
   const HomePage(
       {
         Key? key,
@@ -23,6 +24,7 @@ class HomePage extends StatefulWidget {
         required this.userName,
         required this.userEmail,
         //  required this.role;
+        // required this.userId
       }
       ): super(key: key);
   @override
@@ -137,6 +139,7 @@ class _HomePageState extends State<HomePage> {
                             userName: widget.userName,
                             userEmail: widget.userEmail,
                             // role: widget.role,
+                            //userId: widget.userId,
                           ),
                       ),
                     );

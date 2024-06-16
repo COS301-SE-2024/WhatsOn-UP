@@ -3,15 +3,20 @@ import 'package:firstapp/pages/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firstapp/pages/application_event.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+import 'package:firstapp/pages/editProfile_page.dart';
 class ProfilePage extends StatelessWidget {
   // final String profileImageUrl;
   final String userName;
   final String userEmail;
-
+  // final String role;
+  //final String userId;
   const ProfilePage({
   // required this.profileImageUrl,
    required this.userName,
-  required this.userEmail}); // Constructor to initialize final variable
+  required this.userEmail,
+  // required this.role;
+    //required this.userId;
+  }); // Constructor to initialize final variable
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +59,17 @@ class ProfilePage extends StatelessWidget {
               SizedBox(
                 width: 200,
                 child: ElevatedButton(
-                  onPressed: (){},
+                  onPressed: (){
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => EditprofilePage( //editProfile
+                        //profileImageUrl: profileImageUrl,
+                        userName: userName,
+                        userEmail: userEmail,
+                       // UserId:userId,
+                      )),
+                    );
+                  },
                   style: ElevatedButton.styleFrom(
                     shape: const StadiumBorder()
                   ),

@@ -280,11 +280,14 @@ class _LoginPageState extends State<LoginPage> {
         } else {
           String fullName = response['body']['user']['fullName']?? 'Unknown';
           String userEmail = response['body']['user']['email'] ?? 'Unknown';
+          //String UserId=response['body']['user']['id']?? 'Unknown';
               Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => HomePage(
               userName:  fullName,
-              userEmail: userEmail,)),
+              userEmail: userEmail,
+            // userId:UserId
+            )),
           );
           print('Login successful');
         }
