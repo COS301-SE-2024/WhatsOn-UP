@@ -177,4 +177,32 @@ class AuthService {
         )
     }
 
+    fun resetPassword(token: String, newPassword: String): ResponseEntity<ResponseDto> {
+        try {
+            val response = checkJwt.check(token)
+            if (response != null) {
+                return response
+            }
+
+            val email = jwtGenerator.getUsernameFromToken(token)
+            val user = userRepo.findByEmail(email)!!
+
+            user.password = passwordEncoder.encode(newPassword)
+            userRepo.save(user)
+
+            val authentication: Authentication = authenticationManager.authenticate(
+                UsernamePasswordAuthenticationToken(email, newPassword)
+            )
+
+            SecurityContextHolder.getContext().authentication = authentication
+
+            val tokenDto = jwtGenerator.generateToken(authentication)
+
+            return ResponseEntity.ok(tokenDto)
+        } catch (ex: AuthenticationException) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(ResponseDto("error", System.currentTimeMillis(), "Authentication failed: ${ex.message}"))
+        }
+    }
+
 }

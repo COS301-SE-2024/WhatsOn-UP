@@ -10,5 +10,6 @@ data class CreateEventDto(
     val location: String,
     val maxParticipants: Int?,
     val metadata: String?,
-    val isPrivate: Boolean?
+    val isPrivate: Boolean?,
+    val media: List<String>?
 )

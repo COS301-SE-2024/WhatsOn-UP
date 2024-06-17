@@ -3,6 +3,7 @@ package com.devforce.backend.controller
 import com.devforce.backend.dto.LoginDto
 import com.devforce.backend.dto.ResponseDto
 import com.devforce.backend.dto.RegisterDto
+import com.devforce.backend.dto.ResetPasswordDto
 import com.devforce.backend.service.AuthService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -54,6 +55,13 @@ class AuthController {
     fun deleteUser(@RequestHeader("Authorization") token: String): ResponseEntity<ResponseDto> {
         val jwtToken = token.replace("Bearer ", "")
         return authService.deleteUser(jwtToken)
+    }
+
+    @PutMapping("/reset_password")
+    @PreAuthorize("isAuthenticated()")
+    fun resetPassword(@RequestHeader("Authorization") token: String, @RequestBody passwordBody: ResetPasswordDto): ResponseEntity<ResponseDto> {
+        val jwtToken = token.replace("Bearer ", "")
+        return authService.resetPassword(jwtToken, passwordBody.password)
     }
 
 }
