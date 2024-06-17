@@ -8,8 +8,7 @@ class SearchTile extends StatelessWidget {
       physics: ClampingScrollPhysics(),
       children: [
         LikedCategory(),
-        LikedCategory(),
-        LikedCategory(),
+
       ],
     );
   }
@@ -26,7 +25,7 @@ class LikedCategory extends StatelessWidget {
             child: Text(
               'Ideas for you',
               style: TextStyle(
-                color: Colors.white,
+                color: Colors.black,
                 fontSize: 20.0,
               ),
             ),
