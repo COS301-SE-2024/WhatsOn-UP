@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:firstapp/pages/signin_page.dart';
 import 'package:firstapp/pages/home_page.dart';
-import 'package:firstapp/services/LoginServices.dart';
+import 'package:firstapp/services/api.dart';
 
 
 class LoginPage extends StatefulWidget {
@@ -271,15 +271,14 @@ class _LoginPageState extends State<LoginPage> {
     if (_formKey.currentState!.validate()) {
       String email = emailController.text;
       String password = passwordController.text;
-
-
-      postRequest(email, password).then((response) {
+      Api api = Api();
+      api.loginUser(email, password).then((response) {
         if (response['error'] != null) {
 
           print('An error occurred: ${response['error']}');
         } else {
-          String fullName = response['body']['user']['fullName']?? 'Unknown';
-          String userEmail = response['body']['user']['email'] ?? 'Unknown';
+          String fullName = response['data']['user']['fullName']?? 'Unknown';
+          String userEmail = response['data']['user']['email'] ?? 'Unknown';
           //String UserId=response['body']['user']['id']?? 'Unknown';
               Navigator.push(
             context,

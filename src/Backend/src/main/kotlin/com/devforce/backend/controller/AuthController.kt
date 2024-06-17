@@ -42,7 +42,7 @@ class AuthController {
         return authService.logoutUser(jwtToken)
     }
 
-    @PostMapping("/get_user")
+    @GetMapping("/get_user")
     @PreAuthorize("isAuthenticated()")
     fun getUser(@RequestHeader("Authorization") token: String): ResponseEntity<ResponseDto> {
         val jwtToken = token.replace("Bearer ", "")
