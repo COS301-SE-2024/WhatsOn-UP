@@ -175,7 +175,6 @@ class UserService {
 
         user.fullName = updateUserDto.fullName ?: user.fullName
         user.email = updateUserDto.email ?: user.email
-        user.password = updateUserDto.password?.let { passwordEncoder.encode(it) } ?: user.password
         user.profileImage = updateUserDto.profileImage ?: user.profileImage
 
         userRepo.save(user)

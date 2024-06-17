@@ -42,6 +42,7 @@ class EventService {
             this.metadata = createEventDto.metadata ?: ""
             this.isPrivate = createEventDto.isPrivate ?: false
             this.hosts = setOf(user)
+            this.eventMedia = createEventDto.media ?: emptyList()
         }
 
         eventRepo.save(event)
@@ -69,7 +70,15 @@ class EventService {
     // To do: Implement function to delete an event
     fun deleteEvent(id: UUID): ResponseEntity<ResponseDto> {
 
-        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Method needs to be implemented"))
+        val event = eventRepo.findById(id)
+        if (event.isEmpty) {
+            return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "Event not found"))
+            )
+        }
+
+        eventRepo.delete(event.get())
+
+        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Event deleted successfully"))
         )
     }
 
