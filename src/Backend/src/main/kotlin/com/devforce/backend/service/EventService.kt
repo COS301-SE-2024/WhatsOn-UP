@@ -18,8 +18,8 @@ import java.util.*
 
 @Service
 class EventService @Autowired constructor(
-    @Qualifier("customEventRepo")  private val eventRepo: EventRepo,
-    @Qualifier("customEventElasticsearchRepo") private val eventElasticsearchRepo: EventElasticsearchRepo
+    private val eventRepo: EventRepo,
+    private val eventElasticsearchRepo: EventElasticsearchRepo
 ) {
 
     // To do: Implement function to create a new event
