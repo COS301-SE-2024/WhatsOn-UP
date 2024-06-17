@@ -20,6 +20,7 @@ repositories {
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-elasticsearch")
+	implementation("org.springframework.data:spring-data-elasticsearch")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("io.jsonwebtoken:jjwt:0.2")
@@ -32,7 +33,6 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
 	testImplementation("org.springframework.security:spring-security-test")
-	testImplementation("org.springframework.data:spring-data-elasticsearch")
 	runtimeOnly("org.postgresql:postgresql")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 	implementation("javax.xml.bind:jaxb-api:2.3.1")
