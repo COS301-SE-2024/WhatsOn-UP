@@ -21,6 +21,7 @@ repositories {
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-elasticsearch")
 	implementation("org.springframework.data:spring-data-elasticsearch")
+	implementation("org.elasticsearch.client:elasticsearch-rest-high-level-client:<version>")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("io.jsonwebtoken:jjwt:0.2")

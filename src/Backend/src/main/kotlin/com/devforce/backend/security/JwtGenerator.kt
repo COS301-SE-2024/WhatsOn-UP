@@ -3,7 +3,7 @@ package com.devforce.backend.security
 import com.devforce.backend.ApplicationConstants.EXPIRY
 import com.devforce.backend.ApplicationConstants.SECRET
 import com.devforce.backend.dto.ResponseDto
-import com.devforce.backend.repo.UserRepo
+import com.devforce.backend.repo.jpa.UserRepo
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import org.springframework.beans.factory.annotation.Autowired

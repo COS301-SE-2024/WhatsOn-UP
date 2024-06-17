@@ -4,7 +4,7 @@ import com.devforce.backend.dto.CreateEventDto
 import com.devforce.backend.dto.ResponseDto
 import com.devforce.backend.dto.UpdateEventDto
 import com.devforce.backend.model.EventModel
-import com.devforce.backend.repo.EventRepo
+import com.devforce.backend.repo.jpa.EventRepo
 import com.devforce.backend.repo.elasticSearch.EventElasticsearchRepo
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
