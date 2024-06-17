@@ -1,17 +1,24 @@
-FROM devforce123/backend:latest
+FROM devforce123/backend:2.0
 
-RUN rm -rf /home/ubuntu/*
-
+# Set working directory
 WORKDIR /home/ubuntu
 
+# Copy the application files to the container
 COPY . .
 
+# Change permissions for Gradle wrapper
 RUN chmod +x ./gradlew
 
+# Remove Windows carriage return characters if any
 RUN sed -i 's/\r//' gradlew
 
-RUN ./gradlew build
+# Run Gradle build with necessary environment variables
+# Make sure to run tests and build the application separately
+RUN ./gradlew assemble
+RUN ./gradlew test
 
+# Expose the port
 EXPOSE 8080
-CMD ["./gradlew", "bootRun"]
 
+# Command to run the application
+CMD ["./gradlew", "bootRun"]

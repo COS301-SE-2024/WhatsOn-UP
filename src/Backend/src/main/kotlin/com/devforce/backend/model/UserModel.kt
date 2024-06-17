@@ -15,7 +15,7 @@ class UserModel{
     @Id
     @GeneratedValue
     @Column(columnDefinition = "UUID")
-    var id: UUID = UUID.randomUUID()
+    var userId: UUID = UUID.randomUUID()
 
     var fullName: String = ""
 
@@ -31,7 +31,7 @@ class UserModel{
     var jwtToken: String = ""
     var refreshToken: String = ""
 
-//    var userProfile: String = ""
+    var profileImage: String = ""
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id")
@@ -43,7 +43,7 @@ class UserModel{
         joinColumns = [JoinColumn(name = "user_id")],
         inverseJoinColumns = [JoinColumn(name = "event_id")]
     )
-    var savedEvents: Set<UserModel> = HashSet()
+    var savedEvents: MutableSet<EventModel> = HashSet()
 
     @PrePersist
     fun prePersist() {
