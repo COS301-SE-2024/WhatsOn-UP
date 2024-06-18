@@ -77,4 +77,24 @@ class Api {
       throw Exception(e.toString());
     }
   }
+
+  Future<void> getAllEvents() async {
+  final url = 'http://localhost:8080/api/events/get_all';
+
+  try {
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      final List<dynamic> events = json.decode(response.body);
+      print('Events: $events');
+
+    } else {
+      throw Exception('Failed to load events');
+    }
+  } catch (e) {
+    print('Error: $e');
+    throw Exception(e.toString());
+  }
+}
+
 }
