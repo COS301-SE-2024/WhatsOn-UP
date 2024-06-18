@@ -16,6 +16,16 @@ class Event {
     required this.imageUrls,
     required this.description,
   });
+
+   factory Event.fromJson(Map<String, dynamic> json) {
+    return Event(
+      nameOfEvent: json['title'],
+      dateAndTime: json['startTime'],
+      location: json['location'],
+      imageUrls: List<String>.from(json['eventMedia']),
+      description: json['description'],
+    );
+   }
 }
 
 class EventCard extends StatelessWidget {
