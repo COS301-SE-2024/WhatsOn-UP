@@ -156,8 +156,12 @@ http://localhost:8080
 
   ```json
   {
-      "token": "eyJhbGciOiJIUzUxMiJ9...",
-      "refreshToken": "new-refresh-token"
+    "status": "success",
+    "timestamp": 1718704418436,
+    "data": {
+        "jwtToken": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0MkBnbWFpbC5jb20iLCJyb2xlIjoiR0VORVJBTCIsImlhdCI6MTcxODcwNDQxNywiZXhwIjoxNzE4NzkwODE3fQ.0wo4ZVT69xGUYV5eCwp8uiPeK0l1IA5t9ZEauYidciDmT_GPSRwOzM8KToxHEecj8CYu7PaAt6wuIK8Qeiz-nQ",
+        "refreshToken": "5ee7e3d1-e316-4490-8c77-e0268a91874b"
+    }
   }
   ```
 
