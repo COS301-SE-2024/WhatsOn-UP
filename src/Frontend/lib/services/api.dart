@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:firstapp/widgets/event_card.dart';
 
 class Api {
   // Singleton instance
@@ -78,22 +79,26 @@ class Api {
     }
   }
 
-  Future<void> getAllEvents() async {
+  Future<List<Event>> getAllEvents() async {
   final url = 'http://localhost:8080/api/events/get_all';
 
   try {
     final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
-      final List<dynamic> events = json.decode(response.body);
-      print('Events: $events');
+      // Parse the JSON response
+      final Map<String, dynamic> decodedJson = json.decode(response.body);
+      final List<dynamic> eventsJson = decodedJson['data'];
 
+      // Map the JSON objects to Event objects
+      final List<Event> events = eventsJson.map((jsonEvent) => Event.fromJson(jsonEvent)).toList();
+      return events;
     } else {
       throw Exception('Failed to load events');
     }
   } catch (e) {
     print('Error: $e');
-    throw Exception(e.toString());
+    rethrow;
   }
 }
 
