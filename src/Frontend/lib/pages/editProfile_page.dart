@@ -1,4 +1,12 @@
 
+
+
+
+
+import 'dart:typed_data';
+import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 // import 'package:flutter/widgets.dart';
@@ -8,273 +16,342 @@ import 'package:firstapp/pages/home_page.dart';
 import 'package:firstapp/pages/profilePage.dart';
 import 'package:firstapp/services/EditprofileServices.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+// import 'package:firstapp/utils.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:firstapp/services/api.dart';
+// import 'package:filepicker_windows/filepicker_windows.dart';
+
+
 class EditprofilePage extends StatefulWidget {
-  // final String profileImageUrl;
   final String userName;
   final String userEmail;
-  // final String role;
-  const EditprofilePage(
-      {
-        Key? key,
-        // required this.profileImageUrl,
-        required this.userName,
-        required this.userEmail,
-        //  required this.role;
-      }
-      ): super(key: key);
-  @override
-  _EditprofilePage createState() => _EditprofilePage();
+  final String userId;
+  final String role;
+  String  profileImage;
 
+   EditprofilePage({
+    Key? key,
+    required this.userName,
+    required this.userEmail,
+    required this.userId,
+    required this.role,
+    required this.profileImage,
+
+  }) : super(key: key);
+
+  @override
+  _EditprofilePageState createState() => _EditprofilePageState();
 }
 
-class _EditprofilePage extends State<EditprofilePage> {
-  late Color myColor;
-  late Size mediaSize;
+class _EditprofilePageState extends State<EditprofilePage> {
+  Uint8List? _image;
+
+  Future<void> selectImage() async {
+    try {
+      Uint8List img = await pickImage(ImageSource.gallery);
+      setState(() {
+        _image = img;
+        widget.profileImage = base64Encode(img);
+      });
+    } catch (e) {
+      print('Failed to pick image: $e');
+    }
+  }
+
+  Future<Uint8List> pickImage(ImageSource source) async {
+    final ImagePicker _imagePicker = ImagePicker();
+    final XFile? image = await _imagePicker.pickImage(source: source);
+    if (image != null) {
+      return await image.readAsBytes();
+    } else {
+      throw 'No image selected';
+    }
+  }
+
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController nameController = TextEditingController();
-  TextEditingController confirmPasswordController = TextEditingController();
-  bool rememberUser = false;
-  String adjustedName='';
-  String adjustedPassword='';
-  String adjustedEmail='';
+  bool isObscurePassword = true;
   final _formKey = GlobalKey<FormState>();
 
   @override
-  Widget build(BuildContext context) {
-    myColor = Theme.of(context).primaryColor;
-    mediaSize = MediaQuery.of(context).size;
-    return Container(
-      color: Colors.black,
-      child: Scaffold(
-        appBar: AppBar(
-          leading: IconButton(onPressed: (){ Navigator.pop(context);}, icon: const Icon(LineAwesomeIcons.angle_left_solid)),
-          title: Text('Edit Profile'),
-
-        ),
-        backgroundColor: Colors.transparent,
-          body: _buildBottom()),
-
-        );
+  void initState() {
+    super.initState();
+    emailController.text = widget.userEmail;
+    nameController.text = widget.userName;
   }
 
-  Widget _buildBottom() {
-    return SizedBox(
-      width: mediaSize.width,
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(32.0),
-          child: _buildForm(),
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    nameController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: const Icon(LineAwesomeIcons.angle_left_solid),
+        ),
+        title: Text('Edit Profile'),
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildTop(),
+              const SizedBox(height: 30),
+              _buildTextField("Full name", nameController, false),
+              _buildTextField("Email", emailController, false),
+              _buildTextField("Password", passwordController, true),
+              const SizedBox(height: 30),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _editUser,
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    padding: EdgeInsets.symmetric(vertical: 16),
+                  ),
+                  child: Text(
+                    'Save',
+                    style: TextStyle(
+                        color: theme.brightness == Brightness.dark ? Colors
+                            .white : Colors.black),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 30),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          ProfilePage(
+                            userName: widget.userName,
+                            userEmail: widget.userEmail,
+                            userId: widget.userId,
+                            role: widget.role,
+                            profileImage: widget.profileImage,
+                          ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    padding: EdgeInsets.symmetric(vertical: 16),
+                  ),
+                  child: Text(
+                    'Cancel',
+                    style: TextStyle(
+                        color: theme.brightness == Brightness.dark ? Colors
+                            .white : Colors.black),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildForm() {
-    final theme = Theme.of(context);
-    final loginTextColour = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
-
-    return Form(
-      key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _buildTop() {
+    return Center(
+      child: Stack(
         children: [
+          _image != null ?
+          Container(
 
-          _buildInputField(
-            nameController,
-            label: widget.userName,
-            icon: Icons.person,
-
-          ),
-          const SizedBox(height: 30),
-          _buildInputField(
-            emailController,
-            label: widget.userEmail,
-            icon: Icons.email,
-
-            validator: (value) {
-              if (value != null && !value.isEmpty) {
-                final regex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
-                if (!regex.hasMatch(value)) {
-                  return 'Enter a valid email address';
-                }
-              }
-              return null; // If value is empty or valid
-            },
-
-
-
-
-          ),
-          const SizedBox(height: 30),
-          _buildInputField(
-            passwordController,
-            label: "Password",
-            icon: Icons.lock,
-            isPassword: true,
-            validator: (value) {
-              if (value != null && !value.isEmpty) {
-                if (value.length < 6) {
-                  return 'Password must be at least 6 characters';
-                }
-              }
-
-                return null;
-            },
-          ),
-          const SizedBox(height: 30),
-          _buildInputField(
-            confirmPasswordController,
-            label: "Confirm Password",
-            icon: Icons.lock,
-            isPassword: true,
-            validator: (value) {
-              if (value != null && !value.isEmpty) {
-                if (value != passwordController.text) {
-                  return 'Passwords do not match';
-                }
-              }
-              return null;
-            },
-          ),
-          const SizedBox(height: 30),
-          SizedBox(
-
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: _EditUser,
-              style: ElevatedButton.styleFrom(
-                // backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
+            width: 130,
+            height: 130,
+            decoration: BoxDecoration(
+              border: Border.all(width: 4, color: Colors.white),
+              boxShadow: [
+                BoxShadow(
+                  spreadRadius: 2,
+                  blurRadius: 10,
+                  color: Colors.black.withOpacity(0.1),
                 ),
-                padding: EdgeInsets.symmetric(vertical: 16),
+              ],
+              shape: BoxShape.circle,
+              image: DecorationImage(
+                fit: BoxFit.cover,
+                image: MemoryImage(
+                    _image!
+                ),
               ),
-              child: Text(
-                'confirm',
-                // style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0)),
-                style: TextStyle(color: loginTextColour),
+            ),
+          )
+              :
+          Container(
+            width: 130,
+            height: 130,
+            decoration: BoxDecoration(
+              border: Border.all(width: 4, color: Colors.white),
+              boxShadow: [
+                BoxShadow(
+                  spreadRadius: 2,
+                  blurRadius: 10,
+                  color: Colors.black.withOpacity(0.1),
+                ),
+              ],
+              shape: BoxShape.circle,
+              image: DecorationImage(
+                fit: BoxFit.cover,
+                image: NetworkImage(widget.profileImage),
               ),
             ),
           ),
+          Positioned(
+            bottom: 0,
+            right: 0,
+            child: Container(
+              height: 40,
+              width: 40,
+              child: IconButton(
+                  onPressed: selectImage,
 
 
-
-
-
-
-
-
+                  icon: Icon(Icons.add_a_photo),
+                  color: Colors.black),
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildGreyText(String text) {
-    return Text(
-      text,
-      style: const TextStyle(color: Colors.grey),
-    );
-  }
-
-  Widget _buildInputField(
-      TextEditingController controller, {
-        required String label,
-        required IconData icon,
-        bool isPassword = false,
-        String? Function(String?)? validator,
-      }) {
-    return TextFormField(
-      controller: controller,
-      decoration: InputDecoration(
-        labelText: label,
-        labelStyle: TextStyle(color: Colors.grey),
-        prefixIcon: Icon(icon, color: Colors.grey),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(color: Colors.grey),
+  Widget _buildTextField(String labelText, TextEditingController controller,
+      bool isPassword) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 30),
+      child: TextFormField(
+        controller: controller,
+        obscureText: isPassword ? isObscurePassword : false,
+        decoration: InputDecoration(
+          suffixIcon: isPassword
+              ? IconButton(
+            onPressed: () {
+              setState(() {
+                isObscurePassword = !isObscurePassword;
+              });
+            },
+            icon: Icon(
+              isObscurePassword ? Icons.visibility_off : Icons.visibility,
+              color: Colors.grey,
+            ),
+          )
+              : null,
+          labelText: labelText,
+          floatingLabelBehavior: FloatingLabelBehavior.always,
+          hintText: labelText,
+          hintStyle: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.grey,
+          ),
         ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(color: Colors.grey),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(color: Colors.black),
-        ),
-      ),
-      obscureText: isPassword,
-      validator: validator,
-    );
-  }
-  Future<void> _EditUser() async {
-    onPressed: () {
-      if (_formKey.currentState!.validate()) {
-        // backend processing-user data will be saved here
-        if(!nameController.text.isEmpty)
-        {
-          adjustedName=nameController.text;
-        }
-        else if(nameController.text.isEmpty){
-          adjustedName=widget.userName;
-        }
-        else if(!emailController.text.isEmpty){
-          adjustedEmail=emailController.text;
-        }
-        else if(emailController.text.isEmpty){
-          adjustedEmail=widget.userEmail;
-        }
-        else if(!passwordController.text.isEmpty){
-          adjustedPassword=passwordController.text;
-        }
-        else if(passwordController.text.isEmpty){
-          //find password by id
-
-        }
-        final user = User(
-          name: adjustedName,
-          email: adjustedEmail,
-          password:adjustedPassword,
-        );
-        print(user);
-        postChangeUser(user.name,user.email,user.password).then((response) {
-          if (response['error'] != null) {
-
-            print('An error occurred: ${response['error']}');
-          } else {
-            String fullName = response['body']['user']['fullName']?? 'Unknown';
-            String userEmail = response['body']['user']['email'] ?? 'Unknown';
-            //String UserId=response['body']['user']['id']?? 'Unknown';
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => ProfilePage(
-                userName:  fullName,
-                userEmail: userEmail,
-                // userId:UserId
-              )),
-            );
-            print('Edit sucessful');
+        validator: (value) {
+          if (value != null && !value.isEmpty) {
+            if (value.length < 6) {
+              return 'Password must be at least 6 characters';
+            }
           }
-        });
+          return null;
+        },
+      ),
+    );
+  }
 
-      }
-    };
+  Future<void> _editUser() async {
+    String fullName;
+    String userEmail;
+    String userId;
+    String newPassword;
+    if (_formKey.currentState!.validate()) {
+      final adjustedName = nameController.text.isNotEmpty
+          ? nameController.text
+          : widget.userName;
+      final adjustedEmail = emailController.text.isNotEmpty ? emailController
+          .text : widget.userEmail;
+      final adjustedPassword = passwordController.text;
+
+      final user = User(
+        name: adjustedName,
+        email: adjustedEmail,
+        password: adjustedPassword,
+        userId: widget.userId,
+      );
+
+      Api api = Api();
+
+      api.postChangeUser(
+          user.name, user.email, widget.profileImage).then((
+          response) {
+        if (response['error'] != null) {
+          print('An error occurred: ${response['error']}');
+        } else {
+           fullName = response['body']['user']['fullName'] ?? 'Unknown';
+          userEmail = response['body']['user']['email'] ?? 'Unknown';
+           userId = response['body']['user']['email'] ?? 'unknown';
+
+
+          api.updatePassword(user.password).then((response2) {
+            if (response2['error'] != null) {
+              print('An error occurred: ${response['error']}');
+            } else {
+              newPassword = response2['body']['user']['password'] ??
+                  'Unknown';
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      ProfilePage(
+                        userName: fullName,
+                        userEmail: userEmail,
+                        userId: userId,
+                        role: widget.role,
+                        profileImage: widget.profileImage,
+                      ),
+                ),
+              );
+            }
+          });
+        }
+      });
+    }
   }
 }
-
-class User {
+  class User {
   final String name;
   final String email;
   final String password;
+  final String userId;
 
   User({
-    required this.name,
-    required this.email,
-    required this.password,
+  required this.name,
+  required this.email,
+  required this.password,
+  required this.userId,
   });
 
   @override
   String toString() {
-    return 'User(name: $name, email: $email, password: $password)';
+  return 'User(name: $name, email: $email, password: $password, userId: $userId)';
   }
-}
+  }

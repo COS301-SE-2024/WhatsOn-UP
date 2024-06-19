@@ -15,16 +15,20 @@ class HomePage extends StatefulWidget {
   // final String profileImageUrl;
   final String userName;
   final String userEmail;
-  // final String role;
-  //final String UserId;
+  final String userId;
+  final String role;
+  final String  profileImage;
+
   const HomePage(
       {
         Key? key,
         // required this.profileImageUrl,
         required this.userName,
         required this.userEmail,
-        //  required this.role;
-        // required this.userId
+        required this.userId,
+        required this.role,
+        required this. profileImage,
+
       }
       ): super(key: key);
   @override
@@ -108,7 +112,9 @@ class _HomePageState extends State<HomePage> {
          return  SettingsPage( //profileImageUrl: widget.profileImageUrl,
           userName: widget.userName,
           userEmail: widget.userEmail,
-           // role:widget.role;
+             role:widget.role,
+           userId: widget.userId,
+             profileImage: widget.profileImage,
          );
       default:
         return _buildHomePage();
@@ -139,7 +145,9 @@ class _HomePageState extends State<HomePage> {
                             userName: widget.userName,
                             userEmail: widget.userEmail,
                             // role: widget.role,
-                            //userId: widget.userId,
+                            userId: widget.userId,
+                            role: widget.role,
+                            profileImage: widget. profileImage,
                           ),
                       ),
                     );

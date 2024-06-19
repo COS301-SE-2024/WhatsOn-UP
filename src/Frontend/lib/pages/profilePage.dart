@@ -8,13 +8,17 @@ class ProfilePage extends StatelessWidget {
   // final String profileImageUrl;
   final String userName;
   final String userEmail;
-  // final String role;
+  final String userId;
+  final String role;
+  final String  profileImage;
   //final String userId;
   const ProfilePage({
   // required this.profileImageUrl,
    required this.userName,
   required this.userEmail,
-  // required this.role;
+    required this.userId,
+  required this.role,
+    required this.profileImage,
     //required this.userId;
   }); // Constructor to initialize final variable
 
@@ -66,6 +70,9 @@ class ProfilePage extends StatelessWidget {
                         //profileImageUrl: profileImageUrl,
                         userName: userName,
                         userEmail: userEmail,
+                        userId: userId,
+                        role: role,
+                        profileImage:  profileImage,
                        // UserId:userId,
                       )),
                     );
@@ -95,7 +102,10 @@ class ProfilePage extends StatelessWidget {
             MaterialPageRoute(builder: (context) => ApplicationEvent(
               //profileImageUrl: profileImageUrl,
               userName: userName,
-              userEmail: userEmail,)),
+              userEmail: userEmail,
+              userId: userId,
+              role: role,
+                profileImage:  profileImage,)),
           );
                     },
                   ),

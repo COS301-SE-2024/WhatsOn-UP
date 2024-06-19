@@ -77,4 +77,74 @@ class Api {
       throw Exception(e.toString());
     }
   }
+
+
+
+
+
+  Future<Map<String, dynamic>> postChangeUser(String name, String email, String profileImage) async {
+    // Url for posting new informaion
+    var userChangeUrl = Uri.parse('http://localhost:8080/api/user/update_profile');
+
+    // Define the headers and body for login request
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $jwtKey',
+
+    };
+    var body = jsonEncode({
+      'fullName':name,
+      'email': email,
+      "profileImage":profileImage,
+    });
+
+    try {
+
+      var response = await http.post(userChangeUrl, headers: headers, body: body);
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+
+      } else {
+        throw Exception('Failed to change user');
+      }
+    } catch (e) {
+      print('Error: $e');
+      return {'error': e.toString()};
+    }
+
+  }
+  Future<Map<String, dynamic>> updatePassword(String password) async {
+
+    var Url = Uri.parse('http://localhost:8080/api/auth/reset_password');
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $jwtKey',
+
+    };
+    var body = jsonEncode({
+
+      'password':password,
+
+    });
+
+    try {
+
+      var response = await http.post(Url, headers: headers, body: body);
+
+      if (response.statusCode == 200) {
+        print("sucessfully changed password");
+        return jsonDecode(response.body);
+
+      } else {
+        throw Exception('Failed to change password');
+      }
+    } catch (e) {
+      print('Error: $e');
+      return {'error': e.toString()};
+    }
+  }
+
 }

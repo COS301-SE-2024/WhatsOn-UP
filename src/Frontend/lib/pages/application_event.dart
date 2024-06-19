@@ -7,12 +7,18 @@ class ApplicationEvent extends StatefulWidget {
   // final String profileImageUrl;
   final String userName;
   final String userEmail;
-  // final String role;
+  final String userId;
+  final String role;
+  final String  profileImage;
   const ApplicationEvent({
     Key? key,
     // required this.profileImageUrl,
+
     required this.userName,
     required this.userEmail,
+    required this.userId,
+    required this.role,
+    required this. profileImage,
 
     // required this.role,
   }): super(key: key);
@@ -180,6 +186,10 @@ class _ApplicationEventState extends State<ApplicationEvent> {
               // profileImageUrl: widget.profileImageUrl,
               userName: widget.userName,
               userEmail: widget.userEmail,
+
+              userId: widget.userId,
+              role: widget.role,
+                profileImage: widget. profileImage,
               // role: widget.role,
             ),
         ),

@@ -8,13 +8,17 @@ class SettingsPage extends StatefulWidget {
   // final String profileImageUrl;
   final String userName;
   final String userEmail;
-  // final String role;
+  final String userId;
+  final String role;
+  final String  profileImage;
   const SettingsPage({
     Key? key,
     // required this.profileImageUrl,
     required this.userName,
     required this.userEmail,
-    // required this.role;
+    required this.userId,
+    required this.role,
+    required this. profileImage,
   }): super(key: key);
 
   @override
@@ -60,7 +64,9 @@ class _SettingsPageState extends State<SettingsPage> {
                       // profileImageUrl: //widget.profileImageUrl,
                       userName: widget.userName,
                       userEmail: widget.userEmail,
-                      // role: widget.role;
+                      userId: widget.userId,
+                       role: widget.role,
+                        profileImage: widget.profileImage,
                     ),),
                    );
                     },
