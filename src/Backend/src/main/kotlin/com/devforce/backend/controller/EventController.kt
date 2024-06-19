@@ -25,6 +25,7 @@ class EventController {
     }
 
     @GetMapping("/get_all")
+    @PreAuthorize("permitAll()")
     fun getAllEvents(): ResponseEntity<ResponseDto>{
         return eventService.getAllEvents()
     }
@@ -42,11 +43,19 @@ class EventController {
     }
 
     @GetMapping("/get/{id}")
+    @PreAuthorize("permitAll()")
     fun getEvent(@PathVariable id: UUID): ResponseEntity<ResponseDto> {
         return  eventService.getEvent(id)
     }
 
+    @GetMapping("/{eventId}/media")
+    @PreAuthorize("permitAll()")
+    fun getEventMedia(@PathVariable eventId: UUID): ResponseEntity<ResponseDto> {
+        return eventService.getEventMedia(eventId)
+    }
+
     @GetMapping("/search")
+    @PreAuthorize("permitAll()")
     fun searchEvents(
         @RequestParam(required = false) title: String?,
         @RequestParam(required = false) description: String?,
