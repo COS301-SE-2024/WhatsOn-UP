@@ -19,7 +19,7 @@ class CustomUserDetailsService: UserDetailsService {
         val user = userRepo.findByEmail(email)
             ?: throw UsernameNotFoundException("User not found")
 
-        val roleName = user.role?.name ?: "GENERAL"
+        val roleName = user.role!!.name
         val authorities = setOf(SimpleGrantedAuthority(roleName))
         return User(user.email, user.password, authorities)
     }

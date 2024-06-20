@@ -44,6 +44,15 @@ class JwtGenerator {
         return ResponseDto("success", System.currentTimeMillis(), mapOf("jwtToken" to token, "refreshToken" to refreshToken))
     }
 
+    fun checkExpiry(jwtToken: String): Boolean {
+        val claims: Claims = Jwts.parser()
+            .setSigningKey(SECRET)
+            .parseClaimsJws(jwtToken)
+            .body
+
+        return claims.expiration.after(Date())
+    }
+
     fun refreshToken(jwtToken: String, refreshToken: String): ResponseDto {
         return try {
             val claims: Claims = Jwts.parser()

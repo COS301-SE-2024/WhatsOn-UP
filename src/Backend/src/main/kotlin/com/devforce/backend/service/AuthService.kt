@@ -36,6 +36,9 @@ class AuthService {
     @Autowired
     lateinit var jwtGenerator: JwtGenerator
 
+    @Autowired
+    lateinit var checkJwt: CheckJwt
+
     fun registerUser(userDTO: RegisterDto): ResponseEntity<ResponseDto> {
         if (userRepo.findByEmail(userDTO.email) != null) {
             return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Email is already taken"))
@@ -87,24 +90,31 @@ class AuthService {
     }
 
     fun refreshToken(jwtToken: String, refreshToken: String): ResponseEntity<ResponseDto> {
-        if (!jwtGenerator.validateToken(jwtToken)) {
-            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Invalid token"))
+        val response = checkJwt.check(jwtToken)
+        if (response != null) {
+            return response
         }
 
-        val refreshedDto = jwtGenerator.refreshToken(jwtToken, refreshToken)
+        val expiry = jwtGenerator.checkExpiry(jwtToken)
 
-        return ResponseEntity.ok(refreshedDto)
+        if (!expiry) {
+            val refreshedDto = jwtGenerator.refreshToken(jwtToken, refreshToken)
+            return ResponseEntity.ok(refreshedDto)
+        }
+
+        return ResponseEntity.ok(
+            ResponseDto(
+                "success",
+                System.currentTimeMillis(),
+                "Token is still valid"
+            )
+        )
     }
 
     fun logoutUser(token: String): ResponseEntity<ResponseDto> {
-        if (!jwtGenerator.validateToken(token)) {
-            return ResponseEntity.badRequest().body(
-                ResponseDto(
-                    "error",
-                    System.currentTimeMillis(),
-                    "Invalid token"
-                )
-            )
+        val response = checkJwt.check(token)
+        if (response != null) {
+            return response
         }
 
         val email = jwtGenerator.getUsernameFromToken(token)
@@ -127,8 +137,9 @@ class AuthService {
 
 
     fun getUser(token: String): ResponseEntity<ResponseDto> {
-        if (!jwtGenerator.validateToken(token)) {
-            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Invalid token"))
+        val response = checkJwt.check(token)
+        if (response != null) {
+            return response
         }
 
         val email = jwtGenerator.getUsernameFromToken(token)
@@ -137,8 +148,9 @@ class AuthService {
         val userCreds = mapOf(
             "email" to user.email,
             "role" to user.role?.name,
-            "id" to user.id,
-            "fullName" to user.fullName
+            "id" to user.userId,
+            "fullName" to user.fullName,
+            "profileImage" to user.profileImage
         )
 
         return ResponseEntity.ok(
@@ -151,18 +163,46 @@ class AuthService {
     }
 
     fun deleteUser(token: String): ResponseEntity<ResponseDto> {
-        if (!jwtGenerator.validateToken(token)) {
-            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Invalid token"))
+        val response = checkJwt.check(token)
+        if (response != null) {
+            return response
         }
 
         val email = jwtGenerator.getUsernameFromToken(token)
         val user = userRepo.findByEmail(email)!!
-
         userRepo.delete(user)
 
         return ResponseEntity.ok(
             ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Account deleted successfully"))
         )
+    }
+
+    fun resetPassword(token: String, newPassword: String): ResponseEntity<ResponseDto> {
+        try {
+            val response = checkJwt.check(token)
+            if (response != null) {
+                return response
+            }
+
+            val email = jwtGenerator.getUsernameFromToken(token)
+            val user = userRepo.findByEmail(email)!!
+
+            user.password = passwordEncoder.encode(newPassword)
+            userRepo.save(user)
+
+            val authentication: Authentication = authenticationManager.authenticate(
+                UsernamePasswordAuthenticationToken(email, newPassword)
+            )
+
+            SecurityContextHolder.getContext().authentication = authentication
+
+            val tokenDto = jwtGenerator.generateToken(authentication)
+
+            return ResponseEntity.ok(tokenDto)
+        } catch (ex: AuthenticationException) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(ResponseDto("error", System.currentTimeMillis(), "Authentication failed: ${ex.message}"))
+        }
     }
 
 }

@@ -10,23 +10,24 @@ import 'package:firstapp/screens/splash.dart';
 import 'package:provider/provider.dart';
 import 'package:firstapp/pages/settings_page.dart';
 import 'package:firstapp/screens/SearchScreen.dart';
-import 'package:firstapp/widgets/SearchImageTile.dart';
-import 'package:firstapp/widgets/SearchTile.dart';
-import 'package:firstapp/services/EventService.dart';
 
 
 void main() {
+  // runApp(const MyApp());
   return runApp(ChangeNotifierProvider<ThemeNotifier>(
     create: (_) => new ThemeNotifier(),
     child: MyApp(),
-  ));
+    ));
 }
+
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: AnimatedSplashScreen(
+    return Consumer<ThemeNotifier>(
+      builder: (context, theme, _) => MaterialApp(
+        theme: theme.getTheme(),
+        home: AnimatedSplashScreen(
         splash: const Center(
           child: Text(
             'WhatsOn@UP',
@@ -36,10 +37,12 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-        nextScreen: SearchScreen(),
+          nextScreen: const LoginPage(),
+       
         splashTransition: SplashTransition.slideTransition,
       ),
       debugShowCheckedModeBanner: false,
+      ),
     );
   }
 }

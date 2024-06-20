@@ -3,7 +3,7 @@ import 'dart:convert';
 
 Future<Map<String, dynamic>> postRequest(email, password) async {
   // Define the URL
-  final url = Uri.parse('http://localhost:8080/login');
+  final url = Uri.parse('http://ec2-13-60-34-71.eu-north-1.compute.amazonaws.com:8080/login');
 
   // Define the headers and body
   final headers = {"Content-Type": "application/json"};
