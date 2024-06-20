@@ -1,8 +1,3 @@
-
-
-
-
-
 import 'dart:typed_data';
 import 'dart:convert';
 import 'package:flutter/material.dart';
@@ -21,22 +16,20 @@ import 'package:image_picker/image_picker.dart';
 import 'package:firstapp/services/api.dart';
 // import 'package:filepicker_windows/filepicker_windows.dart';
 
-
 class EditprofilePage extends StatefulWidget {
   final String userName;
   final String userEmail;
   final String userId;
   final String role;
-  String  profileImage;
+  Uint8List? profileImage;
 
-   EditprofilePage({
+  EditprofilePage({
     Key? key,
     required this.userName,
     required this.userEmail,
     required this.userId,
     required this.role,
     required this.profileImage,
-
   }) : super(key: key);
 
   @override
@@ -51,7 +44,6 @@ class _EditprofilePageState extends State<EditprofilePage> {
       Uint8List img = await pickImage(ImageSource.gallery);
       setState(() {
         _image = img;
-        widget.profileImage = base64Encode(img);
       });
     } catch (e) {
       print('Failed to pick image: $e');
@@ -128,8 +120,9 @@ class _EditprofilePageState extends State<EditprofilePage> {
                   child: Text(
                     'Save',
                     style: TextStyle(
-                        color: theme.brightness == Brightness.dark ? Colors
-                            .white : Colors.black),
+                        color: theme.brightness == Brightness.dark
+                            ? Colors.white
+                            : Colors.black),
                   ),
                 ),
               ),
@@ -139,14 +132,13 @@ class _EditprofilePageState extends State<EditprofilePage> {
                 child: ElevatedButton(
                   onPressed: () {
                     MaterialPageRoute(
-                      builder: (context) =>
-                          ProfilePage(
-                            userName: widget.userName,
-                            userEmail: widget.userEmail,
-                            userId: widget.userId,
-                            role: widget.role,
-                            profileImage: widget.profileImage,
-                          ),
+                      builder: (context) => ProfilePage(
+                        userName: widget.userName,
+                        userEmail: widget.userEmail,
+                        userId: widget.userId,
+                        role: widget.role,
+                        profileImage: widget.profileImage,
+                      ),
                     );
                   },
                   style: ElevatedButton.styleFrom(
@@ -158,8 +150,9 @@ class _EditprofilePageState extends State<EditprofilePage> {
                   child: Text(
                     'Cancel',
                     style: TextStyle(
-                        color: theme.brightness == Brightness.dark ? Colors
-                            .white : Colors.black),
+                        color: theme.brightness == Brightness.dark
+                            ? Colors.white
+                            : Colors.black),
                   ),
                 ),
               ),
@@ -174,49 +167,44 @@ class _EditprofilePageState extends State<EditprofilePage> {
     return Center(
       child: Stack(
         children: [
-          _image != null ?
-          Container(
-
-            width: 130,
-            height: 130,
-            decoration: BoxDecoration(
-              border: Border.all(width: 4, color: Colors.white),
-              boxShadow: [
-                BoxShadow(
-                  spreadRadius: 2,
-                  blurRadius: 10,
-                  color: Colors.black.withOpacity(0.1),
+          _image != null
+              ? Container(
+                  width: 130,
+                  height: 130,
+                  decoration: BoxDecoration(
+                    border: Border.all(width: 4, color: Colors.white),
+                    boxShadow: [
+                      BoxShadow(
+                        spreadRadius: 2,
+                        blurRadius: 10,
+                        color: Colors.black.withOpacity(0.1),
+                      ),
+                    ],
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                      fit: BoxFit.cover,
+                      image: MemoryImage(_image!),
+                    ),
+                  ),
+                )
+              : Container(
+                  width: 130,
+                  height: 130,
+                  decoration: BoxDecoration(
+                    border: Border.all(width: 4, color: Colors.white),
+                    boxShadow: [
+                      BoxShadow(
+                        spreadRadius: 2,
+                        blurRadius: 10,
+                        color: Colors.black.withOpacity(0.1),
+                      ),
+                    ],
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                        fit: BoxFit.cover,
+                        image: MemoryImage(widget.profileImage!)),
+                  ),
                 ),
-              ],
-              shape: BoxShape.circle,
-              image: DecorationImage(
-                fit: BoxFit.cover,
-                image: MemoryImage(
-                    _image!
-                ),
-              ),
-            ),
-          )
-              :
-          Container(
-            width: 130,
-            height: 130,
-            decoration: BoxDecoration(
-              border: Border.all(width: 4, color: Colors.white),
-              boxShadow: [
-                BoxShadow(
-                  spreadRadius: 2,
-                  blurRadius: 10,
-                  color: Colors.black.withOpacity(0.1),
-                ),
-              ],
-              shape: BoxShape.circle,
-              image: DecorationImage(
-                fit: BoxFit.cover,
-                image: NetworkImage(widget.profileImage),
-              ),
-            ),
-          ),
           Positioned(
             bottom: 0,
             right: 0,
@@ -225,8 +213,6 @@ class _EditprofilePageState extends State<EditprofilePage> {
               width: 40,
               child: IconButton(
                   onPressed: selectImage,
-
-
                   icon: Icon(Icons.add_a_photo),
                   color: Colors.black),
             ),
@@ -236,8 +222,8 @@ class _EditprofilePageState extends State<EditprofilePage> {
     );
   }
 
-  Widget _buildTextField(String labelText, TextEditingController controller,
-      bool isPassword) {
+  Widget _buildTextField(
+      String labelText, TextEditingController controller, bool isPassword) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 30),
       child: TextFormField(
@@ -246,16 +232,16 @@ class _EditprofilePageState extends State<EditprofilePage> {
         decoration: InputDecoration(
           suffixIcon: isPassword
               ? IconButton(
-            onPressed: () {
-              setState(() {
-                isObscurePassword = !isObscurePassword;
-              });
-            },
-            icon: Icon(
-              isObscurePassword ? Icons.visibility_off : Icons.visibility,
-              color: Colors.grey,
-            ),
-          )
+                  onPressed: () {
+                    setState(() {
+                      isObscurePassword = !isObscurePassword;
+                    });
+                  },
+                  icon: Icon(
+                    isObscurePassword ? Icons.visibility_off : Icons.visibility,
+                    color: Colors.grey,
+                  ),
+                )
               : null,
           labelText: labelText,
           floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -283,13 +269,17 @@ class _EditprofilePageState extends State<EditprofilePage> {
     String userEmail;
     String userId;
     String newPassword;
+    String profileImageBase64;
+    String base64Image;
     if (_formKey.currentState!.validate()) {
       final adjustedName = nameController.text.isNotEmpty
           ? nameController.text
           : widget.userName;
-      final adjustedEmail = emailController.text.isNotEmpty ? emailController
-          .text : widget.userEmail;
-      final adjustedPassword = passwordController.text;
+      final adjustedEmail = emailController.text.isNotEmpty
+          ? emailController.text
+          : widget.userEmail;
+      final adjustedPassword =
+      passwordController.text.isNotEmpty ? passwordController.text : '';
 
       final user = User(
         name: adjustedName,
@@ -297,61 +287,87 @@ class _EditprofilePageState extends State<EditprofilePage> {
         password: adjustedPassword,
         userId: widget.userId,
       );
+      fullName = adjustedName;
+      userEmail = adjustedEmail;
 
       Api api = Api();
 
-      api.postChangeUser(
-          user.name, user.email, widget.profileImage).then((
-          response) {
+      base64Image = _image != null
+          ? base64Encode(_image!)
+          : base64Encode(widget.profileImage!);
+
+      api.postChangeUser(user.name, user.email, base64Image).then((response) {
         if (response['error'] != null) {
           print('An error occurred: ${response['error']}');
         } else {
-           fullName = response['body']['user']['fullName'] ?? 'Unknown';
+          fullName = response['body']['user']['fullName'] ?? 'Unknown';
           userEmail = response['body']['user']['email'] ?? 'Unknown';
-           userId = response['body']['user']['email'] ?? 'unknown';
+          String  profileImage=response['data']['user']['profileImage']?? 'Unknown';
+          Uint8List profileImageBytes = Uint8List(0);
 
+          bool isBase64(String input) {
+            final RegExp base64 = RegExp(
+              r'^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$',
+            );
+            return base64.hasMatch(input);
+          }
 
-          api.updatePassword(user.password).then((response2) {
-            if (response2['error'] != null) {
-              print('An error occurred: ${response['error']}');
-            } else {
-              newPassword = response2['body']['user']['password'] ??
-                  'Unknown';
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      ProfilePage(
-                        userName: fullName,
-                        userEmail: userEmail,
-                        userId: userId,
-                        role: widget.role,
-                        profileImage: widget.profileImage,
-                      ),
-                ),
-              );
+          if (isBase64(profileImage)) {
+
+            try {
+              profileImageBytes = base64Decode(profileImage);
+              setState(() {
+                _image = profileImageBytes;
+                widget.profileImage = profileImageBytes;
+              });
+            } catch (e) {
+              print('Error decoding Base64: $e');
             }
-          });
+          } else {
+            print('Invalid Base64 string: $profileImage');
+          }
+          if (user.password.isNotEmpty) {
+            api.updatePassword(user.password).then((response2) {
+              if (response2['error'] != null) {
+                print('An error occurred: ${response2['error']}');
+              }
+            });
+          }
         }
       });
+
+      // Navigate to ProfilePage regardless of API result
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ProfilePage(
+            userName: fullName,
+            userEmail: userEmail,
+            userId: widget.userId,
+            role: widget.role,
+            profileImage: widget.profileImage,
+          ),
+        ),
+      );
     }
   }
 }
-  class User {
+
+class User {
   final String name;
   final String email;
   final String password;
   final String userId;
 
   User({
-  required this.name,
-  required this.email,
-  required this.password,
-  required this.userId,
+    required this.name,
+    required this.email,
+    required this.password,
+    required this.userId,
   });
 
   @override
   String toString() {
-  return 'User(name: $name, email: $email, password: $password, userId: $userId)';
+    return 'User(name: $name, email: $email, password: $password, userId: $userId)';
   }
-  }
+}

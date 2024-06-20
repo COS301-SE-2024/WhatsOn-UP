@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firstapp/pages/profilePage.dart';
 import 'package:flutter/cupertino.dart';
-
+import 'dart:typed_data';
 class ApplicationEvent extends StatefulWidget {
 
   // final String profileImageUrl;
@@ -9,11 +9,11 @@ class ApplicationEvent extends StatefulWidget {
   final String userEmail;
   final String userId;
   final String role;
-  final String  profileImage;
-  const ApplicationEvent({
+  Uint8List? profileImage;
+
+  ApplicationEvent({
     Key? key,
     // required this.profileImageUrl,
-
     required this.userName,
     required this.userEmail,
     required this.userId,

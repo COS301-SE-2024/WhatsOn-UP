@@ -10,14 +10,14 @@ import 'package:firstapp/pages/searchbar.dart';
 import 'package:firstapp/pages/data_search.dart';
 import 'package:firstapp/pages/profilePage.dart';
 // import 'package:firstapp/widgets/eventcard.dart';
-
+import 'dart:typed_data';
 class HomePage extends StatefulWidget {
   // final String profileImageUrl;
   final String userName;
   final String userEmail;
   final String userId;
   final String role;
-  final String  profileImage;
+  final Uint8List? profileImage;
 
   const HomePage(
       {
@@ -27,7 +27,7 @@ class HomePage extends StatefulWidget {
         required this.userEmail,
         required this.userId,
         required this.role,
-        required this. profileImage,
+        required this.profileImage,
 
       }
       ): super(key: key);
@@ -114,7 +114,7 @@ class _HomePageState extends State<HomePage> {
           userEmail: widget.userEmail,
              role:widget.role,
            userId: widget.userId,
-             profileImage: widget.profileImage,
+           profileImage: widget.profileImage,
          );
       default:
         return _buildHomePage();
@@ -153,8 +153,9 @@ class _HomePageState extends State<HomePage> {
                     );
                   },
                   child:  CircleAvatar(
-                    backgroundImage: NetworkImage(
-                        "http/image"), // Replace the URL with your profile image URL
+                    backgroundImage: widget.profileImage!=null
+                    ? MemoryImage(widget.profileImage!)
+                    : AssetImage('http/example-image') as ImageProvider,// Replace the URL with your profile image URL
                     radius:
                         24.0, // Adjust the size of the profile icon as needed
                   ),

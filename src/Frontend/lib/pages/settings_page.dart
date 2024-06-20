@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firstapp/widgets/theme_manager.dart';
 import 'package:firstapp/pages/profilePage.dart';
-
+import 'dart:typed_data';
 class SettingsPage extends StatefulWidget {
 
   // final String profileImageUrl;
@@ -10,7 +10,7 @@ class SettingsPage extends StatefulWidget {
   final String userEmail;
   final String userId;
   final String role;
-  final String  profileImage;
+  final Uint8List?  profileImage;
   const SettingsPage({
     Key? key,
     // required this.profileImageUrl,

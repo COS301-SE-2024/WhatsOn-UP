@@ -1,7 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-
+import 'dart:convert';
+import 'dart:typed_data';
 class Api {
   // Singleton instance
   static final Api _instance = Api._internal();
@@ -59,6 +60,7 @@ class Api {
       // }
 
       final String _userUrl = 'http://localhost:8080/api/auth/get_user';
+
       var headers = {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
@@ -82,8 +84,9 @@ class Api {
 
 
 
-  Future<Map<String, dynamic>> postChangeUser(String name, String email, String profileImage) async {
+  Future<Map<String, dynamic>> postChangeUser(String name, String email,  String profileImage) async {
     // Url for posting new informaion
+
     var userChangeUrl = Uri.parse('http://localhost:8080/api/user/update_profile');
 
     // Define the headers and body for login request
@@ -101,7 +104,7 @@ class Api {
 
     try {
 
-      var response = await http.post(userChangeUrl, headers: headers, body: body);
+      var response = await http.put(userChangeUrl, headers: headers, body: body);
 
       if (response.statusCode == 200) {
         return jsonDecode(response.body);

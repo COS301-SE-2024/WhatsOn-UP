@@ -4,13 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:firstapp/pages/application_event.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:firstapp/pages/editProfile_page.dart';
+import 'dart:typed_data';
 class ProfilePage extends StatelessWidget {
   // final String profileImageUrl;
   final String userName;
   final String userEmail;
   final String userId;
   final String role;
-  final String  profileImage;
+  final Uint8List? profileImage;
   //final String userId;
   const ProfilePage({
   // required this.profileImageUrl,
@@ -44,7 +45,9 @@ class ProfilePage extends StatelessWidget {
                 width: 120,
                 height: 120,
                 child: CircleAvatar(
-                  backgroundImage: NetworkImage("http.example"),
+                  backgroundImage: profileImage!=null
+                      ? MemoryImage(profileImage!)
+                      : AssetImage('http/example-image') as ImageProvider,
                   radius: 24.0,
                 ),
               ),
