@@ -1,13 +1,15 @@
 package com.devforce.backend.dto
 
+import java.time.LocalDateTime
+
 data class CreateEventDto(
-    val name: String,
+    val title: String,
     val description: String,
-    val startDate: Long,
-    val endDate: Long,
+    val startDate: LocalDateTime,
+    val endDate: LocalDateTime,
     val location: String,
-    val maxParticipants: Int,
-    val metadata: String,
-    val isPrivate: Boolean,
-    val hosts: String
+    val maxParticipants: Int?,
+    val metadata: String?,
+    val isPrivate: Boolean?,
+    val media: List<String>?
 )

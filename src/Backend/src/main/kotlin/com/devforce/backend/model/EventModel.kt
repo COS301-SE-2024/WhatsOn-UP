@@ -22,9 +22,9 @@ class EventModel {
     @ESId
     @GeneratedValue
     @Column(columnDefinition = "UUID")
-    var id: UUID = UUID.randomUUID()
+    var eventId: UUID = UUID.randomUUID()
 
-    var name: String = ""
+    var title: String = ""
     var description: String = ""
     var metadata: String = ""
 
@@ -36,7 +36,6 @@ class EventModel {
     private var createdAt: LocalDateTime = LocalDateTime.now()
     private var updatedAt: LocalDateTime = LocalDateTime.now()
 
-    var hosts: String = ""
     var location: String = ""
     var startTime: LocalDateTime = LocalDateTime.now()
     var endTime: LocalDateTime = LocalDateTime.now()
@@ -46,11 +45,19 @@ class EventModel {
 
     @ManyToMany
     @JoinTable(
+        name = "event_hosts",
+        joinColumns = [JoinColumn(name = "event_id")],
+        inverseJoinColumns = [JoinColumn(name = "user_id")]
+    )
+    var hosts: Set<UserModel> = HashSet()
+
+    @ManyToMany
+    @JoinTable(
         name = "event_attendees",
         joinColumns = [JoinColumn(name = "event_id")],
         inverseJoinColumns = [JoinColumn(name = "user_id")]
     )
-    var attendees: Set<UserModel> = HashSet()
+    var attendees: MutableSet<UserModel> = HashSet()
 
     @ManyToMany
     @JoinTable(
@@ -58,7 +65,7 @@ class EventModel {
         joinColumns = [JoinColumn(name = "event_id")],
         inverseJoinColumns = [JoinColumn(name = "user_id")]
     )
-    var invitees: Set<UserModel> = HashSet()
+    var invitees: MutableSet<UserModel> = HashSet()
 
     @PrePersist
     fun prePersist() {
@@ -72,10 +79,10 @@ class EventModel {
     }
 
     fun getEsId(): String {
-        return id.toString()
+        return eventId.toString()
     }
 
     fun setEsId(esId: String) {
-        id = UUID.fromString(esId)
+        eventId = UUID.fromString(esId)
     }
 }

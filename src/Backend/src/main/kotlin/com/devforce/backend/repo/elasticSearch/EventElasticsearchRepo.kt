@@ -6,6 +6,6 @@ import org.springframework.data.elasticsearch.repository.ElasticsearchRepository
 
 //@Repository
 interface EventElasticsearchRepo : ElasticsearchRepository<EventModel, String> {
-    fun findByName(name: String): List<EventModel>
+    fun findByTitle(title: String): List<EventModel>
     fun findByDescription(description: String): List<EventModel>
 }
