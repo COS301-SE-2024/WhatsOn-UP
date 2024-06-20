@@ -1,19 +1,16 @@
 package com.devforce.backend.service
 
-import com.devforce.backend.dto.CreateEventDto
-import com.devforce.backend.dto.ResponseDto
-import com.devforce.backend.dto.UpdateEventDto
+import com.devforce.backend.dto.*
 import com.devforce.backend.model.EventModel
 import com.devforce.backend.repo.jpa.EventRepo
+import com.devforce.backend.repo.jpa.UserRepo
 import com.devforce.backend.repo.elasticSearch.EventElasticsearchRepo
-import com.devforce.backend.repo.jpa.EventMediaRepo
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.HttpStatus
+import com.devforce.backend.repo.jpa.EventMediaRepo
 import org.springframework.http.ResponseEntity
+import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneId
+import java.time.*
 import java.util.*
 import java.util.stream.Collectors
 
@@ -22,40 +19,59 @@ class EventService @Autowired constructor(
     private val eventRepo: EventRepo,
     private val eventElasticsearchRepo: EventElasticsearchRepo,
     private val eventMediaRepo: EventMediaRepo
-) {
+)  {
+    @Autowired
+    lateinit var checkJwt: CheckJwt
+
+    @Autowired
+    lateinit var userRepo: UserRepo
+
 
     // To do: Implement function to create a new event
-    fun createEvent(event: CreateEventDto): ResponseEntity<ResponseDto> {
-        val eventModel = EventModel().apply {
-            name = event.name
-            description = event.description
-            metadata = event.metadata
-            hosts = event.hosts
-            location = event.location
-            startTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(event.startDate), ZoneId.systemDefault())
-            endTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(event.endDate), ZoneId.systemDefault())
-            maxAttendees = event.maxParticipants
-            isPrivate = event.isPrivate
+    fun createEvent(createEventDto: CreateEventDto, token: String): ResponseEntity<ResponseDto> {
+        val response = checkJwt.check(token)
+        if (response != null) {
+            return response
         }
-        val savedEvent = eventRepo.save(eventModel)
-        eventElasticsearchRepo.save(savedEvent)
-        return ResponseEntity.ok().body(ResponseDto("Event created successfully", System.currentTimeMillis(), savedEvent))
+
+        val email = checkJwt.jwtGenerator.getUsernameFromToken(token)
+        val user = userRepo.findByEmail(email)!!
+
+        val event = EventModel().apply {
+            this.title = createEventDto.title
+            this.description = createEventDto.description
+            this.startTime = createEventDto.startDate
+            this.endTime = createEventDto.endDate
+            this.location = createEventDto.location
+            this.maxAttendees = createEventDto.maxParticipants ?: 10
+            this.metadata = createEventDto.metadata ?: ""
+            this.isPrivate = createEventDto.isPrivate ?: false
+            this.hosts = setOf(user)
+            this.eventMedia = createEventDto.media ?: emptyList()
+        }
+
+        eventRepo.save(event)
+
+        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Event added successfully"))
+        )
     }
 
     // To do: Implement function to retrieve all events
     fun getAllEvents(): ResponseEntity<ResponseDto> {
+        // Implementation goes here
         val events = eventRepo.findAll()
-        return ResponseEntity.ok(ResponseDto("All events fetched", System.currentTimeMillis(), events))
+        val eventsDto = events.map { event -> AllEventsDto(event) }
+        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto)
+        )
     }
 
     // To do: Implement function to update an existing event
     fun updateEvent(id: UUID, updateEventDto: UpdateEventDto): ResponseEntity<ResponseDto> {
         val existingEvent = eventRepo.findById(id).orElseThrow { Exception("Event not found") }
         existingEvent.apply {
-            updateEventDto.name?.let { name = it }
+            updateEventDto.title?.let { title = it }
             updateEventDto.description?.let { description = it }
             updateEventDto.metadata?.let { metadata = it }
-            updateEventDto.hosts?.let { hosts = it }
             updateEventDto.location?.let { location = it }
             updateEventDto.startDate?.let { startTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(it), ZoneId.systemDefault()) }
             updateEventDto.endDate?.let { endTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(it), ZoneId.systemDefault()) }
@@ -69,67 +85,77 @@ class EventService @Autowired constructor(
 
     // To do: Implement function to delete an event
     fun deleteEvent(id: UUID): ResponseEntity<ResponseDto> {
-        if (eventRepo.existsById(id)) {
-            eventRepo.deleteById(id)
-            eventElasticsearchRepo.deleteById(id.toString())
-            return ResponseEntity.ok(ResponseDto("Event deleted successfully", System.currentTimeMillis(), emptyMap<String, Any>()))
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseDto("Event not found", System.currentTimeMillis(), mapOf("id" to id.toString())))
-        }
-    }
 
-    fun getEvent(id: UUID): ResponseEntity<ResponseDto> {
         val event = eventRepo.findById(id)
-        return if (event.isPresent) {
-            ResponseEntity.ok(ResponseDto("Event fetched successfully", System.currentTimeMillis(), event.get()))
-        } else {
-            ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseDto("Event not found", System.currentTimeMillis(), mapOf("id" to id.toString())))
+        if (event.isEmpty) {
+            return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "Event not found"))
+            )
         }
+
+        eventRepo.delete(event.get())
+
+        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Event deleted successfully"))
+        )
     }
 
-    // To do: Implement function to search events based on criteria
-    fun searchEvents(
-        title: String?,
-        description: String?,
-        startDate: Long?,
-        endDate: Long?
-    ): ResponseEntity<ResponseDto> {
-        println("Searching events with parameters: title=$title, description=$description, startDate=$startDate, endDate=$endDate")
-
-        val results = mutableListOf<EventModel>()
-
-        if (!title.isNullOrBlank()) {
-            results.addAll(eventElasticsearchRepo.findByName(title))
-            println("Results for title search: ${results.size}")
-            results.addAll(results)
+        fun getEvent(id: UUID): ResponseEntity<ResponseDto> {
+            val event = eventRepo.findById(id)
+            return if (event.isPresent) {
+                ResponseEntity.ok(ResponseDto("Event fetched successfully", System.currentTimeMillis(), event.get()))
+            } else {
+                ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(ResponseDto("Event not found", System.currentTimeMillis(), mapOf("id" to id.toString())))
+            }
         }
-        if (!description.isNullOrBlank()) {
-            results.addAll(eventElasticsearchRepo.findByDescription(description))
-            println("Results for description search: ${results.size}")
-            results.addAll(results)
+
+        // To do: Implement function to search events based on criteria
+        fun searchEvents(
+            title: String?,
+            description: String?,
+            startDate: LocalDateTime?,
+            endDate: LocalDateTime?
+        ): ResponseEntity<ResponseDto> {
+            println("Searching events with parameters: title=$title, description=$description, startDate=$startDate, endDate=$endDate")
+
+            val results = mutableListOf<EventModel>()
+
+            if (!title.isNullOrBlank()) {
+                results.addAll(eventElasticsearchRepo.findByTitle(title))
+                println("Results for title search: ${results.size}")
+                results.addAll(results)
+            }
+            if (!description.isNullOrBlank()) {
+                results.addAll(eventElasticsearchRepo.findByDescription(description))
+                println("Results for description search: ${results.size}")
+                results.addAll(results)
+            }
+            // Implement search by date range logic if needed
+
+            println("Found ${results.size} events")
+
+            return ResponseEntity.ok(ResponseDto("Events searched successfully", System.currentTimeMillis(), results))
         }
-        // Implement search by date range logic if needed
 
-        println("Found ${results.size} events")
+        fun getAllEventsWithMedia(): List<EventModel> {
+            val events = eventRepo.findAll()
+            events.forEach { event ->
+                val mediaLinks = eventMediaRepo.findByEventId(event.eventId)
+                    .map { it.mediaLink }
+                event.eventMedia = mediaLinks
+            }
+            return events
+        }
 
-        return ResponseEntity.ok(ResponseDto("Events searched successfully", System.currentTimeMillis(), results))
+        fun getEventMedia(eventId: UUID): ResponseEntity<ResponseDto> {
+            val eventMedia = eventMediaRepo.findByEventId(eventId)
+
+            return if (eventMedia.isNotEmpty()) {
+                ResponseEntity.ok()
+                    .body(ResponseDto("Event media fetched successfully", System.currentTimeMillis(), eventMedia))
+            } else {
+                ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(ResponseDto("Event media not found", System.currentTimeMillis(), emptyMap<String, Any>()))
+            }
+
+        }
     }
-    fun getAllEventsWithMedia(): List<EventModel> {
-        val events = eventRepo.findAll()
-        events.forEach { event ->
-            val mediaLinks = eventMediaRepo.findByEventId(event.id)
-                .map { it.mediaLink }
-            event.eventMedia = mediaLinks
-        }
-        return events
-    }
-    fun getEventMedia(eventId: UUID): ResponseEntity<ResponseDto> {
-        val eventMedia = eventMediaRepo.findByEventId(eventId)
-
-        return if (eventMedia.isNotEmpty()) {
-            ResponseEntity.ok().body(ResponseDto("Event media fetched successfully", System.currentTimeMillis(), eventMedia))
-        } else {
-            ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseDto("Event media not found", System.currentTimeMillis(), emptyMap<String, Any>()))
-        }
-    }
-}
