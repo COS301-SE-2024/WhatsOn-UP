@@ -7,24 +7,24 @@ import 'package:firstapp/pages/editProfile_page.dart';
 import 'dart:typed_data';
 import 'package:firstapp/pages/home_page.dart';
 class ProfilePage extends  StatefulWidget {
-  // final String profileImageUrl;
+
   final String userName;
   final String userEmail;
   final String userId;
   final String role;
   Uint8List? profileImage;
 
-  //final String userId;
+
   ProfilePage({
     Key? key,
-    // required this.profileImageUrl,
+
     required this.userName,
     required this.userEmail,
     required this.userId,
     required this.role,
     required this.profileImage,
-    //required this.userId;
-  }): super(key: key); // Constructor to initialize final variable
+
+  }): super(key: key);
 
 
 
@@ -70,7 +70,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       : AssetImage('http/example-image') as ImageProvider,
                   radius: 60.0,
                 ),
-                  // if (widget.role == '1')
+                   if (widget.role == 'admin')
                     Positioned(
                       bottom: 0,
                       right: 0,
