@@ -127,7 +127,8 @@ class EventService @Autowired constructor(
             println("Searching events with parameters: title=$title, description=$description, startDate=$startDate, endDate=$endDate")
 
             val results = eventRepo.searchEvents(title, description, startDate, endDate)
-            println("Found ${results.size} events"); return ResponseEntity.ok(ResponseDto("Events searched successfully", System.currentTimeMillis(), results))
+            println("Found ${results.size} events");
+            return ResponseEntity.ok(ResponseDto("Events searched successfully", System.currentTimeMillis(), results))
 
 
             // Implement search by date range logic

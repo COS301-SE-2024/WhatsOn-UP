@@ -1,3 +1,6 @@
+
+package com.devforce.backend.repo.jpa
+
 import com.devforce.backend.model.EventModel
 import com.devforce.backend.model.UserModel
 import org.springframework.data.jpa.repository.JpaRepository
@@ -15,3 +18,4 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
             "(?4 IS NULL OR e.endTime <= ?4)")
     fun searchEvents(title: String?, description: String?, startDate: LocalDateTime?, endDate: LocalDateTime?): List<EventModel>
 }
+
