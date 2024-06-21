@@ -80,8 +80,29 @@ class Api {
     }
   }
 
+  //Method to retrieve rsvpd events
+  Future<List<dynamic>> getRSVPEvents() async {
+    try {
+      final String _rsvpEventsURL = 'http://localhost:8080/api/user/get_rspv_events';
+      var headers = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $jwtKey',
+      };
 
+      var response = await http.get(Uri.parse(_rsvpEventsURL), headers: headers);
 
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body)['data'];
+      } else {
+        throw Exception(jsonDecode(response.body));
+      }
+    }
+    catch (e) {
+      print('Error: $e');
+      throw Exception(e.toString());
+    }
+  }
 
 
   Future<Map<String, dynamic>> postChangeUser(String name, String email,  String profileImage) async {
@@ -149,5 +170,4 @@ class Api {
       return {'error': e.toString()};
     }
   }
-
 }
