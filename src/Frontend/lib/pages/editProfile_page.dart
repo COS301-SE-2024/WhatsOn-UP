@@ -2,19 +2,15 @@ import 'dart:typed_data';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
-import 'package:flutter/material.dart';
+
 import 'package:flutter/widgets.dart';
-// import 'package:flutter/widgets.dart';
-import 'package:flutter_svg_provider/flutter_svg_provider.dart';
-import 'package:firstapp/pages/login_page.dart';
-import 'package:firstapp/pages/home_page.dart';
+import 'package:flutter/cupertino.dart';
+
 import 'package:firstapp/pages/profilePage.dart';
-import 'package:firstapp/services/EditprofileServices.dart';
-import 'package:line_awesome_flutter/line_awesome_flutter.dart';
-// import 'package:firstapp/utils.dart';
+
+
 import 'package:image_picker/image_picker.dart';
 import 'package:firstapp/services/api.dart';
-// import 'package:filepicker_windows/filepicker_windows.dart';
 
 class EditprofilePage extends StatefulWidget {
   final String userName;
@@ -131,13 +127,16 @@ class _EditprofilePageState extends State<EditprofilePage> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    MaterialPageRoute(
-                      builder: (context) => ProfilePage(
-                        userName: widget.userName,
-                        userEmail: widget.userEmail,
-                        userId: widget.userId,
-                        role: widget.role,
-                        profileImage: widget.profileImage,
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ProfilePage(
+                          userName: widget.userName,
+                          userEmail: widget.userEmail,
+                          userId: widget.userId,
+                          role: widget.role,
+                          profileImage: widget.profileImage,
+                        ),
                       ),
                     );
                   },
@@ -267,10 +266,10 @@ class _EditprofilePageState extends State<EditprofilePage> {
   Future<void> _editUser() async {
     String fullName;
     String userEmail;
-    String userId;
     String newPassword;
     String profileImageBase64;
-    String base64Image;
+    Uint8List profileImageBytes = Uint8List(0);
+
     if (_formKey.currentState!.validate()) {
       final adjustedName = nameController.text.isNotEmpty
           ? nameController.text
@@ -279,31 +278,36 @@ class _EditprofilePageState extends State<EditprofilePage> {
           ? emailController.text
           : widget.userEmail;
       final adjustedPassword =
-      passwordController.text.isNotEmpty ? passwordController.text : '';
+          passwordController.text.isNotEmpty ? passwordController.text : '';
+      profileImageBase64 = _image != null
+          ? base64Encode(_image!)
+          : base64Encode(widget.profileImage!);
 
       final user = User(
         name: adjustedName,
         email: adjustedEmail,
         password: adjustedPassword,
         userId: widget.userId,
+        profileImage: _image,
       );
-      fullName = adjustedName;
-      userEmail = adjustedEmail;
 
       Api api = Api();
 
-      base64Image = _image != null
+      profileImageBase64 = _image != null
           ? base64Encode(_image!)
           : base64Encode(widget.profileImage!);
 
-      api.postChangeUser(user.name, user.email, base64Image).then((response) {
+      api
+          .postChangeUser(user.name, user.email, profileImageBase64)
+          .then((response) {
         if (response['error'] != null) {
           print('An error occurred: ${response['error']}');
         } else {
-          fullName = response['body']['user']['fullName'] ?? 'Unknown';
-          userEmail = response['body']['user']['email'] ?? 'Unknown';
-          String  profileImage=response['data']['user']['profileImage']?? 'Unknown';
-          Uint8List profileImageBytes = Uint8List(0);
+          print(response);
+          fullName = response['data']['user']['fullName'] ?? 'Unknown';
+          userEmail = response['data']['user']['email'] ?? 'Unknown';
+          String profileImage =
+              response['data']['user']['profileImage'] ?? 'Unknown';
 
           bool isBase64(String input) {
             final RegExp base64 = RegExp(
@@ -313,43 +317,66 @@ class _EditprofilePageState extends State<EditprofilePage> {
           }
 
           if (isBase64(profileImage)) {
-
             try {
               profileImageBytes = base64Decode(profileImage);
+              print("getting to decode");
               setState(() {
-                _image = profileImageBytes;
                 widget.profileImage = profileImageBytes;
               });
             } catch (e) {
-              print('Error decoding Base64: $e');
+              print('Failed to decode base64 image: $e');
             }
           } else {
-            print('Invalid Base64 string: $profileImage');
+            print('Invalid base64 image string: $profileImage');
           }
-          if (user.password.isNotEmpty) {
-            api.updatePassword(user.password).then((response2) {
-              if (response2['error'] != null) {
-                print('An error occurred: ${response2['error']}');
-              }
-            });
-          }
-        }
-      });
+          print('User profile updated successfully');
+          showChangedDialog();
 
-      // Navigate to ProfilePage regardless of API result
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ProfilePage(
-            userName: fullName,
-            userEmail: userEmail,
-            userId: widget.userId,
-            role: widget.role,
-            profileImage: widget.profileImage,
-          ),
-        ),
-      );
+
+        }
+      }).catchError((error) {
+        print('Failed to update user profile: $error');
+      });
     }
+  }
+
+
+  Future<void> showChangedDialog() async {
+    await showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Success!'),
+          content: Text('Profile successfully updated.'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ProfilePage(
+                      userName: nameController.text.isNotEmpty
+                          ? nameController.text
+                          : widget.userName,
+                      userEmail: emailController.text.isNotEmpty
+                          ? emailController.text
+                          : widget.userEmail,
+                      userId: widget.userId,
+                      role: widget.role,
+                      profileImage: _image != null
+                          ? _image
+                          : widget.profileImage,
+                    ),
+                  ),
+                ); // Navigate to ProfilePage
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }
 
@@ -358,16 +385,18 @@ class User {
   final String email;
   final String password;
   final String userId;
+  Uint8List? profileImage;
 
   User({
     required this.name,
     required this.email,
     required this.password,
     required this.userId,
+    required this.profileImage,
   });
 
   @override
   String toString() {
-    return 'User(name: $name, email: $email, password: $password, userId: $userId)';
+    return 'User(name: $name, email: $email, password: $password, userId: $userId )';
   }
 }

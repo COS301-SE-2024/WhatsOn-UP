@@ -5,23 +5,35 @@ import 'package:firstapp/pages/application_event.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:firstapp/pages/editProfile_page.dart';
 import 'dart:typed_data';
-class ProfilePage extends StatelessWidget {
+import 'package:firstapp/pages/home_page.dart';
+class ProfilePage extends  StatefulWidget {
   // final String profileImageUrl;
   final String userName;
   final String userEmail;
   final String userId;
   final String role;
-  final Uint8List? profileImage;
+  Uint8List? profileImage;
+
   //final String userId;
-  const ProfilePage({
-  // required this.profileImageUrl,
-   required this.userName,
-  required this.userEmail,
+  ProfilePage({
+    Key? key,
+    // required this.profileImageUrl,
+    required this.userName,
+    required this.userEmail,
     required this.userId,
-  required this.role,
+    required this.role,
     required this.profileImage,
     //required this.userId;
-  }); // Constructor to initialize final variable
+  }): super(key: key); // Constructor to initialize final variable
+
+
+
+  @override
+  _ProfilePageState createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +42,16 @@ class ProfilePage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(onPressed: (){ Navigator.pop(context);}, icon: const Icon(LineAwesomeIcons.angle_left_solid)),
+        leading: IconButton(onPressed: (){ Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage(
+            userName:  widget.userName,
+            userEmail: widget.userEmail,
+            userId: widget.userId,
+            role:widget.role,
+            profileImage: widget.profileImage,
+          )),
+        );}, icon: const Icon(LineAwesomeIcons.angle_left_solid)),
         title: Text('Profile'),
         actions: [
           // onPressed:(){}, Icon(LineAwesomeIcons.moon)
@@ -41,25 +62,46 @@ class ProfilePage extends StatelessWidget {
           padding: EdgeInsets.all(20),
           child: Column(
             children: [
-              SizedBox(
-                width: 120,
-                height: 120,
-                child: CircleAvatar(
-                  backgroundImage: profileImage!=null
-                      ? MemoryImage(profileImage!)
+              Stack(
+                children:[
+                  CircleAvatar(
+                  backgroundImage: widget.profileImage!=null
+                      ? MemoryImage(widget.profileImage!)
                       : AssetImage('http/example-image') as ImageProvider,
-                  radius: 24.0,
+                  radius: 60.0,
                 ),
+                  // if (widget.role == '1')
+                    Positioned(
+                      bottom: 0,
+                      right: 0,
+                      child:  Container(
+                        width: 25,
+                        height: 25,
+                        padding: const EdgeInsets.all(8.0),
+                        decoration: BoxDecoration(
+
+                          shape: BoxShape.circle,
+                          color: Colors.blue,
+                        ),
+
+                      ),
+                    ),
+
+
+                ],
+
+
+
               ),
               const SizedBox(height: 10,),
               Text(
-                userName,
+                widget.userName,
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 20),
               SizedBox(height: 8),
               Text(
-                userEmail,
+                widget.userEmail,
                 style: TextStyle(fontSize: 18),
               ),
               SizedBox(height: 20),
@@ -71,11 +113,11 @@ class ProfilePage extends StatelessWidget {
                       context,
                       MaterialPageRoute(builder: (context) => EditprofilePage( //editProfile
                         //profileImageUrl: profileImageUrl,
-                        userName: userName,
-                        userEmail: userEmail,
-                        userId: userId,
-                        role: role,
-                        profileImage:  profileImage,
+                        userName: widget.userName,
+                        userEmail: widget.userEmail,
+                        userId: widget.userId,
+                        role: widget.role,
+                        profileImage: widget.profileImage,
                        // UserId:userId,
                       )),
                     );
@@ -104,11 +146,11 @@ class ProfilePage extends StatelessWidget {
             context,
             MaterialPageRoute(builder: (context) => ApplicationEvent(
               //profileImageUrl: profileImageUrl,
-              userName: userName,
-              userEmail: userEmail,
-              userId: userId,
-              role: role,
-                profileImage:  profileImage,)),
+              userName: widget.userName,
+              userEmail: widget.userEmail,
+              userId: widget.userId,
+              role: widget.role,
+                profileImage:  widget.profileImage,)),
           );
                     },
                   ),

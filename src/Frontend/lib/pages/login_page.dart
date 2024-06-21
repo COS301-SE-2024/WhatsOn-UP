@@ -293,7 +293,7 @@ class _LoginPageState extends State<LoginPage> {
           }
 
           if (isBase64(profileImage)) {
-            // Decode the Base64 string
+
             try {
               profileImageBytes = base64Decode(profileImage);
             } catch (e) {

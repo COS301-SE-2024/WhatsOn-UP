@@ -11,32 +11,28 @@ import 'package:firstapp/pages/data_search.dart';
 import 'package:firstapp/pages/profilePage.dart';
 // import 'package:firstapp/widgets/eventcard.dart';
 import 'dart:typed_data';
+
 class HomePage extends StatefulWidget {
-  // final String profileImageUrl;
   final String userName;
   final String userEmail;
   final String userId;
   final String role;
   final Uint8List? profileImage;
 
-  const HomePage(
-      {
-        Key? key,
-        // required this.profileImageUrl,
-        required this.userName,
-        required this.userEmail,
-        required this.userId,
-        required this.role,
-        required this.profileImage,
-
-      }
-      ): super(key: key);
+  const HomePage({
+    Key? key,
+    // required this.profileImageUrl,
+    required this.userName,
+    required this.userEmail,
+    required this.userId,
+    required this.role,
+    required this.profileImage,
+  }) : super(key: key);
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
@@ -109,13 +105,14 @@ class _HomePageState extends State<HomePage> {
       case 3:
         return const ExplorePage();
       case 4:
-         return  SettingsPage( //profileImageUrl: widget.profileImageUrl,
+        return SettingsPage(
+          //profileImageUrl: widget.profileImageUrl,
           userName: widget.userName,
           userEmail: widget.userEmail,
-             role:widget.role,
-           userId: widget.userId,
-           profileImage: widget.profileImage,
-         );
+          role: widget.role,
+          userId: widget.userId,
+          profileImage: widget.profileImage,
+        );
       default:
         return _buildHomePage();
     }
@@ -123,8 +120,10 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildHomePage() {
     final theme = Theme.of(context);
-    final borderColour = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
-    final textColour = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
+    final borderColour =
+        theme.brightness == Brightness.dark ? Colors.white : Colors.black;
+    final textColour =
+        theme.brightness == Brightness.dark ? Colors.white : Colors.black;
 
     return SingleChildScrollView(
       child: Column(
@@ -140,28 +139,28 @@ class _HomePageState extends State<HomePage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>  ProfilePage(
-                            // profileImageUrl: widget.profileImageUrl,
-                            userName: widget.userName,
-                            userEmail: widget.userEmail,
-                            // role: widget.role,
-                            userId: widget.userId,
-                            role: widget.role,
-                            profileImage: widget. profileImage,
-                          ),
+                        builder: (context) => ProfilePage(
+                          // profileImageUrl: widget.profileImageUrl,
+                          userName: widget.userName,
+                          userEmail: widget.userEmail,
+                          // role: widget.role,
+                          userId: widget.userId,
+                          role: widget.role,
+                          profileImage: widget.profileImage,
+                        ),
                       ),
                     );
                   },
-                  child:  CircleAvatar(
-                    backgroundImage: widget.profileImage!=null
-                    ? MemoryImage(widget.profileImage!)
-                    : AssetImage('http/example-image') as ImageProvider,// Replace the URL with your profile image URL
-                    radius:
-                        24.0, // Adjust the size of the profile icon as needed
+                  child: CircleAvatar(
+                    backgroundImage: widget.profileImage != null
+                        ? MemoryImage(widget.profileImage!)
+                        : AssetImage('http/example-image')
+                            as ImageProvider, // Replace the URL with your profile image URL
+                    radius: 27.0,
                   ),
                 ),
               ),
-               Text(
+              Text(
                 'Welcome, ${widget.userName}',
                 style: TextStyle(
                   fontSize: 24.0,
@@ -171,7 +170,6 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
           SizedBox(height: 20.0),
-
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: Center(
@@ -215,8 +213,7 @@ class _HomePageState extends State<HomePage> {
                             builder: (BuildContext context) {
                               return AlertDialog(
                                 title: Text('Filter Options'),
-                                content:
-                                    Text('Coming soon'),
+                                content: Text('Coming soon'),
                                 actions: [
                                   TextButton(
                                     onPressed: () {
@@ -241,74 +238,6 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-
-          //  Widget062(),
-          // Card(
-          //   margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-          //   child: Padding(
-          //     padding: const EdgeInsets.all(16.0),
-          //     child: Column(
-          //       crossAxisAlignment: CrossAxisAlignment.start,
-          //       children: [
-          //         const Text(
-          //           'Featured Events',
-          //           style: TextStyle(
-          //             fontSize: 18.0,
-          //             fontWeight: FontWeight.bold,
-          //           ),
-          //         ),
-          //         const SizedBox(height: 8.0),
-          //         Row(
-          //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //           children: [
-          //             const Column(
-          //               crossAxisAlignment: CrossAxisAlignment.start,
-          //               children: [
-          //                 Text(
-          //                   'Event 1',
-          //                   style: TextStyle(
-          //                     fontWeight: FontWeight.bold,
-          //                   ),
-          //                 ),
-          //                 Text('Date: 01/06/2024'),
-          //               ],
-          //             ),
-          //             ElevatedButton(
-          //               onPressed: () {
-          //                 // Handle event RSVP
-          //               },
-          //               child: const Text('RSVP'),
-          //             ),
-          //           ],
-          //         ),
-          //         const SizedBox(height: 16.0),
-          //         Row(
-          //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //           children: [
-          //             const Column(
-          //               crossAxisAlignment: CrossAxisAlignment.start,
-          //               children: [
-          //                 Text(
-          //                   'Event 2',
-          //                   style: TextStyle(
-          //                     fontWeight: FontWeight.bold,
-          //                   ),
-          //                 ),
-          //                 Text('Date: 15/06/2024'),
-          //               ],
-          //             ),
-          //             ElevatedButton(
-          //               onPressed: () {
-          //                 // Handle event RSVP
-          //               },
-          //               child: const Text('RSVP'),
-          //             ),
-          //           ],
-          //         ),
-          //       ],
-          //     ),
-          //   ),
-          // ),
           SizedBox(height: 20.0),
           const Padding(
             padding: EdgeInsets.all(16.0),
