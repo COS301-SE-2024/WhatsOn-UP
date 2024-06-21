@@ -4,7 +4,6 @@ import com.devforce.backend.dto.*
 import com.devforce.backend.model.EventModel
 import com.devforce.backend.repo.jpa.EventRepo
 import com.devforce.backend.repo.jpa.UserRepo
-import com.devforce.backend.repo.elasticSearch.EventElasticsearchRepo
 import org.springframework.beans.factory.annotation.Autowired
 import com.devforce.backend.repo.jpa.EventMediaRepo
 import org.springframework.http.ResponseEntity
@@ -17,7 +16,6 @@ import java.util.stream.Collectors
 @Service
 class EventService @Autowired constructor(
     private val eventRepo: EventRepo,
-    private val eventElasticsearchRepo: EventElasticsearchRepo,
     private val eventMediaRepo: EventMediaRepo
 )  {
     @Autowired
@@ -67,21 +65,32 @@ class EventService @Autowired constructor(
 
     // To do: Implement function to update an existing event
     fun updateEvent(id: UUID, updateEventDto: UpdateEventDto): ResponseEntity<ResponseDto> {
-        val existingEvent = eventRepo.findById(id).orElseThrow { Exception("Event not found") }
-        existingEvent.apply {
-            updateEventDto.title?.let { title = it }
-            updateEventDto.description?.let { description = it }
-            updateEventDto.metadata?.let { metadata = it }
-            updateEventDto.location?.let { location = it }
-            updateEventDto.startDate?.let { startTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(it), ZoneId.systemDefault()) }
-            updateEventDto.endDate?.let { endTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(it), ZoneId.systemDefault()) }
-            updateEventDto.maxParticipants?.let { maxAttendees = it }
-            updateEventDto.isPrivate?.let { isPrivate = it }
-        }
-        val updatedEvent = eventRepo.save(existingEvent)
-        eventElasticsearchRepo.save(updatedEvent)
-        return ResponseEntity.ok(ResponseDto("Event updated successfully", System.currentTimeMillis(), updatedEvent))
-    }
+        try {
+            val existingEvent = eventRepo.findById(id)
+                .orElseThrow { NoSuchElementException("Event with id $id not found") }
+
+            existingEvent.apply {
+                updateEventDto.title?.let { title = it }
+                updateEventDto.description?.let { description = it }
+                updateEventDto.metadata?.let { metadata = it }
+                updateEventDto.location?.let { location = it }
+                updateEventDto.startDate?.let { startTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(it), ZoneId.systemDefault()) }
+                updateEventDto.endDate?.let { endTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(it), ZoneId.systemDefault()) }
+                updateEventDto.maxParticipants?.let { maxAttendees = it }
+                updateEventDto.isPrivate?.let { isPrivate = it }
+            }
+
+            val updatedEvent = eventRepo.save(existingEvent)
+
+            return ResponseEntity.ok(ResponseDto("Event updated successfully", System.currentTimeMillis(), updatedEvent))
+        } catch (e: NoSuchElementException) {
+            return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "Event not found")))
+        } catch (e: Exception) {
+            return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "Failed to update event:")))
+
+
+    }}
+
 
     // To do: Implement function to delete an event
     fun deleteEvent(id: UUID): ResponseEntity<ResponseDto> {
@@ -117,19 +126,9 @@ class EventService @Autowired constructor(
         ): ResponseEntity<ResponseDto> {
             println("Searching events with parameters: title=$title, description=$description, startDate=$startDate, endDate=$endDate")
 
-            val results = mutableListOf<EventModel>()
+            val results = eventRepo.searchEvents(title, description, startDate, endDate)
+            println("Found ${results.size} events"); return ResponseEntity.ok(ResponseDto("Events searched successfully", System.currentTimeMillis(), results))
 
-            if (!title.isNullOrBlank()) {
-                val titleResults = eventElasticsearchRepo.findByTitle(title)
-                println("Results for title search: ${titleResults.size}")
-                results.addAll(titleResults)
-            }
-
-            if (!description.isNullOrBlank()) {
-                val descriptionResults = eventElasticsearchRepo.findByDescription(description)
-                println("Results for description search: ${descriptionResults.size}")
-                results.addAll(descriptionResults)
-            }
 
             // Implement search by date range logic
           /*  if (startDate != null && endDate != null) {
@@ -138,9 +137,6 @@ class EventService @Autowired constructor(
                 results.addAll(dateRangeResults)
             }*/
 
-            println("Found ${results.size} events")
-
-            return ResponseEntity.ok(ResponseDto("Events searched successfully", System.currentTimeMillis(), results))
         }
 
 
