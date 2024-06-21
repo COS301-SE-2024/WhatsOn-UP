@@ -80,7 +80,7 @@ class Api {
   }
 
   Future<List<Event>> getAllEvents() async {
-  final url = 'http://localhost:8080/api/events/get_all';
+  final url = 'http://ec2-13-60-34-71.eu-north-1.compute.amazonaws.com:8080/api/events/get_all';
 
   try {
     final response = await http.get(Uri.parse(url));
