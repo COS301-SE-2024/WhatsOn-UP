@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 import java.util.*
+import kotlin.collections.ArrayList
 
 @Service
 class EventService {
@@ -42,7 +43,7 @@ class EventService {
             this.metadata = createEventDto.metadata ?: ""
             this.isPrivate = createEventDto.isPrivate ?: false
             this.hosts = setOf(user)
-            this.eventMedia = createEventDto.media ?: emptyList()
+            this.eventMedia = createEventDto.media ?: this.eventMedia
         }
 
         eventRepo.save(event)
