@@ -5,8 +5,6 @@ import lombok.AllArgsConstructor
 import lombok.Builder
 import lombok.Data
 import lombok.NoArgsConstructor
-import org.springframework.data.annotation.Id as ESId
-import org.springframework.data.elasticsearch.annotations.Document
 import java.time.LocalDateTime
 import java.util.*
 
@@ -16,12 +14,11 @@ import java.util.*
 @Table(name = "event")
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(indexName = "events")
+
 class EventModel {
-    @jakarta.persistence.Id
-    @ESId
+    @Id
     @GeneratedValue
-    @Column(columnDefinition = "UUID")
+    @Column(name = "event_id", columnDefinition = "UUID")
     var eventId: UUID = UUID.randomUUID()
 
     var title: String = ""
@@ -88,11 +85,11 @@ class EventModel {
         updatedAt = LocalDateTime.now()
     }
 
-    fun getEsId(): String {
+  /*  fun getEsId(): String {
         return eventId.toString()
     }
 
     fun setEsId(esId: String) {
         eventId = UUID.fromString(esId)
-    }
+    }*/
 }
