@@ -43,7 +43,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 borderRadius: BorderRadius.all(
                   Radius.circular(50),
                 ),
-                color: Colors.black, // Adjust color as needed
+                color: Colors.grey, // Adjust color as needed
               ),
               child: Row(
                 children: [
@@ -66,7 +66,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 itemCount: _searchResults.length,
                 itemBuilder: (BuildContext context, int index) {
                   return ListTile(
-                    title: Text(_searchResults[index]['name']),
+                    title: Text(_searchResults[index]['title']),
                     subtitle: Text(_searchResults[index]['description']),
                     // Implement onTap to navigate or show details
                   );

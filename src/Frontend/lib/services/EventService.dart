@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class EventService {
-  static const String baseUrl = 'http://ec2-13-60-34-71.eu-north-1.compute.amazonaws.com:8080';
+  static const String baseUrl = 'http://localhost:8080';
 
   Future<List<dynamic>> searchEvents({
     String? title,

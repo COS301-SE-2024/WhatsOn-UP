@@ -14,16 +14,12 @@ spring:
         format_sql: true
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
-  data:
-    elasticsearch:
-      client:
-        reactive:
-          endpoints: localhost:9200  # Elasticsearch server
-      repositories:
-        enabled: true
+
   main:
     allow-bean-definition-overriding: true
 
   logging:
     level:
       org.springframework: DEBUG
+      org.hibernate.SQL: DEBUG
+      org.hibernate.type.descriptor.sql.BasicBinder: TRACE
