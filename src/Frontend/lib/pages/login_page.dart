@@ -5,7 +5,7 @@ import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:firstapp/pages/signin_page.dart';
 import 'package:firstapp/pages/home_page.dart';
 import 'package:firstapp/services/api.dart';
-
+import 'dart:typed_data';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -277,15 +277,41 @@ class _LoginPageState extends State<LoginPage> {
 
           print('An error occurred: ${response['error']}');
         } else {
+          print(response);
           String fullName = response['data']['user']['fullName']?? 'Unknown';
           String userEmail = response['data']['user']['email'] ?? 'Unknown';
-          //String UserId=response['body']['user']['id']?? 'Unknown';
-              Navigator.push(
+          String UserId=response['data']['user']['id']?? 'Unknown';
+          String role=response['data']['user']['role']?? 'Unknown';
+          String  profileImage=response['data']['user']['profileImage']?? 'Unknown';
+          Uint8List profileImageBytes = Uint8List(0);
+
+          bool isBase64(String input) {
+            final RegExp base64 = RegExp(
+              r'^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$',
+            );
+            return base64.hasMatch(input);
+          }
+
+          if (isBase64(profileImage)) {
+
+            try {
+              profileImageBytes = base64Decode(profileImage);
+            } catch (e) {
+              print('Error decoding Base64: $e');
+            }
+          } else {
+            print('Invalid Base64 string: $profileImage');
+          }
+
+
+          Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => HomePage(
               userName:  fullName,
               userEmail: userEmail,
-            // userId:UserId
+              userId:UserId,
+              role:role,
+              profileImage: profileImageBytes,
             )),
           );
           print('Login successful');
