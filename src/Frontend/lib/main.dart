@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-          nextScreen: const LoginPage(),
+          nextScreen:  const LoginPage(),
        
         splashTransition: SplashTransition.slideTransition,
       ),

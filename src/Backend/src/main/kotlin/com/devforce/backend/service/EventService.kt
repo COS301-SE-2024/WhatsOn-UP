@@ -120,23 +120,31 @@ class EventService @Autowired constructor(
             val results = mutableListOf<EventModel>()
 
             if (!title.isNullOrBlank()) {
-                results.addAll(eventElasticsearchRepo.findByTitle(title))
-                println("Results for title search: ${results.size}")
-                results.addAll(results)
+                val titleResults = eventElasticsearchRepo.findByTitle(title)
+                println("Results for title search: ${titleResults.size}")
+                results.addAll(titleResults)
             }
+
             if (!description.isNullOrBlank()) {
-                results.addAll(eventElasticsearchRepo.findByDescription(description))
-                println("Results for description search: ${results.size}")
-                results.addAll(results)
+                val descriptionResults = eventElasticsearchRepo.findByDescription(description)
+                println("Results for description search: ${descriptionResults.size}")
+                results.addAll(descriptionResults)
             }
-            // Implement search by date range logic if needed
+
+            // Implement search by date range logic
+          /*  if (startDate != null && endDate != null) {
+                val dateRangeResults = eventElasticsearchRepo.findByStartTimeBetween(startDate, endDate)
+                println("Results for date range search: ${dateRangeResults.size}")
+                results.addAll(dateRangeResults)
+            }*/
 
             println("Found ${results.size} events")
 
             return ResponseEntity.ok(ResponseDto("Events searched successfully", System.currentTimeMillis(), results))
         }
 
-        fun getAllEventsWithMedia(): List<EventModel> {
+
+    fun getAllEventsWithMedia(): List<EventModel> {
             val events = eventRepo.findAll()
             events.forEach { event ->
                 val mediaLinks = eventMediaRepo.findByEventId(event.eventId)

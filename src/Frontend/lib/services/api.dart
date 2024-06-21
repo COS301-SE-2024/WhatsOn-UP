@@ -58,10 +58,7 @@ class Api {
       //   throw Exception('JWT token not found');
       // }
 
-      final String _userUrl = 'http://ec2-13-60-34-71.eu-north-1.compute.amazonaws.com:8080'
-          ''
-          ''
-          '/api/auth/get_user';
+      final String _userUrl = 'http://ec2-13-60-34-71.eu-north-1.compute.amazonaws.com:8080/api/auth/get_user';
       var headers = {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
