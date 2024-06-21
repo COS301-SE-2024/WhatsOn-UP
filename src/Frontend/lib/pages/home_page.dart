@@ -9,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:firstapp/pages/searchbar.dart';
 import 'package:firstapp/pages/data_search.dart';
 import 'package:firstapp/pages/profilePage.dart';
+import 'package:firstapp/services/api.dart';
 // import 'package:firstapp/widgets/eventcard.dart';
 
 class HomePage extends StatefulWidget {
@@ -32,8 +33,16 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  late Future<List<Event>> futureEvents;
+  Api api = Api();
 
   int _selectedIndex = 0;
+
+   @override
+    void initState() {
+      super.initState();
+      futureEvents = api.getAllEvents();
+    }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -120,236 +129,177 @@ class _HomePageState extends State<HomePage> {
     final borderColour = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
     final textColour = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
 
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: GestureDetector(
-                  onTap: () {
-                    // Navigate to another page when the profile icon is tapped
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>  ProfilePage(
-                            // profileImageUrl: widget.profileImageUrl,
+    return FutureBuilder<List<Event>>(
+  future: futureEvents,
+  builder: (context, snapshot) {
+    if (snapshot.connectionState == ConnectionState.waiting) {
+      return Center(child: CircularProgressIndicator());
+    } else if (snapshot.hasError) {
+      return Center(child: Text('Error: ${snapshot.error}'));
+    } else if (snapshot.hasData) {
+      final events = snapshot.data!;
+      
+      // Debug print statement to check the length of events
+      print("Number of events: ${events.length}");
+
+      // Add check to ensure events list is not empty
+      if (events.isEmpty) {
+        return Center(child: Text('No events found.'));
+      }
+
+      return SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ProfilePage(
                             userName: widget.userName,
                             userEmail: widget.userEmail,
-                            // role: widget.role,
-                            //userId: widget.userId,
                           ),
-                      ),
-                    );
-                  },
-                  child:  CircleAvatar(
-                    backgroundImage: NetworkImage(
-                        "http/image"), // Replace the URL with your profile image URL
-                    radius:
-                        24.0, // Adjust the size of the profile icon as needed
-                  ),
-                ),
-              ),
-               Text(
-                'Welcome, ${widget.userName}',
-                style: TextStyle(
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 20.0),
-
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.27,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(color: borderColour),
-                        borderRadius: BorderRadius.circular(16.0),
-                      ),
-                      child: TextButton.icon(
-                        onPressed: () {
-                          showSearch(
-                            context: context,
-                            delegate: DataSearch(),
-                          );
-                        },
-                        icon: Icon(Icons.search, color: textColour),
-                        label: Text('Search',
-                            style: TextStyle(
-                              color: textColour,
-                            )),
-                      ),
+                        ),
+                      );
+                    },
+                    child: CircleAvatar(
+                      backgroundImage: NetworkImage("http/image"),
+                      radius: 24.0,
                     ),
                   ),
-                  SizedBox(width: 35.0),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.27,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(color: borderColour),
-                        borderRadius: BorderRadius.circular(16.0),
-                      ),
-                      child: TextButton.icon(
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: Text('Filter Options'),
-                                content:
-                                    Text('Coming soon'),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Text('Close'),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        },
-                        icon: Icon(Icons.filter_list, color: textColour),
-                        label: Text('Filter',
-                            style: TextStyle(
-                              color: textColour,
-                            )),
+                ),
+                Text(
+                  'Welcome, ${widget.userName}',
+                  style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+            SizedBox(height: 20.0),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.27,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: borderColour),
+                          borderRadius: BorderRadius.circular(16.0),
+                        ),
+                        child: TextButton.icon(
+                          onPressed: () {
+                            showSearch(
+                              context: context,
+                              delegate: DataSearch(),
+                            );
+                          },
+                          icon: Icon(Icons.search, color: textColour),
+                          label: Text('Search', style: TextStyle(color: textColour)),
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                    SizedBox(width: 35.0),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.27,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: borderColour),
+                          borderRadius: BorderRadius.circular(16.0),
+                        ),
+                        child: TextButton.icon(
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text('Filter Options'),
+                                  content: Text('Coming soon'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text('Close'),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                          icon: Icon(Icons.filter_list, color: textColour),
+                          label: Text('Filter', style: TextStyle(color: textColour)),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
+            SizedBox(height: 20.0),
+            const Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Text(
+                'Explore More',
+                style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+              ),
+            ),
+            SizedBox(
+              height: 250.0,
+              child: GridView.builder(
+                scrollDirection: Axis.horizontal,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 1,
+                ),
+                itemCount: events.length,
+                itemBuilder: (context, index) {
+                  // Ensure index is within bounds
+                  if (index >= events.length) {
+                    return Container(); // or handle error gracefully
+                  }
+                  return EventCard(event: events[index]);
+                },
+              ),
+            ),
+            SizedBox(height: 20.0),
+            const Padding(
+              padding: EdgeInsets.all(10.0),
+              child: Text(
+                'Saved',
+                style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+              ),
+            ),
+            SizedBox(
+              height: 250.0,
+              child: GridView.builder(
+                scrollDirection: Axis.horizontal,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 1,
+                ),
+                itemCount: events.length,
+                itemBuilder: (context, index) {
+                  // Ensure index is within bounds
+                  if (index >= events.length) {
+                    return Container(); // or handle error gracefully
+                  }
+                  return EventCard(event: events[index]);
+                },
+              ),
+            ),
+          ],
+        ),
+      );
+    } else {
+      return Center(child: Text('No events found.'));
+    }
+  },
+);
 
-          //  Widget062(),
-          // Card(
-          //   margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-          //   child: Padding(
-          //     padding: const EdgeInsets.all(16.0),
-          //     child: Column(
-          //       crossAxisAlignment: CrossAxisAlignment.start,
-          //       children: [
-          //         const Text(
-          //           'Featured Events',
-          //           style: TextStyle(
-          //             fontSize: 18.0,
-          //             fontWeight: FontWeight.bold,
-          //           ),
-          //         ),
-          //         const SizedBox(height: 8.0),
-          //         Row(
-          //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //           children: [
-          //             const Column(
-          //               crossAxisAlignment: CrossAxisAlignment.start,
-          //               children: [
-          //                 Text(
-          //                   'Event 1',
-          //                   style: TextStyle(
-          //                     fontWeight: FontWeight.bold,
-          //                   ),
-          //                 ),
-          //                 Text('Date: 01/06/2024'),
-          //               ],
-          //             ),
-          //             ElevatedButton(
-          //               onPressed: () {
-          //                 // Handle event RSVP
-          //               },
-          //               child: const Text('RSVP'),
-          //             ),
-          //           ],
-          //         ),
-          //         const SizedBox(height: 16.0),
-          //         Row(
-          //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //           children: [
-          //             const Column(
-          //               crossAxisAlignment: CrossAxisAlignment.start,
-          //               children: [
-          //                 Text(
-          //                   'Event 2',
-          //                   style: TextStyle(
-          //                     fontWeight: FontWeight.bold,
-          //                   ),
-          //                 ),
-          //                 Text('Date: 15/06/2024'),
-          //               ],
-          //             ),
-          //             ElevatedButton(
-          //               onPressed: () {
-          //                 // Handle event RSVP
-          //               },
-          //               child: const Text('RSVP'),
-          //             ),
-          //           ],
-          //         ),
-          //       ],
-          //     ),
-          //   ),
-          // ),
-          SizedBox(height: 20.0),
-          const Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Text(
-              'Explore More',
-              style: TextStyle(
-                fontSize: 18.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 250.0,
-            child: GridView.builder(
-              scrollDirection: Axis.horizontal,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 1,
-              ),
-              itemCount: events.length,
-              itemBuilder: (context, index) {
-                return EventCard(event: events[index]);
-              },
-            ),
-          ),
-          SizedBox(height: 20.0),
-          const Padding(
-            padding: EdgeInsets.all(10.0),
-            child: Text(
-              'Saved',
-              style: TextStyle(
-                fontSize: 18.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 250.0,
-            child: GridView.builder(
-              scrollDirection: Axis.horizontal,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 1,
-              ),
-              itemCount: events.length,
-              itemBuilder: (context, index) {
-                return EventCard(event: events[index]);
-              },
-            ),
-          ),
-        ],
-      ),
-    );
   }
 }
