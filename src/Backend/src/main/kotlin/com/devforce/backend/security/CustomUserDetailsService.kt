@@ -15,12 +15,12 @@ class CustomUserDetailsService: UserDetailsService {
     @Autowired
     lateinit var userRepo: UserRepo
 
-    override fun loadUserByUsername(email: String): UserDetails {
+    override fun loadUserByUsername(email: String): CustomUser {
         val user = userRepo.findByEmail(email)
             ?: throw UsernameNotFoundException("User not found")
 
         val roleName = user.role!!.name
         val authorities = setOf(SimpleGrantedAuthority(roleName))
-        return User(user.email, user.password, authorities)
+        return CustomUser(user.email, user.password, authorities, user)
     }
 }

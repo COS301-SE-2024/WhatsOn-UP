@@ -16,15 +16,13 @@ import java.util.UUID
 @RestController
 @RequestMapping("/api/events")
 class EventController {
-
     @Autowired
     lateinit var eventService: EventService
 
     @PostMapping("/create")
     @RolesAllowed("HOST", "ADMIN")
-    fun createEvent(@RequestBody event: CreateEventDto, @RequestHeader("Authorization") token: String): ResponseEntity<ResponseDto> {
-        val jwtToken = token.substring(7)
-        return eventService.createEvent(event, jwtToken)
+    fun createEvent(@RequestBody event: CreateEventDto): ResponseEntity<ResponseDto> {
+        return eventService.createEvent(event)
     }
 
     @GetMapping("/get_all")

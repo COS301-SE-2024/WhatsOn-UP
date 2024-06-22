@@ -4,8 +4,10 @@ import com.devforce.backend.dto.*
 import com.devforce.backend.model.EventModel
 import com.devforce.backend.repo.EventRepo
 import com.devforce.backend.repo.UserRepo
+import com.devforce.backend.security.CustomUser
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 import java.util.*
@@ -13,8 +15,6 @@ import kotlin.collections.ArrayList
 
 @Service
 class EventService {
-    @Autowired
-    lateinit var checkJwt: CheckJwt
 
     @Autowired
     lateinit var userRepo: UserRepo
@@ -24,14 +24,8 @@ class EventService {
 
 
 
-    fun createEvent(createEventDto: CreateEventDto, token: String): ResponseEntity<ResponseDto> {
-        val response = checkJwt.check(token)
-        if (response != null) {
-            return response
-        }
-
-        val email = checkJwt.jwtGenerator.getUsernameFromToken(token)
-        val user = userRepo.findByEmail(email)!!
+    fun createEvent(createEventDto: CreateEventDto): ResponseEntity<ResponseDto> {
+        val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
 
         val event = EventModel().apply {
             this.title = createEventDto.title
@@ -47,7 +41,7 @@ class EventService {
         }
 
         eventRepo.save(event)
-        
+
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Event added successfully"))
         )
     }

@@ -22,21 +22,30 @@ class JwtAuthFilter: OncePerRequestFilter() {
 
     @Autowired
     private lateinit var customUserDetailsService: CustomUserDetailsService
-
     @Throws(ServletException::class, IOException::class)
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
         filterChain: FilterChain
     ) {
-        val token = getJWTFromRequest(request)
-        if (token != null && jwtGenerator.validateToken(token)) {
-            val email = jwtGenerator.getUsernameFromToken(token)
 
-            val userDetails: UserDetails = customUserDetailsService.loadUserByUsername(email)
-            val authenticationToken = UsernamePasswordAuthenticationToken(userDetails, null, userDetails.authorities)
-            authenticationToken.details = WebAuthenticationDetailsSource().buildDetails(request)
-            SecurityContextHolder.getContext().authentication = authenticationToken
+        val token = getJWTFromRequest(request)
+        if (token != null) {
+            if (jwtGenerator.validateToken(token)) {
+                val email = jwtGenerator.getUsernameFromToken(token)
+                val userDetails: CustomUser = customUserDetailsService.loadUserByUsername(email)
+                if (userDetails.userModel.jwtToken != token) {
+                    response.sendError(401, "Invalid token")
+                    return
+                }
+                val authenticationToken = UsernamePasswordAuthenticationToken(userDetails, null, userDetails.authorities)
+                authenticationToken.details = WebAuthenticationDetailsSource().buildDetails(request)
+                SecurityContextHolder.getContext().authentication = authenticationToken
+            }
+            else {
+                response.sendError(401, "Invalid token")
+                return
+            }
         }
         filterChain.doFilter(request, response)
     }
