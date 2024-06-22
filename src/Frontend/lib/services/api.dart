@@ -6,6 +6,7 @@ import 'package:firstapp/widgets/event_card.dart';
 class Api {
   // Singleton instance
   static final Api _instance = Api._internal();
+  static const String domain = 'ec2-13-60-34-71.eu-north-1.compute.amazonaws.com';
   factory Api() => _instance;
   Api._internal();
 
@@ -18,7 +19,7 @@ class Api {
 
   // Method to log in the user and store JWT token
   Future<Map<String, dynamic>> loginUser(String email, String password) async {
-    final String _loginUrl = 'http://localhost:8080/api/auth/login';
+    final String _loginUrl = 'http://$domain:8080/api/auth/login';
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -59,7 +60,7 @@ class Api {
       //   throw Exception('JWT token not found');
       // }
 
-      final String _userUrl = 'http://localhost:8080/api/auth/get_user';
+      final String _userUrl = 'http://$domain:8080/api/auth/get_user';
       var headers = {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
@@ -80,7 +81,7 @@ class Api {
   }
 
   Future<List<Event>> getAllEvents() async {
-  final url = 'http://ec2-13-60-34-71.eu-north-1.compute.amazonaws.com:8080/api/events/get_all';
+  final url = 'http://$domain:8080/api/events/get_all';
 
   try {
     final response = await http.get(Uri.parse(url));
