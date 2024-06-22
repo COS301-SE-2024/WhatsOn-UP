@@ -27,7 +27,7 @@ class EventModel {
 
     @ElementCollection
     @CollectionTable(name = "event_media", joinColumns = [JoinColumn(name = "event_id")])
-    @Column(name = "media_link")
+    @Column(name = "media_link" , columnDefinition = "TEXT")
     var eventMedia: List<String> = ArrayList()
 
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -74,6 +74,14 @@ class EventModel {
     )
     var invitees: MutableSet<UserModel> = HashSet()
 
+    @ManyToMany
+    @JoinTable(
+        name = "saved_events",
+        joinColumns = [JoinColumn(name = "event_id")],
+        inverseJoinColumns = [JoinColumn(name = "user_id")]
+    )
+    var savedEvents: MutableSet<UserModel> = HashSet()
+
     @PrePersist
     fun prePersist() {
         createdAt = LocalDateTime.now()
@@ -85,11 +93,4 @@ class EventModel {
         updatedAt = LocalDateTime.now()
     }
 
-  /*  fun getEsId(): String {
-        return eventId.toString()
-    }
-
-    fun setEsId(esId: String) {
-        eventId = UUID.fromString(esId)
-    }*/
 }
