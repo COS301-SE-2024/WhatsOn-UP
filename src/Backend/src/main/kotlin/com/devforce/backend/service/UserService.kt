@@ -3,9 +3,9 @@ package com.devforce.backend.service
 import com.devforce.backend.dto.AllEventsDto
 import com.devforce.backend.dto.ResponseDto
 import com.devforce.backend.dto.UpdateUserDto
-import com.devforce.backend.repo.EventRepo
-import com.devforce.backend.repo.RoleRepo
-import com.devforce.backend.repo.UserRepo
+import com.devforce.backend.repo.jpa.EventRepo
+import com.devforce.backend.repo.jpa.RoleRepo
+import com.devforce.backend.repo.jpa.UserRepo
 import com.devforce.backend.security.JwtGenerator
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity

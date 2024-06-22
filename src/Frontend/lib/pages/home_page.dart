@@ -9,6 +9,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:firstapp/pages/searchbar.dart';
 import 'package:firstapp/pages/data_search.dart';
 import 'package:firstapp/pages/profilePage.dart';
+
+import '../screens/SearchScreen.dart';
 // import 'package:firstapp/widgets/eventcard.dart';
 import 'dart:typed_data';
 
@@ -33,6 +35,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
@@ -170,6 +173,7 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
           SizedBox(height: 20.0),
+
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: Center(
@@ -185,9 +189,12 @@ class _HomePageState extends State<HomePage> {
                       ),
                       child: TextButton.icon(
                         onPressed: () {
-                          showSearch(
-                            context: context,
-                            delegate: DataSearch(),
+                          // Navigate to SearchScreen when Search button is pressed
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SearchScreen(),
+                            ),
                           );
                         },
                         icon: Icon(Icons.search, color: textColour),

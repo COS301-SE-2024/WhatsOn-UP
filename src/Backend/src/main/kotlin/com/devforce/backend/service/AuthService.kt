@@ -4,8 +4,8 @@ import com.devforce.backend.dto.LoginDto
 import com.devforce.backend.dto.RegisterDto
 import com.devforce.backend.dto.ResponseDto
 import com.devforce.backend.model.UserModel
-import com.devforce.backend.repo.RoleRepo
-import com.devforce.backend.repo.UserRepo
+import com.devforce.backend.repo.jpa.RoleRepo
+import com.devforce.backend.repo.jpa.UserRepo
 import com.devforce.backend.security.JwtGenerator
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
