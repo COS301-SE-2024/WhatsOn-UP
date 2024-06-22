@@ -3,6 +3,8 @@ import 'package:firstapp/widgets/CustomSearchBar.dart';
 import 'package:firstapp/widgets/SearchTile.dart';
 import 'package:firstapp/services/EventService.dart';
 
+import '../widgets/FilteredEventsScreen.dart';
+
 class SearchScreen extends StatefulWidget {
   @override
   _SearchScreenState createState() => _SearchScreenState();
@@ -11,24 +13,79 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   final EventService _eventService = EventService();
   List<dynamic> _searchResults = [];
+  bool _isLoading = false;
+  bool _showSearchTiles = true;
 
   void _searchEvents(String query) async {
+    setState(() {
+      _isLoading = true;
+      _searchResults.clear(); // Clear previous results
+    });
+
     try {
       final results = await _eventService.searchEvents(title: query);
       setState(() {
         _searchResults = results;
+        _isLoading = false;
+        _showSearchTiles = false;
       });
     } catch (e) {
       // Handle error, e.g., show an error message
       print('Error searching events: $e');
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
+  void _applyFilter(String filter) async {
+    setState(() {
+      _isLoading = true;
+      _searchResults.clear();
+    });
 
+    try {
+      final results = await _eventService.filterEventsByKeyword(filter);
+      setState(() {
+        _searchResults = results;
+        _isLoading = false;
+      });
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => FilteredEventsScreen(events: _searchResults),
+        ),
+      ).then((value) {
+        // Clear search results when returning from FilteredEventsScreen
+        setState(() {
+          _searchResults.clear();
+        });
+      });
+    } catch (e) {
+      // Handle error, e.g., show an error message
+      print('Error filtering events: $e');
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+  void _clearSearchResults() {
+    setState(() {
+      _searchResults.clear();
+      _showSearchTiles = true; // Show search tiles again
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Search Events'),
+        actions: [
+          if (_searchResults.isNotEmpty)
+            IconButton(
+              icon: Icon(Icons.close),
+              onPressed: _clearSearchResults,
+            ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -56,12 +113,33 @@ class _SearchScreenState extends State<SearchScreen> {
                         border: InputBorder.none,
                       ),
                       onSubmitted: _searchEvents,
+                      onTap: () {
+                        setState(() {
+                          _showSearchTiles = true; // Show search tiles on tap
+                        });
+                      },
+                      onChanged: (value) {
+                        setState(() {
+                          _showSearchTiles = true; // Show search tiles on change
+                        });
+                      },
                     ),
                   ),
                 ],
               ),
             ),
-            Expanded(
+            if (_showSearchTiles)
+              SearchTile(
+                onFilterSelected: _searchEvents,
+              ),
+            SizedBox(height: 16.0),
+            _isLoading
+                ? Center(child: CircularProgressIndicator()) // Show loading indicator
+                : _searchResults.isEmpty
+                ? Center(
+              child: Text('No events found'), // Show no results message
+            )
+                : Expanded(
               child: ListView.builder(
                 itemCount: _searchResults.length,
                 itemBuilder: (BuildContext context, int index) {

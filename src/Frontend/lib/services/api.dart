@@ -17,7 +17,7 @@ class Api {
 
   // Method to log in the user and store JWT token
   Future<Map<String, dynamic>> loginUser(String email, String password) async {
-    final String _loginUrl = 'http://ec2-13-60-34-71.eu-north-1.compute.amazonaws.com:8080/api/auth/login';
+    final String _loginUrl = 'http://localhost:8080/api/auth/login';
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -58,7 +58,7 @@ class Api {
       //   throw Exception('JWT token not found');
       // }
 
-      final String _userUrl = 'http://ec2-13-60-34-71.eu-north-1.compute.amazonaws.com:8080/api/auth/get_user';
+      final String _userUrl = 'http://localhost:8080/api/auth/get_user';
       var headers = {
         'Content-Type': 'application/json',
         'Accept': 'application/json',

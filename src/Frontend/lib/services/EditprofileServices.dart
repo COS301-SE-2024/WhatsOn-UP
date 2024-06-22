@@ -56,7 +56,7 @@ import 'package:http/http.dart' as http;
 
 Future<Map<String, dynamic>> postChangeUser(String name, String email, String password) async {
   // Url for posting new informaion
-  var userChangeUrl = Uri.parse('http://ec2-13-60-34-71.eu-north-1.compute.amazonaws.com:8080/api/..');
+  var userChangeUrl = Uri.parse('http://localhost:8080/api/..');
 
   // Define the headers and body for login request
   var headers = {
