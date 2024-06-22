@@ -1,7 +1,7 @@
 package com.devforce.backend.dto
 
 data class UpdateEventDto(
-    val name: String?,
+    val title: String?,
     val description: String?,
     val startDate: Long?,
     val endDate: Long?,

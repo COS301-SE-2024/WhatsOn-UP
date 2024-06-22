@@ -1,4 +1,4 @@
-package com.devforce.backend.repo
+package com.devforce.backend.repo.jpa
 
 import com.devforce.backend.model.EventModel
 import com.devforce.backend.model.UserModel

@@ -2,19 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firstapp/widgets/theme_manager.dart';
 import 'package:firstapp/pages/profilePage.dart';
-
+import 'dart:typed_data';
 class SettingsPage extends StatefulWidget {
 
   // final String profileImageUrl;
   final String userName;
   final String userEmail;
-  // final String role;
+  final String userId;
+  final String role;
+  final Uint8List?  profileImage;
   const SettingsPage({
     Key? key,
     // required this.profileImageUrl,
     required this.userName,
     required this.userEmail,
-    // required this.role;
+    required this.userId,
+    required this.role,
+    required this. profileImage,
   }): super(key: key);
 
   @override
@@ -60,7 +64,9 @@ class _SettingsPageState extends State<SettingsPage> {
                       // profileImageUrl: //widget.profileImageUrl,
                       userName: widget.userName,
                       userEmail: widget.userEmail,
-                      // role: widget.role;
+                      userId: widget.userId,
+                       role: widget.role,
+                        profileImage: widget.profileImage,
                     ),),
                    );
                     },

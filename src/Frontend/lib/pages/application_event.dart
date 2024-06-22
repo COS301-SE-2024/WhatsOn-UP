@@ -1,18 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:firstapp/pages/profilePage.dart';
 import 'package:flutter/cupertino.dart';
-
+import 'dart:typed_data';
 class ApplicationEvent extends StatefulWidget {
 
   // final String profileImageUrl;
   final String userName;
   final String userEmail;
-  // final String role;
-  const ApplicationEvent({
+  final String userId;
+  final String role;
+  Uint8List? profileImage;
+
+  ApplicationEvent({
     Key? key,
     // required this.profileImageUrl,
     required this.userName,
     required this.userEmail,
+    required this.userId,
+    required this.role,
+    required this. profileImage,
 
     // required this.role,
   }): super(key: key);
@@ -180,6 +186,10 @@ class _ApplicationEventState extends State<ApplicationEvent> {
               // profileImageUrl: widget.profileImageUrl,
               userName: widget.userName,
               userEmail: widget.userEmail,
+
+              userId: widget.userId,
+              role: widget.role,
+                profileImage: widget. profileImage,
               // role: widget.role,
             ),
         ),
