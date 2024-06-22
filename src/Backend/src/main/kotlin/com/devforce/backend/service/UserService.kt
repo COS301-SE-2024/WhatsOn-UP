@@ -78,7 +78,7 @@ class UserService {
     fun getSavedEvents(): ResponseEntity<ResponseDto> {
         val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
 
-        val events = userRepo.getSavedEvents(user.userId)
+        val events = eventRepo.getSavedEvents(user.userId)
         val eventsDto = events.map { event -> AllEventsDto(event) }
 
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto)
@@ -107,7 +107,7 @@ class UserService {
     fun getRspvEvents(): ResponseEntity<ResponseDto> {
         val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
 
-        val events = eventRepo.findByAttendeesIs(user)
+        val events = eventRepo.getRspvdEvents(user.userId)
         val eventsDto = events.map { event -> AllEventsDto(event) }
 
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto)
