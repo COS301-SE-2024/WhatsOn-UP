@@ -26,10 +26,24 @@ To search for upcoming events:
 4. Filter events based on their attributes
 
 ## RSVP Events
+In the WhatsOn@UP app, a registered user is able to RSVP to publicly available events, and events they were directly invited to. To RSVP an event
+1. Navigate to the Home page
+2. Select an event that you want attend
+3. Click on the RSVP button
+4. Navigate to the RSVP tab to see the added event
 
-## Calendar
+## View Calendar
+In the app Calendar a user is able to see a different view of upcoming events, selecting an event that they want more details about.
 
-## Profile
+## Manage Profile
+You are able to view and manage your profile details, along with adding profile images of your choice. To achieve this
+1. Tap on `more` in the navbar - This will open a popup with various options
+2. From the list of options, tap `settings`
+3. In the settings menu tap the `profile` option
+3. Alternatively, you can access the profile page by tapping your profile icon from the home page
+5. Once in the profile page, select `edit profile` button
+6. Once you've edited you're details, tap the `save` button to save your changes
+
 
 ## Create Events
 
