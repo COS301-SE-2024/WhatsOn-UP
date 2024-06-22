@@ -11,7 +11,11 @@ class FilteredEventsScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text('Filtered Events'),
       ),
-      body: ListView.builder(
+      body: events.isEmpty
+          ? Center(
+        child: Text('No events found'),
+      )
+          : ListView.builder(
         itemCount: events.length,
         itemBuilder: (context, index) {
           final event = events[index];
@@ -26,7 +30,6 @@ class FilteredEventsScreen extends StatelessWidget {
                 Text('End Time: ${event['end_time']}'),
               ],
             ),
-            // Implement onTap if needed
           );
         },
       ),

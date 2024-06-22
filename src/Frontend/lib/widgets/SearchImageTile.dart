@@ -1,33 +1,47 @@
+// widgets/SearchImageTile.dart
 import 'package:flutter/material.dart';
 
 class SearchImageTile extends StatelessWidget {
   final String title;
   final String imageUrl;
+  final Function(String) onTap;  // Should be Function(String)
 
-  SearchImageTile({required this.title, required this.imageUrl});
+  SearchImageTile({required this.title, required this.imageUrl, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    // Print received title and imageUrl for each tile
-    print('SearchImageTile - Title: $title, ImageUrl: $imageUrl');
-
-    return Container(
-      margin: EdgeInsets.all(3.0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(20.0)),
-        image: DecorationImage(
-          colorFilter: ColorFilter.mode(Color(0xC1000000), BlendMode.luminosity),
-          fit: BoxFit.cover,
-          image: NetworkImage(imageUrl), // Use NetworkImage for fetching images from URL
+    return GestureDetector(
+      onTap: () => onTap(title), // Passes the title as a parameter to onTap
+      child: Container(
+        margin: EdgeInsets.all(8.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12.0),
+          image: DecorationImage(
+            fit: BoxFit.cover,
+            image: NetworkImage(imageUrl),
+          ),
         ),
-      ),
-      child: Center(
-        child: Text(
-          title,
-          style: TextStyle(
-            fontSize: 18.0,
-            fontWeight: FontWeight.w400,
-            color: Colors.white,
+        child: Container(
+          alignment: Alignment.bottomLeft,
+          padding: EdgeInsets.all(8.0),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12.0),
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Colors.transparent,
+                Colors.black.withOpacity(0.7),
+              ],
+            ),
+          ),
+          child: Text(
+            title,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16.0,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
       ),
