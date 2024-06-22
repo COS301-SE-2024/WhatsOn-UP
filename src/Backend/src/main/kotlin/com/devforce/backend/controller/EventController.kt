@@ -74,7 +74,14 @@ class EventController {
         return events
     }
 
-
+    @GetMapping("/filterEvents")
+    fun filterEvents(
+        @RequestParam(required = false) date: LocalDateTime?,
+        @RequestParam(required = false) maxAttendees: Int?,
+        @RequestParam(required = false) type: Boolean?
+    ): ResponseEntity<ResponseDto> {
+        return eventService.filterEvents(date, maxAttendees, type)
+    }
     @GetMapping("/filter")
     @PreAuthorize("permitAll()")
     fun filterEventsByKeyword(@RequestParam keywordFilter: String): ResponseEntity<ResponseDto> {

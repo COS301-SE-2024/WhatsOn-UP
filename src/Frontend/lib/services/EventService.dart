@@ -49,4 +49,20 @@ class EventService {
       throw Exception('Failed to connect to the server');
     }
   }
+
+  Future<List<dynamic>> filterEvents({
+    String date = '',
+    int maxAttendees = 0,
+    String type = '',
+  }) async {
+    final response = await http.get(Uri.parse(
+        '$baseUrl/api/events/filterEvents?date=$date&maxAttendees=$maxAttendees&type=$type'));
+
+    if (response.statusCode == 200) {
+      final List<dynamic> events = json.decode(response.body);
+      return events;
+    } else {
+      throw Exception('Failed to load events');
+    }
+  }
 }

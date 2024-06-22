@@ -146,6 +146,15 @@ class EventService @Autowired constructor(
 
 
 }
+    fun filterEvents(date: LocalDateTime?, maxAttendees: Int?, type: Boolean?): ResponseEntity<ResponseDto> {
+        try {
+            val filteredEvents = eventRepo.filterEvents(date, maxAttendees, type)
+            return ResponseEntity.ok(ResponseDto("Events filtered successfully", System.currentTimeMillis(), filteredEvents))
+        } catch (e: Exception) {
+            return ResponseEntity.internalServerError()
+                .body(ResponseDto("Error filtering events", System.currentTimeMillis(), null))
+        }
+    }
     fun filterEventsByKeyword(keywordFilter: String): List<EventModel> {
         return eventRepo.filterEventsByKeyword(keywordFilter)
     }

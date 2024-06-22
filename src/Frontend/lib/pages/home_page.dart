@@ -9,8 +9,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:firstapp/pages/searchbar.dart';
 import 'package:firstapp/pages/data_search.dart';
 import 'package:firstapp/pages/profilePage.dart';
-
 import '../screens/SearchScreen.dart';
+import '../screens/FilterScreen.dart';
 // import 'package:firstapp/widgets/eventcard.dart';
 import 'dart:typed_data';
 
@@ -215,22 +215,11 @@ class _HomePageState extends State<HomePage> {
                       ),
                       child: TextButton.icon(
                         onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: Text('Filter Options'),
-                                content: Text('Coming soon'),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Text('Close'),
-                                  ),
-                                ],
-                              );
-                            },
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => FilterScreen(),
+                            ),
                           );
                         },
                         icon: Icon(Icons.filter_list, color: textColour),
