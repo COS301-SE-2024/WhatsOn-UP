@@ -121,15 +121,21 @@ class EventService @Autowired constructor(
         fun searchEvents(
             title: String?,
             description: String?,
-            startDate: LocalDateTime?,
-            endDate: LocalDateTime?
+            location: String?
         ): ResponseEntity<ResponseDto> {
-            println("Searching events with parameters: title=$title, description=$description, startDate=$startDate, endDate=$endDate")
+            println("Searching events with parameters: title=$title, description=$description, location=$location")
 
-            val results = eventRepo.searchEvents(title, description, startDate, endDate)
-            println("Found ${results.size} events");
+            val results: List<EventModel>
+            try {
+                results = eventRepo.searchEvents(title, description, location)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                return ResponseEntity.internalServerError()
+                    .body(ResponseDto("Error searching events", System.currentTimeMillis(), null))
+            }
+
+            println("Found ${results.size} events")
             return ResponseEntity.ok(ResponseDto("Events searched successfully", System.currentTimeMillis(), results))
-
 
             // Implement search by date range logic
           /*  if (startDate != null && endDate != null) {
@@ -138,8 +144,11 @@ class EventService @Autowired constructor(
                 results.addAll(dateRangeResults)
             }*/
 
-        }
 
+}
+    fun filterEventsByKeyword(keywordFilter: String): List<EventModel> {
+        return eventRepo.filterEventsByKeyword(keywordFilter)
+    }
 
     fun getAllEventsWithMedia(): List<EventModel> {
             val events = eventRepo.findAll()

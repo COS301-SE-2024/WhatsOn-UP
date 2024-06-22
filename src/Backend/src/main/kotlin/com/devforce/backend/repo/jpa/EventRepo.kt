@@ -7,15 +7,23 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import java.time.LocalDateTime
 import java.util.*
+import org.springframework.data.repository.query.Param;
 
 interface EventRepo: JpaRepository<EventModel, UUID> {
     fun findByAttendeesIs(user: UserModel): List<EventModel>
 
-    @Query("SELECT e FROM EventModel e WHERE " +
-            "(?1 IS NULL OR e.title LIKE %?1%) AND " +
-            "(?2 IS NULL OR e.description LIKE %?2%) AND " +
-            "(?3 IS NULL OR e.startTime >= ?3) AND " +
-            "(?4 IS NULL OR e.endTime <= ?4)")
-    fun searchEvents(title: String?, description: String?, startDate: LocalDateTime?, endDate: LocalDateTime?): List<EventModel>
-}
+    @Query("SELECT e FROM EventModel e WHERE (:title IS NULL OR e.title LIKE %:title%) " +
+            "AND (:description IS NULL OR e.description LIKE %:description%) " +
+            "AND (:location IS NULL OR e.location LIKE %:location%)")
+    fun searchEvents(title: String?, description: String?, location: String?): List<EventModel>
 
+    @Query("SELECT e FROM EventModel e WHERE e.title LIKE %:keywordFilter%")
+    fun filterEventsByKeyword(@Param("keywordFilter") keywordFilter: String): List<EventModel>
+
+}
+    /*fun searchEvents(
+        @Param("title") title: String?,
+        @Param("description") description: String?,
+        @Param("startDate") startDate: LocalDateTime?,
+        @Param("endDate") endDate: LocalDateTime?
+    ): List<EventModel>*/
