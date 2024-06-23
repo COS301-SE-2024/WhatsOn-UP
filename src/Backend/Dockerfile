@@ -12,10 +12,7 @@ RUN chmod +x ./gradlew
 # Remove Windows carriage return characters if any
 RUN sed -i 's/\r//' gradlew
 
-# Run Gradle build with necessary environment variables
-# Make sure to run tests and build the application separately
-RUN ./gradlew assemble
-RUN ./gradlew test
+RUN ./gradlew build
 
 # Expose the port
 EXPOSE 8080
