@@ -80,9 +80,9 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
                 "LEFT JOIN FETCH i.role ir " +
                 "LEFT JOIN FETCH e.eventMedia em " +
                 "WHERE " +
-                "(:#{#filterByDto.startTime} IS NULL OR e.startTime >= :#{#filterByDto.startTime}) AND " +
-                "(:#{#filterByDto.endTime} IS NULL OR e.endTime <= :#{#filterByDto.endTime}) AND " +
-                "(:#{#filterByDto.location} IS NULL OR e.location ILIKE %:#{#filterByDto.location}%) AND " +
+                "(:#{#filterByDto.startTime} IS NULL OR e.startTime >= TO_TIMESTAMP(:#{#filterByDto.startTime}, 'YYYY-MM-DD HH24:MI:SS')) AND " +
+                "(:#{#filterByDto.endTime} IS NULL OR e.endTime <= TO_TIMESTAMP(:#{#filterByDto.endTime}, 'YYYY-MM-DD HH24:MI:SS')) AND " +
+                "(:#{#filterByDto.location} IS NULL OR e.location ILIKE %:#{#filterByDto.location}% ) AND " +
                 "(:#{#filterByDto.isPrivate} IS NULL OR e.isPrivate = :#{#filterByDto.isPrivate}) AND " +
                 "(:#{#filterByDto.maxAttendees} IS NULL OR e.maxAttendees <= :#{#filterByDto.maxAttendees})"
     )
