@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+
 class EventService {
   static const String baseUrl = 'http://localhost:8080';
 
@@ -50,19 +51,27 @@ class EventService {
     }
   }
 
-  Future<List<dynamic>> filterEvents({
-    String date = '',
-    int maxAttendees = 0,
-    String type = '',
-  }) async {
-    final response = await http.get(Uri.parse(
-        '$baseUrl/api/events/filterEvents?date=$date&maxAttendees=$maxAttendees&type=$type'));
+  Future<List<dynamic>> filterEvents(String startDate, String endDate, int minCapacity, int maxCapacity, bool isPrivate) async {
+    final queryParams = {
+      'startDate': startDate,
+      'endDate': endDate,
+      'minCapacity': minCapacity.toString(),
+      'maxCapacity': maxCapacity.toString(),
+      'isPrivate': isPrivate.toString(),
+    };
 
-    if (response.statusCode == 200) {
-      final List<dynamic> events = json.decode(response.body);
-      return events;
-    } else {
-      throw Exception('Failed to load events');
+    final uri = Uri.parse('$baseUrl/api/events/filterEvents').replace(queryParameters: queryParams);
+
+    try {
+      final response = await http.get(uri);
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body)['data'];
+        return data;
+      } else {
+        throw Exception('Failed to filter events');
+      }
+    } catch (e) {
+      throw Exception('Failed to connect to the server');
     }
   }
 }
