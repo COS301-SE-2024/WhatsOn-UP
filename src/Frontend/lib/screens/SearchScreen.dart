@@ -1,3 +1,4 @@
+import 'package:firstapp/widgets/event_card.dart';
 import 'package:flutter/material.dart';
 import 'package:firstapp/widgets/SearchTile.dart';
 import 'package:firstapp/services/EventService.dart';
@@ -11,7 +12,7 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   final EventService _eventService = EventService();
-  List<dynamic> _searchResults = [];
+  List<Event> _searchResults = [];
   bool _isLoading = false;
   bool _showSearchTiles = true;
 
@@ -22,7 +23,7 @@ class _SearchScreenState extends State<SearchScreen> {
     });
 
     try {
-      final results = await _eventService.searchEvents(query);
+      final results = await _eventService.searchEvents(query) as List<Event>;
       setState(() {
         _searchResults = results;
         _isLoading = false;
@@ -142,11 +143,8 @@ class _SearchScreenState extends State<SearchScreen> {
               child: ListView.builder(
                 itemCount: _searchResults.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return ListTile(
-                    title: Text(_searchResults[index]['title']),
-                    subtitle: Text(_searchResults[index]['description']),
-                    // TODO: Implement onTap to navigate to event details page
-                  );
+                  EventCard card = EventCard(event: _searchResults[index]);
+                  return card;
                 },
               ),
             ),
