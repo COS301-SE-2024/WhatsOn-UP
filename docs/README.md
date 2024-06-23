@@ -48,4 +48,9 @@ You are able to view and manage your profile details, along with adding profile 
 ## Create Events
 
 ## Sign Out
+To sign out
+1. select the `more` button on the navbar
+2. select the `settings` button in the list that pops up
+3. navigate to `profile`
+4. tap the `Logout` button
 
