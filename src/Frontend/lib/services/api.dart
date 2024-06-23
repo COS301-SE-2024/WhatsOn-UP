@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+// import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:convert';
 import 'dart:typed_data';
 class Api {
@@ -10,7 +10,7 @@ class Api {
   Api._internal();
 
   // Secure Storage instance
-  final _secureStorage = const FlutterSecureStorage();
+  // final _secureStorage = const FlutterSecureStorage();
 
   // Keys for storing JWT and refresh token
   var jwtKey = 'jwtToken';
@@ -36,8 +36,8 @@ class Api {
         jwtKey = responseBody['jwtToken'];
         refreshToken = responseBody['refreshToken'];
         // Store tokens securely
-        await _secureStorage.write(key: 'jwtToken', value: jwtKey);
-        await _secureStorage.write(key: 'refreshToken', value: refreshToken);
+        // await _secureStorage.write(key: 'jwtToken', value: jwtKey);
+        // await _secureStorage.write(key: 'refreshToken', value: refreshToken);
         // Return user details
         return await getUserDetails();
       } else {
