@@ -6,7 +6,7 @@ import 'package:firstapp/widgets/event_card.dart';
 class Api {
   // Singleton instance
   static final Api _instance = Api._internal();
-  static const String domain = 'ec2-13-60-34-71.eu-north-1.compute.amazonaws.com';
+  static const String domain = 'localhost';
   factory Api() => _instance;
   Api._internal();
 
@@ -93,6 +93,7 @@ class Api {
 
       // Map the JSON objects to Event objects
       final List<Event> events = eventsJson.map((jsonEvent) => Event.fromJson(jsonEvent)).toList();
+      print(events[0]);
       return events;
     } else {
       throw Exception('Failed to load events');

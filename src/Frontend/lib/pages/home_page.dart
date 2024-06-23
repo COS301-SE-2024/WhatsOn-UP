@@ -50,45 +50,7 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  final List<Event> events = [
-    Event(
-        nameOfEvent: 'Event name 1',
-        dateAndTime: '2024/05/28',
-        location: 'braam',
-        imageUrls: [
-          'https://source.unsplash.com/random/200x200?sig=1',
-          'https://source.unsplash.com/random/200x200?sig=1',
-          'https://source.unsplash.com/random/200x200?sig=1'
-        ],
-        description: 'This is a test description for Event 1'),
-    Event(
-        nameOfEvent: 'Event name 2',
-        dateAndTime: '2024/05/29',
-        location: 'jozi',
-        imageUrls: ['https://source.unsplash.com/random/200x200?sig=2'],
-        description: 'This is a test description for Event 2'),
-    Event(
-        nameOfEvent: 'Event name 3',
-        dateAndTime: '2024/05/30',
-        location: 'pta',
-        imageUrls: [
-          'https://source.unsplash.com/random/200x200?sig=3',
-          'https://source.unsplash.com/random/200x200?sig=3'
-        ],
-        description: 'This is a test description for Event 3'),
-    Event(
-        nameOfEvent: 'Event name 4',
-        dateAndTime: '2024/05/31',
-        location: 'soweto',
-        imageUrls: [
-          'https://source.unsplash.com/random/200x200?sig=4',
-          'https://source.unsplash.com/random/200x200?sig=4',
-          'https://source.unsplash.com/random/200x200?sig=4',
-          'https://source.unsplash.com/random/200x200?sig=4',
-          'https://source.unsplash.com/random/200x200?sig=4'
-        ],
-        description: 'This is a test description for Event 4'),
-  ];
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -138,8 +100,8 @@ class _HomePageState extends State<HomePage> {
       return Center(child: Text('Error: ${snapshot.error}'));
     } else if (snapshot.hasData) {
       final events = snapshot.data!;
-      
-      // Debug print statement to check the length of events
+
+      print('second events call: $events');
       print("Number of events: ${events.length}");
 
       // Add check to ensure events list is not empty
@@ -263,7 +225,9 @@ class _HomePageState extends State<HomePage> {
                   if (index >= events.length) {
                     return Container(); // or handle error gracefully
                   }
-                  return EventCard(event: events[index]);
+                  EventCard card = EventCard(event: events[index]);
+                  print('is there an event here: $events[index]');
+                  return card;
                 },
               ),
             ),
