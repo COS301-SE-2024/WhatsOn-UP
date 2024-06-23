@@ -81,13 +81,14 @@ class ThemeNotifier with ChangeNotifier {
   ThemeData getTheme() => _themeData;
 
   ThemeNotifier() {
+    _themeData = lightTheme; // Setting light as the default theme because _themeData was uninitialised before which caused errors
     StorageManager.readData('themeMode').then((value) {
-      print('value read from storage: ' + value.toString());
+      // print('value read from storage: ' + value.toString());
       var themeMode = value ?? 'light';
       if (themeMode == 'light') {
         _themeData = lightTheme;
       } else {
-        print('setting dark theme');
+        // print('setting dark theme');
         _themeData = darkTheme;
       }
       notifyListeners();

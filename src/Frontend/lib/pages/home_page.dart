@@ -9,25 +9,31 @@ import 'package:flutter/cupertino.dart';
 import 'package:firstapp/pages/searchbar.dart';
 import 'package:firstapp/pages/data_search.dart';
 import 'package:firstapp/pages/profilePage.dart';
+
+import '../screens/SearchScreen.dart';
 import 'package:firstapp/services/api.dart';
 // import 'package:firstapp/widgets/eventcard.dart';
+import 'dart:typed_data';
+import 'package:firstapp/pages/Broadcast.dart';
+import 'package:firstapp/pages/manageEvents.dart';
+
 
 class HomePage extends StatefulWidget {
-  // final String profileImageUrl;
   final String userName;
   final String userEmail;
-  // final String role;
-  //final String UserId;
-  const HomePage(
-      {
-        Key? key,
-        // required this.profileImageUrl,
-        required this.userName,
-        required this.userEmail,
-        //  required this.role;
-        // required this.userId
-      }
-      ): super(key: key);
+  final String userId;
+  final String role;
+  final Uint8List? profileImage;
+
+  const HomePage({
+    Key? key,
+    // required this.profileImageUrl,
+    required this.userName,
+    required this.userEmail,
+    required this.userId,
+    required this.role,
+    required this.profileImage,
+  }) : super(key: key);
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -61,6 +67,7 @@ class _HomePageState extends State<HomePage> {
       bottomNavigationBar: NavBar(
         selectedIndex: _selectedIndex,
         onItemTapped: _onItemTapped,
+        userRole: widget.role,
       ),
     );
   }
@@ -76,11 +83,20 @@ class _HomePageState extends State<HomePage> {
       case 3:
         return const ExplorePage();
       case 4:
-         return  SettingsPage( //profileImageUrl: widget.profileImageUrl,
+        return SettingsPage(
+          //profileImageUrl: widget.profileImageUrl,
           userName: widget.userName,
           userEmail: widget.userEmail,
-           // role:widget.role;
-         );
+          role: widget.role,
+          userId: widget.userId,
+          profileImage: widget.profileImage,
+        );
+      case 5:
+        return const ManageEvents();
+
+      case 6:
+        return const Broadcast();
+
       default:
         return _buildHomePage();
     }
@@ -121,27 +137,38 @@ class _HomePageState extends State<HomePage> {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
+                         MaterialPageRoute(
                           builder: (context) => ProfilePage(
+                            // profileImageUrl: widget.profileImageUrl,
                             userName: widget.userName,
                             userEmail: widget.userEmail,
+                            // role: widget.role,
+                            userId: widget.userId,
+                            role: widget.role,
+                            profileImage: widget.profileImage,
                           ),
                         ),
                       );
                     },
                     child: CircleAvatar(
-                      backgroundImage: NetworkImage("http/image"),
-                      radius: 24.0,
+                      backgroundImage: widget.profileImage != null
+                          ? MemoryImage(widget.profileImage!)
+                          : AssetImage('http/example-image')
+                              as ImageProvider, // Replace the URL with your profile image URL
+                      radius: 27.0,
                     ),
                   ),
                 ),
                 Text(
                   'Welcome, ${widget.userName}',
-                  style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.bold),
                 ),
               ],
             ),
             SizedBox(height: 20.0),
+
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: Center(
@@ -157,9 +184,12 @@ class _HomePageState extends State<HomePage> {
                         ),
                         child: TextButton.icon(
                           onPressed: () {
-                            showSearch(
-                              context: context,
-                              delegate: DataSearch(),
+                            // Navigate to SearchScreen when Search button is pressed
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SearchScreen(),
+                              ),
                             );
                           },
                           icon: Icon(Icons.search, color: textColour),
@@ -226,7 +256,6 @@ class _HomePageState extends State<HomePage> {
                     return Container(); // or handle error gracefully
                   }
                   EventCard card = EventCard(event: events[index]);
-                  print('is there an event here: $events[index]');
                   return card;
                 },
               ),

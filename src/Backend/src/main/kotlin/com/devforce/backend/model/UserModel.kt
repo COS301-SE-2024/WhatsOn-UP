@@ -31,19 +31,12 @@ class UserModel{
     var jwtToken: String = ""
     var refreshToken: String = ""
 
+    @Column(columnDefinition = "TEXT")
     var profileImage: String = ""
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id")
     var role: RoleModel? = null
-
-    @ManyToMany
-    @JoinTable(
-        name = "saved_events",
-        joinColumns = [JoinColumn(name = "user_id")],
-        inverseJoinColumns = [JoinColumn(name = "event_id")]
-    )
-    var savedEvents: MutableSet<EventModel> = HashSet()
 
     @PrePersist
     fun prePersist() {

@@ -14,10 +14,11 @@ import java.util.*
 @Table(name = "event")
 @NoArgsConstructor
 @AllArgsConstructor
-class EventModel{
+
+class EventModel {
     @Id
     @GeneratedValue
-    @Column(columnDefinition = "UUID")
+    @Column(name = "event_id", columnDefinition = "UUID")
     var eventId: UUID = UUID.randomUUID()
 
     var title: String = ""
@@ -26,17 +27,27 @@ class EventModel{
 
     @ElementCollection
     @CollectionTable(name = "event_media", joinColumns = [JoinColumn(name = "event_id")])
-    @Column(name = "media_link")
+    @Column(name = "media_link" , columnDefinition = "TEXT")
     var eventMedia: List<String> = ArrayList()
 
+    @Column(name = "created_at", nullable = false, updatable = false)
     private var createdAt: LocalDateTime = LocalDateTime.now()
+
+    @Column(name = "updated_at", nullable = false)
     private var updatedAt: LocalDateTime = LocalDateTime.now()
 
     var location: String = ""
+
+    @Column(name = "start_time", nullable = false)
     var startTime: LocalDateTime = LocalDateTime.now()
+
+    @Column(name = "end_time", nullable = false)
     var endTime: LocalDateTime = LocalDateTime.now()
 
+    @Column(name = "max_attendees", nullable = false)
     var maxAttendees: Int = 0
+
+    @Column(name = "is_private", nullable = false)
     var isPrivate: Boolean = false
 
     @ManyToMany
@@ -63,6 +74,14 @@ class EventModel{
     )
     var invitees: MutableSet<UserModel> = HashSet()
 
+    @ManyToMany
+    @JoinTable(
+        name = "saved_events",
+        joinColumns = [JoinColumn(name = "event_id")],
+        inverseJoinColumns = [JoinColumn(name = "user_id")]
+    )
+    var savedEvents: MutableSet<UserModel> = HashSet()
+
     @PrePersist
     fun prePersist() {
         createdAt = LocalDateTime.now()
@@ -73,4 +92,5 @@ class EventModel{
     fun preUpdate() {
         updatedAt = LocalDateTime.now()
     }
+
 }

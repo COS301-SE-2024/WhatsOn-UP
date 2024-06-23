@@ -3,34 +3,22 @@ package com.devforce.backend.service
 import com.devforce.backend.dto.*
 import com.devforce.backend.model.EventModel
 import com.devforce.backend.repo.EventRepo
-import com.devforce.backend.repo.UserRepo
+import com.devforce.backend.security.CustomUser
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
-import java.time.LocalDateTime
+import java.time.*
 import java.util.*
 
 @Service
 class EventService {
-    @Autowired
-    lateinit var checkJwt: CheckJwt
-
-    @Autowired
-    lateinit var userRepo: UserRepo
 
     @Autowired
     lateinit var eventRepo: EventRepo
 
-
-
-    fun createEvent(createEventDto: CreateEventDto, token: String): ResponseEntity<ResponseDto> {
-        val response = checkJwt.check(token)
-        if (response != null) {
-            return response
-        }
-
-        val email = checkJwt.jwtGenerator.getUsernameFromToken(token)
-        val user = userRepo.findByEmail(email)!!
+    fun createEvent(createEventDto: CreateEventDto): ResponseEntity<ResponseDto> {
+        val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
 
         val event = EventModel().apply {
             this.title = createEventDto.title
@@ -42,11 +30,11 @@ class EventService {
             this.metadata = createEventDto.metadata ?: ""
             this.isPrivate = createEventDto.isPrivate ?: false
             this.hosts = setOf(user)
-            this.eventMedia = createEventDto.media ?: emptyList()
+            this.eventMedia = createEventDto.media ?: this.eventMedia
         }
 
         eventRepo.save(event)
-        
+
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Event added successfully"))
         )
     }
@@ -62,10 +50,32 @@ class EventService {
 
     // To do: Implement function to update an existing event
     fun updateEvent(id: UUID, updateEventDto: UpdateEventDto): ResponseEntity<ResponseDto> {
-        // Implementation goes here
-        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Event updated successfully"))
-        )
-    }
+        try {
+            val existingEvent = eventRepo.findById(id)
+                .orElseThrow { NoSuchElementException("Event with id $id not found") }
+
+            existingEvent.apply {
+                updateEventDto.title?.let { title = it }
+                updateEventDto.description?.let { description = it }
+                updateEventDto.metadata?.let { metadata = it }
+                updateEventDto.location?.let { location = it }
+                updateEventDto.startDate?.let { startTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(it), ZoneId.systemDefault()) }
+                updateEventDto.endDate?.let { endTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(it), ZoneId.systemDefault()) }
+                updateEventDto.maxParticipants?.let { maxAttendees = it }
+                updateEventDto.isPrivate?.let { isPrivate = it }
+            }
+
+            val updatedEvent = eventRepo.save(existingEvent)
+
+            return ResponseEntity.ok(ResponseDto("Event updated successfully", System.currentTimeMillis(), updatedEvent))
+        } catch (e: NoSuchElementException) {
+            return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "Event not found")))
+        } catch (e: Exception) {
+            return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "Failed to update event:")))
+
+
+    }}
+
 
     // To do: Implement function to delete an event
     fun deleteEvent(id: UUID): ResponseEntity<ResponseDto> {
@@ -83,15 +93,22 @@ class EventService {
     }
 
 
-    // To do: Implement function to search events based on criteria
+//     To do: Implement function to search events based on criteria
     fun searchEvents(
-        title: String?,
-        description: String?,
-        startDate: LocalDateTime?,
-        endDate: LocalDateTime?
+        searchString: String
     ): ResponseEntity<ResponseDto> {
-        // Implementation goes here
-        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Method needs to be implemented"))
+
+        val events = eventRepo.searchEvents(searchString)
+        val eventsDto = events.map { event -> AllEventsDto(event) }
+        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto)
+        )
+
+    }
+    fun filterEvents(filterBy: FilterByDto): ResponseEntity<ResponseDto>{
+        val events = eventRepo.filterEvents(filterBy)
+        val eventsDto = events.map { event -> AllEventsDto(event) }
+        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto)
         )
     }
+
 }
