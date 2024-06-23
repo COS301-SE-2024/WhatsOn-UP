@@ -17,6 +17,8 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 
+//FUTURE
+//fun filterEvents(
 @Service
 class EventService {
 
@@ -203,7 +205,7 @@ class EventService {
         return eventRepo.filterEventsByKeyword(keywordFilter)
     }
 
-    //filtering from search screen(image tile filtering)- NOT SURE
+    //FUTURE
     fun filterEvents(filterBy: FilterByDto): ResponseEntity<ResponseDto>{
         val events = eventRepo.filterEvents(filterBy)
         val eventsDto = events.map { event -> AllEventsDto(event) }

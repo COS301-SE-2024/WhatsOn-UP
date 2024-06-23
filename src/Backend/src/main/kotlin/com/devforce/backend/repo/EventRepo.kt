@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import java.util.*
-
+//FUTURE - filterEvents
 
 interface EventRepo: JpaRepository<EventModel, UUID> {
 
@@ -70,7 +70,8 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
 
 
 
-   /* @Query(
+   /* FUTURE
+   @Query(
         "SELECT DISTINCT e FROM EventModel e " +
                 "LEFT JOIN FETCH e.attendees a " +
                 "LEFT JOIN FETCH a.role ar " +

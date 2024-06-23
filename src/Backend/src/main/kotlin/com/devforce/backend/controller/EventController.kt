@@ -19,7 +19,8 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 
-
+//FUTURE
+//  fun filterEvents(
 @RestController
 @RequestMapping("/api/events")
 class EventController {
@@ -76,7 +77,7 @@ class EventController {
         return filteredEvents
     }
 
-        //this filter is the one for search page  - fliter by keyword
+        //FUTURE
    /* @GetMapping("/filter")
     @PreAuthorize("permitAll()")
     fun filterEvents(
