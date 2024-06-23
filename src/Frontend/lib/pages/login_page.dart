@@ -277,7 +277,6 @@ class _LoginPageState extends State<LoginPage> {
 
           print('An error occurred: ${response['error']}');
         } else {
-          print(response);
           String fullName = response['data']['user']['fullName']?? 'Unknown';
           String userEmail = response['data']['user']['email'] ?? 'Unknown';
           String UserId=response['data']['user']['id']?? 'Unknown';

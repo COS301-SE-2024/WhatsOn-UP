@@ -46,6 +46,7 @@ class AuthService {
         val encodedPassword = passwordEncoder.encode(userDTO.password)
 
         val tokenDto = jwtGenerator.generateToken(userDTO.email, "GENERAL")
+        print(tokenDto)
 
         val newUser = UserModel().apply {
             this.email = userDTO.email
