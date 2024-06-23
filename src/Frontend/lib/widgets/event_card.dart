@@ -19,7 +19,6 @@ class Event {
 
    factory Event.fromJson(Map<String, dynamic> json) {
     dynamic j = json['eventMedia']; 
-    print("AAHHHHH $j");
     return Event(
       nameOfEvent: json['title'],
       dateAndTime: json['startTime'],
