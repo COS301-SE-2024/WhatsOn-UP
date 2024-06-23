@@ -170,4 +170,49 @@ class Api {
       return {'error': e.toString()};
     }
   }
+
+  Future<Map<String, dynamic>> createEvent({
+    required String title,
+    required String description,
+    required DateTime startDate,
+    required DateTime endDate,
+    required String location,
+    int? maxParticipants,
+    String? metadata,
+    bool isPrivate = false,
+    List<String>? media,
+  }) async {
+    final String _createEventUrl = 'http://localhost:8080/api/events/create';
+    
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $jwtKey',
+    };
+
+    var body = jsonEncode({
+      'title': title,
+      'description': description,
+      'startDate': startDate.toIso8601String(),
+      'endDate': endDate.toIso8601String(),
+      'location': location,
+      'maxParticipants': maxParticipants,
+      'metadata': metadata,
+      'isPrivate': isPrivate,
+      'media': media,
+    });
+
+    try {
+      var response = await http.post(Uri.parse(_createEventUrl), headers: headers, body: body);
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        throw Exception(jsonDecode(response.body));
+      }
+    } catch (e) {
+      print('Error: $e');
+      throw Exception(e.toString());
+    }
+  }
 }
