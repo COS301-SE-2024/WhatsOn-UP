@@ -7,6 +7,7 @@ import com.devforce.backend.model.EventModel
 import com.devforce.backend.service.EventService
 import jakarta.annotation.security.RolesAllowed
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
@@ -75,13 +76,25 @@ class EventController {
     }
 
     @GetMapping("/filterEvents")
+    @PreAuthorize("permitAll()")
     fun filterEvents(
-        @RequestParam(required = false) date: LocalDateTime?,
-        @RequestParam(required = false) maxAttendees: Int?,
-        @RequestParam(required = false) type: Boolean?
+        @RequestParam(required = false) startDate: String?,
+        @RequestParam(required = false) endDate: String?,
+        @RequestParam(required = false) minCapacity: Int?,
+        @RequestParam(required = false) maxCapacity: Int?,
+        @RequestParam(required = false) isPrivate: Boolean?
     ): ResponseEntity<ResponseDto> {
-        return eventService.filterEvents(date, maxAttendees, type)
+        val filteredEvents = eventService.filterEvents(
+            startDate,
+            endDate,
+            minCapacity ?: 0,
+            maxCapacity ?: Int.MAX_VALUE,
+            isPrivate ?: false
+        )
+        return filteredEvents
     }
+
+        //this filter is the one for search page  - fliter by keyword
     @GetMapping("/filter")
     @PreAuthorize("permitAll()")
     fun filterEventsByKeyword(@RequestParam keywordFilter: String): ResponseEntity<ResponseDto> {

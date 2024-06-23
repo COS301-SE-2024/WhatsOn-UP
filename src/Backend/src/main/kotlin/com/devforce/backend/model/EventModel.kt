@@ -85,6 +85,8 @@ class EventModel {
         updatedAt = LocalDateTime.now()
     }
 
+
+
   /*  fun getEsId(): String {
         return eventId.toString()
     }

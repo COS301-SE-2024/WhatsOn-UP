@@ -20,14 +20,21 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
     @Query("SELECT e FROM EventModel e WHERE e.title LIKE %:keywordFilter%")
     fun filterEventsByKeyword(@Param("keywordFilter") keywordFilter: String): List<EventModel>
 
-    @Query("SELECT e FROM EventModel e " +
-            "WHERE (:date IS NULL OR e.startTime >= :date) " +
-            "AND (:maxAttendees IS NULL OR e.maxAttendees <= :maxAttendees) " +
-            "AND (:type IS NULL OR e.isPrivate = :type)")
+
+    @Query(value = """
+        SELECT * FROM event e
+        WHERE (:startDate IS NULL OR e.start_time >= CAST(:startDate AS TIMESTAMP))
+        AND (:endDate IS NULL OR e.end_time <= CAST(:endDate AS TIMESTAMP))
+        AND e.max_attendees >= :minCapacity
+        AND e.max_attendees <= :maxCapacity
+        AND e.is_private = :isPrivate
+    """, nativeQuery = true)
     fun filterEvents(
-        @Param("date") date: LocalDateTime?,
-        @Param("maxAttendees") maxAttendees: Int?,
-        @Param("type") type: Boolean?
+        @Param("startDate") startDate: String?,
+        @Param("endDate") endDate: String?,
+        @Param("minCapacity") minCapacity: Int,
+        @Param("maxCapacity") maxCapacity: Int,
+        @Param("isPrivate") isPrivate: Boolean
     ): List<EventModel>
 }
     /*fun searchEvents(
