@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
 import 'package:firstapp/services/api.dart';
+import 'package:firstapp/pages/detailed_event_page.dart';
+import 'package:firstapp/widgets/event_card.dart';
 
 class CalendarPage extends StatefulWidget {
   const CalendarPage({super.key});
@@ -17,7 +19,6 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
   @override
   void initState() {
     super.initState();
-    // _groupedEvents = _groupEventsByDate(_events);
     _fetchRSVPEvents();
   }
 
@@ -25,13 +26,11 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
   Map<DateTime, List<Map<String, dynamic>>> _groupedEvents = {};
-
+  bool _isLoading = true;
 
   Future<void> _fetchRSVPEvents() async {
     try {
       final response = await Api().getRSVPEvents();  
-      
-
       final parsedEvents = parseEvents(response);
 
       setState(() {
@@ -39,11 +38,14 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
         _events.clear();
         _events.addAll(parsedEvents);
         _groupedEvents = _groupEventsByDate(_events);
+        _isLoading = false;
       });
       
-      print('RSVP Events: $response');
     } catch (e) {
       print('RSVP Error: $e');
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -56,6 +58,7 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
         'location': event['location'],
         'attendees': event['attendees'].length.toString(),
         'url': 'https://picsum.photos/200',
+        'description': event['description'],
       };
     }).toList();
   }
@@ -184,69 +187,88 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
           ),
           const SizedBox(height: 16.0),
           Expanded(
-            child: ListView.builder(
+            child: _isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : ListView.builder(
               itemCount: _getEventsForMonth(_focusedDay).length,
               itemBuilder: (context, index) {
                 final event = _getEventsForMonth(_focusedDay)[index];
-                return Card(
-                  margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          width: 120,
-                          height: 80,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8.0),
-                            image: DecorationImage(
-                              image: NetworkImage(event['url']),
-                              fit: BoxFit.cover,
+                return GestureDetector(
+                  onTap: () {
+                    Event eventObject = Event(
+                      nameOfEvent: event['name'],
+                      dateAndTime: '${event['date']} ${event['time']}',
+                      location: event['location'],
+                      description: event['description'],
+                      imageUrls: [event['url']],
+                    );
+                  
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DetailedEventPage(event: eventObject),
+                      ),
+                    );
+                  },
+                  child: Card(
+                    margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            width: 120,
+                            height: 80,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8.0),
+                              image: DecorationImage(
+                                image: NetworkImage(event['url']),
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
-                        ),
-                        const SizedBox(width: 16.0),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                event['name'],
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
+                          const SizedBox(width: 16.0),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  event['name'],
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(height: 8.0),
-                              Row(
-                                children: [
-                                  const Icon(Icons.calendar_today, size: 16),
-                                  const SizedBox(width: 4.0),
-                                  Text(event['date']),
-                                  const SizedBox(width: 16.0),
-                                  const Icon(Icons.access_time, size: 16),
-                                  const SizedBox(width: 4.0),
-                                  Text(event['time']),
-                                ],
-                              ),
-                              const SizedBox(height: 8.0),
-                              Row(
-                                children: [
-                                  const Icon(Icons.location_on, size: 16),
-                                  const SizedBox(width: 4.0),
-                                  Text(event['location']),
-                                  const SizedBox(width: 16.0),
-                                  const Icon(Icons.people, size: 16),
-                                  const SizedBox(width: 4.0),
-                                  Text(event['attendees']),
-                                  // Text('${event['attendees']} Attendees'), // Removed this because the "attendees" text caused overflow on smaller screens
-                                ],
-                              ),
-                            ],
+                                const SizedBox(height: 8.0),
+                                Row(
+                                  children: [
+                                    const Icon(Icons.calendar_today, size: 16),
+                                    const SizedBox(width: 4.0),
+                                    Text(event['date']),
+                                    const SizedBox(width: 16.0),
+                                    const Icon(Icons.access_time, size: 16),
+                                    const SizedBox(width: 4.0),
+                                    Text(event['time']),
+                                  ],
+                                ),
+                                const SizedBox(height: 8.0),
+                                Row(
+                                  children: [
+                                    const Icon(Icons.location_on, size: 16),
+                                    const SizedBox(width: 4.0),
+                                    Text(event['location']),
+                                    const SizedBox(width: 16.0),
+                                    const Icon(Icons.people, size: 16),
+                                    const SizedBox(width: 4.0),
+                                    Text(event['attendees']),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 );

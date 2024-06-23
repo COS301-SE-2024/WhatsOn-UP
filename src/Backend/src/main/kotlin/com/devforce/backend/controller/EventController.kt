@@ -86,18 +86,7 @@ class EventController {
         @RequestParam(required = false) isPrivate: Boolean?,
         @RequestParam(required = false) maxAttendees: Int?
     ): ResponseEntity<ResponseDto> {
-
-        // Convert date strings to LocalDateTime
-        val startTimeDateTime: LocalDateTime? = startTime?.let {
-            LocalDateTime.parse(it, DateTimeFormatter.ISO_DATE_TIME)
-        }
-
-        val endTimeDateTime: LocalDateTime? = endTime?.let {
-            LocalDateTime.parse(it, DateTimeFormatter.ISO_DATE_TIME)
-        }
-
-
-        val filterByDto = FilterByDto(startTimeDateTime, endTimeDateTime, location, isPrivate, maxAttendees)
+        val filterByDto = FilterByDto(startTime, endTime, location, isPrivate, maxAttendees)
 
         return eventService.filterEvents(filterByDto)
     }*/

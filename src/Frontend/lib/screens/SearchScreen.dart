@@ -22,7 +22,7 @@ class _SearchScreenState extends State<SearchScreen> {
     });
 
     try {
-      final results = await _eventService.searchEvents(title: query);
+      final results = await _eventService.searchEvents(query);
       setState(() {
         _searchResults = results;
         _isLoading = false;

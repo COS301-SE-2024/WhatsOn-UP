@@ -57,23 +57,29 @@ class EventService {
     // To do: Implement function to update an existing event
     fun updateEvent(id: UUID, updateEventDto: UpdateEventDto): ResponseEntity<ResponseDto> {
         try {
-            val existingEvent = eventRepo.findById(id)
-                .orElseThrow { NoSuchElementException("Event with id $id not found") }
+            val existing = eventRepo.findById(id)
+
+            if (existing.isEmpty) {
+                return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "Event not found")))
+            }
+
+            val existingEvent = existing.get()
 
             existingEvent.apply {
                 updateEventDto.title?.let { title = it }
                 updateEventDto.description?.let { description = it }
                 updateEventDto.metadata?.let { metadata = it }
                 updateEventDto.location?.let { location = it }
-                updateEventDto.startDate?.let { startTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(it), ZoneId.systemDefault()) }
-                updateEventDto.endDate?.let { endTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(it), ZoneId.systemDefault()) }
+                updateEventDto.startDate?.let { startTime = it }
+                updateEventDto.endDate?.let { endTime = it }
                 updateEventDto.maxParticipants?.let { maxAttendees = it }
                 updateEventDto.isPrivate?.let { isPrivate = it }
             }
 
+
             val updatedEvent = eventRepo.save(existingEvent)
 
-            return ResponseEntity.ok(ResponseDto("Event updated successfully", System.currentTimeMillis(), updatedEvent))
+            return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), updatedEvent))
         } catch (e: NoSuchElementException) {
             return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "Event not found")))
         } catch (e: Exception) {
