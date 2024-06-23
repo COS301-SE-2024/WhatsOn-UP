@@ -4,7 +4,7 @@ FROM devforce123/backend:2.0
 WORKDIR /home/ubuntu
 
 # Copy the application files to the container
-COPY . .
+ADD . .
 
 # Change permissions for Gradle wrapper
 RUN chmod +x ./gradlew
