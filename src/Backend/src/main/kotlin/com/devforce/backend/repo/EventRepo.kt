@@ -87,5 +87,24 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
                 "(:#{#filterByDto.maxAttendees} IS NULL OR e.maxAttendees <= :#{#filterByDto.maxAttendees})"
     )
     fun filterEvents(@Param("filterByDto") filterByDto: FilterByDto): List<EventModel>
+
+
+    @Query(value = """
+        SELECT * FROM event e
+        WHERE (:startDate IS NULL OR e.start_time >= CAST(:startDate AS TIMESTAMP))
+        AND (:endDate IS NULL OR e.end_time <= CAST(:endDate AS TIMESTAMP))
+        AND e.max_attendees >= :minCapacity
+        AND e.max_attendees <= :maxCapacity
+        AND e.is_private = :isPrivate
+    """, nativeQuery = true)
+    fun filteringEvents(
+        @Param("startDate") startDate: String?,
+        @Param("endDate") endDate: String?,
+        @Param("minCapacity") minCapacity: Int,
+        @Param("maxCapacity") maxCapacity: Int,
+        @Param("isPrivate") isPrivate: Boolean
+    ): List<EventModel>
+
 }
+
 

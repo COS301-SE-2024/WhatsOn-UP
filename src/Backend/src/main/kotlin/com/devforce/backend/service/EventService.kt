@@ -121,7 +121,7 @@ class EventService {
             println("Parsed End Date: $parsedEndDate")
     if(parsedStartDate != null || parsedEndDate != null) {
 
-        val filteredEvents = eventRepo.filterEvents(null, null, minCapacity, maxCapacity, isPrivate)
+        val filteredEvents = eventRepo.filteringEvents(null, null, minCapacity, maxCapacity, isPrivate)
         println("Filtered Events: $filteredEvents")
         return ResponseEntity.ok(ResponseDto("Events filtered successfully", System.currentTimeMillis(), filteredEvents))
     }
@@ -134,7 +134,7 @@ class EventService {
         println("Formatted End Date: $formattedEndDate")
 
         val filteredEvents =
-            eventRepo.filterEvents(formattedStartDate, formattedEndDate, minCapacity, maxCapacity, isPrivate)
+            eventRepo.filteringEvents(formattedStartDate, formattedEndDate, minCapacity, maxCapacity, isPrivate)
         println("Filtered Events: $filteredEvents")
         return ResponseEntity.ok(ResponseDto("Events filtered successfully", System.currentTimeMillis(), filteredEvents))
     }
@@ -161,9 +161,9 @@ class EventService {
     }
 
 
-    fun filterEventsByKeyword(keywordFilter: String): List<EventModel> {
+   /* fun filterEventsByKeyword(keywordFilter: String): List<EventModel> {
         return eventRepo.filterEventsByKeyword(keywordFilter)
-    }
+    }*/
     fun filterEvents(filterBy: FilterByDto): ResponseEntity<ResponseDto>{
         val events = eventRepo.filterEvents(filterBy)
         val eventsDto = events.map { event -> AllEventsDto(event) }

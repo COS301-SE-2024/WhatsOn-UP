@@ -66,7 +66,7 @@ class EventController {
         @RequestParam(required = false) maxCapacity: Int?,
         @RequestParam(required = false) isPrivate: Boolean?
     ): ResponseEntity<ResponseDto> {
-        val filteredEvents = eventService.filterEvents(
+        val filteredEvents = eventService.filteringEvents(
             startDate,
             endDate,
             minCapacity ?: 0,
