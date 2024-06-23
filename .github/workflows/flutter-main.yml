@@ -25,9 +25,5 @@ jobs:
     - name: Install dependencies
       run: flutter pub get
 
-    - name: Navigate to src/Frontend directory
-      run: cd src/Frontend
-
-    - name: Run tests with coverage
-      run: flutter test --coverage test/api_test.dart
-
+    - name: Run tests
+      run: flutter test

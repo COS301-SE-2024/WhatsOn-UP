@@ -1,93 +1,152 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:firstapp/services/api.dart';
+import 'package:flutter_test/flutter_test.dart';
 
-class Api {
-  // Singleton instance
-  static final Api _instance = Api._internal();
-  factory Api() => _instance;
-  Api._internal();
+void main() {
+  group('Api', () {
+    final api = Api();
 
-  // Secure Storage
-  final _secureStorage = FlutterSecureStorage();
+    test('loginUser throws an exception on failed login', () async {
+      final String email = 'wrong@example.com';
+      final String password = 'wrongpassword';
 
-  // Base URLs
-  final String _loginUrl = 'http://localhost:8080/api/auth/login';
-  final String _userUrl = 'http://localhost:8080/api/auth/get_user';
-
-  // Keys for storing JWT and refresh token
-  final String _jwtKey = 'jwtToken';
-  final String _refreshTokenKey = 'refreshToken';
-
-  // Method to log in the user and store JWT token
-  Future<bool> loginUser(String email, String password) async {
-    var headers = {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-    };
-    var body = jsonEncode({
-      'email': email,
-      'password': password
+      try {
+        await api.loginUser(email, password);
+        fail('Expected an exception to be thrown');
+      } catch (e) {
+        expect(e.toString(), contains('Exception:'));
+      }
     });
 
-    try {
-      var response = await http.post(Uri.parse(_loginUrl), headers: headers, body: body);
+    test('loginUser returns user details on successful login', () async {
+      final String email = 'host@gmail.com';
+      final String password = 'password';
 
-      if (response.statusCode == 200) {
-        var responseBody = jsonDecode(response.body)['body'];
-        var jwt = responseBody['jwtToken'];
-        var refreshToken = responseBody['refreshToken'];
-
-        // Store tokens securely
-        await _secureStorage.write(key: _jwtKey, value: jwt);
-        await _secureStorage.write(key: _refreshTokenKey, value: refreshToken);
-        return true;
-      } else {
-        throw Exception('Failed to login');
+      try {
+        final response = await api.loginUser(email, password);
+        expect(response['status'], 'success');
+      } catch (e) {
+        fail('loginUser failed: $e');
       }
-    } catch (e) {
-      print('Error: $e');
-      return false;
-    }
-  }
+    });
 
-  // Method to retrieve user details using stored JWT token
-  Future<Map<String, dynamic>> getUserDetails() async {
-    try {
-      var jwt = await _secureStorage.read(key: _jwtKey);
-      if (jwt == null) throw Exception('No JWT token found');
 
-      var headers = {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $jwt',
-      };
-
-      var response = await http.post(Uri.parse(_userUrl), headers: headers);
-      print(response.body);
-
-      if (response.statusCode == 200) {
-        return jsonDecode(response.body);
-      } else {
-        throw Exception('Failed to get user details');
+    test('getAllEvents returns a list of events', () async {
+      try {
+        final response = await api.getAllEvents();
+        expect(response, isA<List<dynamic>>());
+      } catch (e) {
+        fail('getAllEvents failed: $e');
       }
-    } catch (e) {
-      print('Error: $e');
-      return {'error': e.toString()};
-    }
-  }
-}
+    });
 
-// Example usage
-Future<void> main() async {
-  var email = 'your-email@example.com';
-  var password = 'your-password';
 
-  var api = Api();
+    test('getRSVPEvents returns a list of rsvpd events', () async {
+      try {
+        final response = await api.getRSVPEvents();
+        expect(response, isA<List<dynamic>>());
+      } catch (e) {
+        fail('getRSVPEvents failed: $e');
+      }
+    });
 
-  var loginSuccess = await api.loginUser(email, password);
-  if (loginSuccess) {
-    var userDetails = await api.getUserDetails();
-    print(userDetails);
-  }
+
+    test('postChangeUser updates user details', () async {
+      try {
+        final response = await api.postChangeUser(
+          'host',
+          'host@gmail.com',
+          '',
+        );
+        expect(response['status'], 'success');
+      } catch (e) {
+        fail('postChangeUser failed: $e');
+      }
+    });
+
+    test('postChangeUser throws an exception on error', () async {
+      String temp = api.jwtKey;
+      api.jwtKey = 'invalid_jwt_token';
+
+      try {
+        await api.postChangeUser(
+          'New Name',
+          'newemail@example.com',
+          'profileImageURL',
+        );
+        fail("contains 'Exception:'");
+      } catch (e) {
+        expect(e.toString(), contains('Exception:'));
+      }
+      finally {
+        api.jwtKey = temp;
+      }
+    });
+
+    test('updatePassword changes the user password', () async {
+      try {
+        final response = await api.updatePassword('password');
+      } catch (e) {
+        fail('updatePassword failed: $e');
+      }
+    });
+
+    test('updatePassword throws an exception on error', () async {
+      String temp = api.jwtKey;
+      api.jwtKey = 'invalid_jwt_token';
+
+      try {
+        await api.updatePassword('newpassword123');
+        fail("'contains 'Exception:'");
+      } catch (e) {
+        expect(e.toString(), contains('Exception:'));
+      }
+      finally {
+        api.jwtKey = temp;
+      }
+    });
+
+    test('createEvent creates a new event', () async {
+      try {
+        final response = await api.createEvent(
+          title: 'New Event',
+          description: 'Event Description',
+          startDate: DateTime.now(),
+          endDate: DateTime.now().add(Duration(hours: 2)),
+          location: 'Event Location',
+          maxParticipants: 100,
+          metadata: 'metadata',
+          isPrivate: false,
+          media: ['media1', 'media2'],
+        );
+        print(response);
+      } catch (e) {
+        fail('createEvent failed: $e');
+      }
+    });
+
+    test('createEvent throws an exception on error', () async {
+      String temp = api.jwtKey;
+      api.jwtKey = 'invalid_jwt_token';
+
+      try {
+        await api.createEvent(
+          title: 'New Event',
+          description: 'Event Description',
+          startDate: DateTime.now(),
+          endDate: DateTime.now().add(Duration(hours: 2)),
+          location: 'Event Location',
+          maxParticipants: 100,
+          metadata: 'metadata',
+          isPrivate: false,
+          media: ['media1', 'media2'],
+        );
+        fail('Expected an exception to be thrown');
+      } catch (e) {
+        expect(e.toString(), contains('Exception:'));
+      }
+      finally {
+        api.jwtKey = temp;
+      }
+    });
+  });
 }

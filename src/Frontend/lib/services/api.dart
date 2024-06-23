@@ -146,9 +146,9 @@ class Api {
 
     };
     var body = jsonEncode({
-      'fullName':name,
-      'email': email,
-      "profileImage":profileImage,
+    if (name != '') 'fullName': name,
+    if (email != '') 'email': email,
+    if (profileImage != '') 'profileImage': profileImage,
     });
 
     try {
@@ -188,6 +188,8 @@ class Api {
 
       if (response.statusCode == 200) {
         print("sucessfully changed password");
+        jwtKey = jsonDecode(response.body)['data']['jwtToken'];
+        refreshToken = jsonDecode(response.body)['data']['refreshToken'];
         return jsonDecode(response.body);
 
       } else {

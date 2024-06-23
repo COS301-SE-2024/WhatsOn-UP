@@ -65,11 +65,13 @@ class AuthService {
 
     fun loginUser(userDTO: LoginDto): ResponseEntity<ResponseDto> {
         try {
-            val user = userRepo.findByEmail(userDTO.email)!!
+            val user = userRepo.findByEmail(userDTO.email)
+                ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(ResponseDto("error", System.currentTimeMillis(), "Invalid email"))
 
             if (!passwordEncoder.matches(userDTO.password, user.password)) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(ResponseDto("error", System.currentTimeMillis(), "Invalid email or password"))
+                    .body(ResponseDto("error", System.currentTimeMillis(), "Invalid password"))
             }
 
             val tokenDto = jwtGenerator.generateToken(userDTO.email, user.role!!.name)
