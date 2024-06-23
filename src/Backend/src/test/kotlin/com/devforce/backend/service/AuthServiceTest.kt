@@ -1,89 +1,207 @@
-import com.devforce.backend.dto.LoginDto
-import com.devforce.backend.dto.RegisterDto
-import com.devforce.backend.dto.ResponseDto
+package com.devforce.backend.service
+
+import com.devforce.backend.dto.*
+import com.devforce.backend.model.EventModel
+import com.devforce.backend.model.RoleModel
 import com.devforce.backend.model.UserModel
+import com.devforce.backend.repo.EventRepo
 import com.devforce.backend.repo.UserRepo
+import com.devforce.backend.security.CustomUser
 import com.devforce.backend.security.JwtGenerator
-import com.devforce.backend.service.AuthService
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.ArgumentMatchers.anyString
 import org.mockito.InjectMocks
 import org.mockito.Mock
+import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
-import org.mockito.junit.jupiter.MockitoExtension
-import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
-import org.springframework.security.authentication.AuthenticationManager
+import org.mockito.MockitoAnnotations
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.core.authority.SimpleGrantedAuthority
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.password.PasswordEncoder
-import javax.naming.AuthenticationException
+import java.util.*
 
-@ExtendWith(MockitoExtension::class)
-class AuthServiceTests {
+@AutoConfigureMockMvc
 
-    @Mock
-    lateinit var authenticationManager: AuthenticationManager
+class AuthServiceTest {
 
     @Mock
-    lateinit var userRepo: UserRepo
+    private lateinit var eventRepo: EventRepo
 
     @Mock
-    lateinit var passwordEncoder: PasswordEncoder
-
-    @Mock
-    lateinit var jwtGenerator: JwtGenerator
+    private lateinit var userRepo: UserRepo
 
     @InjectMocks
-    lateinit var authService: AuthService
+    private lateinit var authServiceWithMocks: AuthService
 
-    @Test
-    fun `test registerUser success`() {
-        // Mock data
-        val registerDto = RegisterDto("test@example.com", "password", "Test User")
+    @Mock
+    private lateinit var jwtGenerator: JwtGenerator
 
-        // Mock behavior of userRepo and jwtGenerator
-        `when`(userRepo.findByEmail(registerDto.email)).thenReturn(null)
-        `when`(passwordEncoder.encode(registerDto.password)).thenReturn("encodedPassword")
-        `when`(jwtGenerator.generateToken(anyString(), anyString())).thenReturn(mapOf("jwtToken" to "mockJwt", "refreshToken" to "mockRefresh"))
+    @Mock
+    private lateinit var passswordEncoder: PasswordEncoder
 
-        // Execute the method
-        val response = authService.registerUser(registerDto)
-
-        assertEquals("success", response.body!!.status)
+    @BeforeEach
+    fun setUp() {
+        MockitoAnnotations.openMocks(this)
+        val roleg = RoleModel().apply {
+            name = "GENERAL"
+        }
+        val user = UserModel().apply {
+            userId= UUID.randomUUID()
+            email = "email@gmail"
+            password = "password"
+            role = roleg
+        }
+        val roleName = "HOST"
+        val authorities = setOf(SimpleGrantedAuthority(roleName))
+        val userDetails = CustomUser("email@gmail", "password", authorities, user)
+        val auth = UsernamePasswordAuthenticationToken(userDetails, authorities, userDetails.authorities)
+        SecurityContextHolder.getContext().authentication = auth
     }
 
     @Test
-    fun `test registerUser error`() {
-        // Mock data
-        val registerDto = RegisterDto("test@example.com", "password", "Test User")
+    fun `!!!register user success!!!`() {
+        val registerDto = RegisterDto(
+            email = "email@gmail",
+            password = "password",
+            fullName = "John Doe"
+        )
 
-        // Mock behavior of userRepo and jwtGenerator
+        `when`(passswordEncoder.encode(registerDto.password)).thenReturn("password")
+        `when`(jwtGenerator.generateToken(registerDto.email, "GENERAL")).thenReturn(
+            mapOf(
+                "jwtToken" to "jwtToken",
+                "refreshToken" to "refreshToken"
+            ))
+
+
+        val response = authServiceWithMocks.registerUser(registerDto)
+
+        assertEquals(response.body?.status, "success")
+    }
+
+    @Test
+    fun `!!!register user failure!!!`() {
+        val registerDto = RegisterDto(
+            email = "email@gmail",
+            password = "password",
+            fullName = "John Doe"
+        )
+
         `when`(userRepo.findByEmail(registerDto.email)).thenReturn(UserModel())
-        `when`(passwordEncoder.encode(registerDto.password)).thenReturn("encodedPassword")
-        `when`(jwtGenerator.generateToken(anyString(), anyString())).thenReturn(mapOf("jwtToken" to "mockJwt", "refreshToken" to "mockRefresh"))
+        val response = authServiceWithMocks.registerUser(registerDto)
 
-        // Execute the method
-        val response = authService.registerUser(registerDto)
-
-        assertEquals("error", response.body!!.status)
+        assertEquals(response.body?.status, "error")
     }
 
     @Test
-    fun `test loginUser with authentication exception`() {
-        // Mock data
-        val loginDto = LoginDto("test@example.com", "password")
+    fun `!!!login user success!!!`() {
+        var roleg = RoleModel().apply {
+            name = "GENERAL"
+        }
+        val loginDto = LoginDto(
+            email = "email@gmail",
+            password = "password"
+        )
 
-        // Mock behavior of userRepo
-        `when`(userRepo.findByEmail(loginDto.email)).thenThrow(AuthenticationException("Authentication failed"))
+        val user = UserModel().apply {
+            email = loginDto.email
+            password = "password"
+            role = roleg
+        }
 
-        // Execute the method
-        val response = authService.loginUser(loginDto)
+        `when`(userRepo.findByEmail(loginDto.email)).thenReturn(user)
+        `when`(passswordEncoder.matches(loginDto.password, user.password)).thenReturn(true)
+        `when`(jwtGenerator.generateToken(user.email, "GENERAL")).thenReturn(
+            mapOf(
+                "jwtToken" to "jwtToken",
+                "refreshToken" to "refreshToken"
+            ))
 
-        // Assert the response
-        assertEquals(HttpStatus.UNAUTHORIZED, response.statusCode)
-        assertEquals("error", response.body!!.status)
+        val response = authServiceWithMocks.loginUser(loginDto)
+
+        assertEquals(response.body?.status, "success")
     }
 
+    @Test
+    fun `!!!login user failure!!!`() {
+        val loginDto = LoginDto(
+            email = "email@gmail",
+            password = "password"
+        )
+
+        val user = UserModel().apply {
+            email = loginDto.email
+            password = "password"
+        }
+
+        `when`(userRepo.findByEmail(loginDto.email)).thenReturn(user)
+        `when`(passswordEncoder.matches(loginDto.password, user.password)).thenReturn(false)
+
+        val response = authServiceWithMocks.loginUser(loginDto)
+
+        assertEquals(response.body?.status, "error")
+    }
+
+    @Test
+    fun `!!!logout user success!!!`() {
+        val response = authServiceWithMocks.logoutUser()
+
+        assertEquals(response.body?.status, "success")
+    }
+
+    @Test
+    fun `!!!getUser success!!!`() {
+        val response = authServiceWithMocks.getUser()
+
+        assertEquals(response.body?.status, "success")
+    }
+
+    @Test
+    fun `!!!deleteUser success!!!`() {
+        val response = authServiceWithMocks.deleteUser()
+
+        assertEquals(response.body?.status, "success")
+    }
+
+    @Test
+    fun `!!!resetPassword success!!!`() {
+        val password = "password"
+        `when`(passswordEncoder.encode(password)).thenReturn("password")
+        val user = UserModel().apply {
+            email = "email@gmail"
+            role = RoleModel().apply {
+                name = "GENERAL"
+            }
+        }
+        `when`(jwtGenerator.generateToken(user.email, user.role!!.name)).thenReturn(
+            mapOf(
+                "jwtToken" to "jwtToken",
+                "refreshToken" to "refreshToken"
+            ))
+
+        val response = authServiceWithMocks.resetPassword(password)
+
+        assertEquals(response.body?.status, "success")
+    }
+
+    @Test
+    fun `!!!refreshToken success!!!`() {
+        val refreshTokenDto = RefreshTokenDto("refreshToken", "jwtToken")
+        val user = UserModel().apply {
+            email = "email@gmail"
+            role = RoleModel().apply {
+                name = "GENERAL"
+            }
+        }
+        `when`(jwtGenerator.generateToken(user.email, user.role!!.name)).thenReturn(
+            mapOf(
+                "jwtToken" to "jwtToken",
+                "refreshToken" to "refreshToken"
+            ))
+        val response = authServiceWithMocks.refreshToken(refreshTokenDto)
+    }
 
 }
