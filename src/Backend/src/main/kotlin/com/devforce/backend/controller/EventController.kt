@@ -78,7 +78,7 @@ class EventController {
     }
 
         //FUTURE
-   /* @GetMapping("/filter")
+    @GetMapping("/filter")
     @PreAuthorize("permitAll()")
     fun filterEvents(
         @RequestParam(required = false) startTime: String?,
@@ -90,5 +90,5 @@ class EventController {
         val filterByDto = FilterByDto(startTime, endTime, location, isPrivate, maxAttendees)
 
         return eventService.filterEvents(filterByDto)
-    }*/
+    }
 }

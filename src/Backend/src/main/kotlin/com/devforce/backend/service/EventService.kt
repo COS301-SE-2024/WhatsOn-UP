@@ -201,16 +201,16 @@ class EventService {
     }
 
 
-   /* fun filterEventsByKeyword(keywordFilter: String): List<EventModel> {
+    /*fun filterEventsByKeyword(keywordFilter: String): List<EventModel> {
         return eventRepo.filterEventsByKeyword(keywordFilter)
     }
-
+*/
     //FUTURE
     fun filterEvents(filterBy: FilterByDto): ResponseEntity<ResponseDto>{
         val events = eventRepo.filterEvents(filterBy)
         val eventsDto = events.map { event -> AllEventsDto(event) }
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto)
         )
-    } */
+    }
 
 }

@@ -71,6 +71,8 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
 
 
    /* FUTURE
+
+    */
    @Query(
         "SELECT DISTINCT e FROM EventModel e " +
                 "LEFT JOIN FETCH e.attendees a " +
@@ -89,7 +91,7 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
     )
     fun filterEvents(@Param("filterByDto") filterByDto: FilterByDto): List<EventModel>
 
-*/
+
    @Query(value = """
     SELECT * FROM event e
     WHERE (:startDate IS NULL OR e.start_time >= CAST(:startDate AS TIMESTAMP))
