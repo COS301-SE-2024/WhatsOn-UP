@@ -10,7 +10,15 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 import java.time.*
 import java.util.*
+import java.util.stream.Collectors
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
 
+//FUTURE
+//fun filterEvents(
 @Service
 class EventService {
 
@@ -109,7 +117,95 @@ class EventService {
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto)
         )
 
+}
+    //the filter for filtering screen
+    fun filteringEvents(startDate: String?, endDate: String?, minCapacity: Int?, maxCapacity: Int?, isPrivate: Boolean?): ResponseEntity<ResponseDto> {
+        try {
+            println("Before anything: $startDate")
+            println("Before anything: $endDate")
+            println("Before anything bool check: $isPrivate")
+
+            val trimmedStartDate = startDate?.trim()
+            val trimmedEndDate = endDate?.trim()
+            println("Before anything2: $trimmedStartDate")
+            println("Before anything2: $trimmedEndDate")
+            var formattedStartDate: String? = null
+            var formattedEndDate: String? = null
+            var emptyMax: Int? = null
+            var emptyMin: Int? = null
+//its currently parsing sanme date for start and end so && will work until i fix that
+            if (trimmedStartDate != null) {
+                if (trimmedEndDate != null) {
+                    if (trimmedStartDate.isNotEmpty() && !trimmedEndDate.isNotEmpty()) {
+                        val parsedStartDate = parseToLocalDateTime(trimmedStartDate)
+                        val parsedEndDate = parseToLocalDateTime(trimmedEndDate)
+
+                        println("Parsed Start Date: $parsedStartDate")
+                        println("Parsed End Date: $parsedEndDate")
+                        println("Parsed Bool: $isPrivate")
+                        println("Min Capacity: $minCapacity")
+                        println("Max Capacity: $maxCapacity")
+
+                        formattedStartDate = parsedStartDate?.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+                        formattedEndDate = parsedEndDate?.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+
+                        println("Formatted Start Date: $formattedStartDate")
+                        println("Formatted End Date: $formattedEndDate")
+                    }
+                }
+            }
+            println("Sending start..: $formattedStartDate")
+            println("Sending end..: $formattedEndDate")
+            println("Sending bool..: $isPrivate")
+            println("Sending max..: $maxCapacity")
+            println("Sending min..: $minCapacity")
+            val filteredEvents = if (minCapacity != null && maxCapacity != null) {
+                eventRepo.filteringEvents(
+                    formattedStartDate,
+                    formattedEndDate,
+                    minCapacity,
+                    maxCapacity,
+                    isPrivate
+                )
+            } else {
+                eventRepo.filteringEvents(
+                    formattedStartDate,
+                    formattedEndDate,
+                    null,  // pass null explicitly
+                    null,  // pass null explicitly
+                    isPrivate
+                )
+            }
+
+            println("Filtered Events: $filteredEvents")
+            return ResponseEntity.ok(ResponseDto("Events filtered successfully", System.currentTimeMillis(), filteredEvents))
+        } catch (e: IllegalArgumentException) {
+            e.printStackTrace()
+            return ResponseEntity.badRequest()
+                .body(ResponseDto("Error filtering events: ${e.message}", System.currentTimeMillis(), null))
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return ResponseEntity.internalServerError()
+                .body(ResponseDto("Error filtering events", System.currentTimeMillis(), null))
+        }
     }
+
+    fun parseToLocalDateTime(timestamp: String?): LocalDateTime? {
+        return if (timestamp.isNullOrBlank()) {
+            null
+        } else {
+            timestamp.toLongOrNull()?.let { epochMillis ->
+                LocalDateTime.ofInstant(Instant.ofEpochMilli(epochMillis), ZoneOffset.UTC)
+            }
+        }
+    }
+
+
+    /*fun filterEventsByKeyword(keywordFilter: String): List<EventModel> {
+        return eventRepo.filterEventsByKeyword(keywordFilter)
+    }
+*/
+    //FUTURE
     fun filterEvents(filterBy: FilterByDto): ResponseEntity<ResponseDto>{
         val events = eventRepo.filterEvents(filterBy)
         val eventsDto = events.map { event -> AllEventsDto(event) }

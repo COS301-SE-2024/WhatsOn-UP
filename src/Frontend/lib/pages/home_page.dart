@@ -10,6 +10,7 @@ import 'package:firstapp/pages/searchbar.dart';
 import 'package:firstapp/pages/data_search.dart';
 import 'package:firstapp/pages/profilePage.dart';
 
+import '../screens/FilterScreen.dart';
 import '../screens/SearchScreen.dart';
 import 'package:firstapp/services/api.dart';
 // import 'package:firstapp/widgets/eventcard.dart';
@@ -44,11 +45,11 @@ class _HomePageState extends State<HomePage> {
 
   int _selectedIndex = 0;
 
-   @override
-    void initState() {
-      super.initState();
-      futureEvents = api.getAllEvents();
-    }
+  @override
+  void initState() {
+    super.initState();
+    futureEvents = api.getAllEvents();
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -56,7 +57,7 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -108,191 +109,181 @@ class _HomePageState extends State<HomePage> {
     final textColour = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
 
     return FutureBuilder<List<Event>>(
-  future: futureEvents,
-  builder: (context, snapshot) {
-    if (snapshot.connectionState == ConnectionState.waiting) {
-      return Center(child: CircularProgressIndicator());
-    } else if (snapshot.hasError) {
-      return Center(child: Text('Error: ${snapshot.error}'));
-    } else if (snapshot.hasData) {
-      final events = snapshot.data!;
+      future: futureEvents,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else if (snapshot.hasData) {
+          final events = snapshot.data!;
 
-      print('second events call: $events');
-      print("Number of events: ${events.length}");
+          print('second events call: $events');
+          print("Number of events: ${events.length}");
 
-      // Add check to ensure events list is not empty
-      if (events.isEmpty) {
-        return Center(child: Text('No events found.'));
-      }
+          // Add check to ensure events list is not empty
+          if (events.isEmpty) {
+            return Center(child: Text('No events found.'));
+          }
 
-      return SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+          return SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                         MaterialPageRoute(
-                          builder: (context) => ProfilePage(
-                            // profileImageUrl: widget.profileImageUrl,
-                            userName: widget.userName,
-                            userEmail: widget.userEmail,
-                            // role: widget.role,
-                            userId: widget.userId,
-                            role: widget.role,
-                            profileImage: widget.profileImage,
-                          ),
-                        ),
-                      );
-                    },
-                    child: CircleAvatar(
-                      backgroundImage: widget.profileImage != null
-                          ? MemoryImage(widget.profileImage!)
-                          : AssetImage('http/example-image')
-                              as ImageProvider, // Replace the URL with your profile image URL
-                      radius: 27.0,
-                    ),
-                  ),
-                ),
-                Text(
-                  'Welcome, ${widget.userName}',
-                  style: TextStyle(
-                    fontSize: 24.0,
-                    fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-            SizedBox(height: 20.0),
-
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                Row(
                   children: [
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.27,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(color: borderColour),
-                          borderRadius: BorderRadius.circular(16.0),
-                        ),
-                        child: TextButton.icon(
-                          onPressed: () {
-                            // Navigate to SearchScreen when Search button is pressed
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => SearchScreen(),
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ProfilePage(
+                                // profileImageUrl: widget.profileImageUrl,
+                                userName: widget.userName,
+                                userEmail: widget.userEmail,
+                                // role: widget.role,
+                                userId: widget.userId,
+                                role: widget.role,
+                                profileImage: widget.profileImage,
                               ),
-                            );
-                          },
-                          icon: Icon(Icons.search, color: textColour),
-                          label: Text('Search', style: TextStyle(color: textColour)),
+                            ),
+                          );
+                        },
+                        child: CircleAvatar(
+                          backgroundImage: widget.profileImage != null
+                              ? MemoryImage(widget.profileImage!)
+                              : AssetImage('http/example-image')
+                          as ImageProvider, // Replace the URL with your profile image URL
+                          radius: 27.0,
                         ),
                       ),
                     ),
-                    SizedBox(width: 35.0),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.27,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(color: borderColour),
-                          borderRadius: BorderRadius.circular(16.0),
-                        ),
-                        child: TextButton.icon(
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: Text('Filter Options'),
-                                  content: Text('Coming soon'),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: Text('Close'),
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                          },
-                          icon: Icon(Icons.filter_list, color: textColour),
-                          label: Text('Filter', style: TextStyle(color: textColour)),
-                        ),
-                      ),
+                    Text(
+                      'Welcome, ${widget.userName}',
+                      style: TextStyle(
+                          fontSize: 24.0,
+                          fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
-              ),
-            ),
-            SizedBox(height: 20.0),
-            const Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Text(
-                'Explore More',
-                style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-              ),
-            ),
-            SizedBox(
-              height: 250.0,
-              child: GridView.builder(
-                scrollDirection: Axis.horizontal,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 1,
+                SizedBox(height: 20.0),
+
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.27,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(color: borderColour),
+                              borderRadius: BorderRadius.circular(16.0),
+                            ),
+                            child: TextButton.icon(
+                              onPressed: () {
+                                // Navigate to SearchScreen when Search button is pressed
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => SearchScreen(),
+                                  ),
+                                );
+                              },
+                              icon: Icon(Icons.search, color: textColour),
+                              label: Text('Search', style: TextStyle(color: textColour)),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 35.0),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.27,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(color: borderColour),
+                              borderRadius: BorderRadius.circular(16.0),
+                            ),
+                            child: TextButton.icon(
+                              onPressed: () {
+                                // Navigate to SearchScreen when Search button is pressed
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => FilterScreen(),
+                                  ),
+                                );
+                              },
+                              icon: Icon(Icons.filter_list, color: textColour),
+                              label: Text('Filter', style: TextStyle(color: textColour)),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-                itemCount: events.length,
-                itemBuilder: (context, index) {
-                  // Ensure index is within bounds
-                  if (index >= events.length) {
-                    return Container(); // or handle error gracefully
-                  }
-                  EventCard card = EventCard(event: events[index]);
-                  return card;
-                },
-              ),
-            ),
-            SizedBox(height: 20.0),
-            const Padding(
-              padding: EdgeInsets.all(10.0),
-              child: Text(
-                'Saved',
-                style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-              ),
-            ),
-            SizedBox(
-              height: 250.0,
-              child: GridView.builder(
-                scrollDirection: Axis.horizontal,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 1,
+                SizedBox(height: 20.0),
+                const Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Text(
+                    'Explore More',
+                    style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                  ),
                 ),
-                itemCount: events.length,
-                itemBuilder: (context, index) {
-                  // Ensure index is within bounds
-                  if (index >= events.length) {
-                    return Container(); // or handle error gracefully
-                  }
-                  return EventCard(event: events[index]);
-                },
-              ),
+                SizedBox(
+                  height: 250.0,
+                  child: GridView.builder(
+                    scrollDirection: Axis.horizontal,
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 1,
+                    ),
+                    itemCount: events.length,
+                    itemBuilder: (context, index) {
+                      // Ensure index is within bounds
+                      if (index >= events.length) {
+                        return Container(); // or handle error gracefully
+                      }
+                      EventCard card = EventCard(event: events[index]);
+                      return card;
+                    },
+                  ),
+                ),
+                SizedBox(height: 20.0),
+                const Padding(
+                  padding: EdgeInsets.all(10.0),
+                  child: Text(
+                    'Saved',
+                    style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                SizedBox(
+                  height: 250.0,
+                  child: GridView.builder(
+                    scrollDirection: Axis.horizontal,
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 1,
+                    ),
+                    itemCount: events.length,
+                    itemBuilder: (context, index) {
+                      // Ensure index is within bounds
+                      if (index >= events.length) {
+                        return Container(); // or handle error gracefully
+                      }
+                      return EventCard(event: events[index]);
+                    },
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-      );
-    } else {
-      return Center(child: Text('No events found.'));
-    }
-  },
-);
+          );
+        } else {
+          return Center(child: Text('No events found.'));
+        }
+      },
+    );
 
   }
 }

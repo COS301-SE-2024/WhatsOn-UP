@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:firstapp/widgets/CustomSearchBar.dart';
 import 'package:firstapp/widgets/SearchTile.dart';
 import 'package:firstapp/services/EventService.dart';
 
@@ -30,14 +29,14 @@ class _SearchScreenState extends State<SearchScreen> {
         _showSearchTiles = false;
       });
     } catch (e) {
-      // Handle error, e.g., show an error message
+     //probably add an  alert
       print('Error searching events: $e');
       setState(() {
         _isLoading = false;
       });
     }
   }
-  void _applyFilter(String filter) async {
+/*  void _applyFilter(String filter) async {
     setState(() {
       _isLoading = true;
       _searchResults.clear();
@@ -61,13 +60,13 @@ class _SearchScreenState extends State<SearchScreen> {
         });
       });
     } catch (e) {
-      // Handle error, e.g., show an error message
+      //probably add an  alert
       print('Error filtering events: $e');
       setState(() {
         _isLoading = false;
       });
     }
-  }
+  }*/
   void _clearSearchResults() {
     setState(() {
       _searchResults.clear();
@@ -100,7 +99,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 borderRadius: BorderRadius.all(
                   Radius.circular(50),
                 ),
-                color: Colors.grey, // Adjust color as needed
+                color: Colors.grey,
               ),
               child: Row(
                 children: [
@@ -134,10 +133,10 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
             SizedBox(height: 16.0),
             _isLoading
-                ? Center(child: CircularProgressIndicator()) // Show loading indicator
+                ? Center(child: CircularProgressIndicator())
                 : _searchResults.isEmpty
                 ? Center(
-              child: Text('No events found'), // Show no results message
+              child: Text('No events found'),
             )
                 : Expanded(
               child: ListView.builder(
@@ -146,7 +145,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   return ListTile(
                     title: Text(_searchResults[index]['title']),
                     subtitle: Text(_searchResults[index]['description']),
-                    // Implement onTap to navigate or show details
+                    // TODO: Implement onTap to navigate to event details page
                   );
                 },
               ),

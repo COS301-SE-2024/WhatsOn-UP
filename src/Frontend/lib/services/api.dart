@@ -211,7 +211,7 @@ class Api {
     List<String>? media,
   }) async {
     final String _createEventUrl = 'http://localhost:8080/api/events/create';
-    
+
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
