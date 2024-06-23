@@ -12,7 +12,8 @@ RUN chmod +x ./gradlew
 # Remove Windows carriage return characters if any
 RUN sed -i 's/\r//' gradlew
 
-RUN ./gradlew build
+RUN ./gradlew assemble
+RUN ./gradlew test
 
 # Expose the port
 EXPOSE 8080
