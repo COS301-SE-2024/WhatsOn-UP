@@ -26,8 +26,9 @@ jobs:
       - name: Build Docker image
         run: docker build -t devforce123/backend:2.0 -f src/Backend/Dockerfile src/Backend/
         
+      # Upload coverage reports to Codecov
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4.0.1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-        run: run: ./codecov.sh -f src/Backend/build/test-results/test/TEST-com.devforce.backend.service.EventServiceTest.xml
+          file: src/Backend/build/test-results/test/TEST-com.devforce.backend.service.EventServiceTest.xml
