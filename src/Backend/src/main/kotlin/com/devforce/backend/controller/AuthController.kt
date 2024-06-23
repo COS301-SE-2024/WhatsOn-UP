@@ -1,9 +1,6 @@
 package com.devforce.backend.controller
 
-import com.devforce.backend.dto.LoginDto
-import com.devforce.backend.dto.ResponseDto
-import com.devforce.backend.dto.RegisterDto
-import com.devforce.backend.dto.ResetPasswordDto
+import com.devforce.backend.dto.*
 import com.devforce.backend.service.AuthService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -30,38 +27,33 @@ class AuthController {
     }
 
     @PostMapping("/refresh_token")
-    @PreAuthorize("isAuthenticated()")
-    fun refreshToken(@RequestHeader("Authorization") jwtToken: String, @RequestHeader("Refresh-Token") refreshToken: String): ResponseEntity<ResponseDto> {
-        val jwtTokenc = jwtToken.replace("Bearer ", "")
-        return authService.refreshToken(jwtTokenc, refreshToken)
+    @PreAuthorize("permitAll()")
+    fun refreshToken(@RequestBody refreshTokenDto: RefreshTokenDto): ResponseEntity<ResponseDto> {
+        return authService.refreshToken(refreshTokenDto)
     }
 
     @PostMapping("/logout")
     @PreAuthorize("isAuthenticated()")
-    fun logoutUser(@RequestHeader("Authorization") token: String): ResponseEntity<ResponseDto> {
-        val jwtToken = token.replace("Bearer ", "")
-        return authService.logoutUser(jwtToken)
+    fun logoutUser(): ResponseEntity<ResponseDto> {
+        return authService.logoutUser()
     }
 
     @GetMapping("/get_user")
     @PreAuthorize("isAuthenticated()")
-    fun getUser(@RequestHeader("Authorization") token: String): ResponseEntity<ResponseDto> {
-        val jwtToken = token.replace("Bearer ", "")
-        return authService.getUser(jwtToken)
+    fun getUser(): ResponseEntity<ResponseDto> {
+        return authService.getUser()
     }
 
     @DeleteMapping("/delete_user")
     @PreAuthorize("isAuthenticated()")
-    fun deleteUser(@RequestHeader("Authorization") token: String): ResponseEntity<ResponseDto> {
-        val jwtToken = token.replace("Bearer ", "")
-        return authService.deleteUser(jwtToken)
+    fun deleteUser(): ResponseEntity<ResponseDto> {
+        return authService.deleteUser()
     }
 
     @PutMapping("/reset_password")
     @PreAuthorize("isAuthenticated()")
-    fun resetPassword(@RequestHeader("Authorization") token: String, @RequestBody passwordBody: ResetPasswordDto): ResponseEntity<ResponseDto> {
-        val jwtToken = token.replace("Bearer ", "")
-        return authService.resetPassword(jwtToken, passwordBody.password)
+    fun resetPassword(@RequestBody passwordBody: ResetPasswordDto): ResponseEntity<ResponseDto> {
+        return authService.resetPassword(passwordBody.password)
     }
 
 }

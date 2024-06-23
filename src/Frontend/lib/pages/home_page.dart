@@ -13,6 +13,9 @@ import '../screens/SearchScreen.dart';
 import '../screens/FilterScreen.dart';
 // import 'package:firstapp/widgets/eventcard.dart';
 import 'dart:typed_data';
+import 'package:firstapp/pages/Broadcast.dart';
+import 'package:firstapp/pages/manageEvents.dart';
+
 
 class HomePage extends StatefulWidget {
   final String userName;
@@ -93,6 +96,7 @@ class _HomePageState extends State<HomePage> {
       bottomNavigationBar: NavBar(
         selectedIndex: _selectedIndex,
         onItemTapped: _onItemTapped,
+        userRole: widget.role,
       ),
     );
   }
@@ -116,6 +120,12 @@ class _HomePageState extends State<HomePage> {
           userId: widget.userId,
           profileImage: widget.profileImage,
         );
+      case 5:
+        return const ManageEvents();
+
+      case 6:
+        return const Broadcast();
+
       default:
         return _buildHomePage();
     }
@@ -287,3 +297,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+
+
+

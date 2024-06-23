@@ -3,12 +3,15 @@ package com.devforce.backend.service
 import com.devforce.backend.dto.AllEventsDto
 import com.devforce.backend.dto.ResponseDto
 import com.devforce.backend.dto.UpdateUserDto
-import com.devforce.backend.repo.jpa.EventRepo
-import com.devforce.backend.repo.jpa.RoleRepo
-import com.devforce.backend.repo.jpa.UserRepo
+import com.devforce.backend.model.UserModel
+import com.devforce.backend.repo.EventRepo
+import com.devforce.backend.repo.RoleRepo
+import com.devforce.backend.repo.UserRepo
+import com.devforce.backend.security.CustomUser
 import com.devforce.backend.security.JwtGenerator
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import java.util.*
@@ -27,23 +30,15 @@ class UserService {
 
     @Autowired
     lateinit var passwordEncoder: PasswordEncoder
-
-    @Autowired
-    lateinit var checkJwt: CheckJwt
+    
 
     @Autowired
     lateinit var eventRepo: EventRepo
 
 
     // To do: Implement function to save an event for the current user
-    fun saveEvent(id: UUID, token: String): ResponseEntity<ResponseDto> {
-        val response = checkJwt.check(token)
-        if (response != null) {
-            return response
-        }
-
-        val email = checkJwt.jwtGenerator.getUsernameFromToken(token)
-        val user = userRepo.findByEmail(email)!!
+    fun saveEvent(id: UUID): ResponseEntity<ResponseDto> {
+        val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
 
         val optionalEvent = eventRepo.findById(id)
 
@@ -52,22 +47,16 @@ class UserService {
         }
 
         val event = optionalEvent.get()
-        user.savedEvents.add(event)
-        userRepo.save(user)
+        event.savedEvents.add(user)
+        eventRepo.save(event)
 
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Event saved successfully")))
 
     }
 
     // To do: Implement function to delete a saved event for the current user
-    fun deleteSavedEvent(id: UUID, token: String): ResponseEntity<ResponseDto> {
-        val response = checkJwt.check(token)
-        if (response != null) {
-            return response
-        }
-
-        val email = checkJwt.jwtGenerator.getUsernameFromToken(token)
-        val user = userRepo.findByEmail(email)!!
+    fun deleteSavedEvent(id: UUID): ResponseEntity<ResponseDto> {
+        val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
 
         val optionalEvent = eventRepo.findById(id)
 
@@ -75,39 +64,31 @@ class UserService {
             return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Event not found"))
         }
 
-        user.savedEvents.remove(optionalEvent.get())
-        userRepo.save(user)
+
+        val event = optionalEvent.get()
+        event.savedEvents.remove(user)
+        eventRepo.save(event)
+
 
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Event deleted successfully"))
         )
     }
 
     // To do: Implement function to get all saved events for the current user
-    fun getSavedEvents(token: String): ResponseEntity<ResponseDto> {
-        val response = checkJwt.check(token)
-        if (response != null) {
-            return response
-        }
+    fun getSavedEvents(): ResponseEntity<ResponseDto> {
+        val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
 
-        val email = checkJwt.jwtGenerator.getUsernameFromToken(token)
-        val user = userRepo.findByEmail(email)!!
-
-        val events = user.savedEvents
+        val events = eventRepo.getSavedEvents(user.userId)
         val eventsDto = events.map { event -> AllEventsDto(event) }
 
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto)
         )
     }
+    
 
     // To do: Implement function to RSVP to an event for the current user
-    fun rspvEvent(id: UUID, token: String): ResponseEntity<ResponseDto> {
-        val response = checkJwt.check(token)
-        if (response != null) {
-            return response
-        }
-
-        val email = checkJwt.jwtGenerator.getUsernameFromToken(token)
-        val user = userRepo.findByEmail(email)!!
+    fun rspvEvent(id: UUID): ResponseEntity<ResponseDto> {
+        val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
 
         val optionalEvent = eventRepo.findById(id)
 
@@ -123,16 +104,10 @@ class UserService {
     }
 
     // To do: Implement function to get all RSVP'd events for the current user
-    fun getRspvEvents(token: String): ResponseEntity<ResponseDto> {
-        val response = checkJwt.check(token)
-        if (response != null) {
-            return response
-        }
+    fun getRspvEvents(): ResponseEntity<ResponseDto> {
+        val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
 
-        val email = checkJwt.jwtGenerator.getUsernameFromToken(token)
-        val user = userRepo.findByEmail(email)!!
-
-        val events = eventRepo.findByAttendeesIs(user)
+        val events = eventRepo.getRspvdEvents(user.userId)
         val eventsDto = events.map { event -> AllEventsDto(event) }
 
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto)
@@ -140,16 +115,9 @@ class UserService {
     }
 
     // To do: Implement function to delete an RSVP'd event for the current user
-    fun deleteRspvEvent(id: UUID, token: String
+    fun deleteRspvEvent(id: UUID
     ): ResponseEntity<ResponseDto> {
-        val response = checkJwt.check(token)
-        if (response != null) {
-            return response
-        }
-
-        val email = checkJwt.jwtGenerator.getUsernameFromToken(token)
-        val user = userRepo.findByEmail(email)!!
-
+        val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
         val optionalEvent = eventRepo.findById(id)
 
         if (optionalEvent.isEmpty) {
@@ -164,14 +132,8 @@ class UserService {
     }
 
     // To do: Implement function to update user profile
-    fun updateProfile(updateUserDto: UpdateUserDto, token: String): ResponseEntity<ResponseDto> {
-        if (!jwtGenerator.validateToken(token)) {
-            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Invalid token"))
-        }
-
-        val email = jwtGenerator.getUsernameFromToken(token)
-
-        val user = userRepo.findByEmail(email)!!
+    fun updateProfile(updateUserDto: UpdateUserDto): ResponseEntity<ResponseDto> {
+        val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
 
         user.fullName = updateUserDto.fullName ?: user.fullName
         user.email = updateUserDto.email ?: user.email

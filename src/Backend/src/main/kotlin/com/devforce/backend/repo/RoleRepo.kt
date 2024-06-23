@@ -1,4 +1,4 @@
-package com.devforce.backend.repo.jpa
+package com.devforce.backend.repo
 
 import com.devforce.backend.model.RoleModel
 import org.springframework.data.jpa.repository.JpaRepository
