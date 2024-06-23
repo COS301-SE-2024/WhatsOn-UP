@@ -1,33 +1,33 @@
-name: Flutter Tests
+name: Docker Image CI
 
 on:
-  push:
-    branches:
-      - main
   pull_request:
-    branches:
-      - main
+    branches: 
+      - develop
+  push:
+    branches: 
+      - develop
 
 jobs:
-  test:
-    name: Run tests
+  build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      - name: Checkout the code
+        uses: actions/checkout@v4
+    
+      # Authenticate with Docker Hub
+      - name: Log into Docker Hub
+        env:
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_TOKEN }}
+        run: echo $DOCKER_PASSWORD | docker login -u devforce123 --password-stdin
 
-    - name: Install Flutter
-      uses: subosito/flutter-action@v2
-      with:
-        flutter-version: '3.0.0' # Change this to your desired Flutter version
-
-    - name: Install dependencies
-      run: flutter pub get
-
-    - name: Navigate to src/Frontend directory
-      run: cd src/Frontend
-
-    - name: Run tests with coverage
-      run: flutter test --coverage test/api_test.dart
+      # Build the Docker image
+      - name: Build Docker image
+        run: docker build -t devforce123/backend:2.0 -f src/Backend/Dockerfile src/Backend/
+        
+      # - name: Upload coverage reports to Codecov
+      #   uses: codecov/codecov-action@v4.0.1
+      #   with:
+      #     token: ${{ secrets.CODECOV_TOKEN }}
 
