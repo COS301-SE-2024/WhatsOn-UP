@@ -1,10 +1,10 @@
 # Help Center
 ## Table Of Contents
-1. [Registration and Login](#registration-and-login)
-2. [Home](#home)
+1. [Registration and Login](#register-and-login)
+2. [Search For Events](#search-for-events)
 3. [RSVP Events](#rsvp-events)
-4. [Calendar](#calendar)
-5. [Profile](#profile)
+4. [View Calendar](#view-calendar)
+5. [Manage Profile](#manage-profile)
 6. [Create Events](#create-events)
 7. [Sign Out](#sign-out)
 
