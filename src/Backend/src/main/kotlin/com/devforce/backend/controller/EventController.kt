@@ -77,7 +77,7 @@ class EventController {
     }
 
         //this filter is the one for search page  - fliter by keyword
-    @GetMapping("/filter")
+   /* @GetMapping("/filter")
     @PreAuthorize("permitAll()")
     fun filterEvents(
         @RequestParam(required = false) startTime: String?,
@@ -100,5 +100,5 @@ class EventController {
         val filterByDto = FilterByDto(startTimeDateTime, endTimeDateTime, location, isPrivate, maxAttendees)
 
         return eventService.filterEvents(filterByDto)
-    }
+    }*/
 }

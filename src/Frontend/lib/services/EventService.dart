@@ -34,7 +34,7 @@ class EventService {
       throw Exception('Failed to connect to the server');
     }
   }
-  Future<List<dynamic>> filterEventsByKeyword(String keyword) async {
+ /* Future<List<dynamic>> filterEventsByKeyword(String keyword) async {
     final queryParams = {'keywordFilter': keyword};
     final uri = Uri.parse('$baseUrl/api/events/filter').replace(queryParameters: queryParams);
 
@@ -50,7 +50,7 @@ class EventService {
       throw Exception('Failed to connect to the server');
     }
   }
-
+*/
   Future<List<dynamic>> filterEvents(String startDate, String endDate, int minCapacity, int maxCapacity, bool isPrivate) async {
     final queryParams = {
       'startDate': startDate,
