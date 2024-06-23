@@ -70,7 +70,7 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
 
 
 
-    @Query(
+   /* @Query(
         "SELECT DISTINCT e FROM EventModel e " +
                 "LEFT JOIN FETCH e.attendees a " +
                 "LEFT JOIN FETCH a.role ar " +
@@ -88,22 +88,22 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
     )
     fun filterEvents(@Param("filterByDto") filterByDto: FilterByDto): List<EventModel>
 
-
-    @Query(value = """
-        SELECT * FROM event e
-        WHERE (:startDate IS NULL OR e.start_time >= CAST(:startDate AS TIMESTAMP))
-        AND (:endDate IS NULL OR e.end_time <= CAST(:endDate AS TIMESTAMP))
-        AND e.max_attendees >= :minCapacity
-        AND e.max_attendees <= :maxCapacity
-        AND e.is_private = :isPrivate
-    """, nativeQuery = true)
-    fun filteringEvents(
-        @Param("startDate") startDate: String?,
-        @Param("endDate") endDate: String?,
-        @Param("minCapacity") minCapacity: Int,
-        @Param("maxCapacity") maxCapacity: Int,
-        @Param("isPrivate") isPrivate: Boolean
-    ): List<EventModel>
+*/
+   @Query(value = """
+    SELECT * FROM event e
+    WHERE (:startDate IS NULL OR e.start_time >= CAST(:startDate AS TIMESTAMP))
+    AND (:endDate IS NULL OR e.end_time <= CAST(:endDate AS TIMESTAMP))
+    AND (:minCapacity IS NULL OR e.max_attendees >= :minCapacity)
+    AND (:maxCapacity IS NULL OR e.max_attendees <= :maxCapacity)
+    AND (:isPrivate IS NULL OR  e.is_private = :isPrivate)
+""", nativeQuery = true)
+   fun filteringEvents(
+       @Param("startDate") startDate: String?,
+       @Param("endDate") endDate: String?,
+       @Param("minCapacity") minCapacity: Int?,
+       @Param("maxCapacity") maxCapacity: Int?,
+       @Param("isPrivate") isPrivate: Boolean?
+   ): List<EventModel>
 
 }
 

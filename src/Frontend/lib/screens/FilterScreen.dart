@@ -121,8 +121,8 @@ class _FilterScreenState extends State<FilterScreen> with SingleTickerProviderSt
                         children: [
                           isSelected
                               ? Icon(Icons.check_circle, color: Colors.white, size: 20.0)
-                              : SizedBox.shrink(), // Show icon only when selected
-                          SizedBox(width: 8.0), // Add space between icon and text
+                              : SizedBox.shrink(),
+                          SizedBox(width: 8.0), //  space between icon and text
                           Text(
                             option,
                             style: TextStyle(
@@ -191,7 +191,7 @@ class _FilterScreenState extends State<FilterScreen> with SingleTickerProviderSt
         endDate = now.add(Duration(days: 7)).millisecondsSinceEpoch;
         break;
       default:
-      // Handle default case or leave as is
+      //  TODO
     }
     print("Selected Date Range: $selectedDateRange, Start Date: $startDate, End Date: $endDate");
 
@@ -225,7 +225,7 @@ class _FilterScreenState extends State<FilterScreen> with SingleTickerProviderSt
         maxCapacity = 500;
         break;
       default:
-      // Handle default case or leave as is
+      // TODO
     }
 
     // Prepare event type
@@ -263,12 +263,12 @@ class _FilterScreenState extends State<FilterScreen> with SingleTickerProviderSt
   }
 
   Widget _buildEventRow(dynamic event) {
-    // Customize this based on your event structure
+
     return ListTile(
       title: Text(event['title']),
       subtitle: Text(event['description']),
 
-      // Add more fields as needed
+
     );
   }
 
