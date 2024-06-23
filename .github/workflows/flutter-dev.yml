@@ -14,18 +14,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+    - name: Checkout repository
+      uses: actions/checkout@v2
 
-      - name: Install Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.0.0'  # Replace with your desired Flutter version
+    - name: Install Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.0.0' # Change this to your desired Flutter version
 
-      - name: Install dependencies
+    - name: Install dependencies
         run: |
           cd src/Frontend
           flutter pub get
 
-      - name: Run tests with coverage
-        run: flutter test --coverage src/Frontend/test/api_test.dart
+
+    - name: Run tests with coverage
+      run: flutter test --coverage src/Frontend/test/api_test.dart
+
