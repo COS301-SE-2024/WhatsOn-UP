@@ -22,11 +22,12 @@ jobs:
       with:
         flutter-version: '3.0.0' # Change this to your desired Flutter version
 
+    - name: Navigate to src/Frontend directory
+      run: cd src/Frontend
+
     - name: Install dependencies
       run: flutter pub get
 
-    - name: Navigate to src/Frontend directory
-      run: cd src/Frontend
 
     - name: Run tests with coverage
       run: flutter test --coverage test/api_test.dart
