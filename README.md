@@ -13,8 +13,9 @@ WhatsOn@UP system aims to be a central hub for all University of Pretoria events
 
 <table>
   <tr>
-    <th>Video</th>
-    <td><a href="https://drive.google.com/file/d/1NjTF3Wyfv0JfyUvZUSzZ3Qs84BKFjVUM/view?usp=sharing">Recorded demo video</a></td>
+    <th>Demo Videos</th>
+    <td><a href="https://drive.google.com/file/d/1NjTF3Wyfv0JfyUvZUSzZ3Qs84BKFjVUM/view?usp=sharing">Demo 1 Video</a></td>
+ <td><a href="https://drive.google.com/file/d/1tH-Z4wL-U17SL5ecBKT7rOWEyJ3HX0MR/view?usp=drive_link">Demo 2 Video</a></td>
   </tr>
   <tr>
     <th>Project Board</th>
@@ -25,7 +26,7 @@ WhatsOn@UP system aims to be a central hub for all University of Pretoria events
     <td>
      <ul>
        <li><a href="https://docs.google.com/document/d/1Ja-Ev1ghWPG8koCJdV99sALttg2e2dUh/edit">SRS Document (Google Docs)</a></li>
-       <li><a href="./docs/SRS-document.md">SRS Document (GitHub)</a></li>
+       <li><a href="https://docs.google.com/document/d/1hoqGcpMkbaW6cMlomIt7ngt-VoZO51XU/edit?usp=drive_link&ouid=106979401378245433760&rtpof=true&sd=true">SRS Document (GitHub)</a></li>
        <li><a href="https://docs.google.com/document/d/1SfIxE-KDSOgc1vl41UrfoCZFlWVLJbdIIYWA4zPoOc0/edit?usp=sharing">Testing Document</a></li>
        <li><a href="./docs/Contracts/Contracts.md">Contracts</a></li>
        <li><a href="https://www.figma.com/design/OjxWQqAXxuycjBsvbRyU0f/WhatsOn%40UP?node-id=0-1&t=rWZnW452JgRBb5ha-0">Wireframes</a></li>
