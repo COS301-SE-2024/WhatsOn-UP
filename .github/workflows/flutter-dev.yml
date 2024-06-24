@@ -23,7 +23,7 @@ jobs:
           flutter-version: '3.0.0'  # Replace with your desired Flutter version
 
       - name: Install dependencies
-        run: |
+        run:
           cd src/Frontend
           flutter pub get
 
