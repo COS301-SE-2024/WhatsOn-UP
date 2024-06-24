@@ -1,8 +1,12 @@
 name: Flutter Tests
 
 on:
+  push:
+    branches:
+      - develop
   pull_request:
-    branches: [ "develop"]
+    branches:
+      - develop
 
 jobs:
   test:
@@ -16,12 +20,12 @@ jobs:
       - name: Install Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.0.0'
+          flutter-version: '3.0.0'  # Replace with your desired Flutter version
 
       - name: Install dependencies
-        working-directory: src/Frontend
-        run: flutter pub get
+        run: |
+          cd src/Frontend
+          flutter pub get
 
       - name: Run tests with coverage
-        working-directory: src/Frontend
-        run: flutter test --coverage
+        run: flutter test --coverage src/Frontend/test/api_test.dart

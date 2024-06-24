@@ -146,7 +146,9 @@ void main() {
       }
       finally {
         api.jwtKey = temp;
+        print('api.jwtKey: ${api.jwtKey}');
       }
     });
   });
+
 }

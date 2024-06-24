@@ -2,7 +2,11 @@ name: Docker Image CI
 
 on:
   pull_request:
-    branches: [ "main"]
+    branches: 
+      - main
+  push:
+    branches: 
+      - main
 
 jobs:
   build:
@@ -20,7 +24,7 @@ jobs:
 
       # Build the Docker image
       - name: Build Docker image
-        run: docker build -t devforce123/backend:3.0 -f src/Backend/Dockerfile src/Backend/
+        run: docker build -t devforce123/backend:2.0 -f src/Backend/Dockerfile src/Backend/
 
   push:
     needs: build
@@ -39,4 +43,4 @@ jobs:
 
       # Push the Docker image to Docker Hub
       - name: Push Docker image
-        run: docker push devforce123/backend:3.0
+        run: docker push devforce123/backend:2.0
