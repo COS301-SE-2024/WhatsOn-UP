@@ -17,7 +17,7 @@ import 'package:firstapp/services/api.dart';
 import 'dart:typed_data';
 import 'package:firstapp/pages/Broadcast.dart';
 import 'package:firstapp/pages/manageEvents.dart';
-
+import 'package:firstapp/pages/application_event.dart';
 
 class HomePage extends StatefulWidget {
   final String userName;
@@ -70,6 +70,30 @@ class _HomePageState extends State<HomePage> {
         onItemTapped: _onItemTapped,
         userRole: widget.role,
       ),
+      floatingActionButton: (widget.role == 'HOST' || widget.role == 'ADMIN')
+      ? Padding(
+          padding: EdgeInsets.only(right: 15, bottom: 70),
+          child: Align(
+            alignment: Alignment.bottomRight,
+            child: FloatingActionButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ApplicationEvent(
+                    userName: widget.userName,
+                    userEmail: widget.userEmail,
+                    userId: widget.userId,
+                    role: widget.role,
+                    profileImage: widget.profileImage,
+                  )),
+                );
+              },
+              child: Icon(Icons.add),
+              backgroundColor: Theme.of(context).primaryColor,
+            ),
+          ),
+        ) : null,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 
