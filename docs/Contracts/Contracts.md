@@ -64,7 +64,7 @@ This will manage creation, deletion, updating, and viewing of user accounts and 
 {
     "status": "success",
     "timestamp": 1703277000,
-    "body": {
+    "data": {
         "message": "user successfully created"
     }
 }
@@ -103,7 +103,7 @@ This will manage creation, deletion, updating, and viewing of user accounts and 
 {
     "status": "success",
     "timestamp": 1703277000,
-    "body": {
+    "data": {
         "auth_token": "<token>"
     }
 }
@@ -143,7 +143,7 @@ This will manage creation, deletion, updating, and viewing of user accounts and 
 {
     "status": "success",
     "timestamp": 1703277000,
-    "body": {
+    "data": {
         [
             {
                 "event_id": {{001}},
@@ -179,7 +179,7 @@ This will manage creation, deletion, updating, and viewing of user accounts and 
 {
     "status": "success",
     "timestamp": 1703277000,
-    "body": {
+    "data": {
         [
             {
                 "event_id": {{001}},
@@ -236,7 +236,7 @@ This will manage creation, deletion, updating, and viewing of user accounts and 
 {
     "status": "success",
     "timestamp": 1703277000,
-    "body": {
+    "data": {
         [
             {
                 "event_id": {{004}},
@@ -279,7 +279,7 @@ This will manage creation, deletion, updating, and viewing of user accounts and 
 {
     "status": "success",
     "timestamp": 1703277000,
-    "body": {
+    "data": {
         [
             {
                 "event_id": {{004}},

@@ -8,6 +8,7 @@ class Event {
   final String location;
   final List<String> imageUrls;
   final String description;
+  final String id;
 
   Event({
     required this.nameOfEvent,
@@ -15,10 +16,14 @@ class Event {
     required this.location,
     required this.imageUrls,
     required this.description,
+    required this.id,
   });
 
    factory Event.fromJson(Map<String, dynamic> json) {
     dynamic j = json['eventMedia']; 
+
+    // print("EVENTS: ${json}");
+
     return Event(
       nameOfEvent: json['title'],
       dateAndTime: json['startTime'],
@@ -27,6 +32,7 @@ class Event {
           ? List<String>.from(json['eventMedia'])
           : ['https://images.pexels.com/photos/1190297/pexels-photo-1190297.jpeg'],
       description: json['description'],
+      id: json['id'],
     );
    }
 }

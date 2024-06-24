@@ -59,6 +59,7 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
         'attendees': event['attendees'].length.toString(),
         'url': 'https://picsum.photos/200',
         'description': event['description'],
+        'id': event['event_id'],
       };
     }).toList();
   }
@@ -201,6 +202,7 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
                       location: event['location'],
                       description: event['description'],
                       imageUrls: [event['url']],
+                      id: event['id'],
                     );
                   
                     Navigator.push(
