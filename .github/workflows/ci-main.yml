@@ -26,21 +26,21 @@ jobs:
       - name: Build Docker image
         run: docker build -t devforce123/backend:2.0 -f src/Backend/Dockerfile src/Backend/
 
-  push:
-    needs: build
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+  # push:
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   if: github.ref == 'refs/heads/main'
 
-    steps:
-      - name: Checkout the code
-        uses: actions/checkout@v4
+  #   steps:
+  #     - name: Checkout the code
+  #       uses: actions/checkout@v4
     
-      # Authenticate with Docker Hub
-      - name: Log into Docker Hub
-        env:
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_TOKEN }}
-        run: echo $DOCKER_PASSWORD | docker login -u devforce123 --password-stdin
+  #     # Authenticate with Docker Hub
+  #     - name: Log into Docker Hub
+  #       env:
+  #         DOCKER_PASSWORD: ${{ secrets.DOCKER_TOKEN }}
+  #       run: echo $DOCKER_PASSWORD | docker login -u devforce123 --password-stdin
 
-      # Push the Docker image to Docker Hub
-      - name: Push Docker image
-        run: docker push devforce123/backend:2.0
+  #     # Push the Docker image to Docker Hub
+  #     - name: Push Docker image
+  #       run: docker push devforce123/backend:2.0
