@@ -243,4 +243,28 @@ class Api {
       throw Exception(e.toString());
     }
   }
+
+
+  Future<Map<String, dynamic>> rsvpEvent(String eventId) async {
+    final String _rsvpEventUrl = 'http://localhost:8080/api/user/rspv_event/$eventId';
+    
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $jwtKey',
+    };
+
+    try {
+      var response = await http.put(Uri.parse(_rsvpEventUrl), headers: headers);
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        throw Exception(jsonDecode(response.body));
+      }
+    } catch (e) {
+      print('Error: $e');
+      throw Exception(e.toString());
+    }
+  }
 }

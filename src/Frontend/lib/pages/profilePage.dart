@@ -117,22 +117,22 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     child: Column(
                       children: [
-                        _buildProfileOption(
-                          text: 'Create event application',
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => ApplicationEvent(
-                                userName: widget.userName,
-                                userEmail: widget.userEmail,
-                                userId: widget.userId,
-                                role: widget.role,
-                                profileImage: widget.profileImage,
-                              )),
-                            );
-                          },
-                        ),
-                        _buildDivider(),
+                        // _buildProfileOption(
+                        //   text: 'Create event application',
+                        //   onTap: () {
+                        //     Navigator.push(
+                        //       context,
+                        //       MaterialPageRoute(builder: (context) => ApplicationEvent(
+                        //         userName: widget.userName,
+                        //         userEmail: widget.userEmail,
+                        //         userId: widget.userId,
+                        //         role: widget.role,
+                        //         profileImage: widget.profileImage,
+                        //       )),
+                        //     );
+                        //   },
+                        // ),
+                        // _buildDivider(),
                         _buildProfileOption(
                           text: 'Notifications',
                           onTap: () {
