@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firstapp/widgets/event_card.dart';
-
+import 'package:firstapp/services/api.dart';
 
 class DetailedEventPage extends StatefulWidget {
   final Event event;
@@ -15,8 +15,19 @@ class DetailedEventPage extends StatefulWidget {
 class _DetailedEventPageState extends State<DetailedEventPage> {
   int _currentImageIndex = 0;
 
-  void _addToCalendar() {
-    // Logic for adding to calendar
+  // void _addToCalendar() {
+  Future<void> _addToCalendar() async {
+    try {
+      var result = await Api().rsvpEvent(widget.event.id);
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Successfully RSVP\'d to event!')),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to RSVP: ${e.toString()}')),
+      );
+    }
   }
 
   void _viewLocationOnMap() {
@@ -25,6 +36,11 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
 
   void _reportEvent() {
     // Logic for reporting event
+  }
+
+  @override
+  void initState() {
+    super.initState();
   }
 
 

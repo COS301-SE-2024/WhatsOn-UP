@@ -38,3 +38,9 @@ out/
 
 ### Kotlin ###
 .kotlin
+
+tempDocker
+
+generated*
+Generated*
+

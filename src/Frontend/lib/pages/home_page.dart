@@ -9,15 +9,47 @@ import 'package:flutter/cupertino.dart';
 import 'package:firstapp/pages/searchbar.dart';
 import 'package:firstapp/pages/data_search.dart';
 import 'package:firstapp/pages/profilePage.dart';
+
+import '../screens/FilterScreen.dart';
+import '../screens/SearchScreen.dart';
+import 'package:firstapp/services/api.dart';
 // import 'package:firstapp/widgets/eventcard.dart';
+import 'dart:typed_data';
+import 'package:firstapp/pages/Broadcast.dart';
+import 'package:firstapp/pages/manageEvents.dart';
+import 'package:firstapp/pages/application_event.dart';
 
 class HomePage extends StatefulWidget {
+  final String userName;
+  final String userEmail;
+  final String userId;
+  final String role;
+  final Uint8List? profileImage;
+
+  const HomePage({
+    Key? key,
+    // required this.profileImageUrl,
+    required this.userName,
+    required this.userEmail,
+    required this.userId,
+    required this.role,
+    required this.profileImage,
+  }) : super(key: key);
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+  late Future<List<Event>> futureEvents;
+  Api api = Api();
+
   int _selectedIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    futureEvents = api.getAllEvents();
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -25,45 +57,7 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  final List<Event> events = [
-    Event(
-        nameOfEvent: 'Event name 1',
-        dateAndTime: '2024/05/28',
-        location: 'braam',
-        imageUrls: [
-          'https://source.unsplash.com/random/200x200?sig=1',
-          'https://source.unsplash.com/random/200x200?sig=1',
-          'https://source.unsplash.com/random/200x200?sig=1'
-        ],
-        description: 'This is a test description for Event 1'),
-    Event(
-        nameOfEvent: 'Event name 2',
-        dateAndTime: '2024/05/29',
-        location: 'jozi',
-        imageUrls: ['https://source.unsplash.com/random/200x200?sig=2'],
-        description: 'This is a test description for Event 2'),
-    Event(
-        nameOfEvent: 'Event name 3',
-        dateAndTime: '2024/05/30',
-        location: 'pta',
-        imageUrls: [
-          'https://source.unsplash.com/random/200x200?sig=3',
-          'https://source.unsplash.com/random/200x200?sig=3'
-        ],
-        description: 'This is a test description for Event 3'),
-    Event(
-        nameOfEvent: 'Event name 4',
-        dateAndTime: '2024/05/31',
-        location: 'soweto',
-        imageUrls: [
-          'https://source.unsplash.com/random/200x200?sig=4',
-          'https://source.unsplash.com/random/200x200?sig=4',
-          'https://source.unsplash.com/random/200x200?sig=4',
-          'https://source.unsplash.com/random/200x200?sig=4',
-          'https://source.unsplash.com/random/200x200?sig=4'
-        ],
-        description: 'This is a test description for Event 4'),
-  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,7 +68,32 @@ class _HomePageState extends State<HomePage> {
       bottomNavigationBar: NavBar(
         selectedIndex: _selectedIndex,
         onItemTapped: _onItemTapped,
+        userRole: widget.role,
       ),
+      floatingActionButton: (widget.role == 'HOST' || widget.role == 'ADMIN')
+      ? Padding(
+          padding: EdgeInsets.only(right: 15, bottom: 70),
+          child: Align(
+            alignment: Alignment.bottomRight,
+            child: FloatingActionButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ApplicationEvent(
+                    userName: widget.userName,
+                    userEmail: widget.userEmail,
+                    userId: widget.userId,
+                    role: widget.role,
+                    profileImage: widget.profileImage,
+                  )),
+                );
+              },
+              child: Icon(Icons.add),
+              backgroundColor: Theme.of(context).primaryColor,
+            ),
+          ),
+        ) : null,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 
@@ -89,7 +108,20 @@ class _HomePageState extends State<HomePage> {
       case 3:
         return const ExplorePage();
       case 4:
-        return const SettingsPage();
+        return SettingsPage(
+          //profileImageUrl: widget.profileImageUrl,
+          userName: widget.userName,
+          userEmail: widget.userEmail,
+          role: widget.role,
+          userId: widget.userId,
+          profileImage: widget.profileImage,
+        );
+      case 5:
+        return const ManageEvents();
+
+      case 6:
+        return const Broadcast();
+
       default:
         return _buildHomePage();
     }
@@ -100,244 +132,182 @@ class _HomePageState extends State<HomePage> {
     final borderColour = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
     final textColour = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
 
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: GestureDetector(
-                  onTap: () {
-                    // Navigate to another page when the profile icon is tapped
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const ProfilePage(
-                              profileImageUrl:
-                                  'https://example.com/your-profile-image.jpg')),
-                    );
-                  },
-                  child: const CircleAvatar(
-                    backgroundImage: NetworkImage(
-                        'https://example.com/profile-image.jpg'), // Replace the URL with your profile image URL
-                    radius:
-                        24.0, // Adjust the size of the profile icon as needed
-                  ),
-                ),
-              ),
-              const Text(
-                'Welcome, Username',
-                style: TextStyle(
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 20.0),
-          // Container(
-          //   padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          //   decoration: BoxDecoration(
-          //     border: Border.all(color: borderColour),
-          //     borderRadius: BorderRadius.circular(8.0),
-          //   ),
-          //   child: IconButton(
-          //     onPressed: () {
-          //       showSearch(context: context, delegate: DataSearch());
-          //     },
-          //     icon: const Icon(Icons.search),
-          //   ),
-          // ),
+    return FutureBuilder<List<Event>>(
+      future: futureEvents,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else if (snapshot.hasData) {
+          final events = snapshot.data!;
 
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.27,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(color: borderColour),
-                        borderRadius: BorderRadius.circular(16.0),
-                      ),
-                      child: TextButton.icon(
-                        onPressed: () {
-                          showSearch(
-                            context: context,
-                            delegate: DataSearch(),
+          print('second events call: $events');
+          print("Number of events: ${events.length}");
+
+          // Add check to ensure events list is not empty
+          if (events.isEmpty) {
+            return Center(child: Text('No events found.'));
+          }
+
+          return SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ProfilePage(
+                                // profileImageUrl: widget.profileImageUrl,
+                                userName: widget.userName,
+                                userEmail: widget.userEmail,
+                                // role: widget.role,
+                                userId: widget.userId,
+                                role: widget.role,
+                                profileImage: widget.profileImage,
+                              ),
+                            ),
                           );
                         },
-                        icon: Icon(Icons.search, color: textColour),
-                        label: Text('Search',
-                            style: TextStyle(
-                              color: textColour,
-                            )),
+                        child: CircleAvatar(
+                          backgroundImage: widget.profileImage != null
+                              ? MemoryImage(widget.profileImage!)
+                              : AssetImage('http/example-image')
+                          as ImageProvider, // Replace the URL with your profile image URL
+                          radius: 27.0,
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(width: 35.0),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.27,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(color: borderColour),
-                        borderRadius: BorderRadius.circular(16.0),
-                      ),
-                      child: TextButton.icon(
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: Text('Filter Options'),
-                                content:
-                                    Text('Coming soon'),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Text('Close'),
+                    Text(
+                      'Welcome, ${widget.userName}',
+                      style: TextStyle(
+                          fontSize: 24.0,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 20.0),
+
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.27,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(color: borderColour),
+                              borderRadius: BorderRadius.circular(16.0),
+                            ),
+                            child: TextButton.icon(
+                              onPressed: () {
+                                // Navigate to SearchScreen when Search button is pressed
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => SearchScreen(),
                                   ),
-                                ],
-                              );
-                            },
-                          );
-                        },
-                        icon: Icon(Icons.filter_list, color: textColour),
-                        label: Text('Filter',
-                            style: TextStyle(
-                              color: textColour,
-                            )),
-                      ),
+                                );
+                              },
+                              icon: Icon(Icons.search, color: textColour),
+                              label: Text('Search', style: TextStyle(color: textColour)),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 35.0),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.27,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(color: borderColour),
+                              borderRadius: BorderRadius.circular(16.0),
+                            ),
+                            child: TextButton.icon(
+                              onPressed: () {
+                                // Navigate to SearchScreen when Search button is pressed
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => FilterScreen(),
+                                  ),
+                                );
+                              },
+                              icon: Icon(Icons.filter_list, color: textColour),
+                              label: Text('Filter', style: TextStyle(color: textColour)),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ),
+                ),
+                SizedBox(height: 20.0),
+                const Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Text(
+                    'Explore More',
+                    style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                SizedBox(
+                  height: 250.0,
+                  child: GridView.builder(
+                    scrollDirection: Axis.horizontal,
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 1,
+                    ),
+                    itemCount: events.length,
+                    itemBuilder: (context, index) {
+                      // Ensure index is within bounds
+                      if (index >= events.length) {
+                        return Container(); // or handle error gracefully
+                      }
+                      EventCard card = EventCard(event: events[index]);
+                      return card;
+                    },
+                  ),
+                ),
+                SizedBox(height: 20.0),
+                const Padding(
+                  padding: EdgeInsets.all(10.0),
+                  child: Text(
+                    'Saved',
+                    style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                SizedBox(
+                  height: 250.0,
+                  child: GridView.builder(
+                    scrollDirection: Axis.horizontal,
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 1,
+                    ),
+                    itemCount: events.length,
+                    itemBuilder: (context, index) {
+                      // Ensure index is within bounds
+                      if (index >= events.length) {
+                        return Container(); // or handle error gracefully
+                      }
+                      return EventCard(event: events[index]);
+                    },
+                  ),
+                ),
+              ],
             ),
-          ),
-
-          //  Widget062(),
-          // Card(
-          //   margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-          //   child: Padding(
-          //     padding: const EdgeInsets.all(16.0),
-          //     child: Column(
-          //       crossAxisAlignment: CrossAxisAlignment.start,
-          //       children: [
-          //         const Text(
-          //           'Featured Events',
-          //           style: TextStyle(
-          //             fontSize: 18.0,
-          //             fontWeight: FontWeight.bold,
-          //           ),
-          //         ),
-          //         const SizedBox(height: 8.0),
-          //         Row(
-          //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //           children: [
-          //             const Column(
-          //               crossAxisAlignment: CrossAxisAlignment.start,
-          //               children: [
-          //                 Text(
-          //                   'Event 1',
-          //                   style: TextStyle(
-          //                     fontWeight: FontWeight.bold,
-          //                   ),
-          //                 ),
-          //                 Text('Date: 01/06/2024'),
-          //               ],
-          //             ),
-          //             ElevatedButton(
-          //               onPressed: () {
-          //                 // Handle event RSVP
-          //               },
-          //               child: const Text('RSVP'),
-          //             ),
-          //           ],
-          //         ),
-          //         const SizedBox(height: 16.0),
-          //         Row(
-          //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //           children: [
-          //             const Column(
-          //               crossAxisAlignment: CrossAxisAlignment.start,
-          //               children: [
-          //                 Text(
-          //                   'Event 2',
-          //                   style: TextStyle(
-          //                     fontWeight: FontWeight.bold,
-          //                   ),
-          //                 ),
-          //                 Text('Date: 15/06/2024'),
-          //               ],
-          //             ),
-          //             ElevatedButton(
-          //               onPressed: () {
-          //                 // Handle event RSVP
-          //               },
-          //               child: const Text('RSVP'),
-          //             ),
-          //           ],
-          //         ),
-          //       ],
-          //     ),
-          //   ),
-          // ),
-          SizedBox(height: 20.0),
-          const Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Text(
-              'Explore More',
-              style: TextStyle(
-                fontSize: 18.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 250.0,
-            child: GridView.builder(
-              scrollDirection: Axis.horizontal,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 1,
-              ),
-              itemCount: events.length,
-              itemBuilder: (context, index) {
-                return EventCard(event: events[index]);
-              },
-            ),
-          ),
-          SizedBox(height: 20.0),
-          const Padding(
-            padding: EdgeInsets.all(10.0),
-            child: Text(
-              'Saved',
-              style: TextStyle(
-                fontSize: 18.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 250.0,
-            child: GridView.builder(
-              scrollDirection: Axis.horizontal,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 1,
-              ),
-              itemCount: events.length,
-              itemBuilder: (context, index) {
-                return EventCard(event: events[index]);
-              },
-            ),
-          ),
-        ],
-      ),
+          );
+        } else {
+          return Center(child: Text('No events found.'));
+        }
+      },
     );
+
   }
 }
