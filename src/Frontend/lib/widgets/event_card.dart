@@ -16,6 +16,19 @@ class Event {
     required this.imageUrls,
     required this.description,
   });
+
+   factory Event.fromJson(Map<String, dynamic> json) {
+    dynamic j = json['eventMedia']; 
+    return Event(
+      nameOfEvent: json['title'],
+      dateAndTime: json['startTime'],
+      location: json['location'],
+      imageUrls: (json.containsKey('eventMedia') && (json['eventMedia'] as List).isNotEmpty)
+          ? List<String>.from(json['eventMedia'])
+          : ['https://images.pexels.com/photos/1190297/pexels-photo-1190297.jpeg'],
+      description: json['description'],
+    );
+   }
 }
 
 class EventCard extends StatelessWidget {
@@ -77,21 +90,12 @@ class EventCard extends StatelessWidget {
                 Text(
                   event.nameOfEvent,
                   style: TextStyle(
-                    fontSize: 23.0,
+                    fontSize: 17.0,
                     fontWeight: FontWeight.bold,
                     color: textColour,
                   ),
                 ),
                 const SizedBox(height: 4.0),
-                Text(
-                  event.dateAndTime,
-                  style: TextStyle(
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.bold,
-                    color: textColour,
-                  ),
-                ),
-                const SizedBox(height: 6.0),
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [

@@ -60,16 +60,17 @@ University of Pretoria
 
 Repository: [COS301-SE-2024/WhatsOn-UP (github.com)](https://github.com/COS301-SE-2024/WhatsOn-UP)
 
-Demo 1 Slides: [https://www.canva.com/design/DAGGsKNb6aU/W8v3NKotCxBJOJauO8_IrA/](https://www.canva.com/design/DAGGsKNb6aU/W8v3NKotCxBJOJauO8_IrA/)
+Demo 1 Slides: [Slides](https://www.canva.com/design/DAGGsKNb6aU/W8v3NKotCxBJOJauO8_IrA/)
 
-Wireframes:[https://drive.google.com/file/d/1qSlPJPVNYl5rjaByyzo5KBY_vjX_63GY/view?usp=drive_link](https://drive.google.com/file/d/1qSlPJPVNYl5rjaByyzo5KBY_vjX_63GY/view?usp=drive_link)
+Wireframes:[Wireframes](https://drive.google.com/file/d/1qSlPJPVNYl5rjaByyzo5KBY_vjX_63GY/view?usp=drive_link)
 
-Testing Documentation: [https://docs.google.com/document/d/1SfIxE-KDSOgc1vl41UrfoCZFlWVLJbdIIYWA4zPoOc0/edit?usp=drive_link](https://docs.google.com/document/d/1SfIxE-KDSOgc1vl41UrfoCZFlWVLJbdIIYWA4zPoOc0/edit?usp=drive_link)
+Testing Documentation: [Testing Documentation](https://docs.google.com/document/d/1SfIxE-KDSOgc1vl41UrfoCZFlWVLJbdIIYWA4zPoOc0/edit?usp=drive_link)
 
-Technologies Research: [https://docs.google.com/document/d/1i5oyOKCl6RR43fGU84T-jpH3FCVdWkCGCwjNLkaaPE4/edit?usp=drive_link](https://docs.google.com/document/d/1i5oyOKCl6RR43fGU84T-jpH3FCVdWkCGCwjNLkaaPE4/edit?usp=drive_link)
+Technologies Research: [Technologies Research](https://docs.google.com/document/d/1i5oyOKCl6RR43fGU84T-jpH3FCVdWkCGCwjNLkaaPE4/edit?usp=drive_link)
 
 Github Ruleset Research: [CI/CD - Google Docs](https://docs.google.com/document/d/1Ig4SYOKnw4ZOrzP6SjYiHuW31lKe9OM7teOcSr8CBp4/edit#heading=h.lt3dnkdyw0h7)
 
+Coding Standards Documentation:[Coding Standards](https://docs.google.com/document/d/1_oVeZqWZemT3urwrFUN708oN37bDlg5WAx-VP4TaVw4/edit?usp=drive_link)
 ### **Introduction**
 
 Students often miss out on enriching experiences beyond academics due to the difficulty in finding and managing various campus events. Current methods rely on scattered sources, making it challenging for students and even university guests to stay informed and involved. The proposed WhatsOn@UP software system aims to be the central hub for all events happening at the University of Pretoria, with the vision of expanding to encompass other universities at a later stage.

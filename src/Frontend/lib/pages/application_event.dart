@@ -1,9 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:firstapp/pages/profilePage.dart';
 import 'package:flutter/cupertino.dart';
+import 'dart:typed_data';
+import 'package:image_picker/image_picker.dart';
+import 'package:firstapp/widgets/theme_manager.dart';
+import 'package:firstapp/services/api.dart';
 
 class ApplicationEvent extends StatefulWidget {
-  const ApplicationEvent({Key? key}) : super(key: key);
+  final String userName;
+  final String userEmail;
+  final String userId;
+  final String role;
+  Uint8List? profileImage;
+
+  ApplicationEvent({
+    Key? key,
+    required this.userName,
+    required this.userEmail,
+    required this.userId,
+    required this.role,
+    required this.profileImage,
+  }) : super(key: key);
 
   @override
   State<ApplicationEvent> createState() => _ApplicationEventState();
@@ -14,10 +31,18 @@ class _ApplicationEventState extends State<ApplicationEvent> {
   late Size mediaSize;
   TextEditingController eventNameController = TextEditingController();
   TextEditingController eventDescriptionController = TextEditingController();
-  DateTime selectedDate = DateTime.now();
-  TimeOfDay selectedTime = TimeOfDay.now();
+  TextEditingController venueController = TextEditingController();
+  TextEditingController maxAttendeesController = TextEditingController();
+  DateTime startDate = DateTime.now();
+  TimeOfDay startTime = TimeOfDay.now();
+  DateTime endDate = DateTime.now();
+  TimeOfDay endTime = TimeOfDay.now();
+  List<XFile>? selectedImages;
+  bool isPublic = true;
 
   final _formKey = GlobalKey<FormState>();
+
+  final ImagePicker _picker = ImagePicker();
 
   @override
   Widget build(BuildContext context) {
@@ -42,46 +67,113 @@ class _ApplicationEventState extends State<ApplicationEvent> {
       key: _formKey,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Event Details',
-              style: TextStyle(
-                fontSize: 24,
-                // color: Colors.black,
-                fontWeight: FontWeight.bold,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Event Details',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            const SizedBox(height: 20),
-            _buildInputField(eventNameController, label: 'Event Name'),
-            const SizedBox(height: 10),
-            _buildInputField(eventDescriptionController, label: 'Description'),
-            const SizedBox(height: 20),
-            _buildDateTimePicker(),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                showSubmitDialog(context);
-              },
-              child: const Text('Submit'),
-            ),
-          ],
+              const SizedBox(height: 20),
+              _buildInputField(eventNameController, label: 'Event Name'),
+              const SizedBox(height: 10),
+              _buildInputField(eventDescriptionController, label: 'Description'),
+              const SizedBox(height: 10),
+              _buildInputField(venueController, label: 'Venue'),
+              const SizedBox(height: 10),
+              _buildInputField(maxAttendeesController, label: 'Max Attendees', keyboardType: TextInputType.number),
+              const SizedBox(height: 20),
+              _buildDateTimePicker('Start', startDate, startTime, (date, time) {
+                setState(() {
+                  startDate = date;
+                  startTime = time;
+                });
+              }),
+              const SizedBox(height: 20),
+              _buildDateTimePicker('End', endDate, endTime, (date, time) {
+                setState(() {
+                  endDate = date;
+                  endTime = time;
+                });
+              }),
+              const SizedBox(height: 20),
+              _buildPrivacyToggle(),
+              const SizedBox(height: 20),
+              _buildImagePicker(),
+              const SizedBox(height: 35),
+              Center(
+                child: SizedBox(
+                  width: 150,
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      showSubmitDialog(context);
+                    },
+                    child: const Text('Submit'),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildInputField(
-    TextEditingController controller, {
-    required String label,
-  }) {
+  Widget _buildPrivacyToggle() {
+  final theme = Theme.of(context);
+  final isLightTheme = theme.brightness == Brightness.light;
+
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      const Text('Event Visibility:'),
+      const SizedBox(height: 10),
+      Row(
+        children: [
+          Switch(
+            value: isPublic,
+            onChanged: (value) {
+              setState(() {
+                isPublic = value;
+              });
+            },
+            activeTrackColor: isLightTheme
+                ? lightPrimaryColor.withOpacity(0.5)
+                : darkPrimaryColor.withOpacity(0.5),
+            activeColor: isLightTheme ? lightPrimaryColor : darkPrimaryColor,
+            inactiveThumbColor: isLightTheme
+                ? Colors.grey[400]
+                : Colors.grey[600],
+            inactiveTrackColor: isLightTheme
+                ? Colors.grey[300]
+                : Colors.grey[700],
+          ),
+          const SizedBox(width: 10),
+          Text(
+            isPublic ? 'Public' : 'Private',
+            style: TextStyle(
+              color: isLightTheme ? lightTextColor : Colors.white,
+            ),
+          ),
+        ],
+      ),
+    ],
+  );
+}
+
+  Widget _buildInputField(TextEditingController controller, {required String label, TextInputType keyboardType = TextInputType.text}) {
     return TextFormField(
       controller: controller,
       decoration: InputDecoration(
         labelText: label,
         border: const OutlineInputBorder(),
       ),
+      keyboardType: keyboardType,
       validator: (value) {
         if (value == null || value.isEmpty) {
           return 'Please enter $label';
@@ -91,38 +183,39 @@ class _ApplicationEventState extends State<ApplicationEvent> {
     );
   }
 
-  Widget _buildDateTimePicker() {
+  Widget _buildDateTimePicker(String label, DateTime date, TimeOfDay time, void Function(DateTime, TimeOfDay) onDateTimeChanged) {
     final theme = Theme.of(context);
     final dateAndTimeColour = theme.brightness == Brightness.dark ? const Color.fromARGB(255, 58, 132, 218) : const Color.fromARGB(255, 13, 73, 151);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Select Date:'),
+        Text('$label Date and Time:'),
         const SizedBox(height: 10),
         Row(
           children: [
             const Icon(Icons.calendar_today),
             const SizedBox(width: 10),
             TextButton(
-              onPressed: () => _selectDate(context),
+              onPressed: () async {
+                final pickedDate = await showDatePicker(
+                  context: context,
+                  initialDate: date,
+                  firstDate: DateTime.now(),
+                  lastDate: DateTime(DateTime.now().year + 1),
+                );
+                if (pickedDate != null) {
+                  final pickedTime = await showTimePicker(
+                    context: context,
+                    initialTime: time,
+                  );
+                  if (pickedTime != null) {
+                    onDateTimeChanged(pickedDate, pickedTime);
+                  }
+                }
+              },
               child: Text(
-                '${selectedDate.day}/${selectedDate.month}/${selectedDate.year}',
-                style: TextStyle(color: dateAndTimeColour),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 20),
-        const Text('Select Time:'),
-        const SizedBox(height: 10),
-        Row(
-          children: [
-            const Icon(Icons.access_time),
-            const SizedBox(width: 10),
-            TextButton(
-              onPressed: () => _selectTime(context),
-              child: Text(
-                '${selectedTime.format(context)}',
+                '${date.day}/${date.month}/${date.year} ${time.format(context)}',
                 style: TextStyle(color: dateAndTimeColour),
               ),
             ),
@@ -132,52 +225,94 @@ class _ApplicationEventState extends State<ApplicationEvent> {
     );
   }
 
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: selectedDate,
-      firstDate: DateTime.now(),
-      lastDate: DateTime(DateTime.now().year + 1),
+  Widget _buildImagePicker() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text('Upload Images:'),
+        const SizedBox(height: 10),
+        ElevatedButton(
+          onPressed: () async {
+            final List<XFile>? pickedFiles = await _picker.pickMultiImage();
+            if (pickedFiles != null) {
+              setState(() {
+                selectedImages = pickedFiles;
+              });
+            }
+          },
+          child: const Text('Select Images'),
+        ),
+        if (selectedImages != null)
+          Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: Wrap(
+              spacing: 10,
+              children: selectedImages!.map((file) => Text(file.name)).toList(),
+            ),
+          ),
+      ],
     );
-    if (pickedDate != null && pickedDate != selectedDate) {
-      setState(() {
-        selectedDate = pickedDate;
-      });
-    }
-  }
-
-  Future<void> _selectTime(BuildContext context) async {
-    final TimeOfDay? pickedTime = await showTimePicker(
-      context: context,
-      initialTime: selectedTime,
-    );
-    if (pickedTime != null && pickedTime != selectedTime) {
-      setState(() {
-        selectedTime = pickedTime;
-      });
-    }
   }
 
   void _submitForm() {
-    if (_formKey.currentState!.validate()) {
-      String eventName = eventNameController.text;
-      String eventDescription = eventDescriptionController.text;
+  if (_formKey.currentState!.validate()) {
+    String eventName = eventNameController.text;
+    String eventDescription = eventDescriptionController.text;
+    String venue = venueController.text;
+    int? maxAttendees = int.tryParse(maxAttendeesController.text);
+
+    // Combine date and time
+    DateTime startDateTime = DateTime(
+      startDate.year, startDate.month, startDate.day,
+      startTime.hour, startTime.minute
+    );
+    DateTime endDateTime = DateTime(
+      endDate.year, endDate.month, endDate.day,
+      endTime.hour, endTime.minute
+    );
+
+    List<String>? mediaUrls = selectedImages?.map((file) => file.path).toList();
+
+    Api().createEvent(
+      title: eventName,
+      description: eventDescription,
+      startDate: startDateTime,
+      endDate: endDateTime,
+      location: venue,
+      maxParticipants: maxAttendees,
+      isPrivate: !isPublic,
+      media: mediaUrls,
+    ).then((response) {
+      print('Event created successfully');
       Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => const ProfilePage(
-                profileImageUrl: 'https://example.com/your-profile-image.jpg')),
+          builder: (context) => ProfilePage(
+            userName: widget.userName,
+            userEmail: widget.userEmail,
+            userId: widget.userId,
+            role: widget.role,
+            profileImage: widget.profileImage,
+          ),
+        ),
       );
-      print('Event Name: $eventName');
-      print('Event Description: $eventDescription');
-      print(
-          'Selected Date: ${selectedDate.day}/${selectedDate.month}/${selectedDate.year}');
-      print('Selected Time: ${selectedTime.format(context)}');
-
+      
       eventNameController.clear();
       eventDescriptionController.clear();
-    }
+      venueController.clear();
+      maxAttendeesController.clear();
+      setState(() {
+        selectedImages = null;
+        isPublic = true;
+      });
+    }).catchError((error) {
+      print('Error creating event: $error');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to create event: $error')),
+      );
+    });
   }
+}
 
   void showSubmitDialog(BuildContext context) {
     bool isValid = _formKey.currentState!.validate();

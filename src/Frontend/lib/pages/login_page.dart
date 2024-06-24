@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:firstapp/pages/signin_page.dart';
 import 'package:firstapp/pages/home_page.dart';
+import 'package:firstapp/services/api.dart';
+import 'dart:typed_data';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -9,6 +13,8 @@ class LoginPage extends StatefulWidget {
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
+int _selectedIndex = 0;
+
 
 class _LoginPageState extends State<LoginPage> {
   late Color myColor;
@@ -19,8 +25,7 @@ class _LoginPageState extends State<LoginPage> {
 
   final _formKey = GlobalKey<FormState>();
 
-  final String testingEmail = 'DevForce@gmail.com';
-  final String testingPassword = 'password123';
+
 
   @override
   Widget build(BuildContext context) {
@@ -130,7 +135,7 @@ class _LoginPageState extends State<LoginPage> {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: _simulateLogin,
+              onPressed: _login,
               style: ElevatedButton.styleFrom(
                 // backgroundColor: const Color.fromARGB(255, 255, 255, 255),
                 shape: RoundedRectangleBorder(
@@ -262,23 +267,57 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void _simulateLogin() {
+  Future<void> _login() async {
     if (_formKey.currentState!.validate()) {
       String email = emailController.text;
       String password = passwordController.text;
+      Api api = Api();
+      api.loginUser(email, password).then((response) {
+        if (response['error'] != null) {
 
-      if (email == testingEmail && password == testingPassword) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => HomePage()),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Invalid email or password'),
-          ),
-        );
-      }
+          print('An error occurred: ${response['error']}');
+        } else {
+          String fullName = response['data']['user']['fullName']?? 'Unknown';
+          String userEmail = response['data']['user']['email'] ?? 'Unknown';
+          String UserId=response['data']['user']['id']?? 'Unknown';
+          String role=response['data']['user']['role']?? 'Unknown';
+          String  profileImage=response['data']['user']['profileImage']?? 'Unknown';
+          Uint8List profileImageBytes = Uint8List(0);
+
+          bool isBase64(String input) {
+            final RegExp base64 = RegExp(
+              r'^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$',
+            );
+            return base64.hasMatch(input);
+          }
+
+          if (isBase64(profileImage)) {
+
+            try {
+              profileImageBytes = base64Decode(profileImage);
+            } catch (e) {
+              print('Error decoding Base64: $e');
+            }
+          } else {
+            print('Invalid Base64 string: $profileImage');
+          }
+
+
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => HomePage(
+              userName:  fullName,
+              userEmail: userEmail,
+              userId:UserId,
+              role:role,
+              profileImage: profileImageBytes,
+            )),
+          );
+          print('Login successful');
+        }
+      });
+
+
     }
   }
 }

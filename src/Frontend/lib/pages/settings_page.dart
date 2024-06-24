@@ -2,9 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firstapp/widgets/theme_manager.dart';
 import 'package:firstapp/pages/profilePage.dart';
+import 'dart:typed_data';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingsPage extends StatefulWidget {
-  const SettingsPage({super.key});
+  // final String profileImageUrl;
+  final String userName;
+  final String userEmail;
+  final String userId;
+  final String role;
+  final Uint8List? profileImage;
+  const SettingsPage({
+    Key? key,
+    // required this.profileImageUrl,
+    required this.userName,
+    required this.userEmail,
+    required this.userId,
+    required this.role,
+    required this.profileImage,
+  }) : super(key: key);
 
   @override
   _SettingsPageState createState() => _SettingsPageState();
@@ -16,7 +32,8 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final borderColour = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
+    final borderColour =
+        theme.brightness == Brightness.dark ? Colors.white : Colors.black;
 
     return Scaffold(
       body: Padding(
@@ -43,10 +60,19 @@ class _SettingsPageState extends State<SettingsPage> {
                     icon: Icons.person,
                     text: 'Profile',
                     onTap: () {
-                    Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => ProfilePage(profileImageUrl:'https://example.com/your-profile-image.jpg')),
-                   );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ProfilePage(
+                            // profileImageUrl: //widget.profileImageUrl,
+                            userName: widget.userName,
+                            userEmail: widget.userEmail,
+                            userId: widget.userId,
+                            role: widget.role,
+                            profileImage: widget.profileImage,
+                          ),
+                        ),
+                      );
                     },
                   ),
                   _buildDivider(),
@@ -85,10 +111,8 @@ class _SettingsPageState extends State<SettingsPage> {
                   _buildDivider(),
                   _buildSettingsOption(
                     icon: Icons.info,
-                    text: 'About',
-                    onTap: () {
-                      // Handle about tap
-                    },
+                    text: 'Help',
+                    onTap: _launchURL,
                   ),
                 ],
               ),
@@ -127,11 +151,11 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-
   Widget _buildThemeToggle() {
     return Consumer<ThemeNotifier>(
       builder: (context, themeNotifier, child) {
-        bool isLightTheme = themeNotifier.getTheme() == themeNotifier.lightTheme;
+        bool isLightTheme =
+            themeNotifier.getTheme() == themeNotifier.lightTheme;
 
         return GestureDetector(
           onTap: () {
@@ -184,5 +208,14 @@ class _SettingsPageState extends State<SettingsPage> {
         );
       },
     );
+  }
+
+  void _launchURL() async {
+    const url = 'https://cos301-se-2024.github.io/WhatsOn-UP/';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }
