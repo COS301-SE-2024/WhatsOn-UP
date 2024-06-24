@@ -11,7 +11,7 @@ class SearchImageTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => onTap(title), // Passes the title as a parameter to onTap
+      onTap: () => onTap(title),
       child: Container(
         margin: EdgeInsets.all(8.0),
         decoration: BoxDecoration(

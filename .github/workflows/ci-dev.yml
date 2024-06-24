@@ -25,3 +25,9 @@ jobs:
       # Build the Docker image
       - name: Build Docker image
         run: docker build -t devforce123/backend:2.0 -f src/Backend/Dockerfile src/Backend/
+        
+      # - name: Upload coverage reports to Codecov
+      #   uses: codecov/codecov-action@v4.0.1
+      #   with:
+      #     token: ${{ secrets.CODECOV_TOKEN }}
+
