@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'dart:typed_data';import 'package:firstapp/widgets/event_card.dart';
+
 
 
 class EventService {
@@ -11,8 +13,12 @@ class EventService {
     try {
       final response = await http.get(uri);
       if (response.statusCode == 200) {
-        final List<dynamic> data = json.decode(response.body)['data'];
-        return data;
+        final Map<String, dynamic> decodedJson = json.decode(response.body);
+        final List<dynamic> eventsJson = decodedJson['data'];
+
+        // Map the JSON objects to Event objects
+        final List<Event> events = eventsJson.map((jsonEvent) => Event.fromJson(jsonEvent)).toList();
+        return events;
       } else {
         throw Exception('Failed to load events');
       }
