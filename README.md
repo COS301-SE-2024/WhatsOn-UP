@@ -18,6 +18,7 @@ WhatsOn@UP system aims to be a central hub for all University of Pretoria events
   <tr>
     <th>Demo Videos</th>
     <td><a href="https://drive.google.com/file/d/1NjTF3Wyfv0JfyUvZUSzZ3Qs84BKFjVUM/view?usp=sharing">Demo 1 Video</a>
+<br/>
     <a href="https://drive.google.com/file/d/1tH-Z4wL-U17SL5ecBKT7rOWEyJ3HX0MR/view?usp=drive_link">Demo 2 Video</a></td>
   </tr>
   <tr>
