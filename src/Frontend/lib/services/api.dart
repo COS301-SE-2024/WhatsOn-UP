@@ -7,7 +7,8 @@ import 'dart:typed_data';import 'package:firstapp/widgets/event_card.dart';
 class Api {
   // Singleton instance
   static final Api _instance = Api._internal();
-  static const String domain = 'localhost';
+  // static const String domain = '10.0.2.2';
+  static const String domain = 'Localhost';
   factory Api() => _instance;
   Api._internal();
 

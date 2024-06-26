@@ -9,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:firstapp/pages/searchbar.dart';
 import 'package:firstapp/pages/data_search.dart';
 import 'package:firstapp/pages/profilePage.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import '../screens/FilterScreen.dart';
 import '../screens/SearchScreen.dart';
@@ -136,7 +137,10 @@ class _HomePageState extends State<HomePage> {
       future: futureEvents,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return Center(child: SpinKitPianoWave(
+            color:  Color.fromARGB(255, 149, 137, 74),
+            size: 50.0,
+          ));
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (snapshot.hasData) {

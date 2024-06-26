@@ -177,15 +177,17 @@ class _SigninPage extends State<SigninPage> {
               },
               style: ElevatedButton.styleFrom(
                 // backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+                foregroundColor: Colors.black, backgroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
+                  side: BorderSide(color: Colors.grey, width: 1),
                 ),
                 padding: EdgeInsets.symmetric(vertical: 16),
               ),
               child: Text(
                 'Sign up',
                 // style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0)),
-                style: TextStyle(color: loginTextColour),
+
               ),
             ),
           ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
 import 'package:firstapp/services/api.dart';
@@ -189,7 +190,10 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
           const SizedBox(height: 16.0),
           Expanded(
             child: _isLoading
-              ? const Center(child: CircularProgressIndicator())
+              ? const Center(child:SpinKitPianoWave(
+              color:  Color.fromARGB(255, 149, 137, 74),
+              size: 50.0,
+            ))
               : ListView.builder(
               itemCount: _getEventsForMonth(_focusedDay).length,
               itemBuilder: (context, index) {

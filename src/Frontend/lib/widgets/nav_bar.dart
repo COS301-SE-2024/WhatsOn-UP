@@ -179,7 +179,7 @@ class NavBar extends StatelessWidget {
         label: 'Settings',
       ),
     ];
-
+    int adjustedIndex = selectedIndex.clamp(0, navBarItems.length - 1);
     List<PopupMenuEntry<int>> popupMenuItems = [
       PopupMenuItem<int>(
         value: 5,
@@ -210,7 +210,10 @@ class NavBar extends StatelessWidget {
           return BottomNavigationBarItem(
             icon: PopupMenuButton<int>(
               onSelected: (int result) {
-                if (result == 6) {
+                if (result == 5) {
+
+                  onItemTapped(navBarItems.length - 1);
+                  }else if (result == 6) {
 
                   Navigator.push(
                     context,

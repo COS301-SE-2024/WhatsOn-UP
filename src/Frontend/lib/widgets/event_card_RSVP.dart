@@ -79,9 +79,15 @@ class EventCard extends StatelessWidget {
                 onPressed: () {
               showDeleteDialog(context);
            },
-             style: ElevatedButton.styleFrom(
-             padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 5.0), 
-           ),
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.black, backgroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    side: BorderSide(color: Colors.grey, width: 1),
+                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 5.0),
+                ),
+
     child: const Text('Cancel'),
   ),
 )
