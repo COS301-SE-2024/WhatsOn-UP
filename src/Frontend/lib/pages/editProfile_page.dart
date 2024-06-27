@@ -11,7 +11,7 @@ import 'package:firstapp/pages/profilePage.dart';
 
 import 'package:image_picker/image_picker.dart';
 import 'package:firstapp/services/api.dart';
-
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 class EditprofilePage extends StatefulWidget {
   final String userName;
   final String userEmail;
@@ -60,6 +60,7 @@ class _EditprofilePageState extends State<EditprofilePage> {
   TextEditingController passwordController = TextEditingController();
   TextEditingController nameController = TextEditingController();
   bool isObscurePassword = true;
+  bool _isLoading = false;
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -90,7 +91,12 @@ class _EditprofilePageState extends State<EditprofilePage> {
         ),
         title: Text('Edit Profile'),
       ),
-      body: SingleChildScrollView(
+      body:  _isLoading
+          ? const Center(child:SpinKitPianoWave(
+        color:  Color.fromARGB(255, 149, 137, 74),
+         size: 50.0,
+      ))
+          :SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
@@ -108,17 +114,16 @@ class _EditprofilePageState extends State<EditprofilePage> {
                 child: ElevatedButton(
                   onPressed: _editUser,
                   style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.black, backgroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
+                      side: BorderSide(color: Colors.grey, width: 1),
                     ),
                     padding: EdgeInsets.symmetric(vertical: 16),
                   ),
                   child: Text(
                     'Save',
-                    style: TextStyle(
-                        color: theme.brightness == Brightness.dark
-                            ? Colors.white
-                            : Colors.black),
+
                   ),
                 ),
               ),
@@ -141,17 +146,16 @@ class _EditprofilePageState extends State<EditprofilePage> {
                     );
                   },
                   style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.black, backgroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
+                      side: BorderSide(color: Colors.grey, width: 1),
                     ),
                     padding: EdgeInsets.symmetric(vertical: 16),
                   ),
                   child: Text(
                     'Cancel',
-                    style: TextStyle(
-                        color: theme.brightness == Brightness.dark
-                            ? Colors.white
-                            : Colors.black),
+
                   ),
                 ),
               ),
@@ -241,6 +245,7 @@ class _EditprofilePageState extends State<EditprofilePage> {
                     color: Colors.grey,
                   ),
                 )
+
               : null,
           labelText: labelText,
           floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -251,19 +256,15 @@ class _EditprofilePageState extends State<EditprofilePage> {
             color: Colors.grey,
           ),
         ),
-        validator: (value) {
-          if (value != null && !value.isEmpty) {
-            if (value.length < 6) {
-              return 'Password must be at least 6 characters';
-            }
-          }
-          return null;
-        },
+
       ),
     );
   }
 
   Future<void> _editUser() async {
+    setState(() {
+      _isLoading = true;
+    });
     String fullName;
     String userEmail;
     String newPassword;
@@ -303,7 +304,7 @@ class _EditprofilePageState extends State<EditprofilePage> {
         if (response['error'] != null) {
           print('An error occurred: ${response['error']}');
         } else {
-          print(response);
+
           fullName = response['data']['user']['fullName'] ?? 'Unknown';
           userEmail = response['data']['user']['email'] ?? 'Unknown';
           String profileImage =
@@ -330,7 +331,13 @@ class _EditprofilePageState extends State<EditprofilePage> {
             print('Invalid base64 image string: $profileImage');
           }
           print('User profile updated successfully');
-          showChangedDialog();
+          // await Future.delayed(Duration(seconds: 2));
+
+          setState(() {
+            _isLoading = false;
+          });
+         //await
+         showChangedDialog();
 
 
         }

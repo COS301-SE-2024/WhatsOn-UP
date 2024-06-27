@@ -102,7 +102,12 @@ class _ProfilePageState extends State<ProfilePage> {
                         );
                       },
                       style: ElevatedButton.styleFrom(
-                        shape: const StadiumBorder(),
+                        foregroundColor: Colors.black, backgroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                          side: BorderSide(color: Colors.grey, width: 1),
+                        ),
+                        padding: EdgeInsets.symmetric(vertical: 16),
                       ),
                       child: const Text('Edit Profile'),
                     ),

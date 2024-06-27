@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firstapp/widgets/event_card_RSVP.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class RsvpEventsPage extends StatefulWidget {
   const RsvpEventsPage({Key? key}) : super(key: key);
@@ -20,21 +21,34 @@ class _RsvpEventsPageState extends State<RsvpEventsPage> {
     Event(nameOfEvent: 'Event name 7', imageUrl: 'https://source.unsplash.com/random/200x200?sig=7'),
     Event(nameOfEvent: 'Event name 8', imageUrl: 'https://source.unsplash.com/random/200x200?sig=8'),
   ];
-
+  bool _isLoading =false;
   void removeEvent(String nameOfEvent, String imageUrl) {
     setState(() {
-      events.removeWhere((event) =>
-          event.nameOfEvent == nameOfEvent && event.imageUrl == imageUrl);
+      _isLoading = true;
+    });
+    Future.delayed(Duration(seconds: 1), () {
+      setState(() {
+        events.removeWhere((event) =>
+        event.nameOfEvent == nameOfEvent && event.imageUrl == imageUrl);
+        _isLoading = false;
+      });
+
+      print("Event removed: $nameOfEvent");
     });
    
-       print("Event removed: $nameOfEvent");
+
      
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
+      body: _isLoading
+          ? const Center(child:SpinKitPianoWave(
+        color:  Color.fromARGB(255, 149, 137, 74),
+        size: 50.0,
+      ))
+          :Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Padding(
