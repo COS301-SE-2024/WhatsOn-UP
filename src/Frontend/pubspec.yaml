@@ -37,6 +37,8 @@ dependencies:
   editable_image: ^2.0.0
   image_picker: ^1.1.2
   flutter_spinkit: ^5.2.1
+  supabase_flutter: ^2.5.6
+  google_sign_in: ^6.2.1
 
 
   # The following adds the Cupertino Icons font to your application.

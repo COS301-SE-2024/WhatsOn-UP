@@ -6,6 +6,7 @@ import 'package:firstapp/pages/signin_page.dart';
 import 'package:firstapp/pages/home_page.dart';
 import 'package:firstapp/services/api.dart';
 import 'dart:typed_data';
+import 'package:firstapp/pages/google_signin.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -187,7 +188,13 @@ class _LoginPageState extends State<LoginPage> {
                     height: 32,
                     image: Svg('assets/images/google-icon.svg'),
                   ),
-                  onPressed: () {}),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => googleSignIn()),
+                    );
+
+                  }),
 
             ],
           ),
@@ -330,4 +337,5 @@ class _LoginPageState extends State<LoginPage> {
 
     }
   }
+
 }

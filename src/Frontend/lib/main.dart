@@ -10,11 +10,16 @@ import 'package:firstapp/screens/splash.dart';
 import 'package:provider/provider.dart';
 import 'package:firstapp/pages/settings_page.dart';
 import 'package:firstapp/screens/SearchScreen.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-
-void main() {
+void main() async{
   // runApp(const MyApp());
-  return runApp(ChangeNotifierProvider<ThemeNotifier>(
+  WidgetsFlutterBinding.ensureInitialized();
+  await Supabase.initialize(
+    url: 'https://mehgbhiirnmypfgnkaud.supabase.co',
+    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1laGdiaGlpcm5teXBmZ25rYXVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTY3ODcxMjMsImV4cCI6MjAzMjM2MzEyM30.IqwbTqO7T_ZyYjkWBAbKCK2kwEzJktZtAEJKlrfjYvY',
+  );
+   runApp(ChangeNotifierProvider<ThemeNotifier>(
     create: (_) => new ThemeNotifier(),
     child: MyApp(),
     ));
