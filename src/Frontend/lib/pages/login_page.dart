@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:firstapp/screens/ProfileScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:firstapp/pages/signin_page.dart';
@@ -7,14 +8,14 @@ import 'package:firstapp/pages/home_page.dart';
 import 'package:firstapp/services/api.dart';
 import 'dart:typed_data';
 import 'package:firstapp/pages/google_signin.dart';
-
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
-int _selectedIndex = 0;
 
 
 class _LoginPageState extends State<LoginPage> {
@@ -24,8 +25,11 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController passwordController = TextEditingController();
   bool rememberUser = false;
   bool _isObscured = true;
-
+String? _userId;
   final _formKey = GlobalKey<FormState>();
+
+
+
 
 
 
@@ -188,13 +192,14 @@ class _LoginPageState extends State<LoginPage> {
                     height: 32,
                     image: Svg('assets/images/google-icon.svg'),
                   ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => googleSignIn()),
-                    );
+                onPressed:() {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const GoogleSignInPage ()),
+                  );
+                },
 
-                  }),
+              ),
 
             ],
           ),
@@ -337,5 +342,46 @@ class _LoginPageState extends State<LoginPage> {
 
     }
   }
+// void loginGoogle{
+//   final user = supabase.auth.currentUser;
+//   final profileImageUrl = user?.userMetadata?['avatar_url'];
+//   final fullName = user?.userMetadata?['full_name'];
+//   final email=user?.userMetadata?['email'];
+//   final role=user?.userMetadata?['role'];
+//   Uint8List profileImageBytes = Uint8List(0);
+//
+//   if (profileImageUrl != null) {
+//   profileImageBytes = decodeProfileImage(profileImageUrl);
+//   }
+//
+//   Api api = Api();
+// }
+
+
+
+
+// Uint8List decodeProfileImage(String profileImage) {
+//   Uint8List profileImageBytes = Uint8List(0);
+//
+//   bool isBase64(String input) {
+//     final RegExp base64 = RegExp(
+//       r'^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$',
+//     );
+//     return base64.hasMatch(input);
+//   }
+//
+//   if (isBase64(profileImage)) {
+//     try {
+//       profileImageBytes = base64Decode(profileImage);
+//     } catch (e) {
+//       print('Error decoding Base64: $e');
+//     }
+//   } else {
+//     print('Invalid Base64 string: $profileImage');
+//   }
+//
+//   return profileImageBytes;
+// }
+
 
 }

@@ -42,24 +42,21 @@ class ProfileScreen extends StatelessWidget {
     final fullName = user?.userMetadata?['full_name'];
     final email=user?.userMetadata?['email'];
     final role=user?.userMetadata?['role'];
-    print('testing');
-    print(user);
-    print(" ");
-    print(fullName);
     Uint8List profileImageBytes = Uint8List(0);
+
     if (profileImageUrl != null) {
       profileImageBytes = decodeProfileImage(profileImageUrl);
     }
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profile'),
+        title: const Text('access the google user '),
         actions: [
           TextButton(
             onPressed: () async {
               await supabase.auth.signOut();
               if (context.mounted) {
                 Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (context) => const googleSignIn()),
+                  MaterialPageRoute(builder: (context) => const GoogleSignInPage() ),
                 );
               }
             },
