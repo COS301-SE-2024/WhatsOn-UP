@@ -1,8 +1,8 @@
 package com.devforce.backend.config
 
 import com.devforce.backend.security.CustomUserDetailsService
-import com.devforce.backend.security.JwtAuthFilter
-import com.devforce.backend.security.JwtEntryPoint
+import com.devforce.backend.security.AuthFilter
+import com.devforce.backend.security.EntryPoint
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -27,7 +27,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 class AuthConfig {
 
     @Autowired
-    lateinit var jwtEntryPoint: JwtEntryPoint
+    lateinit var jwtEntryPoint: EntryPoint
 
     @Autowired
     lateinit var customUserDetailsService: CustomUserDetailsService
@@ -66,14 +66,14 @@ class AuthConfig {
     }
 
     @Bean
-    fun jwtAuthFilter(): JwtAuthFilter {
-        return JwtAuthFilter()
+    fun jwtAuthFilter(): AuthFilter {
+        return AuthFilter()
     }
 
     @Bean
     fun corsConfigurationSource(): CorsConfigurationSource {
         val configuration = CorsConfiguration().apply {
-            allowedOrigins = mutableListOf("http://localhost:3000")
+            allowedOrigins = mutableListOf("*")
             allowedMethods = mutableListOf("GET", "POST", "PUT", "DELETE", "OPTIONS")
             allowedHeaders = mutableListOf("*")
             allowCredentials = true

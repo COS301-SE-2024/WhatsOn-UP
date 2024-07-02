@@ -28,7 +28,7 @@ class EventController {
     lateinit var eventService: EventService
 
     @PostMapping("/create")
-    @RolesAllowed("HOST", "ADMIN")
+    @PreAuthorize("hasAnyRole('HOST', 'ADMIN')")
     fun createEvent(@RequestBody event: CreateEventDto): ResponseEntity<ResponseDto> {
         return eventService.createEvent(event)
     }
@@ -40,13 +40,13 @@ class EventController {
     }
 
     @PutMapping("/update/{id}")
-    @RolesAllowed("HOST", "ADMIN")
+    @PreAuthorize("hasAnyRole('HOST', 'ADMIN')")
     fun updateEvent(@PathVariable id: UUID, @RequestBody event: UpdateEventDto): ResponseEntity<ResponseDto> {
         return eventService.updateEvent(id, event)
     }
 
     @DeleteMapping("/delete/{id}")
-    @RolesAllowed("HOST", "ADMIN")
+    @PreAuthorize("hasAnyRole('HOST', 'ADMIN')")
     fun deleteEvent(@PathVariable id: UUID): ResponseEntity<ResponseDto> {
         return eventService.deleteEvent(id)
     }

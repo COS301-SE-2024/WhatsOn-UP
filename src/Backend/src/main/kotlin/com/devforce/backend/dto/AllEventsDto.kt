@@ -31,20 +31,17 @@ data class AllEventsDto(
         isPrivate = event.isPrivate,
         hosts = event.hosts.map { host ->
             PartialUser(
-                fullName = host.fullName,
-                email = host.email
+                fullName = host.fullName
             )
         },
         attendees = event.attendees.map { attendee ->
             PartialUser(
-                fullName = attendee.fullName,
-                email = attendee.email
+                fullName = attendee.fullName
             )
         },
         invitees = event.invitees.map { invitee ->
             PartialUser(
-                fullName = invitee.fullName,
-                email = invitee.email
+                fullName = invitee.fullName
             )
         }
     )

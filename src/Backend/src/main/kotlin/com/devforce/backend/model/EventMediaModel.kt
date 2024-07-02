@@ -15,6 +15,6 @@ data class EventMediaModel(
     @Column(name = "event_id")
     var eventId: UUID = UUID.randomUUID(),
 
-    @Column(name = "media_link")
+    @Column(name = "media_link", columnDefinition = "TEXT")
     var mediaLink: String = ""
 )
