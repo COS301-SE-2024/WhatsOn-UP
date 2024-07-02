@@ -5,57 +5,56 @@ import jakarta.servlet.ServletException
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.autoconfigure.security.SecurityProperties
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
 import org.springframework.stereotype.Component
-import org.springframework.util.StringUtils
 import org.springframework.web.filter.OncePerRequestFilter
 import java.io.IOException
 
 @Component
-class JwtAuthFilter: OncePerRequestFilter() {
-
-    @Autowired
-    private lateinit var jwtGenerator: JwtGenerator
+class AuthFilter: OncePerRequestFilter() {
 
     @Autowired
     private lateinit var customUserDetailsService: CustomUserDetailsService
+
     @Throws(ServletException::class, IOException::class)
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
         filterChain: FilterChain
     ) {
+        // Ignore authentication for specific URL pattern
+        val requestURI = request.requestURI
+        if (requestURI.endsWith("/api/events/get_all")) {
+            filterChain.doFilter(request, response)
+            return
+        }
 
-        val token = getJWTFromRequest(request)
-        if (token != null) {
-            if (jwtGenerator.validateToken(token)) {
-                val email = jwtGenerator.getUsernameFromToken(token)
-                val userDetails: CustomUser = customUserDetailsService.loadUserByUsername(email)
-                if (userDetails.userModel.jwtToken != token) {
-                    response.sendError(401, "Invalid token")
-                    return
-                }
+        val id = getBearer(request)
+        if (id != null) {
+            try {
+                val userDetails: CustomUser = customUserDetailsService.loadUserByUsername(id)
                 val authenticationToken = UsernamePasswordAuthenticationToken(userDetails, null, userDetails.authorities)
                 authenticationToken.details = WebAuthenticationDetailsSource().buildDetails(request)
                 SecurityContextHolder.getContext().authentication = authenticationToken
-            }
-            else {
-                response.sendError(401, "Invalid token")
+            } catch (e: Exception) {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid user ID")
                 return
             }
+        } else {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid user ID")
+            return
         }
         filterChain.doFilter(request, response)
     }
 
-    private fun getJWTFromRequest(request: HttpServletRequest): String? {
-        val bearerToken = request.getHeader("Authorization")
-        return if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-            bearerToken.substring(7)
-        } else {
-            null
-        }
+    private fun getBearer(request: HttpServletRequest): String? {
+        val authorizationHeader = request.getHeader("Authorization")
+        return if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            authorizationHeader.substring(7)
+        } else null
     }
+
 }
