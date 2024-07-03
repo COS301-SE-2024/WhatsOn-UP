@@ -2,18 +2,15 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../main.dart';
-import 'package:firstapp/services/api.dart';
-class SupabaseSignup extends StatefulWidget {
-  const SupabaseSignup({super.key});
+class ForgotPass extends StatefulWidget {
+  const ForgotPass({super.key});
 
   @override
-  State<SupabaseSignup> createState() => _SupabaseSignupState();
+  State<ForgotPass> createState() => _ForgotPassState();
 }
 
-class _SupabaseSignupState extends State<SupabaseSignup> {
+class _ForgotPassState extends State<ForgotPass> {
   final _emailController = TextEditingController();
-  final _usernameController= TextEditingController();
-  final _passwordController= TextEditingController();
   late final StreamSubscription<AuthState> _authSubscription;
   late Color myColor;
   late Size mediaSize;
@@ -32,7 +29,7 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
   @override
   void dispose() {
     _emailController.dispose();
-    _passwordController.dispose();
+
     _authSubscription.cancel();
     super.dispose();
   }
@@ -58,7 +55,7 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
         body: Stack(
           children: [
             Positioned(top: 80, child: _buildTop()),
-            Positioned(bottom: 3, child: _buildBottom()),
+            Positioned(bottom: 0, child: _buildBottom()),
           ],
         ),
       ),
@@ -101,16 +98,6 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const SizedBox(height: 30),
-          TextFormField(
-            controller: _usernameController,
-            decoration: InputDecoration(
-              labelText: 'Fullname',
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(20.0),
-              ),
-            ),
-          ),
           const SizedBox(height: 20),
           TextFormField(
             controller: _emailController,
@@ -121,37 +108,25 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
               ),
             ),
           ),
-          const SizedBox(height: 20),
-          TextFormField(
-            controller: _passwordController,
-            decoration: InputDecoration(
-              labelText: 'Password',
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(20.0),
-              ),
-            ),
-          ),
+
           const SizedBox(height: 20),
           TextButton(
 
             onPressed: () async {
               try {
                 final email = _emailController.text.trim();
-                final password= _passwordController.text.trim();
+
                 // await supabase.auth.signInWithOtp(
                 //   email: email,
                 //   emailRedirectTo:
                 //   'io.supabase.flutterquickstart://login-callback/',
                 // );
-                final AuthResponse res = await supabase.auth.signUp(
-                    email: email,
-                    password: password
+                await supabase.auth.resetPasswordForEmail(email,
+                 redirectTo: 'io.supabase.flutterquickstart://login-callback/',
                 );
                 if (mounted) {
-                  await _usernameInput(); // Ensure the username is saved
                   ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Signed up successfully")));
-                  Navigator.of(context).pushReplacementNamed('/login');
+                      SnackBar(content: Text("reset your password link has been sent to your inbox ")));
                 }
               } on AuthException catch (error) {
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -173,9 +148,7 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
               ), // Text color
               backgroundColor: Colors.transparent,
             ),
-
-            child: const Text('Sign Up'),
-
+            child: const Text('reset password'),
           ),
 
         ],
@@ -184,21 +157,9 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
   }
 
 
-  Future<void> _usernameInput() async {
-      final user = supabase.auth.currentUser;
-      String username = _usernameController.text;
-
-      Api api = Api();
-      api.postUsername(username,user!.id).then((response) {
-        if (response['error'] != null) {
-
-          print('An error occurred: ${response['error']}');
-        } else {
-          print('Username added successfully');
-        }
-      });
-      Navigator.of(context).pushReplacementNamed('/login');
-      print('signup successful');
+  Future<void> _sendVerificationEmail(String email) async {
+    //API endpoint
+    print('Sending verification email to $email');
 
   }
 }

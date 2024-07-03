@@ -42,6 +42,9 @@ class ProfileScreen extends StatelessWidget {
     final fullName = user?.userMetadata?['full_name'];
     final email=user?.userMetadata?['email'];
     final role=user?.userMetadata?['role'];
+    final id=user?.userMetadata?['id'];
+    print ('this is your id: ');
+    print(user?.id);
     Uint8List profileImageBytes = Uint8List(0);
 
     if (profileImageUrl != null) {

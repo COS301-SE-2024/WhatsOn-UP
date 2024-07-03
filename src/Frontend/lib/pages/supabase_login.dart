@@ -163,6 +163,7 @@
 //   }
 // }
 import 'dart:async';
+import 'package:firstapp/pages/supabase_forgot_password.dart';
 import 'package:firstapp/pages/supabase_signup.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -178,12 +179,12 @@ class SupabaseLogin extends StatefulWidget {
 
 class _SupabaseLoginState extends State<SupabaseLogin> {
   final _emailController = TextEditingController();
-  final _usernameController= TextEditingController();
+
   final _passwordController= TextEditingController();
   late final StreamSubscription<AuthState> _authSubscription;
   late Color myColor;
   late Size mediaSize;
-
+bool _obscurePassword=true;
   @override
   void initState() {
     super.initState();
@@ -200,6 +201,7 @@ class _SupabaseLoginState extends State<SupabaseLogin> {
     _emailController.dispose();
     _passwordController.dispose();
     _authSubscription.cancel();
+
     super.dispose();
   }
 
@@ -257,16 +259,6 @@ class _SupabaseLoginState extends State<SupabaseLogin> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const SizedBox(height: 30),
-          TextFormField(
-            controller: _usernameController,
-            decoration: InputDecoration(
-              labelText: 'Fullname',
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(20.0),
-              ),
-            ),
-          ),
           const SizedBox(height: 20),
           TextFormField(
             controller: _emailController,
@@ -285,7 +277,20 @@ class _SupabaseLoginState extends State<SupabaseLogin> {
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(20.0),
               ),
+
+
+
+
+              suffixIcon: IconButton(
+                icon: Icon(_obscurePassword?Icons.visibility_off:Icons.visibility),
+                onPressed: (){
+                  setState(() {
+                    _obscurePassword=!_obscurePassword;
+                  });
+                },
+              ),
             ),
+            obscureText: _obscurePassword,
           ),
           const SizedBox(height: 20),
           TextButton(
@@ -300,6 +305,16 @@ class _SupabaseLoginState extends State<SupabaseLogin> {
                 //   'io.supabase.flutterquickstart://login-callback/',
                 // );
                final authResponse= await supabase.auth.signInWithPassword(password:password, email:email);
+
+                //for reset password workd
+               //  await supabase.auth.resetPasswordForEmail(email,
+               //    redirectTo: 'io.supabase.flutterquickstart://login-callback/',
+               //  );
+
+                //update password
+               //  await supabase.auth.updateUser({
+               //    password: password,
+               //  } as UserAttributes);
 
                 if (mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -353,7 +368,7 @@ class _SupabaseLoginState extends State<SupabaseLogin> {
 
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const SupabaseSignup ()),
+                  MaterialPageRoute(builder: (context) => const ForgotPass()),
                 );
 
               }, child: Text('I forgot my password')

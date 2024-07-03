@@ -268,4 +268,39 @@ class Api {
       throw Exception(e.toString());
     }
   }
+
+
+
+
+
+   Future<Map<String, dynamic>> postUsername(String username,String userid) async {
+
+    var userChangeUrl = Uri.parse('http://localhost:8080/api/user/update_profile');
+  //
+  //   // Define the headers and body for login request
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $userid',
+     };
+     var body = jsonEncode({
+       'fullName':username
+     });
+
+     try {
+
+       var response = await http.put(userChangeUrl, headers: headers, body: body);
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+
+      } else {
+         throw Exception('Failed to change user');
+       }
+    } catch (e) {
+       print('Error: $e');
+       return {'error': e.toString()};
+     }
+
+   }
 }
