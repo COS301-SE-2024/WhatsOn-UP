@@ -64,4 +64,16 @@ class UserController {
         return userService.updateProfile(userDto)
     }
 
+    @GetMapping("/get_user")
+    @PreAuthorize("isAuthenticated()")
+    fun getUser(): ResponseEntity<ResponseDto> {
+        return userService.getUser()
+    }
+
+    @DeleteMapping("/delete_user")
+    @PreAuthorize("isAuthenticated()")
+    fun deleteUser(): ResponseEntity<ResponseDto> {
+        return userService.deleteUser()
+    }
+
 }
