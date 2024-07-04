@@ -171,9 +171,9 @@ class _HomePageState extends State<HomePage> {
                                 // profileImageUrl: widget.profileImageUrl,
                                 userName: widget.userName,
                                 userEmail: widget.userEmail,
-                                // role: widget.role,
-                                userId: widget.userId,
                                 role: widget.role,
+                                userId: widget.userId,
+
                                 profileImage: widget.profileImage,
                               ),
                             ),

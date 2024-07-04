@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 // import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:convert';
 import 'dart:typed_data';import 'package:firstapp/widgets/event_card.dart';
-
+import 'package:firstapp/main.dart';
 class Api {
   // Singleton instance
   static final Api _instance = Api._internal();
@@ -18,6 +18,8 @@ class Api {
   // Keys for storing JWT and refresh token
   var jwtKey = 'jwtToken';
   var refreshToken = 'refreshToken';
+
+
 
   // Method to log in the user and store JWT token
   Future<Map<String, dynamic>> loginUser(String email, String password) async {
@@ -134,7 +136,7 @@ class Api {
     }
   }
 
-  Future<Map<String, dynamic>> postChangeUser(String name, String email,  String profileImage) async {
+  Future<Map<String, dynamic>> postChangeUser(String name,String profileImage, String userId) async {
     // Url for posting new informaion
 
     var userChangeUrl = Uri.parse('http://localhost:8080/api/user/update_profile');
@@ -143,12 +145,11 @@ class Api {
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Authorization': 'Bearer $jwtKey',
+      'Authorization': 'Bearer $userId',
 
     };
     var body = jsonEncode({
       'fullName':name,
-      'email': email,
       "profileImage":profileImage,
     });
 
@@ -267,6 +268,8 @@ class Api {
       print('Error: $e');
       throw Exception(e.toString());
     }
+
+
   }
 
 
@@ -303,4 +306,34 @@ class Api {
      }
 
    }
+  Future<Map<String, dynamic>> getUser(String userid) async {
+    final String _userUrl = 'http://$domain:8080/api/auth/get_user';
+
+    //
+    //   // Define the headers and body for login request
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $userid',
+    };
+
+
+    try {
+
+      var response = await http.get(Uri.parse(_userUrl), headers: headers);
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+
+      } else {
+        throw Exception('Failed to get user details');
+      }
+    } catch (e) {
+      print('Error: $e');
+      return {'error': e.toString()};
+    }
+
+  }
+
+
+
 }

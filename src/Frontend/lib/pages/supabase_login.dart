@@ -170,6 +170,10 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../main.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:firstapp/pages/google_signin.dart';
+import 'package:firstapp/pages/home_page.dart';
+import 'dart:convert';
+import 'dart:typed_data';
+import 'package:firstapp/services/api.dart';
 class SupabaseLogin extends StatefulWidget {
   const SupabaseLogin({super.key});
 
@@ -188,12 +192,12 @@ bool _obscurePassword=true;
   @override
   void initState() {
     super.initState();
-    _authSubscription = supabase.auth.onAuthStateChange.listen((event) {
-      final session = event.session;
-      if (session != null) {
-        Navigator.of(context).pushReplacementNamed('/account');
-      }
-    });
+    // _authSubscription = supabase.auth.onAuthStateChange.listen((event) {
+    //   final session = event.session;
+    //   if (session != null) {
+    //     Navigator.of(context).pushReplacementNamed('/account');
+    //   }
+    // });
   }
 
   @override
@@ -319,6 +323,8 @@ bool _obscurePassword=true;
                 if (mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text("Logged In: ${authResponse.user!.email!}")));
+                  await _login();
+
                 }
               } on AuthException catch (error) {
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -386,7 +392,7 @@ bool _obscurePassword=true;
                 onPressed:() {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const GoogleSignInPage ()),
+                    MaterialPageRoute(builder: (context) => const googleSignIn ()),
                   );
                 },
 
@@ -397,5 +403,61 @@ bool _obscurePassword=true;
         ],
       ),
     );
+  }
+
+
+
+  Future<void> _login() async {
+    final user = supabase.auth.currentUser;
+
+
+    Api api = Api();
+    api. getUser(user!.id).then((response){
+      if (response['error'] != null) {
+
+        print('An error occurred: ${response['error']}');
+      } else {
+        print('Username added successfully');
+        String fullName = response['data']['user']['fullName']?? 'Unknown';
+        String userEmail = user.userMetadata?['email'];
+        String UserId=user.id;
+        String role=response['data']['user']['role']?? 'Unknown';
+        String  profileImage=response['data']['user']['profileImage']?? 'Unknown';
+        Uint8List profileImageBytes = Uint8List(0);
+
+        bool isBase64(String input) {
+          final RegExp base64 = RegExp(
+            r'^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$',
+          );
+          return base64.hasMatch(input);
+        }
+
+        if (isBase64(profileImage)) {
+
+          try {
+            profileImageBytes = base64Decode(profileImage);
+          } catch (e) {
+            print('Error decoding Base64: $e');
+          }
+        } else {
+          print('Invalid Base64 string: $profileImage');
+        }
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage(
+            userName:  fullName,
+            userEmail: userEmail,
+            userId:UserId,
+            role:role,
+            profileImage: profileImageBytes,
+          )),
+        );
+      }
+    });
+
+
+    print('signup successful');
+
   }
 }

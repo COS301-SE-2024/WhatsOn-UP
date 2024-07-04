@@ -2,7 +2,8 @@ import 'dart:typed_data';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
-
+import '../main.dart';
+ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -34,7 +35,7 @@ class EditprofilePage extends StatefulWidget {
 
 class _EditprofilePageState extends State<EditprofilePage> {
   Uint8List? _image;
-
+  // final supabase=Supabase.instance.client;
   Future<void> selectImage() async {
     try {
       Uint8List img = await pickImage(ImageSource.gallery);
@@ -106,7 +107,7 @@ class _EditprofilePageState extends State<EditprofilePage> {
               _buildTop(),
               const SizedBox(height: 30),
               _buildTextField("Full name", nameController, false),
-              _buildTextField("Email", emailController, false),
+              // _buildTextField("Email", emailController, false),
               _buildTextField("Password", passwordController, true),
               const SizedBox(height: 30),
               SizedBox(
@@ -262,6 +263,7 @@ class _EditprofilePageState extends State<EditprofilePage> {
   }
 
   Future<void> _editUser() async {
+    final user1 = supabase.auth.currentUser;
     setState(() {
       _isLoading = true;
     });
@@ -299,7 +301,7 @@ class _EditprofilePageState extends State<EditprofilePage> {
           : base64Encode(widget.profileImage!);
 
       api
-          .postChangeUser(user.name, user.email, profileImageBase64)
+          .postChangeUser(user.name, profileImageBase64,user1!.id)
           .then((response) {
         if (response['error'] != null) {
           print('An error occurred: ${response['error']}');
@@ -403,7 +405,7 @@ class User {
   });
 
   @override
-  String toString() {
+   String toString() {//userId: $userId
     return 'User(name: $name, email: $email, password: $password, userId: $userId )';
   }
 }

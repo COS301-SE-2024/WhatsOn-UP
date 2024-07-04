@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../main.dart';
 import 'package:firstapp/services/api.dart';
+import 'dart:convert';
+import 'dart:typed_data';
+import 'package:firstapp/pages/home_page.dart';
 class SupabaseSignup extends StatefulWidget {
   const SupabaseSignup({super.key});
 
@@ -195,9 +198,45 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
           print('An error occurred: ${response['error']}');
         } else {
           print('Username added successfully');
+          String fullName = response['data']['user']['fullName']?? 'Unknown';
+          String userEmail = user.userMetadata?['email'];
+          String UserId=user.id;
+          String role=response['data']['user']['role']?? 'Unknown';
+          String  profileImage=response['data']['user']['profileImage']?? 'Unknown';
+          Uint8List profileImageBytes = Uint8List(0);
+
+          bool isBase64(String input) {
+            final RegExp base64 = RegExp(
+              r'^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$',
+            );
+            return base64.hasMatch(input);
+          }
+
+          if (isBase64(profileImage)) {
+
+            try {
+              profileImageBytes = base64Decode(profileImage);
+            } catch (e) {
+              print('Error decoding Base64: $e');
+            }
+          } else {
+            print('Invalid Base64 string: $profileImage');
+          }
+
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => HomePage(
+              userName:  username,
+              userEmail: userEmail,
+               userId:UserId,
+               role:role,
+              profileImage: profileImageBytes,
+            )),
+          );
         }
       });
-      Navigator.of(context).pushReplacementNamed('/login');
+
+
       print('signup successful');
 
   }

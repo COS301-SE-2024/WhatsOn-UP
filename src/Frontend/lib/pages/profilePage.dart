@@ -1,5 +1,6 @@
 
 import 'package:firstapp/pages/login_page.dart';
+import 'package:firstapp/pages/supabase_login.dart';
 import 'package:flutter/material.dart';
 import 'package:firstapp/pages/application_event.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
@@ -33,7 +34,7 @@ class ProfilePage extends  StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-
+final String ADMIN='ADMIN';
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +58,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             : const AssetImage('http/example-image') as ImageProvider,
                         radius: 60.0,
                       ),
-                      if (widget.role == 'ADMIN')
+                      if (widget.role == ADMIN)
                         Positioned(
                           top:80,
                           right: 0,
@@ -157,7 +158,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           onTap: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) =>  LoginPage()),
+                              MaterialPageRoute(builder: (context) =>  SupabaseLogin()),
                             );
                           },
                         ),

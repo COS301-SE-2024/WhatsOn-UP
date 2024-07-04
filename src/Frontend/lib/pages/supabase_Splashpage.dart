@@ -24,7 +24,8 @@ Future<void>_redirect() async{
   final session = supabase.auth.currentSession;
   if(!mounted) return;
   if(session != null) {
-    Navigator.of(context).pushReplacementNamed('/account');
+    // Navigator.of(context).pushReplacementNamed('/account');
+    //we need tp find a way to go directly to the home page if the user is already logged in
   }
   else{
     Navigator.of(context).pushReplacementNamed('/login');
