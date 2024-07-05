@@ -11,7 +11,7 @@ import java.util.*
 @Data
 @Builder
 @Entity
-@Table(name = "event")
+@Table(name = "events")
 @NoArgsConstructor
 @AllArgsConstructor
 
@@ -94,12 +94,4 @@ class EventModel {
     }
 
 
-
-  /*  fun getEsId(): String {
-        return eventId.toString()
-    }
-
-    fun setEsId(esId: String) {
-        eventId = UUID.fromString(esId)
-    }*/
 }

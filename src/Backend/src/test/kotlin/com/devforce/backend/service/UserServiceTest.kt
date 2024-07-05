@@ -34,14 +34,14 @@ class UserServiceTest {
     @BeforeEach
     fun setUp() {
         MockitoAnnotations.openMocks(this)
+
+        val id = UUID.randomUUID()
         val user = UserModel().apply {
-            userId= UUID.randomUUID()
-            email = "email@gmail"
-            password = "password"
+            userId= id
         }
         val roleName = "HOST"
         val authorities = setOf(SimpleGrantedAuthority(roleName))
-        val userDetails = CustomUser("email@gmail", "password", authorities, user)
+        val userDetails = CustomUser(id, authorities, user)
         val auth = UsernamePasswordAuthenticationToken(userDetails, authorities, userDetails.authorities)
         SecurityContextHolder.getContext().authentication = auth
     }
@@ -74,7 +74,7 @@ class UserServiceTest {
 
     @Test
     fun `!!!Update user profile success!!!`() {
-        val updateUserDto = UpdateUserDto("email@gmail", "password", "newPassword")
+        val updateUserDto = UpdateUserDto("dummy name", "dummy profile")
         val response = userServiceWithMocks.updateProfile(updateUserDto)
 
         assertEquals("success", response.body!!.status)
@@ -106,16 +106,17 @@ class UserServiceTest {
 
     @Test
     fun `!!!Get saved events success!!!`() {
+        val id = UUID.randomUUID()
         val user = UserModel().apply {
-            userId = UUID.randomUUID()
-            email = "email@gmail"
-            password = "password"
+            userId = id
         }
         val event = EventModel().apply {
             attendees.add(user)
         }
 
-        `when`(userRepo.findByEmail("email@gmail")).thenReturn(user)
+        val option = Optional.of(user)
+
+        `when`(userRepo.findById(id)).thenReturn(option)
         `when`(eventRepo.getSavedEvents(user.userId)).thenReturn(listOf(event))
 
         val response = userServiceWithMocks.getSavedEvents()
@@ -127,9 +128,7 @@ class UserServiceTest {
     fun `!!!RSVP event success!!!`() {
         val id = UUID.randomUUID()
         val user = UserModel().apply {
-            userId = UUID.randomUUID()
-            email = "email@gmail"
-            password = "password"
+            userId = id
         }
         val event = EventModel()
 
@@ -154,16 +153,15 @@ class UserServiceTest {
 
     @Test
     fun `!!!Get RSVP'd events success!!!`() {
+        val id = UUID.randomUUID()
         val user = UserModel().apply {
-            userId = UUID.randomUUID()
-            email = "email@gmail"
-            password = "password"
+            userId = id
         }
         val event = EventModel().apply {
             attendees.add(user)
         }
 
-        `when`(userRepo.findByEmail("email@gmail")).thenReturn(user)
+        `when`(userRepo.findById(id)).thenReturn(Optional.of(user))
         `when`(eventRepo.getRspvdEvents(user.userId)).thenReturn(listOf(event))
 
         val response = userServiceWithMocks.getRspvEvents()
@@ -176,9 +174,7 @@ class UserServiceTest {
     fun `!!!Delete RSVP'd event success!!!`() {
         val id = UUID.randomUUID()
         val user = UserModel().apply {
-            userId = UUID.randomUUID()
-            email = "email@gmail"
-            password = "password"
+            userId = id
         }
         val event = EventModel().apply {
             attendees.add(user)

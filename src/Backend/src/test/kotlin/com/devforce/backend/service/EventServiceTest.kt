@@ -38,14 +38,14 @@ class EventServiceTest {
     @BeforeEach
     fun setUp() {
         MockitoAnnotations.openMocks(this)
+
+        val id = UUID.randomUUID()
         val user = UserModel().apply {
-            userId= UUID.randomUUID()
-            email = "email@gmail"
-            password = "password"
+            userId= id
         }
         val roleName = "HOST"
         val authorities = setOf(SimpleGrantedAuthority(roleName))
-        val userDetails = CustomUser("email@gmail", "password", authorities, user)
+        val userDetails = CustomUser(id, authorities, user)
         val auth = UsernamePasswordAuthenticationToken(userDetails, authorities, userDetails.authorities)
         SecurityContextHolder.getContext().authentication = auth
     }
@@ -147,7 +147,6 @@ class EventServiceTest {
     @Test
     fun `!!!Delete event failure!!!`() {
         val id = UUID.randomUUID()
-        val event = EventModel()
 
         // Mock necessary dependencies and interactions
         `when`(eventRepo.findById(id)).thenReturn(Optional.empty())

@@ -93,7 +93,7 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
 
 
    @Query(value = """
-    SELECT * FROM event e
+    SELECT * FROM events e
     WHERE (:startDate IS NULL OR e.start_time >= CAST(:startDate AS TIMESTAMP))
     AND (:endDate IS NULL OR e.end_time <= CAST(:endDate AS TIMESTAMP))
     AND (:minCapacity IS NULL OR e.max_attendees >= :minCapacity)

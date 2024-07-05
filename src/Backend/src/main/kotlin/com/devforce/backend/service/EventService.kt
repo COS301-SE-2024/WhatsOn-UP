@@ -43,7 +43,9 @@ class EventService {
 
         eventRepo.save(event)
 
-        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Event added successfully"))
+        val eventDto = AllEventsDto(event)
+
+        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventDto)
         )
     }
 
