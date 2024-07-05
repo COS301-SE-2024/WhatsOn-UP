@@ -24,11 +24,9 @@ Future<void>_redirect() async{
   final session = supabase.auth.currentSession;
   if(!mounted) return;
   if(session != null) {
-<<<<<<< HEAD
+
      // Navigator.of(context).pushReplacementNamed('/home');
-=======
-     //Navigator.of(context).pushReplacementNamed('/home');
->>>>>>> b534554d94e613e8828b57d785fb11eeda91563e
+
 
   }
   else{
