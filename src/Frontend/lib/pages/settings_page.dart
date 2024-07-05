@@ -6,20 +6,11 @@ import 'dart:typed_data';
 import 'package:url_launcher/url_launcher.dart';
 
 class SettingsPage extends StatefulWidget {
-  // final String profileImageUrl;
-  final String userName;
-  final String userEmail;
-  final String userId;
-  final String role;
-  final Uint8List? profileImage;
+
   const SettingsPage({
     Key? key,
     // required this.profileImageUrl,
-    required this.userName,
-    required this.userEmail,
-    required this.userId,
-    required this.role,
-    required this.profileImage,
+
   }) : super(key: key);
 
   @override
@@ -64,12 +55,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => ProfilePage(
-                            // profileImageUrl: //widget.profileImageUrl,
-                            userName: widget.userName,
-                            userEmail: widget.userEmail,
-                            userId: widget.userId,
-                            role: widget.role,
-                            profileImage: widget.profileImage,
+
                           ),
                         ),
                       );

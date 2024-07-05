@@ -10,7 +10,10 @@ import 'package:firstapp/pages/searchbar.dart';
 import 'package:firstapp/pages/data_search.dart';
 import 'package:firstapp/pages/profilePage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:provider/provider.dart';
 
+import '../providers/events_providers.dart';
+import '../providers/user_provider.dart';
 import '../screens/FilterScreen.dart';
 import '../screens/SearchScreen.dart';
 import 'package:firstapp/services/api.dart';
@@ -21,20 +24,10 @@ import 'package:firstapp/pages/manageEvents.dart';
 import 'package:firstapp/pages/application_event.dart';
 
 class HomePage extends StatefulWidget {
-  final String userName;
-  final String userEmail;
-  final String userId;
-  final String role;
-  final Uint8List? profileImage;
 
   const HomePage({
     Key? key,
-    // required this.profileImageUrl,
-    required this.userName,
-    required this.userEmail,
-    required this.userId,
-    required this.role,
-    required this.profileImage,
+
   }) : super(key: key);
   @override
   _HomePageState createState() => _HomePageState();
@@ -46,11 +39,11 @@ class _HomePageState extends State<HomePage> {
 
   int _selectedIndex = 0;
 
-  @override
-  void initState() {
-    super.initState();
-    futureEvents = api.getAllEvents();
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   futureEvents = api.getAllEvents();
+  // }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -61,6 +54,9 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    userProvider userP = Provider.of<userProvider>(context);
+const String HOST='HOST';
+const String ADMIN='ADMIN';
     return Scaffold(
       body: Container(
         // color: Colors.grey[200],
@@ -69,9 +65,9 @@ class _HomePageState extends State<HomePage> {
       bottomNavigationBar: NavBar(
         selectedIndex: _selectedIndex,
         onItemTapped: _onItemTapped,
-        userRole: widget.role,
+        userRole: userP.role,
       ),
-      floatingActionButton: (widget.role == 'HOST' || widget.role == 'ADMIN')
+      floatingActionButton: (userP.role== HOST || userP.role == ADMIN)
       ? Padding(
           padding: EdgeInsets.only(right: 15, bottom: 70),
           child: Align(
@@ -81,11 +77,7 @@ class _HomePageState extends State<HomePage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => ApplicationEvent(
-                    userName: widget.userName,
-                    userEmail: widget.userEmail,
-                    userId: widget.userId,
-                    role: widget.role,
-                    profileImage: widget.profileImage,
+
                   )),
                 );
               },
@@ -99,6 +91,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _getSelectedPage(int index) {
+    userProvider userP = Provider.of<userProvider>(context);
     switch (index) {
       case 0:
         return _buildHomePage();
@@ -109,14 +102,7 @@ class _HomePageState extends State<HomePage> {
       case 3:
         return const ExplorePage();
       case 4:
-        return SettingsPage(
-          //profileImageUrl: widget.profileImageUrl,
-          userName: widget.userName,
-          userEmail: widget.userEmail,
-          role: widget.role,
-          userId: widget.userId,
-          profileImage: widget.profileImage,
-        );
+        return SettingsPage();
       case 5:
         return const ManageEvents();
 
@@ -128,13 +114,200 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  // Widget _buildHomePage() {
+  //   userProvider userP = Provider.of<userProvider>(context);
+  //   eventProvider eventP = Provider.of<eventProvider>(context);
+  //   final theme = Theme.of(context);
+  //   final borderColour = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
+  //   final textColour = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
+  //
+  //   return FutureBuilder<List<Event>>(
+  //     future: futureEvents,
+  //     builder: (context, snapshot) {
+  //       if (snapshot.connectionState == ConnectionState.waiting) {
+  //         return Center(child: SpinKitPianoWave(
+  //           color:  Color.fromARGB(255, 149, 137, 74),
+  //           size: 50.0,
+  //         ));
+  //       } else if (snapshot.hasError) {
+  //         return Center(child: Text('Error: ${snapshot.error}'));
+  //       } else if (snapshot.hasData) {
+  //         final events = snapshot.data!;
+  //
+  //         print('second events call: $events');
+  //         print("Number of events: ${events.length}");
+  //
+  //         // Add check to ensure events list is not empty
+  //         if (events.isEmpty) {
+  //           return Center(child: Text('No events found.'));
+  //         }
+  //
+  //         return SingleChildScrollView(
+  //           child: Column(
+  //             crossAxisAlignment: CrossAxisAlignment.start,
+  //             children: [
+  //               Row(
+  //                 children: [
+  //                   Padding(
+  //                     padding: const EdgeInsets.all(16.0),
+  //                     child: GestureDetector(
+  //                       onTap: () {
+  //                         Navigator.push(
+  //                           context,
+  //                           MaterialPageRoute(
+  //                             builder: (context) => ProfilePage(
+  //
+  //                             ),
+  //                           ),
+  //                         );
+  //                       },
+  //                       child: CircleAvatar(
+  //                         backgroundImage: userP.profileImage != null
+  //                             ? MemoryImage(userP.profileImage!)
+  //                             : AssetImage('http/example-image')
+  //                         as ImageProvider, // Replace the URL with your profile image URL
+  //                         radius: 27.0,
+  //                       ),
+  //                     ),
+  //                   ),
+  //                   Text(
+  //                     'Welcome, ${userP.Fullname}',
+  //                     style: TextStyle(
+  //                         fontSize: 24.0,
+  //                         fontWeight: FontWeight.bold),
+  //                   ),
+  //                 ],
+  //               ),
+  //               SizedBox(height: 20.0),
+  //
+  //               Container(
+  //                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
+  //                 child: Center(
+  //                   child: Row(
+  //                     mainAxisAlignment: MainAxisAlignment.center,
+  //                     children: [
+  //                       SizedBox(
+  //                         width: MediaQuery.of(context).size.width * 0.27,
+  //                         child: Container(
+  //                           decoration: BoxDecoration(
+  //                             border: Border.all(color: borderColour),
+  //                             borderRadius: BorderRadius.circular(16.0),
+  //                           ),
+  //                           child: TextButton.icon(
+  //                             onPressed: () {
+  //                               // Navigate to SearchScreen when Search button is pressed
+  //                               Navigator.push(
+  //                                 context,
+  //                                 MaterialPageRoute(
+  //                                   builder: (context) => SearchScreen(),
+  //                                 ),
+  //                               );
+  //                             },
+  //                             icon: Icon(Icons.search, color: textColour),
+  //                             label: Text('Search', style: TextStyle(color: textColour)),
+  //                           ),
+  //                         ),
+  //                       ),
+  //                       SizedBox(width: 35.0),
+  //                       SizedBox(
+  //                         width: MediaQuery.of(context).size.width * 0.27,
+  //                         child: Container(
+  //                           decoration: BoxDecoration(
+  //                             border: Border.all(color: borderColour),
+  //                             borderRadius: BorderRadius.circular(16.0),
+  //                           ),
+  //                           child: TextButton.icon(
+  //                             onPressed: () {
+  //                               // Navigate to SearchScreen when Search button is pressed
+  //                               Navigator.push(
+  //                                 context,
+  //                                 MaterialPageRoute(
+  //                                   builder: (context) => FilterScreen(),
+  //                                 ),
+  //                               );
+  //                             },
+  //                             icon: Icon(Icons.filter_list, color: textColour),
+  //                             label: Text('Filter', style: TextStyle(color: textColour)),
+  //                           ),
+  //                         ),
+  //                       ),
+  //                     ],
+  //                   ),
+  //                 ),
+  //               ),
+  //               SizedBox(height: 20.0),
+  //               const Padding(
+  //                 padding: EdgeInsets.all(16.0),
+  //                 child: Text(
+  //                   'Explore More',
+  //                   style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+  //                 ),
+  //               ),
+  //               SizedBox(
+  //                 height: 250.0,
+  //                 child: GridView.builder(
+  //                   scrollDirection: Axis.horizontal,
+  //                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+  //                     crossAxisCount: 1,
+  //                   ),
+  //                   itemCount: events.length,
+  //                   itemBuilder: (context, index) {
+  //                     // Ensure index is within bounds
+  //                     if (index >= events.length) {
+  //                       return Container(); // or handle error gracefully
+  //                     }
+  //                     EventCard card = EventCard(event: events[index]);
+  //                     return card;
+  //                   },
+  //                 ),
+  //               ),
+  //               SizedBox(height: 20.0),
+  //               const Padding(
+  //                 padding: EdgeInsets.all(10.0),
+  //                 child: Text(
+  //                   'Saved',
+  //                   style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+  //                 ),
+  //               ),
+  //               SizedBox(
+  //                 height: 250.0,
+  //                 child: GridView.builder(
+  //                   scrollDirection: Axis.horizontal,
+  //                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+  //                     crossAxisCount: 1,
+  //                   ),
+  //                   itemCount: events.length,
+  //                   itemBuilder: (context, index) {
+  //                     // Ensure index is within bounds
+  //                     if (index >= events.length) {
+  //                       return Container(); // or handle error gracefully
+  //                     }
+  //                     return EventCard(event: events[index]);
+  //                   },
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //         );
+  //       } else {
+  //         return Center(child: Text('No events found.'));
+  //       }
+  //     },
+  //   );
+  //
+  // }
+
+
+
   Widget _buildHomePage() {
+    userProvider userP = Provider.of<userProvider>(context);
+    EventProvider eventP = Provider.of<EventProvider>(context);
     final theme = Theme.of(context);
     final borderColour = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
     final textColour = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
-
+    // futureEvents=eventP.eventsHome;
     return FutureBuilder<List<Event>>(
-      future: futureEvents,
+      future: eventP.eventsHome,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: SpinKitPianoWave(
@@ -145,9 +318,6 @@ class _HomePageState extends State<HomePage> {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (snapshot.hasData) {
           final events = snapshot.data!;
-
-          print('second events call: $events');
-          print("Number of events: ${events.length}");
 
           // Add check to ensure events list is not empty
           if (events.isEmpty) {
@@ -168,28 +338,22 @@ class _HomePageState extends State<HomePage> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => ProfilePage(
-                                // profileImageUrl: widget.profileImageUrl,
-                                userName: widget.userName,
-                                userEmail: widget.userEmail,
-                                role: widget.role,
-                                userId: widget.userId,
 
-                                profileImage: widget.profileImage,
                               ),
                             ),
                           );
                         },
                         child: CircleAvatar(
-                          backgroundImage: widget.profileImage != null
-                              ? MemoryImage(widget.profileImage!)
+                          backgroundImage: userP.profileImage != null
+                              ? MemoryImage(userP.profileImage!)
                               : AssetImage('http/example-image')
-                          as ImageProvider, // Replace the URL with your profile image URL
+                          as ImageProvider,
                           radius: 27.0,
                         ),
                       ),
                     ),
                     Text(
-                      'Welcome, ${widget.userName}',
+                      'Welcome, ${userP.Fullname}',
                       style: TextStyle(
                           fontSize: 24.0,
                           fontWeight: FontWeight.bold),

@@ -226,11 +226,7 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => HomePage(
-              userName:  username,
-              userEmail: userEmail,
-               userId:UserId,
-               role:role,
-              profileImage: profileImageBytes,
+
             )),
           );
         }

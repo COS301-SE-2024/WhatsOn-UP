@@ -57,12 +57,7 @@ class Api {
   // Method to retrieve user details using stored JWT token
   Future<Map<String, dynamic>> getUserDetails() async {
     try {
-      // Retrieve tokens from secure storage
-      // String? jwtToken = await _secureStorage.read(key: jwtKey);
-      // if (jwtToken == null) {
-      //   print('JWT token not found');
-      //   throw Exception('JWT token not found');
-      // }
+
 
       final String _userUrl = 'http://$domain:8080/api/auth/get_user';
       var headers = {
@@ -169,7 +164,7 @@ class Api {
     }
 
   }
-  Future<Map<String, dynamic>> updatePassword(String password) async {
+  Future<Map<String, dynamic>> updatePassword(String password,String userId) async {
 
     var Url = Uri.parse('http://localhost:8080/api/auth/reset_password');
     var headers = {
@@ -211,13 +206,14 @@ class Api {
     String? metadata,
     bool isPrivate = false,
     List<String>? media,
+    required String userId,
   }) async {
     final String _createEventUrl = 'http://localhost:8080/api/events/create';
 
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Authorization': 'Bearer $jwtKey',
+      'Authorization': 'Bearer $userId',
     };
 
     var body = jsonEncode({
@@ -247,13 +243,13 @@ class Api {
   }
 
 
-  Future<Map<String, dynamic>> rsvpEvent(String eventId) async {
+  Future<Map<String, dynamic>> rsvpEvent(String eventId, String UserId) async {
     final String _rsvpEventUrl = 'http://localhost:8080/api/user/rspv_event/$eventId';
     
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Authorization': 'Bearer $jwtKey',
+      'Authorization': 'Bearer $UserId',
     };
 
     try {

@@ -7,11 +7,11 @@ class SupabaseAccountpage extends StatelessWidget {
 
 
   void _logout(BuildContext context) async {
-    // Call Supabase signOut method to clear the session
+
     await supabase.auth.signOut();
 
 
-    // Navigate to the login page
+
     Navigator.of(context).pushReplacementNamed('/login');
   }
   @override

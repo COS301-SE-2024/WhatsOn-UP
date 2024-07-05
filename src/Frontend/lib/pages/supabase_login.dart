@@ -166,6 +166,7 @@ import 'dart:async';
 import 'package:firstapp/pages/supabase_forgot_password.dart';
 import 'package:firstapp/pages/supabase_signup.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../main.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
@@ -174,6 +175,10 @@ import 'package:firstapp/pages/home_page.dart';
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:firstapp/services/api.dart';
+
+import '../providers/events_providers.dart';
+import '../providers/user_provider.dart';
+import '../widgets/event_card.dart';
 class SupabaseLogin extends StatefulWidget {
   const SupabaseLogin({super.key});
 
@@ -198,6 +203,9 @@ bool _obscurePassword=true;
     //     Navigator.of(context).pushReplacementNamed('/account');
     //   }
     // });
+
+
+
   }
 
   @override
@@ -332,8 +340,10 @@ bool _obscurePassword=true;
                   backgroundColor: Theme.of(context).colorScheme.error,
                 ));
               } catch (error) {
+                print(error);
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text('Error occurred, please try again'),
+                  content: Text('Error occurred, please try again : $error'),
+
                   backgroundColor: Theme.of(context).colorScheme.error,
                 ));
               }
@@ -392,7 +402,7 @@ bool _obscurePassword=true;
                 onPressed:() {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const googleSignIn ()),
+                    MaterialPageRoute(builder: (context) => const GoogleSignInPage ()),
                   );
                 },
 
@@ -408,10 +418,14 @@ bool _obscurePassword=true;
 
 
   Future<void> _login() async {
+    userProvider userP = Provider.of<userProvider>(context, listen: false);
+    // eventProvider eventP = Provider.of<eventProvider>(context, listen: false);
     final user = supabase.auth.currentUser;
 
 
     Api api = Api();
+    // final List<Event> events=await api.getAllEvents();
+    //eventP.addEventsHome(events);
     api. getUser(user!.id).then((response){
       if (response['error'] != null) {
 
@@ -424,7 +438,10 @@ bool _obscurePassword=true;
         String role=response['data']['user']['role']?? 'Unknown';
         String  profileImage=response['data']['user']['profileImage']?? 'Unknown';
         Uint8List profileImageBytes = Uint8List(0);
-
+        userP.userId=user.id;
+        userP.Fullname=fullName;
+        userP.email=userEmail;
+        userP.role=role;
         bool isBase64(String input) {
           final RegExp base64 = RegExp(
             r'^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$',
@@ -443,14 +460,12 @@ bool _obscurePassword=true;
           print('Invalid Base64 string: $profileImage');
         }
 
+    userP.profileimage=profileImageBytes;
+
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => HomePage(
-            userName:  fullName,
-            userEmail: userEmail,
-            userId:UserId,
-            role:role,
-            profileImage: profileImageBytes,
+
           )),
         );
       }

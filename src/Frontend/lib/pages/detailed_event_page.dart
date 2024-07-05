@@ -3,6 +3,8 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firstapp/widgets/event_card.dart';
 import 'package:firstapp/services/api.dart';
 
+import '../main.dart';
+
 class DetailedEventPage extends StatefulWidget {
   final Event event;
 
@@ -14,11 +16,11 @@ class DetailedEventPage extends StatefulWidget {
 
 class _DetailedEventPageState extends State<DetailedEventPage> {
   int _currentImageIndex = 0;
-
+  final user = supabase.auth.currentUser;
   // void _addToCalendar() {
   Future<void> _addToCalendar() async {
     try {
-      var result = await Api().rsvpEvent(widget.event.id);
+      var result = await Api().rsvpEvent(widget.event.id,user!.id);
       
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Successfully RSVP\'d to event!')),
