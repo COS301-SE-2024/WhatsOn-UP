@@ -70,6 +70,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
+late SupabaseClient supabaseClient;
 void main() async{
 
   await Supabase.initialize(
@@ -87,6 +88,7 @@ void main() async{
   //      child:  MyApp(),
   //   ),
   // );
+
   runApp(
     MultiProvider(providers: [
       ChangeNotifierProvider(create: (context) => EventProvider()),
@@ -97,8 +99,8 @@ void main() async{
   ),
   );
 }
-final supabase = Supabase.instance.client;
 
+final supabase = Supabase.instance.client;
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

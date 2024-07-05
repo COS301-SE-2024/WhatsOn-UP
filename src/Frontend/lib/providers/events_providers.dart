@@ -73,20 +73,25 @@
 
 import 'package:flutter/material.dart';
 import 'package:firstapp/widgets/event_card.dart';
+import 'package:supabase_auth_ui/supabase_auth_ui.dart';
+import '../main.dart';
 import '../services/api.dart';
 
 class EventProvider with ChangeNotifier {
+
+
+
   final Api api = Api();
 
   late Future<List<Event>> _eventsHome;
-  //late Future<List<Event>> _eventsRsvp;
+  late   Future<List<dynamic>> _eventsRsvp;
   //late Future<List<Event>> _eventsSaved;
-  List<Event> _eventsRsvp = [];
+  // List<Event> _eventsRsvp = [];
   List<Event> _eventsSaved = [];
 
   EventProvider() {
     _eventsHome = _fetchEventsHome();
-    // _eventsRsvp = _fetchEventsRsvp();
+
     // _eventsSaved = _fetchEventsSaved();
   }
 
@@ -97,13 +102,17 @@ class EventProvider with ChangeNotifier {
       throw Exception('Failed to fetch home events: $e');
     }
   }
-  // Future<List<Event>> _fetchEventsRsvp() async {
-  //   try {
-  //     return await api.getAllEvents();
-  //   } catch (e) {
-  //     throw Exception('Failed to fetch home events: $e');
-  //   }
-  // }
+  Future<List<dynamic>>_fetchEventsRsvp(String userId) async {
+    final user = supabase.auth.currentUser;
+    try {
+      return await api.getRSVPEvents(userId);
+    } catch (e) {
+      throw Exception('Failed to fetch home events: $e');
+    }
+  }
+  void fetchfortheFirstTimeRsvp(String userId) {
+    _eventsRsvp = _fetchEventsRsvp(userId);
+  }
   //
   // Future<List<Event>> _fetchEventsSaved() async {
   //   try {
@@ -116,18 +125,18 @@ class EventProvider with ChangeNotifier {
 
   Future<List<Event>> get eventsHome async {
     try {
-      return await _eventsHome; // Return the awaited _eventsHome future
+      return await _eventsHome;
     } catch (e) {
       throw Exception('Failed to fetch home events: $e');
     }
   }
-  // Future<List<Event>> get eventsRsvp async {
-  //   try {
-  //     return await _eventsRsvp; // Return the awaited _eventsHome future
-  //   } catch (e) {
-  //     throw Exception('Failed to fetch RSVP events: $e');
-  //   }
-  // }
+     Future<List<dynamic>> get eventsRsvp async {
+    try {
+       return await _eventsRsvp;
+     } catch (e) {
+       throw Exception('Failed to fetch RSVP events: $e');
+     }
+   }
 
   // Future<List<Event>> get eventsSaved async {
   //   try {
@@ -137,7 +146,7 @@ class EventProvider with ChangeNotifier {
   //   }
   // }
 
-  List<Event> get eventsRsvp => _eventsRsvp;
+  // List<Event> get eventsRsvp => _eventsRsvp;
   List<Event> get eventsSaved => _eventsSaved;
 
   void addEventHome(Event event) {
@@ -161,36 +170,36 @@ class EventProvider with ChangeNotifier {
     });
   }
 
-  // void addEventRSVP(Event event) {
-  //   _eventsHome.then((events) {
-  //     events.add(event);
-  //     notifyListeners();
-  //   });
-  // }
+  void addEventRSVP(Event event) {
+    _eventsHome.then((events) {
+      events.add(event);
+      notifyListeners();
+    });
+  }
   //
-  // void addEventsRSVP(List<Event> events) {
-  //   _eventsHome.then((existingEvents) {
-  //     existingEvents.addAll(events);
-  //     notifyListeners();
-  //   });
-  // }
+  void addEventsRSVP(List<Event> events) {
+    _eventsHome.then((existingEvents) {
+      existingEvents.addAll(events);
+      notifyListeners();
+    });
+  }
   //
-  // void removeEventRSVP(Event event) {
-  //   _eventsHome.then((events) {
-  //     events.remove(event);
-  //     notifyListeners();
-  //   });
-  // }
-
-  void addEventRsvp(Event event) {
-    _eventsRsvp.add(event);
-    notifyListeners();
+  void removeEventRSVP(Event event) {
+    _eventsHome.then((events) {
+      events.remove(event);
+      notifyListeners();
+    });
   }
 
-  void removeEventRsvp(Event event) {
-    _eventsRsvp.remove(event);
-    notifyListeners();
-  }
+  // void addEventRsvp(Event event) {
+  //   _eventsRsvp.add(event);
+  //   notifyListeners();
+  // }
+
+  // void removeEventRsvp(Event event) {
+  //   _eventsRsvp.remove(event);
+  //   notifyListeners();
+  // }
 
   void addEventSaved(Event event) {
     _eventsSaved.add(event);

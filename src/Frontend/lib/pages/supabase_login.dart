@@ -420,8 +420,9 @@ bool _obscurePassword=true;
   Future<void> _login() async {
     userProvider userP = Provider.of<userProvider>(context, listen: false);
     // eventProvider eventP = Provider.of<eventProvider>(context, listen: false);
+    EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
     final user = supabase.auth.currentUser;
-
+     eventP.fetchfortheFirstTimeRsvp(user!.id);
 
     Api api = Api();
     // final List<Event> events=await api.getAllEvents();
@@ -431,6 +432,7 @@ bool _obscurePassword=true;
 
         print('An error occurred: ${response['error']}');
       } else {
+
         print('Username added successfully');
         String fullName = response['data']['user']['fullName']?? 'Unknown';
         String userEmail = user.userMetadata?['email'];
