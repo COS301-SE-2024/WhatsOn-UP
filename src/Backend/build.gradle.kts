@@ -5,6 +5,7 @@ plugins {
 	id("io.spring.dependency-management") version "1.1.5"
 	kotlin("jvm") version "1.9.24"
 	kotlin("plugin.spring") version "1.9.24"
+	id("jacoco")
 }
 
 group = "com.devforce"
@@ -45,4 +46,15 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+}
+
+val jacocoTestReport by tasks.getting(JacocoReport::class) {
+	reports {
+		xml.required = true
+		html.required = true
+	}
+}
+
+tasks.named("check") {
+	dependsOn("jacocoTestReport")
 }
