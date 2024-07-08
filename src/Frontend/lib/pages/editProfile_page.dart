@@ -2,7 +2,9 @@ import 'dart:typed_data';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
-
+import 'package:provider/provider.dart';
+import '../main.dart';
+ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -12,20 +14,22 @@ import 'package:firstapp/pages/profilePage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firstapp/services/api.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+
+import '../providers/user_provider.dart';
 class EditprofilePage extends StatefulWidget {
-  final String userName;
-  final String userEmail;
-  final String userId;
-  final String role;
-  Uint8List? profileImage;
+  // final String userName;
+  // final String userEmail;
+  // final String userId;
+  // final String role;
+  // Uint8List? profileImage;
 
   EditprofilePage({
     Key? key,
-    required this.userName,
-    required this.userEmail,
-    required this.userId,
-    required this.role,
-    required this.profileImage,
+    // required this.userName,
+    // required this.userEmail,
+    // required this.userId,
+    // required this.role,
+    // required this.profileImage,
   }) : super(key: key);
 
   @override
@@ -33,8 +37,9 @@ class EditprofilePage extends StatefulWidget {
 }
 
 class _EditprofilePageState extends State<EditprofilePage> {
-  Uint8List? _image;
 
+  Uint8List? _image;
+  // final supabase=Supabase.instance.client;
   Future<void> selectImage() async {
     try {
       Uint8List img = await pickImage(ImageSource.gallery);
@@ -66,8 +71,7 @@ class _EditprofilePageState extends State<EditprofilePage> {
   @override
   void initState() {
     super.initState();
-    emailController.text = widget.userEmail;
-    nameController.text = widget.userName;
+
   }
 
   @override
@@ -80,6 +84,10 @@ class _EditprofilePageState extends State<EditprofilePage> {
 
   @override
   Widget build(BuildContext context) {
+    userProvider userP = Provider.of<userProvider>(context);
+    emailController.text = userP.email;
+    nameController.text = userP.Fullname;
+
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
@@ -106,8 +114,8 @@ class _EditprofilePageState extends State<EditprofilePage> {
               _buildTop(),
               const SizedBox(height: 30),
               _buildTextField("Full name", nameController, false),
-              _buildTextField("Email", emailController, false),
-              _buildTextField("Password", passwordController, true),
+              // _buildTextField("Email", emailController, false),
+              // _buildTextField("Password", passwordController, true),
               const SizedBox(height: 30),
               SizedBox(
                 width: double.infinity,
@@ -136,11 +144,11 @@ class _EditprofilePageState extends State<EditprofilePage> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => ProfilePage(
-                          userName: widget.userName,
-                          userEmail: widget.userEmail,
-                          userId: widget.userId,
-                          role: widget.role,
-                          profileImage: widget.profileImage,
+                          // userName: widget.userName,
+                          // userEmail: widget.userEmail,
+                          // userId: widget.userId,
+                          // role: widget.role,
+                          // profileImage: widget.profileImage,
                         ),
                       ),
                     );
@@ -167,6 +175,7 @@ class _EditprofilePageState extends State<EditprofilePage> {
   }
 
   Widget _buildTop() {
+    userProvider userP = Provider.of<userProvider>(context);
     return Center(
       child: Stack(
         children: [
@@ -205,7 +214,7 @@ class _EditprofilePageState extends State<EditprofilePage> {
                     shape: BoxShape.circle,
                     image: DecorationImage(
                         fit: BoxFit.cover,
-                        image: MemoryImage(widget.profileImage!)),
+                        image: MemoryImage(userP.profileimage!)),
                   ),
                 ),
           Positioned(
@@ -262,6 +271,8 @@ class _EditprofilePageState extends State<EditprofilePage> {
   }
 
   Future<void> _editUser() async {
+    userProvider userp = Provider.of<userProvider>(context,listen: false);
+    final user1 = supabase.auth.currentUser;
     setState(() {
       _isLoading = true;
     });
@@ -272,34 +283,43 @@ class _EditprofilePageState extends State<EditprofilePage> {
     Uint8List profileImageBytes = Uint8List(0);
 
     if (_formKey.currentState!.validate()) {
-      final adjustedName = nameController.text.isNotEmpty
-          ? nameController.text
-          : widget.userName;
-      final adjustedEmail = emailController.text.isNotEmpty
-          ? emailController.text
-          : widget.userEmail;
+      if(nameController.text.isNotEmpty){
+        userp.Fullname=nameController.text;
+      }
+      if(emailController.text.isNotEmpty){
+        userp.email=emailController.text;
+      }
+      if(passwordController.text.isNotEmpty){
+        userp.password=passwordController.text;
+      }
+
+      final adjustedName = userp.Fullname;
+
+      final adjustedEmail = userp.email;
+
       final adjustedPassword =
           passwordController.text.isNotEmpty ? passwordController.text : '';
       profileImageBase64 = _image != null
           ? base64Encode(_image!)
-          : base64Encode(widget.profileImage!);
+          : base64Encode(userp.profileimage!);
+      if(_image != null){
+        userp.profileimage=_image;
+      }
 
       final user = User(
         name: adjustedName,
         email: adjustedEmail,
         password: adjustedPassword,
-        userId: widget.userId,
+        userId: user1!.id,
         profileImage: _image,
       );
 
       Api api = Api();
 
-      profileImageBase64 = _image != null
-          ? base64Encode(_image!)
-          : base64Encode(widget.profileImage!);
+      profileImageBase64 =base64Encode(userp.profileimage!);
 
       api
-          .postChangeUser(user.name, user.email, profileImageBase64)
+          .postChangeUser(user.name, profileImageBase64,user1.id)
           .then((response) {
         if (response['error'] != null) {
           print('An error occurred: ${response['error']}');
@@ -321,9 +341,9 @@ class _EditprofilePageState extends State<EditprofilePage> {
             try {
               profileImageBytes = base64Decode(profileImage);
               print("getting to decode");
-              setState(() {
-                widget.profileImage = profileImageBytes;
-              });
+              // setState(() {
+              //   widget.profileImage = profileImageBytes;
+              // });
             } catch (e) {
               print('Failed to decode base64 image: $e');
             }
@@ -333,9 +353,9 @@ class _EditprofilePageState extends State<EditprofilePage> {
           print('User profile updated successfully');
           // await Future.delayed(Duration(seconds: 2));
 
-          setState(() {
-            _isLoading = false;
-          });
+          // setState(() {
+          //   _isLoading = false;
+          // });
          //await
          showChangedDialog();
 
@@ -364,17 +384,7 @@ class _EditprofilePageState extends State<EditprofilePage> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => ProfilePage(
-                      userName: nameController.text.isNotEmpty
-                          ? nameController.text
-                          : widget.userName,
-                      userEmail: emailController.text.isNotEmpty
-                          ? emailController.text
-                          : widget.userEmail,
-                      userId: widget.userId,
-                      role: widget.role,
-                      profileImage: _image != null
-                          ? _image
-                          : widget.profileImage,
+
                     ),
                   ),
                 ); // Navigate to ProfilePage
@@ -403,7 +413,7 @@ class User {
   });
 
   @override
-  String toString() {
+   String toString() {//userId: $userId
     return 'User(name: $name, email: $email, password: $password, userId: $userId )';
   }
 }

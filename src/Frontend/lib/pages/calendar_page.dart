@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
 import 'package:firstapp/services/api.dart';
 import 'package:firstapp/pages/detailed_event_page.dart';
 import 'package:firstapp/widgets/event_card.dart';
+
+import '../providers/events_providers.dart';
 
 class CalendarPage extends StatefulWidget {
   const CalendarPage({super.key});
@@ -20,7 +23,10 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
   @override
   void initState() {
     super.initState();
-    _fetchRSVPEvents();
+    // _fetchRSVPEvents();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _fetchRSVPEvents();
+    });
   }
 
   CalendarFormat _calendarFormat = CalendarFormat.month;
@@ -30,8 +36,11 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
   bool _isLoading = true;
 
   Future<void> _fetchRSVPEvents() async {
+
     try {
-      final response = await Api().getRSVPEvents();  
+      EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
+      final response = await eventP.eventsRsvp;
+
       final parsedEvents = parseEvents(response);
 
       setState(() {

@@ -5,21 +5,17 @@ import 'dart:typed_data';
 import 'package:image_picker/image_picker.dart';
 import 'package:firstapp/widgets/theme_manager.dart';
 import 'package:firstapp/services/api.dart';
+import 'package:provider/provider.dart';
+import '../main.dart';
+import '../providers/events_providers.dart';
+import '../widgets/event_card.dart';
 
 class ApplicationEvent extends StatefulWidget {
-  final String userName;
-  final String userEmail;
-  final String userId;
-  final String role;
-  Uint8List? profileImage;
+
 
   ApplicationEvent({
     Key? key,
-    required this.userName,
-    required this.userEmail,
-    required this.userId,
-    required this.role,
-    required this.profileImage,
+
   }) : super(key: key);
 
   @override
@@ -27,6 +23,7 @@ class ApplicationEvent extends StatefulWidget {
 }
 
 class _ApplicationEventState extends State<ApplicationEvent> {
+  
   late Color myColor;
   late Size mediaSize;
   TextEditingController eventNameController = TextEditingController();
@@ -271,6 +268,13 @@ class _ApplicationEventState extends State<ApplicationEvent> {
   }
 
   void _submitForm() {
+    EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
+
+
+    // eventP.addEventHome(
+    // );
+   // eventP.addEventHome();
+    final userSuperbase = supabase.auth.currentUser;
   if (_formKey.currentState!.validate()) {
     String eventName = eventNameController.text;
     String eventDescription = eventDescriptionController.text;
@@ -289,6 +293,13 @@ class _ApplicationEventState extends State<ApplicationEvent> {
 
     List<String>? mediaUrls = selectedImages?.map((file) => file.path).toList();
 
+
+    // eventP.addEventHome(newEvent);
+
+//need to return an event as a responds
+
+
+
     Api().createEvent(
       title: eventName,
       description: eventDescription,
@@ -298,18 +309,14 @@ class _ApplicationEventState extends State<ApplicationEvent> {
       maxParticipants: maxAttendees,
       isPrivate: !isPublic,
       media: mediaUrls,
+      userId: userSuperbase!.id,
     ).then((response) {
       print('Event created successfully');
+      print (response);
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => ProfilePage(
-            userName: widget.userName,
-            userEmail: widget.userEmail,
-            userId: widget.userId,
-            role: widget.role,
-            profileImage: widget.profileImage,
-          ),
+          builder: (context) => ProfilePage(),
         ),
       );
       
@@ -353,3 +360,4 @@ class _ApplicationEventState extends State<ApplicationEvent> {
     );
   }
 }
+

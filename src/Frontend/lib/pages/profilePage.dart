@@ -1,28 +1,19 @@
 
 import 'package:firstapp/pages/login_page.dart';
+import 'package:firstapp/pages/supabase_login.dart';
 import 'package:flutter/material.dart';
 import 'package:firstapp/pages/application_event.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:firstapp/pages/editProfile_page.dart';
 import 'dart:typed_data';
 import 'package:firstapp/pages/home_page.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/user_provider.dart';
 class ProfilePage extends  StatefulWidget {
-
-  final String userName;
-  final String userEmail;
-  final String userId;
-  final String role;
-  Uint8List? profileImage;
-
 
   ProfilePage({
     Key? key,
-
-    required this.userName,
-    required this.userEmail,
-    required this.userId,
-    required this.role,
-    required this.profileImage,
 
   }): super(key: key);
 
@@ -33,10 +24,11 @@ class ProfilePage extends  StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-
+final String ADMIN='ADMIN';
 
   @override
   Widget build(BuildContext context) {
+    userProvider user = Provider.of<userProvider>(context);
     final theme = Theme.of(context);
     final borderColour = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
 
@@ -52,12 +44,13 @@ class _ProfilePageState extends State<ProfilePage> {
                   Stack(
                     children: [
                       CircleAvatar(
-                        backgroundImage: widget.profileImage != null
-                            ? MemoryImage(widget.profileImage!)
+                        backgroundImage: user.profileimage != null
+                            ? MemoryImage(user.profileimage!)
                             : const AssetImage('http/example-image') as ImageProvider,
                         radius: 60.0,
                       ),
-                      if (widget.role == 'ADMIN')
+                      // if (widget.role == ADMIN)
+                      if (user.role== ADMIN)
                         Positioned(
                           top:80,
                           right: 0,
@@ -76,13 +69,15 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    widget.userName,
+                    // widget.userName,
+                    user.Fullname,
                     style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 20),
                   const SizedBox(height: 8),
                   Text(
-                    widget.userEmail,
+                    // widget.userEmail,
+                    user.email,
                     style: const TextStyle(fontSize: 18),
                   ),
                   const SizedBox(height: 20),
@@ -93,11 +88,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => EditprofilePage(
-                            userName: widget.userName,
-                            userEmail: widget.userEmail,
-                            userId: widget.userId,
-                            role: widget.role,
-                            profileImage: widget.profileImage,
+
                           )),
                         );
                       },
@@ -141,14 +132,14 @@ class _ProfilePageState extends State<ProfilePage> {
                         _buildProfileOption(
                           text: 'Notifications',
                           onTap: () {
-                            // Handle notifications tap
+
                           },
                         ),
                         _buildDivider(),
                         _buildProfileOption(
                           text: 'Security',
                           onTap: () {
-                            // Handle security tap
+
                           },
                         ),
                         _buildDivider(),
@@ -157,7 +148,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           onTap: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) =>  LoginPage()),
+                              MaterialPageRoute(builder: (context) =>  SupabaseLogin()),
                             );
                           },
                         ),
@@ -169,18 +160,14 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           ),
           Positioned(
-            top: 40.0, // Adjust this value according to your needs
-            left: 10.0, // Adjust this value according to your needs
+            top: 40.0,
+            left: 10.0,
             child: IconButton(
               onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => HomePage(
-                    userName: widget.userName,
-                    userEmail: widget.userEmail,
-                    userId: widget.userId,
-                    role: widget.role,
-                    profileImage: widget.profileImage,
+                        //widget.profileImage,
                   )),
                 );
               },
