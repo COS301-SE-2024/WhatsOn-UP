@@ -34,7 +34,7 @@ jobs:
               working-directory: ./src/Backend
 
             - name: Run tests with Gradle
-              run: ./gradlew test
+              run:  ./gradlew clean test codeCoverageReport 
               working-directory: ./src/Backend
 
             - name: Upload coverage reports to Codecov
