@@ -1,4 +1,4 @@
-name: CI with Gradle
+name: Backend workflow with Gradle
 
 on:
     push:
@@ -16,6 +16,8 @@ jobs:
             DB_USERNAME: ${{ secrets.DB_USERNAME }}
             DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
             DOCKER_PASSWORD: ${{ secrets.DOCKER_TOKEN }}
+            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
         steps:
             - name: Checkout the code
@@ -48,10 +50,35 @@ jobs:
 
             - name: Build Docker image
               working-directory: ./src/Backend
-              run: docker build -t decforce123/backend:3.0 .
+              run: docker build -t decforce123/backend .
       
             - name: Push Docker image to Docker Hub
               working-directory: ./src/Backend
               run: docker push devforce123/backend
+            
+            - name: Deploy to Server 1
+              uses: easingthemes/ssh-deploy@main
+              env:
+                SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
+                REMOTE_HOST: ${{ secrets.HOST_DNS }}
+                REMOTE_USER: ${{ secrets.USERNAME }}
+                TARGET: ${{ secrets.TARGET_DIR }}
+      
+            - name: Executing remote ssh commands using ssh key
+              uses: appleboy/ssh-action@master
+              with:
+                host: ${{ secrets.HOST_DNS }}
+                username: ${{ secrets.USERNAME }}
+                key: ${{ secrets.EC2_SSH_KEY }}
+                script: |
+                  sudo su
+                  docker stop backend
+                  docker pull devforce123/backend
+                  docker run -d --name backend -p 8080:8080 --memory 2g devforce123/backend
+
+                  
+
+           
+
 
 
