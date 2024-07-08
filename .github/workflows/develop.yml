@@ -1,4 +1,4 @@
-name: Springboot CI with Gradle
+name: CI with Gradle
 
 on:
     push:
@@ -15,6 +15,7 @@ jobs:
             DB_URL: ${{ secrets.DB_URL }}
             DB_USERNAME: ${{ secrets.DB_USERNAME }}
             DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+            DOCKER_PASSWORD: ${{ secrets.DOCKER_TOKEN }}
 
         steps:
             - name: Checkout the code
@@ -41,4 +42,16 @@ jobs:
               uses: codecov/codecov-action@v4.0.1
               with:
                   token: ${{ secrets.CODECOV_TOKEN }}
+
+            - name: Log into Docker Hub
+              run: echo $DOCKER_PASSWORD | docker login -u devforce123 --password-stdin
+
+            - name: Build Docker image
+              working-directory: ./src/Backend
+              run: docker build -t decforce123/backend:3.0 .
+      
+            - name: Push Docker image to Docker Hub
+              working-directory: ./src/Backend
+              run: docker push devforce123/backend
+
 
