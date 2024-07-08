@@ -50,7 +50,7 @@ jobs:
 
             - name: Build Docker image
               working-directory: ./src/Backend
-              run: docker build -t decforce123/backend .
+              run: docker build -t devforce123/backend .
       
             - name: Push Docker image to Docker Hub
               working-directory: ./src/Backend
