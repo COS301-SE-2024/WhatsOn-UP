@@ -316,13 +316,7 @@ class _ApplicationEventState extends State<ApplicationEvent> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => ProfilePage(
-            // userName: widget.userName,
-            // userEmail: widget.userEmail,
-            // userId: widget.userId,
-            // role: widget.role,
-            // profileImage: widget.profileImage,
-          ),
+          builder: (context) => ProfilePage(),
         ),
       );
       
