@@ -152,4 +152,31 @@ class UserService {
         )
     }
 
+    fun getUser(): ResponseEntity<ResponseDto> {
+        val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
+
+        val userCreds = mapOf(
+            "role" to user.role?.name,
+            "fullName" to user.fullName,
+            "profileImage" to user.profileImage
+        )
+
+        return ResponseEntity.ok(
+            ResponseDto(
+                "success",
+                System.currentTimeMillis(),
+                mapOf("user" to userCreds)
+            )
+        )
+    }
+
+    fun deleteUser(): ResponseEntity<ResponseDto> {
+        val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
+        userRepo.delete(user)
+
+        return ResponseEntity.ok(
+            ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Account deleted successfully"))
+        )
+    }
+
 }

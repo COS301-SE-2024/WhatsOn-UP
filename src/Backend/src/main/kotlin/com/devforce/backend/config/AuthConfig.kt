@@ -27,7 +27,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 class AuthConfig {
 
     @Autowired
-    lateinit var jwtEntryPoint: EntryPoint
+    lateinit var entryPoint: EntryPoint
 
     @Autowired
     lateinit var customUserDetailsService: CustomUserDetailsService
@@ -41,7 +41,7 @@ class AuthConfig {
                 sessionCreationPolicy = SessionCreationPolicy.STATELESS
             }
             exceptionHandling {
-                authenticationEntryPoint = jwtEntryPoint
+                authenticationEntryPoint = entryPoint
             }
             cors {
                 configurationSource = corsConfigurationSource()
@@ -50,7 +50,7 @@ class AuthConfig {
                 disable()
             }
         }
-        http.addFilterBefore(jwtAuthFilter(), UsernamePasswordAuthenticationFilter::class.java)
+        http.addFilterBefore(authFilter(), UsernamePasswordAuthenticationFilter::class.java)
         return http.build()
     }
 
@@ -66,7 +66,7 @@ class AuthConfig {
     }
 
     @Bean
-    fun jwtAuthFilter(): AuthFilter {
+    fun authFilter(): AuthFilter {
         return AuthFilter()
     }
 
