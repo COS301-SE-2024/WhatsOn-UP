@@ -1,11 +1,12 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.gradle.testing.jacoco.tasks.JacocoReport
 
 plugins {
 	id("org.springframework.boot") version "3.3.0"
 	id("io.spring.dependency-management") version "1.1.5"
 	kotlin("jvm") version "1.9.24"
 	kotlin("plugin.spring") version "1.9.24"
-	id("jacoco")
+//	id("jacoco")
 }
 
 group = "com.devforce"
@@ -44,17 +45,41 @@ tasks.withType<KotlinCompile> {
 	}
 }
 
-tasks.withType<Test> {
-	useJUnitPlatform()
-}
+tasks {
+	val test by getting(Test::class) {
+		useJUnitPlatform()
+		testLogging {
+			events("passed", "skipped", "failed")
+		}
+	}
 
-val jacocoTestReport by tasks.getting(JacocoReport::class) {
-	reports {
-		xml.required = true
-		html.required = true
+	val codeCoverageReport by creating(JacocoReport::class) {
+		executionData(fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec"))
+
+		subprojects.forEach {
+			sourceSets(it.sourceSets["main"])
+		}
+
+		reports {
+			xml.required.set(true)
+			xml.outputLocation.set(layout.buildDirectory.file("reports/jacoco/report.xml"))
+			html.required.set(true)
+			html.outputLocation.set(layout.buildDirectory.dir("reports/jacoco/html"))
+			csv.required.set(false)
+
+			sourceDirectories.setFrom(files(sourceSets["main"].allSource.srcDirs))
+			classDirectories.setFrom(files(sourceSets["main"].output))
+		}
+
+		dependsOn(test)
+
+		doLast {
+			println("Jacoco report generated at: ${reports.xml.outputLocation.get().asFile.absolutePath}")
+			println("Jacoco HTML report generated at: ${reports.html.outputLocation.get().asFile.absolutePath}")
+		}
 	}
 }
 
 tasks.named("check") {
-	dependsOn("jacocoTestReport")
+	dependsOn("codeCoverageReport")
 }
