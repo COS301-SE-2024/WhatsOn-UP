@@ -179,8 +179,9 @@ class Event {
 
 class EventCard extends StatefulWidget {
   final Event event;
+  final bool showBookmarkButton;
 
-  EventCard({Key? key, required this.event}) : super(key: key);
+  EventCard({Key? key, required this.event, this.showBookmarkButton = true}) : super(key: key);
 
   @override
   _EventCardState createState() => _EventCardState();
@@ -267,26 +268,28 @@ class _EventCardState extends State<EventCard> {
                         ),
                       ),
                     ),
-                    IconButton(
-                      icon: Icon(
-                        isBookmarked ? Icons.bookmark : Icons.bookmark_border,
-                        size: 20.0,
-                        color: isBookmarked ? Colors.black : textColour,
+
+                    if (widget.showBookmarkButton)
+                      IconButton(
+                        icon: Icon(
+                          isBookmarked ? Icons.bookmark : Icons.bookmark_border,
+                          size: 20.0,
+                          color: isBookmarked ? Colors.black : textColour,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            isBookmarked = !isBookmarked;
+                            if(isBookmarked==true){
+                              eventP.addEventSaved(widget.event);
+                              //api to add this event
+                            }
+                            else{
+                              eventP.removeEventSaved(widget.event);
+                              //api to remove this event// Toggle bookmark state
+                            }
+                          });
+                        },
                       ),
-                      onPressed: () {
-                        setState(() {
-                          isBookmarked = !isBookmarked;
-                          if(isBookmarked==true){
-                            eventP.addEventSaved(widget.event);
-                            //api to add this event
-                          }
-                          else{
-                            eventP.removeEventSaved(widget.event);
-                            //api to remove this event// Toggle bookmark state
-                          }
-                        });
-                      },
-                    ),
                   ],
                 ),
               ],

@@ -1,14 +1,16 @@
+import 'package:firstapp/providers/events_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firstapp/widgets/event_card.dart';
 import 'package:firstapp/services/api.dart';
+import 'package:provider/provider.dart';
 
 import '../main.dart';
 
 class DetailedEventPage extends StatefulWidget {
   final Event event;
-
-  const DetailedEventPage({super.key, required this.event});
+  final bool createdByUser;
+  const DetailedEventPage({super.key, required this.event,this.createdByUser = false});
 
   @override
   _DetailedEventPageState createState() => _DetailedEventPageState();
@@ -52,6 +54,7 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
     final theme = Theme.of(context);
     final dotColour = theme.brightness == Brightness.dark ? const Color.fromARGB(255, 116, 116, 116) : Colors.grey;
     final activeDotColour = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
+EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
 
     return Scaffold(
       appBar: AppBar(
@@ -162,6 +165,14 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
                       minimumSize: const Size(double.infinity, 48),
                     ),
                   ),
+                  ElevatedButton.icon(
+                    onPressed: _viewLocationOnMap,
+                    icon: const Icon(Icons.map),
+                    label: const Text('Remove Event from my Calendar'),
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(double.infinity, 48),
+                    ),
+                  ),
                   const SizedBox(height: 8.0),
                   ElevatedButton.icon(
                     onPressed: _viewLocationOnMap,
@@ -171,6 +182,7 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
                       minimumSize: const Size(double.infinity, 48),
                     ),
                   ),
+
                   const SizedBox(height: 8.0),
                   ElevatedButton.icon(
                     onPressed: _reportEvent,
@@ -178,6 +190,27 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
                     label: const Text('Report Event'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.red,
+                      minimumSize: const Size(double.infinity, 48),
+                    ),
+                  ),
+                  if(widget.createdByUser)
+                  const SizedBox(height: 20.0),
+                  ElevatedButton.icon(
+                    onPressed: _reportEvent,
+                    label: const Text('edit Event'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.black, // Color of the text and icons
+                      side: const BorderSide(color: Color.fromARGB(255, 149, 137, 74)),
+                      minimumSize: const Size(double.infinity, 48),
+                    ),
+                  ),
+                  const SizedBox(height: 8.0),
+                  ElevatedButton.icon(
+                    onPressed: _reportEvent,
+                    label: const Text('Remove Event'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.black, // Color of the text and icons
+                      side: const BorderSide(color: Color.fromARGB(255, 149, 137, 74)),
                       minimumSize: const Size(double.infinity, 48),
                     ),
                   ),

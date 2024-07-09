@@ -305,7 +305,7 @@ class Api {
 
    }
   Future<Map<String, dynamic>> getUser(String userid) async {
-    final String _userUrl = 'http://$domain:8080/api/auth/get_user';
+    final String _userUrl = 'http://$domain:8080/api/user/get_user';
 
     //
     //   // Define the headers and body for login request

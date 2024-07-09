@@ -149,13 +149,19 @@ class EventProvider with ChangeNotifier {
   // List<Event> get eventsRsvp => _eventsRsvp;
   List<Event> get eventsSaved => _eventsSaved;
 
-  void addEventHome(Event event) {
+  // void addEventHome(Event event) {
+  //   _eventsHome.then((events) {
+  //     events.add(event);
+  //     notifyListeners();
+  //   });
+  // }
+  void addEventHome(Map<String, dynamic> eventData) {
+    Event event = Event.fromJson(eventData); // Assuming you have a method to convert the map to an Event object
     _eventsHome.then((events) {
       events.add(event);
       notifyListeners();
     });
   }
-
   void addEventsHome(List<Event> events) {
     _eventsHome.then((existingEvents) {
       existingEvents.addAll(events);
@@ -234,3 +240,4 @@ class EventProvider with ChangeNotifier {
 //   });
 // }
 }
+

@@ -34,7 +34,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late Future<List<Event>> futureEvents;
+  // late Future<List<Event>> futureEvents;
   Api api = Api();
 
   int _selectedIndex = 0;
@@ -104,7 +104,7 @@ const String ADMIN='ADMIN';
       case 4:
         return SettingsPage();
       case 5:
-        return const ManageEvents();
+        return  ManageEvents();
 
       case 6:
         return const Broadcast();
@@ -302,6 +302,7 @@ const String ADMIN='ADMIN';
   Widget _buildHomePage() {
     userProvider userP = Provider.of<userProvider>(context);
     EventProvider eventP = Provider.of<EventProvider>(context);
+
     final theme = Theme.of(context);
     final borderColour = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
     final textColour = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
@@ -438,7 +439,9 @@ const String ADMIN='ADMIN';
                       if (index >= events.length) {
                         return Container(); // or handle error gracefully
                       }
+                      print('Event card: ${events[index]}');
                       EventCard card = EventCard(event: events[index]);
+
                       return card;
                     },
                   ),

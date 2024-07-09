@@ -312,7 +312,10 @@ class _ApplicationEventState extends State<ApplicationEvent> {
       userId: userSuperbase!.id,
     ).then((response) {
       print('Event created successfully');
-      print (response);
+      // print('The Event: ');
+        print (response['data']);
+        eventP.addEventHome(response['data']);
+      // eventP.;
       Navigator.push(
         context,
         MaterialPageRoute(
