@@ -1,9 +1,8 @@
 package com.devforce.backend.service
 
-import com.devforce.backend.dto.AllEventsDto
+import com.devforce.backend.dto.EventDto
 import com.devforce.backend.dto.ResponseDto
 import com.devforce.backend.dto.UpdateUserDto
-import com.devforce.backend.model.UserModel
 import com.devforce.backend.repo.EventRepo
 import com.devforce.backend.repo.RoleRepo
 import com.devforce.backend.repo.UserRepo
@@ -75,7 +74,7 @@ class UserService {
         val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
 
         val events = eventRepo.getSavedEvents(user.userId)
-        val eventsDto = events.map { event -> AllEventsDto(event) }
+        val eventsDto = events.map { event -> EventDto(event, false) }
 
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto)
         )
@@ -104,7 +103,7 @@ class UserService {
         val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
 
         val events = eventRepo.getRspvdEvents(user.userId)
-        val eventsDto = events.map { event -> AllEventsDto(event) }
+        val eventsDto = events.map { event -> EventDto(event, false) }
 
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto)
         )

@@ -1,9 +1,10 @@
 package com.devforce.backend.dto
 
 import com.devforce.backend.model.EventModel
+import com.devforce.backend.model.UserModel
 import java.time.LocalDateTime
 
-data class AllEventsDto(
+data class EventDto(
     val id: String,
     val title: String,
     val description: String,
@@ -14,11 +15,12 @@ data class AllEventsDto(
     val endTime: LocalDateTime,
     val maxAttendees: Int,
     val isPrivate: Boolean,
-    val hosts: List<PartialUser>,
-    val attendees: List<PartialUser>,
-    val invitees: List<PartialUser>
+    val hosts: Set<UserModel>,
+    val attendees: Set<UserModel>,
+    val invitees: Set<UserModel>,
+    val isHost: Boolean
 ) {
-    constructor(event: EventModel) : this(
+    constructor(event: EventModel, isHost: Boolean) : this(
         id = event.eventId.toString(),
         title = event.title,
         description = event.description,
@@ -29,20 +31,9 @@ data class AllEventsDto(
         endTime = event.endTime,
         maxAttendees = event.maxAttendees,
         isPrivate = event.isPrivate,
-        hosts = event.hosts.map { host ->
-            PartialUser(
-                fullName = host.fullName
-            )
-        },
-        attendees = event.attendees.map { attendee ->
-            PartialUser(
-                fullName = attendee.fullName
-            )
-        },
-        invitees = event.invitees.map { invitee ->
-            PartialUser(
-                fullName = invitee.fullName
-            )
-        }
+        hosts = event.hosts,
+        attendees = event.attendees,
+        invitees = event.invitees,
+        isHost = isHost
     )
 }

@@ -10,12 +10,9 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 import java.time.*
 import java.util.*
-import java.util.stream.Collectors
 import java.time.Instant
 import java.time.LocalDateTime
-import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeParseException
 
 //FUTURE
 //fun filterEvents(
@@ -43,7 +40,7 @@ class EventService {
 
         eventRepo.save(event)
 
-        val eventDto = AllEventsDto(event)
+        val eventDto = EventDto(event,false)
 
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventDto)
         )
@@ -52,8 +49,20 @@ class EventService {
     // To do: Implement function to retrieve all events
     fun getAllEvents(): ResponseEntity<ResponseDto> {
         // Implementation goes here
+        val user = SecurityContextHolder.getContext().authentication.principal
         val events = eventRepo.findAll()
-        val eventsDto = events.map { event -> AllEventsDto(event) }
+        var eventsDto: List<EventDto>? = null
+        if (user == "anonymousUser") {
+            eventsDto = events.map { event -> EventDto(event, false) }
+        }
+        else {
+            val userModel = (user as CustomUser).userModel
+
+            eventsDto = events.map {
+
+                event -> EventDto(event, userModel.userId in event.hosts.map { host -> host.userId })
+            }
+        }
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto)
         )
     }
@@ -115,7 +124,7 @@ class EventService {
     ): ResponseEntity<ResponseDto> {
 
         val events = eventRepo.searchEvents(searchString)
-        val eventsDto = events.map { event -> AllEventsDto(event) }
+        val eventsDto = events.map { event -> EventDto(event, false) }
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto)
         )
 
@@ -210,7 +219,7 @@ class EventService {
     //FUTURE
     fun filterEvents(filterBy: FilterByDto): ResponseEntity<ResponseDto>{
         val events = eventRepo.filterEvents(filterBy)
-        val eventsDto = events.map { event -> AllEventsDto(event) }
+        val eventsDto = events.map { event -> EventDto(event, false) }
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto)
         )
     }
