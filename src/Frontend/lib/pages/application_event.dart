@@ -313,7 +313,7 @@ class _ApplicationEventState extends State<ApplicationEvent> {
     ).then((response) {
       print('Event created successfully');
       // print('The Event: ');
-        print (response['data']);
+      //   print (response['data']);
         eventP.addEventHome(response['data']);
       // eventP.;
       Navigator.push(

@@ -356,8 +356,10 @@
 //   }
 // }
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:firstapp/providers/events_providers.dart';
+import '../providers/user_provider.dart';
 import '../screens/FilterScreen.dart';
 import '../screens/SearchScreen.dart';
 import 'Eventcard_management.dart'; // Assuming Eventcard_management.dart contains EventCard widget
@@ -458,14 +460,21 @@ class _EventmanagementCategoryState extends State<EventmanagementCategory> {
               future: _eventsHome,
               builder: (context, AsyncSnapshot<List<Event>> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator()); // While data is loading
+                  return Center(child: SpinKitPianoWave(
+                    color:  Color.fromARGB(255, 149, 137, 74),
+                    size: 50.0,
+                  ));
                 } else if (snapshot.hasError) {
-                  return Center(child: Text('Error loading events')); // On error
+                  return Center(child: Text('Error loading events'));
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return Center(child: Text('No events available')); // If no data
+                  return Center(child: Text('No events available'));
                 } else {
-                  // When data is available
+                  userProvider userP = Provider.of<userProvider>(context, listen: false);
+
                   List<Event> events = snapshot.data!;
+                  if (userP.role!='ADMIN') {
+                    events = events.where((event) => event.hosts.contains(userP.Fullname)).toList();
+                  }
                   int rowCount = (events.length / 2).ceil();
                   return ListView.builder(
                    itemCount: rowCount,
@@ -483,7 +492,7 @@ class _EventmanagementCategoryState extends State<EventmanagementCategory> {
                               child: EventCard(event: events[index2],showBookmarkButton:false),
                             ),
                         ],
-                      ); // Using EventCard widget to display each event
+                      );
                     },
                   );
                 }

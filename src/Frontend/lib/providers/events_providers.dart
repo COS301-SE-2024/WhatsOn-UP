@@ -156,7 +156,7 @@ class EventProvider with ChangeNotifier {
   //   });
   // }
   void addEventHome(Map<String, dynamic> eventData) {
-    Event event = Event.fromJson(eventData); // Assuming you have a method to convert the map to an Event object
+    Event event = Event.fromJson(eventData);
     _eventsHome.then((events) {
       events.add(event);
       notifyListeners();
@@ -216,7 +216,16 @@ class EventProvider with ChangeNotifier {
     _eventsSaved.remove(event);
     notifyListeners();
   }
-
+  Future<Event?> getEventById(String id) async {
+    try {
+      List<Event> events = await _eventsHome;
+      Event? event= events.firstWhere((event) => event.id == id);
+      return event;
+    } catch (e) {
+      throw Exception('Failed to get event by ID: $e');
+    }
+  }
+}
 
 
 // void addEventSaved(Event event) {
@@ -239,5 +248,5 @@ class EventProvider with ChangeNotifier {
 //     notifyListeners();
 //   });
 // }
-}
+
 

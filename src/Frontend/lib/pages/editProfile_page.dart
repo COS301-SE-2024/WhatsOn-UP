@@ -340,7 +340,7 @@ class _EditprofilePageState extends State<EditprofilePage> {
           if (isBase64(profileImage)) {
             try {
               profileImageBytes = base64Decode(profileImage);
-              print("getting to decode");
+
               // setState(() {
               //   widget.profileImage = profileImageBytes;
               // });

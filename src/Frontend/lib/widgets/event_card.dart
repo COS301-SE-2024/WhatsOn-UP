@@ -153,6 +153,7 @@ class Event {
   final List<String> imageUrls;
   final String description;
   final String id;
+  List<String> hosts;
 
   Event({
     required this.nameOfEvent,
@@ -161,6 +162,7 @@ class Event {
     required this.imageUrls,
     required this.description,
     required this.id,
+    required this.hosts,
   });
 
   factory Event.fromJson(Map<String, dynamic> json) {
@@ -173,6 +175,9 @@ class Event {
           : ['https://images.pexels.com/photos/1190297/pexels-photo-1190297.jpeg'],
       description: json['description'],
       id: json['id'],
+      hosts: (json.containsKey('hosts') && (json['hosts'] as List).isNotEmpty)
+          ? List<String>.from(json['hosts'].map((host) => host['fullName']))
+          : [],
     );
   }
 }

@@ -215,7 +215,7 @@ import '../widgets/eventManagement_category.dart';
 class ManageEvents extends StatelessWidget {
   ManageEvents({Key? key}) : super(key: key);
 
-  bool _isLoading = false; // Assuming this is declared elsewhere in your class
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {

@@ -4,36 +4,7 @@ import 'package:firstapp/pages/detailed_event_page.dart';
 import '../pages/detailed_event_page.dart';
 import '../providers/events_providers.dart';
 import  'event_card.dart';
-// class Event {
-//   final String nameOfEvent;
-//   final String dateAndTime;
-//   final String location;
-//   final List<String> imageUrls;
-//   final String description;
-//   final String id;
-//
-//   Event({
-//     required this.nameOfEvent,
-//     required this.dateAndTime,
-//     required this.location,
-//     required this.imageUrls,
-//     required this.description,
-//     required this.id,
-//   });
-//
-//   factory Event.fromJson(Map<String, dynamic> json) {
-//     return Event(
-//       nameOfEvent: json['title'],
-//       dateAndTime: json['startTime'],
-//       location: json['location'],
-//       imageUrls: (json.containsKey('eventMedia') && (json['eventMedia'] as List).isNotEmpty)
-//           ? List<String>.from(json['eventMedia'])
-//           : ['https://images.pexels.com/photos/1190297/pexels-photo-1190297.jpeg'],
-//       description: json['description'],
-//       id: json['id'],
-//     );
-//   }
-// }
+
 
 class EventCardM extends StatefulWidget {
   final Event event;

@@ -178,7 +178,7 @@ import 'package:firstapp/services/api.dart';
 
 import '../providers/events_providers.dart';
 import '../providers/user_provider.dart';
-import '../widgets/event_card.dart';
+
 class SupabaseLogin extends StatefulWidget {
   const SupabaseLogin({super.key});
 
@@ -340,7 +340,7 @@ bool _obscurePassword=true;
                   backgroundColor: Theme.of(context).colorScheme.error,
                 ));
               } catch (error) {
-                print(error);
+
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                   content: Text('Error occurred, please try again : $error'),
 
@@ -433,7 +433,7 @@ bool _obscurePassword=true;
         print('An error occurred: ${response['error']}');
       } else {
 
-        print('Username added successfully');
+
         String fullName = response['data']['user']['fullName']?? 'Unknown';
         String userEmail = user.userMetadata?['email'];
         String UserId=user.id;
