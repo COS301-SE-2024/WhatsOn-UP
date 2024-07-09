@@ -5,7 +5,6 @@ import jakarta.servlet.ServletException
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.autoconfigure.security.SecurityProperties
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
@@ -13,11 +12,20 @@ import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
 import java.io.IOException
 
+
 @Component
 class AuthFilter: OncePerRequestFilter() {
 
     @Autowired
     private lateinit var customUserDetailsService: CustomUserDetailsService
+
+    private val ENDPOINTS: List<String> = mutableListOf(
+        "/api/events/get_all",
+        "/api/events/filter",
+        "/api/events/search",
+        "/api/events/filterEvents"
+    )
+
 
     @Throws(ServletException::class, IOException::class)
     override fun doFilterInternal(
@@ -27,12 +35,16 @@ class AuthFilter: OncePerRequestFilter() {
     ) {
         // Ignore authentication for specific URL pattern
         val requestURI = request.requestURI
-        if (requestURI.endsWith("/api/events/get_all")) {
+        val id = getBearer(request)
+        val match = ENDPOINTS.stream().anyMatch { suffix: String? ->
+            requestURI.endsWith(
+                suffix!!
+            )
+        }
+        if (match && id == null) {
             filterChain.doFilter(request, response)
             return
         }
-
-        val id = getBearer(request)
         if (id != null) {
             try {
                 val userDetails: CustomUser = customUserDetailsService.loadUserByUsername(id)
