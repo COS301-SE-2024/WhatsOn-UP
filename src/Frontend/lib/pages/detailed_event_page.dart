@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:firstapp/pages/edit_Event.dart';
 import 'package:firstapp/providers/events_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -21,14 +24,16 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
   int _currentImageIndex = 0;
   final user = supabase.auth.currentUser;
   late Event _thisCurrentEvent;
+
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     _fetchEvent();
+
   }
   Future<void> _fetchEvent() async {
     try {
-      EventProvider eventProvider = Provider.of<EventProvider>(context, listen: false);
+      EventProvider eventProvider = Provider.of<EventProvider>(context,listen: false);
       Event? event = await eventProvider.getEventById(widget.event.id );
       if (event != null) {
         setState(() {
@@ -50,7 +55,7 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
 
 
 
-  // void _addToCalendar() {
+
   Future<void> _addToCalendar() async {
     try {
       var result = await Api().rsvpEvent(widget.event.id,user!.id);
@@ -73,12 +78,24 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
     // Logic for reporting event
   }
 
-  void _editEvent() {
-    // Logic for reporting event
+  Future<void> _editEvent() async {
+    EventProvider eventProvider = Provider.of<EventProvider>(context,listen: false);
+    if (widget.event.id != null && widget.event.id is String) {
+      print('Navigating to EditEvent with eventId: ${widget.event.id}');
+      final resultEdit= await Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => EditEvent(eventId: widget.event.id)),
+      );
+      if (resultEdit == true) {
+        await eventProvider.refreshEvents();
+      }
+    } else {
+      print('Event ID is null or not a String');
+    }
   }
 
   void _DeleteEvent() {
-    // Logic for reporting event
+
   }
 
   @override
@@ -87,13 +104,15 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
     userProvider userP = Provider.of<userProvider>(context, listen: false);
 
 
+
+
     final theme = Theme.of(context);
     final dotColour = theme.brightness == Brightness.dark ? const Color.fromARGB(255, 116, 116, 116) : Colors.grey;
     final activeDotColour = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.event.nameOfEvent),
+        title: Text(_thisCurrentEvent.nameOfEvent),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -150,7 +169,7 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    widget.event.nameOfEvent,
+                    _thisCurrentEvent.nameOfEvent,
                     style: const TextStyle(
                       fontSize: 24.0,
                       fontWeight: FontWeight.bold,
@@ -173,7 +192,8 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
                       const Icon(Icons.location_on),
                       const SizedBox(width: 8.0),
                       Text(
-                        widget.event.location,
+                        // widget.event.location,
+                        _thisCurrentEvent.location,
                         style: const TextStyle(fontSize: 16.0),
                       ),
                     ],
@@ -188,7 +208,8 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
                   ),
                   const SizedBox(height: 8.0),
                   Text(
-                    widget.event.description,
+                    _thisCurrentEvent.description,
+                    //   _thisCurrentEvent.description,
                     style: const TextStyle(fontSize: 16.0),
                   ),
                   const SizedBox(height: 16.0),
@@ -271,12 +292,5 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
 
 
   }
-
-
-
-
-
-  // Example usage inside a widget or another function
-
 
 }

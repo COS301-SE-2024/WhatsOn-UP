@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
@@ -15,8 +17,32 @@ class CalendarPage extends StatefulWidget {
   @override
   State<CalendarPage> createState() => _CalendarPageState();
 }
+class Attendee {
+  final String userId;
+  final String fullName;
+  final String profileImage;
+  final Map<String, dynamic> role;
 
+  Attendee({
+    required this.userId,
+    required this.fullName,
+    required this.profileImage,
+    required this.role,
+  });
+
+  factory Attendee.fromJson(Map<String, dynamic> json) {
+    return Attendee(
+      userId: json['userId'],
+      fullName: json['fullName'],
+      profileImage: json['profileImage'],
+      role: json['role'],
+    );
+  }
+}
 class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClientMixin {
+
+
+
   @override
   bool get wantKeepAlive => true;
 
@@ -63,12 +89,16 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
         'date': event['startTime'].substring(0, 10),
         'time': event['startTime'].substring(11, 16),
         'location': event['location'],
-        'attendees': event['attendees'].length.toString(),
+        // 'attendees': event['attendees'].length.toString(),
         'url': 'https://picsum.photos/200', // TODO: This still needs to change to the actual url of the image. Currently nothing is being returned in the eventMedia field
         'description': event['description'],
         'id': event['id'],
         'hosts': (event.containsKey('hosts') && (event['hosts'] as List).isNotEmpty)
             ? List<String>.from(event['hosts'].map((host) => host['fullName']))
+            : [],
+        'attendees': (event.containsKey('attendees') &&
+            (event['attendees'] as List).isNotEmpty)
+            ? List<Attendee>.from(event['attendees'].map((attendee) => Attendee.fromJson(attendee)))
             : [],
       };
     }).toList();
@@ -238,6 +268,13 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
                           imageUrls: [event['url']],
                           id: event['id'],
                           hosts: event['hosts'],
+                          attendees: event['attendees'],
+                          startTime: event['startTime'],
+                          endTime: event['endTime'],
+                          maxAttendees: event['maxAttendees'],
+                          isPrivate: event['isPrivate'],
+                          startDate: null,
+
                         );
                       
                         Navigator.push(
@@ -317,3 +354,5 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
     );
   }
 }
+
+

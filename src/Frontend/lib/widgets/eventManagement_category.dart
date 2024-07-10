@@ -391,7 +391,7 @@ class _EventmanagementCategoryState extends State<EventmanagementCategory> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Event Management'), // Adjust the app bar title as needed
+        title: Text('Edit Events'), // Adjust the app bar title as needed
       ),
 
       body: Column(
