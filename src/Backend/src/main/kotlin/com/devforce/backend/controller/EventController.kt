@@ -1,9 +1,6 @@
 package com.devforce.backend.controller
 
-import com.devforce.backend.dto.CreateEventDto
-import com.devforce.backend.dto.FilterByDto
-import com.devforce.backend.dto.ResponseDto
-import com.devforce.backend.dto.UpdateEventDto
+import com.devforce.backend.dto.*
 import com.devforce.backend.model.EventModel
 import com.devforce.backend.service.EventService
 import jakarta.annotation.security.RolesAllowed
@@ -50,6 +47,13 @@ class EventController {
     fun deleteEvent(@PathVariable id: UUID): ResponseEntity<ResponseDto> {
         return eventService.deleteEvent(id)
     }
+    @GetMapping("/categories")
+    fun getUniqueCategories(): ResponseEntity<ResponseDto> {
+        val categories = eventService.getUniqueCategories()
+        return ResponseEntity.ok(ResponseDto("Categories fetched successfully", System.currentTimeMillis(), categories))
+
+    }
+
 
     @GetMapping("/search/{searchString}")
     @PreAuthorize("permitAll()")
