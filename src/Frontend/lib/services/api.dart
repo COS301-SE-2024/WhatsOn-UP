@@ -49,7 +49,7 @@ class Api {
         throw Exception(jsonDecode(response.body));
       }
     } catch (e) {
-      print('Error: $e');
+
       throw Exception(e.toString());
     }
   }
@@ -74,7 +74,7 @@ class Api {
         throw Exception(jsonDecode(response.body));
       }
     } catch (e) {
-      print('Error: $e');
+
       throw Exception(e.toString());
     }
   }
@@ -102,7 +102,7 @@ class Api {
       throw Exception('Failed to load events');
     }
   } catch (e) {
-    print('Error: $e');
+
     rethrow;
   }
 }
@@ -128,7 +128,7 @@ class Api {
       }
     }
     catch (e) {
-      print('Error RSVP API: $e');
+
       throw Exception(e.toString());
     }
   }
@@ -161,7 +161,7 @@ class Api {
         throw Exception('Failed to change user');
       }
     } catch (e) {
-      print('Error: $e');
+
       return {'error': e.toString()};
     }
 
@@ -193,7 +193,7 @@ class Api {
         throw Exception('Failed to change password');
       }
     } catch (e) {
-      print('Error: $e');
+
       return {'error': e.toString()};
     }
   }
@@ -239,7 +239,7 @@ class Api {
         throw Exception(jsonDecode(response.body));
       }
     } catch (e) {
-      print('Error: $e');
+
       throw Exception(e.toString());
     }
   }
@@ -263,7 +263,7 @@ class Api {
         throw Exception(jsonDecode(response.body));
       }
     } catch (e) {
-      print('Error: $e');
+
       throw Exception(e.toString());
     }
 
@@ -305,7 +305,7 @@ class Api {
 
    }
   Future<Map<String, dynamic>> getUser(String userid) async {
-    final String _userUrl = 'http://$domain:8080/api/auth/get_user';
+    final String _userUrl = 'http://$domain:8080/api/user/get_user';
 
     //
     //   // Define the headers and body for login request
@@ -326,7 +326,7 @@ class Api {
         throw Exception('Failed to get user details');
       }
     } catch (e) {
-      print('Error: $e');
+
       return {'error': e.toString()};
     }
 

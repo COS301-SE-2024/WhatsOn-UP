@@ -533,7 +533,7 @@ class _GoogleSignInPageState extends State<GoogleSignInPage> {
       if (response['error'] != null) {
         print('An error occurred: ${response['error']}');
       } else {
-        print('Username added successfully');
+
         userP.role = response['data']['user']['role'] ?? 'Unknown';
 
         bool isBase64(String input) {

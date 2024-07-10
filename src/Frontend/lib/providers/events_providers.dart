@@ -149,13 +149,19 @@ class EventProvider with ChangeNotifier {
   // List<Event> get eventsRsvp => _eventsRsvp;
   List<Event> get eventsSaved => _eventsSaved;
 
-  void addEventHome(Event event) {
+  // void addEventHome(Event event) {
+  //   _eventsHome.then((events) {
+  //     events.add(event);
+  //     notifyListeners();
+  //   });
+  // }
+  void addEventHome(Map<String, dynamic> eventData) {
+    Event event = Event.fromJson(eventData);
     _eventsHome.then((events) {
       events.add(event);
       notifyListeners();
     });
   }
-
   void addEventsHome(List<Event> events) {
     _eventsHome.then((existingEvents) {
       existingEvents.addAll(events);
@@ -210,7 +216,16 @@ class EventProvider with ChangeNotifier {
     _eventsSaved.remove(event);
     notifyListeners();
   }
-
+  Future<Event?> getEventById(String id) async {
+    try {
+      List<Event> events = await _eventsHome;
+      Event? event= events.firstWhere((event) => event.id == id);
+      return event;
+    } catch (e) {
+      throw Exception('Failed to get event by ID: $e');
+    }
+  }
+}
 
 
 // void addEventSaved(Event event) {
@@ -233,4 +248,5 @@ class EventProvider with ChangeNotifier {
 //     notifyListeners();
 //   });
 // }
-}
+
+

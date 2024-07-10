@@ -49,7 +49,7 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
       });
       
     } catch (e) {
-      print('RSVP Error: $e');
+      // print('RSVP Error: $e');
       setState(() {
         _isLoading = false;
       });
@@ -67,6 +67,9 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
         'url': 'https://picsum.photos/200', // TODO: This still needs to change to the actual url of the image. Currently nothing is being returned in the eventMedia field
         'description': event['description'],
         'id': event['id'],
+        'hosts': (event.containsKey('hosts') && (event['hosts'] as List).isNotEmpty)
+            ? List<String>.from(event['hosts'].map((host) => host['fullName']))
+            : [],
       };
     }).toList();
   }
@@ -234,6 +237,7 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
                           description: event['description'],
                           imageUrls: [event['url']],
                           id: event['id'],
+                          hosts: event['hosts'],
                         );
                       
                         Navigator.push(
