@@ -7,6 +7,23 @@ import 'dart:typed_data';import 'package:firstapp/widgets/event_card.dart';
 class EventService {
   static const String baseUrl = 'http://localhost:8080';
 
+  Future<List<String>> fetchUniqueCategories() async {
+    final uri = Uri.parse('$baseUrl/api/events/categories');
+
+    try {
+      final response = await http.get(uri);
+      if (response.statusCode == 200) {
+        final List<dynamic> decodedJson = json.decode(response.body);
+        final List<String> categories = decodedJson.map((category) => category.toString()).toList();
+        return categories;
+      } else {
+        throw Exception('Failed to load categories');
+      }
+    } catch (e) {
+      throw Exception('Failed to connect to the server');
+    }
+  }
+
 
   Future<List<dynamic>> searchEvents(String searchTerm) async {
     final uri = Uri.parse('$baseUrl/api/events/search/$searchTerm');
@@ -16,7 +33,7 @@ class EventService {
         final Map<String, dynamic> decodedJson = json.decode(response.body);
         final List<dynamic> eventsJson = decodedJson['data'];
 
-        // Map the JSON objects to Event objects
+
         final List<Event> events = eventsJson.map((jsonEvent) => Event.fromJson(jsonEvent)).toList();
         return events;
       } else {

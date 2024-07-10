@@ -1,9 +1,7 @@
 import 'package:firstapp/widgets/event_card.dart';
 import 'package:flutter/material.dart';
-import 'package:firstapp/widgets/SearchTile.dart';
+import 'package:firstapp/widgets/SearchImageTile.dart';
 import 'package:firstapp/services/EventService.dart';
-
-import '../widgets/FilteredEventsScreen.dart';
 
 class SearchScreen extends StatefulWidget {
   @override
@@ -13,13 +11,41 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   final EventService _eventService = EventService();
   List<Event> _searchResults = [];
+  List<String> _categories = [];
   bool _isLoading = false;
   bool _showSearchTiles = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchCategories(); // Fetch categories when screen initializes
+  }
+
+  void _fetchCategories() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final categories = await _eventService.fetchUniqueCategories(); // Implement this method in EventService
+      setState(() {
+        _categories = categories;
+        _isLoading = false;
+      });
+    } catch (e) {
+      // Handle error, e.g., show an error message
+      print('Error fetching categories: $e');
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
 
   void _searchEvents(String query) async {
     setState(() {
       _isLoading = true;
       _searchResults.clear(); // Clear previous results
+      _showSearchTiles = false; // Hide search tiles when searching
     });
 
     try {
@@ -27,53 +53,23 @@ class _SearchScreenState extends State<SearchScreen> {
       setState(() {
         _searchResults = results;
         _isLoading = false;
-        _showSearchTiles = false;
       });
     } catch (e) {
-     //probably add an  alert
+      // Handle error, e.g., show an error message
       print('Error searching events: $e');
       setState(() {
         _isLoading = false;
       });
     }
   }
-/*  void _applyFilter(String filter) async {
-    setState(() {
-      _isLoading = true;
-      _searchResults.clear();
-    });
 
-    try {
-      final results = await _eventService.filterEventsByKeyword(filter);
-      setState(() {
-        _searchResults = results;
-        _isLoading = false;
-      });
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => FilteredEventsScreen(events: _searchResults),
-        ),
-      ).then((value) {
-        // Clear search results when returning from FilteredEventsScreen
-        setState(() {
-          _searchResults.clear();
-        });
-      });
-    } catch (e) {
-      //probably add an  alert
-      print('Error filtering events: $e');
-      setState(() {
-        _isLoading = false;
-      });
-    }
-  }*/
   void _clearSearchResults() {
     setState(() {
       _searchResults.clear();
       _showSearchTiles = true; // Show search tiles again
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -129,8 +125,17 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
             ),
             if (_showSearchTiles)
-              SearchTile(
-                onFilterSelected: _searchEvents,
+              GridView.count(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                crossAxisCount: 2,
+                children: _categories.map((category) {
+                  return SearchImageTile(
+                    title: category,
+                    imageUrl: 'assets/images/$category.jpg', // Example path to image in assets
+                    onTap: (title) => _searchEvents(title),
+                  );
+                }).toList(),
               ),
             SizedBox(height: 16.0),
             _isLoading
@@ -143,13 +148,12 @@ class _SearchScreenState extends State<SearchScreen> {
               child: ListView.builder(
                 itemCount: _searchResults.length,
                 itemBuilder: (context, index) {
-                      // Ensure index is within bounds
-                      if (index >= _searchResults.length) {
-                        return Container(); // or handle error gracefully
-                      }
-                      EventCard card = EventCard(event: _searchResults[index]);
-                      return card;
-                    },
+                  // Ensure index is within bounds
+                  if (index >= _searchResults.length) {
+                    return Container(); // or handle error gracefully
+                  }
+                  return EventCard(event: _searchResults[index]);
+                },
               ),
             ),
           ],
