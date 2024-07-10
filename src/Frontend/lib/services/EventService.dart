@@ -6,15 +6,20 @@ import 'dart:typed_data';import 'package:firstapp/widgets/event_card.dart';
 
 class EventService {
   static const String baseUrl = 'http://localhost:8080';
+  String authToken = ''; //here
 
   Future<List<String>> fetchUniqueCategories() async {
     final uri = Uri.parse('$baseUrl/api/events/categories');
 
     try {
-      final response = await http.get(uri);
+      final response = await http.get(uri, headers: {
+        'Authorization': 'Bearer $authToken',
+      });
       if (response.statusCode == 200) {
         final List<dynamic> decodedJson = json.decode(response.body);
+        print("body");
         final List<String> categories = decodedJson.map((category) => category.toString()).toList();
+        print(categories);
         return categories;
       } else {
         throw Exception('Failed to load categories');
@@ -28,7 +33,9 @@ class EventService {
   Future<List<dynamic>> searchEvents(String searchTerm) async {
     final uri = Uri.parse('$baseUrl/api/events/search/$searchTerm');
     try {
-      final response = await http.get(uri);
+      final response = await http.get(uri, headers: {
+        'Authorization': 'Bearer $authToken',
+      });
       if (response.statusCode == 200) {
         final Map<String, dynamic> decodedJson = json.decode(response.body);
         final List<dynamic> eventsJson = decodedJson['data'];

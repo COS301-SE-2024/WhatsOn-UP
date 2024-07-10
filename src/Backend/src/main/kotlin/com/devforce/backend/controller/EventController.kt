@@ -48,6 +48,7 @@ class EventController {
         return eventService.deleteEvent(id)
     }
     @GetMapping("/categories")
+    @PreAuthorize("permitAll()")
     fun getUniqueCategories(): ResponseEntity<ResponseDto> {
         val categories = eventService.getUniqueCategories()
         return ResponseEntity.ok(ResponseDto("Categories fetched successfully", System.currentTimeMillis(), categories))
