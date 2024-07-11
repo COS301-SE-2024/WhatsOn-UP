@@ -9,6 +9,7 @@ import 'dart:typed_data';
 import 'package:firstapp/pages/home_page.dart';
 import 'package:provider/provider.dart';
 
+import '../main.dart';
 import '../providers/user_provider.dart';
 class ProfilePage extends  StatefulWidget {
 
@@ -146,6 +147,10 @@ final String ADMIN='ADMIN';
                         _buildProfileOption(
                           text: 'Logout',
                           onTap: () {
+                            final session = supabase.auth.currentSession;
+                            if (session != null) {
+                              supabase.auth.signOut();
+                            }
                             Navigator.push(
                               context,
                               MaterialPageRoute(builder: (context) =>  SupabaseLogin()),

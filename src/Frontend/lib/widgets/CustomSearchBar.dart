@@ -18,7 +18,7 @@ class CustomSearchBar extends StatelessWidget {
       margin: EdgeInsets.all(8.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(50.0),
-        color: Colors.black, // Set background color of search bar to black
+        color: Colors.black,
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,

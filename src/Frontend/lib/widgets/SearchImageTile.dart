@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class SearchImageTile extends StatelessWidget {
   final String title;
   final String imageUrl;
-  final Function(String) onTap;  // Should be Function(String)
+  final Function(String) onTap;
 
   SearchImageTile({required this.title, required this.imageUrl, required this.onTap});
 
