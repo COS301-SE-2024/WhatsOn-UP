@@ -61,7 +61,7 @@ class UserService {
 
 
         val event = optionalEvent.get()
-        val u = event.attendees.find { it.userId == user.userId }
+        val u = event.savedEvents.find { it.userId == user.userId }
         if (event.savedEvents.remove(u)){
             eventRepo.save(event)
             return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Event deleted successfully"))
