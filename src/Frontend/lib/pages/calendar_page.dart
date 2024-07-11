@@ -17,28 +17,28 @@ class CalendarPage extends StatefulWidget {
   @override
   State<CalendarPage> createState() => _CalendarPageState();
 }
-class Attendee {
-  final String userId;
-  final String fullName;
-  final String profileImage;
-  final Map<String, dynamic> role;
-
-  Attendee({
-    required this.userId,
-    required this.fullName,
-    required this.profileImage,
-    required this.role,
-  });
-
-  factory Attendee.fromJson(Map<String, dynamic> json) {
-    return Attendee(
-      userId: json['userId'],
-      fullName: json['fullName'],
-      profileImage: json['profileImage'],
-      role: json['role'],
-    );
-  }
-}
+// class Attendee {
+//   final String userId;
+//   final String fullName;
+//   final String profileImage;
+//   final Map<String, dynamic> role;
+//
+//   Attendee({
+//     required this.userId,
+//     required this.fullName,
+//     required this.profileImage,
+//     required this.role,
+//   });
+//
+//   factory Attendee.fromJson(Map<String, dynamic> json) {
+//     return Attendee(
+//       userId: json['userId'],
+//       fullName: json['fullName'],
+//       profileImage: json['profileImage'],
+//       role: json['role'],
+//     );
+//   }
+// }
 class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClientMixin {
 
 
@@ -46,13 +46,19 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
   @override
   bool get wantKeepAlive => true;
 
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   // _fetchRSVPEvents();
+  //   WidgetsBinding.instance.addPostFrameCallback((_) {
+  //     _fetchRSVPEvents();
+  //   });
+  // }
   @override
-  void initState() {
-    super.initState();
-    // _fetchRSVPEvents();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _fetchRSVPEvents();
-    });
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _fetchRSVPEvents();
+
   }
 
   CalendarFormat _calendarFormat = CalendarFormat.month;
@@ -85,11 +91,16 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
   List<Map<String, dynamic>> parseEvents(List<dynamic> events) {
     return events.map((event) {
       return {
+
+        'startTime': event['startTime']?.toString() ?? '',
+        'endTime': event['endTime']?.toString() ?? '',
+        'isPrivate': event['isPrivate'] ?? false,
         'name': event['title'],
         'date': event['startTime'].substring(0, 10),
         'time': event['startTime'].substring(11, 16),
         'location': event['location'],
         // 'attendees': event['attendees'].length.toString(),
+        'maxAttendees': event['maxAttendees'] is int ? event['maxAttendees'] : 0,
         'url': 'https://picsum.photos/200', // TODO: This still needs to change to the actual url of the image. Currently nothing is being returned in the eventMedia field
         'description': event['description'],
         'id': event['id'],
@@ -114,7 +125,12 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
     }
     return groupedEvents;
   }
-
+  List<Attendee> _getAttendeesForEvent(dynamic event) {
+    // Assuming event['attendees'] is List<dynamic> containing Attendee objects
+    return (event['attendees'] as List<dynamic>)
+        .map((attendee) => Attendee.fromJson(attendee))
+        .toList();
+  }
   List<dynamic> _getEventsForDay(DateTime day) {
     return _groupedEvents[DateTime(day.year, day.month, day.day)] ?? [];
   }
@@ -258,6 +274,9 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
                         ? _getEventsForDay(_selectedDay!)
                         : _getEventsForMonth(_focusedDay);
                     final event = events[index];
+
+
+
                     return GestureDetector(
                       onTap: () {
                         Event eventObject = Event(
@@ -268,15 +287,15 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
                           imageUrls: [event['url']],
                           id: event['id'],
                           hosts: event['hosts'],
-                          attendees: event['attendees'],
+                          attendees:event['attendees'],
                           startTime: event['startTime'],
                           endTime: event['endTime'],
                           maxAttendees: event['maxAttendees'],
                           isPrivate: event['isPrivate'],
-                          startDate: null,
+                          startDate: '',
 
                         );
-                      
+
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -335,7 +354,7 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
                                         const SizedBox(width: 16.0),
                                         const Icon(Icons.people, size: 16),
                                         const SizedBox(width: 4.0),
-                                        Text(event['attendees']),
+                                        Text(event['attendees'].length.toString()),
                                       ],
                                     ),
                                   ],

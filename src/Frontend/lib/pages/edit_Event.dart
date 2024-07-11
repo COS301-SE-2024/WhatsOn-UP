@@ -2,6 +2,7 @@ import 'package:firstapp/pages/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firstapp/pages/profilePage.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'dart:typed_data';
 import 'package:image_picker/image_picker.dart';
 import 'package:firstapp/widgets/theme_manager.dart';
@@ -25,7 +26,7 @@ class EditEvent extends StatefulWidget {
 
 class _EditEventState extends State<EditEvent> {
   late Event _thisCurrentEvent;
-
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -46,6 +47,14 @@ class _EditEventState extends State<EditEvent> {
           venueController.text = _thisCurrentEvent.location;
           maxAttendeesController.text = _thisCurrentEvent.maxAttendees.toString();
           isPublic = _thisCurrentEvent.isPrivate;
+          startDate = DateTime.parse(_thisCurrentEvent.startTime);
+          startTime = TimeOfDay.fromDateTime(startDate);
+          endDate = DateTime.parse(_thisCurrentEvent.endTime);
+          endTime = TimeOfDay.fromDateTime(endDate);
+          print( startDate);
+          print( startTime);
+          print( endDate);
+          print( endTime);
 
         });
       } else {
@@ -75,7 +84,7 @@ class _EditEventState extends State<EditEvent> {
 
   @override
   Widget build(BuildContext context) {
-    userProvider userP = Provider.of<userProvider>(context);
+
     myColor = Theme
         .of(context)
         .primaryColor;
@@ -92,12 +101,21 @@ class _EditEventState extends State<EditEvent> {
         ),
         title: const Text('Update Event'),
       ),
-      body: _buildForm(),
+      body:  isLoading
+          ? Center(
+        child: SpinKitPianoWave(
+          color: Color.fromARGB(255, 149, 137, 74),
+          size: 50.0,
+        ),
+      )
+          : _buildForm(),
     );
   }
 
   Widget _buildForm() {
     String maxAttendees= _thisCurrentEvent.maxAttendees.toString();
+    print('this current event is ${_thisCurrentEvent.startTime}');
+    print('this current event is ${_thisCurrentEvent.endTime}');
     EventProvider eventP = Provider.of<EventProvider>(context);
     return Form(
       key: _formKey,
@@ -249,7 +267,7 @@ class _EditEventState extends State<EditEvent> {
                 final pickedDate = await showDatePicker(
                   context: context,
                   initialDate: date,
-                  firstDate: DateTime.now(),
+                  firstDate:  startDate,
                   lastDate: DateTime(DateTime
                       .now()
                       .year + 1),
@@ -318,6 +336,9 @@ class _EditEventState extends State<EditEvent> {
     EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
     final userSuperbase = supabase.auth.currentUser;
     if (_formKey.currentState!.validate()) {
+      setState(() {
+        isLoading = true;
+      });
       if (eventNameController.text.isNotEmpty) {
         print('updating to ${eventNameController.text}');
         eventP.EditEventName(_thisCurrentEvent.id, eventNameController.text);
@@ -362,17 +383,21 @@ class _EditEventState extends State<EditEvent> {
           eventId: _thisCurrentEvent.id,
           title:eventNameController.text,
           description: eventDescriptionController.text,
-          startDate: _thisCurrentEvent.startTime,
-          endDate: _thisCurrentEvent.endTime,
+          startDate: startDateTime,
+          endDate: endDateTime,
           location: venueController.text,
           maxParticipants: maxAttendees,
           isPrivate: isPublic,
           media: mediaUrls,
 
         ).then((response) {
-          print('Event updated successfully ${response['data']}');
+          setState(() {
+            isLoading = false;
+          });
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Event updated successfully')),
+          );
           Navigator.pop(context, true);
-
 
           eventNameController.clear();
           eventDescriptionController.clear();

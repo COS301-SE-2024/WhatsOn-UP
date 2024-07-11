@@ -63,6 +63,7 @@ import 'package:firstapp/pages/settings_page.dart';
 import 'package:firstapp/pages/supabase_Accountpage.dart';
 import 'package:firstapp/pages/supabase_Splashpage.dart';
 import 'package:firstapp/pages/supabase_login.dart';
+import 'package:firstapp/pages/supabase_resetPassword.dart';
 import 'package:firstapp/providers/events_providers.dart';
 import 'package:firstapp/providers/user_provider.dart';
 import 'package:firstapp/screens/SearchScreen.dart';
@@ -119,7 +120,7 @@ class MyApp extends StatelessWidget {
           // '/rsvp': (context)=> const RSVPEventsPage(),
           '/settings': (context)=> const SettingsPage(),
           '/search': (context)=>  SearchScreen(),
-
+           '/resetPassword': (context)=> const ResetPasswordPage(),
           //
         },
 

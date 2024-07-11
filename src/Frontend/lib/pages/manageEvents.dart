@@ -64,13 +64,7 @@ class ManageEvents extends StatelessWidget {
               );
             },
           ),
-          _buildDivider(),
-          _buildProfileOption(
-            text: 'Attendees',
-            onTap: () {
 
-            },
-          ),
           _buildDivider(),
         ],
       ),

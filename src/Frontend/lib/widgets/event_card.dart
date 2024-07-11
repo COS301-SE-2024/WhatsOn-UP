@@ -164,6 +164,10 @@ class Attendee {
       role: json['role'],
     );
   }
+  @override
+  String toString() {
+    return 'Attendee(id: $userId, name: $fullName, role: $role)';  // Include all properties
+  }
 }
 class Event {
   late final String nameOfEvent;
@@ -191,7 +195,8 @@ class Event {
     required this.endTime,
     required this.maxAttendees,
     required this.isPrivate,
-    required this.attendees, required startDate,
+    required this.attendees,
+    required startDate,
   });
 
   // factory Event.fromJson(Map<String, dynamic> json) {

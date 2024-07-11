@@ -102,6 +102,14 @@ class EventProvider with ChangeNotifier {
       throw Exception('Failed to refresh events: $e');
     }
   }
+  Future<void> refreshRSVPEvents(String userId) async {
+    try {
+      _eventsRsvp = _fetchEventsRsvp(userId);
+      notifyListeners();
+    } catch (e) {
+      throw Exception('Failed to refresh events: $e');
+    }
+  }
   Future<List<Event>> _fetchEventsHome() async {
     try {
       return await api.getAllEvents();
@@ -120,14 +128,6 @@ class EventProvider with ChangeNotifier {
   void fetchfortheFirstTimeRsvp(String userId) {
     _eventsRsvp = _fetchEventsRsvp(userId);
   }
-  //
-  // Future<List<Event>> _fetchEventsSaved() async {
-  //   try {
-  //     return await api.getAllEvents();
-  //   } catch (e) {
-  //     throw Exception('Failed to fetch home events: $e');
-  //   }
-  // }
 
 
   Future<List<Event>> get eventsHome async {
