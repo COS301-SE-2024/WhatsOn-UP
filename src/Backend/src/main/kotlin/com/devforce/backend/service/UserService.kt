@@ -61,12 +61,18 @@ class UserService {
 
 
         val event = optionalEvent.get()
-        event.savedEvents.remove(user)
-        eventRepo.save(event)
+        val u = event.attendees.find { it.userId == user.userId }
+        if (event.savedEvents.remove(u)){
+            eventRepo.save(event)
+            return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Event deleted successfully"))
+            )
+        }
+        else {
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Event not found"))
+        }
 
 
-        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Event deleted successfully"))
-        )
+
     }
 
     // To do: Implement function to get all saved events for the current user
@@ -120,10 +126,15 @@ class UserService {
         }
 
         val event = optionalEvent.get()
-        event.attendees.remove(user)
-        userRepo.save(user)
-        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Event deleted successfully"))
-        )
+        val u = event.attendees.find { it.userId == user.userId }
+        if (event.attendees.remove(u)){
+            eventRepo.save(event)
+            return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Event deleted successfully"))
+            )
+        }
+        else {
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Event not found"))
+        }
     }
 
     // To do: Implement function to update user profile
