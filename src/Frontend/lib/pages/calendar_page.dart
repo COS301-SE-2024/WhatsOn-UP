@@ -46,20 +46,20 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
   @override
   bool get wantKeepAlive => true;
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   // _fetchRSVPEvents();
-  //   WidgetsBinding.instance.addPostFrameCallback((_) {
-  //     _fetchRSVPEvents();
-  //   });
-  // }
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _fetchRSVPEvents();
-
+  void initState() {
+    super.initState();
+    // _fetchRSVPEvents();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _fetchRSVPEvents();
+    });
   }
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   _fetchRSVPEvents();
+  //
+  // }
 
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
