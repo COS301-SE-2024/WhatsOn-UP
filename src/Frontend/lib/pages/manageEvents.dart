@@ -67,7 +67,7 @@ class ManageEvents extends StatelessWidget {
 
           _buildDivider(),
           _buildProfileOption(
-            text: 'My attendees',
+            text: userP.role == 'ADMIN' ? 'Attendees for All Events' : 'My Attendees',
             onTap: () {
               Navigator.push(
                 context,

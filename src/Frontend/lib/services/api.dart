@@ -117,7 +117,7 @@ class Api {
       var response = await http.get(Uri.parse(_rsvpEventsURL), headers: headers);
 
       if (response.statusCode == 200) {
-        print('WORKING RSVP API!');
+
         return jsonDecode(response.body)['data'];
       } else {
         throw Exception(jsonDecode(response.body));

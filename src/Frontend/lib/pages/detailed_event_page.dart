@@ -65,6 +65,8 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
         SnackBar(content: Text('Successfully RSVP\'d to event!')),
       );
       await eventProvider.refreshRSVPEvents(user!.id);
+      print('amount of attendees after event added to the calendar ${_thisCurrentEvent.attendees.length}');
+      Navigator.of(context).pushReplacementNamed('/home');
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to RSVP: ${e.toString()}')),
@@ -77,13 +79,14 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
     print('Removing RSVP for event: ${widget.event.id}');
     try {
        await Api().DeletersvpEvent(widget.event.id,user!.id).then((response){
-         print(response);
+
        });
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Successfully removed RSVP !')),
       );
        await eventProvider.refreshRSVPEvents(user!.id);
+       print('amount of attendees after event removed from the calendar ${_thisCurrentEvent.attendees.length}');
        Navigator.of(context).pushReplacementNamed('/home');
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -110,6 +113,7 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
       );
       if (resultEdit == true) {
         await eventProvider.refreshEvents();
+        await eventProvider.refreshRSVPEvents(user!.id);
         Navigator.of(context).pushReplacementNamed('/home');
       }
     } else {
@@ -258,11 +262,25 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
                             'End: ${_thisCurrentEvent.endTime}',
                             style: const TextStyle(fontSize: 16.0),
                           ),
+
                         ],
                       ),
                     ],
                   ),
                   const SizedBox(height: 8.0),
+                  Row(
+                    children: [
+                      const Icon(Icons.people),
+                      const SizedBox(width: 8.0),
+                      Text(
+                        'Attendees: ${_thisCurrentEvent.attendees.length}/${_thisCurrentEvent.maxAttendees}',
+                        style: const TextStyle(fontSize: 16.0),
+                      ),
+                    ],
+                  ),
+
+
+                  const SizedBox(height:8.0 ),
                   Row(
                     children: [
                       const Icon(Icons.location_on),
@@ -289,24 +307,39 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
                     style: const TextStyle(fontSize: 16.0),
                   ),
                   const SizedBox(height: 16.0),
-                  ElevatedButton.icon(
-                    onPressed: _addToCalendar,
-                    icon: const Icon(Icons.calendar_today),
-                    label: const Text('Add to my Calendar'),
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: const Size(double.infinity, 48),
-                    ),
-                  ),
-                  const SizedBox(height: 8.0),
-                  ElevatedButton.icon(
-                    onPressed:  _removeFromCalendar,
-                    icon: const Icon(Icons.map),
-                    label: const Text('Remove Event from my Calendar'),
+                  if (!_thisCurrentEvent.attendees.any((attendee) => attendee.userId == userP.userId)) ...[
+                    if (_thisCurrentEvent.maxAttendees >_thisCurrentEvent.attendees.length )
+                      ElevatedButton.icon(
+                        onPressed: _addToCalendar,
+                        icon: const Icon(Icons.calendar_today),
+                        label: const Text('Add to my Calendar'),
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: const Size(double.infinity, 48),
+                        ),
+                      ),
+                    if (_thisCurrentEvent.maxAttendees <= _thisCurrentEvent.attendees.length + 1)
+                      ElevatedButton.icon(
+                        onPressed: () {},
+                        icon: const Icon(Icons.calendar_today),
+                        label: const Text('Max Participants reached'),
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: const Size(double.infinity, 48),
+                        ),
+                      ),
+                  ],
 
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: const Size(double.infinity, 48),
+                  const SizedBox(height: 8.0),
+                  if (_thisCurrentEvent.attendees.any((attendee) => attendee.userId == userP.userId)) ...[
+                    ElevatedButton.icon(
+                      onPressed: _removeFromCalendar,
+                      icon: const Icon(Icons.calendar_today),
+                      label: const Text('Remove from my Calendar'),
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: const Size(double.infinity, 48),
+                      ),
                     ),
-                  ),
+                    const SizedBox(height: 8.0),
+                  ],
                   const SizedBox(height: 8.0),
                   ElevatedButton.icon(
                     onPressed: _viewLocationOnMap,
@@ -336,6 +369,7 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
                     const SizedBox(height: 8.0),
                     ElevatedButton.icon(
                       onPressed: _editEvent,
+                      icon: const Icon(Icons.edit),
                       label: const Text('Edit Event'),
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.black,
@@ -347,6 +381,7 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
                     const SizedBox(height: 8.0),
                     ElevatedButton.icon(
                       onPressed: _DeleteEvent,
+                      icon: const Icon(Icons.delete),
                       label: const Text('Remove Event'),
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.black,

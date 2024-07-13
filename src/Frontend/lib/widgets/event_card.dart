@@ -155,7 +155,14 @@ class Attendee {
     required this.profileImage,
     required this.role,
   });
-
+  Map<String, dynamic> toJson() {
+    return {
+      'userId': userId,
+      'fullName': fullName,
+      'profileImage': profileImage,
+      'role': role,
+    };
+  }
   factory Attendee.fromJson(Map<String, dynamic> json) {
     return Attendee(
       userId: json['userId'],

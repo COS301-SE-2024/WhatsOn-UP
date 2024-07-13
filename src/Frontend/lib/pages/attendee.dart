@@ -15,14 +15,20 @@ class Attendee extends StatefulWidget {
 }
 
 class _AttendeeState extends State<Attendee> {
-  late Future<List<Event>> _eventsHome;
+  late Future<List<Event>> _eventsRsvp;
 
   @override
   void initState() {
     super.initState();
     EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
+    userProvider userP = Provider.of<userProvider>(context, listen: false);
+    if(userP.role== 'Admin'){
+      _eventsRsvp = eventP.eventsRsvp;
+    }
+    else{
+      _eventsRsvp = eventP.eventsHome;
+    }
 
-    _eventsHome = eventP.eventsHome;
   }
 
 
@@ -39,7 +45,7 @@ class _AttendeeState extends State<Attendee> {
           title: Text('Attandees'), // Adjust the app bar title as needed
         ),
         body: FutureBuilder<List<Event>>(
-          future: _eventsHome,
+          future: _eventsRsvp,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
@@ -75,7 +81,7 @@ class _AttendeeState extends State<Attendee> {
                           Row(
                             children:[
                               Icon(Icons.people, size: 16),
-                              SizedBox(width: 4), // Adjust the width as needed for spacing
+                              SizedBox(width: 4),
                               Text(events[index].attendees.length.toString())
                             ],
                           ),

@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
-
+import 'dart:typed_data';
+import 'dart:convert';
 import '../widgets/event_card.dart';
 
 class EventAttendance extends StatefulWidget {
@@ -13,30 +14,72 @@ class EventAttendance extends StatefulWidget {
 }
 
 class _EventAttendanceState extends State<EventAttendance> {
+  late List<Attendee> filteredAttendees;
+  TextEditingController searchController = TextEditingController();
+
   @override
+  void initState() {
+    super.initState();
+    filteredAttendees = widget.event.attendees;
+    searchController.addListener(filterAttendees);
+  }
+
+  void filterAttendees() {
+    String query = searchController.text.toLowerCase();
+    setState(() {
+      filteredAttendees = widget.event.attendees.where((attendee) =>
+          attendee.fullName.toLowerCase().contains(query)).toList();
+    });
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+  @override
+
   Widget build(BuildContext context) {
-   return Scaffold(
-        appBar: AppBar(
+    return Scaffold(
+      appBar: AppBar(
         title: Text(widget.event.nameOfEvent),
-    ),
-    body: widget.event.attendees.length == 0
-        ? Center(
-      child: Text("You don't have any attendees"),
-    )
-   : ListView.builder(
-      itemCount: widget.event.attendees.length,
-      itemBuilder: (context, index) {
-        return ListTile(
-          leading: CircleAvatar(
-            backgroundImage: NetworkImage(widget.event.attendees[index].profileImage),
-            radius: 20,
+      ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              controller: searchController,
+              decoration: InputDecoration(
+                labelText: 'Search by name',
+                prefixIcon: Icon(Icons.search),
+              ),
+            ),
           ),
-          title:Center(
-            child: Text(widget.event.attendees[index].fullName),
-        )
-        );
-      },
-    ),
+          Expanded(
+            child: filteredAttendees.isEmpty
+                ? Center(
+              child: Text("No matching attendees found."),
+            )
+                : ListView.builder(
+              itemCount: filteredAttendees.length,
+              itemBuilder: (context, index) {
+                Uint8List profileImageBytes =
+                base64Decode(filteredAttendees[index].profileImage);
+                return ListTile(
+                  leading: CircleAvatar(
+                    backgroundImage: MemoryImage(profileImageBytes),
+                    radius: 20,
+                  ),
+                  title: Center(
+                    child: Text(filteredAttendees[index].fullName),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

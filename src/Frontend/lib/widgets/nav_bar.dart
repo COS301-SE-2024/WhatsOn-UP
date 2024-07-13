@@ -25,8 +25,8 @@ class NavBar extends StatelessWidget {
         label: 'Home',
       ),
       const BottomNavigationBarItem(
-        icon: Icon(Icons.event),
-        label: 'RSVP Events',
+        icon: Icon(Icons.notifications),
+        label: 'Notifications',
       ),
       const BottomNavigationBarItem(
         icon: Icon(Icons.calendar_today),
@@ -47,8 +47,8 @@ class NavBar extends StatelessWidget {
         label: 'Home',
       ),
       BottomNavigationBarItem(
-        icon: Icon(Icons.event),
-        label: 'RSVP Events',
+        icon: Icon(Icons.notifications),
+        label: 'Notifications',
       ),
       BottomNavigationBarItem(
         icon: Icon(Icons.calendar_today),

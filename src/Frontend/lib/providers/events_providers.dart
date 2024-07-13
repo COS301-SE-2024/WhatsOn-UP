@@ -84,7 +84,7 @@ class EventProvider with ChangeNotifier {
   final Api api = Api();
 
   late Future<List<Event>> _eventsHome;
-  late   Future<List<dynamic>> _eventsRsvp;
+  late Future<List<Event>> _eventsRsvp;
   //late Future<List<Event>> _eventsSaved;
   // List<Event> _eventsRsvp = [];
   List<Event> _eventsSaved = [];
@@ -117,10 +117,15 @@ class EventProvider with ChangeNotifier {
       throw Exception('Failed to fetch home events: $e');
     }
   }
-  Future<List<dynamic>>_fetchEventsRsvp(String userId) async {
+  Future<List<Event>> _fetchEventsRsvp(String userId) async {
     final user = supabase.auth.currentUser;
     try {
-      return await api.getRSVPEvents(userId);
+      final response= await api.getRSVPEvents(userId);
+      List<Event> events = (response as List)
+          .map((eventData) => Event.fromJson(eventData))
+          .toList();
+
+      return events;
     } catch (e) {
       throw Exception('Failed to fetch home events: $e');
     }
@@ -137,7 +142,7 @@ class EventProvider with ChangeNotifier {
       throw Exception('Failed to fetch home events: $e');
     }
   }
-     Future<List<dynamic>> get eventsRsvp async {
+     Future<List<Event>> get eventsRsvp async {
     try {
        return await _eventsRsvp;
      } catch (e) {

@@ -17,28 +17,7 @@ class CalendarPage extends StatefulWidget {
   @override
   State<CalendarPage> createState() => _CalendarPageState();
 }
-// class Attendee {
-//   final String userId;
-//   final String fullName;
-//   final String profileImage;
-//   final Map<String, dynamic> role;
-//
-//   Attendee({
-//     required this.userId,
-//     required this.fullName,
-//     required this.profileImage,
-//     required this.role,
-//   });
-//
-//   factory Attendee.fromJson(Map<String, dynamic> json) {
-//     return Attendee(
-//       userId: json['userId'],
-//       fullName: json['fullName'],
-//       profileImage: json['profileImage'],
-//       role: json['role'],
-//     );
-//   }
-// }
+
 class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClientMixin {
 
 
@@ -71,12 +50,11 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
 
     try {
       EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
-      final response = await eventP.eventsRsvp;
-
-      final parsedEvents = parseEvents(response);
+      final List<Event> events = await eventP.eventsRsvp;
+      // final parsedEvents = parseEvents(response);
 
       setState(() {
-        _groupedEvents = _groupEventsByDate(parsedEvents);
+        _groupedEvents = _groupEventsByDate(events);
         _isLoading = false;
       });
       
@@ -115,22 +93,38 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
     }).toList();
   }
 
-  Map<DateTime, List<Map<String, dynamic>>> _groupEventsByDate(List<Map<String, dynamic>> events) {
+  Map<DateTime, List<Map<String, dynamic>>> _groupEventsByDate(List<Event> events) {
     Map<DateTime, List<Map<String, dynamic>>> groupedEvents = {};
-    for (var event in events) {
-      DateTime date = DateTime.parse(event['date']);
+
+
+    events.forEach((event) {
+      DateTime date = DateTime.parse(event.startTime); // Assuming startTime is a DateTime string
       DateTime eventDay = DateTime(date.year, date.month, date.day);
-      if (groupedEvents[eventDay] == null) groupedEvents[eventDay] = [];
-      groupedEvents[eventDay]!.add(event);
-    }
+
+      if (groupedEvents[eventDay] == null) {
+        groupedEvents[eventDay] = [];
+      }
+
+      groupedEvents[eventDay]!.add({
+        'startTime': event.startTime.toString(),
+        'endTime': event.endTime.toString(),
+        'isPrivate': event.isPrivate ?? false,
+        'name': event.nameOfEvent,
+        'date': event.startTime.substring(0, 10),
+        'time': event.startTime.substring(11, 16),
+        'location': event.location,
+        'maxAttendees': event.maxAttendees ?? 0,
+        'url': 'https://picsum.photos/200', // Placeholder URL, update as needed
+        'description': event.description ?? '',
+        'id': event.id,
+        'hosts': event.hosts != null ? List<String>.from(event.hosts!) : [],
+        'attendees': event.attendees != null ? List<Attendee>.from(event.attendees!) : [],
+      });
+    });
+
     return groupedEvents;
   }
-  List<Attendee> _getAttendeesForEvent(dynamic event) {
-    // Assuming event['attendees'] is List<dynamic> containing Attendee objects
-    return (event['attendees'] as List<dynamic>)
-        .map((attendee) => Attendee.fromJson(attendee))
-        .toList();
-  }
+
   List<dynamic> _getEventsForDay(DateTime day) {
     return _groupedEvents[DateTime(day.year, day.month, day.day)] ?? [];
   }
@@ -155,6 +149,10 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
 
   @override
   Widget build(BuildContext context) {
+
+
+
+
     super.build(context);
     return Scaffold(
       body: Column(
@@ -274,8 +272,6 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
                         ? _getEventsForDay(_selectedDay!)
                         : _getEventsForMonth(_focusedDay);
                     final event = events[index];
-
-
 
                     return GestureDetector(
                       onTap: () {
