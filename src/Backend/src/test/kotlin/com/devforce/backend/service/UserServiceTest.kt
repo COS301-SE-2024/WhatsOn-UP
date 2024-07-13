@@ -31,17 +31,17 @@ class UserServiceTest {
     @InjectMocks
     private lateinit var userServiceWithMocks: UserService
 
+    var userid = UUID.randomUUID()
+    var user = UserModel().apply {
+        userId= userid
+    }
+
     @BeforeEach
     fun setUp() {
         MockitoAnnotations.openMocks(this)
-
-        val id = UUID.randomUUID()
-        val user = UserModel().apply {
-            userId= id
-        }
         val roleName = "HOST"
         val authorities = setOf(SimpleGrantedAuthority(roleName))
-        val userDetails = CustomUser(id, authorities, user)
+        val userDetails = CustomUser(userid, authorities, user)
         val auth = UsernamePasswordAuthenticationToken(userDetails, authorities, userDetails.authorities)
         SecurityContextHolder.getContext().authentication = auth
     }
@@ -83,9 +83,14 @@ class UserServiceTest {
     @Test
     fun `!!!Delete event success!!!`() {
         val id = UUID.randomUUID()
-        val event = EventModel()
+      
+        val event = EventModel().apply {
+            savedEvents.add(user)
+        }
 
         `when`(eventRepo.findById(id)).thenReturn(Optional.of(event))
+        `when`(eventRepo.save(event)).thenReturn(event)
+
 
         val response = userServiceWithMocks.deleteSavedEvent(id)
 
@@ -107,9 +112,7 @@ class UserServiceTest {
     @Test
     fun `!!!Get saved events success!!!`() {
         val id = UUID.randomUUID()
-        val user = UserModel().apply {
-            userId = id
-        }
+        
         val event = EventModel().apply {
             attendees.add(user)
         }
@@ -127,9 +130,7 @@ class UserServiceTest {
     @Test
     fun `!!!RSVP event success!!!`() {
         val id = UUID.randomUUID()
-        val user = UserModel().apply {
-            userId = id
-        }
+        
         val event = EventModel()
 
         `when`(eventRepo.findById(id)).thenReturn(Optional.of(event))
@@ -154,9 +155,7 @@ class UserServiceTest {
     @Test
     fun `!!!Get RSVP'd events success!!!`() {
         val id = UUID.randomUUID()
-        val user = UserModel().apply {
-            userId = id
-        }
+        
         val event = EventModel().apply {
             attendees.add(user)
         }
@@ -173,14 +172,15 @@ class UserServiceTest {
     @Test
     fun `!!!Delete RSVP'd event success!!!`() {
         val id = UUID.randomUUID()
-        val user = UserModel().apply {
-            userId = id
-        }
+
+        
+
         val event = EventModel().apply {
             attendees.add(user)
         }
 
         `when`(eventRepo.findById(id)).thenReturn(Optional.of(event))
+        `when`(eventRepo.save(event)).thenReturn(event)
 
         val response = userServiceWithMocks.deleteRspvEvent(id)
 
