@@ -1,6 +1,10 @@
 name: Backend Service Testing Pipeline
 
 on:
+    workflow_run:
+      workflows: ["Frontend CI"]
+      types:
+        - completed
     push:
         branches:
             - develop
