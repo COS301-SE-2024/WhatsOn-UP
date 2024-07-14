@@ -69,7 +69,7 @@ jobs:
 
     - name: Convert Jacoco report to lcov
       run: |
-        python3 scripts/jacoco2lcov.py ./src/Backend/build/reports/jacoco/codeCoverageReport/codeCoverageReport.xml backend.lcov.info
+        python3 scripts/jacoco2lcov.py ./src/Backend/build/reports/jacoco/report.xml backend.lcov.info
 
     - name: Merge coverage reports
       run: |
