@@ -35,16 +35,22 @@ jobs:
       run: flutter pub get
 
     - name: Install lcov
-      run: sudo apt-get install lcov
+      run: sudo apt-get install -y lcov
 
     - name: Run tests with coverage
       working-directory: ./src/Frontend
-      run: |
-        flutter pub get
-        flutter test --coverage
+      run: flutter test --coverage
 
-    - name: Upload frontend coverage report
+    - name: Verify lcov report
+      run: |
+        if [ ! -f ./src/Frontend/coverage/lcov.info ]; then
+          echo "lcov report not generated!"
+          exit 1
+        fi
+      working-directory: ./src/Frontend
+
+    - name: Upload coverage artifact
       uses: actions/upload-artifact@v2
       with:
         name: frontend-coverage
-        path: src/Frontend/coverage/lcov.info
+        path: ./src/Frontend/coverage/lcov.info
