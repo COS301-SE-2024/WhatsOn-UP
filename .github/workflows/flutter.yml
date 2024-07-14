@@ -35,12 +35,21 @@ jobs:
       run: flutter pub get
 
 
-    - name: Generate lcov report
+    - name: Run tests with coverage
       run: |
-        sudo apt-get install -y lcov
         flutter test --coverage
+        # Convert the coverage report to lcov format
+        genhtml coverage/lcov.info -o coverage/
       working-directory: ./src/Frontend
-    
+
+    - name: Verify lcov report
+      run: |
+        if [ ! -f ./src/Frontend/coverage/lcov.info ]; then
+          echo "lcov report not generated!"
+          exit 1
+        fi
+      working-directory: ./src/Frontend
+
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v2
       with:
