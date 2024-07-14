@@ -7,12 +7,14 @@ on:
       - main
     paths:
       - 'src/Frontend/**'
+      - '.github/workflows/flutter.yml'
   pull_request:
     branches:
       - develop
       - main
     paths:
       - 'src/Frontend/**'
+      - '.github/workflows/flutter.yml'
 
 jobs:
   test:

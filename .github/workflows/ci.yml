@@ -6,13 +6,15 @@ on:
             - develop
             - main
         paths:
-            - 'src/Backend/**'
+          - 'src/Backend/**'
+          - '.github/workflows/ci.yml'
     pull_request:
         branches:
             - develop
             - main
         paths:
-            - 'src/Backend/**'
+          - 'src/Backend/**'
+          - '.github/workflows/ci.yml'
 
 jobs:
     build:
