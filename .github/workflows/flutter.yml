@@ -34,6 +34,8 @@ jobs:
       working-directory: ./src/Frontend
       run: flutter pub get
 
+    - name: Install lcov
+      run: sudo apt-get install lcov
 
     - name: Run tests with coverage
       run: |
