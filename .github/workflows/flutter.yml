@@ -38,7 +38,6 @@ jobs:
     - name: Run tests with coverage
       run: |
         flutter test --coverage
-        # Convert the coverage report to lcov format
         genhtml coverage/lcov.info -o coverage/
       working-directory: ./src/Frontend
 
