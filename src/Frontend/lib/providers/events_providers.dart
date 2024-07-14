@@ -81,7 +81,8 @@ class EventProvider with ChangeNotifier {
 
 
 
-  final Api api = Api();
+  // late final Api api = Api();
+  late final Api api ;
 
   late Future<List<Event>> _eventsHome;
   late Future<List<Event>> _eventsRsvp;
@@ -89,14 +90,17 @@ class EventProvider with ChangeNotifier {
   // List<Event> _eventsRsvp = [];
   List<Event> _eventsSaved = [];
 
-  EventProvider() {
+  // EventProvider() {
+  //   _eventsHome = _fetchEventsHome();
+  //
+  //   // _eventsSaved = _fetchEventsSaved();
+  // }
+  EventProvider({required this.api}) {
     _eventsHome = _fetchEventsHome();
-
-    // _eventsSaved = _fetchEventsSaved();
   }
   Future<void> refreshEvents() async {
     try {
-      _eventsHome = _fetchEventsHome();
+       _eventsHome = _fetchEventsHome();
       notifyListeners();
     } catch (e) {
       throw Exception('Failed to refresh events: $e');
@@ -167,12 +171,16 @@ class EventProvider with ChangeNotifier {
   //     notifyListeners();
   //   });
   // }
-  void addEventHome(Map<String, dynamic> eventData) {
+  Future<void> addEventHome(Map<String, dynamic> eventData) async {
+    // Event event = Event.fromJson(eventData);
+    // _eventsHome.then((events) {
+    //   events.add(event);
+    //   notifyListeners();
+    // });
     Event event = Event.fromJson(eventData);
-    _eventsHome.then((events) {
-      events.add(event);
-      notifyListeners();
-    });
+    List<Event> events = await _eventsHome;
+    events.add(event);
+    notifyListeners();
   }
   void addEventsHome(List<Event> events) {
     _eventsHome.then((existingEvents) {
@@ -181,11 +189,14 @@ class EventProvider with ChangeNotifier {
     });
   }
 
-  void removeEventHome(Event event) {
-    _eventsHome.then((events) {
-      events.remove(event);
-      notifyListeners();
-    });
+  Future<void> removeEventHome(Event event) async {
+    // _eventsHome.then((events) {
+    //   events.remove(event);
+    //   notifyListeners();
+    // });
+    List<Event> events = await _eventsHome;
+    events.remove(event);
+    notifyListeners();
   }
 
   void addEventRSVP(Event event) {
@@ -250,7 +261,7 @@ class EventProvider with ChangeNotifier {
   //     throw Exception('Failed to get event by ID: $e');
   //   }
   // }
-  void EditEventName(String id, String eventName) async {
+  Future<void> EditEventName(String id, String eventName) async {
     try {
       List<Event> events = await _eventsHome;
       Event? event = events.firstWhere((event) => event.id == id);
@@ -278,22 +289,28 @@ class EventProvider with ChangeNotifier {
   }
 
 
-  void EditEventLocation(String id, String Location) async {
+  Future<void> EditEventLocation(String id, String Location) async {
     try {
       List<Event> events = await _eventsHome;
       Event? event = events.firstWhere((event) => event.id == id);
-      event.location = Location ;
-      notifyListeners();
+      if (event != null) {
+        event.location = Location ;
+        notifyListeners();
+      }
+
     } catch (e) {
       throw Exception('Failed to get event by ID: $e');
     }
   }
-  void EditEventMaxParticipants(String id, int maxParticipants) async {
+  Future<void> EditEventMaxParticipants(String id, int maxParticipants) async {
     try {
       List<Event> events = await _eventsHome;
       Event? event = events.firstWhere((event) => event.id == id);
-      event.maxAttendees = maxParticipants ;
-      notifyListeners();
+      if (event != null) {
+        event.maxAttendees = maxParticipants ;
+        notifyListeners();
+      }
+
     } catch (e) {
       throw Exception('Failed to get event by ID: $e');
     }

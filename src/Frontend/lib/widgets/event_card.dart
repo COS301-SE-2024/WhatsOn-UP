@@ -177,16 +177,16 @@ class Attendee {
   }
 }
 class Event {
-  late final String nameOfEvent;
+  late  String nameOfEvent;
   late final String dateAndTime;
-  late final String location;
+  late  String location;
   List<String> imageUrls;
   String description;
   final String id;
   List<String> hosts;
   late final String startTime;
   late final String endTime;
-  late final maxAttendees;
+  late int maxAttendees;
   late final bool isPrivate;
   final List<Attendee> attendees;
 
@@ -254,6 +254,24 @@ class Event {
       dateAndTime: json['startTime'],
       startDate: null,
     );
+  }
+
+
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': nameOfEvent,
+      'startTime': startTime,
+      'endTime': endTime,
+      'maxAttendees': maxAttendees,
+      'location': location,
+      'isPrivate': isPrivate,
+      'eventMedia': imageUrls,
+      'description': description,
+      'hosts': hosts.map((host) => {'fullName': host}).toList(),
+      'attendees': attendees.map((attendee) => attendee.toJson()).toList(),
+    };
   }
 }
 
