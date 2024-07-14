@@ -1,3 +1,4 @@
+import 'package:firstapp/pages/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firstapp/pages/profilePage.dart';
 import 'package:flutter/cupertino.dart';
@@ -319,7 +320,7 @@ class _ApplicationEventState extends State<ApplicationEvent> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => ProfilePage(),
+          builder: (context) => HomePage(),
         ),
       );
       

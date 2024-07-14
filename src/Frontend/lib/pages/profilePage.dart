@@ -140,7 +140,7 @@ final String ADMIN='ADMIN';
                         _buildProfileOption(
                           text: 'Security',
                           onTap: () {
-
+                            Navigator.of(context).pushReplacementNamed('/resetPassword');
                           },
                         ),
                         _buildDivider(),

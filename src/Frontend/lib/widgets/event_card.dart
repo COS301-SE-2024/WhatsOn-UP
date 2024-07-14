@@ -1,4 +1,3 @@
-
 import 'package:firstapp/providers/events_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:firstapp/pages/detailed_event_page.dart';
@@ -144,16 +143,52 @@ import 'package:provider/provider.dart';
 //     );
 //   }
 // }
+class Attendee {
+  final String userId;
+  final String fullName;
+  final String profileImage;
+  final Map<String, dynamic> role;
 
-
+  Attendee({
+    required this.userId,
+    required this.fullName,
+    required this.profileImage,
+    required this.role,
+  });
+  Map<String, dynamic> toJson() {
+    return {
+      'userId': userId,
+      'fullName': fullName,
+      'profileImage': profileImage,
+      'role': role,
+    };
+  }
+  factory Attendee.fromJson(Map<String, dynamic> json) {
+    return Attendee(
+      userId: json['userId'],
+      fullName: json['fullName'],
+      profileImage: json['profileImage'],
+      role: json['role'],
+    );
+  }
+  @override
+  String toString() {
+    return 'Attendee(id: $userId, name: $fullName, role: $role)';  // Include all properties
+  }
+}
 class Event {
-  final String nameOfEvent;
-  final String dateAndTime;
-  final String location;
-  final List<String> imageUrls;
-  final String description;
+  late final String nameOfEvent;
+  late final String dateAndTime;
+  late final String location;
+  List<String> imageUrls;
+  String description;
   final String id;
   List<String> hosts;
+  late final String startTime;
+  late final String endTime;
+  late final maxAttendees;
+  late final bool isPrivate;
+  final List<Attendee> attendees;
 
   Event({
     required this.nameOfEvent,
@@ -163,21 +198,61 @@ class Event {
     required this.description,
     required this.id,
     required this.hosts,
+   required this.startTime,
+    required this.endTime,
+    required this.maxAttendees,
+    required this.isPrivate,
+    required this.attendees,
+    required startDate,
   });
 
+  // factory Event.fromJson(Map<String, dynamic> json) {
+  //   return Event(
+  //     nameOfEvent: json['title'],
+  //     startTime: json['startTime'],
+  //     endTime: json['endTime'],
+  //     dateAndTime: json['startTime'],
+  //     maxAttendees: json['maxAttendees'],
+  //     location: json['location'],
+  //     isPrivate: json['isPrivate'],
+  //     imageUrls: (json.containsKey('eventMedia') &&
+  //             (json['eventMedia'] as List).isNotEmpty)
+  //         ? List<String>.from(json['eventMedia'])
+  //         : [
+  //             'https://images.pexels.com/photos/1190297/pexels-photo-1190297.jpeg'
+  //           ],
+  //     description: json['description'],
+  //     id: json['id'],
+  //     hosts: (json.containsKey('hosts') && (json['hosts'] as List).isNotEmpty)
+  //         ? List<String>.from(json['hosts'].map((host) => host['fullName']))
+  //         : [],
+  //     attendees: (json.containsKey('attendees') &&
+  //         (json['attendees'] as List).isNotEmpty)
+  //         ? List<Attendee>.from(json['attendees'].map((attendee) => Attendee.fromJson(attendee)))
+  //         : [],
+  //   );
+  // }
   factory Event.fromJson(Map<String, dynamic> json) {
     return Event(
-      nameOfEvent: json['title'],
-      dateAndTime: json['startTime'],
-      location: json['location'],
+      nameOfEvent: json['title']?.toString() ?? '',
+      startTime: json['startTime']?.toString() ?? '',
+      endTime: json['endTime']?.toString() ?? '',
+      maxAttendees: json['maxAttendees'] is int ? json['maxAttendees'] : 0,
+      location: json['location']?.toString() ?? '',
+      isPrivate: json['isPrivate'] ?? false,
       imageUrls: (json.containsKey('eventMedia') && (json['eventMedia'] as List).isNotEmpty)
-          ? List<String>.from(json['eventMedia'])
+          ? List<String>.from(json['eventMedia'].map((media) => media?.toString() ?? ''))
           : ['https://images.pexels.com/photos/1190297/pexels-photo-1190297.jpeg'],
-      description: json['description'],
-      id: json['id'],
+      description: json['description']?.toString() ?? '',
+      id: json['id']?.toString() ?? '',
       hosts: (json.containsKey('hosts') && (json['hosts'] as List).isNotEmpty)
-          ? List<String>.from(json['hosts'].map((host) => host['fullName']))
+          ? List<String>.from(json['hosts'].map((host) => host['fullName']?.toString() ?? ''))
           : [],
+      attendees: (json.containsKey('attendees') && (json['attendees'] as List).isNotEmpty)
+          ? List<Attendee>.from(json['attendees'].map((attendee) => Attendee.fromJson(attendee)))
+          : [],
+      dateAndTime: json['startTime'],
+      startDate: null,
     );
   }
 }
@@ -186,7 +261,8 @@ class EventCard extends StatefulWidget {
   final Event event;
   final bool showBookmarkButton;
 
-  EventCard({Key? key, required this.event, this.showBookmarkButton = true}) : super(key: key);
+  EventCard({Key? key, required this.event, this.showBookmarkButton = true})
+      : super(key: key);
 
   @override
   _EventCardState createState() => _EventCardState();
@@ -273,7 +349,6 @@ class _EventCardState extends State<EventCard> {
                         ),
                       ),
                     ),
-
                     if (widget.showBookmarkButton)
                       IconButton(
                         icon: Icon(
@@ -284,11 +359,10 @@ class _EventCardState extends State<EventCard> {
                         onPressed: () {
                           setState(() {
                             isBookmarked = !isBookmarked;
-                            if(isBookmarked==true){
+                            if (isBookmarked == true) {
                               eventP.addEventSaved(widget.event);
                               //api to add this event
-                            }
-                            else{
+                            } else {
                               eventP.removeEventSaved(widget.event);
                               //api to remove this event// Toggle bookmark state
                             }

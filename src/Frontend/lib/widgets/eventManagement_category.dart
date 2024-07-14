@@ -379,7 +379,6 @@ class _EventmanagementCategoryState extends State<EventmanagementCategory> {
   void initState() {
     super.initState();
     EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
-    // Initialize _eventsHome in initState or any other appropriate lifecycle method
     _eventsHome = eventP.eventsHome;
   }
 
@@ -391,7 +390,7 @@ class _EventmanagementCategoryState extends State<EventmanagementCategory> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Event Management'), // Adjust the app bar title as needed
+        title: Text('Edit Events'), // Adjust the app bar title as needed
       ),
 
       body: Column(
