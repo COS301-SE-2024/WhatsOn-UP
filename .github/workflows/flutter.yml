@@ -22,7 +22,7 @@ jobs:
     - name: Install Flutter
       uses: subosito/flutter-action@v2
       with:
-        flutter-version: '3.0.0' # Change this to your desired Flutter version
+        flutter-version: '3.22.1'
 
     - name: Install dependencies
       working-directory: ./src/Frontend
