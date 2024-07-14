@@ -43,7 +43,7 @@ jobs:
 
     - name: Verify lcov report
       run: |
-        if [ ! -f ./src/Frontend/coverage/lcov.info ]; then
+        if [ ! -f ./coverage/lcov.info ]; then
           echo "lcov report not generated!"
           exit 1
         fi
