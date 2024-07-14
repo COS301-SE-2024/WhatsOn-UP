@@ -42,31 +42,29 @@ jobs:
               run: ./gradlew assemble
               working-directory: ./src/Backend
 
-            - name: Run tests with Gradle
-              run:  ./gradlew clean test codeCoverageReport 
-              working-directory: ./src/Backend
-
             - name: Install lcov and Python3
               run: |
                 sudo apt-get update
                 sudo apt-get install -y lcov python3-pip
-                pip3 install jacoco2lcov
       
             - name: Download frontend coverage report
               uses: actions/download-artifact@v2
               with:
                 name: frontend-coverage
                 path: ./frontend-coverage
-
-
+      
+            - name: Run tests with Gradle
+              working-directory: ./src/Backend
+              run: ./gradlew clean test codeCoverageReport
+      
             - name: Convert Jacoco report to lcov
               run: |
-                jacoco2lcov ./src/Backend/build/reports/jacoco/codeCoverageReport/codeCoverageReport.xml > backend.lcov.info
-
+                python3 scripts/jacoco2lcov.py ./src/Backend/build/reports/jacoco/codeCoverageReport/codeCoverageReport.xml backend.lcov.info
+      
             - name: Merge coverage reports
               run: |
                 lcov -a ./frontend-coverage/lcov.info -a backend.lcov.info -o merged.lcov.info
-
+      
             - name: Upload coverage to Codecov
               uses: codecov/codecov-action@v4
               with:
@@ -74,5 +72,3 @@ jobs:
                 files: merged.lcov.info
                 flags: unittests
                 name: codecov-umbrella
-
-           
