@@ -165,7 +165,7 @@ String Host='HOST';
                   text: userP.role == Admin
                       ? 'All Events'
                       : 'My Events',
-                  onTap: () => _navigateToEventManagementCategory(context),
+                  onTap: () async => await _navigateToEventManagementCategory(context),
                 ),
                 _buildDivider(),
                 _buildProfileOption(
@@ -184,7 +184,12 @@ String Host='HOST';
                   text: userP.role == Admin
                       ? 'Attendees for All Events'
                       : 'My Attendees',
-                  onTap: () => _navigateToAttendeesEvent(context),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Attendee()),
+                    );
+                  },
                 ),
                 _buildDivider(),
               ],
@@ -192,7 +197,7 @@ String Host='HOST';
     );
   }
 
-  void _navigateToEventManagementCategory(BuildContext context) {
+  Future<void> _navigateToEventManagementCategory(BuildContext context) async {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => EventmanagementCategory()),

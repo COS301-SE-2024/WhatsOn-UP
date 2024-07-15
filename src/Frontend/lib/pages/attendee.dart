@@ -8,7 +8,7 @@ import 'Event_Attendance.dart';
 
 
 class Attendee extends StatefulWidget {
-  const Attendee({super.key});
+   Attendee({super.key});
 
   @override
   State<Attendee> createState() => _AttendeeState();
@@ -22,7 +22,7 @@ class _AttendeeState extends State<Attendee> {
     super.initState();
     EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
     userProvider userP = Provider.of<userProvider>(context, listen: false);
-    if(userP.role== 'Admin'){
+    if(userP.role== 'ADMIN'){
       _eventsRsvp = eventP.eventsRsvp;
     }
     else{
@@ -42,7 +42,7 @@ class _AttendeeState extends State<Attendee> {
 
     return Scaffold(
         appBar: AppBar(
-          title: Text('Attandees'), // Adjust the app bar title as needed
+          title: Text('Attandees'),
         ),
         body: FutureBuilder<List<Event>>(
           future: _eventsRsvp,
