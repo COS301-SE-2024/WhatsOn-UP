@@ -11,9 +11,45 @@ import 'package:firstapp/providers/user_provider.dart';
 
 
 class MockEventProvider extends ChangeNotifier implements EventProvider {
+  late final Api api ;
+  late Future<List<Event>> _eventsHome;
+  late Future<List<Event>> _eventsRsvp;
+
+  @override
+  MockEventProvider({required this.api}) {
+    _eventsHome = _fetchEventsHome();
+  }
   @override
   Future<List<Event>> get eventsRsvp async {
-    // Return mock RSVP events data for testing
+    List<Attendee> attendees1 = [
+      Attendee(
+          userId: '1',
+          fullName: 'John Doe',
+          profileImage: 'path/to/john_doe.jpg',
+          role: {'Admin': 'Organizer', 'permissions': ['manage']}
+      ),
+      Attendee(
+          userId: '2',
+          fullName: 'Jane Smith',
+          profileImage: 'path/to/jane_smith.jpg',
+          role: {'title': 'Attendee', 'permissions': ['view']}
+      ),
+    ];
+
+    List<Attendee> attendees2 = [
+      Attendee(
+          userId: '3',
+          fullName: 'Alice Johnson',
+          profileImage: 'path/to/alice_johnson.jpg',
+          role: {'title': 'Organizer', 'permissions': ['manage']}
+      ),
+      Attendee(
+          userId: '4',
+          fullName: 'Bob Brown',
+          profileImage: 'path/to/bob_brown.jpg',
+          role: {'title': 'Attendee', 'permissions': ['view']}
+      ),
+    ];
     return Future.value([
       Event(
         id: '1',
@@ -27,7 +63,7 @@ class MockEventProvider extends ChangeNotifier implements EventProvider {
         endTime: '2022-01-01T12:00:00.000Z',
         maxAttendees: 100,
         isPrivate: true,
-        attendees: [],
+        attendees: [attendees1[0], attendees1[1]],
         startDate: DateTime.parse('2022-01-01T10:00:00.000Z'),
       ),
       Event(
@@ -42,7 +78,7 @@ class MockEventProvider extends ChangeNotifier implements EventProvider {
         endTime: '2022-01-02T12:00:00.000Z',
         maxAttendees: 150,
         isPrivate: false,
-        attendees: [],
+        attendees: [attendees2[0], attendees2[1]],
         startDate: DateTime.parse('2022-01-02T10:00:00.000Z'),
       ),
     ]);
@@ -50,7 +86,35 @@ class MockEventProvider extends ChangeNotifier implements EventProvider {
 
   @override
   Future<List<Event>> get eventsHome async {
-    // Return mock home events data for testing
+    List<Attendee> attendees1 = [
+      Attendee(
+          userId: '1',
+          fullName: 'John Doe',
+          profileImage: 'path/to/john_doe.jpg',
+          role: {'Admin': 'Organizer', 'permissions': ['manage']}
+      ),
+      Attendee(
+          userId: '2',
+          fullName: 'Jane Smith',
+          profileImage: 'path/to/jane_smith.jpg',
+          role: {'title': 'Attendee', 'permissions': ['view']}
+      ),
+    ];
+
+    List<Attendee> attendees2 = [
+      Attendee(
+          userId: '3',
+          fullName: 'Alice Johnson',
+          profileImage: 'path/to/alice_johnson.jpg',
+          role: {'title': 'Organizer', 'permissions': ['manage']}
+      ),
+      Attendee(
+          userId: '4',
+          fullName: 'Bob Brown',
+          profileImage: 'path/to/bob_brown.jpg',
+          role: {'title': 'Attendee', 'permissions': ['view']}
+      ),
+    ];
     return Future.value([
 
       Event(
@@ -65,7 +129,7 @@ class MockEventProvider extends ChangeNotifier implements EventProvider {
         endTime: '2022-01-01T12:00:00.000Z',
         maxAttendees: 100,
         isPrivate: true,
-        attendees: [],
+        attendees: [attendees1[0],attendees1[1]],
         startDate: DateTime.parse('2022-01-01T10:00:00.000Z'),
       ),
       Event(
@@ -80,7 +144,7 @@ class MockEventProvider extends ChangeNotifier implements EventProvider {
         endTime: '2022-01-02T12:00:00.000Z',
         maxAttendees: 150,
         isPrivate: false,
-        attendees: [],
+        attendees: [ attendees2[0], attendees2[1]],
         startDate: DateTime.parse('2022-01-02T10:00:00.000Z'),
       ),
       Event(
@@ -101,8 +165,7 @@ class MockEventProvider extends ChangeNotifier implements EventProvider {
     ]);
   }
 
-  @override
-  late Api api;
+
 
   @override
   void EditEventDescription(String id, String Description) {
@@ -210,36 +273,66 @@ class MockEventProvider extends ChangeNotifier implements EventProvider {
   void removeEventSaved(Event event) {
     // TODO: implement removeEventSaved
   }
+  @override
+  Future<List<Event>> _fetchEventsHome() async {
+    try {
+      return await api.getAllEvents();
+    } catch (e) {
+      throw Exception('Failed to fetch home events: $e');
+    }
+  }
 }
 
 class MockUserProvider extends ChangeNotifier implements userProvider {
-  @override
-  String get role => 'ADMIN';
-  @override
-  String get Fullname => 'John Doe';
-
-  @override
-  late String email;
-
-  @override
-  late String password;
-
-  @override
+  String _Fullname = 'Testing';
+  String _Email = '';
+  String _Password = '';
+  String _Role= '';
+  String _userId= '';
   Uint8List? profileImage;
 
-  @override
-  Uint8List? profileimage;
 
-  @override
-  late String userId;
+  String get Fullname => _Fullname;
+  String get email => _Email;
+  String get password => _Password;
+  Uint8List? get profileimage => profileImage;
+  String get role => _Role;
+  String get userId => _userId; 
+  
 
   @override
   set Fullname(String value) {
-    // TODO: implement Fullname
+    _Fullname = value;
+    notifyListeners();
   }
 
   @override
   set role(String value) {
-    // TODO: implement role
+    _Role = value;
+    notifyListeners();
+  }
+
+  @override
+  set email(String value) {
+    _Email = value;
+    notifyListeners();
+  }
+
+  @override
+  set password(String value) {
+    _Password = value;
+    notifyListeners();
+  }
+
+  @override
+  set profileimage(Uint8List? value) {
+    profileImage = value;
+    notifyListeners();
+  }
+
+  @override
+  set userId(String value) {
+    _userId = value;
+    notifyListeners();
   } // Mock Fullname for testing
 }

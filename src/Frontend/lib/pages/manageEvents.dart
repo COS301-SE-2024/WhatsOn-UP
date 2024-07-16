@@ -187,7 +187,7 @@ String Host='HOST';
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => Attendee()),
+                      MaterialPageRoute(builder: (context) => Attendees()),
                     );
                   },
                 ),
@@ -214,7 +214,7 @@ String Host='HOST';
   void _navigateToAttendeesEvent(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => Attendee()),
+      MaterialPageRoute(builder: (context) => Attendees()),
     );
   }
 

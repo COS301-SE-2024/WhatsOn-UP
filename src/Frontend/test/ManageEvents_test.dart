@@ -184,11 +184,11 @@ print(find.byType(ApplicationEvent));
       );
       print('Current role: ${user.role}');
       expect(find.text('Attendees for All Events'), findsOneWidget);
-      // await tester.tap(find.text('Attendees for All Events'));
-      // await tester.pump(Duration(seconds: 1));
-      //
-      // print('The type we expect : ${find.byType(Attendee)}');
-      // expect(find.byType(Attendee), findsOneWidget);
+      await tester.tap(find.text('Attendees for All Events'));
+      await tester.pump(Duration(seconds: 1));
+
+      print('The type we expect : ${find.byType(SpinKitPianoWave)}');
+      expect(find.byType(SpinKitPianoWave), findsOneWidget);
     });
     // Add more tests for other interactions and navigation as needed
   });

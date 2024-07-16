@@ -7,27 +7,20 @@ import '../widgets/event_card.dart';
 import 'Event_Attendance.dart';
 
 
-class Attendee extends StatefulWidget {
-   Attendee({super.key});
+class Attendees extends StatefulWidget {
+   Attendees({super.key});
 
   @override
-  State<Attendee> createState() => _AttendeeState();
+  State<Attendees> createState() => _AttendeesState();
 }
 
-class _AttendeeState extends State<Attendee> {
+class _AttendeesState extends State<Attendees> {
   late Future<List<Event>> _eventsRsvp;
 
   @override
   void initState() {
     super.initState();
-    EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
-    userProvider userP = Provider.of<userProvider>(context, listen: false);
-    if(userP.role== 'ADMIN'){
-      _eventsRsvp = eventP.eventsRsvp;
-    }
-    else{
-      _eventsRsvp = eventP.eventsHome;
-    }
+
 
   }
 
@@ -35,7 +28,14 @@ class _AttendeeState extends State<Attendee> {
 
   @override
   Widget build(BuildContext context) {
-
+    EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
+    userProvider userP = Provider.of<userProvider>(context, listen: false);
+    if(userP.role== 'HOST'){
+      _eventsRsvp = eventP.eventsRsvp;
+    }
+    else{
+      _eventsRsvp = eventP.eventsHome;
+    }
     final theme = Theme.of(context);
     final textColour = theme.colorScheme.onSurface;
     final borderColour = theme.colorScheme.secondary;
