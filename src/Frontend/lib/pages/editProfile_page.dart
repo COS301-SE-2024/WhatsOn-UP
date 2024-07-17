@@ -383,9 +383,7 @@ class _EditprofilePageState extends State<EditprofilePage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ProfilePage(
-
-                    ),
+                    builder: (context) => ProfilePage(),
                   ),
                 ); // Navigate to ProfilePage
               },
