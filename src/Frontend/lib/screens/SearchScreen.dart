@@ -19,7 +19,7 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   void initState() {
     super.initState();
-    _fetchCategories(); 
+    _fetchCategories();
   }
 
   void _fetchCategories() async {
@@ -45,8 +45,8 @@ class _SearchScreenState extends State<SearchScreen> {
   void _searchEvents(String query) async {
     setState(() {
       _isLoading = true;
-      _searchResults.clear(); // Clear previous results
-      _showSearchTiles = false; // Hide search tiles when searching
+      _searchResults.clear();
+      _showSearchTiles = false;
     });
 
     try {
@@ -67,7 +67,7 @@ class _SearchScreenState extends State<SearchScreen> {
   void _clearSearchResults() {
     setState(() {
       _searchResults.clear();
-      _showSearchTiles = true; // Show search tiles again
+      _showSearchTiles = true;
     });
   }
 
@@ -112,12 +112,12 @@ class _SearchScreenState extends State<SearchScreen> {
                       onSubmitted: _searchEvents,
                       onTap: () {
                         setState(() {
-                          _showSearchTiles = true; //
+                          _showSearchTiles = true;
                         });
                       },
                       onChanged: (value) {
                         setState(() {
-                          _showSearchTiles = true; // Show search tiles on change
+                          _showSearchTiles = true;
                         });
                       },
                     ),
@@ -125,7 +125,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 ],
               ),
             ),
-            if (_showSearchTiles)
+            if (_showSearchTiles  && _categories.isNotEmpty)
               GridView.count(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
@@ -133,7 +133,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 children: _categories.map((category) {
                   return SearchImageTile(
                     title: category,
-                    imageUrl: 'images/$category.jpg', // Example path to image in assets
+                    imageUrl: 'images/$category.jpg',
                     onTap: (title) => _searchEvents(title),
                   );
                 }).toList(),
@@ -141,7 +141,7 @@ class _SearchScreenState extends State<SearchScreen> {
             SizedBox(height: 16.0),
             _isLoading
                 ? Center(child: CircularProgressIndicator())
-                : _searchResults.isEmpty
+                : _searchResults.isEmpty  && _categories.isEmpty
                 ? Center(
               child: Text('No events found'),
             )
@@ -149,9 +149,9 @@ class _SearchScreenState extends State<SearchScreen> {
               child: ListView.builder(
                 itemCount: _searchResults.length,
                 itemBuilder: (context, index) {
-                  // Ensure index is within bounds
+
                   if (index >= _searchResults.length) {
-                    return Container(); // or handle error gracefully
+                    return Container();
                   }
                   return EventCard(event: _searchResults[index]);
                 },
