@@ -2,6 +2,7 @@ import 'package:firstapp/widgets/event_card.dart';
 import 'package:flutter/material.dart';
 import 'package:firstapp/widgets/SearchImageTile.dart';
 import 'package:firstapp/services/EventService.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SearchScreen extends StatefulWidget {
   @override
@@ -9,7 +10,7 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  final EventService _eventService = EventService();
+  final EventService _eventService = EventService(Supabase.instance.client);
   List<Event> _searchResults = [];
   List<String> _categories = [];
   bool _isLoading = false;
@@ -18,7 +19,7 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   void initState() {
     super.initState();
-    _fetchCategories(); // Fetch categories when screen initializes
+    _fetchCategories(); 
   }
 
   void _fetchCategories() async {
@@ -27,7 +28,7 @@ class _SearchScreenState extends State<SearchScreen> {
     });
 
     try {
-      final categories = await _eventService.fetchUniqueCategories(); // Implement this method in EventService
+      final categories = await _eventService.fetchUniqueCategories();
       setState(() {
         _categories = categories;
         _isLoading = false;
@@ -111,7 +112,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       onSubmitted: _searchEvents,
                       onTap: () {
                         setState(() {
-                          _showSearchTiles = true; // Show search tiles on tap
+                          _showSearchTiles = true; //
                         });
                       },
                       onChanged: (value) {
@@ -132,7 +133,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 children: _categories.map((category) {
                   return SearchImageTile(
                     title: category,
-                    imageUrl: 'assets/images/$category.jpg', // Example path to image in assets
+                    imageUrl: 'images/$category.jpg', // Example path to image in assets
                     onTap: (title) => _searchEvents(title),
                   );
                 }).toList(),
