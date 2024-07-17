@@ -23,6 +23,7 @@ class EventModel {
 
     var title: String = ""
     var description: String = ""
+
     var metadata: String = "" //changed from  var metadata: String = ""
 
     @ElementCollection

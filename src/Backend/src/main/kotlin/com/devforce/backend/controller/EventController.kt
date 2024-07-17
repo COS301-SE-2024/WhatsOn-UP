@@ -56,10 +56,12 @@ class EventController {
     }
 
 
-    @GetMapping("/search/{searchString}")
+    @GetMapping("/search")
     @PreAuthorize("permitAll()")
-    fun searchEvents(@PathVariable searchString: String): ResponseEntity<ResponseDto> {
-        val events = eventService.searchEvents(searchString)
+    fun searchEvents(
+        @RequestParam(required = true) searchString: String)
+    : ResponseEntity<ResponseDto>? {
+        val events = searchString.let { eventService.searchEvents(it) }
         return events
     }
 

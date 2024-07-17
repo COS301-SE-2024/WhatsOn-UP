@@ -71,7 +71,11 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
    // fun findByTitleContainingIgnoreCase(title: String): List<Event>
 
 
-    @Query("SELECT DISTINCT (metadata ->> 'category') FROM events WHERE metadata ->> 'category' IS NOT NULL", nativeQuery = true)
+    @Query("""
+        SELECT DISTINCT (metadata::jsonb ->> 'category') 
+        FROM events 
+        WHERE metadata::jsonb ->> 'category' IS NOT NULL
+    """, nativeQuery = true)
     fun findUniqueCategories(): List<String>
 
 
