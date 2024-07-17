@@ -410,6 +410,35 @@ bool _obscurePassword=true;
 
             ],
           ),
+          const SizedBox(height: 20),
+          TextButton(
+            onPressed: () async {
+              try {
+                await _login(isGuest: true);
+                
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomePage()),
+                );
+              } catch (e) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Error logging in as guest: ${e.toString()}'),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+              }
+            },
+            style: TextButton.styleFrom(
+              padding: const EdgeInsets.symmetric(vertical: 10.0),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0),
+              ),
+              backgroundColor: Colors.transparent,
+            ),
+            child: const Text('Log in as guest'),
+          ),
+
         ],
       ),
     );
@@ -417,64 +446,138 @@ bool _obscurePassword=true;
 
 
 
-  Future<void> _login() async {
-    userProvider userP = Provider.of<userProvider>(context, listen: false);
-    // eventProvider eventP = Provider.of<eventProvider>(context, listen: false);
-    EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
+  // Future<void> _login() async {
+  //   userProvider userP = Provider.of<userProvider>(context, listen: false);
+  //   // eventProvider eventP = Provider.of<eventProvider>(context, listen: false);
+  //   EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
+  //   final user = supabase.auth.currentUser;
+  //    eventP.fetchfortheFirstTimeRsvp(user!.id);
+
+  //   Api api = Api();
+  //   // final List<Event> events=await api.getAllEvents();
+  //   //eventP.addEventsHome(events);
+  //   api. getUser(user!.id).then((response){
+  //     if (response['error'] != null) {
+
+  //       print('An error occurred: ${response['error']}');
+  //     } else {
+
+  //       print('Username added successfully');
+  //       String fullName = response['data']['user']['fullName']?? 'Unknown';
+  //       String userEmail = user.userMetadata?['email'];
+  //       String UserId=user.id;
+  //       String role=response['data']['user']['role']?? 'Unknown';
+  //       String  profileImage=response['data']['user']['profileImage']?? 'Unknown';
+  //       Uint8List profileImageBytes = Uint8List(0);
+  //       userP.userId=user.id;
+  //       userP.Fullname=fullName;
+  //       userP.email=userEmail;
+  //       userP.role=role;
+  //       bool isBase64(String input) {
+  //         final RegExp base64 = RegExp(
+  //           r'^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$',
+  //         );
+  //         return base64.hasMatch(input);
+  //       }
+
+  //       if (isBase64(profileImage)) {
+
+  //         try {
+  //           profileImageBytes = base64Decode(profileImage);
+  //         } catch (e) {
+  //           print('Error decoding Base64: $e');
+  //         }
+  //       } else {
+  //         print('Invalid Base64 string: $profileImage');
+  //       }
+
+  //   userP.profileimage=profileImageBytes;
+
+  //       Navigator.push(
+  //         context,
+  //         MaterialPageRoute(builder: (context) => HomePage(
+
+  //         )),
+  //       );
+  //     }
+  //   });
+
+
+  //   print('signup successful');
+
+  // }
+
+  Future<void> _login({bool isGuest = false}) async {
+  userProvider userP = Provider.of<userProvider>(context, listen: false);
+  EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
+
+  if (isGuest) {
+    userP.setGuestUser();
+    // Skip getting events
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => HomePage()),
+    );
+  } else {
     final user = supabase.auth.currentUser;
-     eventP.fetchfortheFirstTimeRsvp(user!.id);
+    if (user == null) {
+      print('No user is currently logged in');
+      return;
+    }
+
+    eventP.fetchfortheFirstTimeRsvp(user.id);
 
     Api api = Api();
-    // final List<Event> events=await api.getAllEvents();
-    //eventP.addEventsHome(events);
-    api. getUser(user!.id).then((response){
+    try {
+      final response = await api.getUser(user.id);
       if (response['error'] != null) {
-
         print('An error occurred: ${response['error']}');
       } else {
-
         print('Username added successfully');
-        String fullName = response['data']['user']['fullName']?? 'Unknown';
-        String userEmail = user.userMetadata?['email'];
-        String UserId=user.id;
-        String role=response['data']['user']['role']?? 'Unknown';
-        String  profileImage=response['data']['user']['profileImage']?? 'Unknown';
-        Uint8List profileImageBytes = Uint8List(0);
-        userP.userId=user.id;
-        userP.Fullname=fullName;
-        userP.email=userEmail;
-        userP.role=role;
-        bool isBase64(String input) {
-          final RegExp base64 = RegExp(
-            r'^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$',
-          );
-          return base64.hasMatch(input);
-        }
+        String fullName = response['data']['user']['fullName'] ?? 'Unknown';
+        String userEmail = user.userMetadata?['email'] ?? '';
+        String role = response['data']['user']['role'] ?? 'Unknown';
+        String profileImage = response['data']['user']['profileImage'] ?? '';
 
+        Uint8List? profileImageBytes;
         if (isBase64(profileImage)) {
-
           try {
             profileImageBytes = base64Decode(profileImage);
           } catch (e) {
             print('Error decoding Base64: $e');
           }
         } else {
-          print('Invalid Base64 string: $profileImage');
+          print('Invalid Base64 string or empty profileImage');
         }
 
-    userP.profileimage=profileImageBytes;
+        userP.setUserData(
+          userId: user.id,
+          fullName: fullName,
+          email: userEmail,
+          role: role,
+          profileImage: profileImageBytes,
+          isGuest: false,
+        );
 
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => HomePage(
-
-          )),
+          MaterialPageRoute(builder: (context) => HomePage()),
         );
       }
-    });
-
-
-    print('signup successful');
-
+    } catch (e) {
+      print('Error during login: $e');
+    }
   }
+
+  print('Login/signup successful');
+}
+
+bool isBase64(String input) {
+  if (input.isEmpty) return false;
+  final RegExp base64 = RegExp(
+    r'^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?$',
+  );
+  return base64.hasMatch(input);
+}
+
 }

@@ -92,6 +92,7 @@ class EventProvider with ChangeNotifier {
   EventProvider() {
     _eventsHome = _fetchEventsHome();
 
+    _eventsRsvp = Future.value([]);
     // _eventsSaved = _fetchEventsSaved();
   }
 
@@ -102,14 +103,36 @@ class EventProvider with ChangeNotifier {
       throw Exception('Failed to fetch home events: $e');
     }
   }
-  Future<List<dynamic>>_fetchEventsRsvp(String userId) async {
-    final user = supabase.auth.currentUser;
+
+  Future<List<dynamic>> _fetchCalendarEventsGuest() async {
     try {
-      return await api.getRSVPEvents(userId);
+      return await api.getAllEventsGuest();
     } catch (e) {
       throw Exception('Failed to fetch home events: $e');
     }
   }
+
+  // Future<List<dynamic>>_fetchEventsRsvp(String userId) async {
+  //   final user = supabase.auth.currentUser;
+  //   try {
+  //     return await api.getRSVPEvents(userId);
+  //   } catch (e) {
+  //     throw Exception('Failed to fetch home events: $e');
+  //   }
+  // }
+
+  Future<List<dynamic>> _fetchEventsRsvp(String? userId) async {
+    // print("ID RECEIVED IN PROVIDER: $userId");
+  if (userId == "guest") { // If id received is "guest", user is a guest
+    return _fetchCalendarEventsGuest(); // Retrieve all events (for display on the calendar page)
+  }
+  try {
+    return await api.getRSVPEvents(userId!);
+  } catch (e) {
+    throw Exception('Failed to fetch RSVP events: $e');
+  }
+}
+
   void fetchfortheFirstTimeRsvp(String userId) {
     _eventsRsvp = _fetchEventsRsvp(userId);
   }

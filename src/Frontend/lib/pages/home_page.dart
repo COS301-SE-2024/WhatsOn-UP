@@ -55,8 +55,9 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     userProvider userP = Provider.of<userProvider>(context);
-const String HOST='HOST';
-const String ADMIN='ADMIN';
+    print("user role: ${userP.role}");
+    const String HOST='HOST';
+    const String ADMIN='ADMIN';
     return Scaffold(
       body: Container(
         // color: Colors.grey[200],
