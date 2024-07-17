@@ -332,6 +332,10 @@ class Api {
 
   }
 
+  String getJwtToken() {
+    return jwtKey;
+  }
+
 
 
 }
