@@ -284,6 +284,6 @@ void main() {
 
     });
 
-    // Add more tests for other interactions and navigation as needed
+
   });
 }
