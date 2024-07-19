@@ -1,11 +1,11 @@
 
-import 'package:firstapp/pages/login_page.dart';
+
 import 'package:firstapp/pages/supabase_login.dart';
 import 'package:flutter/material.dart';
-import 'package:firstapp/pages/application_event.dart';
+
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:firstapp/pages/editProfile_page.dart';
-import 'dart:typed_data';
+
 import 'package:firstapp/pages/home_page.dart';
 import 'package:provider/provider.dart';
 
@@ -47,10 +47,12 @@ final String ADMIN='ADMIN';
                       CircleAvatar(
                         backgroundImage: user.profileimage != null
                             ? MemoryImage(user.profileimage!)
-                            : const AssetImage('http/example-image') as ImageProvider,
+                            : null,
                         radius: 60.0,
+                        child: user.profileimage == null
+                            ? Placeholder()
+                            : null,
                       ),
-                      // if (widget.role == ADMIN)
                       if (user.role== ADMIN)
                         Positioned(
                           top:80,
@@ -86,12 +88,7 @@ final String ADMIN='ADMIN';
                     width: 200,
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => EditprofilePage(
-
-                          )),
-                        );
+                        _navigateToEditprofile(context);
                       },
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.black, backgroundColor: Colors.white,
@@ -114,22 +111,7 @@ final String ADMIN='ADMIN';
                     ),
                     child: Column(
                       children: [
-                        // _buildProfileOption(
-                        //   text: 'Create event application',
-                        //   onTap: () {
-                        //     Navigator.push(
-                        //       context,
-                        //       MaterialPageRoute(builder: (context) => ApplicationEvent(
-                        //         userName: widget.userName,
-                        //         userEmail: widget.userEmail,
-                        //         userId: widget.userId,
-                        //         role: widget.role,
-                        //         profileImage: widget.profileImage,
-                        //       )),
-                        //     );
-                        //   },
-                        // ),
-                        // _buildDivider(),
+
                         _buildProfileOption(
                           text: 'Notifications',
                           onTap: () {
@@ -185,7 +167,12 @@ final String ADMIN='ADMIN';
   }
   }
 
-
+Future<void> _navigateToEditprofile(BuildContext context) async {
+  Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => EditprofilePage()),
+  );
+}
    Widget _buildProfileOption({
   
     required String text,

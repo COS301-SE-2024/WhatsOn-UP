@@ -15,19 +15,11 @@ class Attendees extends StatefulWidget {
 }
 
 class _AttendeesState extends State<Attendees> {
-  late Future<List<Event>> _eventsRsvp;
+  late final _eventsRsvp;
 
   @override
   void initState() {
     super.initState();
-
-
-  }
-
-
-
-  @override
-  Widget build(BuildContext context) {
     EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
     userProvider userP = Provider.of<userProvider>(context, listen: false);
     if(userP.role== 'HOST'){
@@ -36,13 +28,21 @@ class _AttendeesState extends State<Attendees> {
     else{
       _eventsRsvp = eventP.eventsHome;
     }
+
+  }
+
+
+
+  @override
+  Widget build(BuildContext context) {
+
     final theme = Theme.of(context);
     final textColour = theme.colorScheme.onSurface;
     final borderColour = theme.colorScheme.secondary;
 
     return Scaffold(
         appBar: AppBar(
-          title: Text('Attandees'),
+          title: Text('Attendees'),
         ),
         body: FutureBuilder<List<Event>>(
           future: _eventsRsvp,
@@ -55,7 +55,7 @@ class _AttendeesState extends State<Attendees> {
               );
             } else {
               userProvider userP = Provider.of<userProvider>(context, listen: false);
-              List<Event> events = snapshot.data!;
+              var events = snapshot.data!;
               events = events.where((event) => event.hosts.contains(userP.Fullname)).toList();
               return ListView.separated(
                 itemCount: events.length,

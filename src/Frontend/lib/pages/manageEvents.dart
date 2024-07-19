@@ -184,12 +184,7 @@ String Host='HOST';
                   text: userP.role == Admin
                       ? 'Attendees for All Events'
                       : 'My Attendees',
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => Attendees()),
-                    );
-                  },
+                  onTap: ()=> _navigateToAttendeesEvent(context),
                 ),
                 _buildDivider(),
               ],
