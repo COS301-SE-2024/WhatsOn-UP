@@ -2,9 +2,11 @@ package com.devforce.backend.service
 
 import com.devforce.backend.dto.*
 import com.devforce.backend.model.EventModel
+import com.devforce.backend.model.InviteeModel
 import com.devforce.backend.repo.EventRepo
+import com.devforce.backend.repo.InviteeRepo
+import com.devforce.backend.repo.UserRepo
 import com.devforce.backend.security.CustomUser
-import com.sun.java.accessibility.util.EventID
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -23,6 +25,12 @@ class EventService {
 
     @Autowired
     lateinit var eventRepo: EventRepo
+
+    @Autowired
+    lateinit var userRepo: UserRepo
+
+    @Autowired
+    lateinit var inviteeRepo: InviteeRepo
 
     fun createEvent(createEventDto: CreateEventDto): ResponseEntity<ResponseDto> {
         val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
@@ -219,6 +227,53 @@ class EventService {
                 LocalDateTime.ofInstant(Instant.ofEpochMilli(epochMillis), ZoneOffset.UTC)
             }
         }
+    }
+
+    fun inviteUser(eventId: UUID, userId: UUID): ResponseEntity<ResponseDto>{
+        val from = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
+        val event = eventRepo.findById(eventId)
+        if (event.isEmpty) {
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Event not found"))
+        }
+
+        val user = userRepo.findById(userId)
+        if (user.isEmpty) {
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "User not found"))
+        }
+        val eventModel = event.get()
+        val userModel = user.get()
+
+        val invite = InviteeModel().apply {
+            this.event = eventModel
+            this.user = userModel
+            this.from = from
+        }
+
+        inviteeRepo.save(invite)
+
+        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "User invited successfully")))
+    }
+
+    fun acceptInvite(inviteId: UUID): ResponseEntity<ResponseDto> {
+        val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
+
+        val invite = inviteeRepo.findById(inviteId)
+
+        if (invite.isEmpty) {
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Invite not found"))
+        }
+
+        val inviteModel = invite.get()
+
+        if (inviteModel.user!!.userId != user.userId) {
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Invite not found"))
+        }
+
+        inviteModel.accepted = true
+
+        inviteeRepo.save(inviteModel)
+
+        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Invite accepted successfully")))
     }
 
     /*fun filterEventsByKeyword(keywordFilter: String): List<EventModel> {
