@@ -39,11 +39,11 @@ class EventModel {
 
     var location: String = ""
 
-    @Column(name = "start_time", nullable = false)
-    var startTime: LocalDateTime = LocalDateTime.now()
+    @Column(name = "start_date_time", nullable = false)
+    var startDateTime: LocalDateTime = LocalDateTime.now()
 
-    @Column(name = "end_time", nullable = false)
-    var endTime: LocalDateTime = LocalDateTime.now()
+    @Column(name = "end_date_time", nullable = false)
+    var endDateTime: LocalDateTime = LocalDateTime.now()
 
     @Column(name = "max_attendees", nullable = false)
     var maxAttendees: Int = 0
@@ -58,6 +58,9 @@ class EventModel {
         inverseJoinColumns = [JoinColumn(name = "user_id")]
     )
     var hosts: Set<UserModel> = HashSet()
+
+    @Column(name = "expired", nullable = false)
+    var expired: Boolean = false;
 
     @ManyToMany
     @JoinTable(
