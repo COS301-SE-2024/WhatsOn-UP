@@ -85,7 +85,7 @@ void main() {
             ChangeNotifierProvider<userProvider>(
                 create: (_) => mockUserProvider),
           ],
-          // child: ProfilePage(),
+
           child: MaterialApp(
             home: ProfilePage(),
             routes: {
@@ -104,7 +104,7 @@ void main() {
     testWidgets('should navigate to resetPassword on logout',
         (WidgetTester tester) async {
       when(mockUserProvider.profileimage).thenReturn(null);
-      when(mockUserProvider.role).thenReturn('USER'); // Not admin
+      when(mockUserProvider.role).thenReturn('USER');
 
       await tester.pumpWidget(
         MaterialApp(
@@ -119,7 +119,7 @@ void main() {
       );
 
       await tester.tap(find.text('Security'));
-      await tester.pumpAndSettle(); // Wait for navigation
+      await tester.pumpAndSettle();
       expect(find.byType(ResetPasswordPage), findsOneWidget);
     });
   });
