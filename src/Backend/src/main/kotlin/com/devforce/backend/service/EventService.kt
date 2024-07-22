@@ -5,6 +5,7 @@ import com.devforce.backend.model.EventModel
 import com.devforce.backend.repo.EventRepo
 import com.devforce.backend.security.CustomUser
 import com.sun.java.accessibility.util.EventID
+import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.context.SecurityContextHolder
@@ -200,6 +201,14 @@ class EventService {
             return ResponseEntity.internalServerError()
                 .body(ResponseDto("Error filtering events", System.currentTimeMillis(), null))
         }
+    }
+
+    fun getUniqueCategories(): List<String> {
+        return eventRepo.findUniqueCategories()
+    }
+    private fun extractCategory(metadata: String): String? {
+        val json = ObjectMapper().readTree(metadata)
+        return json.get("category")?.asText()
     }
 
     fun parseToLocalDateTime(timestamp: String?): LocalDateTime? {

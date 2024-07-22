@@ -2,6 +2,7 @@ package com.devforce.backend.repo
 
 import com.devforce.backend.dto.FilterByDto
 import com.devforce.backend.model.EventModel
+import jdk.jfr.Event
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
@@ -76,7 +77,15 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
     )
     fun searchEvents(@Param("searchString") searchString: String): List<EventModel>
 
+   // fun findByTitleContainingIgnoreCase(title: String): List<Event>
 
+
+    @Query("""
+        SELECT DISTINCT (metadata::jsonb ->> 'category') 
+        FROM events 
+        WHERE metadata::jsonb ->> 'category' IS NOT NULL
+    """, nativeQuery = true)
+    fun findUniqueCategories(): List<String>
 
 
    /* FUTURE

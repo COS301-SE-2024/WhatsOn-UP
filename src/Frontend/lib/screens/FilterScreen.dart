@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firstapp/services/EventService.dart';
+import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 
 
 class FilterScreen extends StatefulWidget {
@@ -8,7 +9,8 @@ class FilterScreen extends StatefulWidget {
 }
 
 class _FilterScreenState extends State<FilterScreen> with SingleTickerProviderStateMixin {
-  EventService eventService = EventService();
+  EventService eventService = EventService(Supabase.instance.client);
+
 
   late String selectedDateRange="";
   late String selectedCapacityRange="";
