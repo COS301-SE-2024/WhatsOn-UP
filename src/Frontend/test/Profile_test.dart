@@ -28,7 +28,7 @@ void main() {
           .thenReturn(Uint8List.fromList(placeholderImageData));
     });
 
-    testWidgets('should display profile image or admin badge',
+    testWidgets('should display profile image and admin badge',
         (WidgetTester tester) async {
       when(mockUserProvider.role).thenReturn('ADMIN');
 
