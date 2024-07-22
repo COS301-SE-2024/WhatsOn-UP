@@ -23,7 +23,8 @@ class EventModel {
 
     var title: String = ""
     var description: String = ""
-    var metadata: String = ""
+
+    var metadata: String = "" //changed from  var metadata: String = ""
 
     @ElementCollection
     @CollectionTable(name = "event_media", joinColumns = [JoinColumn(name = "event_id")])
