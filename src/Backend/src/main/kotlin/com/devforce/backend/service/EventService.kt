@@ -4,6 +4,7 @@ import com.devforce.backend.dto.*
 import com.devforce.backend.model.EventModel
 import com.devforce.backend.repo.EventRepo
 import com.devforce.backend.security.CustomUser
+import com.sun.java.accessibility.util.EventID
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.context.SecurityContextHolder
@@ -28,8 +29,8 @@ class EventService {
         val event = EventModel().apply {
             this.title = createEventDto.title
             this.description = createEventDto.description
-            this.startTime = createEventDto.startDate
-            this.endTime = createEventDto.endDate
+            this.startDateTime = createEventDto.startDate
+            this.endDateTime = createEventDto.endDate
             this.location = createEventDto.location
             this.maxAttendees = createEventDto.maxParticipants ?: 10
             this.metadata = createEventDto.metadata ?: ""
@@ -52,7 +53,7 @@ class EventService {
         val user = SecurityContextHolder.getContext().authentication.principal
         val events = eventRepo.findAll()
         var eventsDto: List<EventDto>? = null
-        if (user == "anonymousUser") {
+         if (user == "anonymousUser") {
             eventsDto = events.map { event -> EventDto(event, false) }
         }
         else {
@@ -83,8 +84,8 @@ class EventService {
                 updateEventDto.description?.let { description = it }
                 updateEventDto.metadata?.let { metadata = it }
                 updateEventDto.location?.let { location = it }
-                updateEventDto.startDate?.let { startTime = it }
-                updateEventDto.endDate?.let { endTime = it }
+                updateEventDto.startDateTime?.let { startDateTime = it }
+                updateEventDto.endDateTime?.let { endDateTime = it }
                 updateEventDto.maxParticipants?.let { maxAttendees = it }
                 updateEventDto.isPrivate?.let { isPrivate = it }
             }
@@ -210,7 +211,6 @@ class EventService {
             }
         }
     }
-
 
     /*fun filterEventsByKeyword(keywordFilter: String): List<EventModel> {
         return eventRepo.filterEventsByKeyword(keywordFilter)
