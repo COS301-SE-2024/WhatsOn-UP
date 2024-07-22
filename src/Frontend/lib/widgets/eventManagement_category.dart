@@ -22,10 +22,23 @@ class _EventmanagementCategoryState extends State<EventmanagementCategory> {
   @override
   void initState() {
     super.initState();
-    EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
-    _eventsHome = eventP.eventsHome;
-  }
 
+    _loadEvents();
+  }
+  void _loadEvents() async {
+    try {
+      EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
+      _eventsHome = eventP.eventsHome;
+    } catch (e) {
+      setState(() {
+
+        _errorMessage = 'Error loading events';
+        _errorOccurred = true;
+      });
+    }
+  }
+  late String _errorMessage;
+  late bool _errorOccurred = false;
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -37,7 +50,9 @@ class _EventmanagementCategoryState extends State<EventmanagementCategory> {
         title: Text('Edit Events'), // Adjust the app bar title as needed
       ),
 
-      body: Column(
+      body: _errorOccurred
+          ? Center(child: Text(_errorMessage))
+          : Column(
         children: [
           SizedBox(width: 35.0),
           Padding(

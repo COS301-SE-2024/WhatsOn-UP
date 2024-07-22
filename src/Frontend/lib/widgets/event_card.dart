@@ -346,7 +346,7 @@ class _EventCardState extends State<EventCard> {
                       fit: BoxFit.cover,
                     )
                         : Image.asset(
-                      'assets/images/adminBadge.png',
+                      'assets/images/user.png',
                       height: 120.0,
                       width: double.infinity,
                       fit: BoxFit.cover,

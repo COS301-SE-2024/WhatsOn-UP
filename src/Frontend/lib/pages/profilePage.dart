@@ -45,15 +45,14 @@ final String ADMIN='ADMIN';
                   Stack(
                     children: [
                       CircleAvatar(
-                        backgroundImage: user.profileimage != null
-                            ? MemoryImage(user.profileimage!)
-                            : null,
+                        backgroundImage: user.profileImage!.isNotEmpty
+                            ? MemoryImage(user.profileImage!)
+                            : const AssetImage('assets/images/user.png'),
+
                         radius: 60.0,
-                        child: user.profileimage == null
-                            ? Placeholder()
-                            : null,
+
                       ),
-                      if (user.role== ADMIN)
+                      if (user.role==ADMIN)
                         Positioned(
                           top:80,
                           right: 0,
