@@ -19,12 +19,6 @@ class UserService {
 
     @Autowired
     lateinit var userRepo: UserRepo
-
-    @Autowired
-    lateinit var roleRepo: RoleRepo
-
-    @Autowired
-    lateinit var passwordEncoder: PasswordEncoder
     
 
     @Autowired
@@ -188,5 +182,25 @@ class UserService {
             ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Account deleted successfully"))
         )
     }
+
+    fun inviteUser(eventId: UUID, userId: UUID): ResponseEntity<ResponseDto>{
+        val from = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
+        val event = eventRepo.findById(eventId)
+        if (event.isEmpty) {
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Event not found"))
+        }
+
+        val user = userRepo.findById(userId)
+        if (user.isEmpty) {
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "User not found"))
+        }
+        val eventModel = event.get()
+        val userModel = user.get()
+
+        eventModel.invitees.add(userModel)
+        eventRepo.save(eventModel)
+        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "User invited successfully")))
+    }
+
 
 }

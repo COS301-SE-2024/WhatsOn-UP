@@ -422,7 +422,15 @@ bool _obscurePassword=true;
     // eventProvider eventP = Provider.of<eventProvider>(context, listen: false);
     EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
     final user = supabase.auth.currentUser;
-     eventP.fetchfortheFirstTimeRsvp(user!.id);
+
+    //changes by Khanya - check if user is logged and return session data
+    if (user != null) {
+      final session = supabase.auth.currentSession;
+      if (session != null) {
+        print('JWT Token: ${session.accessToken}');
+      }
+
+      eventP.fetchfortheFirstTimeRsvp(user!.id);
 
     Api api = Api();
     // final List<Event> events=await api.getAllEvents();
@@ -477,4 +485,4 @@ bool _obscurePassword=true;
     print('signup successful');
 
   }
-}
+}}
