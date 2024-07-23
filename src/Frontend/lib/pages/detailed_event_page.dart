@@ -65,6 +65,7 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
         SnackBar(content: Text('Successfully RSVP\'d to event!')),
       );
       await eventProvider.refreshRSVPEvents(user!.id);
+      await eventProvider.refreshEvents();
       print('amount of attendees after event added to the calendar ${_thisCurrentEvent.attendees.length}');
       Navigator.of(context).pushReplacementNamed('/home');
     } catch (e) {

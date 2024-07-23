@@ -85,8 +85,7 @@ void main() {
 
 
        var updatedEvents = await eventProvider.eventsHome;
-       print(updatedEvents.length);
-       print(initialEvents.length);
+
 
        expect(updatedEvents.length, initialEvents.length);
 
@@ -100,7 +99,7 @@ void main() {
       var eventToUpdate = (await eventProvider.eventsHome).first;
       var originalName = eventToUpdate.nameOfEvent;
       var newName = 'Updated Event Name';
-      print('the event we are editing ${eventToUpdate.id}');
+
       await  eventProvider.EditEventName(eventToUpdate.id!, newName);
 
 
@@ -117,7 +116,7 @@ void main() {
       var eventToUpdate = (await eventProvider.eventsHome).first;
       var originalDescription = eventToUpdate.description;
       var newDescription = 'Updated Event Description';
-      print('the event we are editing ${eventToUpdate.id}');
+
        eventProvider.EditEventDescription(eventToUpdate.id!, newDescription);
 
       var updatedEvent = (await eventProvider.eventsHome).firstWhere((e) => e.id == eventToUpdate.id);
@@ -130,7 +129,7 @@ void main() {
       var eventToUpdate = (await eventProvider.eventsHome).first;
       var originalLocation = eventToUpdate.location;
       var newLocation = 'Updated Event Location';
-      print('the event we are editing ${eventToUpdate.id}');
+
       await eventProvider.EditEventLocation(eventToUpdate.id!, newLocation);
 
       var updatedEvent = (await eventProvider.eventsHome).firstWhere((e) => e.id == eventToUpdate.id);
@@ -145,7 +144,7 @@ void main() {
       var eventToUpdate = (await eventProvider.eventsHome).first;
       var originalMaxParticipants = eventToUpdate.maxAttendees;
       var newMaxParticipants = 200;
-      print('the event we are editing ${eventToUpdate.id}');
+
       await eventProvider.EditEventMaxParticipants(eventToUpdate.id!, newMaxParticipants);
 
       var updatedEvent = (await eventProvider.eventsHome).firstWhere((e) => e.id == eventToUpdate.id);

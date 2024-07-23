@@ -282,8 +282,12 @@ class EventCard extends StatefulWidget {
   EventCard({Key? key, required this.event, this.showBookmarkButton = true})
       : super(key: key);
 
+
+
   @override
   _EventCardState createState() => _EventCardState();
+
+
 }
 
 class _EventCardState extends State<EventCard> {
@@ -291,6 +295,7 @@ class _EventCardState extends State<EventCard> {
 
   @override
   Widget build(BuildContext context) {
+
     EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
     final theme = Theme.of(context);
     final cardColour = theme.colorScheme.surface;
@@ -333,8 +338,15 @@ class _EventCardState extends State<EventCard> {
                 Container(
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(16.0),
-                    child: Image.network(
+                    child: widget.event.imageUrls.isNotEmpty
+                        ? Image.network(
                       widget.event.imageUrls[0],
+                      height: 120.0,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                    )
+                        : Image.asset(
+                      'assets/images/user.png',
                       height: 120.0,
                       width: double.infinity,
                       fit: BoxFit.cover,

@@ -12,8 +12,6 @@ import '../providers/events_providers.dart';
 import '../widgets/event_card.dart';
 
 class ApplicationEvent extends StatefulWidget {
-
-
   ApplicationEvent({
     Key? key,
 

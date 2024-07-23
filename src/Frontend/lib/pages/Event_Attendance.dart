@@ -68,7 +68,9 @@ class _EventAttendanceState extends State<EventAttendance> {
                 base64Decode(filteredAttendees[index].profileImage);
                 return ListTile(
                   leading: CircleAvatar(
-                    backgroundImage: MemoryImage(profileImageBytes),
+                    backgroundImage: filteredAttendees[index].profileImage.isNotEmpty
+                        ? NetworkImage(filteredAttendees[index].profileImage)
+                        : AssetImage('assets/images/user.png'),
                     radius: 20,
                   ),
                   title: Center(
