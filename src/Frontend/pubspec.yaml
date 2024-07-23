@@ -55,6 +55,9 @@ dependencies:
   url_launcher: ^6.3.0
   mockito: ^5.4.4
   flutter_mapbox_navigation: ^0.2.2
+  dio: ^5.5.0+1
+  flutter_polyline_points: ^2.1.0
+  google_maps_flutter: ^2.2.8
 
 
 
