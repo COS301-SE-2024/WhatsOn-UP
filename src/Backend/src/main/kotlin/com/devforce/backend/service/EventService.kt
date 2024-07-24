@@ -230,6 +230,10 @@ class EventService {
     }
 
     fun inviteUser(eventId: UUID, userId: UUID): ResponseEntity<ResponseDto>{
+        val alreadyInvited = inviteeRepo.findByUserAndEvent(userId, eventId)
+        if (alreadyInvited != null) {
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "User already invited"))
+        }
         val from = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
         val event = eventRepo.findById(eventId)
         if (event.isEmpty) {
