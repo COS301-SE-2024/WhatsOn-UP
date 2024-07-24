@@ -118,33 +118,33 @@ class _GoogleSignInPageState extends State<GoogleSignInPage> {
     userP.email = user!.userMetadata?['email'];
     userP.userId = user.id;
 
-    String profileImageBase64 = base64Encode(user.userMetadata?['avatar_url']!);
-    Uint8List profileImageBytes = Uint8List(0);
+    // String profileImageBase64 = base64Encode(user.userMetadata?['avatar_url']!);
+    Uint8List profileImageBytes = user.userMetadata?['avatar_url'];
     Api api = Api();
-    api.postChangeUser(fullname, profileImageBase64, user.id).then((response) {
+    api.postChangeUser(fullname, profileImageBytes, user.id).then((response) {
       if (response['error'] != null) {
         print('An error occurred: ${response['error']}');
       } else {
 
         userP.role = response['data']['user']['role'] ?? 'Unknown';
 
-        bool isBase64(String input) {
-          final RegExp base64 = RegExp(
-            r'^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$',
-          );
-          return base64.hasMatch(input);
-        }
+        // bool isBase64(String input) {
+        //   final RegExp base64 = RegExp(
+        //     r'^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$',
+        //   );
+        //   return base64.hasMatch(input);
+        // }
 
-        if (isBase64(profileImageBase64)) {
-          try {
-            profileImageBytes = base64Decode(profileImageBase64);
-          } catch (e) {
-            print('Error decoding Base64: $e');
-          }
-        } else {
-          print('Invalid Base64 string: $profileImageBase64');
-        }
-        userP.profileimage = profileImageBytes;
+        // if (isBase64(profileImageBase64)) {
+        //   try {
+        //     profileImageBytes = base64Decode(profileImageBase64);
+        //   } catch (e) {
+        //     print('Error decoding Base64: $e');
+        //   }
+        // } else {
+        //   print('Invalid Base64 string: $profileImageBase64');
+        // }
+        userP.profileImage = profileImageBytes;
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => HomePage()),

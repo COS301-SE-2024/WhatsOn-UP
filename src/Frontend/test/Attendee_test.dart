@@ -35,6 +35,11 @@ void main() {
           isPrivate: true,
           attendees: [],
           startDate: DateTime.parse('2022-01-01T10:00:00.000Z'),
+          metadata: Metadata(
+            mentors: [],
+            categories: [],
+            sessions: [],
+          ),
         ),
         Event(
           id: '2',
@@ -50,6 +55,11 @@ void main() {
           isPrivate: false,
           attendees: [],
           startDate: DateTime.parse('2022-01-02T10:00:00.000Z'),
+          metadata: Metadata(
+            mentors: [],
+            categories: [],
+            sessions: [],
+          ),
         ),
       ]);
       when(mockUserProvider.Fullname).thenReturn('User Name');
@@ -69,6 +79,11 @@ void main() {
           isPrivate: true,
           attendees: [],
           startDate: DateTime.parse('2022-01-01T10:00:00.000Z'),
+          metadata: Metadata(
+            mentors: [],
+            categories: [],
+            sessions: [],
+          ),
         ),
         Event(
           id: '2',
@@ -84,6 +99,11 @@ void main() {
           isPrivate: false,
           attendees: [],
           startDate: DateTime.parse('2022-01-02T10:00:00.000Z'),
+          metadata: Metadata(
+            mentors: [],
+            categories: [],
+            sessions: [],
+          ),
         ),
         Event(
           id: '3',
@@ -99,6 +119,11 @@ void main() {
           isPrivate: false,
           attendees: [],
           startDate: DateTime.parse('2022-01-03T10:00:00.000Z'),
+          metadata: Metadata(
+            mentors: [],
+            categories: [],
+            sessions: [],
+          ),
         ),
       ]);
 
@@ -117,6 +142,11 @@ void main() {
           isPrivate: true,
           attendees: [],
           startDate: DateTime.parse('2022-01-01T10:00:00.000Z'),
+          metadata: Metadata(
+            mentors: [],
+            categories: [],
+            sessions: [],
+          ),
         ),
         Event(
           id: '2',
@@ -132,6 +162,11 @@ void main() {
           isPrivate: false,
           attendees: [],
           startDate: DateTime.parse('2022-01-02T10:00:00.000Z'),
+          metadata: Metadata(
+            mentors: [],
+            categories: [],
+            sessions: [],
+          ),
         ),
         Event(
           id: '3',
@@ -147,6 +182,11 @@ void main() {
           isPrivate: false,
           attendees: [],
           startDate: DateTime.parse('2022-01-03T10:00:00.000Z'),
+          metadata: Metadata(
+            mentors: [],
+            categories: [],
+            sessions: [],
+          ),
         ),
       ]);
     });

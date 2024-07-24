@@ -592,6 +592,16 @@ class MockApi extends _i1.Mock implements _i2.Api {
       ) as _i4.Future<List<_i5.Event>>);
 
   @override
+  _i4.Future<List<_i5.Event>> getAllSavedEvents(String? userId) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getAllSavedEvents,
+          [userId],
+        ),
+        returnValue: _i4.Future<List<_i5.Event>>.value(<_i5.Event>[]),
+      ) as _i4.Future<List<_i5.Event>>);
+
+  @override
   _i4.Future<List<dynamic>> getRSVPEvents(String? userId) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -604,7 +614,7 @@ class MockApi extends _i1.Mock implements _i2.Api {
   @override
   _i4.Future<Map<String, dynamic>> postChangeUser(
     String? name,
-    String? profileImage,
+    _i8.Uint8List? profileImage,
     String? userId,
   ) =>
       (super.noSuchMethod(

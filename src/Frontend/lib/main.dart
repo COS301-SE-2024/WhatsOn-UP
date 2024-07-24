@@ -56,7 +56,7 @@
 
 
 import 'package:firstapp/pages/editProfile_page.dart';
-import 'package:firstapp/pages/edit_Event.dart';
+
 import 'package:firstapp/pages/home_page.dart';
 import 'package:firstapp/pages/profilePage.dart';
 import 'package:firstapp/pages/settings_page.dart';

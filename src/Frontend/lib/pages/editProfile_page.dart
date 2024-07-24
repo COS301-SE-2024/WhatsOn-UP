@@ -17,19 +17,11 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import '../providers/user_provider.dart';
 class EditprofilePage extends StatefulWidget {
-  // final String userName;
-  // final String userEmail;
-  // final String userId;
-  // final String role;
-  // Uint8List? profileImage;
+
 
   EditprofilePage({
     Key? key,
-    // required this.userName,
-    // required this.userEmail,
-    // required this.userId,
-    // required this.role,
-    // required this.profileImage,
+
   }) : super(key: key);
 
   @override
@@ -39,7 +31,7 @@ class EditprofilePage extends StatefulWidget {
 class _EditprofilePageState extends State<EditprofilePage> {
 
   Uint8List? _image;
-  // final supabase=Supabase.instance.client;
+
   Future<void> selectImage() async {
     try {
       Uint8List img = await pickImage(ImageSource.gallery);
@@ -86,7 +78,7 @@ class _EditprofilePageState extends State<EditprofilePage> {
   Widget build(BuildContext context) {
     final userP = context.watch<userProvider>();
 
-    // userProvider userP = Provider.of<userProvider>(context);
+
     emailController.text = userP.email;
     nameController.text = userP.Fullname;
 
@@ -115,7 +107,7 @@ class _EditprofilePageState extends State<EditprofilePage> {
             children: [
               _buildTop(),
               const SizedBox(height: 30),
-              _buildTextField("Full name", nameController, false),
+              _buildTextField("Fullname", nameController, false),
               // _buildTextField("Email", emailController, false),
               // _buildTextField("Password", passwordController, true),
               const SizedBox(height: 30),
@@ -216,7 +208,7 @@ class _EditprofilePageState extends State<EditprofilePage> {
                     shape: BoxShape.circle,
                     image: DecorationImage(
                         fit: BoxFit.cover,
-                        image: MemoryImage(userP.profileimage!)),
+                        image: MemoryImage(userP.profileImage!)),
                   ),
                 ),
           Positioned(
@@ -301,11 +293,11 @@ class _EditprofilePageState extends State<EditprofilePage> {
 
       final adjustedPassword =
           passwordController.text.isNotEmpty ? passwordController.text : '';
-      profileImageBase64 = _image != null
-          ? base64Encode(_image!)
-          : base64Encode(userp.profileimage!);
+      // profileImageBase64 = _image != null
+      //     ? base64Encode(_image!)
+      //     : base64Encode(userp.profileimage!);
       if(_image != null){
-        userp.profileimage=_image;
+        userp.profileImage=_image;
       }
 
       final user = User(
@@ -318,10 +310,10 @@ class _EditprofilePageState extends State<EditprofilePage> {
 
       Api api = Api();
 
-      profileImageBase64 =base64Encode(userp.profileimage!);
+      // profileImageBase64 =base64Encode(userp.profileimage!);
 
       api
-          .postChangeUser(user.name, profileImageBase64,user1.id)
+          .postChangeUser(user.name, user.profileImage,user1.id)
           .then((response) {
         if (response['error'] != null) {
           print('An error occurred: ${response['error']}');
@@ -365,6 +357,8 @@ class _EditprofilePageState extends State<EditprofilePage> {
         }
       }).catchError((error) {
         print('Failed to update user profile: $error');
+        _isLoading = false;
+
       });
     }
   }
