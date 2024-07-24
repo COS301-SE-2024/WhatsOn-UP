@@ -36,6 +36,10 @@ class UserService {
         }
 
         val event = optionalEvent.get()
+        if (event.savedEvents.any { it.userId == user.userId }) {
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Event already saved"))
+        }
+
         event.savedEvents.add(user)
         eventRepo.save(event)
 
@@ -92,6 +96,12 @@ class UserService {
         }
 
         val event = optionalEvent.get()
+
+        if (event.attendees.any { it.userId == user.userId } || event.hosts.any { it.userId == user.userId }) {
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Event already RSVP'd"))
+        }
+
+
         event.attendees.add(user)
         eventRepo.save(event)
 

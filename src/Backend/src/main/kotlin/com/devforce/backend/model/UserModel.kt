@@ -13,7 +13,6 @@ import java.util.*
 class UserModel{
 
     @Id
-    @GeneratedValue
     @Column(columnDefinition = "UUID")
     var userId: UUID = UUID.randomUUID()
 

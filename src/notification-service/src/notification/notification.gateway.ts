@@ -48,6 +48,22 @@ export class NotificationGateway implements OnModuleInit {
             notification.type = typeData[0].name;
           }
 
+          const client = Object.values(this.clients).find(
+            (client) => client.token === notification.user_id
+          );
+
+          console.log('Notification:', notification);
+
+          if (!notification.event_id) {
+            client.socket.emit('notification', {
+              status: 'success',
+              data: notification,
+              timestamp: new Date().toISOString(),
+            });
+            return;
+          }
+
+
           let { data: eventData, error: eventError } = await this.supabase
             .from('events')
             .select(
@@ -68,20 +84,12 @@ export class NotificationGateway implements OnModuleInit {
             return;
           }
 
-          const client = Object.values(this.clients).find(
-            (client) => client.token === notification.user_id
-          );
-
           if (client) {
-            console.log('Sending notification to client:', notification);
             client.socket.emit('notification', {
               status: 'success',
               data: notification,
               timestamp: new Date().toISOString(),
             });
-          } else {
-            console.log('Client not found for notification:', notification);
-            this.emitError(notification.user_id, 'Client not found');
           }
         }
       )

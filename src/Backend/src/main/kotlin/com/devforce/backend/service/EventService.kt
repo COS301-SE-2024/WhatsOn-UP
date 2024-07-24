@@ -36,6 +36,7 @@ class EventService {
         val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
 
         val event = EventModel().apply {
+            this.eventId = UUID.randomUUID()
             this.title = createEventDto.title
             this.description = createEventDto.description
             this.startDateTime = createEventDto.startDate
@@ -120,7 +121,7 @@ class EventService {
             )
         }
 
-        eventRepo.delete(event.get())
+        eventRepo.deleteEvent(id)
 
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Event deleted successfully"))
         )
@@ -237,61 +238,6 @@ class EventService {
                 LocalDateTime.ofInstant(Instant.ofEpochMilli(epochMillis), ZoneOffset.UTC)
             }
         }
-    }
-
-    fun inviteUser(eventId: UUID, userId: UUID): ResponseEntity<ResponseDto>{
-        val alreadyInvited = inviteeRepo.findByUserAndEvent(userId, eventId)
-        if (alreadyInvited != null) {
-            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "User already invited"))
-        }
-        val from = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
-        val event = eventRepo.findById(eventId)
-        if (event.isEmpty) {
-            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Event not found"))
-        }
-
-        val user = userRepo.findById(userId)
-        if (user.isEmpty) {
-            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "User not found"))
-        }
-        val eventModel = event.get()
-        val userModel = user.get()
-
-        val invite = InviteeModel().apply {
-            this.event = eventModel
-            this.user = userModel
-            this.from = from
-        }
-
-        inviteeRepo.save(invite)
-
-        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "User invited successfully")))
-    }
-
-    fun acceptInvite(inviteId: UUID): ResponseEntity<ResponseDto> {
-        val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
-
-        val invite = inviteeRepo.findById(inviteId)
-
-        if (invite.isEmpty) {
-            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Invite not found"))
-        }
-
-        val inviteModel = invite.get()
-
-        if (inviteModel.user!!.userId != user.userId) {
-            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Invite not found"))
-        }
-
-        if (inviteModel.accepted) {
-            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Invite already accepted"))
-        }
-
-        inviteModel.accepted = true
-
-        inviteeRepo.save(inviteModel)
-
-        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Invite accepted successfully")))
     }
 
 

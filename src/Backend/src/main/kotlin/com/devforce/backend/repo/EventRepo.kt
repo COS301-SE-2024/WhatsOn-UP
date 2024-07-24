@@ -2,9 +2,10 @@ package com.devforce.backend.repo
 
 import com.devforce.backend.dto.FilterByDto
 import com.devforce.backend.model.EventModel
-import jdk.jfr.Event
+import jakarta.transaction.Transactional
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
+import org.springframework.data.jpa.repository.query.Procedure
 import org.springframework.data.repository.query.Param
 import java.util.*
 //FUTURE - filterEvents
@@ -55,7 +56,8 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
                 "LEFT JOIN FETCH e.invitees i " +
                 "LEFT JOIN FETCH i.role ir " +
                 "LEFT JOIN FETCH e.eventMedia em " +
-                "WHERE a.userId = :userId " +
+                "WHERE (a.userId = :userId " +
+                "OR h.userId = :userId) " +
                 "AND e.expired = false"
     )
     fun getRspvdEvents(@Param("userId") userId: UUID): List<EventModel>
@@ -135,6 +137,10 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
        @Param("maxCapacity") maxCapacity: Int?,
        @Param("isPrivate") isPrivate: Boolean?
    ): List<EventModel>
+
+    @Transactional
+    @Procedure(procedureName = "delete_event")
+    fun deleteEvent(eventId: UUID)
 
 }
 
