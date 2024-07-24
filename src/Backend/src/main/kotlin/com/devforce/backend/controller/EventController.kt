@@ -69,18 +69,6 @@ class EventController {
         return events
     }
 
-    @PutMapping("/invite")
-    @PreAuthorize("hasAnyRole('HOST', 'ADMIN', 'GENERAL')")
-    fun inviteUser(@RequestParam eventId: UUID, @RequestParam userId: UUID): ResponseEntity<ResponseDto> {
-        return eventService.inviteUser(eventId, userId)
-    }
-
-    @PostMapping("/accept")
-    @PreAuthorize("hasAnyRole('HOST', 'ADMIN', 'GENERAL')")
-    fun acceptInvite(@RequestParam inviteId: UUID): ResponseEntity<ResponseDto> {
-        return eventService.acceptInvite(inviteId)
-    }
-
     @GetMapping("/filterEvents")
     @PreAuthorize("permitAll()")
     fun filterEvents(

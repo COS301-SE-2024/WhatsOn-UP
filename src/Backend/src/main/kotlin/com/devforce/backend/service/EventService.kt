@@ -60,16 +60,15 @@ class EventService {
     fun getAllEvents(): ResponseEntity<ResponseDto> {
         // Implementation goes here
         val user = SecurityContextHolder.getContext().authentication.principal
-        val events = eventRepo.findAll()
         var eventsDto: List<EventDto>? = null
          if (user == "anonymousUser") {
+            val events = eventRepo.findAllByUser(null)
             eventsDto = events.map { event -> EventDto(event, false) }
         }
         else {
             val userModel = (user as CustomUser).userModel
-
+            val events = eventRepo.findAllByUser(userModel.userId)
             eventsDto = events.map {
-
                 event -> EventDto(event, userModel.userId in event.hosts.map { host -> host.userId })
             }
         }
@@ -133,10 +132,21 @@ class EventService {
         searchString: String
     ): ResponseEntity<ResponseDto> {
 
-        val events = eventRepo.searchEvents(searchString)
-        val eventsDto = events.map { event -> EventDto(event, false) }
+        val user = SecurityContextHolder.getContext().authentication.principal
+        var eventsDto: List<EventDto>? = null
+        if (user == "anonymousUser") {
+            val events = eventRepo.searchEvents(searchString, null)
+            eventsDto = events.map { event -> EventDto(event, false) }
+        }
+        else {
+            val userModel = (user as CustomUser).userModel
+            val events = eventRepo.searchEvents(searchString, userModel.userId)
+            eventsDto = events.map {
+                    event -> EventDto(event, userModel.userId in event.hosts.map { host -> host.userId })
+            }
+        }
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto)
-        )
+    )
 
 }
     //the filter for filtering screen
@@ -273,6 +283,10 @@ class EventService {
             return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Invite not found"))
         }
 
+        if (inviteModel.accepted) {
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Invite already accepted"))
+        }
+
         inviteModel.accepted = true
 
         inviteeRepo.save(inviteModel)
@@ -280,10 +294,7 @@ class EventService {
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Invite accepted successfully")))
     }
 
-    /*fun filterEventsByKeyword(keywordFilter: String): List<EventModel> {
-        return eventRepo.filterEventsByKeyword(keywordFilter)
-    }
-*/
+
     //FUTURE
     fun filterEvents(filterBy: FilterByDto): ResponseEntity<ResponseDto>{
         val events = eventRepo.filterEvents(filterBy)

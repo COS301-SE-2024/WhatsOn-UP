@@ -20,10 +20,15 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
                 "LEFT JOIN FETCH e.invitees i " +
                 "LEFT JOIN FETCH i.role ir " +
                 "LEFT JOIN FETCH e.eventMedia em " +
-                "WHERE e.expired = false "+
-                "AND e.isPrivate = false"
+                "WHERE e.expired = false " +
+                "AND (e.isPrivate = false " +
+                "OR :userId IS NULL " +
+                "OR a.userId = :userId " +
+                "OR i.userId = :userId " +
+                "OR h.userId = :userId)"
     )
-    override fun findAll(): List<EventModel>
+    fun findAllByUser(@Param("userId") userId: UUID?): List<EventModel>
+
 
     @Query(
         "SELECT DISTINCT e FROM EventModel e " +
@@ -64,9 +69,13 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
                 "LEFT JOIN FETCH e.invitees i " +
                 "LEFT JOIN FETCH i.role ir " +
                 "LEFT JOIN FETCH e.eventMedia em " +
-                "WHERE e.title ILIKE %:searchString% " +
-                "AND e.expired = false " +
-                "AND e.isPrivate = false "+
+                "WHERE e.expired = false " +
+                "AND (e.isPrivate = false " +
+                "OR :userId IS NULL " +
+                "OR a.userId = :userId " +
+                "OR i.userId = :userId " +
+                "OR h.userId = :userId) "+
+                "AND e.title ILIKE %:searchString% " +
                 "OR e.description ILIKE %:searchString% " +
                 "OR e.location ILIKE %:searchString% " +
                 "OR e.metadata ILIKE %:searchString% " +
@@ -75,7 +84,8 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
                 "CASE WHEN e.location ILIKE %:searchString% THEN 1 ELSE 0 END + " +
                 "CASE WHEN e.metadata ILIKE %:searchString% THEN 1 ELSE 0 END) DESC"
     )
-    fun searchEvents(@Param("searchString") searchString: String): List<EventModel>
+    fun searchEvents(@Param("searchString") searchString: String, @Param("userId") userId: UUID?): List<EventModel>
+
 
    // fun findByTitleContainingIgnoreCase(title: String): List<Event>
 
