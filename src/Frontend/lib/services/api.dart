@@ -2,7 +2,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 // import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:convert';
-import 'dart:typed_data';import 'package:firstapp/widgets/event_card.dart';
+import 'dart:typed_data';
+import 'package:firstapp/widgets/event_card.dart';
 import 'package:firstapp/main.dart';
 class Api {
   // Singleton instance
@@ -156,11 +157,14 @@ class Api {
   }
 
   Future<Map<String, dynamic>> postChangeUser(String name, Uint8List? profileImage, String userId) async {
-    // Url for posting new informaion
+    String? base64Image;
+    if (profileImage != null) {
+      base64Image = base64Encode(profileImage);
+    }
 
     var userChangeUrl = Uri.parse('http://localhost:8080/api/user/update_profile');
 
-    // Define the headers and body for login request
+
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -169,7 +173,7 @@ class Api {
     };
     var body = jsonEncode({
       'fullName':name,
-      "profileImage":profileImage,
+      "profileImage": base64Image,
     });
 
     try {

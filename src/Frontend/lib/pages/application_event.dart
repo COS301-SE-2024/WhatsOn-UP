@@ -135,7 +135,7 @@ class _ApplicationEventState extends State<ApplicationEvent> {
                 ),
                 child: Column(
                   children: <Widget>[
-                    MultiSelectBottomSheetField<Category>(
+                    MultiSelectBottomSheetField(
                       key: _multiSelectKey,
                       initialChildSize: 0.4,
                       listType: MultiSelectListType.CHIP,
