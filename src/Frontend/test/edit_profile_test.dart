@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
-import 'package:firstapp/pages/editprofile_page.dart';
+import 'package:firstapp/pages/editProfile_page.dart';
 import 'package:firstapp/providers/user_provider.dart';
 import 'package:firstapp/services/api.dart';
 import 'api_test.mocks.dart';
