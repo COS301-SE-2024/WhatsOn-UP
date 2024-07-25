@@ -5,7 +5,7 @@ import 'package:firstapp/providers/events_providers.dart';
 import 'package:firstapp/providers/user_provider.dart';
 import 'api_test.mocks.dart';
 import 'package:firstapp/widgets/event_card.dart';
-import 'package:firstapp/widgets/eventmanagement_category.dart';
+import 'package:firstapp/widgets/eventManagement_category.dart';
 
 import 'package:mockito/mockito.dart';
 
