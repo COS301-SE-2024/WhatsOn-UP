@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:firstapp/pages/home_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -364,43 +366,39 @@ class _ApplicationEventState extends State<ApplicationEvent> {
       endTime.hour, endTime.minute
     );
 
-    List<String>? mediaUrls = selectedImages?.map((file) => file.path).toList();
-    List<String> selectedCategoryNames = _selectedCategories.map((category) => category.name).toList();
-    print(selectedCategoryNames);
-    // eventP.addEventHome(newEvent);
 
-//need to return an event as a responds
+      eventNameController.clear();List<String>? mediaUrls = selectedImages?.map((file) => file.path).toList();
+      List<String> selectedCategoryNames = _selectedCategories.map((category) => category.name).toList();
 
+      // eventP.addEventHome(newEvent);
 
 
-    Api().createEvent(
-      title: eventName,
-      description: eventDescription,
-      startDate: startDateTime,
-      endDate: endDateTime,
-      location: venue,
-      maxParticipants: maxAttendees,
-      isPrivate: !isPublic,
-      media: mediaUrls,
-      userId: userSuperbase!.id,
-      metadata: {
-        'categories': selectedCategoryNames.join(', ')
-      },
-    ).then((response) {
-      print('Event created successfully');
-      // print('The Event: ');
-      //   print (response['data']);
+
+      Api().createEvent(
+        title: eventName,
+        description: eventDescription,
+        startDate: startDateTime,
+        endDate: endDateTime,
+        location: venue,
+        maxParticipants: maxAttendees,
+        isPrivate: !isPublic,
+        media: mediaUrls,
+        userId: userSuperbase!.id,
+        metadata: selectedCategoryNames
+      ).then((response) {
+        print('Event created successfully');
+        // print('The Event: ');
+        //   print (response['data']);
         eventP.addEventHome(response['data']);
-      // eventP.;
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => HomePage(),
-        ),
-      );
-      
-      eventNameController.clear();
-      eventDescriptionController.clear();
+        // eventP.;
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomePage(),
+          ),
+        );
+
+        eventDescriptionController.clear();
       venueController.clear();
       maxAttendeesController.clear();
       setState(() {

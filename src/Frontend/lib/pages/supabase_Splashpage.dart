@@ -91,25 +91,25 @@ Future<void>_redirect() async{
         userP.Fullname=fullName;
         userP.email=userEmail;
         userP.role=role;
-        bool isBase64(String input) {
-          final RegExp base64 = RegExp(
-            r'^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$',
-          );
-          return base64.hasMatch(input);
-        }
+        // bool isBase64(String input) {
+        //   final RegExp base64 = RegExp(
+        //     r'^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$',
+        //   );
+        //   return base64.hasMatch(input);
+        // }
+        //
+        // if (isBase64(profileImage)) {
+        //
+        //   try {
+        //     profileImageBytes = base64Decode(profileImage);
+        //   } catch (e) {
+        //     print('Error decoding Base64: $e');
+        //   }
+        // } else {
+        //   print('Invalid Base64 string: $profileImage');
+        // }
 
-        if (isBase64(profileImage)) {
-
-          try {
-            profileImageBytes = base64Decode(profileImage);
-          } catch (e) {
-            print('Error decoding Base64: $e');
-          }
-        } else {
-          print('Invalid Base64 string: $profileImage');
-        }
-
-        userP.profileimage=profileImageBytes;
+        userP.profileimage=profileImage;
 
         Navigator.of(context).pushReplacementNamed('/home');
       }

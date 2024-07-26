@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import 'package:firstapp/providers/user_provider.dart';
 import 'package:image/image.dart' as img;
 import 'api_test.mocks.dart';
+import 'package:mocktail_image_network/mocktail_image_network.dart';
 
 void main() {
   group('ProfilePage Tests', () {
@@ -21,25 +22,29 @@ void main() {
       when(mockUserProvider.email).thenReturn('user@gmail.com');
       when(mockUserProvider.password).thenReturn('password123');
 
-      final placeholderImage = img.Image(width: 20, height: 20);
-      final placeholderImageData = img.encodePng(placeholderImage);
-
+      // final placeholderImage = img.Image(width: 20, height: 20);
+      // final placeholderImageData = img.encodePng(placeholderImage);
+      //
+      // when(mockUserProvider.profileImage)
+      //     .thenReturn(Uint8List.fromList(placeholderImageData));
+      String mockImageUrl = 'https://via.placeholder.com/150';
       when(mockUserProvider.profileImage)
-          .thenReturn(Uint8List.fromList(placeholderImageData));
+          .thenReturn(mockImageUrl);
     });
 
     testWidgets('should display profile image and admin badge',
         (WidgetTester tester) async {
       when(mockUserProvider.role).thenReturn('ADMIN');
-
-      await tester.pumpWidget(
-        MaterialApp(
-          home: ChangeNotifierProvider<userProvider>.value(
-            value: mockUserProvider,
-            child: ProfilePage(),
+      await mockNetworkImages(() async {
+        await tester.pumpWidget(
+          MaterialApp(
+            home: ChangeNotifierProvider<userProvider>.value(
+              value: mockUserProvider,
+              child: ProfilePage(),
+            ),
           ),
-        ),
-      );
+        );
+      });
       expect(find.byType(CircleAvatar), findsOneWidget);
       expect(find.byWidgetPredicate((widget) {
         if (widget is Image) {
@@ -54,15 +59,16 @@ void main() {
     testWidgets('should display profile image only for GENERAL role',
         (WidgetTester tester) async {
       when(mockUserProvider.role).thenReturn('GENERAL');
-
-      await tester.pumpWidget(
-        MaterialApp(
-          home: ChangeNotifierProvider<userProvider>.value(
-            value: mockUserProvider,
-            child: ProfilePage(),
+      await mockNetworkImages(() async {
+        await tester.pumpWidget(
+          MaterialApp(
+            home: ChangeNotifierProvider<userProvider>.value(
+              value: mockUserProvider,
+              child: ProfilePage(),
+            ),
           ),
-        ),
-      );
+        );
+      });
       expect(find.byType(CircleAvatar), findsOneWidget);
       expect(find.byWidgetPredicate((widget) {
         if (widget is Image) {
@@ -77,7 +83,7 @@ void main() {
     testWidgets('should navigate to EditProfilePage on button press',
         (WidgetTester tester) async {
       when(mockUserProvider.role).thenReturn('ADMIN');
-
+      await mockNetworkImages(() async {
       await tester.pumpWidget(
         MaterialApp(
             home: MultiProvider(
@@ -93,7 +99,7 @@ void main() {
             },
           ),
         )),
-      );
+      );});
 
       await tester.tap(find.text('Edit Profile'));
       await tester.pumpAndSettle();
@@ -105,19 +111,19 @@ void main() {
         (WidgetTester tester) async {
       when(mockUserProvider.profileimage).thenReturn(null);
       when(mockUserProvider.role).thenReturn('USER');
-
-      await tester.pumpWidget(
-        MaterialApp(
-          home: ChangeNotifierProvider<userProvider>.value(
-            value: mockUserProvider,
-            child: ProfilePage(),
+      await mockNetworkImages(() async {
+        await tester.pumpWidget(
+          MaterialApp(
+            home: ChangeNotifierProvider<userProvider>.value(
+              value: mockUserProvider,
+              child: ProfilePage(),
+            ),
+            routes: {
+              '/resetPassword': (context) => ResetPasswordPage(),
+            },
           ),
-          routes: {
-            '/resetPassword': (context) => ResetPasswordPage(),
-          },
-        ),
-      );
-
+        );
+      });
       await tester.tap(find.text('Security'));
       await tester.pumpAndSettle();
       expect(find.byType(ResetPasswordPage), findsOneWidget);

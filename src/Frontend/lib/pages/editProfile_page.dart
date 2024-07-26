@@ -33,23 +33,38 @@ class _EditprofilePageState extends State<EditprofilePage> {
   Uint8List? _image;
 
   Future<void> selectImage() async {
+
     try {
-      Uint8List img = await pickImage(ImageSource.gallery);
-      setState(() {
-        _image = img;
-      });
+       await pickImage(ImageSource.gallery);
+
     } catch (e) {
       print('Failed to pick image: $e');
     }
+
   }
 
-  Future<Uint8List> pickImage(ImageSource source) async {
-    final ImagePicker _imagePicker = ImagePicker();
-    final XFile? image = await _imagePicker.pickImage(source: source);
-    if (image != null) {
-      return await image.readAsBytes();
-    } else {
-      throw 'No image selected';
+  Future<void> pickImage(ImageSource source) async {
+    userProvider userP = Provider.of<userProvider>(context,listen: false);
+    try {
+      final ImagePicker _imagePicker = ImagePicker();
+      final XFile? image = await _imagePicker.pickImage(source: ImageSource.gallery);
+
+      if (image != null) {
+
+        final Uint8List imageBytes = await image.readAsBytes();
+        Api api = Api();
+        var response = await api.uploadImage(imageBytes,userP.userId);
+        if (response['success']) {
+          print('Upload successful: ${response['data']}');
+          userP.profileImage = response['data']['media_link'];
+        } else {
+          print('Upload failed: ${response['error']}');
+        }
+      } else {
+        throw 'No image selected';
+      }
+    } catch (e) {
+      print('Failed to pick image: $e');
     }
   }
 
@@ -208,7 +223,7 @@ class _EditprofilePageState extends State<EditprofilePage> {
                     shape: BoxShape.circle,
                     image: DecorationImage(
                         fit: BoxFit.cover,
-                        image: MemoryImage(userP.profileImage!)),
+                        image: NetworkImage(userP.profileImage!)),
                   ),
                 ),
           Positioned(
@@ -296,9 +311,9 @@ class _EditprofilePageState extends State<EditprofilePage> {
       // profileImageBase64 = _image != null
       //     ? base64Encode(_image!)
       //     : base64Encode(userp.profileimage!);
-      if(_image != null){
-        userp.profileImage=_image;
-      }
+      // if(_image != null){
+      //   userp.profileImage=_image;
+      // }
 
       final user = User(
         name: adjustedName,
@@ -313,7 +328,7 @@ class _EditprofilePageState extends State<EditprofilePage> {
       // profileImageBase64 =base64Encode(userp.profileimage!);
 
       api
-          .postChangeUser(user.name, user.profileImage,user1.id)
+          .postChangeUser(user.name,user1.id)
           .then((response) {
         if (response['error'] != null) {
           print('An error occurred: ${response['error']}');

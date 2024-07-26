@@ -46,7 +46,7 @@ final String ADMIN='ADMIN';
                     children: [
                       CircleAvatar(
                         backgroundImage: user.profileImage!.isNotEmpty
-                            ? MemoryImage(user.profileImage!)
+                            ? NetworkImage(user.profileImage!)
                             : const AssetImage('assets/images/user.png'),
 
                         radius: 60.0,

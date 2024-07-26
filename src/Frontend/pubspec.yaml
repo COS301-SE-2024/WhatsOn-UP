@@ -40,6 +40,7 @@ dependencies:
   supabase_flutter: ^2.5.6
   google_sign_in: ^6.2.1
   supabase_auth_ui: ^0.5.0
+  mocktail_image_network: ^1.2.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

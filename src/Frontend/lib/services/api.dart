@@ -156,13 +156,9 @@ class Api {
     }
   }
 
-  Future<Map<String, dynamic>> postChangeUser(String name, Uint8List? profileImage, String userId) async {
-    String? base64Image;
-    if (profileImage != null) {
-      base64Image = base64Encode(profileImage);
-    }
+  Future<Map<String, dynamic>> postChangeUser(String name, String userId) async {
 
-    var userChangeUrl = Uri.parse('http://localhost:8080/api/user/update_profile');
+    var userChangeUrl = Uri.parse('http://localhost:8080/api/user/update_profile?fullName=$name');
 
 
     var headers = {
@@ -171,14 +167,11 @@ class Api {
       'Authorization': 'Bearer $userId',
 
     };
-    var body = jsonEncode({
-      'fullName':name,
-      "profileImage": base64Image,
-    });
+
 
     try {
 
-      var response = await http.put(userChangeUrl, headers: headers, body: body);
+      var response = await http.put(userChangeUrl, headers: headers);
 
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
@@ -231,7 +224,7 @@ class Api {
     required DateTime endDate,
     required String location,
     int? maxParticipants,
-    String? metadata,
+    List<String>? metadata,
     bool isPrivate = false,
     List<String>? media,
     required String userId,
@@ -251,7 +244,7 @@ class Api {
       'endDate': endDate.toIso8601String(),
       'location': location,
       'maxParticipants': maxParticipants,
-      'metadata': metadata,
+      'metadata': metadata != null ? jsonEncode(metadata) : null,
       'isPrivate': isPrivate,
       'media': media,
     });
@@ -453,7 +446,34 @@ class Api {
     }
 
   }
+  Future<Map<String, dynamic>> uploadImage(Uint8List imageBytes, String eventId) async {
+    String generateFilename(String userId) {
+      final timestamp = DateTime.now().millisecondsSinceEpoch;
+      return 'profile_image_${userId}_$timestamp.png';
+    }
+    final uri = Uri.parse('http://localhost:8083/media/upload?event_id=$eventId');
+    final request = http.MultipartRequest('POST', uri);
+    final filename = generateFilename(eventId);
+    request.files.add(
+      http.MultipartFile.fromBytes(
+        'file',
+        imageBytes,
+        filename: filename,
+      ),
+    );
 
+    try {
+      final response = await request.send();
+      if (response.statusCode == 200) {
+        return jsonDecode(response.stream.toString());
+      } else {
+
+        throw Exception('Upload failed with status: ${response.statusCode}');
+      }
+    } catch (e) {
+      return {'error': e.toString()};
+    }
+  }
 
 
 

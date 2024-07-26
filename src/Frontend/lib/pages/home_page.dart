@@ -164,7 +164,7 @@ const String ADMIN='ADMIN';
                         },
                         child: CircleAvatar(
                           backgroundImage: userP.profileImage!.isNotEmpty
-                              ? MemoryImage(userP.profileImage!)
+                              ?  NetworkImage(userP.profileImage!)
                               : const AssetImage('assets/images/user.png')
 
                           as ImageProvider,

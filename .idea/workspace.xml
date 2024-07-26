@@ -5,6 +5,30 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4b81b844-adb5-414e-9f67-5d8f0a3e3414" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources/6d67a535-f47c-4bfa-bf57-c1c4eacc5658.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources/6d67a535-f47c-4bfa-bf57-c1c4eacc5658/storage_v2/_src_/database/postgres.edMnLQ.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources/6d67a535-f47c-4bfa-bf57-c1c4eacc5658/storage_v2/_src_/database/postgres.edMnLQ/schema/public.abK9xQ.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/.idea/gradle.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/.idea/jarRepositories.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/.idea/kotlinc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/.idea/libraries/Dart_Packages.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/.idea/libraries/Dart_SDK.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/MyApplication/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/MyApplication/.idea/.name" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/MyApplication/.idea/gradle.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/MyApplication/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/MyApplication/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/storage-service/env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Frontend/lib/pages/application_event.dart" beforeDir="false" afterPath="$PROJECT_DIR$/src/Frontend/lib/pages/application_event.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -66,7 +90,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.cidr.known.project.marker": "true",
     "RunOnceActivity.readMode.enableVisualFormatting": "true",
-    "Spring Boot.BackendApplication.executor": "Coverage",
+    "Spring Boot.BackendApplication.executor": "Run",
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
     "com.google.cloudcode.ide_session_index": "20240726_0003",
@@ -102,7 +126,7 @@
       <method v="2" />
     </configuration>
     <configuration name="BackendApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" activateToolWindowBeforeRun="false" nameIsGenerated="true">
-      <option name="ALTERNATIVE_JRE_PATH" value="$PROJECT_DIR$/src/Backend/src/main/kotlin/com/devforce/backend/service" />
+      <option name="ALTERNATIVE_JRE_PATH" value="Android API 31 Platform" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <envs>
         <env name="DB_PASSWORD" value="DevForce123!" />
@@ -110,6 +134,9 @@
         <env name="DB_USERNAME" value="postgres.mehgbhiirnmypfgnkaud" />
         <env name="SECRET" value="kzhnha&amp;k7(jfmnui0k#4@5)=hlp62kwy(7&amp;c6q23&amp;4znx_78(9" />
       </envs>
+      <option name="envFilePaths">
+        <option value="$PROJECT_DIR$/src/Backend/src/main/kotlin/com/devforce/backend/BackendApplication.kt" />
+      </option>
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.devforce.backend.BackendApplication" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -151,7 +178,7 @@
       <workItem from="1719425386875" duration="474000" />
       <workItem from="1722011597782" duration="428000" />
       <workItem from="1722012398796" duration="4319000" />
-      <workItem from="1722017486693" duration="1604000" />
+      <workItem from="1722017486693" duration="2256000" />
     </task>
     <servers />
   </component>

@@ -4,7 +4,49 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f15131b9-b573-48b6-91bd-623264e869e0" name="Changes" comment="" />
+    <list default="true" id="f15131b9-b573-48b6-91bd-623264e869e0" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../.idea/dataSources.local.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../.idea/dataSources.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../.idea/dataSources/6d67a535-f47c-4bfa-bf57-c1c4eacc5658.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../.idea/dataSources/6d67a535-f47c-4bfa-bf57-c1c4eacc5658/storage_v2/_src_/database/postgres.edMnLQ.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../.idea/dataSources/6d67a535-f47c-4bfa-bf57-c1c4eacc5658/storage_v2/_src_/database/postgres.edMnLQ/schema/public.abK9xQ.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/kotlinc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MyApplication/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MyApplication/.idea/.name" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MyApplication/.idea/gradle.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MyApplication/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MyApplication/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/storage-service/env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/lib/pages/application_event.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/lib/pages/application_event.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/lib/pages/editProfile_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/lib/pages/editProfile_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/lib/pages/google_signin.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/lib/pages/google_signin.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/lib/pages/home_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/lib/pages/home_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/lib/pages/profilePage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/lib/pages/profilePage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/lib/pages/supabase_Splashpage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/lib/pages/supabase_Splashpage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/lib/pages/supabase_login.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/lib/pages/supabase_login.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/lib/providers/user_provider.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/lib/providers/user_provider.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/lib/services/api.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/lib/services/api.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/pubspec.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/pubspec.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/test/Profile_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/test/Profile_test.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/test/api_test.mocks.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/test/api_test.mocks.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/test/edit_profile_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/test/edit_profile_test.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/test/edit_user_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/test/edit_user_test.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MyApplication/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/MyApplication/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -84,7 +126,7 @@
     "ScreenRecorder.SavePath": "C:\\Users\\zethe",
     "Spring Boot.BackendApplication.executor": "Run",
     "android.gradle.sync.needed": "true",
-    "com.google.cloudcode.ide_session_index": "20240726_0004",
+    "com.google.cloudcode.ide_session_index": "20240726_0006",
     "dart.analysis.tool.window.visible": "false",
     "git-widget-placeholder": "feat/unitTesting",
     "kotlin-language-version-configured": "true",
@@ -94,7 +136,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "device.mirroring",
+    "settings.editor.selected.configurable": "testing.instrumented.configuration",
     "show.migrate.to.gradle.popup": "false",
     "vue.rearranger.settings.migration": "true"
   },
@@ -132,6 +174,8 @@
       <method v="2" />
     </configuration>
     <configuration name="BackendApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="ALTERNATIVE_JRE_PATH" value="$USER_HOME$/AppData/Local/Android/Sdk" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <envs>
         <env name="DB_PASSWORD" value="DevForce123!" />
         <env name="DB_URL" value="jdbc:postgresql://aws-0-ap-south-1.pooler.supabase.com:6543/postgres?prepareThreshold=0" />
@@ -238,6 +282,8 @@
       <workItem from="1722012188518" duration="197000" />
       <workItem from="1722015218896" duration="906000" />
       <workItem from="1722017460569" duration="16000" />
+      <workItem from="1722020385091" duration="526000" />
+      <workItem from="1722021634527" duration="10692000" />
     </task>
     <servers />
   </component>
@@ -272,6 +318,11 @@
           <url>file://$PROJECT_DIR$/Frontend/lib/pages/edit_Event.dart</url>
           <line>93</line>
           <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="Dart">
+          <url>file://$PROJECT_DIR$/Frontend/test/Profile_test.dart</url>
+          <line>1</line>
+          <option name="timeStamp" value="6" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -4,6 +4,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mockito/mockito.dart';
+import 'package:mocktail_image_network/mocktail_image_network.dart';
 import 'package:provider/provider.dart';
 import 'package:firstapp/pages/editProfile_page.dart';
 import 'package:firstapp/providers/user_provider.dart';
@@ -11,6 +12,7 @@ import 'package:firstapp/services/api.dart';
 import 'api_test.mocks.dart';
 import 'package:image/image.dart' as img;
 import 'package:supabase_flutter/supabase_flutter.dart';
+// import 'package:mocktail/mocktail.dart';
 void main() {
   group('EditprofilePage', () {
     late MockImagePicker mockImagePicker;
@@ -21,14 +23,13 @@ void main() {
       mockUserProvider = MockuserProvider();
 
       mockImagePicker = MockImagePicker();
-      when(mockUserProvider.Fullname).thenReturn('Test User');
-      when(mockUserProvider.email).thenReturn('user@email.com');
+       when(mockUserProvider.Fullname).thenReturn('Test User');
+       when(mockUserProvider.email).thenReturn('user@email.com');
 
       final placeholderImage = img.Image(width: 20, height: 20);
       final placeholderImageData = img.encodePng(placeholderImage);
-
-      when(mockUserProvider.profileImage)
-          .thenReturn(Uint8List.fromList(placeholderImageData));
+      String mockImageUrl = 'http://example.com/path/to/placeholder/image.jpg';
+       when(mockUserProvider.profileImage).thenReturn(mockImageUrl);
 
     });
 
@@ -42,12 +43,14 @@ void main() {
     }
 
     testWidgets('renders correctly', (WidgetTester tester) async {
-      await tester.pumpWidget(createWidgetUnderTest());
+      await mockNetworkImages(() async {
+        await tester.pumpWidget(createWidgetUnderTest());
 
-      expect(find.text('Edit Profile'), findsOneWidget);
-      expect(find.text('Save'), findsOneWidget);
-      expect(find.text('Cancel'), findsOneWidget);
-      expect(find.byType(TextFormField), findsNWidgets(1));
+        expect(find.text('Edit Profile'), findsOneWidget);
+        expect(find.text('Save'), findsOneWidget);
+        expect(find.text('Cancel'), findsOneWidget);
+        expect(find.byType(TextFormField), findsNWidgets(1));
+      });
     });
 
     // testWidgets('select image and update state', (WidgetTester tester) async {

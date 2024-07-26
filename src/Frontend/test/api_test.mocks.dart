@@ -4,7 +4,7 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i5;
-import 'dart:typed_data' as _i9;
+import 'dart:typed_data' as _i10;
 import 'dart:ui' as _i7;
 
 import 'package:firstapp/providers/events_providers.dart' as _i4;
@@ -15,7 +15,7 @@ import 'package:image_picker/image_picker.dart' as _i11;
 import 'package:image_picker_platform_interface/image_picker_platform_interface.dart'
     as _i3;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:mockito/src/dummies.dart' as _i10;
+import 'package:mockito/src/dummies.dart' as _i9;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -375,7 +375,7 @@ class MockuserProvider extends _i1.Mock implements _i8.userProvider {
   }
 
   @override
-  set profileimage(_i9.Uint8List? _profileimage) => super.noSuchMethod(
+  set profileimage(String? _profileimage) => super.noSuchMethod(
         Invocation.setter(
           #profileimage,
           _profileimage,
@@ -386,7 +386,7 @@ class MockuserProvider extends _i1.Mock implements _i8.userProvider {
   @override
   String get Fullname => (super.noSuchMethod(
         Invocation.getter(#Fullname),
-        returnValue: _i10.dummyValue<String>(
+        returnValue: _i9.dummyValue<String>(
           this,
           Invocation.getter(#Fullname),
         ),
@@ -395,7 +395,7 @@ class MockuserProvider extends _i1.Mock implements _i8.userProvider {
   @override
   String get email => (super.noSuchMethod(
         Invocation.getter(#email),
-        returnValue: _i10.dummyValue<String>(
+        returnValue: _i9.dummyValue<String>(
           this,
           Invocation.getter(#email),
         ),
@@ -404,7 +404,7 @@ class MockuserProvider extends _i1.Mock implements _i8.userProvider {
   @override
   String get password => (super.noSuchMethod(
         Invocation.getter(#password),
-        returnValue: _i10.dummyValue<String>(
+        returnValue: _i9.dummyValue<String>(
           this,
           Invocation.getter(#password),
         ),
@@ -413,7 +413,7 @@ class MockuserProvider extends _i1.Mock implements _i8.userProvider {
   @override
   String get role => (super.noSuchMethod(
         Invocation.getter(#role),
-        returnValue: _i10.dummyValue<String>(
+        returnValue: _i9.dummyValue<String>(
           this,
           Invocation.getter(#role),
         ),
@@ -422,7 +422,7 @@ class MockuserProvider extends _i1.Mock implements _i8.userProvider {
   @override
   String get userId => (super.noSuchMethod(
         Invocation.getter(#userId),
-        returnValue: _i10.dummyValue<String>(
+        returnValue: _i9.dummyValue<String>(
           this,
           Invocation.getter(#userId),
         ),
@@ -456,7 +456,7 @@ class MockuserProvider extends _i1.Mock implements _i8.userProvider {
       );
 
   @override
-  set profileImage(_i9.Uint8List? value) => super.noSuchMethod(
+  set profileImage(String? value) => super.noSuchMethod(
         Invocation.setter(
           #profileImage,
           value,
@@ -536,7 +536,7 @@ class MockApi extends _i1.Mock implements _i2.Api {
   @override
   String get jwtKey => (super.noSuchMethod(
         Invocation.getter(#jwtKey),
-        returnValue: _i10.dummyValue<String>(
+        returnValue: _i9.dummyValue<String>(
           this,
           Invocation.getter(#jwtKey),
         ),
@@ -554,7 +554,7 @@ class MockApi extends _i1.Mock implements _i2.Api {
   @override
   String get refreshToken => (super.noSuchMethod(
         Invocation.getter(#refreshToken),
-        returnValue: _i10.dummyValue<String>(
+        returnValue: _i9.dummyValue<String>(
           this,
           Invocation.getter(#refreshToken),
         ),
@@ -628,7 +628,6 @@ class MockApi extends _i1.Mock implements _i2.Api {
   @override
   _i5.Future<Map<String, dynamic>> postChangeUser(
     String? name,
-    _i9.Uint8List? profileImage,
     String? userId,
   ) =>
       (super.noSuchMethod(
@@ -636,7 +635,6 @@ class MockApi extends _i1.Mock implements _i2.Api {
           #postChangeUser,
           [
             name,
-            profileImage,
             userId,
           ],
         ),
@@ -669,7 +667,7 @@ class MockApi extends _i1.Mock implements _i2.Api {
     required DateTime? endDate,
     required String? location,
     int? maxParticipants,
-    String? metadata,
+    List<String>? metadata,
     bool? isPrivate = false,
     List<String>? media,
     required String? userId,
@@ -805,6 +803,23 @@ class MockApi extends _i1.Mock implements _i2.Api {
             #isPrivate: isPrivate,
             #media: media,
           },
+        ),
+        returnValue:
+            _i5.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
+      ) as _i5.Future<Map<String, dynamic>>);
+
+  @override
+  _i5.Future<Map<String, dynamic>> uploadImage(
+    _i10.Uint8List? imageBytes,
+    String? eventId,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #uploadImage,
+          [
+            imageBytes,
+            eventId,
+          ],
         ),
         returnValue:
             _i5.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
