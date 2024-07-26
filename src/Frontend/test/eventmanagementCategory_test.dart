@@ -5,7 +5,7 @@ import 'package:firstapp/providers/events_providers.dart';
 import 'package:firstapp/providers/user_provider.dart';
 import 'api_test.mocks.dart';
 import 'package:firstapp/widgets/event_card.dart';
-import 'package:firstapp/widgets/eventmanagement_category.dart';
+import 'package:firstapp/widgets/eventManagement_category.dart';
 
 import 'package:mockito/mockito.dart';
 
@@ -41,6 +41,11 @@ void main() {
           isPrivate: true,
           attendees: [],
           startDate: DateTime.parse('2022-01-01T10:00:00.000Z'),
+          metadata: Metadata(
+            mentors: [],
+            categories: [],
+            sessions: [],
+          ),
         ),
         Event(
           id: '2',
@@ -56,6 +61,11 @@ void main() {
           isPrivate: false,
           attendees: [],
           startDate: DateTime.parse('2022-01-02T10:00:00.000Z'),
+          metadata: Metadata(
+            mentors: [],
+            categories: [],
+            sessions: [],
+          ),
         ),
       ]);
       when(mockEventProvider.eventsHome).thenAnswer((_) async =>
@@ -74,6 +84,11 @@ void main() {
           isPrivate: true,
           attendees: [],
           startDate: DateTime.parse('2022-01-01T10:00:00.000Z'),
+          metadata: Metadata(
+            mentors: [],
+            categories: [],
+            sessions: [],
+          ),
         ),
         Event(
           id: '2',
@@ -89,6 +104,11 @@ void main() {
           isPrivate: false,
           attendees: [],
           startDate: DateTime.parse('2022-01-02T10:00:00.000Z'),
+          metadata: Metadata(
+            mentors: [],
+            categories: [],
+            sessions: [],
+          ),
         ),
         Event(
           id: '3',
@@ -104,6 +124,11 @@ void main() {
           isPrivate: false,
           attendees: [],
           startDate: DateTime.parse('2022-01-03T10:00:00.000Z'),
+          metadata: Metadata(
+            mentors: [],
+            categories: [],
+            sessions: [],
+          ),
         ),
       ]);
       when(mockEventProvider.eventsRsvp).thenAnswer((_) async =>
@@ -122,6 +147,11 @@ void main() {
           isPrivate: true,
           attendees: [],
           startDate: DateTime.parse('2022-01-01T10:00:00.000Z'),
+          metadata: Metadata(
+            mentors: [],
+            categories: [],
+            sessions: [],
+          ),
         ),
         Event(
           id: '2',
@@ -137,6 +167,11 @@ void main() {
           isPrivate: false,
           attendees: [],
           startDate: DateTime.parse('2022-01-02T10:00:00.000Z'),
+          metadata: Metadata(
+            mentors: [],
+            categories: [],
+            sessions: [],
+          ),
         ),
         Event(
           id: '3',
@@ -152,6 +187,11 @@ void main() {
           isPrivate: false,
           attendees: [],
           startDate: DateTime.parse('2022-01-03T10:00:00.000Z'),
+          metadata: Metadata(
+            mentors: [],
+            categories: [],
+            sessions: [],
+          ),
         ),
       ]);
     });

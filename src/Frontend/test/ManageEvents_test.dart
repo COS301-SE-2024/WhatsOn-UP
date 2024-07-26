@@ -5,6 +5,7 @@ import 'package:firstapp/providers/events_providers.dart';
 import 'package:firstapp/widgets/eventManagement_category.dart';
 import 'package:firstapp/widgets/event_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
@@ -39,6 +40,11 @@ void main() {
           isPrivate: true,
           attendees: [],
           startDate: DateTime.parse('2022-01-01T10:00:00.000Z'),
+          metadata: Metadata(
+            mentors: [],
+            categories: [],
+            sessions: [],
+          ),
         ),
         Event(
           id: '2',
@@ -54,6 +60,11 @@ void main() {
           isPrivate: false,
           attendees: [],
           startDate: DateTime.parse('2022-01-02T10:00:00.000Z'),
+          metadata: Metadata(
+            mentors: [],
+            categories: [],
+            sessions: [],
+          ),
         ),
       ]);
       when(mockEventProvider.eventsHome).thenAnswer((_) async => [
@@ -71,6 +82,11 @@ void main() {
           isPrivate: true,
           attendees: [],
           startDate: DateTime.parse('2022-01-01T10:00:00.000Z'),
+          metadata: Metadata(
+            mentors: [],
+            categories: [],
+            sessions: [],
+          ),
         ),
         Event(
           id: '2',
@@ -86,6 +102,13 @@ void main() {
           isPrivate: false,
           attendees: [],
           startDate: DateTime.parse('2022-01-02T10:00:00.000Z'),
+          metadata: Metadata(
+            mentors: [],
+            categories: [],
+            sessions: [],
+          ),
+
+
         ),
         Event(
           id: '3',
@@ -101,6 +124,11 @@ void main() {
           isPrivate: false,
           attendees: [],
           startDate: DateTime.parse('2022-01-03T10:00:00.000Z'),
+          metadata: Metadata(
+            mentors: [],
+            categories: [],
+            sessions: [],
+          ),
         ),
       ]);
       when(mockEventProvider.eventsRsvp).thenAnswer((_) async => [
@@ -118,6 +146,11 @@ void main() {
           isPrivate: true,
           attendees: [],
           startDate: DateTime.parse('2022-01-01T10:00:00.000Z'),
+          metadata: Metadata(
+            mentors: [],
+            categories: [],
+            sessions: [],
+          ),
         ),
         Event(
           id: '2',
@@ -133,6 +166,11 @@ void main() {
           isPrivate: false,
           attendees: [],
           startDate: DateTime.parse('2022-01-02T10:00:00.000Z'),
+          metadata: Metadata(
+            mentors: [],
+            categories: [],
+            sessions: [],
+          ),
         ),
         Event(
           id: '3',
@@ -148,6 +186,11 @@ void main() {
           isPrivate: false,
           attendees: [],
           startDate: DateTime.parse('2022-01-03T10:00:00.000Z'),
+          metadata: Metadata(
+            mentors: [],
+            categories: [],
+            sessions: [],
+          ),
         ),
       ]);
     });
@@ -173,6 +216,7 @@ void main() {
       expect(find.text('Past Events'), findsOneWidget);
       expect(find.text('Create Event'), findsOneWidget);
       expect(find.text('Attendees for All Events'), findsOneWidget);
+      expect(find.byIcon(Icons.arrow_forward), findsNWidgets(4));
     });
 
     testWidgets('Renders ManageEvents correctly for non-ADMIN role', (WidgetTester tester) async {
@@ -282,6 +326,27 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.byType(Attendees), findsOneWidget);
 
+    });
+testWidgets('setLoading method updates _isLoading state', (WidgetTester tester) async{
+      when(mockUserProvider.role).thenReturn('HOST');
+      await tester.pumpWidget(
+        MultiProvider(
+          providers: [
+
+            ChangeNotifierProvider<EventProvider>(create: (_) => mockEventProvider),
+            ChangeNotifierProvider<userProvider>(create: (_) => mockUserProvider),
+          ],
+          child: MaterialApp(
+            home: ManageEvents(),
+          ),
+        ),
+      );
+      expect(find.byType(SpinKitPianoWave), findsNothing);
+      final statefulElement = tester.element(find.byType(ManageEvents)) as StatefulElement;
+      final state = statefulElement.state as dynamic;
+      state.setLoading(true);
+      await tester.pump();
+      expect(find.byType(SpinKitPianoWave), findsOneWidget);
     });
 
 

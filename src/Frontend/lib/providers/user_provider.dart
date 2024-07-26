@@ -14,12 +14,12 @@ class userProvider extends ChangeNotifier{
   String _Password = '';
   String _Role= '';
   String _userId= '';
- Uint8List? profileImage;
+ Uint8List? profileimage;
 
   String get Fullname => _Fullname;
   String get email => _Email;
   String get password => _Password;
-  Uint8List? get profileimage => profileImage;
+  Uint8List? get profileImage => profileimage;
   String get role => _Role;
   String get userId => _userId;
 
@@ -38,8 +38,8 @@ class userProvider extends ChangeNotifier{
       _Password = value;
       notifyListeners();
     }
-    set profileimage(Uint8List? value){
-      profileImage = value;
+    set profileImage(Uint8List? value){
+      profileimage = value;
       notifyListeners();
     }
     set role(String value){

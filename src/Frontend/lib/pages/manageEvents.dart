@@ -125,6 +125,8 @@ import '../widgets/eventManagement_category.dart';
 class ManageEvents extends StatefulWidget {
   ManageEvents({Key? key}) : super(key: key);
 
+
+
   @override
   _ManageEventsState createState() => _ManageEventsState();
 }

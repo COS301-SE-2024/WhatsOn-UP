@@ -24,14 +24,14 @@ void main() {
       user.password = 'password123';
       user.role = 'admin';
       user.userId = '12345';
-      user.profileimage = Uint8List.fromList([0, 1, 2, 3, 4]);
+      user.profileImage = Uint8List.fromList([0, 1, 2, 3, 4]);
 
       expect(user.Fullname, 'John Doe');
       expect(user.email, 'john.doe@example.com');
       expect(user.password, 'password123');
       expect(user.role, 'admin');
       expect(user.userId, '12345');
-      expect(user.profileimage, Uint8List.fromList([0, 1, 2, 3, 4]));
+      expect(user.profileImage, Uint8List.fromList([0, 1, 2, 3, 4]));
     });
 
     test('notifies listeners on changes', () {
@@ -62,7 +62,7 @@ void main() {
       expect(notified, true);
       notified = false;
 
-      user.profileimage = Uint8List.fromList([5, 6, 7, 8, 9]);
+      user.profileImage = Uint8List.fromList([5, 6, 7, 8, 9]);
       expect(notified, true);
     });
   });

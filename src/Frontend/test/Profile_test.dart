@@ -24,7 +24,7 @@ void main() {
       final placeholderImage = img.Image(width: 20, height: 20);
       final placeholderImageData = img.encodePng(placeholderImage);
 
-      when(mockUserProvider.profileimage)
+      when(mockUserProvider.profileImage)
           .thenReturn(Uint8List.fromList(placeholderImageData));
     });
 
