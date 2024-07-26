@@ -6,8 +6,7 @@ import 'package:firstapp/pages/explore_page.dart';
 import 'package:firstapp/pages/settings_page.dart';
 import 'package:firstapp/widgets/nav_bar.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:firstapp/pages/searchbar.dart';
-import 'package:firstapp/pages/data_search.dart';
+
 import 'package:firstapp/pages/profilePage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
@@ -17,8 +16,6 @@ import '../providers/user_provider.dart';
 import '../screens/FilterScreen.dart';
 import '../screens/SearchScreen.dart';
 import 'package:firstapp/services/api.dart';
-// import 'package:firstapp/widgets/eventcard.dart';
-import 'dart:typed_data';
 import 'package:firstapp/pages/Broadcast.dart';
 import 'package:firstapp/pages/manageEvents.dart';
 import 'package:firstapp/pages/application_event.dart';
@@ -163,9 +160,10 @@ const String ADMIN='ADMIN';
                           );
                         },
                         child: CircleAvatar(
-                          backgroundImage: userP.profileImage != null
+                          backgroundImage: userP.profileImage!.isNotEmpty
                               ? MemoryImage(userP.profileImage!)
-                              : AssetImage('http/example-image')
+                              : const AssetImage('assets/images/user.png')
+
                           as ImageProvider,
                           radius: 27.0,
                         ),

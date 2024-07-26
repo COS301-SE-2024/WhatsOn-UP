@@ -35,7 +35,7 @@ class CustomSearchBar extends StatelessWidget {
               decoration: InputDecoration(
                 hintText: placeholder,
                 hintStyle: TextStyle(
-                  color: Colors.white, // Adjust hint text color to white
+                  color: Colors.white,
                   fontSize: fontSize,
                 ),
                 border: InputBorder.none, // Remove underline

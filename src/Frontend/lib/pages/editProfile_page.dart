@@ -84,7 +84,9 @@ class _EditprofilePageState extends State<EditprofilePage> {
 
   @override
   Widget build(BuildContext context) {
-    userProvider userP = Provider.of<userProvider>(context);
+    final userP = context.watch<userProvider>();
+
+    // userProvider userP = Provider.of<userProvider>(context);
     emailController.text = userP.email;
     nameController.text = userP.Fullname;
 

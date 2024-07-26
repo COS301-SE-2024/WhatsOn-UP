@@ -122,7 +122,7 @@ class EventProvider with ChangeNotifier {
     }
   }
   Future<List<Event>> _fetchEventsRsvp(String userId) async {
-    final user = supabase.auth.currentUser;
+
     try {
       final response= await api.getRSVPEvents(userId);
       List<Event> events = (response as List)
