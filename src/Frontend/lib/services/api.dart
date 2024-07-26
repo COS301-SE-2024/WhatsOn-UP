@@ -8,7 +8,7 @@ class Api {
   // Singleton instance
   static final Api _instance = Api._internal();
   // static const String domain = '10.0.2.2';
-  static const String domain = 'Localhost';
+  static const String domain = 'localhost';
   factory Api() => _instance;
   Api._internal();
 
@@ -111,7 +111,7 @@ class Api {
   Future<List<dynamic>> getRSVPEvents(String userId) async {
     print('the id in rsvp is $userId');
     try {
-      final String _rsvpEventsURL = 'http://localhost:8080/api/user/get_rspv_events';
+      final String _rsvpEventsURL = 'http://$domain:8080/api/user/get_rspv_events';
       var headers = {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
@@ -136,7 +136,7 @@ class Api {
   Future<Map<String, dynamic>> postChangeUser(String name,String profileImage, String userId) async {
     // Url for posting new informaion
 
-    var userChangeUrl = Uri.parse('http://localhost:8080/api/user/update_profile');
+    var userChangeUrl = Uri.parse('http://$domain:8080/api/user/update_profile');
 
     // Define the headers and body for login request
     var headers = {
@@ -168,7 +168,7 @@ class Api {
   }
   Future<Map<String, dynamic>> updatePassword(String password,String userId) async {
 
-    var Url = Uri.parse('http://localhost:8080/api/auth/reset_password');
+    var Url = Uri.parse('http://$domain:8080/api/auth/reset_password');
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -210,7 +210,7 @@ class Api {
     List<String>? media,
     required String userId,
   }) async {
-    final String _createEventUrl = 'http://localhost:8080/api/events/create';
+    final String _createEventUrl = 'http://$domain:8080/api/events/create';
 
     var headers = {
       'Content-Type': 'application/json',
@@ -246,7 +246,7 @@ class Api {
 
 
   Future<Map<String, dynamic>> rsvpEvent(String eventId, String UserId) async {
-    final String _rsvpEventUrl = 'http://localhost:8080/api/user/rspv_event/$eventId';
+    final String _rsvpEventUrl = 'http://$domain:8080/api/user/rspv_event/$eventId';
     
     var headers = {
       'Content-Type': 'application/json',
@@ -276,7 +276,7 @@ class Api {
 
    Future<Map<String, dynamic>> postUsername(String username,String userid) async {
 
-    var userChangeUrl = Uri.parse('http://localhost:8080/api/user/update_profile');
+    var userChangeUrl = Uri.parse('http://$domain:8080/api/user/update_profile');
   //
   //   // Define the headers and body for login request
     var headers = {
