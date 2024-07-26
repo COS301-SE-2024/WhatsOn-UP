@@ -1,0 +1,11 @@
+{
+  "status": "success",
+  "timestamp": 1720093620276,
+  "data": {
+    "user": {
+      "role": "GENERAL",
+      "fullName": null,
+      "profileImage": ""
+    }
+  }
+}

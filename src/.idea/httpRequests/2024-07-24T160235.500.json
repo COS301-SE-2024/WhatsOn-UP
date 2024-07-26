@@ -1,0 +1,6 @@
+{
+  "timestamp": "2024-07-24T14:02:35.332+00:00",
+  "status": 500,
+  "error": "Internal Server Error",
+  "path": "/api/events/get_all"
+}

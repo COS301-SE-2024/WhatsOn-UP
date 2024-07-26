@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="f15131b9-b573-48b6-91bd-623264e869e0" name="Changes" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$/Backend">
+      <ProjectState />
+    </projectState>
+    <projectState path="$PROJECT_DIR$/Frontend/android">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <task path="$PROJECT_DIR$/Backend">
+          <activation />
+        </task>
+        <projects_view>
+          <tree_state>
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="Backend" type="f1a62948:ProjectNode" />
+              </path>
+            </expand>
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Dart File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+    <option name="ROOT_SYNC" value="DONT_SYNC" />
+  </component>
+  <component name="KubernetesApiPersistence">{}</component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 8
+}</component>
+  <component name="ProjectId" id="2hkFEqRGODotx4CRTTxTEmFK2QG" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Dart Command Line App.Attendee_test.dart.executor": "Run",
+    "Gradle.Build Backend.executor": "Run",
+    "Gradle.Tests in 'com.devforce.backend'.executor": "Run",
+    "HTTP Request.generated-requests | #1.executor": "Run",
+    "HTTP Request.request | #1.executor": "Run",
+    "HTTP Request.request | Login user.executor": "Run",
+    "HTTP Request.src-endpoints_10 | #1.executor": "Run",
+    "HTTP Request.src-endpoints_11 | #1.executor": "Run",
+    "HTTP Request.src-endpoints_12 | #1.executor": "Run",
+    "HTTP Request.src-endpoints_13 | #1.executor": "Run",
+    "HTTP Request.src-endpoints_4 | #1.executor": "Run",
+    "HTTP Request.src-endpoints_6 | #1.executor": "Run",
+    "HTTP Request.src-endpoints_9 | #1.executor": "Run",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "ScreenRecorder.SavePath": "C:\\Users\\zethe",
+    "Spring Boot.BackendApplication.executor": "Run",
+    "android.gradle.sync.needed": "true",
+    "com.google.cloudcode.ide_session_index": "20240726_0004",
+    "dart.analysis.tool.window.visible": "false",
+    "git-widget-placeholder": "feat/unitTesting",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/zethe/OneDrive/Documents/GitHub/WhatsOn-UP/src/Frontend/assets/images",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "device.mirroring",
+    "show.migrate.to.gradle.popup": "false",
+    "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "kotlin-gradle-user-dirs": [
+      "C:\\Users\\zethe\\.gradle"
+    ]
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\zethe\OneDrive\Documents\GitHub\WhatsOn-UP\src\Frontend\assets\images" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\zethe\OneDrive\Documents\GitHub\WhatsOn-UP\src\storage-service" />
+      <recent name="C:\Users\zethe\OneDrive\Documents\GitHub\WhatsOn-UP\src\Frontend\assets\images" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Spring Boot.BackendApplication">
+    <configuration name="Attendee_test.dart" type="DartCommandLineRunConfigurationType" factoryName="Dart Command Line Application" temporary="true" nameIsGenerated="true">
+      <option name="filePath" value="$PROJECT_DIR$/Frontend/test/Attendee_test.dart" />
+      <option name="workingDirectory" value="$PROJECT_DIR$/Frontend" />
+      <method v="2" />
+    </configuration>
+    <configuration name="src-endpoints_10 | #1" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$APPLICATION_CONFIG_DIR$/scratches/src-endpoints_10.http" requestIdentifier="#1" runType="Run single request">
+      <method v="2" />
+    </configuration>
+    <configuration name="src-endpoints_11 | #1" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$APPLICATION_CONFIG_DIR$/scratches/src-endpoints_11.http" requestIdentifier="#1" runType="Run single request">
+      <method v="2" />
+    </configuration>
+    <configuration name="src-endpoints_12 | #1" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$APPLICATION_CONFIG_DIR$/scratches/src-endpoints_12.http" requestIdentifier="#1" runType="Run single request">
+      <method v="2" />
+    </configuration>
+    <configuration name="src-endpoints_13 | #1" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$APPLICATION_CONFIG_DIR$/scratches/src-endpoints_13.http" requestIdentifier="#1" runType="Run single request">
+      <method v="2" />
+    </configuration>
+    <configuration name="BackendApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <envs>
+        <env name="DB_PASSWORD" value="DevForce123!" />
+        <env name="DB_URL" value="jdbc:postgresql://aws-0-ap-south-1.pooler.supabase.com:6543/postgres?prepareThreshold=0" />
+        <env name="DB_USERNAME" value="postgres.mehgbhiirnmypfgnkaud" />
+        <env name="SECRET" value="kzhnha&amp;k7(jfmnui0k#4@5)=hlp62kwy(7&amp;c6q23&amp;4znx_78(9" />
+      </envs>
+      <module name="Backend.main" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.devforce.backend.BackendApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Dart Command Line App.Attendee_test.dart" />
+      <item itemvalue="HTTP Request.src-endpoints_13 | #1" />
+      <item itemvalue="HTTP Request.src-endpoints_12 | #1" />
+      <item itemvalue="HTTP Request.src-endpoints_10 | #1" />
+      <item itemvalue="HTTP Request.src-endpoints_11 | #1" />
+      <item itemvalue="Spring Boot.BackendApplication" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="HTTP Request.src-endpoints_13 | #1" />
+        <item itemvalue="HTTP Request.src-endpoints_12 | #1" />
+        <item itemvalue="Dart Command Line App.Attendee_test.dart" />
+        <item itemvalue="HTTP Request.src-endpoints_11 | #1" />
+        <item itemvalue="HTTP Request.src-endpoints_10 | #1" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9f38398b9061-39b83d9b5494-intellij.indexing.shared.core-IU-241.17011.79" />
+        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-IU-241.17011.79" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="f15131b9-b573-48b6-91bd-623264e869e0" name="Changes" comment="" />
+      <created>1718130060012</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1718130060012</updated>
+      <workItem from="1718130061300" duration="605000" />
+      <workItem from="1718131059458" duration="7638000" />
+      <workItem from="1718191188911" duration="9173000" />
+      <workItem from="1718200609203" duration="6870000" />
+      <workItem from="1718504464372" duration="9964000" />
+      <workItem from="1718617028472" duration="3759000" />
+      <workItem from="1718703762905" duration="856000" />
+      <workItem from="1718794573186" duration="3901000" />
+      <workItem from="1718798682164" duration="29981000" />
+      <workItem from="1718869896517" duration="14588000" />
+      <workItem from="1718947711577" duration="9189000" />
+      <workItem from="1718964761935" duration="1082000" />
+      <workItem from="1718968960275" duration="14391000" />
+      <workItem from="1719039407431" duration="9109000" />
+      <workItem from="1719051615884" duration="829000" />
+      <workItem from="1719069715350" duration="12170000" />
+      <workItem from="1719127777804" duration="7512000" />
+      <workItem from="1719215022192" duration="2959000" />
+      <workItem from="1719225632544" duration="979000" />
+      <workItem from="1719418128968" duration="2534000" />
+      <workItem from="1719421948958" duration="491000" />
+      <workItem from="1719422627090" duration="780000" />
+      <workItem from="1719423883498" duration="257000" />
+      <workItem from="1719425869427" duration="2095000" />
+      <workItem from="1719430914222" duration="11173000" />
+      <workItem from="1719657317742" duration="68000" />
+      <workItem from="1719657409268" duration="12236000" />
+      <workItem from="1719676539810" duration="5087000" />
+      <workItem from="1719835595175" duration="15602000" />
+      <workItem from="1719919185489" duration="21676000" />
+      <workItem from="1719942278916" duration="4501000" />
+      <workItem from="1720004278661" duration="7849000" />
+      <workItem from="1720012946830" duration="1763000" />
+      <workItem from="1720032376921" duration="288000" />
+      <workItem from="1720032890587" duration="47226000" />
+      <workItem from="1720354258724" duration="1528000" />
+      <workItem from="1720379072481" duration="552000" />
+      <workItem from="1720427357375" duration="45096000" />
+      <workItem from="1720602343277" duration="27855000" />
+      <workItem from="1720639407400" duration="4050000" />
+      <workItem from="1720689031420" duration="22206000" />
+      <workItem from="1720871021427" duration="6463000" />
+      <workItem from="1720878888323" duration="292000" />
+      <workItem from="1720879208455" duration="13722000" />
+      <workItem from="1720957665209" duration="35673000" />
+      <workItem from="1721130990559" duration="17427000" />
+      <workItem from="1721226916967" duration="10077000" />
+      <workItem from="1721388362269" duration="129000" />
+      <workItem from="1721388520859" duration="18356000" />
+      <workItem from="1721414077135" duration="576000" />
+      <workItem from="1721655150850" duration="3401000" />
+      <workItem from="1721658807797" duration="3790000" />
+      <workItem from="1721668155160" duration="9540000" />
+      <workItem from="1721739531198" duration="24521000" />
+      <workItem from="1721914091506" duration="10399000" />
+      <workItem from="1721998867809" duration="1559000" />
+      <workItem from="1722000867036" duration="5804000" />
+      <workItem from="1722012188518" duration="197000" />
+      <workItem from="1722015218896" duration="906000" />
+      <workItem from="1722017460569" duration="16000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="Dart">
+          <url>file://$PROJECT_DIR$/Frontend/lib/pages/settings_page.dart</url>
+          <line>6</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="Dart">
+          <url>file://$PROJECT_DIR$/Frontend/test/Attendee_test.dart</url>
+          <line>1</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="Dart">
+          <url>file://$PROJECT_DIR$/Frontend/lib/pages/edit_Event.dart</url>
+          <line>93</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>

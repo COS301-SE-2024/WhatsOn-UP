@@ -383,6 +383,9 @@ class _ApplicationEventState extends State<ApplicationEvent> {
       isPrivate: !isPublic,
       media: mediaUrls,
       userId: userSuperbase!.id,
+      metadata: {
+        'categories': selectedCategoryNames.join(', ')
+      },
     ).then((response) {
       print('Event created successfully');
       // print('The Event: ');

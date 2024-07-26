@@ -1,0 +1,50 @@
+{
+  "status": "success",
+  "timestamp": 1720206355637,
+  "data": [
+    {
+      "id": "c23751b9-c610-4f7a-9e7e-81c9e21675ce",
+      "title": "Annual Tech Conference 2.0",
+      "description": "A conference discussing the latest trends in technology and innovation.",
+      "metadata": "{\"keynoteSpeakers\": [\"John Doe\", \"Jane Smith\"], \"sponsors\": [\"TechCorp\", \"InnovateX\"]}",
+      "eventMedia": [],
+      "location": "Silicon Valley Conference Center",
+      "startTime": "2024-09-15T09:00:00",
+      "endTime": "2024-09-15T17:00:00",
+      "maxAttendees": 500,
+      "isPrivate": false,
+      "hosts": [],
+      "attendees": [
+        {
+          "fullName": "Zethembe"
+        }
+      ],
+      "invitees": []
+    },
+    {
+      "id": "d60e6327-aa54-4598-bf67-1ce1b09a1e0a",
+      "title": "Test1",
+      "description": "Test1",
+      "metadata": "",
+      "eventMedia": [
+        "blob:http://localhost:60592/7579a016-25fa-4d73-84da-b6954dbe01fe"
+      ],
+      "location": "home",
+      "startTime": "2024-07-05T19:01:00",
+      "endTime": "2024-07-05T19:01:00",
+      "maxAttendees": 1,
+      "isPrivate": false,
+      "hosts": [
+        {
+          "fullName": "Zethembe"
+        }
+      ],
+      "attendees": [
+        {
+          "fullName": "Zethembe"
+        }
+      ],
+      "invitees": []
+    }
+  ]
+}
