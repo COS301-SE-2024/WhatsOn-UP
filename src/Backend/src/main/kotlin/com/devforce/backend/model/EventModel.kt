@@ -17,9 +17,8 @@ import java.util.*
 
 class EventModel {
     @Id
-    @GeneratedValue
     @Column(name = "event_id", columnDefinition = "UUID")
-    var eventId: UUID = UUID.randomUUID()
+    var eventId: UUID? = null
 
     var title: String = ""
     var description: String = ""

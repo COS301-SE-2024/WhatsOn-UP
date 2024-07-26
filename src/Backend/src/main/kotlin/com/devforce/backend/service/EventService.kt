@@ -3,8 +3,9 @@ package com.devforce.backend.service
 import com.devforce.backend.dto.*
 import com.devforce.backend.model.EventModel
 import com.devforce.backend.repo.EventRepo
+import com.devforce.backend.repo.InviteeRepo
+import com.devforce.backend.repo.UserRepo
 import com.devforce.backend.security.CustomUser
-import com.sun.java.accessibility.util.EventID
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -24,20 +25,26 @@ class EventService {
     @Autowired
     lateinit var eventRepo: EventRepo
 
+    @Autowired
+    lateinit var userRepo: UserRepo
+
+    @Autowired
+    lateinit var inviteeRepo: InviteeRepo
+
     fun createEvent(createEventDto: CreateEventDto): ResponseEntity<ResponseDto> {
         val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
 
         val event = EventModel().apply {
+            this.eventId = UUID.randomUUID()
             this.title = createEventDto.title
             this.description = createEventDto.description
-            this.startDateTime = createEventDto.startDate
-            this.endDateTime = createEventDto.endDate
+            this.startDateTime = createEventDto.startDateTime
+            this.endDateTime = createEventDto.endDateTime
             this.location = createEventDto.location
             this.maxAttendees = createEventDto.maxParticipants ?: 10
             this.metadata = createEventDto.metadata ?: ""
             this.isPrivate = createEventDto.isPrivate ?: false
             this.hosts = setOf(user)
-            this.eventMedia = createEventDto.media ?: this.eventMedia
         }
 
         eventRepo.save(event)
@@ -52,19 +59,30 @@ class EventService {
     fun getAllEvents(): ResponseEntity<ResponseDto> {
         // Implementation goes here
         val user = SecurityContextHolder.getContext().authentication.principal
-        val events = eventRepo.findAll()
         var eventsDto: List<EventDto>? = null
          if (user == "anonymousUser") {
+            val events = eventRepo.findAllByUser(null)
             eventsDto = events.map { event -> EventDto(event, false) }
         }
         else {
             val userModel = (user as CustomUser).userModel
-
+            val events = eventRepo.findAllByUser(userModel.userId)
             eventsDto = events.map {
-
                 event -> EventDto(event, userModel.userId in event.hosts.map { host -> host.userId })
             }
         }
+        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto)
+        )
+    }
+
+    fun getPassedEvents(): ResponseEntity<ResponseDto> {
+        // Implementation goes here
+        val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
+
+        val events = eventRepo.findPassedEvents(user.userId)
+
+        val eventsDto = events.map { event -> EventDto(event, user.userId in event.hosts.map { host -> host.userId }) }
+
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto)
         )
     }
@@ -113,7 +131,7 @@ class EventService {
             )
         }
 
-        eventRepo.delete(event.get())
+        eventRepo.deleteEvent(id)
 
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Event deleted successfully"))
         )
@@ -125,10 +143,21 @@ class EventService {
         searchString: String
     ): ResponseEntity<ResponseDto> {
 
-        val events = eventRepo.searchEvents(searchString)
-        val eventsDto = events.map { event -> EventDto(event, false) }
+        val user = SecurityContextHolder.getContext().authentication.principal
+        var eventsDto: List<EventDto>? = null
+        if (user == "anonymousUser") {
+            val events = eventRepo.searchEvents(searchString, null)
+            eventsDto = events.map { event -> EventDto(event, false) }
+        }
+        else {
+            val userModel = (user as CustomUser).userModel
+            val events = eventRepo.searchEvents(searchString, userModel.userId)
+            eventsDto = events.map {
+                    event -> EventDto(event, userModel.userId in event.hosts.map { host -> host.userId })
+            }
+        }
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto)
-        )
+    )
 
 }
     //the filter for filtering screen
@@ -221,10 +250,7 @@ class EventService {
         }
     }
 
-    /*fun filterEventsByKeyword(keywordFilter: String): List<EventModel> {
-        return eventRepo.filterEventsByKeyword(keywordFilter)
-    }
-*/
+
     //FUTURE
     fun filterEvents(filterBy: FilterByDto): ResponseEntity<ResponseDto>{
         val events = eventRepo.filterEvents(filterBy)

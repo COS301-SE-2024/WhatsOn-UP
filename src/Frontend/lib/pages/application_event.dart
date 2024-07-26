@@ -1,4 +1,5 @@
 import 'package:firstapp/pages/home_page.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firstapp/pages/profilePage.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,7 +11,7 @@ import 'package:provider/provider.dart';
 import '../main.dart';
 import '../providers/events_providers.dart';
 import '../widgets/event_card.dart';
-
+import 'package:multi_select_flutter/multi_select_flutter.dart';
 class ApplicationEvent extends StatefulWidget {
   ApplicationEvent({
     Key? key,
@@ -19,10 +20,34 @@ class ApplicationEvent extends StatefulWidget {
 
   @override
   State<ApplicationEvent> createState() => _ApplicationEventState();
-}
 
+}
+class Category{
+  final int id;
+  final String name;
+  Category({
+    required this.id,
+    required this.name,
+  });
+}
 class _ApplicationEventState extends State<ApplicationEvent> {
-  
+  static List<Category> _categories = [
+    Category(id: 1, name: 'Technology'),
+    Category(id: 2, name: 'Music'),
+    Category(id: 3, name: 'Food'),
+    Category(id: 4, name: 'Sports'),
+    Category(id: 5, name: 'Art'),
+    Category(id: 6, name: 'Science'),
+    Category(id: 7, name: 'Charity & Causes'),
+    Category(id: 8, name: 'Entrepreneurship'),
+  ];
+  final _items=_categories.map((category) => MultiSelectItem<Category>(category, category.name)).toList();
+  List<Category> _selectedCategories = [];
+  final _multiSelectKey = GlobalKey<FormFieldState>();
+  void initState() {
+    _selectedCategories=_categories;
+    super.initState();
+  }
   late Color myColor;
   late Size mediaSize;
   TextEditingController eventNameController = TextEditingController();
@@ -35,6 +60,7 @@ class _ApplicationEventState extends State<ApplicationEvent> {
   TimeOfDay endTime = TimeOfDay.now();
   List<XFile>? selectedImages;
   bool isPublic = true;
+
 
   final _formKey = GlobalKey<FormState>();
 
@@ -55,6 +81,7 @@ class _ApplicationEventState extends State<ApplicationEvent> {
         title: const Text('Create Event'),
       ),
       body: _buildForm(),
+
     );
   }
 
@@ -96,6 +123,53 @@ class _ApplicationEventState extends State<ApplicationEvent> {
                   endTime = time;
                 });
               }),
+              const SizedBox(height: 20),
+              const Text('Event Category:'),
+              Container(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor.withOpacity(.4),
+                  border: Border.all(
+                    color: Theme.of(context).primaryColor,
+                    width: 2,
+                  ),
+                ),
+                child: Column(
+                  children: <Widget>[
+                    MultiSelectBottomSheetField(
+                      key: _multiSelectKey,
+                      initialChildSize: 0.4,
+                      listType: MultiSelectListType.CHIP,
+                      searchable: true,
+                      buttonText: Text("Categories"),
+                      title: Text("Categories"),
+                      items: _items,
+                      onConfirm: (values) {
+                        setState(() {
+                          _selectedCategories = values.cast<Category>();
+                        });
+                      },
+                      chipDisplay: MultiSelectChipDisplay(
+                        onTap: (value) {
+                          setState(() {
+                            _selectedCategories.remove(value);
+                          });
+                        },
+                      ),
+                    ),
+                    _selectedCategories == null ||  _selectedCategories.isEmpty
+                        ? Container(
+                        padding: EdgeInsets.all(10),
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "None selected",
+                          style: TextStyle(color: Colors.black54),
+                        ))
+                        : Container(),
+                  ],
+
+                ),
+              ),
+
               const SizedBox(height: 20),
               _buildPrivacyToggle(),
               const SizedBox(height: 20),
@@ -291,8 +365,8 @@ class _ApplicationEventState extends State<ApplicationEvent> {
     );
 
     List<String>? mediaUrls = selectedImages?.map((file) => file.path).toList();
-
-
+    List<String> selectedCategoryNames = _selectedCategories.map((category) => category.name).toList();
+    print(selectedCategoryNames);
     // eventP.addEventHome(newEvent);
 
 //need to return an event as a responds
@@ -361,5 +435,8 @@ class _ApplicationEventState extends State<ApplicationEvent> {
       },
     );
   }
+
+
+
 }
 

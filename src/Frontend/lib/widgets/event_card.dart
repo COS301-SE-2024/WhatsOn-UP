@@ -3,146 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:firstapp/pages/detailed_event_page.dart';
 import 'package:provider/provider.dart';
 
-// class Event {
-//   final String nameOfEvent;
-//   final String dateAndTime;
-//   final String location;
-//   final List<String> imageUrls;
-//   final String description;
-//   final String id;
-//
-//   Event({
-//     required this.nameOfEvent,
-//     required this.dateAndTime,
-//     required this.location,
-//     required this.imageUrls,
-//     required this.description,
-//     required this.id,
-//   });
-//
-//    factory Event.fromJson(Map<String, dynamic> json) {
-//     dynamic j = json['eventMedia'];
-//
-//     // print("EVENTS: ${json}");
-//
-//     return Event(
-//       nameOfEvent: json['title'],
-//       dateAndTime: json['startTime'],
-//       location: json['location'],
-//       imageUrls: (json.containsKey('eventMedia') && (json['eventMedia'] as List).isNotEmpty)
-//           ? List<String>.from(json['eventMedia'])
-//           : ['https://images.pexels.com/photos/1190297/pexels-photo-1190297.jpeg'],
-//       description: json['description'],
-//       id: json['id'],
-//     );
-//    }
-// }
-//
-// class EventCard extends StatelessWidget {
-//   final Event event;
-//
-//   const EventCard({super.key, required this.event});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     final theme = Theme.of(context);
-//     final cardColour = theme.colorScheme.surface;
-//     final textColour = theme.colorScheme.onSurface;
-//      bool isBookmarked = false;
-//     return GestureDetector(
-//       onTap: () {
-//         Navigator.push(
-//           context,
-//           MaterialPageRoute(
-//             builder: (context) => DetailedEventPage(event: event),
-//           ),
-//         );
-//       },
-//       child: Card(
-//         color: cardColour,
-//         shape: RoundedRectangleBorder(
-//           borderRadius: BorderRadius.circular(15),
-//         ),
-//         child: Container(
-//           width: 200,
-//           height: 265,
-//           decoration: BoxDecoration(
-//             color: cardColour,
-//             borderRadius: BorderRadius.circular(15),
-//             boxShadow: [
-//               BoxShadow(
-//                 color: Colors.grey.withOpacity(0.3),
-//                 spreadRadius: 4,
-//                 blurRadius: 3,
-//                 offset: const Offset(0, 0),
-//               ),
-//             ],
-//           ),
-//           child: Padding(
-//             padding: const EdgeInsets.symmetric(horizontal: 10),
-//             child: Column(
-//               children: [
-//                 const SizedBox(height: 7.0),
-//                 Container(
-//                   child: ClipRRect(
-//                     borderRadius: BorderRadius.circular(16.0),
-//                     child: Image.network(
-//                       event.imageUrls[0],
-//                       height: 120.0,
-//                       width: double.infinity,
-//                       fit: BoxFit.cover,
-//                     ),
-//                   ),
-//                 ),
-//                 Text(
-//                   event.nameOfEvent,
-//                   style: TextStyle(
-//                     fontSize: 17.0,
-//                     fontWeight: FontWeight.bold,
-//                     color: textColour,
-//                   ),
-//                 ),
-//                 const SizedBox(height: 4.0),
-//                 Row(
-//                   mainAxisSize: MainAxisSize.min,
-//                   children: [
-//                     Icon(
-//                       Icons.location_on,
-//                       size: 20.0,
-//                       color: textColour,
-//                     ),
-//                     Expanded(
-//                       child: Text(
-//                         event.location,
-//                         style: TextStyle(
-//                           fontSize: 14.0,
-//                           color: textColour,
-//                         ),
-//                       ),
-//                     ),
-//                     IconButton(
-//                       icon: Icon(
-//                         isBookmarked ? Icons.bookmark : Icons.bookmark_border,
-//                         size: 20.0,
-//                         color: isBookmarked ? Colors.black : textColour,
-//                       ),
-//                       onPressed: () {
-//                         setState(() {
-//                           isBookmarked = !isBookmarked; // Toggle bookmark state
-//                         });
-//
-//                       },
-//                     ),
-//                   ],
-//                 ),
-//               ],
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
 class Attendee {
   final String userId;
   final String fullName;
@@ -176,6 +36,35 @@ class Attendee {
     return 'Attendee(id: $userId, name: $fullName, role: $role)';  // Include all properties
   }
 }
+
+class Metadata {
+  final List<String> mentors;
+  final List<String> categories;
+  final List<String> sessions;
+
+  Metadata({
+    required this.mentors,
+    required this.categories,
+    required this.sessions,
+  });
+
+  factory Metadata.fromJson(Map<String, dynamic> json) {
+    return Metadata(
+      mentors: json['mentors'] != null ? List<String>.from(json['mentors']) : [],
+      categories: json['categories'] != null ? List<String>.from(json['categories']) : [],
+      sessions: json['sessions'] != null ? List<String>.from(json['sessions']) : [],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'mentors': mentors,
+      'categories': categories,
+      'sessions': sessions,
+    };
+  }
+}
+
 class Event {
   late  String nameOfEvent;
   late final String dateAndTime;
@@ -189,7 +78,7 @@ class Event {
   late int maxAttendees;
   late final bool isPrivate;
   final List<Attendee> attendees;
-
+  final Metadata metadata;
   Event({
     required this.nameOfEvent,
     required this.dateAndTime,
@@ -204,34 +93,9 @@ class Event {
     required this.isPrivate,
     required this.attendees,
     required startDate,
+    required this.metadata,
   });
 
-  // factory Event.fromJson(Map<String, dynamic> json) {
-  //   return Event(
-  //     nameOfEvent: json['title'],
-  //     startTime: json['startTime'],
-  //     endTime: json['endTime'],
-  //     dateAndTime: json['startTime'],
-  //     maxAttendees: json['maxAttendees'],
-  //     location: json['location'],
-  //     isPrivate: json['isPrivate'],
-  //     imageUrls: (json.containsKey('eventMedia') &&
-  //             (json['eventMedia'] as List).isNotEmpty)
-  //         ? List<String>.from(json['eventMedia'])
-  //         : [
-  //             'https://images.pexels.com/photos/1190297/pexels-photo-1190297.jpeg'
-  //           ],
-  //     description: json['description'],
-  //     id: json['id'],
-  //     hosts: (json.containsKey('hosts') && (json['hosts'] as List).isNotEmpty)
-  //         ? List<String>.from(json['hosts'].map((host) => host['fullName']))
-  //         : [],
-  //     attendees: (json.containsKey('attendees') &&
-  //         (json['attendees'] as List).isNotEmpty)
-  //         ? List<Attendee>.from(json['attendees'].map((attendee) => Attendee.fromJson(attendee)))
-  //         : [],
-  //   );
-  // }
   factory Event.fromJson(Map<String, dynamic> json) {
     return Event(
       nameOfEvent: json['title']?.toString() ?? '',
@@ -253,6 +117,13 @@ class Event {
           : [],
       dateAndTime: json['startTime'],
       startDate: null,
+      metadata: json.containsKey('metadata') && json['metadata'] is Map<String, dynamic>
+          ? Metadata.fromJson(json['metadata'])
+          : Metadata(
+        mentors: [],
+        categories: [],
+        sessions: [],
+      ),
     );
   }
 
@@ -271,9 +142,12 @@ class Event {
       'description': description,
       'hosts': hosts.map((host) => {'fullName': host}).toList(),
       'attendees': attendees.map((attendee) => attendee.toJson()).toList(),
+      'metadata': metadata.toJson(),
     };
   }
 }
+
+
 
 class EventCard extends StatefulWidget {
   final Event event;
@@ -394,7 +268,7 @@ class _EventCardState extends State<EventCard> {
                               //api to add this event
                             } else {
                               eventP.removeEventSaved(widget.event);
-                              //api to remove this event// Toggle bookmark state
+
                             }
                           });
                         },

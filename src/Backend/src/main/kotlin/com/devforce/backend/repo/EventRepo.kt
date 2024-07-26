@@ -2,9 +2,10 @@ package com.devforce.backend.repo
 
 import com.devforce.backend.dto.FilterByDto
 import com.devforce.backend.model.EventModel
-import jdk.jfr.Event
+import jakarta.transaction.Transactional
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
+import org.springframework.data.jpa.repository.query.Procedure
 import org.springframework.data.repository.query.Param
 import java.util.*
 //FUTURE - filterEvents
@@ -20,10 +21,29 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
                 "LEFT JOIN FETCH e.invitees i " +
                 "LEFT JOIN FETCH i.role ir " +
                 "LEFT JOIN FETCH e.eventMedia em " +
-                "WHERE e.expired = false "+
-                "AND e.isPrivate = false"
+                "WHERE e.expired = false " +
+                "AND (e.isPrivate = false " +
+                "OR :userId IS NULL " +
+                "OR a.userId = :userId " +
+                "OR i.userId = :userId " +
+                "OR h.userId = :userId)"
     )
-    override fun findAll(): List<EventModel>
+    fun findAllByUser(@Param("userId") userId: UUID?): List<EventModel>
+
+    @Query(
+        "SELECT DISTINCT e FROM EventModel e " +
+                "LEFT JOIN FETCH e.attendees a " +
+                "LEFT JOIN FETCH a.role ar " +
+                "LEFT JOIN FETCH e.hosts h " +
+                "LEFT JOIN FETCH h.role hr " +
+                "LEFT JOIN FETCH e.invitees i " +
+                "LEFT JOIN FETCH i.role ir " +
+                "LEFT JOIN FETCH e.eventMedia em " +
+                "WHERE e.expired = true " +
+                "AND h.userId = :userId"
+    )
+    fun findPassedEvents(@Param("userId") userId: UUID): List<EventModel>
+
 
     @Query(
         "SELECT DISTINCT e FROM EventModel e " +
@@ -50,7 +70,8 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
                 "LEFT JOIN FETCH e.invitees i " +
                 "LEFT JOIN FETCH i.role ir " +
                 "LEFT JOIN FETCH e.eventMedia em " +
-                "WHERE a.userId = :userId " +
+                "WHERE (a.userId = :userId " +
+                "OR h.userId = :userId) " +
                 "AND e.expired = false"
     )
     fun getRspvdEvents(@Param("userId") userId: UUID): List<EventModel>
@@ -64,9 +85,13 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
                 "LEFT JOIN FETCH e.invitees i " +
                 "LEFT JOIN FETCH i.role ir " +
                 "LEFT JOIN FETCH e.eventMedia em " +
-                "WHERE e.title ILIKE %:searchString% " +
-                "AND e.expired = false " +
-                "AND e.isPrivate = false "+
+                "WHERE e.expired = false " +
+                "AND (e.isPrivate = false " +
+                "OR :userId IS NULL " +
+                "OR a.userId = :userId " +
+                "OR i.userId = :userId " +
+                "OR h.userId = :userId) "+
+                "AND e.title ILIKE %:searchString% " +
                 "OR e.description ILIKE %:searchString% " +
                 "OR e.location ILIKE %:searchString% " +
                 "OR e.metadata ILIKE %:searchString% " +
@@ -75,7 +100,8 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
                 "CASE WHEN e.location ILIKE %:searchString% THEN 1 ELSE 0 END + " +
                 "CASE WHEN e.metadata ILIKE %:searchString% THEN 1 ELSE 0 END) DESC"
     )
-    fun searchEvents(@Param("searchString") searchString: String): List<EventModel>
+    fun searchEvents(@Param("searchString") searchString: String, @Param("userId") userId: UUID?): List<EventModel>
+
 
    // fun findByTitleContainingIgnoreCase(title: String): List<Event>
 
@@ -125,6 +151,10 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
        @Param("maxCapacity") maxCapacity: Int?,
        @Param("isPrivate") isPrivate: Boolean?
    ): List<EventModel>
+
+    @Transactional
+    @Procedure(procedureName = "delete_event")
+    fun deleteEvent(eventId: UUID)
 
 }
 

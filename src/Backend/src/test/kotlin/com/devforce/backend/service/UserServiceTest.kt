@@ -1,6 +1,5 @@
 package com.devforce.backend.service
 
-import com.devforce.backend.dto.UpdateUserDto
 import com.devforce.backend.model.EventModel
 import com.devforce.backend.model.UserModel
 import com.devforce.backend.repo.EventRepo
@@ -74,8 +73,7 @@ class UserServiceTest {
 
     @Test
     fun `!!!Update user profile success!!!`() {
-        val updateUserDto = UpdateUserDto("dummy name", "dummy profile")
-        val response = userServiceWithMocks.updateProfile(updateUserDto)
+        val response = userServiceWithMocks.updateProfile("John Doe")
 
         assertEquals("success", response.body!!.status)
     }
