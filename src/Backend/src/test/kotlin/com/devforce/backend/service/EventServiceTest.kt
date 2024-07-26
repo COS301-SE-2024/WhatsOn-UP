@@ -54,8 +54,8 @@ class EventServiceTest {
         val createEventDto = CreateEventDto(
             title = "Event Title",
             description = "Event Description",
-            startDate = LocalDateTime.now(),
-            endDate = LocalDateTime.now().plusHours(2),
+            startDateTime = LocalDateTime.now(),
+            endDateTime = LocalDateTime.now().plusHours(2),
             location = "Event Location",
             maxParticipants = 10,
             metadata = "Event Metadata",
