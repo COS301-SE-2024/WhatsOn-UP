@@ -2,7 +2,6 @@ package com.devforce.backend.service
 
 import com.devforce.backend.dto.*
 import com.devforce.backend.model.EventModel
-import com.devforce.backend.model.InviteeModel
 import com.devforce.backend.repo.EventRepo
 import com.devforce.backend.repo.InviteeRepo
 import com.devforce.backend.repo.UserRepo
@@ -39,14 +38,13 @@ class EventService {
             this.eventId = UUID.randomUUID()
             this.title = createEventDto.title
             this.description = createEventDto.description
-            this.startDateTime = createEventDto.startDate
-            this.endDateTime = createEventDto.endDate
+            this.startDateTime = createEventDto.startDateTime
+            this.endDateTime = createEventDto.endDateTime
             this.location = createEventDto.location
             this.maxAttendees = createEventDto.maxParticipants ?: 10
             this.metadata = createEventDto.metadata ?: ""
             this.isPrivate = createEventDto.isPrivate ?: false
             this.hosts = setOf(user)
-            this.eventMedia = createEventDto.media ?: this.eventMedia
         }
 
         eventRepo.save(event)
@@ -73,6 +71,18 @@ class EventService {
                 event -> EventDto(event, userModel.userId in event.hosts.map { host -> host.userId })
             }
         }
+        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto)
+        )
+    }
+
+    fun getPassedEvents(): ResponseEntity<ResponseDto> {
+        // Implementation goes here
+        val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
+
+        val events = eventRepo.findPassedEvents(user.userId)
+
+        val eventsDto = events.map { event -> EventDto(event, user.userId in event.hosts.map { host -> host.userId }) }
+
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto)
         )
     }

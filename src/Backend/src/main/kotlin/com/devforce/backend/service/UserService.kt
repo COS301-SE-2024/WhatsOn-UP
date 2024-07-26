@@ -2,7 +2,6 @@ package com.devforce.backend.service
 
 import com.devforce.backend.dto.EventDto
 import com.devforce.backend.dto.ResponseDto
-import com.devforce.backend.dto.UpdateUserDto
 import com.devforce.backend.repo.EventRepo
 import com.devforce.backend.repo.RoleRepo
 import com.devforce.backend.repo.UserRepo
@@ -142,11 +141,10 @@ class UserService {
     }
 
     // To do: Implement function to update user profile
-    fun updateProfile(updateUserDto: UpdateUserDto): ResponseEntity<ResponseDto> {
+    fun updateProfile(fullName: String): ResponseEntity<ResponseDto> {
         val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
 
-        user.fullName = updateUserDto.fullName ?: user.fullName
-        user.profileImage = updateUserDto.profileImage ?: user.profileImage
+        user.fullName = fullName
 
         userRepo.save(user)
 
@@ -172,7 +170,8 @@ class UserService {
         val userCreds = mapOf(
             "role" to user.role?.name,
             "fullName" to user.fullName,
-            "profileImage" to user.profileImage
+            "profileImage" to user.profileImage,
+            "userId" to user.userId
         )
 
         return ResponseEntity.ok(

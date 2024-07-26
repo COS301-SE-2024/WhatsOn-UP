@@ -3,7 +3,6 @@ package com.devforce.backend.service
 import com.devforce.backend.dto.CreateEventDto
 import com.devforce.backend.dto.FilterByDto
 import com.devforce.backend.dto.UpdateEventDto
-import com.devforce.backend.dto.UpdateUserDto
 import com.devforce.backend.model.EventModel
 import com.devforce.backend.model.UserModel
 import com.devforce.backend.repo.EventRepo
@@ -60,8 +59,7 @@ class EventServiceTest {
             location = "Event Location",
             maxParticipants = 10,
             metadata = "Event Metadata",
-            isPrivate = false,
-            media = List(1) { "Event Media" }
+            isPrivate = false
         )
 
         val response = eventServiceWithMocks.createEvent(createEventDto)
@@ -159,8 +157,9 @@ class EventServiceTest {
     @Test
     fun `!!!Search events success!!!`() {
         val searchString = "searchString"
+        val userid = null
 
-        `when`(eventRepo.searchEvents(searchString)).thenReturn(listOf())
+        `when`(eventRepo.searchEvents(searchString, userid)).thenReturn(listOf())
 
         val response = eventServiceWithMocks.searchEvents(searchString)
 

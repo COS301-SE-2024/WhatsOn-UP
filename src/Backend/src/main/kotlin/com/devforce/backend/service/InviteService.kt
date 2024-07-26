@@ -43,6 +43,21 @@ class InviteService {
         val eventModel = event.get()
         val userModel = user.get()
 
+        if (eventModel.hosts.any { it.userId == userModel.userId }) {
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "User is already a host of this event"))
+
+        }
+
+        if (eventModel.invitees.any { it.userId == userModel.userId }) {
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "User is already attending this event"))
+        }
+
+        if (eventModel.isPrivate){
+            if (eventModel.hosts.none { it.userId == from.userId }) {
+                return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "You are not authorized to invite users to this event"))
+            }
+        }
+
         val invite = InviteeModel().apply {
             this.event = eventModel
             this.user = userModel

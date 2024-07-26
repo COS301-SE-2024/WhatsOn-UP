@@ -20,7 +20,7 @@ export class AppService {
     return randomString.substring(0, length);
   }
 
-  async uploadProfile(file: any, token: string): Promise<string> {
+  async uploadProfile(file: any, token: string){
     const filename = this.generateRandomString(26) + file.originalname.substring(file.originalname.lastIndexOf('.'));
     const { data: profile, error: profile_error } = await this.supabase
       .from('profiles')
@@ -103,10 +103,13 @@ export class AppService {
       );
     }
 
-    return url.data.publicUrl;
+    return {
+      media_name: filename,
+      media_link: url.data.publicUrl
+    }
   }
 
-  async uploadEventMedia(file: any, event_id: string): Promise<string> {
+  async uploadEventMedia(file: any, event_id: string){
     const filename = this.generateRandomString(50) + file.originalname.substring(file.originalname.lastIndexOf('.'));
     const { data: fileInfo, error: fileError } = await this.supabase.storage
       .from('storage')
@@ -162,7 +165,10 @@ export class AppService {
       );
     }
 
-    return url.data.publicUrl;
+    return {
+      media_name: filename,
+      media_link: url.data.publicUrl
+    }
   }
 
   async deleteMedia(media_name: string): Promise<string> {

@@ -22,8 +22,6 @@ import java.time.format.DateTimeParseException
 @RestController
 @RequestMapping("/api/events")
 class EventController {
-    @Autowired
-    private lateinit var userService: UserService
 
     @Autowired
     lateinit var eventService: EventService
@@ -101,5 +99,12 @@ class EventController {
         val filterByDto = FilterByDto(startDateTime, endDateTime, location, isPrivate, maxAttendees)
 
         return eventService.filterEvents(filterByDto)
+    }
+
+
+    @GetMapping("/get_passed_events")
+    @PreAuthorize("hasAnyRole('HOST', 'ADMIN')")
+    fun getPassedEvents(): ResponseEntity<ResponseDto> {
+        return eventService.getPassedEvents()
     }
 }

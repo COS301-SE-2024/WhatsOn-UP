@@ -15,14 +15,14 @@ class InviteController {
     lateinit var inviteService: InviteService
 
     @PutMapping("/send")
-    @PreAuthorize("hasAnyRole('HOST', 'ADMIN', 'GENERAL')")
+    @PreAuthorize("isAuthenticated()")
     fun inviteUser(@RequestParam eventId: UUID, @RequestParam userId: UUID): ResponseEntity<ResponseDto> {
         return inviteService.inviteUser(eventId, userId)
     }
 
-    @PostMapping("/accept")
-    @PreAuthorize("hasAnyRole('HOST', 'ADMIN', 'GENERAL')")
-    fun acceptInvite(@RequestParam inviteId: UUID): ResponseEntity<ResponseDto> {
-        return inviteService.acceptInvite(inviteId)
+    @PostMapping("/accept/{id}")
+    @PreAuthorize("isAuthenticated()")
+    fun acceptInvite(@PathVariable id: UUID): ResponseEntity<ResponseDto> {
+        return inviteService.acceptInvite(id)
     }
 }

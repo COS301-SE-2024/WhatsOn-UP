@@ -49,8 +49,16 @@ export class NotificationGateway implements OnModuleInit {
           }
 
           const client = Object.values(this.clients).find(
-            (client) => client.token === notification.user_id
+            (client) => client.token == notification.user_id
           );
+
+          console.log('Client:', client);
+
+          if (!client) {
+            console.error('Client not found:', notification.user_id);
+            this.emitError(notification.user_id, 'Client not found');
+            return;
+          }
 
           console.log('Notification:', notification);
 
