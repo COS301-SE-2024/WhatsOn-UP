@@ -84,7 +84,9 @@ class _EditprofilePageState extends State<EditprofilePage> {
 
   @override
   Widget build(BuildContext context) {
-    userProvider userP = Provider.of<userProvider>(context);
+    final userP = context.watch<userProvider>();
+
+    // userProvider userP = Provider.of<userProvider>(context);
     emailController.text = userP.email;
     nameController.text = userP.Fullname;
 
@@ -340,7 +342,7 @@ class _EditprofilePageState extends State<EditprofilePage> {
           if (isBase64(profileImage)) {
             try {
               profileImageBytes = base64Decode(profileImage);
-              print("getting to decode");
+
               // setState(() {
               //   widget.profileImage = profileImageBytes;
               // });
@@ -383,9 +385,7 @@ class _EditprofilePageState extends State<EditprofilePage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ProfilePage(
-
-                    ),
+                    builder: (context) => ProfilePage(),
                   ),
                 ); // Navigate to ProfilePage
               },

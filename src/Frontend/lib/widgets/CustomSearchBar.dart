@@ -18,7 +18,7 @@ class CustomSearchBar extends StatelessWidget {
       margin: EdgeInsets.all(8.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(50.0),
-        color: Colors.black, // Set background color of search bar to black
+        color: Colors.black,
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -35,7 +35,7 @@ class CustomSearchBar extends StatelessWidget {
               decoration: InputDecoration(
                 hintText: placeholder,
                 hintStyle: TextStyle(
-                  color: Colors.white, // Adjust hint text color to white
+                  color: Colors.white,
                   fontSize: fontSize,
                 ),
                 border: InputBorder.none, // Remove underline

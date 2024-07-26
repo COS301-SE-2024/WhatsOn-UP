@@ -1,9 +1,8 @@
 package com.devforce.backend.service
 
-import com.devforce.backend.dto.AllEventsDto
+import com.devforce.backend.dto.EventDto
 import com.devforce.backend.dto.ResponseDto
 import com.devforce.backend.dto.UpdateUserDto
-import com.devforce.backend.model.UserModel
 import com.devforce.backend.repo.EventRepo
 import com.devforce.backend.repo.RoleRepo
 import com.devforce.backend.repo.UserRepo
@@ -20,12 +19,6 @@ class UserService {
 
     @Autowired
     lateinit var userRepo: UserRepo
-
-    @Autowired
-    lateinit var roleRepo: RoleRepo
-
-    @Autowired
-    lateinit var passwordEncoder: PasswordEncoder
     
 
     @Autowired
@@ -62,12 +55,18 @@ class UserService {
 
 
         val event = optionalEvent.get()
-        event.savedEvents.remove(user)
-        eventRepo.save(event)
+        val u = event.savedEvents.find { it.userId == user.userId }
+        if (event.savedEvents.remove(u)){
+            eventRepo.save(event)
+            return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Event deleted successfully"))
+            )
+        }
+        else {
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Event not found"))
+        }
 
 
-        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Event deleted successfully"))
-        )
+
     }
 
     // To do: Implement function to get all saved events for the current user
@@ -75,7 +74,7 @@ class UserService {
         val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
 
         val events = eventRepo.getSavedEvents(user.userId)
-        val eventsDto = events.map { event -> AllEventsDto(event) }
+        val eventsDto = events.map { event -> EventDto(event, false) }
 
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto)
         )
@@ -104,7 +103,7 @@ class UserService {
         val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
 
         val events = eventRepo.getRspvdEvents(user.userId)
-        val eventsDto = events.map { event -> AllEventsDto(event) }
+        val eventsDto = events.map { event -> EventDto(event, false) }
 
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto)
         )
@@ -121,10 +120,15 @@ class UserService {
         }
 
         val event = optionalEvent.get()
-        event.attendees.remove(user)
-        userRepo.save(user)
-        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Event deleted successfully"))
-        )
+        val u = event.attendees.find { it.userId == user.userId }
+        if (event.attendees.remove(u)){
+            eventRepo.save(event)
+            return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Event deleted successfully"))
+            )
+        }
+        else {
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Event not found"))
+        }
     }
 
     // To do: Implement function to update user profile
@@ -178,5 +182,25 @@ class UserService {
             ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Account deleted successfully"))
         )
     }
+
+    fun inviteUser(eventId: UUID, userId: UUID): ResponseEntity<ResponseDto>{
+        val from = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
+        val event = eventRepo.findById(eventId)
+        if (event.isEmpty) {
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Event not found"))
+        }
+
+        val user = userRepo.findById(userId)
+        if (user.isEmpty) {
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "User not found"))
+        }
+        val eventModel = event.get()
+        val userModel = user.get()
+
+        eventModel.invitees.add(userModel)
+        eventRepo.save(eventModel)
+        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "User invited successfully")))
+    }
+
 
 }

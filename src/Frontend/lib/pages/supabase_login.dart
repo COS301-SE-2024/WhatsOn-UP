@@ -178,7 +178,7 @@ import 'package:firstapp/services/api.dart';
 
 import '../providers/events_providers.dart';
 import '../providers/user_provider.dart';
-import '../widgets/event_card.dart';
+
 class SupabaseLogin extends StatefulWidget {
   const SupabaseLogin({super.key});
 
@@ -340,7 +340,7 @@ bool _obscurePassword=true;
                   backgroundColor: Theme.of(context).colorScheme.error,
                 ));
               } catch (error) {
-                print(error);
+
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                   content: Text('Error occurred, please try again : $error'),
 
@@ -513,6 +513,7 @@ bool _obscurePassword=true;
 
   if (isGuest) {
     userP.setGuestUser();
+    eventP.fetchfortheFirstTimeRsvp('guest');
     // Skip getting events
     Navigator.push(
       context,
@@ -520,12 +521,16 @@ bool _obscurePassword=true;
     );
   } else {
     final user = supabase.auth.currentUser;
-    if (user == null) {
-      print('No user is currently logged in');
-      return;
-    }
 
-    eventP.fetchfortheFirstTimeRsvp(user.id);
+    //changes by Khanya - check if user is logged and return session data
+    if (user != null) {
+      final session = supabase.auth.currentSession;
+      if (session != null) {
+        print('JWT Token: ${session.accessToken}');
+      }
+
+    
+      eventP.fetchfortheFirstTimeRsvp(user!.id);
 
     Api api = Api();
     try {
@@ -533,13 +538,25 @@ bool _obscurePassword=true;
       if (response['error'] != null) {
         print('An error occurred: ${response['error']}');
       } else {
-        print('Username added successfully');
-        String fullName = response['data']['user']['fullName'] ?? 'Unknown';
-        String userEmail = user.userMetadata?['email'] ?? '';
-        String role = response['data']['user']['role'] ?? 'Unknown';
-        String profileImage = response['data']['user']['profileImage'] ?? '';
 
-        Uint8List? profileImageBytes;
+
+        String fullName = response['data']['user']['fullName']?? 'Unknown';
+        String userEmail = user.userMetadata?['email'];
+        String UserId=user.id;
+        String role=response['data']['user']['role']?? 'Unknown';
+        String  profileImage=response['data']['user']['profileImage']?? 'Unknown';
+        Uint8List profileImageBytes = Uint8List(0);
+        userP.userId=user.id;
+        userP.Fullname=fullName;
+        userP.email=userEmail;
+        userP.role=role;
+        bool isBase64(String input) {
+          final RegExp base64 = RegExp(
+            r'^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$',
+          );
+          return base64.hasMatch(input);
+        }
+
         if (isBase64(profileImage)) {
           try {
             profileImageBytes = base64Decode(profileImage);
@@ -561,23 +578,17 @@ bool _obscurePassword=true;
 
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => HomePage()),
+          MaterialPageRoute(builder: (context) => HomePage(
+
+          )),
         );
       }
-    } catch (e) {
-      print('Error during login: $e');
     }
+    catch (e) {
+      print('Error getting user data: $e');
+    }
+    print('signup successful');
+
   }
-
-  print('Login/signup successful');
-}
-
-bool isBase64(String input) {
-  if (input.isEmpty) return false;
-  final RegExp base64 = RegExp(
-    r'^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?$',
-  );
-  return base64.hasMatch(input);
-}
-
+}}
 }

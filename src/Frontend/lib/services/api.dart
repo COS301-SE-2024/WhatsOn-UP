@@ -49,7 +49,7 @@ class Api {
         throw Exception(jsonDecode(response.body));
       }
     } catch (e) {
-      print('Error: $e');
+
       throw Exception(e.toString());
     }
   }
@@ -74,21 +74,17 @@ class Api {
         throw Exception(jsonDecode(response.body));
       }
     } catch (e) {
-      print('Error: $e');
+
       throw Exception(e.toString());
     }
   }
 
   Future<List<Event>> getAllEvents() async {
   final _rsvpEventsURL = 'http://$domain:8080/api/events/get_all';
-  var headers = {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $jwtKey',
-      };
+
 
   try {
-    var response = await http.get(Uri.parse(_rsvpEventsURL), headers: headers);
+    var response = await http.get(Uri.parse(_rsvpEventsURL),);
 
     if (response.statusCode == 200) {
       // Parse the JSON response
@@ -102,7 +98,7 @@ class Api {
       throw Exception('Failed to load events');
     }
   } catch (e) {
-    print('Error: $e');
+
     rethrow;
   }
 }
@@ -121,14 +117,14 @@ class Api {
       var response = await http.get(Uri.parse(_rsvpEventsURL), headers: headers);
 
       if (response.statusCode == 200) {
-        print('WORKING RSVP API!');
+
         return jsonDecode(response.body)['data'];
       } else {
         throw Exception(jsonDecode(response.body));
       }
     }
     catch (e) {
-      print('Error RSVP API: $e');
+
       throw Exception(e.toString());
     }
   }
@@ -161,7 +157,7 @@ class Api {
         throw Exception('Failed to change user');
       }
     } catch (e) {
-      print('Error: $e');
+
       return {'error': e.toString()};
     }
 
@@ -193,7 +189,7 @@ class Api {
         throw Exception('Failed to change password');
       }
     } catch (e) {
-      print('Error: $e');
+
       return {'error': e.toString()};
     }
   }
@@ -239,7 +235,7 @@ class Api {
         throw Exception(jsonDecode(response.body));
       }
     } catch (e) {
-      print('Error: $e');
+
       throw Exception(e.toString());
     }
   }
@@ -263,14 +259,59 @@ class Api {
         throw Exception(jsonDecode(response.body));
       }
     } catch (e) {
-      print('Error: $e');
+
+      throw Exception(e.toString());
+    }
+
+
+  }
+  Future<Map<String, dynamic>> DeletersvpEvent(String eventId, String UserId) async {
+    final String _rsvpEventUrl = 'http://localhost:8080/api/user/delete_rspv_event/$eventId';
+
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $UserId',
+    };
+
+    try {
+      var response = await http.delete(Uri.parse(_rsvpEventUrl), headers: headers);
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        throw Exception(jsonDecode(response.body));
+      }
+    } catch (e) {
+
       throw Exception(e.toString());
     }
 
 
   }
 
+  Future<Map<String, dynamic>> DeleteEvent(String eventId,String userid) async {
+    var Url = Uri.parse('http://localhost:8080/api/events/delete/$eventId');
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $userid',
+    };
 
+    try {
+    var response = await http.delete( Url,headers: headers );
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+
+    } else {
+      throw Exception('Failed to delete event');
+    }
+
+  } catch (e) {
+  print('Error: $e');
+  return {'error': e.toString()};
+  }
+  }
 
 
 
@@ -326,21 +367,41 @@ class Api {
         throw Exception('Failed to get user details');
       }
     } catch (e) {
-      print('Error: $e');
+
       return {'error': e.toString()};
     }
 
   }
 
-  Future<List<dynamic>> getAllEventsGuest() async {
+//   Future<List<Event>> getAllEventsGuest() async {
+//   try {
+//       final _allEventsGuestURL = 'http://$domain:8080/api/events/get_all';
+//       var headers = {
+//         'Content-Type': 'application/json',
+//         'Accept': 'application/json',
+//       };
+
+//       var response = await http.get(Uri.parse(_allEventsGuestURL), headers: headers);
+
+//       if (response.statusCode == 200) {
+//         // print('WORKING RSVP API!');
+//         return jsonDecode(response.body)['data'];
+//       } else {
+//         throw Exception(jsonDecode(response.body));
+//       }
+//     }
+//     catch (e) {
+//       print('Error all events guest: $e');
+//       throw Exception(e.toString());
+//     }
+// }
+
+Future<List<dynamic>> getAllEventsGuest() async {
   
-  // var headers = {
-  //       'Content-Type': 'application/json',
-  //       'Accept': 'application/json',
-  //     };
+
 
   // try {
-  //   var response = await http.get(Uri.parse(_rsvpEventsURL), headers: headers);
+  //   var response = await http.get(Uri.parse(_rsvpEventsURL),);
 
   //   if (response.statusCode == 200) {
   //     // Parse the JSON response
@@ -354,33 +415,83 @@ class Api {
   //     throw Exception('Failed to load events');
   //   }
   // } catch (e) {
-  //   print('Error: $e');
+
   //   rethrow;
   // }
 
   try {
-      final _allEventsGuestURL = 'http://$domain:8080/api/events/get_all';
+      final _rsvpEventsURL = 'http://$domain:8080/api/events/get_all';
       var headers = {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
       };
 
-      var response = await http.get(Uri.parse(_allEventsGuestURL), headers: headers);
+      var response = await http.get(Uri.parse(_rsvpEventsURL), headers: headers);
 
       if (response.statusCode == 200) {
-        // print('WORKING RSVP API!');
+
         return jsonDecode(response.body)['data'];
       } else {
         throw Exception(jsonDecode(response.body));
       }
     }
     catch (e) {
-      print('Error all events guest: $e');
+
       throw Exception(e.toString());
     }
-
-
 }
+
+
+  Future<Map<String, dynamic>> updateEvent({
+
+    required String userId,
+    required String eventId,
+    required String title,
+    required String description,
+    required DateTime startDate,
+    required DateTime endDate,
+    required String location,
+    int? maxParticipants,
+    String? metadata,
+    bool isPrivate = false,
+    List<String>? media,
+
+  })async {
+    final String _userUrl = 'http://$domain:8080/api/events/update/$eventId';
+
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $userId',
+    };
+    var body = jsonEncode({
+      'title': title,
+      'description': description,
+      'startDate': startDate.toIso8601String(),
+      'endDate': endDate.toIso8601String(),
+      'location': location,
+      'maxParticipants': maxParticipants,
+      'metadata': metadata,
+
+    });
+
+    try {
+
+      var response = await http.put(Uri.parse(_userUrl), headers: headers,body: body);
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+
+      } else {
+        throw Exception('Failed to get user details');
+      }
+    } catch (e) {
+
+      return {'error': e.toString()};
+    }
+
+  }
+
+
 
 
 }

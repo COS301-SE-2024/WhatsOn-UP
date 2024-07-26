@@ -2,6 +2,7 @@ package com.devforce.backend.repo
 
 import com.devforce.backend.dto.FilterByDto
 import com.devforce.backend.model.EventModel
+import jdk.jfr.Event
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
@@ -10,14 +11,18 @@ import java.util.*
 
 interface EventRepo: JpaRepository<EventModel, UUID> {
 
-    @Query("SELECT DISTINCT e FROM EventModel e " +
-            "LEFT JOIN FETCH e.attendees a " +
-            "LEFT JOIN FETCH a.role ar " +
-            "LEFT JOIN FETCH e.hosts h " +
-            "LEFT JOIN FETCH h.role hr " +
-            "LEFT JOIN FETCH e.invitees i " +
-            "LEFT JOIN FETCH i.role ir " +
-            "LEFT JOIN FETCH e.eventMedia em")
+    @Query(
+        "SELECT DISTINCT e FROM EventModel e " +
+                "LEFT JOIN FETCH e.attendees a " +
+                "LEFT JOIN FETCH a.role ar " +
+                "LEFT JOIN FETCH e.hosts h " +
+                "LEFT JOIN FETCH h.role hr " +
+                "LEFT JOIN FETCH e.invitees i " +
+                "LEFT JOIN FETCH i.role ir " +
+                "LEFT JOIN FETCH e.eventMedia em " +
+                "WHERE e.expired = false "+
+                "AND e.isPrivate = false"
+    )
     override fun findAll(): List<EventModel>
 
     @Query(
@@ -30,9 +35,11 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
                 "LEFT JOIN FETCH i.role ir " +
                 "LEFT JOIN FETCH e.eventMedia em " +
                 "LEFT JOIN FETCH e.savedEvents se " +
-                "WHERE se.userId = :userId"
+                "WHERE se.userId = :userId " +
+                "AND e.expired = false"
     )
     fun getSavedEvents(@Param("userId") userId: UUID): List<EventModel>
+
 
     @Query(
         "SELECT DISTINCT e FROM EventModel e " +
@@ -43,7 +50,8 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
                 "LEFT JOIN FETCH e.invitees i " +
                 "LEFT JOIN FETCH i.role ir " +
                 "LEFT JOIN FETCH e.eventMedia em " +
-                "WHERE a.userId = :userId"
+                "WHERE a.userId = :userId " +
+                "AND e.expired = false"
     )
     fun getRspvdEvents(@Param("userId") userId: UUID): List<EventModel>
 
@@ -57,6 +65,8 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
                 "LEFT JOIN FETCH i.role ir " +
                 "LEFT JOIN FETCH e.eventMedia em " +
                 "WHERE e.title ILIKE %:searchString% " +
+                "AND e.expired = false " +
+                "AND e.isPrivate = false "+
                 "OR e.description ILIKE %:searchString% " +
                 "OR e.location ILIKE %:searchString% " +
                 "OR e.metadata ILIKE %:searchString% " +
@@ -67,7 +77,15 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
     )
     fun searchEvents(@Param("searchString") searchString: String): List<EventModel>
 
+   // fun findByTitleContainingIgnoreCase(title: String): List<Event>
 
+
+    @Query("""
+        SELECT DISTINCT (metadata::jsonb ->> 'category') 
+        FROM events 
+        WHERE metadata::jsonb ->> 'category' IS NOT NULL
+    """, nativeQuery = true)
+    fun findUniqueCategories(): List<String>
 
 
    /* FUTURE
@@ -82,9 +100,9 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
                 "LEFT JOIN FETCH e.invitees i " +
                 "LEFT JOIN FETCH i.role ir " +
                 "LEFT JOIN FETCH e.eventMedia em " +
-                "WHERE " +
-                "(:#{#filterByDto.startTime} IS NULL OR e.startTime >= TO_TIMESTAMP(:#{#filterByDto.startTime}, 'YYYY-MM-DD HH24:MI:SS')) AND " +
-                "(:#{#filterByDto.endTime} IS NULL OR e.endTime <= TO_TIMESTAMP(:#{#filterByDto.endTime}, 'YYYY-MM-DD HH24:MI:SS')) AND " +
+                "WHERE e.expired = false AND " +
+                "(:#{#filterByDto.startDateTime} IS NULL OR e.startDateTime >= TO_TIMESTAMP(:#{#filterByDto.startDateTime}, 'YYYY-MM-DD HH24:MI:SS')) AND " +
+                "(:#{#filterByDto.endDateTime} IS NULL OR e.endDateTime <= TO_TIMESTAMP(:#{#filterByDto.endDateTime}, 'YYYY-MM-DD HH24:MI:SS')) AND " +
                 "(:#{#filterByDto.location} IS NULL OR e.location ILIKE %:#{#filterByDto.location}% ) AND " +
                 "(:#{#filterByDto.isPrivate} IS NULL OR e.isPrivate = :#{#filterByDto.isPrivate}) AND " +
                 "(:#{#filterByDto.maxAttendees} IS NULL OR e.maxAttendees <= :#{#filterByDto.maxAttendees})"
@@ -94,15 +112,15 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
 
    @Query(value = """
     SELECT * FROM events e
-    WHERE (:startDate IS NULL OR e.start_time >= CAST(:startDate AS TIMESTAMP))
-    AND (:endDate IS NULL OR e.end_time <= CAST(:endDate AS TIMESTAMP))
+    WHERE (:startDateTime IS NULL OR e.start_date_time >= CAST(:startDateTime AS TIMESTAMP))
+    AND (:endDateTime IS NULL OR e.end_date_time <= CAST(:endDateTime AS TIMESTAMP))
     AND (:minCapacity IS NULL OR e.max_attendees >= :minCapacity)
     AND (:maxCapacity IS NULL OR e.max_attendees <= :maxCapacity)
     AND (:isPrivate IS NULL OR  e.is_private = :isPrivate)
 """, nativeQuery = true)
    fun filteringEvents(
-       @Param("startDate") startDate: String?,
-       @Param("endDate") endDate: String?,
+       @Param("startDate") startDateTime: String?,
+       @Param("endDate") endDateTime: String?,
        @Param("minCapacity") minCapacity: Int?,
        @Param("maxCapacity") maxCapacity: Int?,
        @Param("isPrivate") isPrivate: Boolean?

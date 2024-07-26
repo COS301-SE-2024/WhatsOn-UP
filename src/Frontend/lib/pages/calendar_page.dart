@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
@@ -17,6 +19,9 @@ class CalendarPage extends StatefulWidget {
 }
 
 class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClientMixin {
+
+
+
   @override
   bool get wantKeepAlive => true;
 
@@ -29,6 +34,12 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
       _fetchEvents();
     });
   }
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   _fetchRSVPEvents();
+  //
+  // }
 
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
@@ -65,46 +76,78 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
     String? userId = userP.role == 'guest' ? null : userP.userId;
     eventP.fetchfortheFirstTimeRsvp(userId!);
 
-    List<dynamic> response = await eventP.eventsRsvp;
+    List<Event> events = await eventP.eventsRsvp;
+    // final parsedEvents = parseEvents(response);
 
-    final parsedEvents = parseEvents(response);
-
-    setState(() {
-      _groupedEvents = _groupEventsByDate(parsedEvents);
-      _isLoading = false;
-    });
-    
-  } catch (e) {
-    print('Error fetching events: $e');
-    setState(() {
-      _isLoading = false;
-    });
+      setState(() {
+        _groupedEvents = _groupEventsByDate(events);
+        _isLoading = false;
+      });
+      
+    } catch (e) {
+      print('RSVP Error: $e');
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
-}
 
   List<Map<String, dynamic>> parseEvents(List<dynamic> events) {
     return events.map((event) {
       return {
+
+        'startTime': event['startTime']?.toString() ?? '',
+        'endTime': event['endTime']?.toString() ?? '',
+        'isPrivate': event['isPrivate'] ?? false,
         'name': event['title'],
         'date': event['startTime'].substring(0, 10),
         'time': event['startTime'].substring(11, 16),
         'location': event['location'],
-        'attendees': event['attendees'].length.toString(),
+        // 'attendees': event['attendees'].length.toString(),
+        'maxAttendees': event['maxAttendees'] is int ? event['maxAttendees'] : 0,
         'url': 'https://picsum.photos/200', // TODO: This still needs to change to the actual url of the image. Currently nothing is being returned in the eventMedia field
         'description': event['description'],
         'id': event['id'],
+        'hosts': (event.containsKey('hosts') && (event['hosts'] as List).isNotEmpty)
+            ? List<String>.from(event['hosts'].map((host) => host['fullName']))
+            : [],
+        'attendees': (event.containsKey('attendees') &&
+            (event['attendees'] as List).isNotEmpty)
+            ? List<Attendee>.from(event['attendees'].map((attendee) => Attendee.fromJson(attendee)))
+            : [],
       };
     }).toList();
   }
 
-  Map<DateTime, List<Map<String, dynamic>>> _groupEventsByDate(List<Map<String, dynamic>> events) {
+  Map<DateTime, List<Map<String, dynamic>>> _groupEventsByDate(List<Event> events) {
     Map<DateTime, List<Map<String, dynamic>>> groupedEvents = {};
-    for (var event in events) {
-      DateTime date = DateTime.parse(event['date']);
+
+
+    events.forEach((event) {
+      DateTime date = DateTime.parse(event.startTime); // Assuming startTime is a DateTime string
       DateTime eventDay = DateTime(date.year, date.month, date.day);
-      if (groupedEvents[eventDay] == null) groupedEvents[eventDay] = [];
-      groupedEvents[eventDay]!.add(event);
-    }
+
+      if (groupedEvents[eventDay] == null) {
+        groupedEvents[eventDay] = [];
+      }
+
+      groupedEvents[eventDay]!.add({
+        'startTime': event.startTime.toString(),
+        'endTime': event.endTime.toString(),
+        'isPrivate': event.isPrivate ?? false,
+        'name': event.nameOfEvent,
+        'date': event.startTime.substring(0, 10),
+        'time': event.startTime.substring(11, 16),
+        'location': event.location,
+        'maxAttendees': event.maxAttendees ?? 0,
+        'url': 'https://picsum.photos/200', // Placeholder URL, update as needed
+        'description': event.description ?? '',
+        'id': event.id,
+        'hosts': event.hosts != null ? List<String>.from(event.hosts!) : [],
+        'attendees': event.attendees != null ? List<Attendee>.from(event.attendees!) : [],
+      });
+    });
+
     return groupedEvents;
   }
 
@@ -269,6 +312,7 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
                         ? _getEventsForDay(_selectedDay!)
                         : _getEventsForMonth(_focusedDay);
                     final event = events[index];
+
                     return GestureDetector(
                       onTap: () {
                         Event eventObject = Event(
@@ -278,8 +322,16 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
                           description: event['description'],
                           imageUrls: [event['url']],
                           id: event['id'],
+                          hosts: event['hosts'],
+                          attendees:event['attendees'],
+                          startTime: event['startTime'],
+                          endTime: event['endTime'],
+                          maxAttendees: event['maxAttendees'],
+                          isPrivate: event['isPrivate'],
+                          startDate: '',
+
                         );
-                      
+
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -367,7 +419,7 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
                                       children: [
                                         const Icon(Icons.people, size: 16),
                                         const SizedBox(width: 4.0),
-                                        Text('${event['attendees']} attendees'),
+                                        Text(event['attendees'].length.toString()),
                                       ],
                                     ),
                                   ],
@@ -386,3 +438,5 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
     );
   }
 }
+
+

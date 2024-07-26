@@ -4,18 +4,17 @@ import com.devforce.backend.dto.*
 import com.devforce.backend.model.EventModel
 import com.devforce.backend.repo.EventRepo
 import com.devforce.backend.security.CustomUser
+import com.sun.java.accessibility.util.EventID
+import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 import java.time.*
 import java.util.*
-import java.util.stream.Collectors
 import java.time.Instant
 import java.time.LocalDateTime
-import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeParseException
 
 //FUTURE
 //fun filterEvents(
@@ -31,8 +30,8 @@ class EventService {
         val event = EventModel().apply {
             this.title = createEventDto.title
             this.description = createEventDto.description
-            this.startTime = createEventDto.startDate
-            this.endTime = createEventDto.endDate
+            this.startDateTime = createEventDto.startDate
+            this.endDateTime = createEventDto.endDate
             this.location = createEventDto.location
             this.maxAttendees = createEventDto.maxParticipants ?: 10
             this.metadata = createEventDto.metadata ?: ""
@@ -43,7 +42,7 @@ class EventService {
 
         eventRepo.save(event)
 
-        val eventDto = AllEventsDto(event)
+        val eventDto = EventDto(event,false)
 
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventDto)
         )
@@ -52,8 +51,20 @@ class EventService {
     // To do: Implement function to retrieve all events
     fun getAllEvents(): ResponseEntity<ResponseDto> {
         // Implementation goes here
+        val user = SecurityContextHolder.getContext().authentication.principal
         val events = eventRepo.findAll()
-        val eventsDto = events.map { event -> AllEventsDto(event) }
+        var eventsDto: List<EventDto>? = null
+         if (user == "anonymousUser") {
+            eventsDto = events.map { event -> EventDto(event, false) }
+        }
+        else {
+            val userModel = (user as CustomUser).userModel
+
+            eventsDto = events.map {
+
+                event -> EventDto(event, userModel.userId in event.hosts.map { host -> host.userId })
+            }
+        }
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto)
         )
     }
@@ -74,8 +85,8 @@ class EventService {
                 updateEventDto.description?.let { description = it }
                 updateEventDto.metadata?.let { metadata = it }
                 updateEventDto.location?.let { location = it }
-                updateEventDto.startDate?.let { startTime = it }
-                updateEventDto.endDate?.let { endTime = it }
+                updateEventDto.startDateTime?.let { startDateTime = it }
+                updateEventDto.endDateTime?.let { endDateTime = it }
                 updateEventDto.maxParticipants?.let { maxAttendees = it }
                 updateEventDto.isPrivate?.let { isPrivate = it }
             }
@@ -115,7 +126,7 @@ class EventService {
     ): ResponseEntity<ResponseDto> {
 
         val events = eventRepo.searchEvents(searchString)
-        val eventsDto = events.map { event -> AllEventsDto(event) }
+        val eventsDto = events.map { event -> EventDto(event, false) }
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto)
         )
 
@@ -192,6 +203,14 @@ class EventService {
         }
     }
 
+    fun getUniqueCategories(): List<String> {
+        return eventRepo.findUniqueCategories()
+    }
+    private fun extractCategory(metadata: String): String? {
+        val json = ObjectMapper().readTree(metadata)
+        return json.get("category")?.asText()
+    }
+
     fun parseToLocalDateTime(timestamp: String?): LocalDateTime? {
         return if (timestamp.isNullOrBlank()) {
             null
@@ -202,7 +221,6 @@ class EventService {
         }
     }
 
-
     /*fun filterEventsByKeyword(keywordFilter: String): List<EventModel> {
         return eventRepo.filterEventsByKeyword(keywordFilter)
     }
@@ -210,7 +228,7 @@ class EventService {
     //FUTURE
     fun filterEvents(filterBy: FilterByDto): ResponseEntity<ResponseDto>{
         val events = eventRepo.filterEvents(filterBy)
-        val eventsDto = events.map { event -> AllEventsDto(event) }
+        val eventsDto = events.map { event -> EventDto(event, false) }
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto)
         )
     }

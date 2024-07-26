@@ -1,3 +1,4 @@
+import 'package:firstapp/pages/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firstapp/pages/profilePage.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,8 +12,6 @@ import '../providers/events_providers.dart';
 import '../widgets/event_card.dart';
 
 class ApplicationEvent extends StatefulWidget {
-
-
   ApplicationEvent({
     Key? key,
 
@@ -312,11 +311,14 @@ class _ApplicationEventState extends State<ApplicationEvent> {
       userId: userSuperbase!.id,
     ).then((response) {
       print('Event created successfully');
-      print (response);
+      // print('The Event: ');
+      //   print (response['data']);
+        eventP.addEventHome(response['data']);
+      // eventP.;
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => ProfilePage(),
+          builder: (context) => HomePage(),
         ),
       );
       

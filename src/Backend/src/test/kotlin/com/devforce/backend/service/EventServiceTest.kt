@@ -82,8 +82,8 @@ class EventServiceTest {
         val updateEventDto = UpdateEventDto(
             title = "Updated Event Title",
             description = "Updated Event Description",
-            startDate = LocalDateTime.now(),
-            endDate = LocalDateTime.now().plusHours(2),
+            startDateTime = LocalDateTime.now(),
+            endDateTime = LocalDateTime.now().plusHours(2),
             location = "Updated Event Location",
             maxParticipants = 10,
             metadata = "Updated Event Metadata",
@@ -93,8 +93,8 @@ class EventServiceTest {
         val event = EventModel().apply {
             this.title = "Event Title"
             this.description = "Event Description"
-            this.startTime = LocalDateTime.now()
-            this.endTime = LocalDateTime.now().plusHours(2)
+            this.startDateTime = LocalDateTime.now()
+            this.endDateTime = LocalDateTime.now().plusHours(2)
             this.location = "Event Location"
             this.maxAttendees = 20
             this.metadata = "Event Metadata"
@@ -115,8 +115,8 @@ class EventServiceTest {
         val updateEventDto = UpdateEventDto(
             title = "Updated Event Title",
             description = "Updated Event Description",
-            startDate = LocalDateTime.now(),
-            endDate = LocalDateTime.now().plusHours(2),
+            startDateTime = LocalDateTime.now(),
+            endDateTime = LocalDateTime.now().plusHours(2),
             location = "Updated Event Location",
             maxParticipants = 20,
             metadata = "Updated Event Metadata",
@@ -170,8 +170,8 @@ class EventServiceTest {
     @Test
     fun `!!!Filter events success!!!`() {
         val filterByDto = FilterByDto(
-            startTime = "2021-08-01 00:00:00",
-            endTime = "2021-08-31 23:59:59",
+            startDateTime = "2021-08-01 00:00:00",
+            endDateTime = "2021-08-31 23:59:59",
             maxAttendees = 10,
             isPrivate = false,
             location = "Location"

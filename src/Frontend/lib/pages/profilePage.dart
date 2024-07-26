@@ -1,14 +1,15 @@
 
-import 'package:firstapp/pages/login_page.dart';
+
 import 'package:firstapp/pages/supabase_login.dart';
 import 'package:flutter/material.dart';
-import 'package:firstapp/pages/application_event.dart';
+
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:firstapp/pages/editProfile_page.dart';
-import 'dart:typed_data';
+
 import 'package:firstapp/pages/home_page.dart';
 import 'package:provider/provider.dart';
 
+import '../main.dart';
 import '../providers/user_provider.dart';
 class ProfilePage extends  StatefulWidget {
 
@@ -44,13 +45,14 @@ final String ADMIN='ADMIN';
                   Stack(
                     children: [
                       CircleAvatar(
-                        backgroundImage: user.profileimage != null
-                            ? MemoryImage(user.profileimage!)
-                            : const AssetImage('http/example-image') as ImageProvider,
+                        backgroundImage: user.profileImage!.isNotEmpty
+                            ? MemoryImage(user.profileImage!)
+                            : const AssetImage('assets/images/user.png'),
+
                         radius: 60.0,
+
                       ),
-                      // if (widget.role == ADMIN)
-                      if (user.role== ADMIN)
+                      if (user.role==ADMIN)
                         Positioned(
                           top:80,
                           right: 0,
@@ -85,12 +87,7 @@ final String ADMIN='ADMIN';
                     width: 200,
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => EditprofilePage(
-
-                          )),
-                        );
+                        _navigateToEditprofile(context);
                       },
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.black, backgroundColor: Colors.white,
@@ -113,22 +110,7 @@ final String ADMIN='ADMIN';
                     ),
                     child: Column(
                       children: [
-                        // _buildProfileOption(
-                        //   text: 'Create event application',
-                        //   onTap: () {
-                        //     Navigator.push(
-                        //       context,
-                        //       MaterialPageRoute(builder: (context) => ApplicationEvent(
-                        //         userName: widget.userName,
-                        //         userEmail: widget.userEmail,
-                        //         userId: widget.userId,
-                        //         role: widget.role,
-                        //         profileImage: widget.profileImage,
-                        //       )),
-                        //     );
-                        //   },
-                        // ),
-                        // _buildDivider(),
+
                         _buildProfileOption(
                           text: 'Notifications',
                           onTap: () {
@@ -139,13 +121,17 @@ final String ADMIN='ADMIN';
                         _buildProfileOption(
                           text: 'Security',
                           onTap: () {
-
+                            Navigator.of(context).pushReplacementNamed('/resetPassword');
                           },
                         ),
                         _buildDivider(),
                         _buildProfileOption(
                           text: 'Logout',
                           onTap: () {
+                            final session = supabase.auth.currentSession;
+                            if (session != null) {
+                              supabase.auth.signOut();
+                            }
                             Navigator.push(
                               context,
                               MaterialPageRoute(builder: (context) =>  SupabaseLogin()),
@@ -180,7 +166,12 @@ final String ADMIN='ADMIN';
   }
   }
 
-
+Future<void> _navigateToEditprofile(BuildContext context) async {
+  Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => EditprofilePage()),
+  );
+}
    Widget _buildProfileOption({
   
     required String text,
