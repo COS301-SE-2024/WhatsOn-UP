@@ -19,7 +19,8 @@ data class EventDto(
     val hosts: Set<UserModel>,
     val attendees: Set<UserModel>,
     val invitees: Set<UserModel>,
-    val isHost: Boolean
+    val isHost: Boolean,
+    val availableSlots: Int?
 ) {
     constructor(event: EventModel, isHost: Boolean) : this(
         id = event.eventId.toString(),
@@ -35,6 +36,7 @@ data class EventDto(
         hosts = event.hosts,
         attendees = event.attendees,
         invitees = event.invitees,
-        isHost = isHost
+        isHost = isHost,
+        availableSlots = event.availableSlots!!.availableSlots
     )
 }

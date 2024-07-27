@@ -24,6 +24,7 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
                 "LEFT JOIN FETCH e.venue v " +
                 "LEFT JOIN FETCH v.building b " +
                 "LEFT JOIN FETCH b.campus c " +
+                "LEFT JOIN FETCH e.availableSlots es " +
                 "WHERE e.expired = false " +
                 "AND (e.isPrivate = false " +
                 "OR :userId IS NULL " +
@@ -66,6 +67,7 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
                 "LEFT JOIN FETCH e.venue v " +
                 "LEFT JOIN FETCH v.building b " +
                 "LEFT JOIN FETCH b.campus c " +
+                "LEFT JOIN FETCH e.availableSlots es " +
                 "WHERE se.userId = :userId " +
                 "AND e.expired = false"
     )
@@ -84,6 +86,7 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
                 "LEFT JOIN FETCH e.venue v " +
                 "LEFT JOIN FETCH v.building b " +
                 "LEFT JOIN FETCH b.campus c " +
+                "LEFT JOIN FETCH e.availableSlots es " +
                 "WHERE (a.userId = :userId " +
                 "OR h.userId = :userId) " +
                 "AND e.expired = false"
@@ -102,6 +105,7 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
                 "LEFT JOIN FETCH e.venue v " +
                 "LEFT JOIN FETCH v.building b " +
                 "LEFT JOIN FETCH b.campus c " +
+                "LEFT JOIN FETCH e.availableSlots es " +
                 "WHERE e.expired = false " +
                 "AND (e.isPrivate = false " +
                 "OR :userId IS NULL " +
@@ -144,6 +148,7 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
                 "LEFT JOIN FETCH e.venue v " +
                 "LEFT JOIN FETCH v.building b " +
                 "LEFT JOIN FETCH b.campus c " +
+                "LEFT JOIN FETCH e.availableSlots es " +
                 "WHERE e.expired = false " +
                 "AND (e.isPrivate = false " +
                 "OR :userId IS NULL " +

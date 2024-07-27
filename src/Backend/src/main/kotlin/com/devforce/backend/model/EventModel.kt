@@ -25,6 +25,10 @@ class EventModel {
 
     var metadata: String = "" //changed from  var metadata: String = ""
 
+    @OneToOne
+    @JoinColumn(name = "event_id")
+    val availableSlots: AvailableSlotsModel? = null
+
     @ElementCollection
     @CollectionTable(name = "event_media", joinColumns = [JoinColumn(name = "event_id")])
     @Column(name = "media_link" , columnDefinition = "TEXT")
