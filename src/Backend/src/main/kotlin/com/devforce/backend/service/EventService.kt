@@ -38,6 +38,14 @@ class EventService {
             return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "Venue not available")))
         }
 
+        if (createEventDto.maxParticipants != null && createEventDto.maxParticipants < 1) {
+            return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "Max participants must be greater than 0")))
+        }
+
+        if (createEventDto.maxParticipants != null && createEventDto.maxParticipants > venue.capacity) {
+            return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "Max participants must be less than venue capacity")))
+        }
+
         venue.available = false
 
         val event = EventModel().apply {
@@ -47,7 +55,7 @@ class EventService {
             this.startDateTime = createEventDto.startDateTime
             this.endDateTime = createEventDto.endDateTime
             this.venue = venue
-            this.maxAttendees = createEventDto.maxParticipants ?: 10
+            this.maxAttendees = createEventDto.maxParticipants ?: 1
             this.metadata = createEventDto.metadata ?: ""
             this.isPrivate = createEventDto.isPrivate ?: false
             this.hosts = setOf(user)
@@ -118,6 +126,14 @@ class EventService {
 
                 if (!v.available) {
                     return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "Venue not available")))
+                }
+
+                if (updateEventDto.maxParticipants != null && updateEventDto.maxParticipants < 1) {
+                    return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "Max participants must be greater than 0")))
+                }
+
+                if (updateEventDto.maxParticipants != null && updateEventDto.maxParticipants > v.capacity) {
+                    return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "Max participants must be less than venue capacity")))
                 }
 
                 v.available = false

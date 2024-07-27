@@ -27,6 +27,6 @@ class VenueModel {
     var docCam: Boolean = false
     var mic: Boolean = false
     var windows: Boolean = false
-    var lectureSize: Int = 0
+    var capacity: Int = 0
     var available: Boolean = false
 }
