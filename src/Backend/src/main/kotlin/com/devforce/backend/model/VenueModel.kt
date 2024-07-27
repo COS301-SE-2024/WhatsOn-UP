@@ -28,4 +28,5 @@ class VenueModel {
     var mic: Boolean = false
     var windows: Boolean = false
     var lectureSize: Int = 0
+    var available: Boolean = false
 }

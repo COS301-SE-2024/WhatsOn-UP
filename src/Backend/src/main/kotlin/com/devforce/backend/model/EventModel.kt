@@ -40,6 +40,7 @@ class EventModel {
     @JoinColumn(name = "venue_id")
     var venue: VenueModel? = null
 
+
     @Column(name = "start_date_time", nullable = false)
     var startDateTime: LocalDateTime = LocalDateTime.now()
 

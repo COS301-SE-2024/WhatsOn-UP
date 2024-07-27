@@ -19,10 +19,6 @@ class UsersService {
 
     @Autowired
     lateinit var userRepo: UserRepo
-    
-
-    @Autowired
-    lateinit var eventRepo: EventRepo
 
 
     fun getAllUsers(): ResponseEntity<ResponseDto> {

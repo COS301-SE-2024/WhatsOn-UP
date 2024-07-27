@@ -4,8 +4,6 @@ import com.devforce.backend.dto.*
 import com.devforce.backend.model.EventModel
 import com.devforce.backend.model.VenueModel
 import com.devforce.backend.repo.EventRepo
-import com.devforce.backend.repo.InviteeRepo
-import com.devforce.backend.repo.UserRepo
 import com.devforce.backend.repo.VenueRepo
 import com.devforce.backend.security.CustomUser
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -28,12 +26,6 @@ class EventService {
     lateinit var eventRepo: EventRepo
 
     @Autowired
-    lateinit var userRepo: UserRepo
-
-    @Autowired
-    lateinit var inviteeRepo: InviteeRepo
-
-    @Autowired
     lateinit var venueRepo: VenueRepo
 
     fun createEvent(createEventDto: CreateEventDto): ResponseEntity<ResponseDto> {
@@ -41,6 +33,12 @@ class EventService {
 
         val venue = venueRepo.findByVenueId(createEventDto.location)
             ?: return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "Venue not found")))
+
+        if (!venue.available) {
+            return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "Venue not available")))
+        }
+
+        venue.available = false
 
         val event = EventModel().apply {
             this.eventId = UUID.randomUUID()
@@ -117,6 +115,12 @@ class EventService {
                             mapOf("message" to "Venue not found")
                         )
                     )
+
+                if (!v.available) {
+                    return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "Venue not available")))
+                }
+
+                v.available = false
             }
 
             existingEvent.apply {
