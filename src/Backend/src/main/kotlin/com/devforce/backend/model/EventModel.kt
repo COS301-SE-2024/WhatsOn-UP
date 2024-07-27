@@ -36,7 +36,9 @@ class EventModel {
     @Column(name = "updated_at", nullable = false)
     private var updatedAt: LocalDateTime = LocalDateTime.now()
 
-    var location: String = ""
+    @OneToOne
+    @JoinColumn(name = "venue_id")
+    var venue: VenueModel? = null
 
     @Column(name = "start_date_time", nullable = false)
     var startDateTime: LocalDateTime = LocalDateTime.now()

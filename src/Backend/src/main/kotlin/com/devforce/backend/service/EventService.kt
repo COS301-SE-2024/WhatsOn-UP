@@ -2,9 +2,11 @@ package com.devforce.backend.service
 
 import com.devforce.backend.dto.*
 import com.devforce.backend.model.EventModel
+import com.devforce.backend.model.VenueModel
 import com.devforce.backend.repo.EventRepo
 import com.devforce.backend.repo.InviteeRepo
 import com.devforce.backend.repo.UserRepo
+import com.devforce.backend.repo.VenueRepo
 import com.devforce.backend.security.CustomUser
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
@@ -31,8 +33,14 @@ class EventService {
     @Autowired
     lateinit var inviteeRepo: InviteeRepo
 
+    @Autowired
+    lateinit var venueRepo: VenueRepo
+
     fun createEvent(createEventDto: CreateEventDto): ResponseEntity<ResponseDto> {
         val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
+
+        val venue = venueRepo.findByVenueId(createEventDto.location)
+            ?: return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "Venue not found")))
 
         val event = EventModel().apply {
             this.eventId = UUID.randomUUID()
@@ -40,7 +48,7 @@ class EventService {
             this.description = createEventDto.description
             this.startDateTime = createEventDto.startDateTime
             this.endDateTime = createEventDto.endDateTime
-            this.location = createEventDto.location
+            this.venue = venue
             this.maxAttendees = createEventDto.maxParticipants ?: 10
             this.metadata = createEventDto.metadata ?: ""
             this.isPrivate = createEventDto.isPrivate ?: false
@@ -98,11 +106,24 @@ class EventService {
 
             val existingEvent = existing.get()
 
+            var v: VenueModel? = null
+
+            if (updateEventDto.location != null) {
+                v = venueRepo.findByVenueId(updateEventDto.location)
+                    ?: return ResponseEntity.ok(
+                        ResponseDto(
+                            "error",
+                            System.currentTimeMillis(),
+                            mapOf("message" to "Venue not found")
+                        )
+                    )
+            }
+
             existingEvent.apply {
                 updateEventDto.title?.let { title = it }
                 updateEventDto.description?.let { description = it }
                 updateEventDto.metadata?.let { metadata = it }
-                updateEventDto.location?.let { location = it }
+                updateEventDto.location?.let { venue = v}
                 updateEventDto.startDateTime?.let { startDateTime = it }
                 updateEventDto.endDateTime?.let { endDateTime = it }
                 updateEventDto.maxParticipants?.let { maxAttendees = it }
@@ -253,10 +274,21 @@ class EventService {
 
     //FUTURE
     fun filterEvents(filterBy: FilterByDto): ResponseEntity<ResponseDto>{
-        val events = eventRepo.filterEvents(filterBy)
-        val eventsDto = events.map { event -> EventDto(event, false) }
-        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto)
-        )
+
+        val user = SecurityContextHolder.getContext().authentication.principal
+        var eventsDto: List<EventDto>? = null
+        if (user == "anonymousUser") {
+            val events = eventRepo.filterEvents(filterBy, null)
+            eventsDto = events.map { event -> EventDto(event, false) }
+        }
+        else {
+            val userModel = (user as CustomUser).userModel
+            val events = eventRepo.filterEvents(filterBy, userModel.userId)
+            eventsDto = events.map {
+                    event -> EventDto(event, userModel.userId in event.hosts.map { host -> host.userId })
+            }
+        }
+        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto))
     }
 
 }

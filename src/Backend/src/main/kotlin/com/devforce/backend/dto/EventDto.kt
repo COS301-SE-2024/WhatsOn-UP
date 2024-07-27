@@ -2,6 +2,7 @@ package com.devforce.backend.dto
 
 import com.devforce.backend.model.EventModel
 import com.devforce.backend.model.UserModel
+import com.devforce.backend.model.VenueModel
 import java.time.LocalDateTime
 
 data class EventDto(
@@ -10,7 +11,7 @@ data class EventDto(
     val description: String,
     val metadata: String?,
     val eventMedia: List<String>,
-    val location: String,
+    val location: VenueModel?,
     val startDateTime: LocalDateTime,
     val endDateTime: LocalDateTime,
     val maxAttendees: Int,
@@ -26,7 +27,7 @@ data class EventDto(
         description = event.description,
         metadata = event.metadata,
         eventMedia = event.eventMedia,
-        location = event.location,
+        location = event.venue,
         startDateTime = event.startDateTime,
         endDateTime = event.endDateTime,
         maxAttendees = event.maxAttendees,
