@@ -27,7 +27,7 @@ class EventModel {
 
     @OneToOne
     @JoinColumn(name = "event_id")
-    val availableSlots: AvailableSlotsModel? = null
+    var availableSlots: AvailableSlotsModel? = null
 
     @ElementCollection
     @CollectionTable(name = "event_media", joinColumns = [JoinColumn(name = "event_id")])

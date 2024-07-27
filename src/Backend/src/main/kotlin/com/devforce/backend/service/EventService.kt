@@ -1,6 +1,7 @@
 package com.devforce.backend.service
 
 import com.devforce.backend.dto.*
+import com.devforce.backend.model.AvailableSlotsModel
 import com.devforce.backend.model.EventModel
 import com.devforce.backend.model.VenueModel
 import com.devforce.backend.repo.EventRepo
@@ -59,6 +60,7 @@ class EventService {
             this.metadata = createEventDto.metadata ?: ""
             this.isPrivate = createEventDto.isPrivate ?: false
             this.hosts = setOf(user)
+            this.availableSlots = AvailableSlotsModel().apply { this.availableSlots = createEventDto.maxParticipants ?: 1 }
         }
 
         eventRepo.save(event)
