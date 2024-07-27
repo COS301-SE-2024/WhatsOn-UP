@@ -15,7 +15,7 @@ export class AppService {
   async getNotifications(user_id: string) {
     const { data, error } = await this.supabase
       .from('notifications')
-      .select('notification_id, message, event_id, user_id, sent_at, seen_at, notification_types(name), events(description, is_private, title, location, max_attendees, start_date_time, end_date_time)')
+      .select('notification_id, message, event_id, user_id, sent_at, seen_at, notification_types(name), events(description, is_private, title, venues(name, buildings(location, name, access_type)), max_attendees, start_date_time, end_date_time)')
       .eq('user_id', user_id);
 
     if (error) {
