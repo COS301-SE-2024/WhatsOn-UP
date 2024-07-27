@@ -106,4 +106,10 @@ class EventController {
     fun getPassedEvents(): ResponseEntity<ResponseDto> {
         return eventService.getPassedEvents()
     }
+
+    @GetMapping("/get_locations")
+    @PreAuthorize("permitAll()")
+    fun getLocations(): ResponseEntity<ResponseDto> {
+        return eventService.getLocations()
+    }
 }
