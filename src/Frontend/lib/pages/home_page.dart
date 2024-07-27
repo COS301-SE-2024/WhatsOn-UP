@@ -161,11 +161,9 @@ class _HomePageState extends State<HomePage> {
                           );
                         },
                         child: CircleAvatar(
-                          backgroundImage: userP.profileImage!.isNotEmpty
+                          backgroundImage: userP.profileImage != null && userP.profileImage!.isNotEmpty
                               ? MemoryImage(userP.profileImage!)
-                              : const AssetImage('assets/images/user.png')
-
-                          as ImageProvider,
+                              : const AssetImage('assets/images/user.png') as ImageProvider,
                           radius: 27.0,
                         ),
                       ),

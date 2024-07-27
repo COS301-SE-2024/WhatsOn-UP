@@ -45,12 +45,10 @@ final String ADMIN='ADMIN';
                   Stack(
                     children: [
                       CircleAvatar(
-                        backgroundImage: user.profileImage!.isNotEmpty
+                        backgroundImage: user.profileImage != null && user.profileImage!.isNotEmpty
                             ? MemoryImage(user.profileImage!)
-                            : const AssetImage('assets/images/user.png'),
-
+                            : const AssetImage('assets/images/user.png') as ImageProvider,
                         radius: 60.0,
-
                       ),
                       if (user.role==ADMIN)
                         Positioned(
@@ -129,6 +127,7 @@ final String ADMIN='ADMIN';
                           text: 'Logout',
                           onTap: () {
                             final session = supabase.auth.currentSession;
+                            // print("PROFILE SESSION: $session");
                             if (session != null) {
                               supabase.auth.signOut();
                             }

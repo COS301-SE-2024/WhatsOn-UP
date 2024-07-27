@@ -513,7 +513,7 @@ bool _obscurePassword=true;
 
   if (isGuest) {
     userP.setGuestUser();
-    eventP.fetchfortheFirstTimeRsvp('guest');
+    // eventP.fetchfortheFirstTimeRsvp('guest');
     // Skip getting events
     Navigator.push(
       context,

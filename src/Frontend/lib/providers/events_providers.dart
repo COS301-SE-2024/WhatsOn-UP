@@ -156,31 +156,17 @@ class EventProvider with ChangeNotifier {
   // }
 
   Future<List<Event>> _fetchEventsRsvp(String userId) async {
-    print("ID RECEIVED IN PROVIDER: $userId");
-  if (userId == "guest") { // If id received is "guest", user is a guest
-    // List<Event> events = await _fetchCalendarEventsGuest();
-    // print("JAGFIHGEGWIUWYHERFIJHHDSI: $events");
-    // return events; // Retrieve all events (for display on the calendar page)
+    if (userId == "guest") { // If id received is "guest", user is a guest
+      final response = await api.getAllEventsGuest();
+      List<Event> events = (response as List)
+          .map((eventData) => Event.fromJson(eventData))
+          .toList();
 
+      List<Map<String, dynamic>> eventMaps = events.map((event) => event.toJson()).toList();
+      List<Event> events2 = eventMaps.map((map) => Event.fromJson(map)).toList();
 
-    final response = await api.getAllEventsGuest();
-    List<Event> events = (response as List)
-        .map((eventData) => Event.fromJson(eventData))
-        .toList();
-
-    List<Map<String, dynamic>> eventMaps = events.map((event) => event.toJson()).toList();
-    // print(eventMaps.map((map) => Event.fromJson(map)).toList());
-    List<Event> events2 = eventMaps.map((map) => Event.fromJson(map)).toList();
-
-    print("ASDDSA");
-
-    print(events2);
-    return events2;
-
-
-    // print(eventMaps);
-    // return events;
-  }
+      return events2;
+    }
   try {
     // return await api.getRSVPEvents(userId!);
     final response= await api.getRSVPEvents(userId);

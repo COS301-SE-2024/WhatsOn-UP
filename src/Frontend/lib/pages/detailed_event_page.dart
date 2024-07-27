@@ -184,11 +184,12 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(_thisCurrentEvent.nameOfEvent),
-      ),
+      ), 
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const SizedBox(height: 16.0),
             CarouselSlider(
               options: CarouselOptions(
                 height: 200.0,
