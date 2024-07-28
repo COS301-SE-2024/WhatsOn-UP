@@ -25,6 +25,10 @@ class EventModel {
 
     var metadata: String = "" //changed from  var metadata: String = ""
 
+    @OneToOne
+    @JoinColumn(name = "event_id")
+    var availableSlots: AvailableSlotsModel? = null
+
     @ElementCollection
     @CollectionTable(name = "event_media", joinColumns = [JoinColumn(name = "event_id")])
     @Column(name = "media_link" , columnDefinition = "TEXT")
@@ -36,7 +40,10 @@ class EventModel {
     @Column(name = "updated_at", nullable = false)
     private var updatedAt: LocalDateTime = LocalDateTime.now()
 
-    var location: String = ""
+    @OneToOne
+    @JoinColumn(name = "venue_id")
+    var venue: VenueModel? = null
+
 
     @Column(name = "start_date_time", nullable = false)
     var startDateTime: LocalDateTime = LocalDateTime.now()

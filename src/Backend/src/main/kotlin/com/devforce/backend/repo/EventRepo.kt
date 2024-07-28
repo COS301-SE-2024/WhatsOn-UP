@@ -21,6 +21,10 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
                 "LEFT JOIN FETCH e.invitees i " +
                 "LEFT JOIN FETCH i.role ir " +
                 "LEFT JOIN FETCH e.eventMedia em " +
+                "LEFT JOIN FETCH e.venue v " +
+                "LEFT JOIN FETCH v.building b " +
+                "LEFT JOIN FETCH b.campus c " +
+                "LEFT JOIN FETCH e.availableSlots es " +
                 "WHERE e.expired = false " +
                 "AND (e.isPrivate = false " +
                 "OR :userId IS NULL " +
@@ -29,6 +33,8 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
                 "OR h.userId = :userId)"
     )
     fun findAllByUser(@Param("userId") userId: UUID?): List<EventModel>
+
+
 
     @Query(
         "SELECT DISTINCT e FROM EventModel e " +
@@ -39,6 +45,9 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
                 "LEFT JOIN FETCH e.invitees i " +
                 "LEFT JOIN FETCH i.role ir " +
                 "LEFT JOIN FETCH e.eventMedia em " +
+                "LEFT JOIN FETCH e.venue v " +
+                "LEFT JOIN FETCH v.building b " +
+                "LEFT JOIN FETCH b.campus c " +
                 "WHERE e.expired = true " +
                 "AND h.userId = :userId"
     )
@@ -55,6 +64,10 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
                 "LEFT JOIN FETCH i.role ir " +
                 "LEFT JOIN FETCH e.eventMedia em " +
                 "LEFT JOIN FETCH e.savedEvents se " +
+                "LEFT JOIN FETCH e.venue v " +
+                "LEFT JOIN FETCH v.building b " +
+                "LEFT JOIN FETCH b.campus c " +
+                "LEFT JOIN FETCH e.availableSlots es " +
                 "WHERE se.userId = :userId " +
                 "AND e.expired = false"
     )
@@ -70,6 +83,10 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
                 "LEFT JOIN FETCH e.invitees i " +
                 "LEFT JOIN FETCH i.role ir " +
                 "LEFT JOIN FETCH e.eventMedia em " +
+                "LEFT JOIN FETCH e.venue v " +
+                "LEFT JOIN FETCH v.building b " +
+                "LEFT JOIN FETCH b.campus c " +
+                "LEFT JOIN FETCH e.availableSlots es " +
                 "WHERE (a.userId = :userId " +
                 "OR h.userId = :userId) " +
                 "AND e.expired = false"
@@ -85,6 +102,10 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
                 "LEFT JOIN FETCH e.invitees i " +
                 "LEFT JOIN FETCH i.role ir " +
                 "LEFT JOIN FETCH e.eventMedia em " +
+                "LEFT JOIN FETCH e.venue v " +
+                "LEFT JOIN FETCH v.building b " +
+                "LEFT JOIN FETCH b.campus c " +
+                "LEFT JOIN FETCH e.availableSlots es " +
                 "WHERE e.expired = false " +
                 "AND (e.isPrivate = false " +
                 "OR :userId IS NULL " +
@@ -93,11 +114,9 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
                 "OR h.userId = :userId) "+
                 "AND e.title ILIKE %:searchString% " +
                 "OR e.description ILIKE %:searchString% " +
-                "OR e.location ILIKE %:searchString% " +
                 "OR e.metadata ILIKE %:searchString% " +
                 "ORDER BY (CASE WHEN e.title ILIKE %:searchString% THEN 3 ELSE 0 END + " +
                 "CASE WHEN e.description ILIKE %:searchString% THEN 2 ELSE 0 END + " +
-                "CASE WHEN e.location ILIKE %:searchString% THEN 1 ELSE 0 END + " +
                 "CASE WHEN e.metadata ILIKE %:searchString% THEN 1 ELSE 0 END) DESC"
     )
     fun searchEvents(@Param("searchString") searchString: String, @Param("userId") userId: UUID?): List<EventModel>
@@ -126,14 +145,22 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
                 "LEFT JOIN FETCH e.invitees i " +
                 "LEFT JOIN FETCH i.role ir " +
                 "LEFT JOIN FETCH e.eventMedia em " +
-                "WHERE e.expired = false AND " +
-                "(:#{#filterByDto.startDateTime} IS NULL OR e.startDateTime >= TO_TIMESTAMP(:#{#filterByDto.startDateTime}, 'YYYY-MM-DD HH24:MI:SS')) AND " +
+                "LEFT JOIN FETCH e.venue v " +
+                "LEFT JOIN FETCH v.building b " +
+                "LEFT JOIN FETCH b.campus c " +
+                "LEFT JOIN FETCH e.availableSlots es " +
+                "WHERE e.expired = false " +
+                "AND (e.isPrivate = false " +
+                "OR :userId IS NULL " +
+                "OR a.userId = :userId " +
+                "OR i.userId = :userId " +
+                "OR h.userId = :userId) "+
+                "AND (:#{#filterByDto.startDateTime} IS NULL OR e.startDateTime >= TO_TIMESTAMP(:#{#filterByDto.startDateTime}, 'YYYY-MM-DD HH24:MI:SS')) AND " +
                 "(:#{#filterByDto.endDateTime} IS NULL OR e.endDateTime <= TO_TIMESTAMP(:#{#filterByDto.endDateTime}, 'YYYY-MM-DD HH24:MI:SS')) AND " +
-                "(:#{#filterByDto.location} IS NULL OR e.location ILIKE %:#{#filterByDto.location}% ) AND " +
                 "(:#{#filterByDto.isPrivate} IS NULL OR e.isPrivate = :#{#filterByDto.isPrivate}) AND " +
                 "(:#{#filterByDto.maxAttendees} IS NULL OR e.maxAttendees <= :#{#filterByDto.maxAttendees})"
     )
-    fun filterEvents(@Param("filterByDto") filterByDto: FilterByDto): List<EventModel>
+    fun filterEvents(@Param("filterByDto") filterByDto: FilterByDto, @Param("userId") userId: UUID?): List<EventModel>
 
 
    @Query(value = """

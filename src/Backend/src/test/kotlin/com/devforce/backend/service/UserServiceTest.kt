@@ -1,7 +1,9 @@
 package com.devforce.backend.service
 
+import com.devforce.backend.model.AvailableSlotsModel
 import com.devforce.backend.model.EventModel
 import com.devforce.backend.model.UserModel
+import com.devforce.backend.repo.AvailableSlotsRepo
 import com.devforce.backend.repo.EventRepo
 import com.devforce.backend.repo.UserRepo
 import com.devforce.backend.security.CustomUser
@@ -26,6 +28,9 @@ class UserServiceTest {
 
     @Mock
     private lateinit var userRepo: UserRepo
+
+    @Mock
+    private lateinit var availableSlotsRepo: AvailableSlotsRepo
 
     @InjectMocks
     private lateinit var userServiceWithMocks: UserService
@@ -112,7 +117,8 @@ class UserServiceTest {
         val id = UUID.randomUUID()
         
         val event = EventModel().apply {
-            attendees.add(user)
+            savedEvents.add(user)
+            availableSlots = AvailableSlotsModel()
         }
 
         val option = Optional.of(user)
@@ -156,6 +162,7 @@ class UserServiceTest {
         
         val event = EventModel().apply {
             attendees.add(user)
+            availableSlots = AvailableSlotsModel()
         }
 
         `when`(userRepo.findById(id)).thenReturn(Optional.of(user))

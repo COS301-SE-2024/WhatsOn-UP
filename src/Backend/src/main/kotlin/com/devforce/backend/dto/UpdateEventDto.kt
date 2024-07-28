@@ -1,13 +1,14 @@
 package com.devforce.backend.dto
 
 import java.time.LocalDateTime
+import java.util.UUID
 
 data class UpdateEventDto(
     val title: String?,
     val description: String?,
     val startDateTime: LocalDateTime?,
     val endDateTime: LocalDateTime?,
-    val location: String?,
+    val location: UUID?,
     val maxParticipants: Int?,
     val metadata: String?,
     val isPrivate: Boolean?,
