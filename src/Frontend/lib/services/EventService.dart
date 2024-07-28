@@ -11,12 +11,38 @@ class EventService {
   EventService(this.supabase);
   static const String baseUrl = 'http://localhost:8080';
 
-  Future<String?> _getJwtToken() async {
+ /* Future<String?> _getJwtToken() async {
     final session = supabase.auth.currentSession;
     print(session);
     print(session?.accessToken);
     return session?.accessToken;
+  }*/
+
+  Future<List<Event>> fetchPastEvents() async {
+    final uri = Uri.parse('$baseUrl/api/events/get_passed_events');
+    try {
+     // final jwtToken = await _getJwtToken();
+      var headers = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      };
+
+      final response = await http.get(uri, headers: headers);
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> decodedJson = json.decode(response.body);
+        final List<dynamic> eventsJson = decodedJson['data'];
+        final List<Event> events = eventsJson.map((jsonEvent) => Event.fromJson(jsonEvent)).toList();
+        return events;
+      } else if (response.statusCode == 401) {
+        throw Exception('Unauthorized request');
+      } else {
+        throw Exception('Failed to load past events');
+      }
+    } catch (e) {
+      throw Exception('Failed to connect to the server: $e');
+    }
   }
+
 
   Future<List<String>> fetchUniqueCategories() async {
     final uri = Uri.parse('$baseUrl/api/events/categories');
@@ -125,10 +151,10 @@ class EventService {
     final uri = Uri.parse('$baseUrl/api/events/filterEvents').replace(queryParameters: queryParams);
 
     try {
-      final jwtToken = await _getJwtToken();
-      if (jwtToken == null) {
-        throw Exception('JWT token not found');
-      }
+    //  final jwtToken = await _getJwtToken();
+      //if (jwtToken == null) {
+      //  throw Exception('JWT token not found');
+      //}
       var headers = {
         'Content-Type': 'application/json',
         'Accept': 'application/json',

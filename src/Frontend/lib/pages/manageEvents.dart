@@ -121,7 +121,7 @@ import 'attendee.dart';
 import 'package:provider/provider.dart';
 import '../providers/user_provider.dart';
 import '../widgets/eventManagement_category.dart';
-
+import '../widgets/Pastevents.dart';
 class ManageEvents extends StatefulWidget {
   ManageEvents({Key? key}) : super(key: key);
 
@@ -173,8 +173,13 @@ String Host='HOST';
                 _buildProfileOption(
                   text: 'Past Events',
                   onTap: () {
-                    // Handle onTap for 'Past Events'
-                  },
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Pastevents(),
+                      ),
+                    );
+                    },
                 ),
                 _buildDivider(),
                 _buildProfileOption(
