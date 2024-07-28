@@ -117,6 +117,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:firstapp/pages/application_event.dart';
+import 'package:supabase_auth_ui/supabase_auth_ui.dart';
+import '../services/EventService.dart';
 import 'attendee.dart';
 import 'package:provider/provider.dart';
 import '../providers/user_provider.dart';
@@ -144,6 +146,7 @@ String Host='HOST';
   @override
   Widget build(BuildContext context) {
     userProvider userP = Provider.of<userProvider>(context);
+    SupabaseClient supabaseClient = Supabase.instance.client;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -176,7 +179,9 @@ String Host='HOST';
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => Pastevents(),
+                        builder: (context) => Pastevents(
+                      eventService: EventService(supabaseClient),
+                      ),
                       ),
                     );
                     },
