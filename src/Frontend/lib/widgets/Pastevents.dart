@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:provider/provider.dart';
 import 'package:firstapp/services/EventService.dart';
 import '../screens/FilterScreen.dart';
 import '../screens/SearchScreen.dart';
 import 'event_card.dart';
 
 class Pastevents extends StatefulWidget {
-  Pastevents({Key? key}) : super(key: key);
+  final EventService eventService;
+
+  Pastevents({Key? key, required this.eventService}) : super(key: key);
 
   @override
   _PasteventsState createState() => _PasteventsState();
@@ -19,8 +20,7 @@ class _PasteventsState extends State<Pastevents> {
   @override
   void initState() {
     super.initState();
-    final eventService = Provider.of<EventService>(context, listen: false);
-    _pastEvents = eventService.fetchPastEvents();
+    _pastEvents = widget.eventService.fetchPastEvents();
   }
 
   @override
@@ -31,7 +31,7 @@ class _PasteventsState extends State<Pastevents> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Past Events'), // Adjust the app bar title as needed
+        title: Text('Past Events'),
       ),
       body: Column(
         children: [
@@ -51,7 +51,6 @@ class _PasteventsState extends State<Pastevents> {
                       ),
                       child: TextButton.icon(
                         onPressed: () {
-                          // Navigate to SearchScreen when Search button is pressed
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -74,7 +73,6 @@ class _PasteventsState extends State<Pastevents> {
                       ),
                       child: TextButton.icon(
                         onPressed: () {
-                          // Navigate to FilterScreen when Filter button is pressed
                           Navigator.push(
                             context,
                             MaterialPageRoute(
