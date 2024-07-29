@@ -4,11 +4,10 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:typed_data';import 'package:firstapp/widgets/event_card.dart';
 import 'package:firstapp/main.dart';
+import 'globals.dart' as globals;
 class Api {
   // Singleton instance
   static final Api _instance = Api._internal();
-  // static const String domain = '10.0.2.2';
-  static const String domain = 'Localhost';
   factory Api() => _instance;
   Api._internal();
 
@@ -23,7 +22,7 @@ class Api {
 
   // Method to log in the user and store JWT token
   Future<Map<String, dynamic>> loginUser(String email, String password) async {
-    final String _loginUrl = 'http://$domain:8080/api/auth/login';
+    final String _loginUrl = 'http://${globals.domain}:8080/api/auth/login';
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -59,7 +58,7 @@ class Api {
     try {
 
 
-      final String _userUrl = 'http://$domain:8080/api/auth/get_user';
+      final String _userUrl = 'http://${globals.domain}:8080/api/auth/get_user';
       var headers = {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
@@ -80,7 +79,7 @@ class Api {
   }
 
   Future<List<Event>> getAllEvents() async {
-  final _rsvpEventsURL = 'http://$domain:8080/api/events/get_all';
+  final _rsvpEventsURL = 'http://${globals.domain}:8080/api/events/get_all';
 
 
   try {
@@ -107,7 +106,7 @@ class Api {
   Future<List<dynamic>> getRSVPEvents(String userId) async {
     print('the id in rsvp is $userId');
     try {
-      final String _rsvpEventsURL = 'http://localhost:8080/api/user/get_rspv_events';
+      final String _rsvpEventsURL = 'http://${globals.domain}:8080/api/user/get_rspv_events';
       var headers = {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
@@ -132,7 +131,7 @@ class Api {
   Future<Map<String, dynamic>> postChangeUser(String name,String profileImage, String userId) async {
     // Url for posting new informaion
 
-    var userChangeUrl = Uri.parse('http://localhost:8080/api/user/update_profile');
+    var userChangeUrl = Uri.parse('http://${globals.domain}:8080/api/user/update_profile');
 
     // Define the headers and body for login request
     var headers = {
@@ -164,7 +163,7 @@ class Api {
   }
   Future<Map<String, dynamic>> updatePassword(String password,String userId) async {
 
-    var Url = Uri.parse('http://localhost:8080/api/auth/reset_password');
+    var Url = Uri.parse('http://${globals.domain}:8080/api/auth/reset_password');
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -206,7 +205,7 @@ class Api {
     List<String>? media,
     required String userId,
   }) async {
-    final String _createEventUrl = 'http://localhost:8080/api/events/create';
+    final String _createEventUrl = 'http://${globals.domain}:8080/api/events/create';
 
     var headers = {
       'Content-Type': 'application/json',
@@ -242,7 +241,7 @@ class Api {
 
 
   Future<Map<String, dynamic>> rsvpEvent(String eventId, String UserId) async {
-    final String _rsvpEventUrl = 'http://localhost:8080/api/user/rspv_event/$eventId';
+    final String _rsvpEventUrl = 'http://${globals.domain}:8080/api/user/rspv_event/$eventId';
     
     var headers = {
       'Content-Type': 'application/json',
@@ -266,7 +265,7 @@ class Api {
 
   }
   Future<Map<String, dynamic>> DeletersvpEvent(String eventId, String UserId) async {
-    final String _rsvpEventUrl = 'http://localhost:8080/api/user/delete_rspv_event/$eventId';
+    final String _rsvpEventUrl = 'http://${globals.domain}:8080/api/user/delete_rspv_event/$eventId';
 
     var headers = {
       'Content-Type': 'application/json',
@@ -291,7 +290,7 @@ class Api {
   }
 
   Future<Map<String, dynamic>> DeleteEvent(String eventId,String userid) async {
-    var Url = Uri.parse('http://localhost:8080/api/events/delete/$eventId');
+    var Url = Uri.parse('http://${globals.domain}:8080/api/events/delete/$eventId');
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -317,7 +316,7 @@ class Api {
 
    Future<Map<String, dynamic>> postUsername(String username,String userid) async {
 
-    var userChangeUrl = Uri.parse('http://localhost:8080/api/user/update_profile');
+    var userChangeUrl = Uri.parse('http://${globals.domain}:8080/api/user/update_profile');
   //
   //   // Define the headers and body for login request
     var headers = {
@@ -346,7 +345,7 @@ class Api {
 
    }
   Future<Map<String, dynamic>> getUser(String userid) async {
-    final String _userUrl = 'http://$domain:8080/api/user/get_user';
+    final String _userUrl = 'http://${globals.domain}:8080/api/user/get_user';
 
     //
     //   // Define the headers and body for login request
@@ -390,7 +389,7 @@ class Api {
     List<String>? media,
 
   })async {
-    final String _userUrl = 'http://$domain:8080/api/events/update/$eventId';
+    final String _userUrl = 'http://${globals.domain}:8080/api/events/update/$eventId';
 
     var headers = {
       'Content-Type': 'application/json',

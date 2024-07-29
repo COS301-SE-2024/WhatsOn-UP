@@ -1,9 +1,10 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'globals.dart' as globals;
 
 Future<Map<String, dynamic>> postRequest(email, password) async {
 
-  final url = Uri.parse('http://localhost:8080/login');
+  final url = Uri.parse('http://${globals.domain}:8080/login');
 
   final headers = {"Content-Type": "application/json"};
   final body = jsonEncode({

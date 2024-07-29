@@ -100,7 +100,7 @@ const String ADMIN='ADMIN';
       case 2:
         return const CalendarPage();
       case 3:
-        return const ExplorePage();
+        return NavigationPage();
       case 4:
         return SettingsPage();
       case 5:

@@ -1,11 +1,12 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'dart:typed_data';import 'package:firstapp/widgets/event_card.dart';
+import 'globals.dart' as globals;
 
 
 
 class EventService {
-  static const String baseUrl = 'http://localhost:8080';
+  static final String baseUrl = 'http://${globals.domain}:8080';
 
 
   Future<List<dynamic>> searchEvents(String searchTerm) async {
