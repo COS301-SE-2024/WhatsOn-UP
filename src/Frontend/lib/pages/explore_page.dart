@@ -1,7 +1,6 @@
 import 'package:firstapp/models/Route.dart';
 import 'package:firstapp/services/RouteService.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_mapbox_navigation/flutter_mapbox_navigation.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class NavigationPage extends StatefulWidget {
@@ -117,9 +116,17 @@ class NavigationPage extends StatefulWidget {
 class _NavigationPageState extends State<NavigationPage> {
   late GoogleMapController _googleMapController;
   static const LatLng initPos = LatLng(-25.756283, 28.231191);
-  Marker? _origin;
   Marker? _destination;
   MapRoute? _route;
+  late BitmapDescriptor _customIcon;
+
+  final Marker _origin = Marker(
+      markerId: const MarkerId("origin"),
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
+      position: initPos
+    );
+
+  
 
   static const _initialCameraPosition = CameraPosition(
     target: initPos,
@@ -129,11 +136,7 @@ class _NavigationPageState extends State<NavigationPage> {
   @override
   void initState() {
     super.initState();
-    _origin = Marker(
-          markerId: const MarkerId("origin"),
-          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
-          position: initPos
-        );
+    _loadCustomIcons();
   }
 
   @override
@@ -192,6 +195,17 @@ class _NavigationPageState extends State<NavigationPage> {
       _route = updatedRoute;
     });
     print('\n ${updatedRoute}');
+  }
+
+  void _loadCustomIcons() async {
+    // _customIcon = await BitmapDescriptor.asset(const ImageConfiguration(size: Size(512,512)), 'assets/images/target.png');
+    // print(_customIcon.toJson());
+
+    // _origin = Marker(
+    //   markerId: const MarkerId("origin"),
+    //   icon: _customIcon,
+    //   position: initPos
+    // );
   }
 
 }
