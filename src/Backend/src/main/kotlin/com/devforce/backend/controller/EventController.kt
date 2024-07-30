@@ -92,11 +92,10 @@ class EventController {
     fun filterEvents(
         @RequestParam(required = false) startDateTime: String?,
         @RequestParam(required = false) endDateTime: String?,
-        @RequestParam(required = false) location: String?,
         @RequestParam(required = false) isPrivate: Boolean?,
         @RequestParam(required = false) maxAttendees: Int?
     ): ResponseEntity<ResponseDto> {
-        val filterByDto = FilterByDto(startDateTime, endDateTime, location, isPrivate, maxAttendees)
+        val filterByDto = FilterByDto(startDateTime, endDateTime, isPrivate, maxAttendees)
 
         return eventService.filterEvents(filterByDto)
     }
@@ -106,5 +105,11 @@ class EventController {
     @PreAuthorize("hasAnyRole('HOST', 'ADMIN')")
     fun getPassedEvents(): ResponseEntity<ResponseDto> {
         return eventService.getPassedEvents()
+    }
+
+    @GetMapping("/get_locations")
+    @PreAuthorize("permitAll()")
+    fun getLocations(): ResponseEntity<ResponseDto> {
+        return eventService.getLocations()
     }
 }

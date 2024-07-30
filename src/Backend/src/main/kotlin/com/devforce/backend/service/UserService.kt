@@ -2,6 +2,7 @@ package com.devforce.backend.service
 
 import com.devforce.backend.dto.EventDto
 import com.devforce.backend.dto.ResponseDto
+import com.devforce.backend.repo.AvailableSlotsRepo
 import com.devforce.backend.repo.EventRepo
 import com.devforce.backend.repo.RoleRepo
 import com.devforce.backend.repo.UserRepo
@@ -22,6 +23,9 @@ class UserService {
 
     @Autowired
     lateinit var eventRepo: EventRepo
+
+    @Autowired
+    lateinit var availableSlotsRepo: AvailableSlotsRepo
 
 
     // To do: Implement function to save an event for the current user
@@ -77,7 +81,7 @@ class UserService {
         val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
 
         val events = eventRepo.getSavedEvents(user.userId)
-        val eventsDto = events.map { event -> EventDto(event, false) }
+        val eventsDto = events.map { event -> EventDto(event, false, null) }
 
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto)
         )
@@ -100,6 +104,13 @@ class UserService {
             return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Event already RSVP'd"))
         }
 
+        val availableSlots = availableSlotsRepo.findByEventId(id)
+
+        if (availableSlots != null) {
+            if (availableSlots.availableSlots <= 0) {
+                return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Event is full"))
+            }
+        }
 
         event.attendees.add(user)
         eventRepo.save(event)
@@ -112,7 +123,7 @@ class UserService {
         val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
 
         val events = eventRepo.getRspvdEvents(user.userId)
-        val eventsDto = events.map { event -> EventDto(event, false) }
+        val eventsDto = events.map { event -> EventDto(event, false, null) }
 
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto)
         )

@@ -2,6 +2,7 @@ package com.devforce.backend.service
 
 import com.devforce.backend.dto.ResponseDto
 import com.devforce.backend.model.InviteeModel
+import com.devforce.backend.repo.AvailableSlotsRepo
 import com.devforce.backend.repo.EventRepo
 import com.devforce.backend.repo.InviteeRepo
 import com.devforce.backend.repo.UserRepo
@@ -24,6 +25,9 @@ class InviteService {
 
     @Autowired
     lateinit var inviteeRepo: InviteeRepo
+
+    @Autowired
+    lateinit var availableSlotsRepo: AvailableSlotsRepo
 
     fun inviteUser(eventId: UUID, userId: UUID): ResponseEntity<ResponseDto>{
         val alreadyInvited = inviteeRepo.findByUserAndEvent(userId, eventId)
@@ -86,6 +90,14 @@ class InviteService {
 
         if (inviteModel.accepted) {
             return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Invite already accepted"))
+        }
+
+        val availableSlots = inviteModel.event!!.eventId?.let { availableSlotsRepo.findByEventId(it) }
+
+        if (availableSlots != null) {
+            if (availableSlots.availableSlots <= 0) {
+                return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Event is full"))
+            }
         }
 
         inviteModel.accepted = true

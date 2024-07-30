@@ -1,10 +1,11 @@
 package com.devforce.backend.service
 
 import com.devforce.backend.dto.*
+import com.devforce.backend.model.AvailableSlotsModel
 import com.devforce.backend.model.EventModel
+import com.devforce.backend.model.VenueModel
 import com.devforce.backend.repo.EventRepo
-import com.devforce.backend.repo.InviteeRepo
-import com.devforce.backend.repo.UserRepo
+import com.devforce.backend.repo.VenueRepo
 import com.devforce.backend.security.CustomUser
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
@@ -26,13 +27,27 @@ class EventService {
     lateinit var eventRepo: EventRepo
 
     @Autowired
-    lateinit var userRepo: UserRepo
-
-    @Autowired
-    lateinit var inviteeRepo: InviteeRepo
+    lateinit var venueRepo: VenueRepo
 
     fun createEvent(createEventDto: CreateEventDto): ResponseEntity<ResponseDto> {
         val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
+
+        val venue = venueRepo.findByVenueId(createEventDto.location)
+            ?: return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "Venue not found")))
+
+        if (!venue.available) {
+            return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "Venue not available")))
+        }
+
+        if (createEventDto.maxParticipants != null && createEventDto.maxParticipants < 1) {
+            return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "Max participants must be greater than 0")))
+        }
+
+        if (createEventDto.maxParticipants != null && createEventDto.maxParticipants > venue.capacity) {
+            return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "Max participants must be less than venue capacity")))
+        }
+
+        venue.available = false
 
         val event = EventModel().apply {
             this.eventId = UUID.randomUUID()
@@ -40,8 +55,8 @@ class EventService {
             this.description = createEventDto.description
             this.startDateTime = createEventDto.startDateTime
             this.endDateTime = createEventDto.endDateTime
-            this.location = createEventDto.location
-            this.maxAttendees = createEventDto.maxParticipants ?: 10
+            this.venue = venue
+            this.maxAttendees = createEventDto.maxParticipants ?: 1
             this.metadata = createEventDto.metadata ?: ""
             this.isPrivate = createEventDto.isPrivate ?: false
             this.hosts = setOf(user)
@@ -49,7 +64,7 @@ class EventService {
 
         eventRepo.save(event)
 
-        val eventDto = EventDto(event,false)
+        val eventDto = EventDto(event,false, createEventDto.maxParticipants)
 
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventDto)
         )
@@ -62,13 +77,13 @@ class EventService {
         var eventsDto: List<EventDto>? = null
          if (user == "anonymousUser") {
             val events = eventRepo.findAllByUser(null)
-            eventsDto = events.map { event -> EventDto(event, false) }
+            eventsDto = events.map { event -> EventDto(event, false, null) }
         }
         else {
             val userModel = (user as CustomUser).userModel
             val events = eventRepo.findAllByUser(userModel.userId)
             eventsDto = events.map {
-                event -> EventDto(event, userModel.userId in event.hosts.map { host -> host.userId })
+                event -> EventDto(event, userModel.userId in event.hosts.map { host -> host.userId }, null)
             }
         }
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto)
@@ -81,7 +96,7 @@ class EventService {
 
         val events = eventRepo.findPassedEvents(user.userId)
 
-        val eventsDto = events.map { event -> EventDto(event, user.userId in event.hosts.map { host -> host.userId }) }
+        val eventsDto = events.map { event -> EventDto(event, user.userId in event.hosts.map { host -> host.userId }, null) }
 
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto)
         )
@@ -98,11 +113,38 @@ class EventService {
 
             val existingEvent = existing.get()
 
+            var v: VenueModel? = null
+
+            if (updateEventDto.location != null) {
+                v = venueRepo.findByVenueId(updateEventDto.location)
+                    ?: return ResponseEntity.ok(
+                        ResponseDto(
+                            "error",
+                            System.currentTimeMillis(),
+                            mapOf("message" to "Venue not found")
+                        )
+                    )
+
+                if (!v.available) {
+                    return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "Venue not available")))
+                }
+
+                if (updateEventDto.maxParticipants != null && updateEventDto.maxParticipants < 1) {
+                    return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "Max participants must be greater than 0")))
+                }
+
+                if (updateEventDto.maxParticipants != null && updateEventDto.maxParticipants > v.capacity) {
+                    return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "Max participants must be less than venue capacity")))
+                }
+
+                v.available = false
+            }
+
             existingEvent.apply {
                 updateEventDto.title?.let { title = it }
                 updateEventDto.description?.let { description = it }
                 updateEventDto.metadata?.let { metadata = it }
-                updateEventDto.location?.let { location = it }
+                updateEventDto.location?.let { venue = v}
                 updateEventDto.startDateTime?.let { startDateTime = it }
                 updateEventDto.endDateTime?.let { endDateTime = it }
                 updateEventDto.maxParticipants?.let { maxAttendees = it }
@@ -147,13 +189,13 @@ class EventService {
         var eventsDto: List<EventDto>? = null
         if (user == "anonymousUser") {
             val events = eventRepo.searchEvents(searchString, null)
-            eventsDto = events.map { event -> EventDto(event, false) }
+            eventsDto = events.map { event -> EventDto(event, false, null) }
         }
         else {
             val userModel = (user as CustomUser).userModel
             val events = eventRepo.searchEvents(searchString, userModel.userId)
             eventsDto = events.map {
-                    event -> EventDto(event, userModel.userId in event.hosts.map { host -> host.userId })
+                    event -> EventDto(event, userModel.userId in event.hosts.map { host -> host.userId }, null)
             }
         }
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto)
@@ -253,10 +295,26 @@ class EventService {
 
     //FUTURE
     fun filterEvents(filterBy: FilterByDto): ResponseEntity<ResponseDto>{
-        val events = eventRepo.filterEvents(filterBy)
-        val eventsDto = events.map { event -> EventDto(event, false) }
-        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto)
-        )
+
+        val user = SecurityContextHolder.getContext().authentication.principal
+        var eventsDto: List<EventDto>? = null
+        if (user == "anonymousUser") {
+            val events = eventRepo.filterEvents(filterBy, null)
+            eventsDto = events.map { event -> EventDto(event, false, null) }
+        }
+        else {
+            val userModel = (user as CustomUser).userModel
+            val events = eventRepo.filterEvents(filterBy, userModel.userId)
+            eventsDto = events.map {
+                    event -> EventDto(event, userModel.userId in event.hosts.map { host -> host.userId }, null)
+            }
+        }
+        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto))
+    }
+
+    fun getLocations(): ResponseEntity<ResponseDto> {
+        val locations = venueRepo.findAll()
+        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), locations))
     }
 
 }
