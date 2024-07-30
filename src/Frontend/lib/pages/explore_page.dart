@@ -124,7 +124,9 @@ class _NavigationPageState extends State<NavigationPage> {
       markerId: const MarkerId("origin"),
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
       position: initPos
-    );
+  );
+
+  final _textFieldController = TextEditingController();
 
   
 
@@ -149,25 +151,43 @@ class _NavigationPageState extends State<NavigationPage> {
   Widget build(BuildContext context) {
     
     return Scaffold(
-      body: GoogleMap(
-        initialCameraPosition: _initialCameraPosition,
-        onMapCreated: (controller) => _googleMapController = controller,
-        markers: {
-          if (_origin != null) _origin as Marker,
-          if (_destination != null) _destination as Marker
-        },
-        polylines:{
-          if (_route != null)
-            Polyline(
-              polylineId: const PolylineId('overview_polyline'),
-              color: Colors.red,
-              width: 5,
-              points: _route!.polylinePoints
-                  .map((e) => LatLng(e.latitude, e.longitude))
-                  .toList(),
+      body: Stack(
+        children: [
+          GoogleMap(
+            initialCameraPosition: _initialCameraPosition,
+            onMapCreated: (controller) => _googleMapController = controller,
+            markers: {
+              if (_origin != null) _origin as Marker,
+              if (_destination != null) _destination as Marker
+            },
+            polylines: {
+              if (_route != null)
+                Polyline(
+                  polylineId: const PolylineId('overview_polyline'),
+                  color: Colors.red,
+                  width: 5,
+                  points: _route!.polylinePoints
+                      .map((e) => LatLng(e.latitude, e.longitude))
+                      .toList(),
+                ),
+            },
+            onLongPress: _setDestination,
+          ),
+          Positioned(
+            top: 10,
+            left: 15,
+            right: 15,
+            child: SearchBar(
+              hintText: "Search",
+              controller: _textFieldController,
+              padding: WidgetStateProperty.all<EdgeInsets>(
+                const EdgeInsets.symmetric(horizontal: 15),
+              ),
+              leading: const Icon(Icons.search),
+              trailing: const [Icon(Icons.mic)],
             ),
-        },
-        onLongPress: _setDestination,
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Theme.of(context).primaryColor,
@@ -207,5 +227,7 @@ class _NavigationPageState extends State<NavigationPage> {
     //   position: initPos
     // );
   }
+
+  ////////////////////////////////////////////////Searchbar logic///////////////////////////////////////////////
 
 }
