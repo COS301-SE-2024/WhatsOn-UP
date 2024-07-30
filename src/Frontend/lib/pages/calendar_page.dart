@@ -89,6 +89,14 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
             (event['attendees'] as List).isNotEmpty)
             ? List<Attendee>.from(event['attendees'].map((attendee) => Attendee.fromJson(attendee)))
             : [],
+        'metadata': event.containsKey('metadata') && event['metadata'] is Map<String, dynamic>
+            ? Metadata.fromJson(event['metadata'])
+            : Metadata(
+          mentors: [],
+          categories: [],
+          sessions: [],
+        ),
+
       };
     }).toList();
   }
@@ -119,6 +127,7 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
         'id': event.id,
         'hosts': event.hosts != null ? List<String>.from(event.hosts!) : [],
         'attendees': event.attendees != null ? List<Attendee>.from(event.attendees!) : [],
+        'metadata': event.metadata.toJson(),
       });
     });
 
@@ -289,6 +298,7 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
                           maxAttendees: event['maxAttendees'],
                           isPrivate: event['isPrivate'],
                           startDate: '',
+                          metadata:event['metadata'],
 
                         );
 

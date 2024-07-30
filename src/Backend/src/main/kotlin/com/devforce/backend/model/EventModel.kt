@@ -17,13 +17,17 @@ import java.util.*
 
 class EventModel {
     @Id
-    @GeneratedValue
     @Column(name = "event_id", columnDefinition = "UUID")
-    var eventId: UUID = UUID.randomUUID()
+    var eventId: UUID? = null
 
     var title: String = ""
     var description: String = ""
-    var metadata: String = ""
+
+    var metadata: String = "" //changed from  var metadata: String = ""
+
+    @OneToOne
+    @JoinColumn(name = "event_id")
+    var availableSlots: AvailableSlotsModel? = null
 
     @ElementCollection
     @CollectionTable(name = "event_media", joinColumns = [JoinColumn(name = "event_id")])
@@ -36,13 +40,16 @@ class EventModel {
     @Column(name = "updated_at", nullable = false)
     private var updatedAt: LocalDateTime = LocalDateTime.now()
 
-    var location: String = ""
+    @OneToOne
+    @JoinColumn(name = "venue_id")
+    var venue: VenueModel? = null
 
-    @Column(name = "start_time", nullable = false)
-    var startTime: LocalDateTime = LocalDateTime.now()
 
-    @Column(name = "end_time", nullable = false)
-    var endTime: LocalDateTime = LocalDateTime.now()
+    @Column(name = "start_date_time", nullable = false)
+    var startDateTime: LocalDateTime = LocalDateTime.now()
+
+    @Column(name = "end_date_time", nullable = false)
+    var endDateTime: LocalDateTime = LocalDateTime.now()
 
     @Column(name = "max_attendees", nullable = false)
     var maxAttendees: Int = 0
@@ -57,6 +64,9 @@ class EventModel {
         inverseJoinColumns = [JoinColumn(name = "user_id")]
     )
     var hosts: Set<UserModel> = HashSet()
+
+    @Column(name = "expired", nullable = false)
+    var expired: Boolean = false;
 
     @ManyToMany
     @JoinTable(

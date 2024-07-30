@@ -1,3 +1,4 @@
+import 'package:firstapp/pages/allSaved_Events.dart';
 import 'package:firstapp/widgets/event_card.dart';
 import 'package:flutter/material.dart';
 import 'package:firstapp/pages/rsvp_events_page.dart';
@@ -6,8 +7,7 @@ import 'package:firstapp/pages/explore_page.dart';
 import 'package:firstapp/pages/settings_page.dart';
 import 'package:firstapp/widgets/nav_bar.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:firstapp/pages/searchbar.dart';
-import 'package:firstapp/pages/data_search.dart';
+
 import 'package:firstapp/pages/profilePage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
@@ -17,11 +17,11 @@ import '../providers/user_provider.dart';
 import '../screens/FilterScreen.dart';
 import '../screens/SearchScreen.dart';
 import 'package:firstapp/services/api.dart';
-// import 'package:firstapp/widgets/eventcard.dart';
-import 'dart:typed_data';
 import 'package:firstapp/pages/Broadcast.dart';
 import 'package:firstapp/pages/manageEvents.dart';
 import 'package:firstapp/pages/application_event.dart';
+
+import 'allHome_events.dart';
 
 class HomePage extends StatefulWidget {
 
@@ -163,9 +163,10 @@ const String ADMIN='ADMIN';
                           );
                         },
                         child: CircleAvatar(
-                          backgroundImage: userP.profileImage != null
+                          backgroundImage: userP.profileImage!.isNotEmpty
                               ? MemoryImage(userP.profileImage!)
-                              : AssetImage('http/example-image')
+                              : const AssetImage('assets/images/user.png')
+
                           as ImageProvider,
                           radius: 27.0,
                         ),
@@ -237,12 +238,33 @@ const String ADMIN='ADMIN';
                   ),
                 ),
                 SizedBox(height: 20.0),
-                const Padding(
+                 Padding(
                   padding: EdgeInsets.all(16.0),
-                  child: Text(
-                    'Explore More',
-                    style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-                  ),
+                  child: Row(children: [
+                    Text(
+                      'Explore More',
+                      style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                    ),
+                    Spacer(),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AllhomeEvents(),
+                          ),
+                        );
+                      },
+                      child: Text(
+                        'See more',
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+
+        ],)
                 ),
                 SizedBox(
                   height: 250.0,
@@ -265,13 +287,37 @@ const String ADMIN='ADMIN';
                   ),
                 ),
                 SizedBox(height: 20.0),
-                const Padding(
+                 Padding(
                   padding: EdgeInsets.all(10.0),
-                  child: Text(
-                    'Saved',
-                    style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                  child: Row(
+                    children: [
+                      Text(
+                        'Saved Events',
+                        style: TextStyle(
+                            fontSize: 18.0, fontWeight: FontWeight.bold),
+                      ),
+                      Spacer(),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => AllsavedEvents(),
+                            ),
+                          );
+                        },
+                        child: Text(
+                          'See more',
+                          style: TextStyle(
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
+
                 SizedBox(
                   height: 250.0,
                   child: GridView.builder(

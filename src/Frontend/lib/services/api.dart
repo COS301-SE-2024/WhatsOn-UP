@@ -2,7 +2,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 // import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:convert';
-import 'dart:typed_data';import 'package:firstapp/widgets/event_card.dart';
+import 'dart:typed_data';
+import 'package:firstapp/widgets/event_card.dart';
 import 'package:firstapp/main.dart';
 import 'globals.dart' as globals;
 class Api {
@@ -101,10 +102,36 @@ class Api {
     rethrow;
   }
 }
+  Future<List<Event>> getAllSavedEvents(String userId) async {
+    final _savedEventsURL = 'http://$domain:8080/api/events/get_saved_events';
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $userId',
+    };
 
+    try {
+      var response = await http.get(Uri.parse(_savedEventsURL),headers: headers,);
+
+      if (response.statusCode == 200) {
+
+        final Map<String, dynamic> decodedJson = json.decode(response.body);
+        final List<dynamic> eventsJson = decodedJson['data'];
+
+
+        final List<Event> events = eventsJson.map((jsonEvent) => Event.fromJson(jsonEvent)).toList();
+        return events;
+      } else {
+        throw Exception('Failed to load events');
+      }
+    } catch (e) {
+
+      rethrow;
+    }
+  }
 //Method to retrieve rsvpd events
   Future<List<dynamic>> getRSVPEvents(String userId) async {
-    print('the id in rsvp is $userId');
+
     try {
       final String _rsvpEventsURL = 'http://${globals.domain}:8080/api/user/get_rspv_events';
       var headers = {
@@ -128,12 +155,15 @@ class Api {
     }
   }
 
-  Future<Map<String, dynamic>> postChangeUser(String name,String profileImage, String userId) async {
-    // Url for posting new informaion
+  Future<Map<String, dynamic>> postChangeUser(String name, Uint8List? profileImage, String userId) async {
+    String? base64Image;
+    if (profileImage != null) {
+      base64Image = base64Encode(profileImage);
+    }
 
     var userChangeUrl = Uri.parse('http://${globals.domain}:8080/api/user/update_profile');
 
-    // Define the headers and body for login request
+
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -142,7 +172,7 @@ class Api {
     };
     var body = jsonEncode({
       'fullName':name,
-      "profileImage":profileImage,
+      "profileImage": base64Image,
     });
 
     try {

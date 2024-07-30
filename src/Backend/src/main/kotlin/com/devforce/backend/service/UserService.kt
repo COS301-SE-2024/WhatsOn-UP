@@ -2,7 +2,7 @@ package com.devforce.backend.service
 
 import com.devforce.backend.dto.EventDto
 import com.devforce.backend.dto.ResponseDto
-import com.devforce.backend.dto.UpdateUserDto
+import com.devforce.backend.repo.AvailableSlotsRepo
 import com.devforce.backend.repo.EventRepo
 import com.devforce.backend.repo.RoleRepo
 import com.devforce.backend.repo.UserRepo
@@ -19,16 +19,13 @@ class UserService {
 
     @Autowired
     lateinit var userRepo: UserRepo
-
-    @Autowired
-    lateinit var roleRepo: RoleRepo
-
-    @Autowired
-    lateinit var passwordEncoder: PasswordEncoder
     
 
     @Autowired
     lateinit var eventRepo: EventRepo
+
+    @Autowired
+    lateinit var availableSlotsRepo: AvailableSlotsRepo
 
 
     // To do: Implement function to save an event for the current user
@@ -42,6 +39,10 @@ class UserService {
         }
 
         val event = optionalEvent.get()
+        if (event.savedEvents.any { it.userId == user.userId }) {
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Event already saved"))
+        }
+
         event.savedEvents.add(user)
         eventRepo.save(event)
 
@@ -80,7 +81,7 @@ class UserService {
         val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
 
         val events = eventRepo.getSavedEvents(user.userId)
-        val eventsDto = events.map { event -> EventDto(event, false) }
+        val eventsDto = events.map { event -> EventDto(event, false, null) }
 
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto)
         )
@@ -98,6 +99,19 @@ class UserService {
         }
 
         val event = optionalEvent.get()
+
+        if (event.attendees.any { it.userId == user.userId } || event.hosts.any { it.userId == user.userId }) {
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Event already RSVP'd"))
+        }
+
+        val availableSlots = availableSlotsRepo.findByEventId(id)
+
+        if (availableSlots != null) {
+            if (availableSlots.availableSlots <= 0) {
+                return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Event is full"))
+            }
+        }
+
         event.attendees.add(user)
         eventRepo.save(event)
 
@@ -109,7 +123,7 @@ class UserService {
         val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
 
         val events = eventRepo.getRspvdEvents(user.userId)
-        val eventsDto = events.map { event -> EventDto(event, false) }
+        val eventsDto = events.map { event -> EventDto(event, false, null) }
 
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto)
         )
@@ -138,11 +152,10 @@ class UserService {
     }
 
     // To do: Implement function to update user profile
-    fun updateProfile(updateUserDto: UpdateUserDto): ResponseEntity<ResponseDto> {
+    fun updateProfile(fullName: String): ResponseEntity<ResponseDto> {
         val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
 
-        user.fullName = updateUserDto.fullName ?: user.fullName
-        user.profileImage = updateUserDto.profileImage ?: user.profileImage
+        user.fullName = fullName
 
         userRepo.save(user)
 
@@ -168,7 +181,8 @@ class UserService {
         val userCreds = mapOf(
             "role" to user.role?.name,
             "fullName" to user.fullName,
-            "profileImage" to user.profileImage
+            "profileImage" to user.profileImage,
+            "userId" to user.userId
         )
 
         return ResponseEntity.ok(
@@ -188,5 +202,6 @@ class UserService {
             ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Account deleted successfully"))
         )
     }
+
 
 }

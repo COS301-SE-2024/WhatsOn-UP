@@ -1,4 +1,4 @@
-import 'package:http/http.dart' as http;
+/*import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'globals.dart' as globals;
 
@@ -26,4 +26,4 @@ Future<Map<String, dynamic>> postRequest(email, password) async {
     print('Error: $e');
     return {'error': e.toString()};
   }
-}
+}*/
