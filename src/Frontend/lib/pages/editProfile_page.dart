@@ -57,6 +57,7 @@ class _EditprofilePageState extends State<EditprofilePage> {
         if (response['success']) {
           print('Upload successful: ${response['data']}');
           userP.profileImage = response['data']['media_link'];
+          print('profile image: ${userP.profileImage}');
         } else {
           print('Upload failed: ${response['error']}');
         }
