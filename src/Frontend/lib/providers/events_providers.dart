@@ -288,13 +288,13 @@ class EventProvider with ChangeNotifier {
 
   }
 
-
+//modified here - check here
   Future<void> EditEventLocation(String id, String Location) async {
     try {
       List<Event> events = await _eventsHome;
       Event? event = events.firstWhere((event) => event.id == id);
       if (event != null) {
-        event.location = Location ;
+        event.venue?.name = Location ;
         notifyListeners();
       }
 
