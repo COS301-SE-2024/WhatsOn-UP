@@ -373,12 +373,12 @@ class _ApplicationEventState extends State<ApplicationEvent> {
         description: eventDescription,
         startDate: startDateTime,
         endDate: endDateTime,
-        location: venue,
+        location: "20913cdf-198a-4845-a1fa-7254411dfbe3",
         maxParticipants: maxAttendees,
         isPrivate: !isPublic,
         media: mediaUrls,
         userId: userSuperbase!.id,
-        metadata: selectedCategoryNames
+        // metadata: selectedCategoryNames
       ).then((response) {
         print('Event created successfully');
         // print('The Event: ');
