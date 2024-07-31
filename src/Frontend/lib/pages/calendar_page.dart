@@ -76,7 +76,18 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
         'name': event['title'],
         'date': event['startTime'].substring(0, 10),
         'time': event['startTime'].substring(11, 16),
-        'location': event['location'],
+        'venue': event['venue'] != null ? {
+          'name': event['venue']['name'] ?? '',
+          'boards': event['venue']['boards'] ?? '',
+          'ac': event['venue']['ac'] ?? false,
+          'wifi': event['venue']['wifi'] ?? false,
+          'dataProject': event['venue']['dataProject'] ?? 0,
+          'docCam': event['venue']['docCam'] ?? false,
+          'mic': event['venue']['mic'] ?? false,
+          'windows': event['venue']['windows'] ?? false,
+          'capacity': event['venue']['capacity'] ?? 0,
+          'available': event['venue']['available'] ?? false,
+        } : null,
         // 'attendees': event['attendees'].length.toString(),
         'maxAttendees': event['maxAttendees'] is int ? event['maxAttendees'] : 0,
         'url': 'https://picsum.photos/200', // TODO: This still needs to change to the actual url of the image. Currently nothing is being returned in the eventMedia field
@@ -120,7 +131,18 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
         'name': event.nameOfEvent,
         'date': event.startTime.substring(0, 10),
         'time': event.startTime.substring(11, 16),
-        'location': event.location,
+        'venue': event.venue != null ? {
+          'name': event.venue?.name ?? '',
+          'boards': event.venue?.boards ?? '',
+          'ac': event.venue?.ac ?? false,
+          'wifi': event.venue?.wifi ?? false,
+          'dataProject': event.venue?.dataProject ?? 0,
+          'docCam': event.venue?.docCam ?? false,
+          'mic': event.venue?.mic ?? false,
+          'windows': event.venue?.windows ?? false,
+          'capacity': event.venue?.capacity ?? 0,
+          'available': event.venue?.available ?? false,
+        } : null,
         'maxAttendees': event.maxAttendees ?? 0,
         'url': 'https://picsum.photos/200', // Placeholder URL, update as needed
         'description': event.description ?? '',
@@ -287,7 +309,7 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
                         Event eventObject = Event(
                           nameOfEvent: event['name'],
                           dateAndTime: '${event['date']} ${event['time']}',
-                          location: event['location'],
+                          venue: event['venue'],
                           description: event['description'],
                           imageUrls: [event['url']],
                           id: event['id'],
@@ -301,7 +323,19 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
                           metadata:event['metadata'],
 
                         );
-
+/* venue: event['venue'] != null ? Venue(
+                            name: event['venue']['name'] ?? '',
+                            boards: event['venue']['boards'] ?? '',
+                            ac: event['venue']['ac'] ?? false,
+                            wifi: event['venue']['wifi'] ?? false,
+                            dataProject: event['venue']['dataProject'] ?? 0,
+                            docCam: event['venue']['docCam'] ?? false,
+                            mic: event['venue']['mic'] ?? false,
+                            windows: event['venue']['windows'] ?? false,
+                            capacity: event['venue']['capacity'] ?? 0,
+                            available: event['venue']['available'] ?? false,
+                            venueId: '', // addded via reccomendations
+                          ) : null,*/
                         Navigator.push(
                           context,
                           MaterialPageRoute(
