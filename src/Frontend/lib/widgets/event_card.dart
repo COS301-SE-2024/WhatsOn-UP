@@ -164,7 +164,7 @@ class Venue {
   });
 
   factory Venue.fromJson(Map<String, dynamic> json) {
-    print("Printing Venue fromJson...");
+    print("Printing...");
     print( json['location']['building']['campus']['name']);
     return Venue(
       venueId: json['venue_id'],
@@ -227,7 +227,7 @@ class Event {
     required this.description,
     required this.id,
     required this.hosts,
-   required this.startTime,
+    required this.startTime,
     required this.endTime,
     required this.maxAttendees,
     required this.isPrivate,
@@ -237,9 +237,7 @@ class Event {
   });
 
   factory Event.fromJson(Map<String, dynamic> json) {
-    var eventVat;
-    print("Printing Event fromJson...");
-    print( json['venue']);
+    var eventVat ;
     eventVat = Event(
       nameOfEvent: json['title']?.toString() ?? '',
       startTime: json['startTime']?.toString() ?? '',
