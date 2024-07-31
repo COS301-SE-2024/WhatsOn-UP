@@ -81,7 +81,7 @@ class Campus {
 
   factory Campus.fromJson(Map<String, dynamic> json) {
     return Campus(
-      campusId: json['campus_id'],
+      campusId: json['campusId'],
       name: json['name'],
       location: json['location'],
       parking: json['parking'],
@@ -90,7 +90,7 @@ class Campus {
 
   Map<String, dynamic> toJson() {
     return {
-      'campus_id': campusId,
+      'campusId': campusId,
       'name': name,
       'location': location,
       'parking': parking,
@@ -114,8 +114,10 @@ class Building {
   });
 
   factory Building.fromJson(Map<String, dynamic> json) {
+    print("Printing Building From Json...");
+    print( json['name']);
     return Building(
-      buildingId: json['building_id'],
+      buildingId: json['buildingId'],
       name: json['name'],
       accessType: json['accessType'],
       location: json['location'],
@@ -125,7 +127,7 @@ class Building {
 
   Map<String, dynamic> toJson() {
     return {
-      'building_id': buildingId,
+      'buildingId': buildingId,
       'name': name,
       'accessType': accessType,
       'location': location,
@@ -164,12 +166,14 @@ class Venue {
   });
 
   factory Venue.fromJson(Map<String, dynamic> json) {
-    print("Printing...");
-    print( json['location']['building']['campus']['name']);
+    print("Printing Venue From Json...");
+    print( json['name']);
+    print("Printing Venue Building...");
+    print(json['venueId']);
     return Venue(
-      venueId: json['venue_id'],
+      venueId: json['venueId'],
       building: json['building'] != null ? Building.fromJson(json['building']) : null,
-      name: json['location']['building']['campus']['name'],
+      name: json['name'],
       boards: json['boards'],
       ac: json['ac'],
       wifi: json['wifi'],
@@ -184,7 +188,7 @@ class Venue {
 
   Map<String, dynamic> toJson() {
     return {
-      'venue_id': venueId,
+      'venueId': venueId,
       'building': building?.toJson(),
       'name': name,
       'boards': boards,
@@ -237,13 +241,15 @@ class Event {
   });
 
   factory Event.fromJson(Map<String, dynamic> json) {
+    print("Printing Event fromJson...");
+    print( json['location']);
     var eventVat ;
     eventVat = Event(
       nameOfEvent: json['title']?.toString() ?? '',
       startTime: json['startTime']?.toString() ?? '',
       endTime: json['endTime']?.toString() ?? '',
       maxAttendees: json['maxAttendees'] is int ? json['maxAttendees'] : 0,
-      venue: json['venue'] != null ? Venue.fromJson(json['venue']) : null,
+      venue: json['location'] != null ? Venue.fromJson(json['location']) : null,
       isPrivate: json['isPrivate'] ?? false,
       imageUrls: (json.containsKey('eventMedia') && (json['eventMedia'] as List).isNotEmpty)
           ? List<String>.from(json['eventMedia'].map((media) => media?.toString() ?? ''))
