@@ -7,8 +7,9 @@ import 'package:firstapp/services/api.dart';
 import 'package:provider/provider.dart';
 import '../main.dart';
 import '../providers/events_providers.dart';
+import '../providers/user_provider.dart';
 import '../widgets/event_card.dart';
-
+import 'dart:typed_data';
 class EditEvent extends StatefulWidget {
 
 
@@ -73,6 +74,7 @@ class _EditEventState extends State<EditEvent> {
   TimeOfDay endTime = TimeOfDay.now();
   List<XFile>? selectedImages;
   bool isPublic = true;
+  List<Uint8List> imageBytesList = [];
 
   final _formKey = GlobalKey<FormState>();
 
@@ -302,6 +304,11 @@ class _EditEventState extends State<EditEvent> {
             setState(() {
               selectedImages = pickedFiles;
             });
+
+            for (XFile image in selectedImages!) {
+              final Uint8List imageBytes = await image.readAsBytes();
+              imageBytesList.add(imageBytes);
+            }
                     },
           style: ElevatedButton.styleFrom(
             foregroundColor: Colors.black, backgroundColor: Colors.white,
@@ -328,6 +335,7 @@ class _EditEventState extends State<EditEvent> {
 
   Future<void> _submitForm() async {
     EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
+    userProvider userP = Provider.of<userProvider>(context, listen: false);
     final userSuperbase = supabase.auth.currentUser;
     if (_formKey.currentState!.validate()) {
       setState(() {
@@ -371,7 +379,9 @@ class _EditEventState extends State<EditEvent> {
 
         });
         Api api = Api();
-
+        for(Uint8List imageBytes in imageBytesList){
+          Api().eventUploadImage(imageBytes,userP.userId ,widget.eventId);
+        }
         api.updateEvent(
           userId: userSuperbase!.id,
           eventId: _thisCurrentEvent.id,

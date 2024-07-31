@@ -127,22 +127,9 @@ class _GoogleSignInPageState extends State<GoogleSignInPage> {
 
         userP.role = response['data']['user']['role'] ?? 'Unknown';
 
-        // bool isBase64(String input) {
-        //   final RegExp base64 = RegExp(
-        //     r'^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$',
-        //   );
-        //   return base64.hasMatch(input);
-        // }
 
-        // if (isBase64(profileImageBase64)) {
-        //   try {
-        //     profileImageBytes = base64Decode(profileImageBase64);
-        //   } catch (e) {
-        //     print('Error decoding Base64: $e');
-        //   }
-        // } else {
-        //   print('Invalid Base64 string: $profileImageBase64');
-        // }
+
+
         userP.profileImage = user.userMetadata?['avatar_url'];
         Navigator.push(
           context,

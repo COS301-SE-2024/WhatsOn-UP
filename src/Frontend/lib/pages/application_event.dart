@@ -1,5 +1,6 @@
 
 import 'package:firstapp/pages/home_page.dart';
+import 'package:firstapp/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
@@ -9,6 +10,7 @@ import 'package:provider/provider.dart';
 import '../main.dart';
 import '../providers/events_providers.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
+import 'dart:typed_data';
 class ApplicationEvent extends StatefulWidget {
   const ApplicationEvent({
     super.key,
@@ -40,6 +42,7 @@ class _ApplicationEventState extends State<ApplicationEvent> {
   ];
   final _items=_categories.map((category) => MultiSelectItem<Category>(category, category.name)).toList();
   List<Category> _selectedCategories = [];
+  List<Uint8List> imageBytesList = [];
   final _multiSelectKey = GlobalKey<FormFieldState>();
   @override
   void initState() {
@@ -313,6 +316,11 @@ class _ApplicationEventState extends State<ApplicationEvent> {
             setState(() {
               selectedImages = pickedFiles;
             });
+
+            for (XFile image in selectedImages!) {
+              final Uint8List imageBytes = await image.readAsBytes();
+              imageBytesList.add(imageBytes);
+            }
                     },
           style: ElevatedButton.styleFrom(
             foregroundColor: Colors.black, backgroundColor: Colors.white,
@@ -338,7 +346,7 @@ class _ApplicationEventState extends State<ApplicationEvent> {
 
   void _submitForm() {
     EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
-
+    userProvider userP = Provider.of<userProvider>(context, listen: false);
 
     // eventP.addEventHome(
     // );
@@ -361,7 +369,8 @@ class _ApplicationEventState extends State<ApplicationEvent> {
     );
 
 
-      eventNameController.clear();List<String>? mediaUrls = selectedImages?.map((file) => file.path).toList();
+      eventNameController.clear();
+      List<String>? mediaUrls = selectedImages?.map((file) => file.path).toList();
       List<String> selectedCategoryNames = _selectedCategories.map((category) => category.name).toList();
 
       // eventP.addEventHome(newEvent);
@@ -376,15 +385,19 @@ class _ApplicationEventState extends State<ApplicationEvent> {
         location: "20913cdf-198a-4845-a1fa-7254411dfbe3",
         maxParticipants: maxAttendees,
         isPrivate: !isPublic,
-        media: mediaUrls,
+        // media: mediaUrls,
         userId: userSuperbase!.id,
         // metadata: selectedCategoryNames
       ).then((response) {
         print('Event created successfully');
         // print('The Event: ');
         //   print (response['data']);
+
         eventP.addEventHome(response['data']);
-        // eventP.;
+        for(Uint8List imageBytes in imageBytesList){
+          Api().eventUploadImage(imageBytes,userP.userId ,response['data']['id']);
+        }
+
         Navigator.push(
           context,
           MaterialPageRoute(

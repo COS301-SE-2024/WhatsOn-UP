@@ -488,14 +488,22 @@ class Api {
     }
 
   }
-  Future<Map<String, dynamic>> uploadImage(Uint8List imageBytes, String eventId) async {
+  Future<Map<String, dynamic>> uploadImage(Uint8List imageBytes, String userid) async {
     String generateFilename(String userId) {
       final timestamp = DateTime.now().millisecondsSinceEpoch;
       return 'profile_image_${userId}_$timestamp.png';
     }
-    final uri = Uri.parse('http://localhost:8083/media/upload?event_id=$eventId');
+    final uri = Uri.parse('http://localhost:8083/media/update');
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $userid',
+    };
+
     final request = http.MultipartRequest('POST', uri);
-    final filename = generateFilename(eventId);
+    request.headers['Authorization']= 'Bearer $userid';
+
+    final filename = generateFilename(userid);
     request.files.add(
       http.MultipartFile.fromBytes(
         'file',
@@ -506,7 +514,7 @@ class Api {
 
     try {
       final response = await request.send();
-      if (response.statusCode == 200) {
+      if (response.statusCode == 201) {
         return jsonDecode(response.stream.toString());
       } else {
 
@@ -517,6 +525,37 @@ class Api {
     }
   }
 
+  Future<Map<String, dynamic>> eventUploadImage(Uint8List imageBytes, String userid, String EventId) async {
+    String generateFilename(String userId) {
+      final timestamp = DateTime.now().millisecondsSinceEpoch;
+      return 'profile_image_${userId}_$timestamp.png';
+    }
+    final uri = Uri.parse('http://localhost:8083/media/upload?event_id=$EventId');
 
+
+    final request = http.MultipartRequest('POST', uri);
+    request.headers['Authorization']= 'Bearer $userid';
+
+    final filename = generateFilename(userid);
+    request.files.add(
+      http.MultipartFile.fromBytes(
+        'file',
+        imageBytes,
+        filename: filename,
+      ),
+    );
+
+    try {
+      final response = await request.send();
+      if (response.statusCode == 201) {
+        return jsonDecode(response.stream.toString());
+      } else {
+
+        throw Exception('Upload failed with status: ${response.statusCode}');
+      }
+    } catch (e) {
+      return {'error': e.toString()};
+    }
+  }
 
 }

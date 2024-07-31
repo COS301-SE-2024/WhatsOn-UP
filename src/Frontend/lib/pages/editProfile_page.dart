@@ -51,8 +51,9 @@ class _EditprofilePageState extends State<EditprofilePage> {
         final Uint8List imageBytes = await image.readAsBytes();
         Api api = Api();
         var response = await api.uploadImage(imageBytes,userP.userId);
+        print(response);
         if (response['success']) {
-          print('Upload successful: ${response['data']}');
+          print('Upload successful: ${response}');
           userP.profileImage = response['data']['media_link'];
           print('profile image: ${userP.profileImage}');
         } else {
@@ -337,26 +338,9 @@ class _EditprofilePageState extends State<EditprofilePage> {
           String profileImage =
               response['data']['user']['profileImage'] ?? 'Unknown';
 
-          bool isBase64(String input) {
-            final RegExp base64 = RegExp(
-              r'^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$',
-            );
-            return base64.hasMatch(input);
-          }
 
-          if (isBase64(profileImage)) {
-            try {
-              profileImageBytes = base64Decode(profileImage);
 
-              // setState(() {
-              //   widget.profileImage = profileImageBytes;
-              // });
-            } catch (e) {
-              print('Failed to decode base64 image: $e');
-            }
-          } else {
-            print('Invalid base64 image string: $profileImage');
-          }
+
           print('User profile updated successfully');
           // await Future.delayed(Duration(seconds: 2));
 
