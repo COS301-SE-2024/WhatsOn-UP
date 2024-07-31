@@ -11,11 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
-import java.time.*
 import java.util.*
 
 @Service
-class InviteService {
+class InteractionsService {
 
     @Autowired
     lateinit var eventRepo: EventRepo
@@ -105,6 +104,11 @@ class InviteService {
         inviteeRepo.save(inviteModel)
 
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Invite accepted successfully")))
+    }
+
+    fun getAllUsers(): ResponseEntity<ResponseDto> {
+        val users = userRepo.findAllUsers()
+        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), users))
     }
 
 

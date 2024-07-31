@@ -25,8 +25,7 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
                 "LEFT JOIN FETCH v.building b " +
                 "LEFT JOIN FETCH b.campus c " +
                 "LEFT JOIN FETCH e.availableSlots es " +
-                "WHERE e.expired = false " +
-                "AND (e.isPrivate = false " +
+                "WHERE (e.isPrivate = false " +
                 "OR :userId IS NULL " +
                 "OR a.userId = :userId " +
                 "OR i.userId = :userId " +
@@ -37,7 +36,7 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
 
 
     @Query(
-        "SELECT DISTINCT e FROM EventModel e " +
+        "SELECT DISTINCT e FROM PassedEventModel e " +
                 "LEFT JOIN FETCH e.attendees a " +
                 "LEFT JOIN FETCH a.role ar " +
                 "LEFT JOIN FETCH e.hosts h " +
@@ -48,8 +47,7 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
                 "LEFT JOIN FETCH e.venue v " +
                 "LEFT JOIN FETCH v.building b " +
                 "LEFT JOIN FETCH b.campus c " +
-                "WHERE e.expired = true " +
-                "AND h.userId = :userId"
+                "WHERE h.userId = :userId "
     )
     fun findPassedEvents(@Param("userId") userId: UUID): List<EventModel>
 
@@ -68,8 +66,7 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
                 "LEFT JOIN FETCH v.building b " +
                 "LEFT JOIN FETCH b.campus c " +
                 "LEFT JOIN FETCH e.availableSlots es " +
-                "WHERE se.userId = :userId " +
-                "AND e.expired = false"
+                "WHERE se.userId = :userId "
     )
     fun getSavedEvents(@Param("userId") userId: UUID): List<EventModel>
 
@@ -88,8 +85,7 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
                 "LEFT JOIN FETCH b.campus c " +
                 "LEFT JOIN FETCH e.availableSlots es " +
                 "WHERE (a.userId = :userId " +
-                "OR h.userId = :userId) " +
-                "AND e.expired = false"
+                "OR h.userId = :userId) "
     )
     fun getRspvdEvents(@Param("userId") userId: UUID): List<EventModel>
 
@@ -106,8 +102,7 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
                 "LEFT JOIN FETCH v.building b " +
                 "LEFT JOIN FETCH b.campus c " +
                 "LEFT JOIN FETCH e.availableSlots es " +
-                "WHERE e.expired = false " +
-                "AND (e.isPrivate = false " +
+                "WHERE (e.isPrivate = false " +
                 "OR :userId IS NULL " +
                 "OR a.userId = :userId " +
                 "OR i.userId = :userId " +
@@ -149,8 +144,7 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
                 "LEFT JOIN FETCH v.building b " +
                 "LEFT JOIN FETCH b.campus c " +
                 "LEFT JOIN FETCH e.availableSlots es " +
-                "WHERE e.expired = false " +
-                "AND (e.isPrivate = false " +
+                "WHERE (e.isPrivate = false " +
                 "OR :userId IS NULL " +
                 "OR a.userId = :userId " +
                 "OR i.userId = :userId " +
