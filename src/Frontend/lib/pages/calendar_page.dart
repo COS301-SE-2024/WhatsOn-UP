@@ -308,7 +308,7 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
                       onTap: () {
                         Event eventObject = Event(
                           nameOfEvent: event['name'],
-                          dateAndTime: '${event['date']} ${event['time']}',
+                          //dateAndTime: '${event['date']} ${event['time']}',
                           venue: event['venue'],
                           description: event['description'],
                           imageUrls: [event['url']],
