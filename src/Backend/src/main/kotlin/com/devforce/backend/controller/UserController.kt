@@ -3,7 +3,6 @@ package com.devforce.backend.controller
 import com.devforce.backend.dto.ResponseDto
 import com.devforce.backend.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.repository.query.Param
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
@@ -75,5 +74,27 @@ class UserController {
     fun deleteUser(): ResponseEntity<ResponseDto> {
         return userService.deleteUser()
     }
+
+    @PutMapping("/apply_for_host")
+    @PreAuthorize("isAuthenticated()")
+    fun applyHost(
+        @RequestParam howLong: Int,
+        @RequestParam proof: String
+    ): ResponseEntity<ResponseDto> {
+        return userService.applyForHost(howLong, proof)
+    }
+
+    @PostMapping("/acknowledge_application")
+    @PreAuthorize("isAuthenticated()")
+    fun acknowledgeApplication(@RequestParam applicationId: UUID): ResponseEntity<ResponseDto> {
+        return userService.acknowledgeApplication(applicationId)
+    }
+
+    @PostMapping("/dispute_application")
+    @PreAuthorize("isAuthenticated()")
+    fun disputeApplication(@RequestParam applicationId: UUID): ResponseEntity<ResponseDto> {
+        return userService.disputeApplication(applicationId)
+    }
+
 
 }
