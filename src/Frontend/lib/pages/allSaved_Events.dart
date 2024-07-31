@@ -152,7 +152,7 @@ class EventCardS extends StatelessWidget {
                     ),
                     Expanded(
                       child: Text(
-                        event.venue!.name,
+                        event.location,
                         style: TextStyle(
                           fontSize: 14.0,
                           color: textColour,

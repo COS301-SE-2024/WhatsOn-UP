@@ -98,152 +98,10 @@ class Metadata {
   }
 }
 
-//HERE
-class Campus {
-  final String campusId;
-  final String name;
-  final String location;
-  final bool parking;
-
-  Campus({
-    required this.campusId,
-    required this.name,
-    required this.location,
-    required this.parking,
-  });
-
-  factory Campus.fromJson(Map<String, dynamic> json) {
-    return Campus(
-      campusId: json['campusId'],
-      name: json['name'],
-      location: json['location'],
-      parking: json['parking'],
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'campusId': campusId,
-      'name': name,
-      'location': location,
-      'parking': parking,
-    };
-  }
-}
-
-class Building {
-  final String buildingId;
-  final String name;
-  final String accessType;
-  final String location;
-  final Campus? campus;
-
-  Building({
-    required this.buildingId,
-    required this.name,
-    required this.accessType,
-    required this.location,
-    this.campus,
-  });
-
-  factory Building.fromJson(Map<String, dynamic> json) {
-    print("Printing Building From Json...");
-    print( json['name']);
-    return Building(
-      buildingId: json['buildingId'],
-      name: json['name'],
-      accessType: json['accessType'],
-      location: json['location'],
-      campus: json['campus'] != null ? Campus.fromJson(json['campus']) : null,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'buildingId': buildingId,
-      'name': name,
-      'accessType': accessType,
-      'location': location,
-      'campus': campus?.toJson(),
-    };
-  }
-}
-
-class Venue {
-  final String venueId;
-  final Building? building;
-  late final String name;
-  final String? boards;
-  final bool ac;
-  final bool wifi;
-  final int dataProject;
-  final bool docCam;
-  final bool mic;
-  final bool windows;
-  final int capacity;
-  final bool available;
-
-  Venue({
-    required this.venueId,
-    this.building,
-    required this.name,
-    this.boards,
-    required this.ac,
-    required this.wifi,
-    required this.dataProject,
-    required this.docCam,
-    required this.mic,
-    required this.windows,
-    required this.capacity,
-    required this.available,
-  });
-
-  factory Venue.fromJson(Map<String, dynamic> json) {
-    print("Printing Venue From Json...");
-    print( json['name']);
-    print("Printing Venue Building...");
-    print(json['venueId']);
-    return Venue(
-      venueId: json['venueId'],
-      building: json['building'] != null ? Building.fromJson(json['building']) : null,
-      name: json['name'],
-      boards: json['boards'],
-      ac: json['ac'],
-      wifi: json['wifi'],
-      dataProject: json['dataProject'],
-      docCam: json['docCam'],
-      mic: json['mic'],
-      windows: json['windows'],
-      capacity: json['capacity'],
-      available: json['available'],
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'venueId': venueId,
-      'building': building?.toJson(),
-      'name': name,
-      'boards': boards,
-      'ac': ac,
-      'wifi': wifi,
-      'dataProject': dataProject,
-      'docCam': docCam,
-      'mic': mic,
-      'windows': windows,
-      'capacity': capacity,
-      'available': available,
-    };
-  }
-}
-
-
-
 class Event {
   late  String nameOfEvent;
-  // late final String dateAndTime;
-  late final String startDate;
-  late final Venue? venue;
+  late final String dateAndTime;
+  late  String location;
   List<String> imageUrls;
   String description;
   final String id;
@@ -254,35 +112,30 @@ class Event {
   late final bool isPrivate;
   final List<Attendee> attendees;
   final Metadata metadata;
-
-
   Event({
-
     required this.nameOfEvent,
-    this.venue,
+    required this.dateAndTime,
+    required this.location,
     required this.imageUrls,
     required this.description,
     required this.id,
     required this.hosts,
-    required this.startTime,
+   required this.startTime,
     required this.endTime,
     required this.maxAttendees,
     required this.isPrivate,
     required this.attendees,
-    required this.startDate,
+    required startDate,
     required this.metadata,
   });
 
   factory Event.fromJson(Map<String, dynamic> json) {
-    print("Printing Event fromJson...");
-    print( json['location']);
-    var eventVat ;
-    eventVat = Event(
+    return Event(
       nameOfEvent: json['title']?.toString() ?? '',
       startTime: json['startTime']?.toString() ?? '',
       endTime: json['endTime']?.toString() ?? '',
       maxAttendees: json['maxAttendees'] is int ? json['maxAttendees'] : 0,
-      venue: json['location'] != null ? Venue.fromJson(json['location']) : null,
+      location: json['location']?.toString() ?? '',
       isPrivate: json['isPrivate'] ?? false,
       imageUrls: (json.containsKey('eventMedia') && (json['eventMedia'] as List).isNotEmpty)
           ? List<String>.from(json['eventMedia'].map((media) => media?.toString() ?? ''))
@@ -295,7 +148,8 @@ class Event {
       attendees: (json.containsKey('attendees') && (json['attendees'] as List).isNotEmpty)
           ? List<Attendee>.from(json['attendees'].map((attendee) => Attendee.fromJson(attendee)))
           : [],
-      startDate: "CHANGE THIS IN THE FUTURE",
+      dateAndTime: json['startTime'],
+      startDate: null,
       metadata: json.containsKey('metadata') && json['metadata'] is Map<String, dynamic>
           ? Metadata.fromJson(json['metadata'])
           : Metadata(
@@ -304,8 +158,6 @@ class Event {
         sessions: [],
       ),
     );
-    print("AAAAAHHHHHH");
-    return eventVat;
   }
 
 
@@ -317,7 +169,7 @@ class Event {
       'startTime': startTime,
       'endTime': endTime,
       'maxAttendees': maxAttendees,
-      'location': venue?.toJson(),
+      'location': location,
       'isPrivate': isPrivate,
       'eventMedia': imageUrls,
       'description': description,
@@ -426,7 +278,7 @@ class _EventCardState extends State<EventCard> {
                     ),
                     Expanded(
                       child: Text(
-                        widget.event.venue?.name ?? 'No Venue',
+                        widget.event.location,
                         style: TextStyle(
                           fontSize: 14.0,
                           color: textColour,

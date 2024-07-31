@@ -287,16 +287,14 @@ class EventProvider with ChangeNotifier {
 
   }
 
-//modified here - check here
+
   Future<void> EditEventLocation(String id, String Location) async {
     try {
       List<Event> events = await _eventsHome;
       Event? event = events.firstWhere((event) => event.id == id);
-      if (event != null) {
-        event.venue?.name = Location ;
-        notifyListeners();
-      }
-
+      event.location = Location ;
+      notifyListeners();
+    
     } catch (e) {
       throw Exception('Failed to get event by ID: $e');
     }

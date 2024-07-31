@@ -285,7 +285,7 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
                       const SizedBox(width: 8.0),
                       Text(
                         // widget.event.location,
-                        _thisCurrentEvent.venue!.name,
+                        _thisCurrentEvent.location,
                         style: const TextStyle(fontSize: 16.0),
                       ),
                     ],

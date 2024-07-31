@@ -77,8 +77,7 @@ class _EventCardMState extends State<EventCard> {
                     ),
                     Expanded(
                       child: Text(
-                        //modified here
-                        widget.event.venue!.name,
+                        widget.event.location,
                         style: TextStyle(
                           fontSize: 14.0,
                           color: textColour,
