@@ -44,7 +44,7 @@ class EventController {
         return eventService.updateEvent(id, event)
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/remove/{id}")
     @PreAuthorize("hasAnyRole('HOST', 'ADMIN')")
     fun deleteEvent(@PathVariable id: UUID): ResponseEntity<ResponseDto> {
         return eventService.deleteEvent(id)

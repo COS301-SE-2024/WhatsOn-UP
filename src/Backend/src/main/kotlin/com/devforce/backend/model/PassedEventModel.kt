@@ -11,11 +11,11 @@ import java.util.*
 @Data
 @Builder
 @Entity
-@Table(name = "events")
+@Table(name = "passed_events")
 @NoArgsConstructor
 @AllArgsConstructor
 
-class EventModel {
+class PassedEventModel {
     @Id
     @Column(name = "event_id", columnDefinition = "UUID")
     var eventId: UUID? = null
@@ -36,6 +36,9 @@ class EventModel {
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private var createdAt: LocalDateTime = LocalDateTime.now()
+
+    @Column(name = "updated_at", nullable = false)
+    private var updatedAt: LocalDateTime = LocalDateTime.now()
 
     @OneToOne
     @JoinColumn(name = "venue_id")
@@ -89,8 +92,13 @@ class EventModel {
     @PrePersist
     fun prePersist() {
         createdAt = LocalDateTime.now()
+        updatedAt = LocalDateTime.now()
     }
 
+    @PreUpdate
+    fun preUpdate() {
+        updatedAt = LocalDateTime.now()
+    }
 
 
 }
