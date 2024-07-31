@@ -65,10 +65,145 @@ class Metadata {
   }
 }
 
+//HERE
+class Campus {
+  final String campusId;
+  final String name;
+  final String location;
+  final bool parking;
+
+  Campus({
+    required this.campusId,
+    required this.name,
+    required this.location,
+    required this.parking,
+  });
+
+  factory Campus.fromJson(Map<String, dynamic> json) {
+    return Campus(
+      campusId: json['campus_id'],
+      name: json['name'],
+      location: json['location'],
+      parking: json['parking'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'campus_id': campusId,
+      'name': name,
+      'location': location,
+      'parking': parking,
+    };
+  }
+}
+
+class Building {
+  final String buildingId;
+  final String name;
+  final String accessType;
+  final String location;
+  final Campus? campus;
+
+  Building({
+    required this.buildingId,
+    required this.name,
+    required this.accessType,
+    required this.location,
+    this.campus,
+  });
+
+  factory Building.fromJson(Map<String, dynamic> json) {
+    return Building(
+      buildingId: json['building_id'],
+      name: json['name'],
+      accessType: json['accessType'],
+      location: json['location'],
+      campus: json['campus'] != null ? Campus.fromJson(json['campus']) : null,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'building_id': buildingId,
+      'name': name,
+      'accessType': accessType,
+      'location': location,
+      'campus': campus?.toJson(),
+    };
+  }
+}
+
+class Venue {
+  final String venueId;
+  final Building? building;
+  final String name;
+  final String? boards;
+  final bool ac;
+  final bool wifi;
+  final int dataProject;
+  final bool docCam;
+  final bool mic;
+  final bool windows;
+  final int capacity;
+  final bool available;
+
+  Venue({
+    required this.venueId,
+    this.building,
+    required this.name,
+    this.boards,
+    required this.ac,
+    required this.wifi,
+    required this.dataProject,
+    required this.docCam,
+    required this.mic,
+    required this.windows,
+    required this.capacity,
+    required this.available,
+  });
+
+  factory Venue.fromJson(Map<String, dynamic> json) {
+    return Venue(
+      venueId: json['venue_id'],
+      building: json['building'] != null ? Building.fromJson(json['building']) : null,
+      name: json['name'],
+      boards: json['boards'],
+      ac: json['ac'],
+      wifi: json['wifi'],
+      dataProject: json['dataProject'],
+      docCam: json['docCam'],
+      mic: json['mic'],
+      windows: json['windows'],
+      capacity: json['capacity'],
+      available: json['available'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'venue_id': venueId,
+      'building': building?.toJson(),
+      'name': name,
+      'boards': boards,
+      'ac': ac,
+      'wifi': wifi,
+      'dataProject': dataProject,
+      'docCam': docCam,
+      'mic': mic,
+      'windows': windows,
+      'capacity': capacity,
+      'available': available,
+    };
+  }
+}
+
+
+
 class Event {
   late  String nameOfEvent;
   late final String dateAndTime;
-  late  String location;
+  final Venue? venue;
   List<String> imageUrls;
   String description;
   final String id;
@@ -82,7 +217,7 @@ class Event {
   Event({
     required this.nameOfEvent,
     required this.dateAndTime,
-    required this.location,
+    this.venue,
     required this.imageUrls,
     required this.description,
     required this.id,
@@ -102,7 +237,7 @@ class Event {
       startTime: json['startTime']?.toString() ?? '',
       endTime: json['endTime']?.toString() ?? '',
       maxAttendees: json['maxAttendees'] is int ? json['maxAttendees'] : 0,
-      location: json['location']?.toString() ?? '',
+      venue: json['venue'] != null ? Venue.fromJson(json['venue']) : null,
       isPrivate: json['isPrivate'] ?? false,
       imageUrls: (json.containsKey('eventMedia') && (json['eventMedia'] as List).isNotEmpty)
           ? List<String>.from(json['eventMedia'].map((media) => media?.toString() ?? ''))
@@ -136,7 +271,7 @@ class Event {
       'startTime': startTime,
       'endTime': endTime,
       'maxAttendees': maxAttendees,
-      'location': location,
+      'location': venue?.toJson(),
       'isPrivate': isPrivate,
       'eventMedia': imageUrls,
       'description': description,
@@ -246,7 +381,7 @@ class _EventCardState extends State<EventCard> {
                     ),
                     Expanded(
                       child: Text(
-                        widget.event.location,
+                        widget.event.venue?.name ?? 'No Venue',
                         style: TextStyle(
                           fontSize: 14.0,
                           color: textColour,
