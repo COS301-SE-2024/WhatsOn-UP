@@ -2,10 +2,9 @@ package com.devforce.backend.service
 
 import com.devforce.backend.dto.EventDto
 import com.devforce.backend.dto.ResponseDto
-import com.devforce.backend.repo.AvailableSlotsRepo
-import com.devforce.backend.repo.EventRepo
-import com.devforce.backend.repo.RoleRepo
-import com.devforce.backend.repo.UserRepo
+import com.devforce.backend.model.HostApplicationsModel
+import com.devforce.backend.model.Status
+import com.devforce.backend.repo.*
 import com.devforce.backend.security.CustomUser
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -26,6 +25,9 @@ class UserService {
 
     @Autowired
     lateinit var availableSlotsRepo: AvailableSlotsRepo
+
+    @Autowired
+    lateinit var hostApplicationsRepo: HostApplicationsRepo
 
 
     // To do: Implement function to save an event for the current user
@@ -200,6 +202,54 @@ class UserService {
 
         return ResponseEntity.ok(
             ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Account deleted successfully"))
+        )
+    }
+
+    fun applyForHost(howLong: Int?, proof: String): ResponseEntity<ResponseDto> {
+        val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
+
+        val hostApplication = HostApplicationsModel().apply {
+            this.user = user
+            this.status = Status.PENDING
+            if (howLong != null) {
+                this.howLong = howLong
+            }
+            this.proof = proof
+        }
+
+        hostApplicationsRepo.save(hostApplication)
+
+        return ResponseEntity.ok(
+            ResponseDto("success", System.currentTimeMillis(), hostApplication)
+        )
+    }
+
+    fun acknowledgeApplication(applicationId: UUID): ResponseEntity<ResponseDto> {
+        val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
+
+        val application = hostApplicationsRepo.findById(applicationId)
+        if (application.isEmpty) {
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Application not found"))
+        }
+        val applicationModel = application.get()
+        applicationModel.status = Status.ACKNOWLEDGED
+        applicationModel.expiryDateTime = Date(System.currentTimeMillis() + applicationModel.howLong * 24 * 60 * 60 * 1000)
+        hostApplicationsRepo.save(applicationModel)
+        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Application acknowledged successfully"))
+        )
+    }
+
+    fun disputeApplication(applicationId: UUID): ResponseEntity<ResponseDto> {
+        val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
+
+        val application = hostApplicationsRepo.findById(applicationId)
+        if (application.isEmpty) {
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Application not found"))
+        }
+        val applicationModel = application.get()
+        applicationModel.status = Status.DISPUTED
+        hostApplicationsRepo.save(applicationModel)
+        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Application disputed successfully"))
         )
     }
 
