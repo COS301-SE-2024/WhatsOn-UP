@@ -1,11 +1,9 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
-import 'package:firstapp/services/api.dart';
 import 'package:firstapp/pages/detailed_event_page.dart';
 import 'package:firstapp/widgets/event_card.dart';
 
@@ -82,8 +80,8 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
         'url': 'https://picsum.photos/200', // TODO: This still needs to change to the actual url of the image. Currently nothing is being returned in the eventMedia field
         'description': event['description'],
         'id': event['id'],
-        'hosts': (event.containsKey('hosts') && (event['hosts'] as List).isNotEmpty)
-            ? List<String>.from(event['hosts'].map((host) => host['fullName']))
+        'hosts': (event.containsKey('Hosts') && (event['Hosts'] as List).isNotEmpty)
+            ? List<Hosts>.from(event['Hosts'].map((host) => Hosts.fromJson(host)))
             : [],
         'attendees': (event.containsKey('attendees') &&
             (event['attendees'] as List).isNotEmpty)
@@ -105,7 +103,7 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
     Map<DateTime, List<Map<String, dynamic>>> groupedEvents = {};
 
 
-    events.forEach((event) {
+    for (var event in events) {
       DateTime date = DateTime.parse(event.startTime); // Assuming startTime is a DateTime string
       DateTime eventDay = DateTime(date.year, date.month, date.day);
 
@@ -125,11 +123,11 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
         'url': 'https://picsum.photos/200', // Placeholder URL, update as needed
         'description': event.description ?? '',
         'id': event.id,
-        'hosts': event.hosts != null ? List<String>.from(event.hosts!) : [],
-        'attendees': event.attendees != null ? List<Attendee>.from(event.attendees!) : [],
+        'hosts': event.hosts != null ? List<Hosts>.from(event.hosts) : [],
+        'attendees': event.attendees != null ? List<Attendee>.from(event.attendees) : [],
         'metadata': event.metadata.toJson(),
       });
-    });
+    }
 
     return groupedEvents;
   }
@@ -231,6 +229,7 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
                     ),
                   );
                 }
+                return null;
               },
             ),
             headerStyle: const HeaderStyle(

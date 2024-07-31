@@ -10,11 +10,11 @@ class NavBar extends StatelessWidget {
   final String userRole;
 
   const NavBar({
-    Key? key,
+    super.key,
     required this.selectedIndex,
     required this.onItemTapped,
     required this.userRole,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +36,7 @@ class NavBar extends StatelessWidget {
         icon: Icon(Icons.explore),
         label: 'Explore',
       ),
-      BottomNavigationBarItem(
+      const BottomNavigationBarItem(
         icon: Icon(Icons.more_vert),
         label: 'More',
       ),
@@ -65,21 +65,21 @@ class NavBar extends StatelessWidget {
     ];
     int adjustedIndex = selectedIndex.clamp(0, navBarItems.length - 1);
     List<PopupMenuEntry<int>> popupMenuItems = [
-      PopupMenuItem<int>(
+      const PopupMenuItem<int>(
         value: 5,
         child: ListTile(
           leading: Icon(Icons.settings),
           title: Text('Settings'),
         ),
       ),
-      PopupMenuItem<int>(
+      const PopupMenuItem<int>(
         value: 6,
         child: ListTile(
           leading: Icon(Icons.event),
           title: Text('Manage Events'),
         ),
       ),
-      PopupMenuItem<int>(
+      const PopupMenuItem<int>(
         value: 7,
         child: ListTile(
           leading: Icon(Icons.broadcast_on_home),
@@ -101,18 +101,18 @@ class NavBar extends StatelessWidget {
 
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => ManageEvents()),
+                    MaterialPageRoute(builder: (context) => const ManageEvents()),
                   );
                 } else if (result == 7) {
 
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => Broadcast()),
+                    MaterialPageRoute(builder: (context) => const Broadcast()),
                   );
                 }
               },
               itemBuilder: (BuildContext context) => popupMenuItems,
-              child: Icon(Icons.more_vert),
+              child: const Icon(Icons.more_vert),
             ),
             label: 'More',
           );

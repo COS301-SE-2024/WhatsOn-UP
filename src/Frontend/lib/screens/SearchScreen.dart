@@ -5,6 +5,8 @@ import 'package:firstapp/services/EventService.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SearchScreen extends StatefulWidget {
+  const SearchScreen({super.key});
+
   @override
   _SearchScreenState createState() => _SearchScreenState();
 }
@@ -75,11 +77,11 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Search Events'),
+        title: const Text('Search Events'),
         actions: [
           if (_searchResults.isNotEmpty)
             IconButton(
-              icon: Icon(Icons.close),
+              icon: const Icon(Icons.close),
               onPressed: _clearSearchResults,
             ),
         ],
@@ -90,10 +92,10 @@ class _SearchScreenState extends State<SearchScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              margin: EdgeInsets.only(top: 16.0, bottom: 16.0),
-              padding: EdgeInsets.all(8.0),
+              margin: const EdgeInsets.only(top: 16.0, bottom: 16.0),
+              padding: const EdgeInsets.all(8.0),
               height: 40,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 borderRadius: BorderRadius.all(
                   Radius.circular(50),
                 ),
@@ -101,11 +103,11 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
               child: Row(
                 children: [
-                  Icon(Icons.search),
-                  SizedBox(width: 8.0),
+                  const Icon(Icons.search),
+                  const SizedBox(width: 8.0),
                   Expanded(
                     child: TextField(
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         hintText: "Search for events",
                         border: InputBorder.none,
                       ),
@@ -128,7 +130,7 @@ class _SearchScreenState extends State<SearchScreen> {
             if (_showSearchTiles  && _categories.isNotEmpty)
               GridView.count(
                 shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 crossAxisCount: 2,
                 children: _categories.map((category) {
                   return SearchImageTile(
@@ -138,11 +140,11 @@ class _SearchScreenState extends State<SearchScreen> {
                   );
                 }).toList(),
               ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             _isLoading
-                ? Center(child: CircularProgressIndicator())
+                ? const Center(child: CircularProgressIndicator())
                 : _searchResults.isEmpty  && _categories.isEmpty
-                ? Center(
+                ? const Center(
               child: Text('No events found'),
             )
                 : Expanded(

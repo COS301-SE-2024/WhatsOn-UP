@@ -5,10 +5,62 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f15131b9-b573-48b6-91bd-623264e869e0" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/lib/pages/Promotion_Applications.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/lib/pages/Promotion_Processing.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/lib/pages/Promotion_form.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/lib/widgets/Users.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/lib/pages/Broadcast.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/lib/pages/Broadcast.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/lib/pages/Event_Attendance.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/lib/pages/Event_Attendance.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/lib/pages/allHome_events.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/lib/pages/allHome_events.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/lib/pages/allSaved_Events.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/lib/pages/allSaved_Events.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/lib/pages/application_event.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/lib/pages/application_event.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/lib/pages/attendee.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/lib/pages/attendee.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/lib/pages/calendar_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/lib/pages/calendar_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/lib/pages/data_search.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/lib/pages/data_search.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/lib/pages/detailed_event_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/lib/pages/detailed_event_page.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Frontend/lib/pages/editProfile_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/lib/pages/editProfile_page.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/storage-service/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/storage-service/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/lib/pages/edit_Event.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/lib/pages/edit_Event.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/lib/pages/google_signin.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/lib/pages/google_signin.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/lib/pages/home_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/lib/pages/home_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/lib/pages/manageEvents.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/lib/pages/manageEvents.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/lib/pages/profilePage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/lib/pages/profilePage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/lib/pages/rsvp_events_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/lib/pages/rsvp_events_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/lib/pages/searchbar.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/lib/pages/searchbar.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/lib/pages/settings_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/lib/pages/settings_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/lib/pages/supabase_Accountpage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/lib/pages/supabase_Accountpage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/lib/pages/supabase_Splashpage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/lib/pages/supabase_Splashpage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/lib/pages/supabase_forgot_password.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/lib/pages/supabase_forgot_password.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/lib/pages/supabase_login.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/lib/pages/supabase_login.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/lib/pages/supabase_resetPassword.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/lib/pages/supabase_resetPassword.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/lib/pages/supabase_signup.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/lib/pages/supabase_signup.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/lib/providers/events_providers.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/lib/providers/events_providers.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/lib/providers/user_provider.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/lib/providers/user_provider.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/lib/screens/FilterScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/lib/screens/FilterScreen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/lib/screens/SearchScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/lib/screens/SearchScreen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/lib/screens/splash_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/lib/screens/splash_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/lib/services/EventService.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/lib/services/EventService.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/lib/services/api.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/lib/services/api.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/lib/utils.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/lib/utils.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/lib/widgets/CustomSearchBar.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/lib/widgets/CustomSearchBar.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/lib/widgets/Eventcard_management.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/lib/widgets/Eventcard_management.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/lib/widgets/FilteredEventsScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/lib/widgets/FilteredEventsScreen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/lib/widgets/SearchImageTile.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/lib/widgets/SearchImageTile.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/lib/widgets/SearchTile.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/lib/widgets/SearchTile.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/lib/widgets/eventManagement_category.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/lib/widgets/eventManagement_category.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/lib/widgets/event_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/lib/widgets/event_card.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/lib/widgets/event_card_RSVP.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/lib/widgets/event_card_RSVP.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/lib/widgets/nav_bar.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/lib/widgets/nav_bar.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/pubspec.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/pubspec.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/test/Attendee_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/test/Attendee_test.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/test/Event-card-and-cancelation.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/test/Event-card-and-cancelation.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/test/ManageEvents_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/test/ManageEvents_test.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/test/Profile_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/test/Profile_test.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/test/edit_profile_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/test/edit_profile_test.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/test/event_provider_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/test/event_provider_test.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/test/eventmanagementCategory_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/test/eventmanagementCategory_test.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -89,7 +141,7 @@
     "ScreenRecorder.SavePath": "C:\\Users\\zethe",
     "Spring Boot.BackendApplication.executor": "Run",
     "android.gradle.sync.needed": "true",
-    "com.google.cloudcode.ide_session_index": "20240727_0007",
+    "com.google.cloudcode.ide_session_index": "20240731_0000",
     "dart.analysis.tool.window.visible": "false",
     "git-widget-placeholder": "feat/unitTesting",
     "kotlin-language-version-configured": "true",
@@ -254,6 +306,8 @@
       <workItem from="1722102764905" duration="658000" />
       <workItem from="1722103473429" duration="671000" />
       <workItem from="1722105635929" duration="781000" />
+      <workItem from="1722327184953" duration="18419000" />
+      <workItem from="1722430092039" duration="3725000" />
     </task>
     <servers />
   </component>

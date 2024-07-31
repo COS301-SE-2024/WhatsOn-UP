@@ -5,7 +5,7 @@ class SearchImageTile extends StatelessWidget {
   final String imageUrl;
   final Function(String) onTap;
 
-  SearchImageTile({
+  const SearchImageTile({super.key, 
     required this.title,
     required this.imageUrl,
     required this.onTap,
@@ -16,7 +16,7 @@ class SearchImageTile extends StatelessWidget {
     return GestureDetector(
       onTap: () => onTap(title),
       child: Container(
-        margin: EdgeInsets.all(8.0),
+        margin: const EdgeInsets.all(8.0),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12.0),
           image: DecorationImage(
@@ -26,7 +26,7 @@ class SearchImageTile extends StatelessWidget {
         ),
         child: Container(
           alignment: Alignment.bottomLeft,
-          padding: EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(8.0),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12.0),
             gradient: LinearGradient(
@@ -40,7 +40,7 @@ class SearchImageTile extends StatelessWidget {
           ),
           child: Text(
             title,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.white,
               fontSize: 16.0,
               fontWeight: FontWeight.bold,

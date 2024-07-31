@@ -1,17 +1,12 @@
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:mockito/mockito.dart';
 import 'package:mocktail_image_network/mocktail_image_network.dart';
 import 'package:provider/provider.dart';
 import 'package:firstapp/pages/editProfile_page.dart';
 import 'package:firstapp/providers/user_provider.dart';
-import 'package:firstapp/services/api.dart';
 import 'api_test.mocks.dart';
 import 'package:image/image.dart' as img;
-import 'package:supabase_flutter/supabase_flutter.dart';
 // import 'package:mocktail/mocktail.dart';
 void main() {
   group('EditprofilePage', () {
@@ -36,7 +31,7 @@ void main() {
     Widget createWidgetUnderTest() {
       return ChangeNotifierProvider<userProvider>(
         create: (_) => mockUserProvider,
-        child: MaterialApp(
+        child: const MaterialApp(
           home: EditprofilePage(),
         ),
       );

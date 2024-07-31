@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 class FilteredEventsScreen extends StatelessWidget {
   final List<dynamic> events;
 
-  FilteredEventsScreen({required this.events});
+  const FilteredEventsScreen({super.key, required this.events});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Filtered Events'),
+        title: const Text('Filtered Events'),
       ),
       body: events.isEmpty
-          ? Center(
+          ? const Center(
         child: Text('No events found'),
       )
           : ListView.builder(

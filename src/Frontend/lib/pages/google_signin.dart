@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'dart:convert';
 import 'dart:typed_data';
 import 'package:firstapp/services/api.dart';
 import 'package:firstapp/pages/home_page.dart';
@@ -144,10 +143,10 @@ class _GoogleSignInPageState extends State<GoogleSignInPage> {
         // } else {
         //   print('Invalid Base64 string: $profileImageBase64');
         // }
-        userP.profileImage = user.userMetadata?['avatar_url'];;
+        userP.profileImage = user.userMetadata?['avatar_url'];
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => HomePage()),
+          MaterialPageRoute(builder: (context) => const HomePage()),
         );
       }
     });

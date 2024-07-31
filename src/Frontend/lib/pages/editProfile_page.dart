@@ -4,9 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import '../main.dart';
- import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter/cupertino.dart';
 
 import 'package:firstapp/pages/profilePage.dart';
 
@@ -19,10 +16,10 @@ import '../providers/user_provider.dart';
 class EditprofilePage extends StatefulWidget {
 
 
-  EditprofilePage({
-    Key? key,
+  const EditprofilePage({
+    super.key,
 
-  }) : super(key: key);
+  });
 
   @override
   _EditprofilePageState createState() => _EditprofilePageState();
@@ -46,8 +43,8 @@ class _EditprofilePageState extends State<EditprofilePage> {
   Future<void> pickImage(ImageSource source) async {
     userProvider userP = Provider.of<userProvider>(context,listen: false);
     try {
-      final ImagePicker _imagePicker = ImagePicker();
-      final XFile? image = await _imagePicker.pickImage(source: ImageSource.gallery);
+      final ImagePicker imagePicker = ImagePicker();
+      final XFile? image = await imagePicker.pickImage(source: ImageSource.gallery);
 
       if (image != null) {
 
@@ -107,7 +104,7 @@ class _EditprofilePageState extends State<EditprofilePage> {
           },
           icon: const Icon(LineAwesomeIcons.angle_left_solid),
         ),
-        title: Text('Edit Profile'),
+        title: const Text('Edit Profile'),
       ),
       body:  _isLoading
           ? const Center(child:SpinKitPianoWave(
@@ -135,11 +132,11 @@ class _EditprofilePageState extends State<EditprofilePage> {
                     foregroundColor: Colors.black, backgroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
-                      side: BorderSide(color: Colors.grey, width: 1),
+                      side: const BorderSide(color: Colors.grey, width: 1),
                     ),
-                    padding: EdgeInsets.symmetric(vertical: 16),
+                    padding: const EdgeInsets.symmetric(vertical: 16),
                   ),
-                  child: Text(
+                  child: const Text(
                     'Save',
 
                   ),
@@ -153,7 +150,7 @@ class _EditprofilePageState extends State<EditprofilePage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ProfilePage(
+                        builder: (context) => const ProfilePage(
                           // userName: widget.userName,
                           // userEmail: widget.userEmail,
                           // userId: widget.userId,
@@ -167,11 +164,11 @@ class _EditprofilePageState extends State<EditprofilePage> {
                     foregroundColor: Colors.black, backgroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
-                      side: BorderSide(color: Colors.grey, width: 1),
+                      side: const BorderSide(color: Colors.grey, width: 1),
                     ),
-                    padding: EdgeInsets.symmetric(vertical: 16),
+                    padding: const EdgeInsets.symmetric(vertical: 16),
                   ),
-                  child: Text(
+                  child: const Text(
                     'Cancel',
 
                   ),
@@ -205,7 +202,7 @@ class _EditprofilePageState extends State<EditprofilePage> {
                     shape: BoxShape.circle,
                     image: DecorationImage(
                       fit: BoxFit.cover,
-                      image: MemoryImage(_image!),
+                      image: NetworkImage(userP.profileImage!),
                     ),
                   ),
                 )
@@ -230,12 +227,12 @@ class _EditprofilePageState extends State<EditprofilePage> {
           Positioned(
             bottom: 0,
             right: 0,
-            child: Container(
+            child: SizedBox(
               height: 40,
               width: 40,
               child: IconButton(
                   onPressed: selectImage,
-                  icon: Icon(Icons.add_a_photo),
+                  icon: const Icon(Icons.add_a_photo),
                   color: Colors.black),
             ),
           ),
@@ -269,7 +266,7 @@ class _EditprofilePageState extends State<EditprofilePage> {
           labelText: labelText,
           floatingLabelBehavior: FloatingLabelBehavior.always,
           hintText: labelText,
-          hintStyle: TextStyle(
+          hintStyle: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
             color: Colors.grey,
@@ -321,7 +318,7 @@ class _EditprofilePageState extends State<EditprofilePage> {
         email: adjustedEmail,
         password: adjustedPassword,
         userId: user1!.id,
-        profileImage: _image,
+        profileImage: userp.profileImage,
       );
 
       Api api = Api();
@@ -385,17 +382,17 @@ class _EditprofilePageState extends State<EditprofilePage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Success!'),
-          content: Text('Profile successfully updated.'),
+          title: const Text('Success!'),
+          content: const Text('Profile successfully updated.'),
           actions: <Widget>[
             TextButton(
-              child: Text('OK'),
+              child: const Text('OK'),
               onPressed: () {
                 Navigator.pop(context);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ProfilePage(),
+                    builder: (context) => const ProfilePage(),
                   ),
                 ); // Navigate to ProfilePage
               },
@@ -412,7 +409,8 @@ class User {
   final String email;
   final String password;
   final String userId;
-  Uint8List? profileImage;
+  String? profileImage;
+  String? userStatus;
 
   User({
     required this.name,

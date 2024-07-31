@@ -50,7 +50,7 @@ class _EventAttendanceState extends State<EventAttendance> {
             padding: const EdgeInsets.all(8.0),
             child: TextField(
               controller: searchController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Search by name',
                 prefixIcon: Icon(Icons.search),
               ),
@@ -58,7 +58,7 @@ class _EventAttendanceState extends State<EventAttendance> {
           ),
           Expanded(
             child: filteredAttendees.isEmpty
-                ? Center(
+                ? const Center(
               child: Text("No matching attendees found."),
             )
                 : ListView.builder(
@@ -70,7 +70,7 @@ class _EventAttendanceState extends State<EventAttendance> {
                   leading: CircleAvatar(
                     backgroundImage: filteredAttendees[index].profileImage.isNotEmpty
                         ? NetworkImage(filteredAttendees[index].profileImage)
-                        : AssetImage('assets/images/user.png'),
+                        : const AssetImage('assets/images/user.png'),
                     radius: 20,
                   ),
                   title: Center(

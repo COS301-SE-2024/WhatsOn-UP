@@ -172,7 +172,6 @@ import '../main.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:firstapp/pages/google_signin.dart';
 import 'package:firstapp/pages/home_page.dart';
-import 'dart:convert';
 import 'dart:typed_data';
 import 'package:firstapp/services/api.dart';
 
@@ -260,7 +259,7 @@ bool _obscurePassword=true;
       width: mediaSize.width,
       height: mediaSize.height * 0.7,
       padding: const EdgeInsets.all(16.0),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(30.0),
@@ -352,7 +351,7 @@ bool _obscurePassword=true;
               foregroundColor: Colors.black, padding: const EdgeInsets.symmetric(vertical: 10.0),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20.0),
-                side: BorderSide(color: Colors.black),
+                side: const BorderSide(color: Colors.black),
               ), // Text color
               backgroundColor: Colors.transparent,
             ),
@@ -372,11 +371,11 @@ bool _obscurePassword=true;
                 foregroundColor: Colors.black, padding: const EdgeInsets.symmetric(vertical: 10.0),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20.0),
-                  side: BorderSide(color: Colors.black),
+                  side: const BorderSide(color: Colors.black),
                 ), // Text color
                 backgroundColor: Colors.transparent,
               ),
-              child: Text('Sign Up')
+              child: const Text('Sign Up')
           ),
           const SizedBox(height: 10),
           TextButton(
@@ -387,7 +386,7 @@ bool _obscurePassword=true;
                   MaterialPageRoute(builder: (context) => const ForgotPass()),
                 );
 
-              }, child: Text('I forgot my password')
+              }, child: const Text('I forgot my password')
           ),
           const SizedBox(height: 20),
           Row(
@@ -430,12 +429,12 @@ bool _obscurePassword=true;
         print('JWT Token: ${session.accessToken}');
       }
 
-      eventP.fetchfortheFirstTimeRsvp(user!.id);
+      eventP.fetchfortheFirstTimeRsvp(user.id);
 
     Api api = Api();
     // final List<Event> events=await api.getAllEvents();
     //eventP.addEventsHome(events);
-    api. getUser(user!.id).then((response){
+    api. getUser(user.id).then((response){
       if (response['error'] != null) {
 
         print('An error occurred: ${response['error']}');
@@ -474,7 +473,7 @@ bool _obscurePassword=true;
 
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => HomePage(
+          MaterialPageRoute(builder: (context) => const HomePage(
 
           )),
         );

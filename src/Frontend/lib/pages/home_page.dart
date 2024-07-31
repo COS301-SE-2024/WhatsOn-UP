@@ -6,7 +6,6 @@ import 'package:firstapp/pages/calendar_page.dart';
 import 'package:firstapp/pages/explore_page.dart';
 import 'package:firstapp/pages/settings_page.dart';
 import 'package:firstapp/widgets/nav_bar.dart';
-import 'package:flutter/cupertino.dart';
 
 import 'package:firstapp/pages/profilePage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -26,9 +25,9 @@ import 'allHome_events.dart';
 class HomePage extends StatefulWidget {
 
   const HomePage({
-    Key? key,
+    super.key,
 
-  }) : super(key: key);
+  });
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -69,20 +68,20 @@ const String ADMIN='ADMIN';
       ),
       floatingActionButton: (userP.role== HOST || userP.role == ADMIN)
       ? Padding(
-          padding: EdgeInsets.only(right: 15, bottom: 70),
+          padding: const EdgeInsets.only(right: 15, bottom: 70),
           child: Align(
             alignment: Alignment.bottomRight,
             child: FloatingActionButton(
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => ApplicationEvent(
+                  MaterialPageRoute(builder: (context) => const ApplicationEvent(
 
                   )),
                 );
               },
-              child: Icon(Icons.add),
               backgroundColor: Theme.of(context).primaryColor,
+              child: const Icon(Icons.add),
             ),
           ),
         ) : null,
@@ -102,9 +101,9 @@ const String ADMIN='ADMIN';
       case 3:
         return const ExplorePage();
       case 4:
-        return SettingsPage();
+        return const SettingsPage();
       case 5:
-        return  ManageEvents();
+        return  const ManageEvents();
 
       case 6:
         return const Broadcast();
@@ -129,7 +128,7 @@ const String ADMIN='ADMIN';
       future: eventP.eventsHome,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: SpinKitPianoWave(
+          return const Center(child: SpinKitPianoWave(
             color:  Color.fromARGB(255, 149, 137, 74),
             size: 50.0,
           ));
@@ -140,7 +139,7 @@ const String ADMIN='ADMIN';
 
           // Add check to ensure events list is not empty
           if (events.isEmpty) {
-            return Center(child: Text('No events found.'));
+            return const Center(child: Text('No events found.'));
           }
 
           return SingleChildScrollView(
@@ -156,7 +155,7 @@ const String ADMIN='ADMIN';
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => ProfilePage(
+                              builder: (context) => const ProfilePage(
 
                               ),
                             ),
@@ -174,13 +173,13 @@ const String ADMIN='ADMIN';
                     ),
                     Text(
                       'Welcome, ${userP.Fullname}',
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontSize: 24.0,
                           fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
-                SizedBox(height: 20.0),
+                const SizedBox(height: 20.0),
 
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -201,7 +200,7 @@ const String ADMIN='ADMIN';
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => SearchScreen(),
+                                    builder: (context) => const SearchScreen(),
                                   ),
                                 );
                               },
@@ -210,7 +209,7 @@ const String ADMIN='ADMIN';
                             ),
                           ),
                         ),
-                        SizedBox(width: 35.0),
+                        const SizedBox(width: 35.0),
                         SizedBox(
                           width: MediaQuery.of(context).size.width * 0.27,
                           child: Container(
@@ -224,7 +223,7 @@ const String ADMIN='ADMIN';
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => FilterScreen(),
+                                    builder: (context) => const FilterScreen(),
                                   ),
                                 );
                               },
@@ -237,25 +236,25 @@ const String ADMIN='ADMIN';
                     ),
                   ),
                 ),
-                SizedBox(height: 20.0),
+                const SizedBox(height: 20.0),
                  Padding(
-                  padding: EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.all(16.0),
                   child: Row(children: [
-                    Text(
+                    const Text(
                       'Explore More',
                       style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                     ),
-                    Spacer(),
+                    const Spacer(),
                     TextButton(
                       onPressed: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => AllhomeEvents(),
+                            builder: (context) => const AllhomeEvents(),
                           ),
                         );
                       },
-                      child: Text(
+                      child: const Text(
                         'See more',
                         style: TextStyle(
                           fontSize: 16.0,
@@ -286,27 +285,27 @@ const String ADMIN='ADMIN';
                     },
                   ),
                 ),
-                SizedBox(height: 20.0),
+                const SizedBox(height: 20.0),
                  Padding(
-                  padding: EdgeInsets.all(10.0),
+                  padding: const EdgeInsets.all(10.0),
                   child: Row(
                     children: [
-                      Text(
+                      const Text(
                         'Saved Events',
                         style: TextStyle(
                             fontSize: 18.0, fontWeight: FontWeight.bold),
                       ),
-                      Spacer(),
+                      const Spacer(),
                       TextButton(
                         onPressed: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => AllsavedEvents(),
+                              builder: (context) => const AllsavedEvents(),
                             ),
                           );
                         },
-                        child: Text(
+                        child: const Text(
                           'See more',
                           style: TextStyle(
                             fontSize: 16.0,
@@ -339,7 +338,7 @@ const String ADMIN='ADMIN';
             ),
           );
         } else {
-          return Center(child: Text('No events found.'));
+          return const Center(child: Text('No events found.'));
         }
       },
     );

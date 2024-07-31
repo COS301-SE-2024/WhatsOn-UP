@@ -93,7 +93,7 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
       width: mediaSize.width,
       height: mediaSize.height * 0.6,
       padding: const EdgeInsets.all(16.0),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(30.0),
@@ -163,7 +163,7 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
                 ));
               } catch (error) {
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text('Error occurred, please try again'),
+                  content: const Text('Error occurred, please try again'),
                   backgroundColor: Theme.of(context).colorScheme.error,
                 ));
               }
@@ -172,7 +172,7 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
               foregroundColor: Colors.black, padding: const EdgeInsets.symmetric(vertical: 10.0),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20.0),
-                side: BorderSide(color: Colors.black),
+                side: const BorderSide(color: Colors.black),
               ), // Text color
               backgroundColor: Colors.transparent,
             ),
@@ -225,7 +225,7 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
 
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => HomePage(
+            MaterialPageRoute(builder: (context) => const HomePage(
 
             )),
           );

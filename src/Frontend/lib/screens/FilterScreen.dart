@@ -4,6 +4,8 @@ import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 
 
 class FilterScreen extends StatefulWidget {
+  const FilterScreen({super.key});
+
   @override
   _FilterScreenState createState() => _FilterScreenState();
 }
@@ -23,7 +25,7 @@ class _FilterScreenState extends State<FilterScreen> with SingleTickerProviderSt
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(vsync: this, duration: Duration(milliseconds: 500));
+    _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 500));
 
     _scaleAnimation = Tween<double>(begin: 1.0, end: 1.2).animate(
       CurvedAnimation(parent: _controller, curve: Curves.elasticInOut),
@@ -40,7 +42,7 @@ class _FilterScreenState extends State<FilterScreen> with SingleTickerProviderSt
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Event Filter'),
+        title: const Text('Event Filter'),
       ),
       body: SafeArea(
         child: Column(
@@ -60,17 +62,17 @@ class _FilterScreenState extends State<FilterScreen> with SingleTickerProviderSt
                 selectedEventType = value;
               });
             }),
-            Spacer(),
+            const Spacer(),
             Center(
             child:Padding(
               padding: const EdgeInsets.all(16.0),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(foregroundColor: Colors.white, backgroundColor: Colors.pink[300], ),
+                onPressed: _filterEvents,
                 child: Text(
                   "Filter Events",
                   style: whiteTextTheme,
                 ),
-                onPressed: _filterEvents,
               ),
             ),
             ),
@@ -108,13 +110,13 @@ class _FilterScreenState extends State<FilterScreen> with SingleTickerProviderSt
                   });
                 },
                 child: AnimatedContainer(
-                  duration: Duration(milliseconds: 300),
+                  duration: const Duration(milliseconds: 300),
                   curve: Curves.easeInOut,
                   decoration: BoxDecoration(
                     color: isSelected ? _colorAnimation.value : Colors.grey[200],
                     borderRadius: BorderRadius.circular(30.0),
                   ),
-                  padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                   child: Stack(
                     alignment: Alignment.center,
                     children: [
@@ -122,9 +124,9 @@ class _FilterScreenState extends State<FilterScreen> with SingleTickerProviderSt
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           isSelected
-                              ? Icon(Icons.check_circle, color: Colors.white, size: 20.0)
-                              : SizedBox.shrink(),
-                          SizedBox(width: 8.0), //  space between icon and text
+                              ? const Icon(Icons.check_circle, color: Colors.white, size: 20.0)
+                              : const SizedBox.shrink(),
+                          const SizedBox(width: 8.0), //  space between icon and text
                           Text(
                             option,
                             style: TextStyle(
@@ -154,7 +156,7 @@ class _FilterScreenState extends State<FilterScreen> with SingleTickerProviderSt
                               }
                             });
                           },
-                          child: SizedBox(),
+                          child: const SizedBox(),
                         ),
                       ),
                     ],
@@ -183,15 +185,12 @@ class _FilterScreenState extends State<FilterScreen> with SingleTickerProviderSt
       case "Today":
         startDate = now.millisecondsSinceEpoch;
         endDate = now.millisecondsSinceEpoch;
-        break;
       case "Last week":
-        startDate = now.subtract(Duration(days: 7)).millisecondsSinceEpoch;
+        startDate = now.subtract(const Duration(days: 7)).millisecondsSinceEpoch;
         endDate = now.millisecondsSinceEpoch;
-        break;
       case "Next week":
         startDate = now.millisecondsSinceEpoch;
-        endDate = now.add(Duration(days: 7)).millisecondsSinceEpoch;
-        break;
+        endDate = now.add(const Duration(days: 7)).millisecondsSinceEpoch;
       default:
       //  TODO
     }
@@ -205,27 +204,21 @@ class _FilterScreenState extends State<FilterScreen> with SingleTickerProviderSt
       case "0 - 50":
         minCapacity = 0;
         maxCapacity = 50;
-        break;
       case "50 - 100":
         minCapacity = 50;
         maxCapacity = 100;
-        break;
       case "100 - 200":
         minCapacity = 100;
         maxCapacity = 200;
-        break;
       case "200 - 300":
         minCapacity = 200;
         maxCapacity = 300;
-        break;
       case "300 - 400":
         minCapacity = 300;
         maxCapacity = 400;
-        break;
       case "400 - 500":
         minCapacity = 400;
         maxCapacity = 500;
-        break;
       default:
       // TODO
     }
@@ -241,7 +234,7 @@ class _FilterScreenState extends State<FilterScreen> with SingleTickerProviderSt
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text("Filtered Events"),
+          title: const Text("Filtered Events"),
           content: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -253,7 +246,7 @@ class _FilterScreenState extends State<FilterScreen> with SingleTickerProviderSt
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Close'),
+              child: const Text('Close'),
             ),
           ],
         ),

@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 // import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'dart:convert';
 import 'dart:typed_data';
 import 'package:firstapp/widgets/event_card.dart';
-import 'package:firstapp/main.dart';
+
+import '../pages/editProfile_page.dart';
 class Api {
   // Singleton instance
   static final Api _instance = Api._internal();
@@ -24,7 +24,7 @@ class Api {
 
   // Method to log in the user and store JWT token
   Future<Map<String, dynamic>> loginUser(String email, String password) async {
-    final String _loginUrl = 'http://$domain:8080/api/auth/login';
+    const String loginUrl = 'http://$domain:8080/api/auth/login';
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -35,7 +35,7 @@ class Api {
     });
 
     try {
-      var response = await http.post(Uri.parse(_loginUrl), headers: headers, body: body);
+      var response = await http.post(Uri.parse(loginUrl), headers: headers, body: body);
 
       if (response.statusCode == 200) {
         var responseBody = jsonDecode(response.body)['data'];
@@ -60,14 +60,14 @@ class Api {
     try {
 
 
-      final String _userUrl = 'http://$domain:8080/api/auth/get_user';
+      const String userUrl = 'http://$domain:8080/api/auth/get_user';
       var headers = {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
         'Authorization': 'Bearer $jwtKey',
       };
 
-      var response = await http.get(Uri.parse(_userUrl), headers: headers);
+      var response = await http.get(Uri.parse(userUrl), headers: headers);
 
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
@@ -81,11 +81,11 @@ class Api {
   }
 
   Future<List<Event>> getAllEvents() async {
-  final _rsvpEventsURL = 'http://$domain:8080/api/events/get_all';
+  const rsvpEventsURL = 'http://$domain:8080/api/events/get_all';
 
 
   try {
-    var response = await http.get(Uri.parse(_rsvpEventsURL),);
+    var response = await http.get(Uri.parse(rsvpEventsURL),);
 
     if (response.statusCode == 200) {
       // Parse the JSON response
@@ -104,7 +104,7 @@ class Api {
   }
 }
   Future<List<Event>> getAllSavedEvents(String userId) async {
-    final _savedEventsURL = 'http://$domain:8080/api/events/get_saved_events';
+    const savedEventsURL = 'http://$domain:8080/api/events/get_saved_events';
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -112,7 +112,7 @@ class Api {
     };
 
     try {
-      var response = await http.get(Uri.parse(_savedEventsURL),headers: headers,);
+      var response = await http.get(Uri.parse(savedEventsURL),headers: headers,);
 
       if (response.statusCode == 200) {
 
@@ -134,14 +134,14 @@ class Api {
   Future<List<dynamic>> getRSVPEvents(String userId) async {
 
     try {
-      final String _rsvpEventsURL = 'http://localhost:8080/api/user/get_rspv_events';
+      const String rsvpEventsURL = 'http://localhost:8080/api/user/get_rspv_events';
       var headers = {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
         'Authorization': 'Bearer $userId',
       };
 
-      var response = await http.get(Uri.parse(_rsvpEventsURL), headers: headers);
+      var response = await http.get(Uri.parse(rsvpEventsURL), headers: headers);
 
       if (response.statusCode == 200) {
 
@@ -229,7 +229,7 @@ class Api {
     List<String>? media,
     required String userId,
   }) async {
-    final String _createEventUrl = 'http://localhost:8080/api/events/create';
+    const String createEventUrl = 'http://localhost:8080/api/events/create';
 
     var headers = {
       'Content-Type': 'application/json',
@@ -244,13 +244,13 @@ class Api {
       'endDate': endDate.toIso8601String(),
       'location': location,
       'maxParticipants': maxParticipants,
-      'metadata': metadata != null ? jsonEncode(metadata) : null,
+      'metadata': metadata,
       'isPrivate': isPrivate,
       'media': media,
     });
 
     try {
-      var response = await http.post(Uri.parse(_createEventUrl), headers: headers, body: body);
+      var response = await http.post(Uri.parse(createEventUrl), headers: headers, body: body);
 
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
@@ -263,9 +263,35 @@ class Api {
     }
   }
 
+  Future<Map<String, dynamic>> postNotifyUser({required String userId, required String message}) async {
+    const String notifyUserUrl = '';
 
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $userId',
+    };
+
+    var body = jsonEncode({
+      'userId': userId,
+      'message': message,
+    });
+
+    try {
+      var response = await http.post(Uri.parse(notifyUserUrl), headers: headers, body: body);
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        throw Exception(jsonDecode(response.body));
+      }
+    } catch (e) {
+
+      throw Exception(e.toString());
+    }
+  }
   Future<Map<String, dynamic>> rsvpEvent(String eventId, String UserId) async {
-    final String _rsvpEventUrl = 'http://localhost:8080/api/user/rspv_event/$eventId';
+    final String rsvpEventUrl = 'http://localhost:8080/api/user/rspv_event/$eventId';
     
     var headers = {
       'Content-Type': 'application/json',
@@ -274,7 +300,7 @@ class Api {
     };
 
     try {
-      var response = await http.put(Uri.parse(_rsvpEventUrl), headers: headers);
+      var response = await http.put(Uri.parse(rsvpEventUrl), headers: headers);
 
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
@@ -288,8 +314,24 @@ class Api {
 
 
   }
+  Future<List<User>> getGeneralusersToHost() async {
+    const String generalEventsURL = '';
+
+    try {
+      var response = await http.get(Uri.parse(generalEventsURL));
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body)['data'];
+      } else {
+        throw Exception('Failed to load users');
+      }
+    } catch (e) {
+
+      throw Exception(e.toString());
+    }
+  }
   Future<Map<String, dynamic>> DeletersvpEvent(String eventId, String UserId) async {
-    final String _rsvpEventUrl = 'http://localhost:8080/api/user/delete_rspv_event/$eventId';
+    final String rsvpEventUrl = 'http://localhost:8080/api/user/delete_rspv_event/$eventId';
 
     var headers = {
       'Content-Type': 'application/json',
@@ -298,7 +340,7 @@ class Api {
     };
 
     try {
-      var response = await http.delete(Uri.parse(_rsvpEventUrl), headers: headers);
+      var response = await http.delete(Uri.parse(rsvpEventUrl), headers: headers);
 
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
@@ -369,7 +411,7 @@ class Api {
 
    }
   Future<Map<String, dynamic>> getUser(String userid) async {
-    final String _userUrl = 'http://$domain:8080/api/user/get_user';
+    const String userUrl = 'http://$domain:8080/api/user/get_user';
 
     //
     //   // Define the headers and body for login request
@@ -382,7 +424,7 @@ class Api {
 
     try {
 
-      var response = await http.get(Uri.parse(_userUrl), headers: headers);
+      var response = await http.get(Uri.parse(userUrl), headers: headers);
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
 
@@ -413,7 +455,7 @@ class Api {
     List<String>? media,
 
   })async {
-    final String _userUrl = 'http://$domain:8080/api/events/update/$eventId';
+    final String userUrl = 'http://$domain:8080/api/events/update/$eventId';
 
     var headers = {
       'Content-Type': 'application/json',
@@ -433,7 +475,7 @@ class Api {
 
     try {
 
-      var response = await http.put(Uri.parse(_userUrl), headers: headers,body: body);
+      var response = await http.put(Uri.parse(userUrl), headers: headers,body: body);
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
 

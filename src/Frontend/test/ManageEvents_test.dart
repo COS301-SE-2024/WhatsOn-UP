@@ -1,4 +1,5 @@
 
+import 'package:firstapp/pages/Promotion_Applications.dart';
 import 'package:firstapp/pages/application_event.dart';
 import 'package:firstapp/pages/attendee.dart';
 import 'package:firstapp/providers/events_providers.dart';
@@ -204,7 +205,7 @@ void main() {
             ChangeNotifierProvider<EventProvider>(create: (_) => mockEventProvider),
             ChangeNotifierProvider<userProvider>(create: (_) => mockUserProvider),
           ],
-          child: MaterialApp(
+          child: const MaterialApp(
             home: ManageEvents(),
           ),
         ),
@@ -216,7 +217,8 @@ void main() {
       expect(find.text('Past Events'), findsOneWidget);
       expect(find.text('Create Event'), findsOneWidget);
       expect(find.text('Attendees for All Events'), findsOneWidget);
-      expect(find.byIcon(Icons.arrow_forward), findsNWidgets(4));
+      expect(find.text('Event Applications'), findsOneWidget);
+      expect(find.byIcon(Icons.arrow_forward), findsNWidgets(6));
     });
 
     testWidgets('Renders ManageEvents correctly for non-ADMIN role', (WidgetTester tester) async {
@@ -228,7 +230,7 @@ void main() {
             ChangeNotifierProvider<EventProvider>(create: (_) => mockEventProvider),
             ChangeNotifierProvider<userProvider>(create: (_) => mockUserProvider),
           ],
-          child: MaterialApp(
+          child: const MaterialApp(
             home: ManageEvents(),
           ),
         ),
@@ -239,6 +241,7 @@ void main() {
       expect(find.text('Past Events'), findsOneWidget);
       expect(find.text('Create Event'), findsOneWidget);
       expect(find.text('My Attendees'), findsOneWidget);
+      expect(find.byIcon(Icons.arrow_forward), findsNWidgets(5));
     });
 
     testWidgets('Navigates to EventManagementCategory when All Events is tapped', (WidgetTester tester) async {
@@ -251,7 +254,7 @@ void main() {
             ChangeNotifierProvider<EventProvider>(create: (_) => mockEventProvider),
             ChangeNotifierProvider<userProvider>(create: (_) => mockUserProvider),
           ],
-          child: MaterialApp(
+          child: const MaterialApp(
             home: ManageEvents(),
           ),
         ),
@@ -273,7 +276,7 @@ void main() {
             ChangeNotifierProvider<EventProvider>(create: (_) => mockEventProvider),
             ChangeNotifierProvider<userProvider>(create: (_) => mockUserProvider),
           ],
-          child: MaterialApp(
+          child: const MaterialApp(
             home: ManageEvents(),
           ),
         ),
@@ -284,6 +287,26 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.byType(ApplicationEvent), findsOneWidget);
     });
+    testWidgets('Navigates to General user applications page when Event Applications is tapped', (WidgetTester tester) async {
+      when(mockUserProvider.role).thenReturn('ADMIN');
+      await tester.pumpWidget(
+        MultiProvider(
+          providers: [
+
+            ChangeNotifierProvider<EventProvider>(create: (_) => mockEventProvider),
+            ChangeNotifierProvider<userProvider>(create: (_) => mockUserProvider),
+          ],
+          child: const MaterialApp(
+            home: ManageEvents(),
+          ),
+        ),
+      );
+
+
+      await tester.tap(find.text('Event Applications'));
+      await tester.pumpAndSettle();
+      expect(find.byType(Generaleventapplications), findsOneWidget);
+    });
     testWidgets('Navigates to Attendee when Attendee is tapped when the user is an ADMIN', (WidgetTester tester) async {
       when(mockUserProvider.role).thenReturn('ADMIN');
       await tester.pumpWidget(
@@ -293,7 +316,7 @@ void main() {
             ChangeNotifierProvider<EventProvider>(create: (_) => mockEventProvider),
             ChangeNotifierProvider<userProvider>(create: (_) => mockUserProvider),
           ],
-          child: MaterialApp(
+          child: const MaterialApp(
             home: ManageEvents(),
           ),
         ),
@@ -315,7 +338,7 @@ void main() {
             ChangeNotifierProvider<EventProvider>(create: (_) => mockEventProvider),
             ChangeNotifierProvider<userProvider>(create: (_) => mockUserProvider),
           ],
-          child: MaterialApp(
+          child: const MaterialApp(
             home: ManageEvents(),
           ),
         ),
@@ -336,7 +359,7 @@ testWidgets('setLoading method updates _isLoading state', (WidgetTester tester) 
             ChangeNotifierProvider<EventProvider>(create: (_) => mockEventProvider),
             ChangeNotifierProvider<userProvider>(create: (_) => mockUserProvider),
           ],
-          child: MaterialApp(
+          child: const MaterialApp(
             home: ManageEvents(),
           ),
         ),

@@ -1,16 +1,12 @@
-import 'package:firstapp/pages/home_page.dart';
 import 'package:flutter/material.dart';
-import 'package:firstapp/pages/profilePage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'dart:typed_data';
 import 'package:image_picker/image_picker.dart';
 import 'package:firstapp/widgets/theme_manager.dart';
 import 'package:firstapp/services/api.dart';
 import 'package:provider/provider.dart';
 import '../main.dart';
 import '../providers/events_providers.dart';
-import '../providers/user_provider.dart';
 import '../widgets/event_card.dart';
 
 class EditEvent extends StatefulWidget {
@@ -102,7 +98,7 @@ class _EditEventState extends State<EditEvent> {
         title: const Text('Update Event'),
       ),
       body:  isLoading
-          ? Center(
+          ? const Center(
         child: SpinKitPianoWave(
           color: Color.fromARGB(255, 149, 137, 74),
           size: 50.0,
@@ -176,9 +172,9 @@ class _EditEventState extends State<EditEvent> {
                       backgroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
-                        side: BorderSide(color: Colors.grey, width: 1),
+                        side: const BorderSide(color: Colors.grey, width: 1),
                       ),
-                      padding: EdgeInsets.symmetric(vertical: 16),
+                      padding: const EdgeInsets.symmetric(vertical: 16),
                     ),
                     child: const Text('Submit Changes'),
                   ),
@@ -302,18 +298,16 @@ class _EditEventState extends State<EditEvent> {
         const SizedBox(height: 10),
         ElevatedButton(
           onPressed: () async {
-            final List<XFile>? pickedFiles = await _picker.pickMultiImage();
-            if (pickedFiles != null) {
-              setState(() {
-                selectedImages = pickedFiles;
-              });
-            }
-          },
+            final List<XFile> pickedFiles = await _picker.pickMultiImage();
+            setState(() {
+              selectedImages = pickedFiles;
+            });
+                    },
           style: ElevatedButton.styleFrom(
             foregroundColor: Colors.black, backgroundColor: Colors.white,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),
-              side: BorderSide(color: Colors.grey, width: 1),
+              side: const BorderSide(color: Colors.grey, width: 1),
             ),
             padding: const EdgeInsets.symmetric(
                 horizontal: 16.0, vertical: 7.0),

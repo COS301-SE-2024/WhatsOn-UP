@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'dart:typed_data';
 import 'package:firstapp/widgets/event_card.dart';
 //import 'api.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';

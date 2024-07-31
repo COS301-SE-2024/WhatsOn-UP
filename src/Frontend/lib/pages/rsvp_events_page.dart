@@ -1,10 +1,9 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firstapp/widgets/event_card_RSVP.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class RsvpEventsPage extends StatefulWidget {
-  const RsvpEventsPage({Key? key}) : super(key: key);
+  const RsvpEventsPage({super.key});
 
   @override
   _RsvpEventsPageState createState() => _RsvpEventsPageState();
@@ -26,7 +25,7 @@ class _RsvpEventsPageState extends State<RsvpEventsPage> {
     setState(() {
       _isLoading = true;
     });
-    Future.delayed(Duration(seconds: 1), () {
+    Future.delayed(const Duration(seconds: 1), () {
       setState(() {
         events.removeWhere((event) =>
         event.nameOfEvent == nameOfEvent && event.imageUrl == imageUrl);

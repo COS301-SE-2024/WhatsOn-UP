@@ -73,8 +73,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:firstapp/widgets/event_card.dart';
-import 'package:supabase_auth_ui/supabase_auth_ui.dart';
-import '../main.dart';
 import '../services/api.dart';
 
 class EventProvider with ChangeNotifier {
@@ -86,9 +84,10 @@ class EventProvider with ChangeNotifier {
 
   late Future<List<Event>> _eventsHome;
   late Future<List<Event>> _eventsRsvp;
+
   //late Future<List<Event>> _eventsSaved;
   // List<Event> _eventsRsvp = [];
-  List<Event> _eventsSaved = [];
+  final List<Event> _eventsSaved = [];
 
   // EventProvider() {
   //   _eventsHome = _fetchEventsHome();
@@ -106,6 +105,7 @@ class EventProvider with ChangeNotifier {
       throw Exception('Failed to refresh events: $e');
     }
   }
+
   Future<void> refreshRSVPEvents(String userId) async {
     try {
       _eventsRsvp = _fetchEventsRsvp(userId);
@@ -121,11 +121,12 @@ class EventProvider with ChangeNotifier {
       throw Exception('Failed to fetch home events: $e');
     }
   }
+
   Future<List<Event>> _fetchEventsRsvp(String userId) async {
 
     try {
       final response= await api.getRSVPEvents(userId);
-      List<Event> events = (response as List)
+      List<Event> events = (response)
           .map((eventData) => Event.fromJson(eventData))
           .toList();
 
@@ -154,6 +155,7 @@ class EventProvider with ChangeNotifier {
      }
    }
 
+
   // Future<List<Event>> get eventsSaved async {
   //   try {
   //     return await _eventsSaved; // Return the awaited _eventsHome future
@@ -163,6 +165,7 @@ class EventProvider with ChangeNotifier {
   // }
 
   // List<Event> get eventsRsvp => _eventsRsvp;
+
   List<Event> get eventsSaved => _eventsSaved;
 
   // void addEventHome(Event event) {
@@ -265,13 +268,9 @@ class EventProvider with ChangeNotifier {
     try {
       List<Event> events = await _eventsHome;
       Event? event = events.firstWhere((event) => event.id == id);
-      if (event != null) {
-        event.nameOfEvent = eventName;
-        notifyListeners();
-      } else {
-        throw Exception('Event with ID $id not found');
-      }
-    } catch (e) {
+      event.nameOfEvent = eventName;
+      notifyListeners();
+        } catch (e) {
       throw Exception('Failed to edit event name: $e');
     }
   }
@@ -293,11 +292,9 @@ class EventProvider with ChangeNotifier {
     try {
       List<Event> events = await _eventsHome;
       Event? event = events.firstWhere((event) => event.id == id);
-      if (event != null) {
-        event.location = Location ;
-        notifyListeners();
-      }
-
+      event.location = Location ;
+      notifyListeners();
+    
     } catch (e) {
       throw Exception('Failed to get event by ID: $e');
     }
@@ -306,11 +303,9 @@ class EventProvider with ChangeNotifier {
     try {
       List<Event> events = await _eventsHome;
       Event? event = events.firstWhere((event) => event.id == id);
-      if (event != null) {
-        event.maxAttendees = maxParticipants ;
-        notifyListeners();
-      }
-
+      event.maxAttendees = maxParticipants ;
+      notifyListeners();
+    
     } catch (e) {
       throw Exception('Failed to get event by ID: $e');
     }

@@ -36,6 +36,39 @@ class Attendee {
     return 'Attendee(id: $userId, name: $fullName, role: $role)';  // Include all properties
   }
 }
+class Hosts {
+  final String userId;
+  final String fullName;
+  final String profileImage;
+  final Map<String, dynamic> role;
+
+  Hosts({
+    required this.userId,
+    required this.fullName,
+    required this.profileImage,
+    required this.role,
+  });
+  Map<String, dynamic> toJson() {
+    return {
+      'userId': userId,
+      'fullName': fullName,
+      'profileImage': profileImage,
+      'role': role,
+    };
+  }
+  factory  Hosts.fromJson(Map<String, dynamic> json) {
+    return  Hosts(
+      userId: json['userId'],
+      fullName: json['fullName'],
+      profileImage: json['profileImage'],
+      role: json['role'],
+    );
+  }
+  @override
+  String toString() {
+    return 'Hosts(id: $userId, name: $fullName, role: $role)';  // Include all properties
+  }
+}
 
 class Metadata {
   final List<String> mentors;
@@ -72,7 +105,7 @@ class Event {
   List<String> imageUrls;
   String description;
   final String id;
-  List<String> hosts;
+  List<Hosts> hosts;
   late final String startTime;
   late final String endTime;
   late int maxAttendees;
@@ -109,8 +142,8 @@ class Event {
           : ['https://images.pexels.com/photos/1190297/pexels-photo-1190297.jpeg'],
       description: json['description']?.toString() ?? '',
       id: json['id']?.toString() ?? '',
-      hosts: (json.containsKey('hosts') && (json['hosts'] as List).isNotEmpty)
-          ? List<String>.from(json['hosts'].map((host) => host['fullName']?.toString() ?? ''))
+      hosts: (json.containsKey('Hosts') && (json['Hosts'] as List).isNotEmpty)
+          ? List<Hosts>.from(json['Hosts'].map((host) => Hosts.fromJson(host)))
           : [],
       attendees: (json.containsKey('attendees') && (json['attendees'] as List).isNotEmpty)
           ? List<Attendee>.from(json['attendees'].map((attendee) => Attendee.fromJson(attendee)))
@@ -153,8 +186,7 @@ class EventCard extends StatefulWidget {
   final Event event;
   final bool showBookmarkButton;
 
-  EventCard({Key? key, required this.event, this.showBookmarkButton = true})
-      : super(key: key);
+  const EventCard({super.key, required this.event, this.showBookmarkButton = true});
 
 
 

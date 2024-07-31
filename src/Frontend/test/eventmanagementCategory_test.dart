@@ -208,7 +208,7 @@ void main() {
             ChangeNotifierProvider<userProvider>(
                 create: (_) => mockUserProvider),
           ],
-          child: MaterialApp(
+          child: const MaterialApp(
             home: EventmanagementCategory(),
           ),
         ),
@@ -229,7 +229,7 @@ void main() {
             ChangeNotifierProvider<userProvider>(
                 create: (_) => mockUserProvider),
           ],
-          child: MaterialApp(
+          child: const MaterialApp(
             home: EventmanagementCategory(),
           ),
         ),
@@ -254,7 +254,7 @@ void main() {
             ChangeNotifierProvider<userProvider>(
                 create: (_) => mockUserProvider),
           ],
-          child: MaterialApp(
+          child: const MaterialApp(
             home: EventmanagementCategory(),
           ),
         ),
@@ -275,7 +275,7 @@ void main() {
             ChangeNotifierProvider<userProvider>(
                 create: (_) => mockUserProvider),
           ],
-          child: MaterialApp(
+          child: const MaterialApp(
             home: EventmanagementCategory(),
           ),
         ),

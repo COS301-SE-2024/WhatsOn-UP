@@ -55,6 +55,7 @@
 
 
 
+import 'package:firstapp/pages/Promotion_form.dart';
 import 'package:firstapp/pages/detailed_event_page.dart';
 import 'package:firstapp/pages/editProfile_page.dart';
 
@@ -100,13 +101,15 @@ void main() async{
       ChangeNotifierProvider(create: (context) => userProvider()),
       ChangeNotifierProvider(create: (context) => ThemeNotifier()),
     ],
-      child: MyApp(),
+      child: const MyApp(),
   ),
   );
 }
 
 final supabase = Supabase.instance.client;
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Consumer<ThemeNotifier>(
@@ -117,14 +120,15 @@ class MyApp extends StatelessWidget {
           '/': (context) => const SplashPage(),
           '/login': (context) => const SupabaseLogin(),
           '/account': (context) => const SupabaseAccountpage(),
-          '/profile': (context)=> ProfilePage(),
-          '/editProfile': (context)=>  EditprofilePage(),
+          '/profile': (context)=> const ProfilePage(),
+          '/editProfile': (context)=>  const EditprofilePage(),
           '/home': (context)=> const HomePage(),
           // '/rsvp': (context)=> const RSVPEventsPage(),
           '/settings': (context)=> const SettingsPage(),
-          '/search': (context)=>  SearchScreen(),
+          '/search': (context)=>  const SearchScreen(),
            '/resetPassword': (context)=> const ResetPasswordPage(),
           '/detailed_event': (context) => DetailedEventPage(event: ModalRoute.of(context)!.settings.arguments as Event),
+          '/PromotionForm': (context)=> const PromotionForm(),
           //
         },
 

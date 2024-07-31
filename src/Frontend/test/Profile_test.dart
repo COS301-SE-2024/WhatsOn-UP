@@ -1,5 +1,4 @@
 
-import 'dart:typed_data';
 import 'package:firstapp/pages/editProfile_page.dart';
 import 'package:firstapp/pages/profilePage.dart';
 import 'package:firstapp/pages/supabase_resetPassword.dart';
@@ -8,7 +7,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
 import 'package:firstapp/providers/user_provider.dart';
-import 'package:image/image.dart' as img;
 import 'api_test.mocks.dart';
 import 'package:mocktail_image_network/mocktail_image_network.dart';
 
@@ -40,7 +38,7 @@ void main() {
           MaterialApp(
             home: ChangeNotifierProvider<userProvider>.value(
               value: mockUserProvider,
-              child: ProfilePage(),
+              child: const ProfilePage(),
             ),
           ),
         );
@@ -64,7 +62,7 @@ void main() {
           MaterialApp(
             home: ChangeNotifierProvider<userProvider>.value(
               value: mockUserProvider,
-              child: ProfilePage(),
+              child: const ProfilePage(),
             ),
           ),
         );
@@ -93,9 +91,9 @@ void main() {
           ],
 
           child: MaterialApp(
-            home: ProfilePage(),
+            home: const ProfilePage(),
             routes: {
-              '/editProfile': (context) => EditprofilePage(),
+              '/editProfile': (context) => const EditprofilePage(),
             },
           ),
         )),
@@ -116,10 +114,10 @@ void main() {
           MaterialApp(
             home: ChangeNotifierProvider<userProvider>.value(
               value: mockUserProvider,
-              child: ProfilePage(),
+              child: const ProfilePage(),
             ),
             routes: {
-              '/resetPassword': (context) => ResetPasswordPage(),
+              '/resetPassword': (context) => const ResetPasswordPage(),
             },
           ),
         );

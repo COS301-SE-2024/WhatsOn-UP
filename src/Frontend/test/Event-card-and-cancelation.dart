@@ -6,7 +6,7 @@ import 'package:flutter/cupertino.dart';
 void main() {
   testWidgets('RsvpEventsPage should display events and remove them correctly using the popup modal', (WidgetTester tester) async {
     await tester.pumpWidget(
-      MaterialApp(
+      const MaterialApp(
         home: RsvpEventsPage(),
       ),
     );

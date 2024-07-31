@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 class CustomSearchBar extends StatelessWidget {
   const CustomSearchBar({
-    Key? key,
+    super.key,
     required this.leading,
     required this.placeholder,
     required this.fontSize,
-  }) : super(key: key);
+  });
 
   final IconData leading;
   final String placeholder;
@@ -15,7 +15,7 @@ class CustomSearchBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(8.0),
+      margin: const EdgeInsets.all(8.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(50.0),
         color: Colors.black,
@@ -40,7 +40,7 @@ class CustomSearchBar extends StatelessWidget {
                 ),
                 border: InputBorder.none, // Remove underline
               ),
-              style: TextStyle(color: Colors.white), // Adjust text color to white
+              style: const TextStyle(color: Colors.white), // Adjust text color to white
             ),
           ),
         ],

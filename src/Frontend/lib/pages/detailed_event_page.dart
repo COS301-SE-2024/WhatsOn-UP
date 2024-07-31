@@ -62,7 +62,7 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
       var result = await Api().rsvpEvent(widget.event.id,user!.id);
       
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Successfully RSVP\'d to event!')),
+        const SnackBar(content: Text('Successfully RSVP\'d to event!')),
       );
       await eventProvider.refreshRSVPEvents(user!.id);
       await eventProvider.refreshEvents();
@@ -84,7 +84,7 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
        });
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Successfully removed RSVP !')),
+        const SnackBar(content: Text('Successfully removed RSVP !')),
       );
        await eventProvider.refreshRSVPEvents(user!.id);
        await eventProvider.refreshEvents();
@@ -107,21 +107,17 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
 
   Future<void> _editEvent() async {
     EventProvider eventProvider = Provider.of<EventProvider>(context,listen: false);
-    if (widget.event.id != null && widget.event.id is String) {
-      print('Navigating to EditEvent with eventId: ${widget.event.id}');
-      final resultEdit= await Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => EditEvent(eventId: widget.event.id)),
-      );
-      if (resultEdit == true) {
-        await eventProvider.refreshEvents();
-        await eventProvider.refreshRSVPEvents(user!.id);
-        Navigator.of(context).pushReplacementNamed('/home');
-      }
-    } else {
-      print('Event ID is null or not a String');
+    print('Navigating to EditEvent with eventId: ${widget.event.id}');
+    final resultEdit= await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => EditEvent(eventId: widget.event.id)),
+    );
+    if (resultEdit == true) {
+      await eventProvider.refreshEvents();
+      await eventProvider.refreshRSVPEvents(user!.id);
+      Navigator.of(context).pushReplacementNamed('/home');
     }
-  }
+    }
   Future<void> _DeleteEvent() async {
     EventProvider eventProvider = Provider.of<EventProvider>(context, listen: false);
     userProvider userP = Provider.of<userProvider>(context, listen: false);
@@ -130,20 +126,20 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Confirm Delete'),
-          content: Text('Are you sure you want to delete this event?'),
+          title: const Text('Confirm Delete'),
+          content: const Text('Are you sure you want to delete this event?'),
           actions: <Widget>[
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(false);
               },
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(true);
               },
-              child: Text('Delete'),
+              child: const Text('Delete'),
             ),
           ],
         );
@@ -364,10 +360,8 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
                   ),
 
                   const SizedBox(height: 16.0),
-                  if (_thisCurrentEvent != null &&
-                      (_thisCurrentEvent!.hosts != null &&
-                          _thisCurrentEvent!.hosts.isNotEmpty &&
-                          _thisCurrentEvent!.hosts[0] == userP.Fullname || userP.role=='ADMIN')) ...[
+                  if ((_thisCurrentEvent.hosts.isNotEmpty &&
+                          _thisCurrentEvent.hosts[0] == userP.Fullname || userP.role=='ADMIN')) ...[
                     const SizedBox(height: 8.0),
                     ElevatedButton.icon(
                       onPressed: _editEvent,

@@ -87,7 +87,7 @@ class _ForgotPassState extends State<ForgotPass> {
       width: mediaSize.width,
       height: mediaSize.height * 0.6,
       padding: const EdgeInsets.all(16.0),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(30.0),
@@ -126,7 +126,7 @@ class _ForgotPassState extends State<ForgotPass> {
                 );
                 if (mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("reset your password link has been sent to your inbox ")));
+                      const SnackBar(content: Text("reset your password link has been sent to your inbox ")));
                 }
               } on AuthException catch (error) {
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -135,7 +135,7 @@ class _ForgotPassState extends State<ForgotPass> {
                 ));
               } catch (error) {
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text('Error occurred, please try again'),
+                  content: const Text('Error occurred, please try again'),
                   backgroundColor: Theme.of(context).colorScheme.error,
                 ));
               }
@@ -144,7 +144,7 @@ class _ForgotPassState extends State<ForgotPass> {
               foregroundColor: Colors.black, padding: const EdgeInsets.symmetric(vertical: 10.0),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20.0),
-                side: BorderSide(color: Colors.black),
+                side: const BorderSide(color: Colors.black),
               ), // Text color
               backgroundColor: Colors.transparent,
             ),

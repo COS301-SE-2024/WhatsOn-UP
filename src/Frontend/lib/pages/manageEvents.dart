@@ -117,13 +117,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:firstapp/pages/application_event.dart';
+import 'Promotion_Applications.dart';
 import 'attendee.dart';
 import 'package:provider/provider.dart';
 import '../providers/user_provider.dart';
 import '../widgets/eventManagement_category.dart';
 
 class ManageEvents extends StatefulWidget {
-  ManageEvents({Key? key}) : super(key: key);
+  const ManageEvents({super.key});
 
 
 
@@ -152,12 +153,12 @@ String Host='HOST';
           },
           icon: const Icon(LineAwesomeIcons.angle_left_solid),
         ),
-        title: Text('Manage Events'),
+        title: const Text('Manage Events'),
       ),
       body: _isLoading
-          ? Center(
+          ? const Center(
               child: SpinKitPianoWave(
-                color: const Color.fromARGB(255, 149, 137, 74),
+                color: Color.fromARGB(255, 149, 137, 74),
                 size: 50.0,
               ),
             )
@@ -188,6 +189,12 @@ String Host='HOST';
                       : 'My Attendees',
                   onTap: ()=> _navigateToAttendeesEvent(context),
                 ),
+                if(userP.role == Admin)
+                  _buildDivider(),
+                  _buildProfileOption(
+                   text:'Event Applications',
+                    onTap: ()=> _navigateToGeneralEventApplications(context),
+                 ),
                 _buildDivider(),
               ],
             ),
@@ -197,21 +204,26 @@ String Host='HOST';
   Future<void> _navigateToEventManagementCategory(BuildContext context) async {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => EventmanagementCategory()),
+      MaterialPageRoute(builder: (context) => const EventmanagementCategory()),
     );
   }
-
+Future<void> _navigateToGeneralEventApplications(BuildContext context) async {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const Generaleventapplications()),
+    );
+  }
   void _navigateToApplicationEvent(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => ApplicationEvent()),
+      MaterialPageRoute(builder: (context) => const ApplicationEvent()),
     );
   }
 
   void _navigateToAttendeesEvent(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => Attendees()),
+      MaterialPageRoute(builder: (context) => const Attendees()),
     );
   }
 

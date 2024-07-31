@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:provider/provider.dart';
@@ -9,7 +8,6 @@ import '../providers/events_providers.dart';
 import '../providers/user_provider.dart';
 import '../services/api.dart';
 
-import 'dart:convert';
 import 'dart:typed_data';
 
 class  SplashPage extends StatefulWidget {
@@ -26,7 +24,7 @@ class _SplashPageState extends State<SplashPage> {
     _redirect();
   }
 Future<void>_redirect() async{
-  await Future.delayed(Duration(seconds: 2));
+  await Future.delayed(const Duration(seconds: 2));
   final session = supabase.auth.currentSession;
   if(!mounted) return;
   if(session != null) {
@@ -55,7 +53,7 @@ Future<void>_redirect() async{
     ),
     ),
     splashTransition: SplashTransition.slideTransition,
-        nextScreen: SupabaseLogin(),
+        nextScreen: const SupabaseLogin(),
     ),
     );
   }
@@ -74,7 +72,7 @@ Future<void>_redirect() async{
     Api api = Api();
     // final List<Event> events=await api.getAllEvents();
     //eventP.addEventsHome(events);
-    api. getUser(user!.id).then((response){
+    api. getUser(user.id).then((response){
       if (response['error'] != null) {
 
         print('An error occurred: ${response['error']}');

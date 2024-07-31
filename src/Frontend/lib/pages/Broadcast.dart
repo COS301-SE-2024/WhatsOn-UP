@@ -9,11 +9,11 @@ class Broadcast extends StatelessWidget {
     return Scaffold(
       body: Stack(
         children: [
-          Column(
+          const Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 40),
-              const Padding(
+              SizedBox(height: 40),
+              Padding(
                 padding: EdgeInsets.fromLTRB(48.0, 16.0, 16.0, 16.0),
                 child: Text(
                   'Broadcast',
@@ -23,8 +23,8 @@ class Broadcast extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 350),
-              const Center(
+              SizedBox(height: 350),
+              Center(
                 child: Text('Broadcast Page - Coming soon'),
               ),
             ],

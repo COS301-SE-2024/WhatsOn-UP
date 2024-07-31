@@ -1,15 +1,12 @@
 import 'package:firstapp/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:provider/provider.dart';
 import 'package:firstapp/pages/detailed_event_page.dart';
-import '../pages/detailed_event_page.dart';
-import '../providers/events_providers.dart';
 import '../services/api.dart';
 import '../widgets/event_card.dart';
 
 class AllsavedEvents extends StatefulWidget {
-  AllsavedEvents({Key? key}) : super(key: key);
+  const AllsavedEvents({super.key});
 
   @override
   _AllsavedEventsState createState() => _AllsavedEventsState();
@@ -50,14 +47,14 @@ class _AllsavedEventsState extends State<AllsavedEvents> {
         title: const Text('Saved Events'),
       ),
       body:  isLoading
-          ? Center(
+          ? const Center(
         child: SpinKitPianoWave(
           color: Color.fromARGB(255, 149, 137, 74),
           size: 50.0,
         ),
       )
           : hasError
-          ? Center(
+          ? const Center(
         child: Text(
           'Failed to load events. Please try again later.',
           style: TextStyle(color: Colors.red),
@@ -76,7 +73,7 @@ class _AllsavedEventsState extends State<AllsavedEvents> {
 class EventCardS extends StatelessWidget {
   final Event event;
 
-  const EventCardS({Key? key, required this.event}) : super(key: key);
+  const EventCardS({super.key, required this.event});
 
   @override
   Widget build(BuildContext context) {

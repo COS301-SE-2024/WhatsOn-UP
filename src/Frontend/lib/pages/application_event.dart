@@ -1,24 +1,19 @@
-import 'dart:convert';
 
 import 'package:firstapp/pages/home_page.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:firstapp/pages/profilePage.dart';
 import 'package:flutter/cupertino.dart';
-import 'dart:typed_data';
 import 'package:image_picker/image_picker.dart';
 import 'package:firstapp/widgets/theme_manager.dart';
 import 'package:firstapp/services/api.dart';
 import 'package:provider/provider.dart';
 import '../main.dart';
 import '../providers/events_providers.dart';
-import '../widgets/event_card.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 class ApplicationEvent extends StatefulWidget {
-  ApplicationEvent({
-    Key? key,
+  const ApplicationEvent({
+    super.key,
 
-  }) : super(key: key);
+  });
 
   @override
   State<ApplicationEvent> createState() => _ApplicationEventState();
@@ -33,7 +28,7 @@ class Category{
   });
 }
 class _ApplicationEventState extends State<ApplicationEvent> {
-  static List<Category> _categories = [
+  static final List<Category> _categories = [
     Category(id: 1, name: 'Technology'),
     Category(id: 2, name: 'Music'),
     Category(id: 3, name: 'Food'),
@@ -46,6 +41,7 @@ class _ApplicationEventState extends State<ApplicationEvent> {
   final _items=_categories.map((category) => MultiSelectItem<Category>(category, category.name)).toList();
   List<Category> _selectedCategories = [];
   final _multiSelectKey = GlobalKey<FormFieldState>();
+  @override
   void initState() {
     _selectedCategories=_categories;
     super.initState();
@@ -142,8 +138,8 @@ class _ApplicationEventState extends State<ApplicationEvent> {
                       initialChildSize: 0.4,
                       listType: MultiSelectListType.CHIP,
                       searchable: true,
-                      buttonText: Text("Categories"),
-                      title: Text("Categories"),
+                      buttonText: const Text("Categories"),
+                      title: const Text("Categories"),
                       items: _items,
                       onConfirm: (values) {
                         setState(() {
@@ -158,11 +154,11 @@ class _ApplicationEventState extends State<ApplicationEvent> {
                         },
                       ),
                     ),
-                    _selectedCategories == null ||  _selectedCategories.isEmpty
+                    _selectedCategories.isEmpty
                         ? Container(
-                        padding: EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(10),
                         alignment: Alignment.centerLeft,
-                        child: Text(
+                        child: const Text(
                           "None selected",
                           style: TextStyle(color: Colors.black54),
                         ))
@@ -189,9 +185,9 @@ class _ApplicationEventState extends State<ApplicationEvent> {
                       foregroundColor: Colors.black, backgroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
-                        side: BorderSide(color: Colors.grey, width: 1),
+                        side: const BorderSide(color: Colors.grey, width: 1),
                       ),
-                      padding: EdgeInsets.symmetric(vertical: 16),
+                      padding: const EdgeInsets.symmetric(vertical: 16),
                     ),
                     child: const Text('Submit'),
                   ),
@@ -313,18 +309,16 @@ class _ApplicationEventState extends State<ApplicationEvent> {
         const SizedBox(height: 10),
         ElevatedButton(
           onPressed: () async {
-            final List<XFile>? pickedFiles = await _picker.pickMultiImage();
-            if (pickedFiles != null) {
-              setState(() {
-                selectedImages = pickedFiles;
-              });
-            }
-          },
+            final List<XFile> pickedFiles = await _picker.pickMultiImage();
+            setState(() {
+              selectedImages = pickedFiles;
+            });
+                    },
           style: ElevatedButton.styleFrom(
             foregroundColor: Colors.black, backgroundColor: Colors.white,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),
-              side: BorderSide(color: Colors.grey, width: 1),
+              side: const BorderSide(color: Colors.grey, width: 1),
             ),
             padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 7.0),
           ),
@@ -394,7 +388,7 @@ class _ApplicationEventState extends State<ApplicationEvent> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => HomePage(),
+            builder: (context) => const HomePage(),
           ),
         );
 

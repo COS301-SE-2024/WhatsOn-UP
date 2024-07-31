@@ -72,7 +72,7 @@ final recentCities=[
           ),
           children: [
             TextSpan(text: suggetionList[index].substring(query.length),
-            style: TextStyle(
+            style: const TextStyle(
               color:Colors.grey
             )
             )

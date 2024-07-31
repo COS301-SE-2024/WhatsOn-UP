@@ -13,10 +13,10 @@ import '../main.dart';
 import '../providers/user_provider.dart';
 class ProfilePage extends  StatefulWidget {
 
-  ProfilePage({
-    Key? key,
+  const ProfilePage({
+    super.key,
 
-  }): super(key: key);
+  });
 
 
 
@@ -93,9 +93,9 @@ final String ADMIN='ADMIN';
                         foregroundColor: Colors.black, backgroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
-                          side: BorderSide(color: Colors.grey, width: 1),
+                          side: const BorderSide(color: Colors.grey, width: 1),
                         ),
-                        padding: EdgeInsets.symmetric(vertical: 16),
+                        padding: const EdgeInsets.symmetric(vertical: 16),
                       ),
                       child: const Text('Edit Profile'),
                     ),
@@ -134,10 +134,22 @@ final String ADMIN='ADMIN';
                             }
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) =>  SupabaseLogin()),
+                              MaterialPageRoute(builder: (context) =>  const SupabaseLogin()),
                             );
                           },
                         ),
+                        _buildDivider(),
+                        if (user.role!=ADMIN) ...[
+                          _buildProfileOption(
+                            text: 'Apply for Promotion',
+                            onTap: () {
+                              Navigator.of(context).pushReplacementNamed(
+                                  '/PromotionForm');
+                            },
+                          ),
+                          _buildDivider(),
+                        ],
+
                       ],
                     ),
                   ),
@@ -152,7 +164,7 @@ final String ADMIN='ADMIN';
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => HomePage(
+                  MaterialPageRoute(builder: (context) => const HomePage(
                         //widget.profileImage,
                   )),
                 );
@@ -169,7 +181,7 @@ final String ADMIN='ADMIN';
 Future<void> _navigateToEditprofile(BuildContext context) async {
   Navigator.push(
     context,
-    MaterialPageRoute(builder: (context) => EditprofilePage()),
+    MaterialPageRoute(builder: (context) => const EditprofilePage()),
   );
 }
    Widget _buildProfileOption({
