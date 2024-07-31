@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:firstapp/widgets/notification_card.dart';
 import 'package:http/http.dart' as http;
 // import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:typed_data';
@@ -262,7 +263,50 @@ class Api {
       throw Exception(e.toString());
     }
   }
+  Future<List<AppNotification>> getAllNotification({required String userId}) async {
 
+    const String notifyUserUrl = 'http://localhost:8081/notifications/get_all';
+
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $userId',
+    };
+
+
+
+    try {
+      var response = await http.get(Uri.parse(notifyUserUrl), headers: headers);
+
+      if (response.statusCode == 200) {
+
+
+        final Map<String, dynamic> decodedJson = json.decode(response.body);
+        final List<dynamic> eventsJson = decodedJson['data'];
+
+        // Map the JSON objects to Event objects
+        final List<AppNotification> events = eventsJson.map((jsonEvent) =>  AppNotification.fromJson(jsonEvent)).toList();
+        return events;
+
+
+
+
+
+        // // return jsonDecode(response.body);
+        // final List<dynamic> jsonResponse = json.decode(response.body);
+        //
+        // return jsonResponse.map((json) => AppNotification.fromJson(json)).toList();
+      } else {
+
+        print(jsonDecode(response.body
+        ));
+        throw Exception(jsonDecode(response.body));
+      }
+    } catch (e) {
+
+      throw Exception(e.toString());
+    }
+  }
   Future<Map<String, dynamic>> postNotifyUser({required String userId, required String message}) async {
     const String notifyUserUrl = '';
 

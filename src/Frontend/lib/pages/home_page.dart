@@ -1,7 +1,7 @@
 import 'package:firstapp/pages/allSaved_Events.dart';
 import 'package:firstapp/widgets/event_card.dart';
 import 'package:flutter/material.dart';
-import 'package:firstapp/pages/rsvp_events_page.dart';
+import 'package:firstapp/pages/notifications.dart';
 import 'package:firstapp/pages/calendar_page.dart';
 import 'package:firstapp/pages/explore_page.dart';
 import 'package:firstapp/pages/settings_page.dart';
@@ -95,7 +95,7 @@ const String ADMIN='ADMIN';
       case 0:
         return _buildHomePage();
       case 1:
-        return const RsvpEventsPage();
+        return const Notifications();
       case 2:
         return const CalendarPage();
       case 3:
