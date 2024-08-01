@@ -402,10 +402,11 @@ class User {
     required this.password,
     required this.userId,
     required this.profileImage,
+    this.userStatus,
   });
 
   @override
    String toString() {//userId: $userId
-    return 'User(name: $name, email: $email, password: $password, userId: $userId )';
+    return 'User(name: $name, email: $email, password: $password, userId: $userId,userStatus: $userStatus)';
   }
 }

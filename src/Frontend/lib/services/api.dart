@@ -307,6 +307,50 @@ class Api {
       throw Exception(e.toString());
     }
   }
+  Future<Map<String, dynamic>> AcceptInvite({required String userId, required String notificationId}) async {
+
+     String notifyUserUrl = 'http:localhost:8081/api/invite/accept/$notificationId';
+     // final uri = Uri.parse('http://localhost:8083/media/upload?event_id=$EventId');
+
+
+     // final request = http.MultipartRequest('POST', uri);
+     // request.headers['Authorization']= 'Bearer $userid';
+
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $userId',
+    };
+
+
+
+    try {
+      var response = await http.post(Uri.parse(notifyUserUrl), headers: headers);
+
+      if (response.statusCode == 200) {
+
+
+        return jsonDecode(response.body);
+
+
+
+
+
+        // // return jsonDecode(response.body);
+        // final List<dynamic> jsonResponse = json.decode(response.body);
+        //
+        // return jsonResponse.map((json) => AppNotification.fromJson(json)).toList();
+      } else {
+
+        print(jsonDecode(response.body
+        ));
+        throw Exception(jsonDecode(response.body));
+      }
+    } catch (e) {
+
+      throw Exception(e.toString());
+    }
+  }
   Future<Map<String, dynamic>> postNotifyUser({required String userId, required String message}) async {
     const String notifyUserUrl = '';
 
@@ -532,6 +576,7 @@ class Api {
     }
 
   }
+  
   Future<Map<String, dynamic>> uploadImage(Uint8List imageBytes, String userid) async {
     String generateFilename(String userId) {
       final timestamp = DateTime.now().millisecondsSinceEpoch;

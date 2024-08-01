@@ -4,12 +4,37 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f15131b9-b573-48b6-91bd-623264e869e0" name="Changes" comment="" />
+    <list default="true" id="f15131b9-b573-48b6-91bd-623264e869e0" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Frontend/test/NotificationDetailed_test.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/test/Notification_test.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Frontend/test/notificationProvider.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/kotlinc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/kotlinc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/lib/pages/calendar_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/lib/pages/calendar_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/lib/pages/editProfile_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/lib/pages/editProfile_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/lib/pages/notifications.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/lib/pages/notifications.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/lib/pages/supabase_Splashpage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/lib/pages/supabase_Splashpage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/lib/pages/supabase_login.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/lib/pages/supabase_login.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/lib/providers/notification_providers.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/lib/providers/notification_providers.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/lib/screens/NotificationDetailScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/lib/screens/NotificationDetailScreen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/lib/services/api.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/lib/services/api.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/lib/widgets/event_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/lib/widgets/event_card.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/test/ManageEvents_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/test/ManageEvents_test.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/test/api_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/test/api_test.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/test/api_test.mocks.dart" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/test/api_test.mocks.dart" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[C:\Users\zethe\.android\avd\Pixel_3a_API_34.avd]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$/Backend">
       <ProjectState />
@@ -61,49 +86,48 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Dart Command Line App.Attendee_test.dart.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Build Backend.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Tests in 'com.devforce.backend'.executor&quot;: &quot;Run&quot;,
-    &quot;HTTP Request.generated-requests | #1.executor&quot;: &quot;Run&quot;,
-    &quot;HTTP Request.request | #1.executor&quot;: &quot;Run&quot;,
-    &quot;HTTP Request.request | Login user.executor&quot;: &quot;Run&quot;,
-    &quot;HTTP Request.src-endpoints_10 | #1.executor&quot;: &quot;Run&quot;,
-    &quot;HTTP Request.src-endpoints_11 | #1.executor&quot;: &quot;Run&quot;,
-    &quot;HTTP Request.src-endpoints_12 | #1.executor&quot;: &quot;Run&quot;,
-    &quot;HTTP Request.src-endpoints_13 | #1.executor&quot;: &quot;Run&quot;,
-    &quot;HTTP Request.src-endpoints_4 | #1.executor&quot;: &quot;Run&quot;,
-    &quot;HTTP Request.src-endpoints_6 | #1.executor&quot;: &quot;Run&quot;,
-    &quot;HTTP Request.src-endpoints_9 | #1.executor&quot;: &quot;Run&quot;,
-    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
-    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
-    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
-    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;ScreenRecorder.SavePath&quot;: &quot;C:\\Users\\zethe&quot;,
-    &quot;Spring Boot.BackendApplication.executor&quot;: &quot;Run&quot;,
-    &quot;android.gradle.sync.needed&quot;: &quot;true&quot;,
-    &quot;com.google.cloudcode.ide_session_index&quot;: &quot;20240731_0000&quot;,
-    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;feat/unitTesting&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/zethe/OneDrive/Documents/GitHub/WhatsOn-UP/src/Frontend/assets/images&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;testing.instrumented.configuration&quot;,
-    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Dart Command Line App.Attendee_test.dart.executor": "Run",
+    "Gradle.Build Backend.executor": "Run",
+    "Gradle.Tests in 'com.devforce.backend'.executor": "Run",
+    "HTTP Request.generated-requests | #1.executor": "Run",
+    "HTTP Request.request | #1.executor": "Run",
+    "HTTP Request.request | Login user.executor": "Run",
+    "HTTP Request.src-endpoints_10 | #1.executor": "Run",
+    "HTTP Request.src-endpoints_11 | #1.executor": "Run",
+    "HTTP Request.src-endpoints_12 | #1.executor": "Run",
+    "HTTP Request.src-endpoints_13 | #1.executor": "Run",
+    "HTTP Request.src-endpoints_4 | #1.executor": "Run",
+    "HTTP Request.src-endpoints_6 | #1.executor": "Run",
+    "HTTP Request.src-endpoints_9 | #1.executor": "Run",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "ScreenRecorder.SavePath": "C:\\Users\\zethe",
+    "Spring Boot.BackendApplication.executor": "Run",
+    "com.google.cloudcode.ide_session_index": "20240801_0000",
+    "dart.analysis.tool.window.visible": "false",
+    "git-widget-placeholder": "feat/unitTesting",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/zethe/OneDrive/Documents/GitHub/WhatsOn-UP/src/Frontend/assets/images",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "testing.instrumented.configuration",
+    "show.migrate.to.gradle.popup": "false",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;kotlin-gradle-user-dirs&quot;: [
-      &quot;C:\\Users\\zethe\\.gradle&quot;
+  "keyToStringList": {
+    "kotlin-gradle-user-dirs": [
+      "C:\\Users\\zethe\\.gradle"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\zethe\OneDrive\Documents\GitHub\WhatsOn-UP\src\Frontend\assets\images" />
@@ -113,7 +137,159 @@
       <recent name="C:\Users\zethe\OneDrive\Documents\GitHub\WhatsOn-UP\src\Frontend\assets\images" />
     </key>
   </component>
-  <component name="RunManager" selected="Spring Boot.BackendApplication">
+  <component name="RunManager" selected="Android App.Frontend.android.app">
+    <configuration name="Frontend.android.app" type="AndroidRunConfigurationType" factoryName="Android App">
+      <module name="Frontend.android.app.main" />
+      <option name="DEPLOY" value="true" />
+      <option name="DEPLOY_APK_FROM_BUNDLE" value="false" />
+      <option name="DEPLOY_AS_INSTANT" value="false" />
+      <option name="ARTIFACT_NAME" value="" />
+      <option name="PM_INSTALL_OPTIONS" value="" />
+      <option name="ALL_USERS" value="false" />
+      <option name="ALWAYS_INSTALL_WITH_PM" value="false" />
+      <option name="CLEAR_APP_STORAGE" value="false" />
+      <option name="DYNAMIC_FEATURES_DISABLED_LIST" value="" />
+      <option name="ACTIVITY_EXTRA_FLAGS" value="" />
+      <option name="MODE" value="default_activity" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="false" />
+      <option name="INSPECTION_WITHOUT_ACTIVITY_RESTART" value="false" />
+      <option name="TARGET_SELECTION_MODE" value="DEVICE_AND_SNAPSHOT_COMBO_BOX" />
+      <option name="DEBUGGER_TYPE" value="Java" />
+      <Java>
+        <option name="ATTACH_ON_WAIT_FOR_DEBUGGER" value="false" />
+        <option name="DEBUG_SANDBOX_SDK" value="false" />
+      </Java>
+      <Profilers>
+        <option name="ADVANCED_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_CPU_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_CPU_PROFILING_CONFIGURATION_NAME" value="Java/Kotlin Method Sample (legacy)" />
+        <option name="STARTUP_NATIVE_MEMORY_PROFILING_ENABLED" value="false" />
+        <option name="NATIVE_MEMORY_SAMPLE_RATE_BYTES" value="2048" />
+      </Profilers>
+      <option name="DEEP_LINK" value="" />
+      <option name="ACTIVITY_CLASS" value="" />
+      <option name="SEARCH_ACTIVITY_IN_GLOBAL_SCOPE" value="false" />
+      <option name="SKIP_ACTIVITY_VALIDATION" value="false" />
+      <method v="2">
+        <option name="Android.Gradle.BeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Frontend.android.app.androidTest" type="AndroidRunConfigurationType" factoryName="Android App">
+      <module name="Frontend.android.app.androidTest" />
+      <option name="DEPLOY" value="true" />
+      <option name="DEPLOY_APK_FROM_BUNDLE" value="false" />
+      <option name="DEPLOY_AS_INSTANT" value="false" />
+      <option name="ARTIFACT_NAME" value="" />
+      <option name="PM_INSTALL_OPTIONS" value="" />
+      <option name="ALL_USERS" value="false" />
+      <option name="ALWAYS_INSTALL_WITH_PM" value="false" />
+      <option name="CLEAR_APP_STORAGE" value="false" />
+      <option name="DYNAMIC_FEATURES_DISABLED_LIST" value="" />
+      <option name="ACTIVITY_EXTRA_FLAGS" value="" />
+      <option name="MODE" value="default_activity" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="false" />
+      <option name="INSPECTION_WITHOUT_ACTIVITY_RESTART" value="false" />
+      <option name="TARGET_SELECTION_MODE" value="DEVICE_AND_SNAPSHOT_COMBO_BOX" />
+      <option name="DEBUGGER_TYPE" value="Java" />
+      <Java>
+        <option name="ATTACH_ON_WAIT_FOR_DEBUGGER" value="false" />
+        <option name="DEBUG_SANDBOX_SDK" value="false" />
+      </Java>
+      <Profilers>
+        <option name="ADVANCED_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_CPU_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_CPU_PROFILING_CONFIGURATION_NAME" value="Java/Kotlin Method Sample (legacy)" />
+        <option name="STARTUP_NATIVE_MEMORY_PROFILING_ENABLED" value="false" />
+        <option name="NATIVE_MEMORY_SAMPLE_RATE_BYTES" value="2048" />
+      </Profilers>
+      <option name="DEEP_LINK" value="" />
+      <option name="ACTIVITY_CLASS" value="" />
+      <option name="SEARCH_ACTIVITY_IN_GLOBAL_SCOPE" value="false" />
+      <option name="SKIP_ACTIVITY_VALIDATION" value="false" />
+      <method v="2">
+        <option name="Android.Gradle.BeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Frontend.android.app.main" type="AndroidRunConfigurationType" factoryName="Android App">
+      <module name="Frontend.android.app.main" />
+      <option name="DEPLOY" value="true" />
+      <option name="DEPLOY_APK_FROM_BUNDLE" value="false" />
+      <option name="DEPLOY_AS_INSTANT" value="false" />
+      <option name="ARTIFACT_NAME" value="" />
+      <option name="PM_INSTALL_OPTIONS" value="" />
+      <option name="ALL_USERS" value="false" />
+      <option name="ALWAYS_INSTALL_WITH_PM" value="false" />
+      <option name="CLEAR_APP_STORAGE" value="false" />
+      <option name="DYNAMIC_FEATURES_DISABLED_LIST" value="" />
+      <option name="ACTIVITY_EXTRA_FLAGS" value="" />
+      <option name="MODE" value="default_activity" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="false" />
+      <option name="INSPECTION_WITHOUT_ACTIVITY_RESTART" value="false" />
+      <option name="TARGET_SELECTION_MODE" value="DEVICE_AND_SNAPSHOT_COMBO_BOX" />
+      <option name="DEBUGGER_TYPE" value="Java" />
+      <Java>
+        <option name="ATTACH_ON_WAIT_FOR_DEBUGGER" value="false" />
+        <option name="DEBUG_SANDBOX_SDK" value="false" />
+      </Java>
+      <Profilers>
+        <option name="ADVANCED_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_CPU_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_CPU_PROFILING_CONFIGURATION_NAME" value="Java/Kotlin Method Sample (legacy)" />
+        <option name="STARTUP_NATIVE_MEMORY_PROFILING_ENABLED" value="false" />
+        <option name="NATIVE_MEMORY_SAMPLE_RATE_BYTES" value="2048" />
+      </Profilers>
+      <option name="DEEP_LINK" value="" />
+      <option name="ACTIVITY_CLASS" value="" />
+      <option name="SEARCH_ACTIVITY_IN_GLOBAL_SCOPE" value="false" />
+      <option name="SKIP_ACTIVITY_VALIDATION" value="false" />
+      <method v="2">
+        <option name="Android.Gradle.BeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Frontend.android.app.unitTest" type="AndroidRunConfigurationType" factoryName="Android App">
+      <module name="Frontend.android.app.unitTest" />
+      <option name="DEPLOY" value="true" />
+      <option name="DEPLOY_APK_FROM_BUNDLE" value="false" />
+      <option name="DEPLOY_AS_INSTANT" value="false" />
+      <option name="ARTIFACT_NAME" value="" />
+      <option name="PM_INSTALL_OPTIONS" value="" />
+      <option name="ALL_USERS" value="false" />
+      <option name="ALWAYS_INSTALL_WITH_PM" value="false" />
+      <option name="CLEAR_APP_STORAGE" value="false" />
+      <option name="DYNAMIC_FEATURES_DISABLED_LIST" value="" />
+      <option name="ACTIVITY_EXTRA_FLAGS" value="" />
+      <option name="MODE" value="default_activity" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="false" />
+      <option name="INSPECTION_WITHOUT_ACTIVITY_RESTART" value="false" />
+      <option name="TARGET_SELECTION_MODE" value="DEVICE_AND_SNAPSHOT_COMBO_BOX" />
+      <option name="DEBUGGER_TYPE" value="Java" />
+      <Java>
+        <option name="ATTACH_ON_WAIT_FOR_DEBUGGER" value="false" />
+        <option name="DEBUG_SANDBOX_SDK" value="false" />
+      </Java>
+      <Profilers>
+        <option name="ADVANCED_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_CPU_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_CPU_PROFILING_CONFIGURATION_NAME" value="Java/Kotlin Method Sample (legacy)" />
+        <option name="STARTUP_NATIVE_MEMORY_PROFILING_ENABLED" value="false" />
+        <option name="NATIVE_MEMORY_SAMPLE_RATE_BYTES" value="2048" />
+      </Profilers>
+      <option name="DEEP_LINK" value="" />
+      <option name="ACTIVITY_CLASS" value="" />
+      <option name="SEARCH_ACTIVITY_IN_GLOBAL_SCOPE" value="false" />
+      <option name="SKIP_ACTIVITY_VALIDATION" value="false" />
+      <method v="2">
+        <option name="Android.Gradle.BeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="Attendee_test.dart" type="DartCommandLineRunConfigurationType" factoryName="Dart Command Line Application" temporary="true" nameIsGenerated="true">
       <option name="filePath" value="$PROJECT_DIR$/Frontend/test/Attendee_test.dart" />
       <option name="workingDirectory" value="$PROJECT_DIR$/Frontend" />
@@ -140,13 +316,17 @@
         <env name="DB_USERNAME" value="postgres.mehgbhiirnmypfgnkaud" />
         <env name="SECRET" value="kzhnha&amp;k7(jfmnui0k#4@5)=hlp62kwy(7&amp;c6q23&amp;4znx_78(9" />
       </envs>
-      <module name="Backend.main" />
+      <module name="com.devforce.Backend.main" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.devforce.backend.BackendApplication" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
     <list>
+      <item itemvalue="Android App.Frontend.android.app.androidTest" />
+      <item itemvalue="Android App.Frontend.android.app.main" />
+      <item itemvalue="Android App.Frontend.android.app.unitTest" />
+      <item itemvalue="Android App.Frontend.android.app" />
       <item itemvalue="Dart Command Line App.Attendee_test.dart" />
       <item itemvalue="HTTP Request.src-endpoints_13 | #1" />
       <item itemvalue="HTTP Request.src-endpoints_12 | #1" />
@@ -251,6 +431,7 @@
       <workItem from="1722105635929" duration="781000" />
       <workItem from="1722327184953" duration="18419000" />
       <workItem from="1722430092039" duration="3725000" />
+      <workItem from="1722522657789" duration="16304000" />
     </task>
     <servers />
   </component>
@@ -267,6 +448,17 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="Dart">
+          <url>file://$PROJECT_DIR$/Frontend/lib/pages/notifications.dart</url>
+          <line>1</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

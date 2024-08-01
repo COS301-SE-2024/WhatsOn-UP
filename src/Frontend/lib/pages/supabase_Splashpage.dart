@@ -5,6 +5,7 @@ import '../main.dart';
 import 'package:firstapp/pages/supabase_login.dart';
 
 import '../providers/events_providers.dart';
+import '../providers/notification_providers.dart';
 import '../providers/user_provider.dart';
 import '../services/api.dart';
 
@@ -89,6 +90,9 @@ Future<void>_redirect() async{
         userP.Fullname=fullName;
         userP.email=userEmail;
         userP.role=role;
+        notificationProvider _notificationProvider = Provider.of<notificationProvider>(context, listen: false);
+        _notificationProvider.apiInstance=api;
+        _notificationProvider.refreshNotifications(userP.userId);
         // bool isBase64(String input) {
         //   final RegExp base64 = RegExp(
         //     r'^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$',

@@ -4,14 +4,17 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i5;
-import 'dart:typed_data' as _i10;
+import 'dart:typed_data' as _i12;
 import 'dart:ui' as _i7;
 
+import 'package:firstapp/pages/editProfile_page.dart' as _i10;
 import 'package:firstapp/providers/events_providers.dart' as _i4;
+import 'package:firstapp/providers/notification_providers.dart' as _i14;
 import 'package:firstapp/providers/user_provider.dart' as _i8;
 import 'package:firstapp/services/api.dart' as _i2;
 import 'package:firstapp/widgets/event_card.dart' as _i6;
-import 'package:image_picker/image_picker.dart' as _i11;
+import 'package:firstapp/widgets/notification_card.dart' as _i11;
+import 'package:image_picker/image_picker.dart' as _i13;
 import 'package:image_picker_platform_interface/image_picker_platform_interface.dart'
     as _i3;
 import 'package:mockito/mockito.dart' as _i1;
@@ -375,6 +378,15 @@ class MockuserProvider extends _i1.Mock implements _i8.userProvider {
   }
 
   @override
+  _i2.Api get api => (super.noSuchMethod(
+        Invocation.getter(#api),
+        returnValue: _FakeApi_0(
+          this,
+          Invocation.getter(#api),
+        ),
+      ) as _i2.Api);
+
+  @override
   set profileimage(String? _profileimage) => super.noSuchMethod(
         Invocation.setter(
           #profileimage,
@@ -427,6 +439,12 @@ class MockuserProvider extends _i1.Mock implements _i8.userProvider {
           Invocation.getter(#userId),
         ),
       ) as String);
+
+  @override
+  _i5.Future<List<_i10.User>> get generalUserEvents => (super.noSuchMethod(
+        Invocation.getter(#generalUserEvents),
+        returnValue: _i5.Future<List<_i10.User>>.value(<_i10.User>[]),
+      ) as _i5.Future<List<_i10.User>>);
 
   @override
   set Fullname(String? value) => super.noSuchMethod(
@@ -487,6 +505,16 @@ class MockuserProvider extends _i1.Mock implements _i8.userProvider {
         Invocation.getter(#hasListeners),
         returnValue: false,
       ) as bool);
+
+  @override
+  _i5.Future<void> refreshGeneralUsers() => (super.noSuchMethod(
+        Invocation.method(
+          #refreshGeneralUsers,
+          [],
+        ),
+        returnValue: _i5.Future<void>.value(),
+        returnValueForMissingStub: _i5.Future<void>.value(),
+      ) as _i5.Future<void>);
 
   @override
   void addListener(_i7.VoidCallback? listener) => super.noSuchMethod(
@@ -694,6 +722,55 @@ class MockApi extends _i1.Mock implements _i2.Api {
       ) as _i5.Future<Map<String, dynamic>>);
 
   @override
+  _i5.Future<List<_i11.AppNotification>> getAllNotification(
+          {required String? userId}) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getAllNotification,
+          [],
+          {#userId: userId},
+        ),
+        returnValue: _i5.Future<List<_i11.AppNotification>>.value(
+            <_i11.AppNotification>[]),
+      ) as _i5.Future<List<_i11.AppNotification>>);
+
+  @override
+  _i5.Future<Map<String, dynamic>> AcceptInvite({
+    required String? userId,
+    required String? notificationId,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #AcceptInvite,
+          [],
+          {
+            #userId: userId,
+            #notificationId: notificationId,
+          },
+        ),
+        returnValue:
+            _i5.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
+      ) as _i5.Future<Map<String, dynamic>>);
+
+  @override
+  _i5.Future<Map<String, dynamic>> postNotifyUser({
+    required String? userId,
+    required String? message,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #postNotifyUser,
+          [],
+          {
+            #userId: userId,
+            #message: message,
+          },
+        ),
+        returnValue:
+            _i5.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
+      ) as _i5.Future<Map<String, dynamic>>);
+
+  @override
   _i5.Future<Map<String, dynamic>> rsvpEvent(
     String? eventId,
     String? UserId,
@@ -709,6 +786,15 @@ class MockApi extends _i1.Mock implements _i2.Api {
         returnValue:
             _i5.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
       ) as _i5.Future<Map<String, dynamic>>);
+
+  @override
+  _i5.Future<List<_i10.User>> getGeneralusersToHost() => (super.noSuchMethod(
+        Invocation.method(
+          #getGeneralusersToHost,
+          [],
+        ),
+        returnValue: _i5.Future<List<_i10.User>>.value(<_i10.User>[]),
+      ) as _i5.Future<List<_i10.User>>);
 
   @override
   _i5.Future<Map<String, dynamic>> DeletersvpEvent(
@@ -810,15 +896,34 @@ class MockApi extends _i1.Mock implements _i2.Api {
 
   @override
   _i5.Future<Map<String, dynamic>> uploadImage(
-    _i10.Uint8List? imageBytes,
-    String? eventId,
+    _i12.Uint8List? imageBytes,
+    String? userid,
   ) =>
       (super.noSuchMethod(
         Invocation.method(
           #uploadImage,
           [
             imageBytes,
-            eventId,
+            userid,
+          ],
+        ),
+        returnValue:
+            _i5.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
+      ) as _i5.Future<Map<String, dynamic>>);
+
+  @override
+  _i5.Future<Map<String, dynamic>> eventUploadImage(
+    _i12.Uint8List? imageBytes,
+    String? userid,
+    String? EventId,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #eventUploadImage,
+          [
+            imageBytes,
+            userid,
+            EventId,
           ],
         ),
         returnValue:
@@ -829,7 +934,7 @@ class MockApi extends _i1.Mock implements _i2.Api {
 /// A class which mocks [ImagePicker].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockImagePicker extends _i1.Mock implements _i11.ImagePicker {
+class MockImagePicker extends _i1.Mock implements _i13.ImagePicker {
   MockImagePicker() {
     _i1.throwOnMissingStub(this);
   }
@@ -969,4 +1074,83 @@ class MockImagePicker extends _i1.Mock implements _i11.ImagePicker {
         ),
         returnValue: false,
       ) as bool);
+}
+
+/// A class which mocks [notificationProvider].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MocknotificationProvider extends _i1.Mock
+    implements _i14.notificationProvider {
+  MocknotificationProvider() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i2.Api get api => (super.noSuchMethod(
+        Invocation.getter(#api),
+        returnValue: _FakeApi_0(
+          this,
+          Invocation.getter(#api),
+        ),
+      ) as _i2.Api);
+
+  @override
+  _i5.Future<List<_i11.AppNotification>> get notifications =>
+      (super.noSuchMethod(
+        Invocation.getter(#notifications),
+        returnValue: _i5.Future<List<_i11.AppNotification>>.value(
+            <_i11.AppNotification>[]),
+      ) as _i5.Future<List<_i11.AppNotification>>);
+
+  @override
+  bool get hasListeners => (super.noSuchMethod(
+        Invocation.getter(#hasListeners),
+        returnValue: false,
+      ) as bool);
+
+  @override
+  _i5.Future<void> refreshEvents(String? userId) => (super.noSuchMethod(
+        Invocation.method(
+          #refreshEvents,
+          [userId],
+        ),
+        returnValue: _i5.Future<void>.value(),
+        returnValueForMissingStub: _i5.Future<void>.value(),
+      ) as _i5.Future<void>);
+
+  @override
+  void addListener(_i7.VoidCallback? listener) => super.noSuchMethod(
+        Invocation.method(
+          #addListener,
+          [listener],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void removeListener(_i7.VoidCallback? listener) => super.noSuchMethod(
+        Invocation.method(
+          #removeListener,
+          [listener],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void dispose() => super.noSuchMethod(
+        Invocation.method(
+          #dispose,
+          [],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void notifyListeners() => super.noSuchMethod(
+        Invocation.method(
+          #notifyListeners,
+          [],
+        ),
+        returnValueForMissingStub: null,
+      );
 }

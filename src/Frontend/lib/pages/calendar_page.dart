@@ -68,8 +68,8 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
     return events.map((event) {
       return {
 
-        'startTime': event['startTime']?.toString() ?? '',
-        'endTime': event['endTime']?.toString() ?? '',
+        'startTime': event['startDateTime']?.toString() ?? '',
+        'endTime': event['endDateTime']?.toString() ?? '',
         'isPrivate': event['isPrivate'] ?? false,
         'name': event['title'],
         'date': event['startTime'].substring(0, 10),

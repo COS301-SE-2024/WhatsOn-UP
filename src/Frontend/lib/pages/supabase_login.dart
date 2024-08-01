@@ -165,6 +165,7 @@
 import 'dart:async';
 import 'package:firstapp/pages/supabase_forgot_password.dart';
 import 'package:firstapp/pages/supabase_signup.dart';
+import 'package:firstapp/providers/notification_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -420,6 +421,7 @@ bool _obscurePassword=true;
     userProvider userP = Provider.of<userProvider>(context, listen: false);
     // eventProvider eventP = Provider.of<eventProvider>(context, listen: false);
     EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
+
     final user = supabase.auth.currentUser;
 
     //changes by Khanya - check if user is logged and return session data
@@ -451,6 +453,9 @@ bool _obscurePassword=true;
         userP.Fullname=fullName;
         userP.email=userEmail;
         userP.role=role;
+        notificationProvider _notificationProvider = Provider.of<notificationProvider>(context, listen: false);
+        _notificationProvider.apiInstance=api;
+        _notificationProvider.refreshNotifications(userP.userId);
         // bool isBase64(String input) {
         //   final RegExp base64 = RegExp(
         //     r'^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$',

@@ -100,7 +100,7 @@ class Metadata {
 
 class Event {
   late  String nameOfEvent;
-  late final String dateAndTime;
+  late final String? dateAndTime;
   late  String location;
   List<String> imageUrls;
   String description;
@@ -132,8 +132,8 @@ class Event {
   factory Event.fromJson(Map<String, dynamic> json) {
     return Event(
       nameOfEvent: json['title']?.toString() ?? '',
-      startTime: json['startTime']?.toString() ?? '',
-      endTime: json['endTime']?.toString() ?? '',
+      startTime: json['startDateTime']?.toString() ?? '',
+      endTime: json['endDateTime']?.toString() ?? '',
       maxAttendees: json['maxAttendees'] is int ? json['maxAttendees'] : 0,
       location: json['location']?.toString() ?? '',
       isPrivate: json['isPrivate'] ?? false,

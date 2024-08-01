@@ -4,7 +4,6 @@
     <bytecodeTargetLevel>
       <module name="android.app" target="17" />
       <module name="android.flutter_native_splash" target="17" />
-      <module name="android.shared_preferences_android" target="17" />
       <module name="Backend" target="17" />
       <module name="Backend.main" target="17" />
       <module name="Backend.test" target="17" />
