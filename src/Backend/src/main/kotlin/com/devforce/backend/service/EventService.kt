@@ -105,6 +105,13 @@ class EventService {
     // To do: Implement function to update an existing event
     fun updateEvent(id: UUID, updateEventDto: UpdateEventDto): ResponseEntity<ResponseDto> {
         try {
+            val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
+
+            if (user.role!!.name != "ADMIN" && eventRepo.findById(id).get().hosts.none { host -> host.userId == user.userId }) {
+                return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "You are not authorized to update this event")))
+            }
+
+
             val existing = eventRepo.findById(id)
 
             if (existing.isEmpty) {
@@ -140,6 +147,8 @@ class EventService {
                 v.available = false
             }
 
+
+
             existingEvent.apply {
                 updateEventDto.title?.let { title = it }
                 updateEventDto.description?.let { description = it }
@@ -166,10 +175,16 @@ class EventService {
 
     // To do: Implement function to delete an event
     fun deleteEvent(id: UUID): ResponseEntity<ResponseDto> {
+        val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
 
         val event = eventRepo.findById(id)
         if (event.isEmpty) {
             return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "Event not found"))
+            )
+        }
+
+        if (user.role!!.name != "ADMIN" && event.get().hosts.none { host -> host.userId == user.userId }) {
+            return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "You are not authorized to delete this event"))
             )
         }
 

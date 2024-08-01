@@ -29,8 +29,7 @@ void main() {
         Event(
           id: '1',
           nameOfEvent: 'Test Event 1',
-          dateAndTime: '2022-01-01T00:00:00.000Z',
-          location: 'Test Location 1',
+          venue: null,
           description: 'Test Description 1',
           imageUrls: [],
           hosts: [],
@@ -39,7 +38,6 @@ void main() {
           maxAttendees: 100,
           isPrivate: true,
           attendees: [],
-          startDate: DateTime.parse('2022-01-01T10:00:00.000Z'),
           metadata: Metadata(
             mentors: [],
             categories: [],
@@ -49,8 +47,7 @@ void main() {
         Event(
           id: '2',
           nameOfEvent: 'Test Event 2',
-          dateAndTime: '2022-01-02T00:00:00.000Z',
-          location: 'Test Location 2',
+          venue: null,
           description: 'Test Description 2',
           imageUrls: [],
           hosts: [],
@@ -59,7 +56,6 @@ void main() {
           maxAttendees: 150,
           isPrivate: false,
           attendees: [],
-          startDate: DateTime.parse('2022-01-02T10:00:00.000Z'),
           metadata: Metadata(
             mentors: [],
             categories: [],
@@ -71,8 +67,7 @@ void main() {
         Event(
           id: '1',
           nameOfEvent: 'Test Event 1 HOME',
-          dateAndTime: '2022-01-01T00:00:00.000Z',
-          location: 'Test Location 1',
+          venue: null,
           description: 'Test Description 1',
           imageUrls: [],
           hosts: [],
@@ -81,7 +76,6 @@ void main() {
           maxAttendees: 100,
           isPrivate: true,
           attendees: [],
-          startDate: DateTime.parse('2022-01-01T10:00:00.000Z'),
           metadata: Metadata(
             mentors: [],
             categories: [],
@@ -91,8 +85,7 @@ void main() {
         Event(
           id: '2',
           nameOfEvent: 'Test Event 2 HOME',
-          dateAndTime: '2022-01-02T00:00:00.000Z',
-          location: 'Test Location 2',
+          venue: null,
           description: 'Test Description 2',
           imageUrls: [],
           hosts: [],
@@ -101,7 +94,6 @@ void main() {
           maxAttendees: 150,
           isPrivate: false,
           attendees: [],
-          startDate: DateTime.parse('2022-01-02T10:00:00.000Z'),
           metadata: Metadata(
             mentors: [],
             categories: [],
@@ -113,8 +105,7 @@ void main() {
         Event(
           id: '3',
           nameOfEvent: 'Test Event 3 HOME',
-          dateAndTime: '2022-01-03T00:00:00.000Z',
-          location: 'Test Location 3',
+          venue: null,
           description: 'Test Description 3',
           imageUrls: [],
           hosts: [],
@@ -123,7 +114,6 @@ void main() {
           maxAttendees: 200,
           isPrivate: false,
           attendees: [],
-          startDate: DateTime.parse('2022-01-03T10:00:00.000Z'),
           metadata: Metadata(
             mentors: [],
             categories: [],
@@ -135,8 +125,7 @@ void main() {
         Event(
           id: '1',
           nameOfEvent: 'Test Event 1 RSVP',
-          dateAndTime: '2022-01-01T00:00:00.000Z',
-          location: 'Test Location 1',
+          venue: null,
           description: 'Test Description 1',
           imageUrls: [],
           hosts: [],
@@ -145,7 +134,6 @@ void main() {
           maxAttendees: 100,
           isPrivate: true,
           attendees: [],
-          startDate: DateTime.parse('2022-01-01T10:00:00.000Z'),
           metadata: Metadata(
             mentors: [],
             categories: [],
@@ -155,8 +143,7 @@ void main() {
         Event(
           id: '2',
           nameOfEvent: 'Test Event 2 RSVP',
-          dateAndTime: '2022-01-02T00:00:00.000Z',
-          location: 'Test Location 2',
+          venue: null,
           description: 'Test Description 2',
           imageUrls: [],
           hosts: [],
@@ -165,7 +152,6 @@ void main() {
           maxAttendees: 150,
           isPrivate: false,
           attendees: [],
-          startDate: DateTime.parse('2022-01-02T10:00:00.000Z'),
           metadata: Metadata(
             mentors: [],
             categories: [],
@@ -175,8 +161,7 @@ void main() {
         Event(
           id: '3',
           nameOfEvent: 'Test Event 3 RSVP',
-          dateAndTime: '2022-01-03T00:00:00.000Z',
-          location: 'Test Location 3',
+          venue: null,
           description: 'Test Description 3',
           imageUrls: [],
           hosts: [],
@@ -185,7 +170,6 @@ void main() {
           maxAttendees: 200,
           isPrivate: false,
           attendees: [],
-          startDate: DateTime.parse('2022-01-03T10:00:00.000Z'),
           metadata: Metadata(
             mentors: [],
             categories: [],
