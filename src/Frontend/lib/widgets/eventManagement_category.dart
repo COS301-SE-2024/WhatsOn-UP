@@ -133,6 +133,10 @@ class _EventmanagementCategoryState extends State<EventmanagementCategory> {
                   if (userP.role!='ADMIN') {
                     events = events.where((event) => event.hosts.contains(userP.Fullname)).toList();
                   }
+                  if (events.isEmpty)
+                  {
+                    return Center(child: Text('You haven\'t created any events yet.'));
+                  }
                   int rowCount = (events.length / 2).ceil();
                   return ListView.builder(
                    itemCount: rowCount,
