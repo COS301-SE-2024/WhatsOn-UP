@@ -8,6 +8,8 @@ import com.devforce.backend.repo.*
 import com.devforce.backend.security.CustomUser
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
+import org.springframework.mail.MailSender
+import org.springframework.mail.SimpleMailMessage
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
@@ -205,8 +207,33 @@ class UserService {
         )
     }
 
-    fun applyForHost(howLong: Int?, proof: String): ResponseEntity<ResponseDto> {
+    @Autowired
+    lateinit var mailSender: MailSender
+
+    fun applyForHost(howLong: Int?, reason: String, studentEmail: String): ResponseEntity<ResponseDto> {
         val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
+
+        // Check if user is already a host
+        if (user.role?.name == "HOST" || user.role?.name == "ADMIN") {
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "User is already a host"))
+        }
+
+        // Check if user has already applied
+        val existingApplication = hostApplicationsRepo.findByUserId(user.userId)
+        if (existingApplication.isNotEmpty()) {
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "User has already applied"))
+        }
+
+        // Check if student email is valid
+        if (!studentEmail.endsWith("@up.ac.za") && !studentEmail.endsWith("@tuks.co.za")) {
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Invalid student email"))
+        }
+
+        if (reason.isBlank()) {
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Reason cannot be blank"))
+        }
+
+        val veriCode = UUID.randomUUID()
 
         val hostApplication = HostApplicationsModel().apply {
             this.user = user
@@ -214,13 +241,35 @@ class UserService {
             if (howLong != null) {
                 this.howLong = howLong
             }
-            this.proof = proof
+            this.reason = reason
+            this.verificationCode = veriCode
         }
 
         hostApplicationsRepo.save(hostApplication)
 
+        val origin = "http://localhost:8080/api/user/verify_application?veriCode=$veriCode"
+
+        val email = SimpleMailMessage().apply {
+            setTo(studentEmail)
+            setSubject("Host Application Verification")
+            setText("Click the link below to verify your application: $origin")
+        }
+
+        mailSender.send(email)
+
         return ResponseEntity.ok(
-            ResponseDto("success", System.currentTimeMillis(), hostApplication)
+            ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Application sent successfully")
+        ))
+    }
+
+    fun verifyApplication(veriCode: UUID): ResponseEntity<ResponseDto> {
+        val application = hostApplicationsRepo.findByVerificationCode(veriCode)
+            ?: return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Invalid verification code"))
+
+        application.status = Status.ACCEPTED
+        hostApplicationsRepo.save(application)
+
+        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Application verified successfully"))
         )
     }
 

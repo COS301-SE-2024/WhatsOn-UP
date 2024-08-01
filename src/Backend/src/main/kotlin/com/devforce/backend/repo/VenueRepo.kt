@@ -12,7 +12,8 @@ interface VenueRepo : JpaRepository<VenueModel, UUID> {
     @Query(
         "SELECT DISTINCT e FROM VenueModel e " +
                 "LEFT JOIN FETCH e.building b " +
-                "LEFT JOIN FETCH b.campus c"
+                "LEFT JOIN FETCH b.campus c "+
+        "WHERE e.available = true"
     )
     override fun findAll(): List<VenueModel>
 

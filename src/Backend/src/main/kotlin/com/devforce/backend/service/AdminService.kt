@@ -64,10 +64,6 @@ class AdminService {
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "User deleted successfully")))
     }
 
-    fun getApplications(): ResponseEntity<ResponseDto> {
-        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), hostApplicationsRepo.findAll()))
-    }
-
     fun acceptApplication(applicationId: UUID): ResponseEntity<ResponseDto> {
         val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
 
@@ -96,7 +92,7 @@ class AdminService {
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Application rejected successfully")))
     }
 
-    fun getAllApplications(status: Status?): ResponseEntity<ResponseDto> {
+    fun getAllApplications(status: String?): ResponseEntity<ResponseDto> {
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), hostApplicationsRepo.findByStatus(status)))
     }
 }
