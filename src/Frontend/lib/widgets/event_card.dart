@@ -114,6 +114,8 @@ class Building {
   });
 
   factory Building.fromJson(Map<String, dynamic> json) {
+    print("Printing Building From Json...");
+    print( json['name']);
     return Building(
       buildingId: json['buildingId'],
       name: json['name'],
@@ -226,7 +228,7 @@ class Event {
     required this.description,
     required this.id,
     required this.hosts,
-   required this.startTime,
+    required this.startTime,
     required this.endTime,
     required this.maxAttendees,
     required this.isPrivate,
@@ -236,13 +238,15 @@ class Event {
   });
 
   factory Event.fromJson(Map<String, dynamic> json) {
-    var eventVat;
     print("Printing Event fromJson...");
-    print( json['venue']);
+    print( json['startDateTime']);
+    print( json['endDateTime']);
+    print( json['isPrivate']);
+    var eventVat ;
     eventVat = Event(
       nameOfEvent: json['title']?.toString() ?? '',
-      startTime: json['startTime']?.toString() ?? '',
-      endTime: json['endTime']?.toString() ?? '',
+      startTime: json['startDateTime']?.toString() ?? '',
+      endTime: json['endDateTime']?.toString() ?? '',
       maxAttendees: json['maxAttendees'] is int ? json['maxAttendees'] : 0,
       venue: json['location'] != null ? Venue.fromJson(json['location']) : null,
       isPrivate: json['isPrivate'] ?? false,
@@ -257,7 +261,7 @@ class Event {
       attendees: (json.containsKey('attendees') && (json['attendees'] as List).isNotEmpty)
           ? List<Attendee>.from(json['attendees'].map((attendee) => Attendee.fromJson(attendee)))
           : [],
-      startDate: "CHANGE THIS IN THE FUTURE",
+      startDate: json['startDateTime'],
       metadata: json.containsKey('metadata') && json['metadata'] is Map<String, dynamic>
           ? Metadata.fromJson(json['metadata'])
           : Metadata(
