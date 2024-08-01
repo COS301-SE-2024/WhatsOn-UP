@@ -6,12 +6,14 @@ class MapRoute {
   final List<PointLatLng> polylinePoints;
   final String totalDistance;
   final String totalDuration;
+  final List<String> stepInstructions;
 
   const MapRoute({
     required this.bounds,
     required this.polylinePoints,
     required this.totalDistance,
     required this.totalDuration,
+    required this.stepInstructions
   });
 
   factory MapRoute.fromMap(Map<String, dynamic> map) {
@@ -39,12 +41,20 @@ class MapRoute {
       duration = leg['duration']['text'];
     }
 
+    // HTML Instructions
+    final steps = data['legs'][0]['steps'] as List;
+    
+    List<String> htmlInstructions = steps.map((step) {
+      return step['html_instructions'] as String;
+    }).toList();
+
     return MapRoute(
       bounds: bounds,
       polylinePoints:
           PolylinePoints().decodePolyline(data['overview_polyline']['points']),
       totalDistance: distance,
       totalDuration: duration,
+      stepInstructions: htmlInstructions,
     );
   }
 }
