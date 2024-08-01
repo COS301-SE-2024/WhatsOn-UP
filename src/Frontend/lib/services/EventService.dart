@@ -11,20 +11,24 @@ class EventService {
   EventService(this.supabase);
   static const String baseUrl = 'http://localhost:8080';
 
- /* Future<String?> _getJwtToken() async {
+  Future<String?> _getJwtToken() async {
     final session = supabase.auth.currentSession;
     print(session);
     print(session?.accessToken);
     return session?.accessToken;
-  }*/
+  }
 
   Future<List<Event>> fetchPastEvents() async {
     final uri = Uri.parse('$baseUrl/api/events/get_passed_events');
     try {
-     // final jwtToken = await _getJwtToken();
+    // final jwtToken = await _getJwtToken();
+     //if (jwtToken == null) {
+       //throw Exception('JWT token not found');
+     //}
       var headers = {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
+      //  'Authorization': 'Bearer $jwtToken',
       };
 
       final response = await http.get(uri, headers: headers);
