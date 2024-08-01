@@ -308,7 +308,6 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
                       onTap: () {
                         Event eventObject = Event(
                           nameOfEvent: event['name'],
-                          //dateAndTime: '${event['date']} ${event['time']}',
                           venue: event['venue'],
                           description: event['description'],
                           imageUrls: [event['url']],
@@ -319,7 +318,6 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
                           endTime: event['endTime'],
                           maxAttendees: event['maxAttendees'],
                           isPrivate: event['isPrivate'],
-                          startDate: '',
                           metadata:event['metadata'],
 
                         );
@@ -390,7 +388,7 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
                                       children: [
                                         const Icon(Icons.location_on, size: 16),
                                         const SizedBox(width: 4.0),
-                                        Text(event['location']),
+                                        Text(event['venue']['name']),
                                         const SizedBox(width: 16.0),
                                         const Icon(Icons.people, size: 16),
                                         const SizedBox(width: 4.0),

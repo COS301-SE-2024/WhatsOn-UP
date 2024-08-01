@@ -139,7 +139,7 @@ class Building {
 class Venue {
   final String venueId;
   final Building? building;
-  late final String name;
+  late String name;
   final String? boards;
   final bool ac;
   final bool wifi;
@@ -206,7 +206,6 @@ class Venue {
 class Event {
   late  String nameOfEvent;
   // late final String dateAndTime;
-  late final String startDate;
   late final Venue? venue;
   List<String> imageUrls;
   String description;
@@ -233,7 +232,6 @@ class Event {
     required this.maxAttendees,
     required this.isPrivate,
     required this.attendees,
-    required this.startDate,
     required this.metadata,
   });
 
@@ -261,7 +259,6 @@ class Event {
       attendees: (json.containsKey('attendees') && (json['attendees'] as List).isNotEmpty)
           ? List<Attendee>.from(json['attendees'].map((attendee) => Attendee.fromJson(attendee)))
           : [],
-      startDate: json['startDateTime'],
       metadata: json.containsKey('metadata') && json['metadata'] is Map<String, dynamic>
           ? Metadata.fromJson(json['metadata'])
           : Metadata(
@@ -270,7 +267,6 @@ class Event {
         sessions: [],
       ),
     );
-    print("AAAAAHHHHHH");
     return eventVat;
   }
 
