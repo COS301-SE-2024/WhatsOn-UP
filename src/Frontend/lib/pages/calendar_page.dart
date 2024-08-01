@@ -132,6 +132,7 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
         'date': event.startTime.substring(0, 10),
         'time': event.startTime.substring(11, 16),
         'venue': event.venue != null ? {
+          'venueId': event.venue?.venueId,
           'name': event.venue?.name ?? '',
           'boards': event.venue?.boards ?? '',
           'ac': event.venue?.ac ?? false,
@@ -306,9 +307,10 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
 
                     return GestureDetector(
                       onTap: () {
+                        print("AHHHHHHAAAA ${event['venue']}");
                         Event eventObject = Event(
                           nameOfEvent: event['name'],
-                          venue: event['venue'],
+                          venue: Venue.fromJson(event['venue']),
                           description: event['description'],
                           imageUrls: [event['url']],
                           id: event['id'],
@@ -318,7 +320,7 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
                           endTime: event['endTime'],
                           maxAttendees: event['maxAttendees'],
                           isPrivate: event['isPrivate'],
-                          metadata:event['metadata'],
+                          metadata:Metadata.fromJson(event['metadata']),
 
                         );
 /* venue: event['venue'] != null ? Venue(
