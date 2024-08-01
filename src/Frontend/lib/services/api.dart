@@ -103,7 +103,7 @@ class Api {
   }
 }
   Future<List<Event>> getAllSavedEvents(String userId) async {
-    final _savedEventsURL = 'http://$domain:8080/api/events/get_saved_events';
+    final _savedEventsURL = 'http://${globals.domain}:8080/api/events/get_saved_events';
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
