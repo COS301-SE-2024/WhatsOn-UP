@@ -163,13 +163,11 @@ const String ADMIN='ADMIN';
                           );
                         },
                         child: CircleAvatar(
-                          backgroundImage: userP.profileImage!.isNotEmpty
-                              ? MemoryImage(userP.profileImage!)
-                              : const AssetImage('assets/images/user.png')
-
-                          as ImageProvider,
-                          radius: 27.0,
-                        ),
+                        backgroundImage: userP.profileImage != null && userP.profileImage!.isNotEmpty
+                            ? MemoryImage(userP.profileImage!)
+                            : const AssetImage('assets/images/user.png') as ImageProvider,
+                        radius: 60.0,
+                      ),
                       ),
                     ),
                     Text(
