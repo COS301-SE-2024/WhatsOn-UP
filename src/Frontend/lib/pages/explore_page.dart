@@ -1,7 +1,10 @@
+import 'package:firstapp/models/Location.dart';
 import 'package:firstapp/models/Route.dart';
 import 'package:firstapp/services/RouteService.dart';
+import 'package:firstapp/widgets/DirectionsBottomSheet.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:firstapp/services/PlacesService.dart';
 
 class NavigationPage extends StatefulWidget {
   @override
@@ -119,6 +122,7 @@ class _NavigationPageState extends State<NavigationPage> {
   Marker? _destination;
   MapRoute? _route;
   late BitmapDescriptor _customIcon;
+  final PlacesService places = PlacesService();
 
   final Marker _origin = Marker(
       markerId: const MarkerId("origin"),
@@ -151,6 +155,7 @@ class _NavigationPageState extends State<NavigationPage> {
   Widget build(BuildContext context) {
     
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
           GoogleMap(
@@ -171,7 +176,7 @@ class _NavigationPageState extends State<NavigationPage> {
                       .toList(),
                 ),
             },
-            onLongPress: _setDestination,
+            onLongPress: _updateRoute,
           ),
           Positioned(
             top: 10,
@@ -185,23 +190,38 @@ class _NavigationPageState extends State<NavigationPage> {
               ),
               leading: const Icon(Icons.search),
               trailing: const [Icon(Icons.mic)],
+              onSubmitted: _searchPlaces,
             ),
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Theme.of(context).primaryColor,
-        foregroundColor: Colors.white,
-        onPressed: () => _googleMapController.animateCamera(
-          CameraUpdate.newCameraPosition(_initialCameraPosition),
+      floatingActionButton: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            FloatingActionButton(
+              backgroundColor: Theme.of(context).primaryColor,
+              foregroundColor: Colors.white,
+              onPressed: () => _googleMapController.animateCamera(
+                CameraUpdate.newCameraPosition(_initialCameraPosition),
+              ),
+              child: const Icon(Icons.center_focus_strong)
+            ),
+            
+            const SizedBox(height: 16.0), // Space between buttons
+
+            if (_route != null) FloatingActionButton(
+              backgroundColor: Theme.of(context).primaryColor,
+              foregroundColor: Colors.white,
+              onPressed: () => _showDirections(context,_route!.stepInstructions),
+              child: const Icon(Icons.directions),
+            ),
+          ],
         ),
-        child: const Icon(Icons.center_focus_strong)
-      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.miniStartDocked,
     );
   }
 
-  void _setDestination(LatLng _position) async {
+  void _setDestination(LatLng _position) {
     setState(() {
         _destination = Marker(
           markerId: const MarkerId("destination"),
@@ -209,8 +229,12 @@ class _NavigationPageState extends State<NavigationPage> {
           position: _position
         );
       });
+  }
+
+  void _updateRoute(LatLng _destinationPosition) async {
+    _setDestination(_destinationPosition);
     
-    final updatedRoute = await RouteService().getRoute(origin: _origin!.position, destination: _position);
+    final updatedRoute = await RouteService().getRoute(origin: _origin!.position, destination: _destinationPosition);
     setState(() {
       _route = updatedRoute;
     });
@@ -230,4 +254,30 @@ class _NavigationPageState extends State<NavigationPage> {
 
   ////////////////////////////////////////////////Searchbar logic///////////////////////////////////////////////
 
+  void _searchPlaces(String query) async {
+    List<Location> foundLocations = await places.findLocationFromQuery(query: query);
+
+    if(foundLocations.isEmpty){
+      print("location not found"); //alter to be a popup
+    }
+    else{
+      print("LOCATION: ${foundLocations[0].location}");
+
+      if (_route != null){
+        _route = null;
+      }
+      _setDestination(foundLocations[0].location);
+    }
+  }
+
+///////////////////////////////////////Directions//////////////////////////////////////////////////
+
+   void _showDirections(BuildContext context, List<String> directions) {
+      showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return DirectionsModalSheet(directions: directions);
+        },
+      );
+    }
 }
