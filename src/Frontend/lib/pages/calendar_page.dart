@@ -118,7 +118,19 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
         'name': event.nameOfEvent,
         'date': event.startTime.substring(0, 10),
         'time': event.startTime.substring(11, 16),
-        'location': event.location,
+        'venue': event.venue != null ? {
+          'venueId': event.venue?.venueId,
+          'name': event.venue?.name ?? '',
+          'boards': event.venue?.boards ?? '',
+          'ac': event.venue?.ac ?? false,
+          'wifi': event.venue?.wifi ?? false,
+          'dataProject': event.venue?.dataProject ?? 0,
+          'docCam': event.venue?.docCam ?? false,
+          'mic': event.venue?.mic ?? false,
+          'windows': event.venue?.windows ?? false,
+          'capacity': event.venue?.capacity ?? 0,
+          'available': event.venue?.available ?? false,
+        } : null,
         'maxAttendees': event.maxAttendees ?? 0,
         'url': 'https://picsum.photos/200', // Placeholder URL, update as needed
         'description': event.description ?? '',
@@ -283,10 +295,10 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
 
                     return GestureDetector(
                       onTap: () {
+                        print("AHHHHHHAAAA ${event['venue']}");
                         Event eventObject = Event(
                           nameOfEvent: event['name'],
-                          dateAndTime: '${event['date']} ${event['time']}',
-                          location: event['location'],
+                          venue: Venue.fromJson(event['venue']),
                           description: event['description'],
                           imageUrls: [event['url']],
                           id: event['id'],
@@ -296,8 +308,7 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
                           endTime: event['endTime'],
                           maxAttendees: event['maxAttendees'],
                           isPrivate: event['isPrivate'],
-                          startDate: '',
-                          metadata:event['metadata'],
+                          metadata:Metadata.fromJson(event['metadata']),
 
                         );
 
@@ -355,7 +366,7 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
                                       children: [
                                         const Icon(Icons.location_on, size: 16),
                                         const SizedBox(width: 4.0),
-                                        Text(event['location']),
+                                        Text(event['venue']['name']),
                                         const SizedBox(width: 16.0),
                                         const Icon(Icons.people, size: 16),
                                         const SizedBox(width: 4.0),
