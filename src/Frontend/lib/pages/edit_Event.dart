@@ -41,7 +41,7 @@ class _EditEventState extends State<EditEvent> {
           _thisCurrentEvent = event;
           eventNameController.text = _thisCurrentEvent.nameOfEvent;
           eventDescriptionController.text = _thisCurrentEvent.description;
-          venueController.text = _thisCurrentEvent.location;
+          venueController.text = _thisCurrentEvent.venue!.name;
           maxAttendeesController.text = _thisCurrentEvent.maxAttendees.toString();
           isPublic = _thisCurrentEvent.isPrivate;
           startDate = DateTime.parse(_thisCurrentEvent.startTime);

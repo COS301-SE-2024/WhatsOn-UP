@@ -56,7 +56,7 @@ class _AttendeesState extends State<Attendees> {
             } else {
               userProvider userP = Provider.of<userProvider>(context, listen: false);
               var events = snapshot.data!;
-              events = events.where((event) => event.hosts.contains(userP.Fullname)).toList();
+              events = events.where((event) => event.hosts!.contains(userP.Fullname)).toList();
               return ListView.separated(
                 itemCount: events.length,
                 itemBuilder: (context, index) {

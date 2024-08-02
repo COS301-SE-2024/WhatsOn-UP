@@ -292,7 +292,7 @@ class EventProvider with ChangeNotifier {
     try {
       List<Event> events = await _eventsHome;
       Event? event = events.firstWhere((event) => event.id == id);
-      event.location = Location ;
+      event.venue!.name = Location ;
       notifyListeners();
     
     } catch (e) {
