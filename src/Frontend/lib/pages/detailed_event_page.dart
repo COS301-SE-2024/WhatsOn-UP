@@ -87,7 +87,8 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
         SnackBar(content: Text('Successfully removed RSVP !')),
       );
        await eventProvider.refreshRSVPEvents(user!.id);
-       print('amount of attendees after event removed from the calendar ${_thisCurrentEvent.attendees.length}');
+       await eventProvider.refreshEvents();
+
        Navigator.of(context).pushReplacementNamed('/home');
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -289,7 +290,7 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
                       const SizedBox(width: 8.0),
                       Text(
                         // widget.event.location,
-                        _thisCurrentEvent.location,
+                        _thisCurrentEvent.venue!.name,
                         style: const TextStyle(fontSize: 16.0),
                       ),
                     ],

@@ -55,6 +55,7 @@ dependencies:
   url_launcher: ^6.3.0
   mockito: ^5.4.4
   image: ^4.2.0
+  multi_select_flutter: ^4.1.3
 
 
 

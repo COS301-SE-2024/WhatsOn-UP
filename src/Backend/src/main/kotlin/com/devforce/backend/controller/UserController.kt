@@ -1,7 +1,6 @@
 package com.devforce.backend.controller
 
 import com.devforce.backend.dto.ResponseDto
-import com.devforce.backend.dto.UpdateUserDto
 import com.devforce.backend.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -59,9 +58,9 @@ class UserController {
 
     @PutMapping("/update_profile")
     @PreAuthorize("isAuthenticated()")
-    fun updateProfile(@RequestBody userDto: UpdateUserDto, ): ResponseEntity<ResponseDto> {
+    fun updateProfile(@RequestParam fullName: String): ResponseEntity<ResponseDto> {
         
-        return userService.updateProfile(userDto)
+        return userService.updateProfile(fullName)
     }
 
     @GetMapping("/get_user")
@@ -75,5 +74,27 @@ class UserController {
     fun deleteUser(): ResponseEntity<ResponseDto> {
         return userService.deleteUser()
     }
+
+    @PutMapping("/apply_for_host")
+    @PreAuthorize("isAuthenticated()")
+    fun applyHost(
+        @RequestParam howLong: Int,
+        @RequestParam proof: String
+    ): ResponseEntity<ResponseDto> {
+        return userService.applyForHost(howLong, proof)
+    }
+
+    @PostMapping("/acknowledge_application")
+    @PreAuthorize("isAuthenticated()")
+    fun acknowledgeApplication(@RequestParam applicationId: UUID): ResponseEntity<ResponseDto> {
+        return userService.acknowledgeApplication(applicationId)
+    }
+
+    @PostMapping("/dispute_application")
+    @PreAuthorize("isAuthenticated()")
+    fun disputeApplication(@RequestParam applicationId: UUID): ResponseEntity<ResponseDto> {
+        return userService.disputeApplication(applicationId)
+    }
+
 
 }

@@ -17,14 +17,17 @@ import java.util.*
 
 class EventModel {
     @Id
-    @GeneratedValue
     @Column(name = "event_id", columnDefinition = "UUID")
-    var eventId: UUID = UUID.randomUUID()
+    var eventId: UUID? = null
 
     var title: String = ""
     var description: String = ""
 
     var metadata: String = "" //changed from  var metadata: String = ""
+
+    @OneToOne
+    @JoinColumn(name = "event_id")
+    var availableSlots: AvailableSlotsModel? = null
 
     @ElementCollection
     @CollectionTable(name = "event_media", joinColumns = [JoinColumn(name = "event_id")])
@@ -34,10 +37,10 @@ class EventModel {
     @Column(name = "created_at", nullable = false, updatable = false)
     private var createdAt: LocalDateTime = LocalDateTime.now()
 
-    @Column(name = "updated_at", nullable = false)
-    private var updatedAt: LocalDateTime = LocalDateTime.now()
+    @OneToOne
+    @JoinColumn(name = "venue_id")
+    var venue: VenueModel? = null
 
-    var location: String = ""
 
     @Column(name = "start_date_time", nullable = false)
     var startDateTime: LocalDateTime = LocalDateTime.now()
@@ -58,9 +61,6 @@ class EventModel {
         inverseJoinColumns = [JoinColumn(name = "user_id")]
     )
     var hosts: Set<UserModel> = HashSet()
-
-    @Column(name = "expired", nullable = false)
-    var expired: Boolean = false;
 
     @ManyToMany
     @JoinTable(
@@ -89,13 +89,8 @@ class EventModel {
     @PrePersist
     fun prePersist() {
         createdAt = LocalDateTime.now()
-        updatedAt = LocalDateTime.now()
     }
 
-    @PreUpdate
-    fun preUpdate() {
-        updatedAt = LocalDateTime.now()
-    }
 
 
 }
