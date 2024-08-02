@@ -4,6 +4,8 @@ import 'package:firstapp/services/EventService.dart';
 import '../screens/FilterScreen.dart';
 import '../screens/SearchScreen.dart';
 import 'event_card.dart';
+import 'package:firstapp/main.dart';
+
 
 class Pastevents extends StatefulWidget {
   final EventService eventService;
@@ -20,7 +22,8 @@ class _PasteventsState extends State<Pastevents> {
   @override
   void initState() {
     super.initState();
-    _pastEvents = widget.eventService.fetchPastEvents();
+    final user = supabase.auth.currentUser;
+    _pastEvents = widget.eventService.fetchPastEvents(user!.id);
   }
 
   @override

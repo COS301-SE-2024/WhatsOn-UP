@@ -18,7 +18,7 @@ class EventService {
     return session?.accessToken;
   }
 
-  Future<List<Event>> fetchPastEvents() async {
+  Future<List<Event>> fetchPastEvents(String userId) async {
     final uri = Uri.parse('$baseUrl/api/events/get_passed_events');
     try {
     // final jwtToken = await _getJwtToken();
@@ -28,7 +28,7 @@ class EventService {
       var headers = {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-      //  'Authorization': 'Bearer $jwtToken',
+        'Authorization': 'Bearer $userId',
       };
 
       final response = await http.get(uri, headers: headers);
