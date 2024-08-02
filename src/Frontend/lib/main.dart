@@ -80,7 +80,7 @@ void main() async{
   var api = Api();
   await Supabase.initialize(
     url: 'https://mehgbhiirnmypfgnkaud.supabase.co',
-    anonKey:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1laGdiaGlpcm5teXBmZ25rYXVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTY3ODcxMjMsImV4cCI6MjAzMjM2MzEyM30.IqwbTqO7T_ZyYjkWBAbKCK2kwEzJktZtAEJKlrfjYvY',
+    anonKey:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1laGdiaGlpcm5teXBmZ25rYXVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjI1OTc1ODksImV4cCI6MjAzODE3MzU4OX0.LhJE4sO3YrRi2VwQmbt-24LHUVM3bK9eFzHz1SsvH1s',
 
   );
   // runApp(ChangeNotifierProvider<ThemeNotifier>(

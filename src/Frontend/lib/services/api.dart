@@ -91,10 +91,6 @@ class Api {
       // Parse the JSON response
       final Map<String, dynamic> decodedJson = json.decode(response.body);
       final List<dynamic> eventsJson = decodedJson['data'];
-      print("decodedJson");
-      print(decodedJson);
-      print("eventsJson");
-      print(eventsJson);
       // Map the JSON objects to Event objects
       final List<Event> events = eventsJson.map((jsonEvent) => Event.fromJson(jsonEvent)).toList();
       print("events");
