@@ -27,7 +27,7 @@ class Attendee {
     return Attendee(
       userId: json['userId'],
       fullName: json['fullName'],
-      profileImage: json['profileImage'],
+      profileImage: json['profileImage'] ?? '',
       role: json['role'],
     );
   }
@@ -115,14 +115,15 @@ class Building {
 
   factory Building.fromJson(Map<String, dynamic> json) {
     print("Printing Building From Json...");
-    print( json['name']);
-    return Building(
+    Building building;
+    building = Building(
       buildingId: json['buildingId'],
       name: json['name'],
       accessType: json['accessType'],
       location: json['location'],
       campus: json['campus'] != null ? Campus.fromJson(json['campus']) : null,
     );
+    return building;
   }
 
   Map<String, dynamic> toJson() {
@@ -167,7 +168,7 @@ class Venue {
 
   factory Venue.fromJson(Map<String, dynamic> json) {
     print("Printing Venue fromJson...");
-    return Venue(
+    Venue venue = Venue(
       venueId: json['venueId'],
       building: json['building'] != null ? Building.fromJson(json['building']) : null,
       name: json['name'],
@@ -181,6 +182,7 @@ class Venue {
       capacity: json['capacity'],
       available: json['available'],
     );
+    return venue;
   }
 
   Map<String, dynamic> toJson() {
