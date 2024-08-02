@@ -37,6 +37,8 @@ class PassedEventModel {
     @Column(name = "created_at", nullable = false, updatable = false)
     private var createdAt: LocalDateTime = LocalDateTime.now()
 
+    @Column(name = "updated_at", nullable = false)
+    private var updatedAt: LocalDateTime = LocalDateTime.now()
 
     @OneToOne
     @JoinColumn(name = "venue_id")
@@ -90,9 +92,13 @@ class PassedEventModel {
     @PrePersist
     fun prePersist() {
         createdAt = LocalDateTime.now()
+        updatedAt = LocalDateTime.now()
     }
 
-
+    @PreUpdate
+    fun preUpdate() {
+        updatedAt = LocalDateTime.now()
+    }
 
 
 }

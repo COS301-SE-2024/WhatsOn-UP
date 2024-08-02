@@ -13,5 +13,4 @@ interface UserRepo : JpaRepository<UserModel, UUID> {
             "JOIN FETCH u.role")
     fun findAllUsers(): List<UserModel>
 
-
 }

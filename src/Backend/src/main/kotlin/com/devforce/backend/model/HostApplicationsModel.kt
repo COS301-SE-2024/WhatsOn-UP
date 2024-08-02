@@ -39,6 +39,7 @@ class HostApplicationsModel {
     @Column(name = "expiry_date_time")
     var expiryDateTime: Date = Date()
 
+    var proof: String = ""
 
     @OneToOne
     @JoinColumn(name = "accepted_rejected_by")
@@ -46,9 +47,4 @@ class HostApplicationsModel {
 
     @Column(name = "how_long")
     var howLong: Int = 0
-
-    var reason: String = ""
-
-    @Column(name = "verification_code")
-    var verificationCode: UUID = UUID.randomUUID()
 }

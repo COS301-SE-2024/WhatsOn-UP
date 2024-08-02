@@ -3,10 +3,8 @@ package com.devforce.backend.service
 import com.devforce.backend.dto.*
 import com.devforce.backend.model.AvailableSlotsModel
 import com.devforce.backend.model.EventModel
-import com.devforce.backend.model.PassedEventModel
 import com.devforce.backend.model.VenueModel
 import com.devforce.backend.repo.EventRepo
-import com.devforce.backend.repo.PassedEventsRepo
 import com.devforce.backend.repo.VenueRepo
 import com.devforce.backend.security.CustomUser
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -30,9 +28,6 @@ class EventService {
 
     @Autowired
     lateinit var venueRepo: VenueRepo
-
-    @Autowired
-    lateinit var passedEventsRepo: PassedEventsRepo
 
     fun createEvent(createEventDto: CreateEventDto): ResponseEntity<ResponseDto> {
         val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
@@ -99,9 +94,11 @@ class EventService {
         // Implementation goes here
         val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
 
-        val events = passedEventsRepo.findPassedEvents(user.userId)
+        val events = eventRepo.findPassedEvents(user.userId)
 
-        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), events)
+        val eventsDto = events.map { event -> EventDto(event, user.userId in event.hosts.map { host -> host.userId }, null) }
+
+        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto)
         )
     }
 

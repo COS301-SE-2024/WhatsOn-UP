@@ -32,6 +32,11 @@ class AdminController {
         return adminService.deleteUser(userId)
     }
 
+    @GetMapping("/get_applications")
+    fun getApplications(): ResponseEntity<ResponseDto> {
+        return adminService.getApplications()
+    }
+
     @PostMapping("/accept_application")
     fun acceptApplication(@RequestParam applicationId: UUID): ResponseEntity<ResponseDto> {
         return adminService.acceptApplication(applicationId)
@@ -48,17 +53,9 @@ class AdminController {
     }
 
     @GetMapping("/all_applications/{status}")
-    fun allApplications(@PathVariable status: String): ResponseEntity<ResponseDto> {
-        // convert status to Status enum
-        val validStatuses = listOf("PENDING", "ACCEPTED", "REJECTED", "ACKNOWLEDGED", "DISPUTED")
-
-        if (!validStatuses.contains(status)) {
-            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Invalid status"))
-        }
-
+    fun allApplications(@PathVariable status: Status): ResponseEntity<ResponseDto> {
         return adminService.getAllApplications(status)
     }
-
 
 
 }
