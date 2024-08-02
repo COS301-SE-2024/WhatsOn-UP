@@ -55,8 +55,9 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     userProvider userP = Provider.of<userProvider>(context);
-const String HOST='HOST';
-const String ADMIN='ADMIN';
+    print("user role: ${userP.role}");
+    const String HOST='HOST';
+    const String ADMIN='ADMIN';
     return Scaffold(
       body: Container(
         // color: Colors.grey[200],
@@ -163,11 +164,9 @@ const String ADMIN='ADMIN';
                           );
                         },
                         child: CircleAvatar(
-                          backgroundImage: userP.profileImage!.isNotEmpty
+                          backgroundImage: userP.profileImage != null && userP.profileImage!.isNotEmpty
                               ? MemoryImage(userP.profileImage!)
-                              : const AssetImage('assets/images/user.png')
-
-                          as ImageProvider,
+                              : const AssetImage('assets/images/user.png') as ImageProvider,
                           radius: 27.0,
                         ),
                       ),
