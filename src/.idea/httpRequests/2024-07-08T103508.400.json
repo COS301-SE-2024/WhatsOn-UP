@@ -1,6 +1,0 @@
-{
-  "timestamp": "2024-07-08T08:35:08.494+00:00",
-  "status": 400,
-  "error": "Bad Request",
-  "path": "/api/events/create"
-}

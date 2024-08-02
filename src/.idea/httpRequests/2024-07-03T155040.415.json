@@ -1,6 +1,0 @@
-{
-  "timestamp": "2024-07-03T13:50:40.512+00:00",
-  "status": 415,
-  "error": "Unsupported Media Type",
-  "path": "/api/user/update_profile"
-}

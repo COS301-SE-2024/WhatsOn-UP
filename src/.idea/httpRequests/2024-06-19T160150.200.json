@@ -1,8 +1,0 @@
-{
-  "status": "success",
-  "timestamp": 1718805710935,
-  "data": {
-    "jwtToken": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ6QGdtYWlsLmNvbSIsInJvbGUiOiJHRU5FUkFMIiwiaWF0IjoxNzE4ODA1NzA5LCJleHAiOjE3MTg4OTIxMDl9.YBha0w8LnuExUHpdoPPXaXKRRLE-Ed6W7ZSph6dN-LK1nC_4iuuJlZzrKEpbxToK691yeEMY70WYr9wshCIsjQ",
-    "refreshToken": "9e8f970f-cdbd-48a2-b19a-ab4a769b96c2"
-  }
-}

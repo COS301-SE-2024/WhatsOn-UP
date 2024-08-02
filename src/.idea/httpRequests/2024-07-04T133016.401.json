@@ -1,6 +1,0 @@
-{
-  "timestamp": "2024-07-04T11:30:16.837+00:00",
-  "status": 401,
-  "error": "Unauthorized",
-  "path": "/api/auth/get_user"
-}

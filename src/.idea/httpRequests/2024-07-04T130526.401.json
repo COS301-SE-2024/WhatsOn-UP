@@ -1,6 +1,0 @@
-{
-  "timestamp": "2024-07-04T11:05:26.910+00:00",
-  "status": 401,
-  "error": "Unauthorized",
-  "path": "/api/auth/get_userContent-Type:%20application/jsonAccept:%20application/jsonAuthorization:%20Bearer%20984c7b66-448a-426d-8239-1575abecd1ab"
-}
