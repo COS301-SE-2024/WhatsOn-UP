@@ -2,6 +2,7 @@ import 'package:firstapp/providers/events_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:firstapp/pages/detailed_event_page.dart';
 import 'package:provider/provider.dart';
+import '../providers/user_provider.dart';
 
 class Attendee {
   final String userId;
@@ -296,7 +297,9 @@ class Event {
 
 class EventCard extends StatefulWidget {
   final Event event;
-  final bool showBookmarkButton;
+  bool showBookmarkButton;
+
+ 
 
   EventCard({Key? key, required this.event, this.showBookmarkButton = true})
       : super(key: key);
@@ -316,6 +319,10 @@ class _EventCardState extends State<EventCard> {
   Widget build(BuildContext context) {
 
     EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
+    userProvider userP = Provider.of<userProvider>(context, listen: false);
+    String userRole = userP.role;
+    widget.showBookmarkButton = userRole == "GUEST" ? false : true; // if user is a guest, don't show bookmark button
+
     final theme = Theme.of(context);
     final cardColour = theme.colorScheme.surface;
     final textColour = theme.colorScheme.onSurface;
