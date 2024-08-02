@@ -2,6 +2,7 @@ import 'package:firstapp/providers/events_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:firstapp/pages/detailed_event_page.dart';
 import 'package:provider/provider.dart';
+import '../providers/user_provider.dart';
 
 class Attendee {
   final String userId;
@@ -27,7 +28,7 @@ class Attendee {
     return Attendee(
       userId: json['userId'],
       fullName: json['fullName'],
-      profileImage: json['profileImage'],
+      profileImage: json['profileImage'] ?? '',
       role: json['role'],
     );
   }
@@ -115,14 +116,15 @@ class Building {
 
   factory Building.fromJson(Map<String, dynamic> json) {
     print("Printing Building From Json...");
-    print( json['name']);
-    return Building(
+    Building building;
+    building = Building(
       buildingId: json['buildingId'],
       name: json['name'],
       accessType: json['accessType'],
       location: json['location'],
       campus: json['campus'] != null ? Campus.fromJson(json['campus']) : null,
     );
+    return building;
   }
 
   Map<String, dynamic> toJson() {
@@ -167,7 +169,7 @@ class Venue {
 
   factory Venue.fromJson(Map<String, dynamic> json) {
     print("Printing Venue fromJson...");
-    return Venue(
+    Venue venue = Venue(
       venueId: json['venueId'],
       building: json['building'] != null ? Building.fromJson(json['building']) : null,
       name: json['name'],
@@ -181,6 +183,7 @@ class Venue {
       capacity: json['capacity'],
       available: json['available'],
     );
+    return venue;
   }
 
   Map<String, dynamic> toJson() {
@@ -294,7 +297,9 @@ class Event {
 
 class EventCard extends StatefulWidget {
   final Event event;
-  final bool showBookmarkButton;
+  bool showBookmarkButton;
+
+ 
 
   EventCard({Key? key, required this.event, this.showBookmarkButton = true})
       : super(key: key);
@@ -314,6 +319,10 @@ class _EventCardState extends State<EventCard> {
   Widget build(BuildContext context) {
 
     EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
+    userProvider userP = Provider.of<userProvider>(context, listen: false);
+    String userRole = userP.role;
+    widget.showBookmarkButton = userRole == "GUEST" ? false : true; // if user is a guest, don't show bookmark button
+
     final theme = Theme.of(context);
     final cardColour = theme.colorScheme.surface;
     final textColour = theme.colorScheme.onSurface;

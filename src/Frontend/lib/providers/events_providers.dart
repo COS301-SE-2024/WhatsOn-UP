@@ -121,21 +121,68 @@ class EventProvider with ChangeNotifier {
       throw Exception('Failed to fetch home events: $e');
     }
   }
-  Future<List<Event>> _fetchEventsRsvp(String userId) async {
 
+
+  Future<List<Event>> _fetchCalendarEventsGuest() async {
     try {
-      final response= await api.getRSVPEvents(userId);
+      // return await api.getAllEventsGuest();
+      return await api.getAllEvents();
+          } catch (e) {
+      throw Exception('Failed to fetch home events: $e');
+    }
+  }
+
+  // Future<List<Event>> _fetchEventsRsvp(String userId) async {
+
+  //   try {
+  //     final response= await api.getRSVPEvents(userId);
+  //     List<Event> events = (response as List)
+  //         .map((eventData) => Event.fromJson(eventData))
+  //         .toList();
+
+  //     return events;
+  //   } catch (e) {
+  //     throw Exception('Failed to fetch home events: $e');
+  //   }
+  // }
+
+  // Future<List<dynamic>>_fetchEventsRsvp(String userId) async {
+  //   final user = supabase.auth.currentUser;
+  //   try {
+  //     return await api.getRSVPEvents(userId);
+  //   } catch (e) {
+  //     throw Exception('Failed to fetch home events: $e');
+  //   }
+  // }
+
+  Future<List<Event>> _fetchEventsRsvp(String userId) async {
+    if (userId == "guest") { // If id received is "guest", user is a guest
+      final response = await api.getAllEventsGuest();
       List<Event> events = (response as List)
           .map((eventData) => Event.fromJson(eventData))
           .toList();
 
-      return events;
-    } catch (e) {
-      throw Exception('Failed to fetch home events: $e');
+      List<Map<String, dynamic>> eventMaps = events.map((event) => event.toJson()).toList();
+      List<Event> events2 = eventMaps.map((map) => Event.fromJson(map)).toList();
+
+      return events2;
     }
+  try {
+    // return await api.getRSVPEvents(userId!);
+    final response= await api.getRSVPEvents(userId);
+      List<Event> events = (response as List)
+          .map((eventData) => Event.fromJson(eventData))
+          .toList();
+
+      // print(events);
+      return events;
+  } catch (e) {
+    throw Exception('Failed to fetch RSVP events: $e');
   }
+}
+
   void fetchfortheFirstTimeRsvp(String userId) {
-    _eventsRsvp = _fetchEventsRsvp(userId);
+    _eventsRsvp =  _fetchEventsRsvp(userId);
   }
 
 

@@ -9,7 +9,7 @@ class Api {
   // Singleton instance
   static final Api _instance = Api._internal();
   // static const String domain = '10.0.2.2';
-  static const String domain = 'Localhost';
+  static const String domain = 'localhost';
   factory Api() => _instance;
   Api._internal();
 
@@ -91,10 +91,6 @@ class Api {
       // Parse the JSON response
       final Map<String, dynamic> decodedJson = json.decode(response.body);
       final List<dynamic> eventsJson = decodedJson['data'];
-      print("decodedJson");
-      print(decodedJson);
-      print("eventsJson");
-      print(eventsJson);
       // Map the JSON objects to Event objects
       final List<Event> events = eventsJson.map((jsonEvent) => Event.fromJson(jsonEvent)).toList();
       print("events");
@@ -139,7 +135,7 @@ class Api {
   Future<List<dynamic>> getRSVPEvents(String userId) async {
 
     try {
-      final String _rsvpEventsURL = 'http://localhost:8080/api/user/get_rspv_events';
+      final String _rsvpEventsURL = 'http://$domain:8080/api/user/get_rspv_events';
       var headers = {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
@@ -167,7 +163,7 @@ class Api {
       base64Image = base64Encode(profileImage);
     }
 
-    var userChangeUrl = Uri.parse('http://localhost:8080/api/user/update_profile');
+    var userChangeUrl = Uri.parse('http://$domain:8080/api/user/update_profile');
 
 
     var headers = {
@@ -199,7 +195,7 @@ class Api {
   }
   Future<Map<String, dynamic>> updatePassword(String password,String userId) async {
 
-    var Url = Uri.parse('http://localhost:8080/api/auth/reset_password');
+    var Url = Uri.parse('http://$domain:8080/api/auth/reset_password');
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -241,7 +237,7 @@ class Api {
     List<String>? media,
     required String userId,
   }) async {
-    final String _createEventUrl = 'http://localhost:8080/api/events/create';
+    final String _createEventUrl = 'http://$domain:8080/api/events/create';
 
     var headers = {
       'Content-Type': 'application/json',
@@ -277,7 +273,7 @@ class Api {
 
 
   Future<Map<String, dynamic>> rsvpEvent(String eventId, String UserId) async {
-    final String _rsvpEventUrl = 'http://localhost:8080/api/user/rspv_event/$eventId';
+    final String _rsvpEventUrl = 'http://$domain:8080/api/user/rspv_event/$eventId';
     
     var headers = {
       'Content-Type': 'application/json',
@@ -352,7 +348,7 @@ class Api {
 
    Future<Map<String, dynamic>> postUsername(String username,String userid) async {
 
-    var userChangeUrl = Uri.parse('http://localhost:8080/api/user/update_profile');
+    var userChangeUrl = Uri.parse('http://$domain:8080/api/user/update_profile');
   //
   //   // Define the headers and body for login request
     var headers = {
@@ -408,6 +404,73 @@ class Api {
 
   }
 
+//   Future<List<Event>> getAllEventsGuest() async {
+//   try {
+//       final _allEventsGuestURL = 'http://$domain:8080/api/events/get_all';
+//       var headers = {
+//         'Content-Type': 'application/json',
+//         'Accept': 'application/json',
+//       };
+
+//       var response = await http.get(Uri.parse(_allEventsGuestURL), headers: headers);
+
+//       if (response.statusCode == 200) {
+//         // print('WORKING RSVP API!');
+//         return jsonDecode(response.body)['data'];
+//       } else {
+//         throw Exception(jsonDecode(response.body));
+//       }
+//     }
+//     catch (e) {
+//       print('Error all events guest: $e');
+//       throw Exception(e.toString());
+//     }
+// }
+
+Future<List<dynamic>> getAllEventsGuest() async {
+  
+
+
+  // try {
+  //   var response = await http.get(Uri.parse(_rsvpEventsURL),);
+
+  //   if (response.statusCode == 200) {
+  //     // Parse the JSON response
+  //     final Map<String, dynamic> decodedJson = json.decode(response.body);
+  //     final List<dynamic> eventsJson = decodedJson['data'];
+
+  //     // Map the JSON objects to Event objects
+  //     final List<Event> events = eventsJson.map((jsonEvent) => Event.fromJson(jsonEvent)).toList();
+  //     return events;
+  //   } else {
+  //     throw Exception('Failed to load events');
+  //   }
+  // } catch (e) {
+
+  //   rethrow;
+  // }
+
+  try {
+      final _rsvpEventsURL = 'http://$domain:8080/api/events/get_all';
+      var headers = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      };
+
+      var response = await http.get(Uri.parse(_rsvpEventsURL), headers: headers);
+
+      if (response.statusCode == 200) {
+
+        return jsonDecode(response.body)['data'];
+      } else {
+        throw Exception(jsonDecode(response.body));
+      }
+    }
+    catch (e) {
+
+      throw Exception(e.toString());
+    }
+}
 
 
   Future<Map<String, dynamic>> updateEvent({

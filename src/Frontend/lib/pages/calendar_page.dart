@@ -8,7 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:firstapp/services/api.dart';
 import 'package:firstapp/pages/detailed_event_page.dart';
 import 'package:firstapp/widgets/event_card.dart';
-
+import '../providers/user_provider.dart';
 import '../providers/events_providers.dart';
 
 class CalendarPage extends StatefulWidget {
@@ -30,7 +30,8 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
     super.initState();
     // _fetchRSVPEvents();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _fetchRSVPEvents();
+      // _fetchRSVPEvents();
+      _fetchEvents();
     });
   }
   // @override
@@ -46,12 +47,37 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
   Map<DateTime, List<Map<String, dynamic>>> _groupedEvents = {};
   bool _isLoading = true;
 
-  Future<void> _fetchRSVPEvents() async {
+  // Future<void> _fetchRSVPEvents() async {
 
-    try {
-      EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
-      final List<Event> events = await eventP.eventsRsvp;
-      // final parsedEvents = parseEvents(response);
+  //   try {
+  //     EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
+  //     final response = await eventP.eventsRsvp;
+
+  //     final parsedEvents = parseEvents(response);
+
+  //     setState(() {
+  //       _groupedEvents = _groupEventsByDate(parsedEvents);
+  //       _isLoading = false;
+  //     });
+      
+  //   } catch (e) {
+  //     print('RSVP Error: $e');
+  //     setState(() {
+  //       _isLoading = false;
+  //     });
+  //   }
+  // }
+
+  Future<void> _fetchEvents() async {
+  try {
+    EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
+    userProvider userP = Provider.of<userProvider>(context, listen: false);
+    
+    String? userId = userP.role == 'guest' ? null : userP.userId;
+    eventP.fetchfortheFirstTimeRsvp(userId!);
+
+    List<Event> events = await eventP.eventsRsvp;
+    // final parsedEvents = parseEvents(response);
 
       setState(() {
         _groupedEvents = _groupEventsByDate(events);
@@ -59,7 +85,7 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
       });
       
     } catch (e) {
-      // print('RSVP Error: $e');
+      print('RSVP Error: $e');
       setState(() {
         _isLoading = false;
       });
@@ -176,15 +202,28 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
   }
 
   String _formatDate(DateTime date) {
-  return DateFormat('d MMMM yyyy').format(date);
-}
+    return DateFormat('d MMMM yyyy').format(date);
+  }
+
+
+  String _getEventListTitle(userProvider userP) {
+    // print("USER ROLE IN CALEDNAR PAGE: ${userP.role}");
+    if (_selectedDay != null) {
+      return "Events on ${_formatDate(_selectedDay!)}";
+    } 
+    else {
+      if (userP.role == 'GUEST') {
+        return "Events happening in ${_formatMonth(_focusedDay)}";
+      } 
+      else {
+        return "Your RSVP'd Events for ${_formatMonth(_focusedDay)}";
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-
-
-
-
+    final userP = Provider.of<userProvider>(context);
     super.build(context);
     return Scaffold(
       body: Column(
@@ -278,9 +317,10 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                _selectedDay != null
-                    ? "Events on ${_formatDate(_selectedDay!)}"
-                    : "Your RSVP'd Events for ${_formatMonth(_focusedDay)}",
+                // _selectedDay != null
+                //     ? "Events on ${_formatDate(_selectedDay!)}"
+                //     : "Your RSVP'd Events for ${_formatMonth(_focusedDay)}",
+                _getEventListTitle(userP),
                 style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -307,7 +347,6 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
 
                     return GestureDetector(
                       onTap: () {
-                        print("AHHHHHHAAAA ${event['venue']}");
                         Event eventObject = Event(
                           nameOfEvent: event['name'],
                           venue: Venue.fromJson(event['venue']),
@@ -372,6 +411,8 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
                                         fontSize: 18,
                                         fontWeight: FontWeight.bold,
                                       ),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
                                     ),
                                     const SizedBox(height: 8.0),
                                     Row(
@@ -386,12 +427,39 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
                                       ],
                                     ),
                                     const SizedBox(height: 8.0),
+                                    // Row(
+                                    //   children: [
+                                    //     const Icon(Icons.location_on, size: 16),
+                                    //     const SizedBox(width: 4.0),
+                                    //     Expanded(
+                                    //       child: Text(
+                                    //         event['location'],
+                                    //         overflow: TextOverflow.ellipsis,
+                                    //         maxLines: 1,
+                                    //       ),
+                                    //     ),
+                                    //     const SizedBox(width: 16.0),
+                                    //     const Icon(Icons.people, size: 16),
+                                    //     const SizedBox(width: 4.0),
+                                    //     Text(event['attendees']),
+                                    //   ],
+                                    // ),
                                     Row(
                                       children: [
                                         const Icon(Icons.location_on, size: 16),
                                         const SizedBox(width: 4.0),
-                                        Text(event['venue']['name']),
-                                        const SizedBox(width: 16.0),
+                                        Expanded(
+                                          child: Text(
+                                            event['venue']['name'],
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 4.0),
+                                    Row(
+                                      children: [
                                         const Icon(Icons.people, size: 16),
                                         const SizedBox(width: 4.0),
                                         Text(event['attendees'].length.toString()),
