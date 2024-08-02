@@ -55,6 +55,8 @@
 
 
 
+import 'package:firstapp/pages/Promotion_form.dart';
+import 'package:firstapp/pages/calendar_page.dart';
 import 'package:firstapp/pages/detailed_event_page.dart';
 import 'package:firstapp/pages/editProfile_page.dart';
 
@@ -66,6 +68,7 @@ import 'package:firstapp/pages/supabase_Splashpage.dart';
 import 'package:firstapp/pages/supabase_login.dart';
 import 'package:firstapp/pages/supabase_resetPassword.dart';
 import 'package:firstapp/providers/events_providers.dart';
+import 'package:firstapp/providers/notification_providers.dart';
 import 'package:firstapp/providers/user_provider.dart';
 import 'package:firstapp/screens/SearchScreen.dart';
 import 'package:firstapp/services/api.dart';
@@ -80,7 +83,7 @@ void main() async{
   var api = Api();
   await Supabase.initialize(
     url: 'https://mehgbhiirnmypfgnkaud.supabase.co',
-    anonKey:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1laGdiaGlpcm5teXBmZ25rYXVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTY3ODcxMjMsImV4cCI6MjAzMjM2MzEyM30.IqwbTqO7T_ZyYjkWBAbKCK2kwEzJktZtAEJKlrfjYvY',
+    anonKey:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1laGdiaGlpcm5teXBmZ25rYXVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjI1OTc1ODksImV4cCI6MjAzODE3MzU4OX0.LhJE4sO3YrRi2VwQmbt-24LHUVM3bK9eFzHz1SsvH1s',
 
   );
   // runApp(ChangeNotifierProvider<ThemeNotifier>(
@@ -99,6 +102,7 @@ void main() async{
       ChangeNotifierProvider(create: (context) => EventProvider(api: api)),
       ChangeNotifierProvider(create: (context) => userProvider()),
       ChangeNotifierProvider(create: (context) => ThemeNotifier()),
+      ChangeNotifierProvider(create: (context) => notificationProvider()),
     ],
       child: MyApp(),
   ),
@@ -125,6 +129,8 @@ class MyApp extends StatelessWidget {
           '/search': (context)=>  SearchScreen(),
            '/resetPassword': (context)=> const ResetPasswordPage(),
           '/detailed_event': (context) => DetailedEventPage(event: ModalRoute.of(context)!.settings.arguments as Event),
+          '/PromotionForm': (context)=> const PromotionForm(),
+          '/calendar': (context)=> const CalendarPage(),
           //
         },
 
