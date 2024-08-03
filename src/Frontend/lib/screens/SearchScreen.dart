@@ -19,6 +19,7 @@ class _SearchScreenState extends State<SearchScreen> {
   bool _isLoading = false;
   bool _showSearchTiles = true;
   bool _showSearchHistory = false;
+  bool _hasSearched = false;
   Timer? _debounce;
 
   @override
@@ -54,6 +55,7 @@ class _SearchScreenState extends State<SearchScreen> {
       _searchResults.clear();
       _showSearchTiles = false;
       _showSearchHistory = false;
+      _hasSearched = true;
     });
 
     try {
@@ -75,6 +77,7 @@ class _SearchScreenState extends State<SearchScreen> {
     setState(() {
       _searchResults.clear();
       _showSearchTiles = true;
+      _hasSearched = false;
     });
   }
 
@@ -212,7 +215,7 @@ class _SearchScreenState extends State<SearchScreen> {
             SizedBox(height: 16.0),
             _isLoading
                 ? Center(child: CircularProgressIndicator())
-                : _searchResults.isEmpty && _categories.isEmpty
+                : _hasSearched && _searchResults.isEmpty
                 ? Center(child: Text('No events found'))
                 : Expanded(
               child: ListView.builder(
