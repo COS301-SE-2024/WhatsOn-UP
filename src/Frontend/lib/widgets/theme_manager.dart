@@ -10,7 +10,8 @@ const Color lightTextColor = Colors.black;
 // Dark colours
 const Color darkPrimaryColor = Color.fromARGB(255, 13, 71, 161);
 const Color darkSecondaryColor = Color.fromARGB(255, 149, 137, 74);
-const Color darkBackgroundColor = Color.fromARGB(255, 31, 31, 31);
+// const Color darkBackgroundColor = Color.fromARGB(255, 31, 31, 31);
+const Color darkBackgroundColor = Color.fromARGB(255, 18, 18, 18);
 
 class ThemeNotifier with ChangeNotifier {
   final lightTheme = ThemeData(
@@ -46,20 +47,14 @@ class ThemeNotifier with ChangeNotifier {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
           // side: const BorderSide(color: Colors.grey, width: 1),
-          side: const BorderSide(color: Color.fromARGB(255, 255, 255, 255), width: 1),
+          // side: const BorderSide(color: Color.fromARGB(255, 255, 255, 255), width: 1),
         ),
         padding: const EdgeInsets.symmetric(vertical: 16),
       ),
     ),
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(
-        foregroundColor: const Color.fromARGB(255, 255, 255, 255),
-        padding: const EdgeInsets.symmetric(vertical: 10.0),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
-          side: BorderSide(color: const Color.fromARGB(255, 255, 255, 255)),
-        ),
-        backgroundColor: lightPrimaryColor,
+        foregroundColor: Color.fromARGB(255, 13, 71, 161),
       ),
     ),
   );
@@ -95,20 +90,14 @@ class ThemeNotifier with ChangeNotifier {
         backgroundColor: darkPrimaryColor,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
-          side: BorderSide(color: const Color.fromARGB(255, 255, 255, 255), width: 1),
+          // side: BorderSide(color: const Color.fromARGB(255, 255, 255, 255), width: 1),
         ),
         padding: EdgeInsets.symmetric(vertical: 16),
       ),
     ),
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(
-        foregroundColor: Colors.white,
-        padding: const EdgeInsets.symmetric(vertical: 10.0),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
-          side: BorderSide(color: Colors.white),
-        ),
-        backgroundColor: darkPrimaryColor,
+        foregroundColor: Color.fromARGB(255, 60, 128, 230),
       ),
     ),
     );

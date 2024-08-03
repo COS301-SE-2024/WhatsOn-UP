@@ -77,15 +77,15 @@ class _ProfilePageState extends State<ProfilePage> {
                           context,
                           MaterialPageRoute(builder: (context) => EditprofilePage()),
                         ),
-                        style: ElevatedButton.styleFrom(
-                          foregroundColor: Colors.black,
-                          backgroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            side: BorderSide(color: Colors.grey, width: 1),
-                          ),
-                          padding: EdgeInsets.symmetric(vertical: 16),
-                        ),
+                        // style: ElevatedButton.styleFrom(
+                        //   foregroundColor: Colors.black,
+                        //   backgroundColor: Colors.white,
+                        //   shape: RoundedRectangleBorder(
+                        //     borderRadius: BorderRadius.circular(20),
+                        //     side: BorderSide(color: Colors.grey, width: 1),
+                        //   ),
+                        //   padding: EdgeInsets.symmetric(vertical: 16),
+                        // ),
                         child: const Text('Edit Profile', style: TextStyle(fontSize: 16)),
                       ),
                     ),
@@ -93,7 +93,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     const SizedBox(height: 20),
                     Text(
                       "Create an account to access more features!",
-                      style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                      style: TextStyle(fontSize: 16, color: const Color.fromARGB(255, 151, 151, 151)),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 20),
@@ -106,15 +106,15 @@ class _ProfilePageState extends State<ProfilePage> {
                             MaterialPageRoute(builder: (context) => const SupabaseSignup ()),
                           );
                         },
-                        style: ElevatedButton.styleFrom(
-                          foregroundColor: Colors.black,
-                          backgroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            side: BorderSide(color: Colors.grey, width: 1),
-                          ),
-                          padding: EdgeInsets.symmetric(vertical: 12),
-                        ),
+                        // style: ElevatedButton.styleFrom(
+                        //   foregroundColor: Colors.black,
+                        //   backgroundColor: Colors.white,
+                        //   shape: RoundedRectangleBorder(
+                        //     borderRadius: BorderRadius.circular(20),
+                        //     side: BorderSide(color: Colors.grey, width: 1),
+                        //   ),
+                        //   padding: EdgeInsets.symmetric(vertical: 12),
+                        // ),
                         child: const Text('Sign Up', style: TextStyle(fontSize: 16)),
                       ),
                     ),
@@ -123,7 +123,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       onPressed: () {
                         Navigator.pushNamed(context, '/login');
                       },
-                      child: const Text('Already have an account? Log In'),
+                      child:  const Text('Already have an account? Log In',),
                     ),
                   ],
                   const SizedBox(height: 30),
@@ -160,7 +160,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               }
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => SupabaseLogin()),
+                                MaterialPageRoute(builder: (context) => const SupabaseLogin()),
                               );
                             },
                           ),
@@ -182,11 +182,11 @@ class _ProfilePageState extends State<ProfilePage> {
                                 context: context,
                                 builder: (BuildContext context) {
                                   return AlertDialog(
-                                    title: Text('Limited Access'),
-                                    content: Text('As a guest user, you have limited access to features. Sign up or log in to unlock full functionality!'),
+                                    title: const Text('Limited Access'),
+                                    content: const Text('As a guest user, you have limited access to features. Sign up or log in to unlock functionality such as saving events or adding events to your calendar!'),
                                     actions: <Widget>[
                                       TextButton(
-                                        child: Text('OK'),
+                                        child: const Text('OK'),
                                         onPressed: () {
                                           Navigator.of(context).pop();
                                         },

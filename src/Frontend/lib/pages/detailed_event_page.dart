@@ -342,7 +342,6 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
                         minimumSize: const Size(double.infinity, 48),
                       ),
                     ),
-                    const SizedBox(height: 8.0),
                   ],
                   const SizedBox(height: 8.0),
                   ElevatedButton.icon(
@@ -355,6 +354,7 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
                   ),
 
                   const SizedBox(height: 8.0),
+                  if (userP.role != "GUEST")
                   ElevatedButton.icon(
                     onPressed: _reportEvent,
                     icon: const Icon(Icons.report),
@@ -376,9 +376,9 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
                       icon: const Icon(Icons.edit),
                       label: const Text('Edit Event'),
                       style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.black,
-                        backgroundColor: Colors.white,
-                        side: const BorderSide(color: Colors.black),
+                        // foregroundColor: Colors.black,
+                        // backgroundColor: Colors.white,
+                        // side: const BorderSide(color: Colors.black),
                         minimumSize: const Size(double.infinity, 48),
                       ),
                     ),
@@ -388,8 +388,8 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
                       icon: const Icon(Icons.delete),
                       label: const Text('Remove Event'),
                       style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.black,
-                        backgroundColor: Colors.white,
+                        // foregroundColor: Colors.black,
+                        // backgroundColor: Colors.white,
                         side: const BorderSide(color: Colors.red),
                         minimumSize: const Size(double.infinity, 48),
                       ),

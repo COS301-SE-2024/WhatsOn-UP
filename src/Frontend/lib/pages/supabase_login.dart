@@ -228,7 +228,7 @@ bool _obscurePassword=true;
         body: Stack(
           children: [
             Positioned(top: 80, child: _buildTop()),
-            Positioned(bottom: 5, child: _buildBottom()),
+            Positioned(bottom: 0, child: _buildBottom(context)),
           ],
         ),
       ),
@@ -255,13 +255,14 @@ bool _obscurePassword=true;
     );
   }
 
-  Widget _buildBottom() {
+  Widget _buildBottom(BuildContext context) {
     return Container(
       width: mediaSize.width,
       height: mediaSize.height * 0.7,
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: Colors.white,
+        // color: Colors.white,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(30.0),
           topRight: Radius.circular(30.0),
@@ -305,7 +306,8 @@ bool _obscurePassword=true;
             obscureText: _obscurePassword,
           ),
           const SizedBox(height: 20),
-          TextButton(
+          // TextButton(
+          ElevatedButton(
 
             onPressed: () async {
               try {
@@ -359,7 +361,8 @@ bool _obscurePassword=true;
             child: const Text('Login'),
           ),
           const SizedBox(height: 10),
-          TextButton(
+          // TextButton(
+          ElevatedButton(
               onPressed: () {
 
                 Navigator.push(
