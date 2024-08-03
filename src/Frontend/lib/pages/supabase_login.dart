@@ -177,6 +177,7 @@ import 'dart:typed_data';
 import 'package:firstapp/services/api.dart';
 
 import '../providers/events_providers.dart';
+import '../providers/notification_providers.dart';
 import '../providers/user_provider.dart';
 
 class SupabaseLogin extends StatefulWidget {
@@ -550,6 +551,9 @@ bool _obscurePassword=true;
         userP.Fullname=fullName;
         userP.email=userEmail;
         userP.role=role;
+        notificationProvider _notificationProvider = Provider.of<notificationProvider>(context, listen: false);
+        _notificationProvider.apiInstance=api;
+        _notificationProvider.refreshNotifications(userP.userId);
         bool isBase64(String input) {
           final RegExp base64 = RegExp(
             r'^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$',
@@ -572,7 +576,7 @@ bool _obscurePassword=true;
           fullName: fullName,
           email: userEmail,
           role: role,
-          profileImage: profileImageBytes,
+          profileImage: profileImage,
           isGuest: false,
         );
 
