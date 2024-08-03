@@ -218,5 +218,67 @@ export class AppService {
       );
     }
   }
+
+  async uploadProof(file: any, application_id: string) {
+    const filename = this.generateRandomString(50) + file.originalname.substring(file.originalname.lastIndexOf('.'));
+    
+    // Upload file to storage
+    const { data: fileInfo, error: fileError } = await this.supabase.storage
+      .from('storage')
+      .upload(filename, file.buffer);
+  
+    if (fileError) {
+      throw new HttpException(
+        {
+          status: 'error',
+          message: `Error uploading file ${file.originalname}: ${fileError.message}`,
+          timestamp: new Date().toISOString(),
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  
+    // Get public URL for the uploaded file
+    const { data: urlData} = this.supabase
+      .storage
+      .from('storage')
+      .getPublicUrl(filename);
+  
+    if (!urlData.publicUrl) {
+      throw new HttpException(
+        {
+          status: 'error',
+          message: `Error getting public URL for file ${file.originalname}: 'No public URL returned'}`,
+          timestamp: new Date().toISOString(),
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  
+    // Update host_applications table with the URL and filename
+    const { data: eventMedia, error: eventMediaError } = await this.supabase
+      .from('host_applications')
+      .update({ proof_url: urlData.publicUrl, proof_name: filename })
+      .eq('application_id', application_id);
+  
+    if (eventMediaError) {
+      throw new HttpException(
+        {
+          status: 'error',
+          message: `Error updating record for file ${file.originalname}: ${eventMediaError.message}`,
+          timestamp: new Date().toISOString(),
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  
+    return {
+      media_name: filename,
+      media_link: urlData.publicUrl
+    };
+  }
+  
     
 }
+
+
