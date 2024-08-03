@@ -14,14 +14,16 @@ class userProvider extends ChangeNotifier{
   String _Password = '';
   String _Role= '';
   String _userId= '';
- Uint8List? profileImage;
+  Uint8List? profileimage;
+  bool _isGuest = false;
 
   String get Fullname => _Fullname;
   String get email => _Email;
   String get password => _Password;
-  Uint8List? get profileimage => profileImage;
+  Uint8List? get profileImage => profileimage;
   String get role => _Role;
   String get userId => _userId;
+  bool get isGuest => _isGuest;
 
 
 
@@ -38,8 +40,8 @@ class userProvider extends ChangeNotifier{
       _Password = value;
       notifyListeners();
     }
-    set profileimage(Uint8List? value){
-      profileImage = value;
+    set profileImage(Uint8List? value){
+      profileimage = value;
       notifyListeners();
     }
     set role(String value){
@@ -50,5 +52,50 @@ class userProvider extends ChangeNotifier{
       _userId = value;
       notifyListeners();
     }
+    set isGuest(bool value) {
+      _isGuest = value;
+      notifyListeners();
+  }
 
+
+  void setUserData({
+    required String userId,
+    required String fullName,
+    required String email,
+    String? password,
+    required String role,
+    Uint8List? profileImage,
+    required bool isGuest,
+  }) {
+    _userId = userId;
+    _Fullname = fullName;
+    _Email = email;
+    if (password != null) _Password = password;
+    _Role = role;
+    this.profileImage = profileImage;
+    _isGuest = isGuest;
+    notifyListeners();
+  }
+
+  void setGuestUser() {
+    _userId = 'guest';
+    _Fullname = 'Guest User';
+    _Email = '';
+    _Password = '';
+    _Role = 'GUEST';
+    profileImage = null;
+    _isGuest = true;
+    notifyListeners();
+  }
+
+  void clearUser() {
+    _userId = '';
+    _Fullname = '';
+    _Email = '';
+    _Password = '';
+    _Role = '';
+    profileImage = null;
+    _isGuest = false;
+    notifyListeners();
+  }
 }

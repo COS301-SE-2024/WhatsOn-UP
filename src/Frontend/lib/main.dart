@@ -55,8 +55,9 @@
 
 
 
+import 'package:firstapp/pages/detailed_event_page.dart';
 import 'package:firstapp/pages/editProfile_page.dart';
-import 'package:firstapp/pages/edit_Event.dart';
+
 import 'package:firstapp/pages/home_page.dart';
 import 'package:firstapp/pages/host_application.dart';
 import 'package:firstapp/pages/profilePage.dart';
@@ -69,6 +70,7 @@ import 'package:firstapp/providers/events_providers.dart';
 import 'package:firstapp/providers/user_provider.dart';
 import 'package:firstapp/screens/SearchScreen.dart';
 import 'package:firstapp/services/api.dart';
+import 'package:firstapp/widgets/event_card.dart';
 import 'package:firstapp/widgets/theme_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -124,6 +126,8 @@ class MyApp extends StatelessWidget {
           '/search': (context)=>  SearchScreen(),
           '/resetPassword': (context)=> const ResetPasswordPage(),
           '/hostApplication': (context)=> HostApplicationPage(),
+          '/detailed_event': (context) => DetailedEventPage(event: ModalRoute.of(context)!.settings.arguments as Event),
+          //
         },
 
         debugShowCheckedModeBanner: false,

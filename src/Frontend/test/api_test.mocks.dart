@@ -3,16 +3,19 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i4;
-import 'dart:typed_data' as _i8;
-import 'dart:ui' as _i6;
+import 'dart:async' as _i5;
+import 'dart:typed_data' as _i9;
+import 'dart:ui' as _i7;
 
-import 'package:firstapp/providers/events_providers.dart' as _i3;
-import 'package:firstapp/providers/user_provider.dart' as _i7;
+import 'package:firstapp/providers/events_providers.dart' as _i4;
+import 'package:firstapp/providers/user_provider.dart' as _i8;
 import 'package:firstapp/services/api.dart' as _i2;
-import 'package:firstapp/widgets/event_card.dart' as _i5;
+import 'package:firstapp/widgets/event_card.dart' as _i6;
+import 'package:image_picker/image_picker.dart' as _i11;
+import 'package:image_picker_platform_interface/image_picker_platform_interface.dart'
+    as _i3;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:mockito/src/dummies.dart' as _i9;
+import 'package:mockito/src/dummies.dart' as _i10;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -37,10 +40,21 @@ class _FakeApi_0 extends _i1.SmartFake implements _i2.Api {
         );
 }
 
+class _FakeLostDataResponse_1 extends _i1.SmartFake
+    implements _i3.LostDataResponse {
+  _FakeLostDataResponse_1(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
 /// A class which mocks [EventProvider].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockEventProvider extends _i1.Mock implements _i3.EventProvider {
+class MockEventProvider extends _i1.Mock implements _i4.EventProvider {
   MockEventProvider() {
     _i1.throwOnMissingStub(this);
   }
@@ -64,22 +78,22 @@ class MockEventProvider extends _i1.Mock implements _i3.EventProvider {
       );
 
   @override
-  _i4.Future<List<_i5.Event>> get eventsHome => (super.noSuchMethod(
+  _i5.Future<List<_i6.Event>> get eventsHome => (super.noSuchMethod(
         Invocation.getter(#eventsHome),
-        returnValue: _i4.Future<List<_i5.Event>>.value(<_i5.Event>[]),
-      ) as _i4.Future<List<_i5.Event>>);
+        returnValue: _i5.Future<List<_i6.Event>>.value(<_i6.Event>[]),
+      ) as _i5.Future<List<_i6.Event>>);
 
   @override
-  _i4.Future<List<_i5.Event>> get eventsRsvp => (super.noSuchMethod(
+  _i5.Future<List<_i6.Event>> get eventsRsvp => (super.noSuchMethod(
         Invocation.getter(#eventsRsvp),
-        returnValue: _i4.Future<List<_i5.Event>>.value(<_i5.Event>[]),
-      ) as _i4.Future<List<_i5.Event>>);
+        returnValue: _i5.Future<List<_i6.Event>>.value(<_i6.Event>[]),
+      ) as _i5.Future<List<_i6.Event>>);
 
   @override
-  List<_i5.Event> get eventsSaved => (super.noSuchMethod(
+  List<_i6.Event> get eventsSaved => (super.noSuchMethod(
         Invocation.getter(#eventsSaved),
-        returnValue: <_i5.Event>[],
-      ) as List<_i5.Event>);
+        returnValue: <_i6.Event>[],
+      ) as List<_i6.Event>);
 
   @override
   bool get hasListeners => (super.noSuchMethod(
@@ -88,24 +102,24 @@ class MockEventProvider extends _i1.Mock implements _i3.EventProvider {
       ) as bool);
 
   @override
-  _i4.Future<void> refreshEvents() => (super.noSuchMethod(
+  _i5.Future<void> refreshEvents() => (super.noSuchMethod(
         Invocation.method(
           #refreshEvents,
           [],
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i5.Future<void>.value(),
+        returnValueForMissingStub: _i5.Future<void>.value(),
+      ) as _i5.Future<void>);
 
   @override
-  _i4.Future<void> refreshRSVPEvents(String? userId) => (super.noSuchMethod(
+  _i5.Future<void> refreshRSVPEvents(String? userId) => (super.noSuchMethod(
         Invocation.method(
           #refreshRSVPEvents,
           [userId],
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i5.Future<void>.value(),
+        returnValueForMissingStub: _i5.Future<void>.value(),
+      ) as _i5.Future<void>);
 
   @override
   void fetchfortheFirstTimeRsvp(String? userId) => super.noSuchMethod(
@@ -117,18 +131,18 @@ class MockEventProvider extends _i1.Mock implements _i3.EventProvider {
       );
 
   @override
-  _i4.Future<void> addEventHome(Map<String, dynamic>? eventData) =>
+  _i5.Future<void> addEventHome(Map<String, dynamic>? eventData) =>
       (super.noSuchMethod(
         Invocation.method(
           #addEventHome,
           [eventData],
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i5.Future<void>.value(),
+        returnValueForMissingStub: _i5.Future<void>.value(),
+      ) as _i5.Future<void>);
 
   @override
-  void addEventsHome(List<_i5.Event>? events) => super.noSuchMethod(
+  void addEventsHome(List<_i6.Event>? events) => super.noSuchMethod(
         Invocation.method(
           #addEventsHome,
           [events],
@@ -137,17 +151,17 @@ class MockEventProvider extends _i1.Mock implements _i3.EventProvider {
       );
 
   @override
-  _i4.Future<void> removeEventHome(_i5.Event? event) => (super.noSuchMethod(
+  _i5.Future<void> removeEventHome(_i6.Event? event) => (super.noSuchMethod(
         Invocation.method(
           #removeEventHome,
           [event],
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i5.Future<void>.value(),
+        returnValueForMissingStub: _i5.Future<void>.value(),
+      ) as _i5.Future<void>);
 
   @override
-  void addEventRSVP(_i5.Event? event) => super.noSuchMethod(
+  void addEventRSVP(_i6.Event? event) => super.noSuchMethod(
         Invocation.method(
           #addEventRSVP,
           [event],
@@ -156,7 +170,7 @@ class MockEventProvider extends _i1.Mock implements _i3.EventProvider {
       );
 
   @override
-  void addEventsRSVP(List<_i5.Event>? events) => super.noSuchMethod(
+  void addEventsRSVP(List<_i6.Event>? events) => super.noSuchMethod(
         Invocation.method(
           #addEventsRSVP,
           [events],
@@ -165,7 +179,7 @@ class MockEventProvider extends _i1.Mock implements _i3.EventProvider {
       );
 
   @override
-  void removeEventRSVP(_i5.Event? event) => super.noSuchMethod(
+  void removeEventRSVP(_i6.Event? event) => super.noSuchMethod(
         Invocation.method(
           #removeEventRSVP,
           [event],
@@ -174,7 +188,7 @@ class MockEventProvider extends _i1.Mock implements _i3.EventProvider {
       );
 
   @override
-  void addEventSaved(_i5.Event? event) => super.noSuchMethod(
+  void addEventSaved(_i6.Event? event) => super.noSuchMethod(
         Invocation.method(
           #addEventSaved,
           [event],
@@ -183,7 +197,7 @@ class MockEventProvider extends _i1.Mock implements _i3.EventProvider {
       );
 
   @override
-  void removeEventSaved(_i5.Event? event) => super.noSuchMethod(
+  void removeEventSaved(_i6.Event? event) => super.noSuchMethod(
         Invocation.method(
           #removeEventSaved,
           [event],
@@ -192,16 +206,16 @@ class MockEventProvider extends _i1.Mock implements _i3.EventProvider {
       );
 
   @override
-  _i4.Future<_i5.Event?> getEventById(String? id) => (super.noSuchMethod(
+  _i5.Future<_i6.Event?> getEventById(String? id) => (super.noSuchMethod(
         Invocation.method(
           #getEventById,
           [id],
         ),
-        returnValue: _i4.Future<_i5.Event?>.value(),
-      ) as _i4.Future<_i5.Event?>);
+        returnValue: _i5.Future<_i6.Event?>.value(),
+      ) as _i5.Future<_i6.Event?>);
 
   @override
-  _i4.Future<void> EditEventName(
+  _i5.Future<void> EditEventName(
     String? id,
     String? eventName,
   ) =>
@@ -213,9 +227,9 @@ class MockEventProvider extends _i1.Mock implements _i3.EventProvider {
             eventName,
           ],
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i5.Future<void>.value(),
+        returnValueForMissingStub: _i5.Future<void>.value(),
+      ) as _i5.Future<void>);
 
   @override
   void EditEventDescription(
@@ -234,7 +248,7 @@ class MockEventProvider extends _i1.Mock implements _i3.EventProvider {
       );
 
   @override
-  _i4.Future<void> EditEventLocation(
+  _i5.Future<void> EditEventLocation(
     String? id,
     String? Location,
   ) =>
@@ -246,12 +260,12 @@ class MockEventProvider extends _i1.Mock implements _i3.EventProvider {
             Location,
           ],
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i5.Future<void>.value(),
+        returnValueForMissingStub: _i5.Future<void>.value(),
+      ) as _i5.Future<void>);
 
   @override
-  _i4.Future<void> EditEventMaxParticipants(
+  _i5.Future<void> EditEventMaxParticipants(
     String? id,
     int? maxParticipants,
   ) =>
@@ -263,9 +277,9 @@ class MockEventProvider extends _i1.Mock implements _i3.EventProvider {
             maxParticipants,
           ],
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i5.Future<void>.value(),
+        returnValueForMissingStub: _i5.Future<void>.value(),
+      ) as _i5.Future<void>);
 
   @override
   void EditEventsIsPrivate(
@@ -316,7 +330,7 @@ class MockEventProvider extends _i1.Mock implements _i3.EventProvider {
       );
 
   @override
-  void addListener(_i6.VoidCallback? listener) => super.noSuchMethod(
+  void addListener(_i7.VoidCallback? listener) => super.noSuchMethod(
         Invocation.method(
           #addListener,
           [listener],
@@ -325,7 +339,7 @@ class MockEventProvider extends _i1.Mock implements _i3.EventProvider {
       );
 
   @override
-  void removeListener(_i6.VoidCallback? listener) => super.noSuchMethod(
+  void removeListener(_i7.VoidCallback? listener) => super.noSuchMethod(
         Invocation.method(
           #removeListener,
           [listener],
@@ -355,16 +369,16 @@ class MockEventProvider extends _i1.Mock implements _i3.EventProvider {
 /// A class which mocks [userProvider].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockuserProvider extends _i1.Mock implements _i7.userProvider {
+class MockuserProvider extends _i1.Mock implements _i8.userProvider {
   MockuserProvider() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  set profileImage(_i8.Uint8List? _profileImage) => super.noSuchMethod(
+  set profileimage(_i9.Uint8List? _profileimage) => super.noSuchMethod(
         Invocation.setter(
-          #profileImage,
-          _profileImage,
+          #profileimage,
+          _profileimage,
         ),
         returnValueForMissingStub: null,
       );
@@ -372,7 +386,7 @@ class MockuserProvider extends _i1.Mock implements _i7.userProvider {
   @override
   String get Fullname => (super.noSuchMethod(
         Invocation.getter(#Fullname),
-        returnValue: _i9.dummyValue<String>(
+        returnValue: _i10.dummyValue<String>(
           this,
           Invocation.getter(#Fullname),
         ),
@@ -381,7 +395,7 @@ class MockuserProvider extends _i1.Mock implements _i7.userProvider {
   @override
   String get email => (super.noSuchMethod(
         Invocation.getter(#email),
-        returnValue: _i9.dummyValue<String>(
+        returnValue: _i10.dummyValue<String>(
           this,
           Invocation.getter(#email),
         ),
@@ -390,7 +404,7 @@ class MockuserProvider extends _i1.Mock implements _i7.userProvider {
   @override
   String get password => (super.noSuchMethod(
         Invocation.getter(#password),
-        returnValue: _i9.dummyValue<String>(
+        returnValue: _i10.dummyValue<String>(
           this,
           Invocation.getter(#password),
         ),
@@ -399,7 +413,7 @@ class MockuserProvider extends _i1.Mock implements _i7.userProvider {
   @override
   String get role => (super.noSuchMethod(
         Invocation.getter(#role),
-        returnValue: _i9.dummyValue<String>(
+        returnValue: _i10.dummyValue<String>(
           this,
           Invocation.getter(#role),
         ),
@@ -408,7 +422,7 @@ class MockuserProvider extends _i1.Mock implements _i7.userProvider {
   @override
   String get userId => (super.noSuchMethod(
         Invocation.getter(#userId),
-        returnValue: _i9.dummyValue<String>(
+        returnValue: _i10.dummyValue<String>(
           this,
           Invocation.getter(#userId),
         ),
@@ -442,9 +456,9 @@ class MockuserProvider extends _i1.Mock implements _i7.userProvider {
       );
 
   @override
-  set profileimage(_i8.Uint8List? value) => super.noSuchMethod(
+  set profileImage(_i9.Uint8List? value) => super.noSuchMethod(
         Invocation.setter(
-          #profileimage,
+          #profileImage,
           value,
         ),
         returnValueForMissingStub: null,
@@ -475,7 +489,7 @@ class MockuserProvider extends _i1.Mock implements _i7.userProvider {
       ) as bool);
 
   @override
-  void addListener(_i6.VoidCallback? listener) => super.noSuchMethod(
+  void addListener(_i7.VoidCallback? listener) => super.noSuchMethod(
         Invocation.method(
           #addListener,
           [listener],
@@ -484,7 +498,7 @@ class MockuserProvider extends _i1.Mock implements _i7.userProvider {
       );
 
   @override
-  void removeListener(_i6.VoidCallback? listener) => super.noSuchMethod(
+  void removeListener(_i7.VoidCallback? listener) => super.noSuchMethod(
         Invocation.method(
           #removeListener,
           [listener],
@@ -522,7 +536,7 @@ class MockApi extends _i1.Mock implements _i2.Api {
   @override
   String get jwtKey => (super.noSuchMethod(
         Invocation.getter(#jwtKey),
-        returnValue: _i9.dummyValue<String>(
+        returnValue: _i10.dummyValue<String>(
           this,
           Invocation.getter(#jwtKey),
         ),
@@ -540,7 +554,7 @@ class MockApi extends _i1.Mock implements _i2.Api {
   @override
   String get refreshToken => (super.noSuchMethod(
         Invocation.getter(#refreshToken),
-        returnValue: _i9.dummyValue<String>(
+        returnValue: _i10.dummyValue<String>(
           this,
           Invocation.getter(#refreshToken),
         ),
@@ -556,7 +570,7 @@ class MockApi extends _i1.Mock implements _i2.Api {
       );
 
   @override
-  _i4.Future<Map<String, dynamic>> loginUser(
+  _i5.Future<Map<String, dynamic>> loginUser(
     String? email,
     String? password,
   ) =>
@@ -569,42 +583,52 @@ class MockApi extends _i1.Mock implements _i2.Api {
           ],
         ),
         returnValue:
-            _i4.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
-      ) as _i4.Future<Map<String, dynamic>>);
+            _i5.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
+      ) as _i5.Future<Map<String, dynamic>>);
 
   @override
-  _i4.Future<Map<String, dynamic>> getUserDetails() => (super.noSuchMethod(
+  _i5.Future<Map<String, dynamic>> getUserDetails() => (super.noSuchMethod(
         Invocation.method(
           #getUserDetails,
           [],
         ),
         returnValue:
-            _i4.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
-      ) as _i4.Future<Map<String, dynamic>>);
+            _i5.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
+      ) as _i5.Future<Map<String, dynamic>>);
 
   @override
-  _i4.Future<List<_i5.Event>> getAllEvents() => (super.noSuchMethod(
+  _i5.Future<List<_i6.Event>> getAllEvents() => (super.noSuchMethod(
         Invocation.method(
           #getAllEvents,
           [],
         ),
-        returnValue: _i4.Future<List<_i5.Event>>.value(<_i5.Event>[]),
-      ) as _i4.Future<List<_i5.Event>>);
+        returnValue: _i5.Future<List<_i6.Event>>.value(<_i6.Event>[]),
+      ) as _i5.Future<List<_i6.Event>>);
 
   @override
-  _i4.Future<List<dynamic>> getRSVPEvents(String? userId) =>
+  _i5.Future<List<_i6.Event>> getAllSavedEvents(String? userId) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getAllSavedEvents,
+          [userId],
+        ),
+        returnValue: _i5.Future<List<_i6.Event>>.value(<_i6.Event>[]),
+      ) as _i5.Future<List<_i6.Event>>);
+
+  @override
+  _i5.Future<List<dynamic>> getRSVPEvents(String? userId) =>
       (super.noSuchMethod(
         Invocation.method(
           #getRSVPEvents,
           [userId],
         ),
-        returnValue: _i4.Future<List<dynamic>>.value(<dynamic>[]),
-      ) as _i4.Future<List<dynamic>>);
+        returnValue: _i5.Future<List<dynamic>>.value(<dynamic>[]),
+      ) as _i5.Future<List<dynamic>>);
 
   @override
-  _i4.Future<Map<String, dynamic>> postChangeUser(
+  _i5.Future<Map<String, dynamic>> postChangeUser(
     String? name,
-    String? profileImage,
+    _i9.Uint8List? profileImage,
     String? userId,
   ) =>
       (super.noSuchMethod(
@@ -617,11 +641,11 @@ class MockApi extends _i1.Mock implements _i2.Api {
           ],
         ),
         returnValue:
-            _i4.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
-      ) as _i4.Future<Map<String, dynamic>>);
+            _i5.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
+      ) as _i5.Future<Map<String, dynamic>>);
 
   @override
-  _i4.Future<Map<String, dynamic>> updatePassword(
+  _i5.Future<Map<String, dynamic>> updatePassword(
     String? password,
     String? userId,
   ) =>
@@ -634,11 +658,11 @@ class MockApi extends _i1.Mock implements _i2.Api {
           ],
         ),
         returnValue:
-            _i4.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
-      ) as _i4.Future<Map<String, dynamic>>);
+            _i5.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
+      ) as _i5.Future<Map<String, dynamic>>);
 
   @override
-  _i4.Future<Map<String, dynamic>> createEvent({
+  _i5.Future<Map<String, dynamic>> createEvent({
     required String? title,
     required String? description,
     required DateTime? startDate,
@@ -668,11 +692,11 @@ class MockApi extends _i1.Mock implements _i2.Api {
           },
         ),
         returnValue:
-            _i4.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
-      ) as _i4.Future<Map<String, dynamic>>);
+            _i5.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
+      ) as _i5.Future<Map<String, dynamic>>);
 
   @override
-  _i4.Future<Map<String, dynamic>> rsvpEvent(
+  _i5.Future<Map<String, dynamic>> rsvpEvent(
     String? eventId,
     String? UserId,
   ) =>
@@ -685,11 +709,11 @@ class MockApi extends _i1.Mock implements _i2.Api {
           ],
         ),
         returnValue:
-            _i4.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
-      ) as _i4.Future<Map<String, dynamic>>);
+            _i5.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
+      ) as _i5.Future<Map<String, dynamic>>);
 
   @override
-  _i4.Future<Map<String, dynamic>> DeletersvpEvent(
+  _i5.Future<Map<String, dynamic>> DeletersvpEvent(
     String? eventId,
     String? UserId,
   ) =>
@@ -702,11 +726,11 @@ class MockApi extends _i1.Mock implements _i2.Api {
           ],
         ),
         returnValue:
-            _i4.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
-      ) as _i4.Future<Map<String, dynamic>>);
+            _i5.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
+      ) as _i5.Future<Map<String, dynamic>>);
 
   @override
-  _i4.Future<Map<String, dynamic>> DeleteEvent(
+  _i5.Future<Map<String, dynamic>> DeleteEvent(
     String? eventId,
     String? userid,
   ) =>
@@ -719,11 +743,11 @@ class MockApi extends _i1.Mock implements _i2.Api {
           ],
         ),
         returnValue:
-            _i4.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
-      ) as _i4.Future<Map<String, dynamic>>);
+            _i5.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
+      ) as _i5.Future<Map<String, dynamic>>);
 
   @override
-  _i4.Future<Map<String, dynamic>> postUsername(
+  _i5.Future<Map<String, dynamic>> postUsername(
     String? username,
     String? userid,
   ) =>
@@ -736,22 +760,22 @@ class MockApi extends _i1.Mock implements _i2.Api {
           ],
         ),
         returnValue:
-            _i4.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
-      ) as _i4.Future<Map<String, dynamic>>);
+            _i5.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
+      ) as _i5.Future<Map<String, dynamic>>);
 
   @override
-  _i4.Future<Map<String, dynamic>> getUser(String? userid) =>
+  _i5.Future<Map<String, dynamic>> getUser(String? userid) =>
       (super.noSuchMethod(
         Invocation.method(
           #getUser,
           [userid],
         ),
         returnValue:
-            _i4.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
-      ) as _i4.Future<Map<String, dynamic>>);
+            _i5.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
+      ) as _i5.Future<Map<String, dynamic>>);
 
   @override
-  _i4.Future<Map<String, dynamic>> updateEvent({
+  _i5.Future<Map<String, dynamic>> updateEvent({
     required String? userId,
     required String? eventId,
     required String? title,
@@ -783,6 +807,151 @@ class MockApi extends _i1.Mock implements _i2.Api {
           },
         ),
         returnValue:
-            _i4.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
-      ) as _i4.Future<Map<String, dynamic>>);
+            _i5.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
+      ) as _i5.Future<Map<String, dynamic>>);
+}
+
+/// A class which mocks [ImagePicker].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockImagePicker extends _i1.Mock implements _i11.ImagePicker {
+  MockImagePicker() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i5.Future<_i3.XFile?> pickImage({
+    required _i3.ImageSource? source,
+    double? maxWidth,
+    double? maxHeight,
+    int? imageQuality,
+    _i3.CameraDevice? preferredCameraDevice = _i3.CameraDevice.rear,
+    bool? requestFullMetadata = true,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #pickImage,
+          [],
+          {
+            #source: source,
+            #maxWidth: maxWidth,
+            #maxHeight: maxHeight,
+            #imageQuality: imageQuality,
+            #preferredCameraDevice: preferredCameraDevice,
+            #requestFullMetadata: requestFullMetadata,
+          },
+        ),
+        returnValue: _i5.Future<_i3.XFile?>.value(),
+      ) as _i5.Future<_i3.XFile?>);
+
+  @override
+  _i5.Future<List<_i3.XFile>> pickMultiImage({
+    double? maxWidth,
+    double? maxHeight,
+    int? imageQuality,
+    int? limit,
+    bool? requestFullMetadata = true,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #pickMultiImage,
+          [],
+          {
+            #maxWidth: maxWidth,
+            #maxHeight: maxHeight,
+            #imageQuality: imageQuality,
+            #limit: limit,
+            #requestFullMetadata: requestFullMetadata,
+          },
+        ),
+        returnValue: _i5.Future<List<_i3.XFile>>.value(<_i3.XFile>[]),
+      ) as _i5.Future<List<_i3.XFile>>);
+
+  @override
+  _i5.Future<_i3.XFile?> pickMedia({
+    double? maxWidth,
+    double? maxHeight,
+    int? imageQuality,
+    bool? requestFullMetadata = true,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #pickMedia,
+          [],
+          {
+            #maxWidth: maxWidth,
+            #maxHeight: maxHeight,
+            #imageQuality: imageQuality,
+            #requestFullMetadata: requestFullMetadata,
+          },
+        ),
+        returnValue: _i5.Future<_i3.XFile?>.value(),
+      ) as _i5.Future<_i3.XFile?>);
+
+  @override
+  _i5.Future<List<_i3.XFile>> pickMultipleMedia({
+    double? maxWidth,
+    double? maxHeight,
+    int? imageQuality,
+    int? limit,
+    bool? requestFullMetadata = true,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #pickMultipleMedia,
+          [],
+          {
+            #maxWidth: maxWidth,
+            #maxHeight: maxHeight,
+            #imageQuality: imageQuality,
+            #limit: limit,
+            #requestFullMetadata: requestFullMetadata,
+          },
+        ),
+        returnValue: _i5.Future<List<_i3.XFile>>.value(<_i3.XFile>[]),
+      ) as _i5.Future<List<_i3.XFile>>);
+
+  @override
+  _i5.Future<_i3.XFile?> pickVideo({
+    required _i3.ImageSource? source,
+    _i3.CameraDevice? preferredCameraDevice = _i3.CameraDevice.rear,
+    Duration? maxDuration,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #pickVideo,
+          [],
+          {
+            #source: source,
+            #preferredCameraDevice: preferredCameraDevice,
+            #maxDuration: maxDuration,
+          },
+        ),
+        returnValue: _i5.Future<_i3.XFile?>.value(),
+      ) as _i5.Future<_i3.XFile?>);
+
+  @override
+  _i5.Future<_i3.LostDataResponse> retrieveLostData() => (super.noSuchMethod(
+        Invocation.method(
+          #retrieveLostData,
+          [],
+        ),
+        returnValue:
+            _i5.Future<_i3.LostDataResponse>.value(_FakeLostDataResponse_1(
+          this,
+          Invocation.method(
+            #retrieveLostData,
+            [],
+          ),
+        )),
+      ) as _i5.Future<_i3.LostDataResponse>);
+
+  @override
+  bool supportsImageSource(_i3.ImageSource? source) => (super.noSuchMethod(
+        Invocation.method(
+          #supportsImageSource,
+          [source],
+        ),
+        returnValue: false,
+      ) as bool);
 }

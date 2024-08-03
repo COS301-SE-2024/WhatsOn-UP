@@ -2,10 +2,9 @@ package com.devforce.backend.service
 
 import com.devforce.backend.dto.EventDto
 import com.devforce.backend.dto.ResponseDto
-import com.devforce.backend.dto.UpdateUserDto
-import com.devforce.backend.repo.EventRepo
-import com.devforce.backend.repo.RoleRepo
-import com.devforce.backend.repo.UserRepo
+import com.devforce.backend.model.HostApplicationsModel
+import com.devforce.backend.model.Status
+import com.devforce.backend.repo.*
 import com.devforce.backend.security.CustomUser
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -24,6 +23,12 @@ class UserService {
     @Autowired
     lateinit var eventRepo: EventRepo
 
+    @Autowired
+    lateinit var availableSlotsRepo: AvailableSlotsRepo
+
+    @Autowired
+    lateinit var hostApplicationsRepo: HostApplicationsRepo
+
 
     // To do: Implement function to save an event for the current user
     fun saveEvent(id: UUID): ResponseEntity<ResponseDto> {
@@ -36,6 +41,10 @@ class UserService {
         }
 
         val event = optionalEvent.get()
+        if (event.savedEvents.any { it.userId == user.userId }) {
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Event already saved"))
+        }
+
         event.savedEvents.add(user)
         eventRepo.save(event)
 
@@ -74,7 +83,7 @@ class UserService {
         val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
 
         val events = eventRepo.getSavedEvents(user.userId)
-        val eventsDto = events.map { event -> EventDto(event, false) }
+        val eventsDto = events.map { event -> EventDto(event, false, null) }
 
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto)
         )
@@ -92,6 +101,19 @@ class UserService {
         }
 
         val event = optionalEvent.get()
+
+        if (event.attendees.any { it.userId == user.userId } || event.hosts.any { it.userId == user.userId }) {
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Event already RSVP'd"))
+        }
+
+        val availableSlots = availableSlotsRepo.findByEventId(id)
+
+        if (availableSlots != null) {
+            if (availableSlots.availableSlots <= 0) {
+                return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Event is full"))
+            }
+        }
+
         event.attendees.add(user)
         eventRepo.save(event)
 
@@ -103,7 +125,7 @@ class UserService {
         val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
 
         val events = eventRepo.getRspvdEvents(user.userId)
-        val eventsDto = events.map { event -> EventDto(event, false) }
+        val eventsDto = events.map { event -> EventDto(event, false, null) }
 
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto)
         )
@@ -132,11 +154,10 @@ class UserService {
     }
 
     // To do: Implement function to update user profile
-    fun updateProfile(updateUserDto: UpdateUserDto): ResponseEntity<ResponseDto> {
+    fun updateProfile(fullName: String): ResponseEntity<ResponseDto> {
         val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
 
-        user.fullName = updateUserDto.fullName ?: user.fullName
-        user.profileImage = updateUserDto.profileImage ?: user.profileImage
+        user.fullName = fullName
 
         userRepo.save(user)
 
@@ -162,7 +183,8 @@ class UserService {
         val userCreds = mapOf(
             "role" to user.role?.name,
             "fullName" to user.fullName,
-            "profileImage" to user.profileImage
+            "profileImage" to user.profileImage,
+            "userId" to user.userId
         )
 
         return ResponseEntity.ok(
@@ -183,23 +205,52 @@ class UserService {
         )
     }
 
-    fun inviteUser(eventId: UUID, userId: UUID): ResponseEntity<ResponseDto>{
-        val from = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
-        val event = eventRepo.findById(eventId)
-        if (event.isEmpty) {
-            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Event not found"))
+    fun applyForHost(howLong: Int?, proof: String): ResponseEntity<ResponseDto> {
+        val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
+
+        val hostApplication = HostApplicationsModel().apply {
+            this.user = user
+            this.status = Status.PENDING
+            if (howLong != null) {
+                this.howLong = howLong
+            }
+            this.proof = proof
         }
 
-        val user = userRepo.findById(userId)
-        if (user.isEmpty) {
-            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "User not found"))
-        }
-        val eventModel = event.get()
-        val userModel = user.get()
+        hostApplicationsRepo.save(hostApplication)
 
-        eventModel.invitees.add(userModel)
-        eventRepo.save(eventModel)
-        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "User invited successfully")))
+        return ResponseEntity.ok(
+            ResponseDto("success", System.currentTimeMillis(), hostApplication)
+        )
+    }
+
+    fun acknowledgeApplication(applicationId: UUID): ResponseEntity<ResponseDto> {
+        val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
+
+        val application = hostApplicationsRepo.findById(applicationId)
+        if (application.isEmpty) {
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Application not found"))
+        }
+        val applicationModel = application.get()
+        applicationModel.status = Status.ACKNOWLEDGED
+        applicationModel.expiryDateTime = Date(System.currentTimeMillis() + applicationModel.howLong * 24 * 60 * 60 * 1000)
+        hostApplicationsRepo.save(applicationModel)
+        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Application acknowledged successfully"))
+        )
+    }
+
+    fun disputeApplication(applicationId: UUID): ResponseEntity<ResponseDto> {
+        val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
+
+        val application = hostApplicationsRepo.findById(applicationId)
+        if (application.isEmpty) {
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Application not found"))
+        }
+        val applicationModel = application.get()
+        applicationModel.status = Status.DISPUTED
+        hostApplicationsRepo.save(applicationModel)
+        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Application disputed successfully"))
+        )
     }
 
 

@@ -41,4 +41,5 @@ secrets.yml
 .git-hooks/
 node_modules
 
-.idea/
+
+

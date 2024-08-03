@@ -5,6 +5,7 @@ import 'package:firstapp/providers/events_providers.dart';
 import 'package:firstapp/widgets/eventManagement_category.dart';
 import 'package:firstapp/widgets/event_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
@@ -28,8 +29,7 @@ void main() {
         Event(
           id: '1',
           nameOfEvent: 'Test Event 1',
-          dateAndTime: '2022-01-01T00:00:00.000Z',
-          location: 'Test Location 1',
+          venue: null,
           description: 'Test Description 1',
           imageUrls: [],
           hosts: [],
@@ -38,13 +38,16 @@ void main() {
           maxAttendees: 100,
           isPrivate: true,
           attendees: [],
-          startDate: DateTime.parse('2022-01-01T10:00:00.000Z'),
+          metadata: Metadata(
+            mentors: [],
+            categories: [],
+            sessions: [],
+          ),
         ),
         Event(
           id: '2',
           nameOfEvent: 'Test Event 2',
-          dateAndTime: '2022-01-02T00:00:00.000Z',
-          location: 'Test Location 2',
+          venue: null,
           description: 'Test Description 2',
           imageUrls: [],
           hosts: [],
@@ -53,15 +56,18 @@ void main() {
           maxAttendees: 150,
           isPrivate: false,
           attendees: [],
-          startDate: DateTime.parse('2022-01-02T10:00:00.000Z'),
+          metadata: Metadata(
+            mentors: [],
+            categories: [],
+            sessions: [],
+          ),
         ),
       ]);
       when(mockEventProvider.eventsHome).thenAnswer((_) async => [
         Event(
           id: '1',
           nameOfEvent: 'Test Event 1 HOME',
-          dateAndTime: '2022-01-01T00:00:00.000Z',
-          location: 'Test Location 1',
+          venue: null,
           description: 'Test Description 1',
           imageUrls: [],
           hosts: [],
@@ -70,13 +76,16 @@ void main() {
           maxAttendees: 100,
           isPrivate: true,
           attendees: [],
-          startDate: DateTime.parse('2022-01-01T10:00:00.000Z'),
+          metadata: Metadata(
+            mentors: [],
+            categories: [],
+            sessions: [],
+          ),
         ),
         Event(
           id: '2',
           nameOfEvent: 'Test Event 2 HOME',
-          dateAndTime: '2022-01-02T00:00:00.000Z',
-          location: 'Test Location 2',
+          venue: null,
           description: 'Test Description 2',
           imageUrls: [],
           hosts: [],
@@ -85,13 +94,18 @@ void main() {
           maxAttendees: 150,
           isPrivate: false,
           attendees: [],
-          startDate: DateTime.parse('2022-01-02T10:00:00.000Z'),
+          metadata: Metadata(
+            mentors: [],
+            categories: [],
+            sessions: [],
+          ),
+
+
         ),
         Event(
           id: '3',
           nameOfEvent: 'Test Event 3 HOME',
-          dateAndTime: '2022-01-03T00:00:00.000Z',
-          location: 'Test Location 3',
+          venue: null,
           description: 'Test Description 3',
           imageUrls: [],
           hosts: [],
@@ -100,15 +114,18 @@ void main() {
           maxAttendees: 200,
           isPrivate: false,
           attendees: [],
-          startDate: DateTime.parse('2022-01-03T10:00:00.000Z'),
+          metadata: Metadata(
+            mentors: [],
+            categories: [],
+            sessions: [],
+          ),
         ),
       ]);
       when(mockEventProvider.eventsRsvp).thenAnswer((_) async => [
         Event(
           id: '1',
           nameOfEvent: 'Test Event 1 RSVP',
-          dateAndTime: '2022-01-01T00:00:00.000Z',
-          location: 'Test Location 1',
+          venue: null,
           description: 'Test Description 1',
           imageUrls: [],
           hosts: [],
@@ -117,13 +134,16 @@ void main() {
           maxAttendees: 100,
           isPrivate: true,
           attendees: [],
-          startDate: DateTime.parse('2022-01-01T10:00:00.000Z'),
+          metadata: Metadata(
+            mentors: [],
+            categories: [],
+            sessions: [],
+          ),
         ),
         Event(
           id: '2',
           nameOfEvent: 'Test Event 2 RSVP',
-          dateAndTime: '2022-01-02T00:00:00.000Z',
-          location: 'Test Location 2',
+          venue: null,
           description: 'Test Description 2',
           imageUrls: [],
           hosts: [],
@@ -132,13 +152,16 @@ void main() {
           maxAttendees: 150,
           isPrivate: false,
           attendees: [],
-          startDate: DateTime.parse('2022-01-02T10:00:00.000Z'),
+          metadata: Metadata(
+            mentors: [],
+            categories: [],
+            sessions: [],
+          ),
         ),
         Event(
           id: '3',
           nameOfEvent: 'Test Event 3 RSVP',
-          dateAndTime: '2022-01-03T00:00:00.000Z',
-          location: 'Test Location 3',
+          venue: null,
           description: 'Test Description 3',
           imageUrls: [],
           hosts: [],
@@ -147,7 +170,11 @@ void main() {
           maxAttendees: 200,
           isPrivate: false,
           attendees: [],
-          startDate: DateTime.parse('2022-01-03T10:00:00.000Z'),
+          metadata: Metadata(
+            mentors: [],
+            categories: [],
+            sessions: [],
+          ),
         ),
       ]);
     });
@@ -173,6 +200,7 @@ void main() {
       expect(find.text('Past Events'), findsOneWidget);
       expect(find.text('Create Event'), findsOneWidget);
       expect(find.text('Attendees for All Events'), findsOneWidget);
+      expect(find.byIcon(Icons.arrow_forward), findsNWidgets(4));
     });
 
     testWidgets('Renders ManageEvents correctly for non-ADMIN role', (WidgetTester tester) async {
@@ -282,6 +310,27 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.byType(Attendees), findsOneWidget);
 
+    });
+testWidgets('setLoading method updates _isLoading state', (WidgetTester tester) async{
+      when(mockUserProvider.role).thenReturn('HOST');
+      await tester.pumpWidget(
+        MultiProvider(
+          providers: [
+
+            ChangeNotifierProvider<EventProvider>(create: (_) => mockEventProvider),
+            ChangeNotifierProvider<userProvider>(create: (_) => mockUserProvider),
+          ],
+          child: MaterialApp(
+            home: ManageEvents(),
+          ),
+        ),
+      );
+      expect(find.byType(SpinKitPianoWave), findsNothing);
+      final statefulElement = tester.element(find.byType(ManageEvents)) as StatefulElement;
+      final state = statefulElement.state as dynamic;
+      state.setLoading(true);
+      await tester.pump();
+      expect(find.byType(SpinKitPianoWave), findsOneWidget);
     });
 
 

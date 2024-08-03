@@ -22,8 +22,6 @@ import java.time.format.DateTimeParseException
 @RestController
 @RequestMapping("/api/events")
 class EventController {
-    @Autowired
-    private lateinit var userService: UserService
 
     @Autowired
     lateinit var eventService: EventService
@@ -46,7 +44,7 @@ class EventController {
         return eventService.updateEvent(id, event)
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/remove/{id}")
     @PreAuthorize("hasAnyRole('HOST', 'ADMIN')")
     fun deleteEvent(@PathVariable id: UUID): ResponseEntity<ResponseDto> {
         return eventService.deleteEvent(id)
@@ -67,12 +65,6 @@ class EventController {
     : ResponseEntity<ResponseDto>? {
         val events = searchString.let { eventService.searchEvents(it) }
         return events
-    }
-
-    @PutMapping("/invite")
-    @PreAuthorize("hasAnyRole('HOST', 'ADMIN', 'GENERAL')")
-    fun inviteUser(@RequestParam eventId: UUID, @RequestParam userId: UUID): ResponseEntity<ResponseDto> {
-        return userService.inviteUser(eventId, userId)
     }
 
     @GetMapping("/filterEvents")
@@ -100,12 +92,24 @@ class EventController {
     fun filterEvents(
         @RequestParam(required = false) startDateTime: String?,
         @RequestParam(required = false) endDateTime: String?,
-        @RequestParam(required = false) location: String?,
         @RequestParam(required = false) isPrivate: Boolean?,
         @RequestParam(required = false) maxAttendees: Int?
     ): ResponseEntity<ResponseDto> {
-        val filterByDto = FilterByDto(startDateTime, endDateTime, location, isPrivate, maxAttendees)
+        val filterByDto = FilterByDto(startDateTime, endDateTime, isPrivate, maxAttendees)
 
         return eventService.filterEvents(filterByDto)
+    }
+
+
+    @GetMapping("/get_passed_events")
+    @PreAuthorize("hasAnyRole('HOST', 'ADMIN')")
+    fun getPassedEvents(): ResponseEntity<ResponseDto> {
+        return eventService.getPassedEvents()
+    }
+
+    @GetMapping("/get_locations")
+    @PreAuthorize("permitAll()")
+    fun getLocations(): ResponseEntity<ResponseDto> {
+        return eventService.getLocations()
     }
 }
