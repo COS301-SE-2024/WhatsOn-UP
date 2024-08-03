@@ -5,8 +5,14 @@ import 'package:firstapp/services/EventService.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
+import 'package:firstapp/screens/FilterScreen.dart'; // Import the FilterScreen
+
 
 class SearchScreen extends StatefulWidget {
+  final bool showSearchHistoryOnStart;
+
+  SearchScreen({this.showSearchHistoryOnStart = false});
+
   @override
   _SearchScreenState createState() => _SearchScreenState();
 }
@@ -27,6 +33,11 @@ class _SearchScreenState extends State<SearchScreen> {
     super.initState();
     _fetchCategories();
     _loadSearchHistory();
+
+    if (widget.showSearchHistoryOnStart) {
+      _showSearchHistory = true;
+      _showSearchTiles = false;
+    }
   }
 
   void _fetchCategories() async {
@@ -123,6 +134,20 @@ class _SearchScreenState extends State<SearchScreen> {
     super.dispose();
   }
 
+  void _openFilterDialog() async {
+    final result = await showDialog<List<Event>>(
+      context: context,
+      builder: (context) => FilterScreen(),
+    );
+
+    if (result != null) {
+      setState(() {
+        _searchResults = result;
+        _hasSearched = true;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -149,11 +174,11 @@ class _SearchScreenState extends State<SearchScreen> {
                 borderRadius: BorderRadius.all(
                   Radius.circular(50),
                 ),
-                color: Colors.grey,
+                color: Colors.grey[200], // Light grey for better visibility
               ),
               child: Row(
                 children: [
-                  Icon(Icons.search),
+                  Icon(Icons.search), // Search icon color
                   SizedBox(width: 8.0),
                   Expanded(
                     child: TextField(
@@ -170,6 +195,11 @@ class _SearchScreenState extends State<SearchScreen> {
                       },
                       onChanged: _onSearchChanged,
                     ),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.filter_list),
+                    color: Colors.black,
+                    onPressed: _openFilterDialog,
                   ),
                 ],
               ),
