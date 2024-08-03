@@ -347,7 +347,6 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
 
                     return GestureDetector(
                       onTap: () {
-                        print("AHHHHHHAAAA ${event['venue']}");
                         Event eventObject = Event(
                           nameOfEvent: event['name'],
                           venue: Venue.fromJson(event['venue']),
