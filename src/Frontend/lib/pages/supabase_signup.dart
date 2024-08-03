@@ -180,7 +180,20 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
             child: const Text('Sign Up'),
 
           ),
-
+          // const SizedBox(height: 20),
+          // TextButton(
+          //   onPressed: () {
+            
+          //   },
+          //   style: TextButton.styleFrom(
+          //     padding: const EdgeInsets.symmetric(vertical: 10.0),
+          //     shape: RoundedRectangleBorder(
+          //       borderRadius: BorderRadius.circular(20.0),
+          //     ),
+          //     backgroundColor: Colors.transparent,
+          //   ),
+          //   child: const Text('Sign in as guest'),
+          // ),
         ],
       ),
     );
