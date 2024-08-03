@@ -2,8 +2,8 @@ package com.devforce.backend.service
 
 import com.devforce.backend.dto.EventDto
 import com.devforce.backend.dto.ResponseDto
+import com.devforce.backend.model.ApplicationStatusModel
 import com.devforce.backend.model.HostApplicationsModel
-import com.devforce.backend.model.Status
 import com.devforce.backend.repo.*
 import com.devforce.backend.security.CustomUser
 import org.springframework.beans.factory.annotation.Autowired
@@ -13,10 +13,15 @@ import org.springframework.mail.SimpleMailMessage
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 @Service
 class UserService {
+
+    @Autowired
+    private lateinit var roleRepo: RoleRepo
 
     @Autowired
     lateinit var userRepo: UserRepo
@@ -30,6 +35,9 @@ class UserService {
 
     @Autowired
     lateinit var hostApplicationsRepo: HostApplicationsRepo
+
+    @Autowired
+    lateinit var statusRepo: StatusRepo
 
 
     // To do: Implement function to save an event for the current user
@@ -210,8 +218,17 @@ class UserService {
     @Autowired
     lateinit var mailSender: MailSender
 
-    fun applyForHost(howLong: Int?, reason: String, studentEmail: String): ResponseEntity<ResponseDto> {
+    fun applyForHost(howLong: Int, reason: String, studentEmail: String, fromWhen: String): ResponseEntity<ResponseDto> {
         val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
+
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+        val fromWhenDate = try {
+            fromWhen.let { LocalDateTime.parse(it, formatter) }
+        } catch (e: Exception) {
+            null
+        }
+
+        val expiryDateTime = howLong.toLong().let { fromWhenDate?.plusDays(it) }
 
         // Check if user is already a host
         if (user.role?.name == "HOST" || user.role?.name == "ADMIN") {
@@ -235,14 +252,14 @@ class UserService {
 
         val veriCode = UUID.randomUUID()
 
+        val statusModel = statusRepo.findByName("PENDING")
+
         val hostApplication = HostApplicationsModel().apply {
             this.user = user
-            this.status = Status.PENDING
-            if (howLong != null) {
-                this.howLong = howLong
-            }
+            this.expiryDateTime = expiryDateTime
             this.reason = reason
             this.verificationCode = veriCode
+            this.status = statusModel
         }
 
         hostApplicationsRepo.save(hostApplication)
@@ -258,19 +275,21 @@ class UserService {
         mailSender.send(email)
 
         return ResponseEntity.ok(
-            ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Application sent successfully")
-        ))
+            ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Application submitted successfully. Check your email for verification link"))
+        )
     }
 
-    fun verifyApplication(veriCode: UUID): ResponseEntity<ResponseDto> {
+    fun verifyApplication(veriCode: UUID): ResponseEntity<String> {
         val application = hostApplicationsRepo.findByVerificationCode(veriCode)
-            ?: return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Invalid verification code"))
+            ?: return ResponseEntity.badRequest().body("Invalid verification code")
 
-        application.status = Status.ACCEPTED
+        val statusModel = statusRepo.findByName("VERIFIED")
+
+        application.status = statusModel
+        application.verificationCode = null
         hostApplicationsRepo.save(application)
 
-        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Application verified successfully"))
-        )
+        return ResponseEntity.ok("Application verified successfully")
     }
 
     fun acknowledgeApplication(applicationId: UUID): ResponseEntity<ResponseDto> {
@@ -281,8 +300,19 @@ class UserService {
             return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Application not found"))
         }
         val applicationModel = application.get()
-        applicationModel.status = Status.ACKNOWLEDGED
-        applicationModel.expiryDateTime = Date(System.currentTimeMillis() + applicationModel.howLong * 24 * 60 * 60 * 1000)
+        if (applicationModel.status!!.name != "ACCEPTED") {
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Application not accepted"))
+        }
+
+        if (applicationModel.expiryDateTime!!.isBefore(LocalDateTime.now())) {
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Application expired"))
+        }
+        
+        user.role = roleRepo.findByName("HOST")
+        userRepo.save(user)
+
+
+        applicationModel.status = statusRepo.findByName("ACKNOWLEDGED")
         hostApplicationsRepo.save(applicationModel)
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Application acknowledged successfully"))
         )
@@ -296,7 +326,10 @@ class UserService {
             return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Application not found"))
         }
         val applicationModel = application.get()
-        applicationModel.status = Status.DISPUTED
+        if (applicationModel.status!!.name != "REJECTED") {
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Application not rejected"))
+        }
+        applicationModel.status = statusRepo.findByName("DISPUTED")
         hostApplicationsRepo.save(applicationModel)
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Application disputed successfully"))
         )

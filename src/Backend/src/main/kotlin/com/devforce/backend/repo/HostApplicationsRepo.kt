@@ -9,12 +9,13 @@ import java.util.*
 
 interface HostApplicationsRepo: JpaRepository<HostApplicationsModel, UUID> {
     @Query(
-        "SELECT h FROM HostApplicationsModel h " +
-                "JOIN FETCH h.user u " +
-                "JOIN FETCH h.acceptedRejectedBy arb " +
-                "JOIN FETCH arb.role arbr " +
-                "JOIN FETCH u.role ur " +
-                "WHERE (:status IS NULL OR CAST(h.status AS string) = :status)"
+        "SELECT DISTINCT h FROM HostApplicationsModel h "+
+                "LEFT JOIN FETCH h.user u " +
+                "LEFT JOIN FETCH h.acceptedRejectedBy arb "+
+                "LEFT JOIN FETCH arb.role arbr " +
+                "LEFT JOIN FETCH u.role ur " +
+                "LEFT JOIN FETCH h.status s "+
+                "WHERE :status is null or  s.name = :status"
     )
     fun findByStatus(@Param("status") status: String?): List<HostApplicationsModel?>
 
@@ -22,23 +23,15 @@ interface HostApplicationsRepo: JpaRepository<HostApplicationsModel, UUID> {
     @Query(
         "SELECT h FROM HostApplicationsModel h " +
                 "JOIN FETCH h.user u " +
-                "JOIN FETCH h.acceptedRejectedBy arb " +
-                "JOIN FETCH arb.role arbr " +
-                "JOIN FETCH u.role ur " +
                 "WHERE u.userId = :userId"
     )
     fun findByUserId(@Param("userId") userId: UUID): List<HostApplicationsModel?>
 
     @Query(
         "SELECT h FROM HostApplicationsModel h " +
-                "JOIN FETCH h.user u " +
-                "JOIN FETCH h.acceptedRejectedBy arb " +
-                "JOIN FETCH arb.role arbr " +
-                "JOIN FETCH u.role ur " +
                 "WHERE h.verificationCode = :veriCode"
     )
     fun findByVerificationCode(veriCode: UUID): HostApplicationsModel?
-
 
 
 }

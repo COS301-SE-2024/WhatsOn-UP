@@ -78,11 +78,12 @@ class UserController {
     @PutMapping("/apply_for_host")
     @PreAuthorize("isAuthenticated()")
     fun applyHost(
-        @RequestParam howLong: Int?,
+        @RequestParam howLong: Int,
         @RequestParam reason: String,
         @RequestParam studentEmail: String,
+        @RequestParam fromWhen: String,
     ): ResponseEntity<ResponseDto> {
-        return userService.applyForHost(howLong, reason, studentEmail)
+        return userService.applyForHost(howLong, reason, studentEmail, fromWhen)
     }
 
     @PostMapping("/acknowledge_application")
@@ -99,7 +100,7 @@ class UserController {
 
     @GetMapping("/verify_application")
     @PreAuthorize("permitAll()")
-    fun verifyApplication(@RequestParam veriCode: UUID): ResponseEntity<ResponseDto> {
+    fun verifyApplication(@RequestParam veriCode: UUID): ResponseEntity<String> {
         return userService.verifyApplication(veriCode)
     }
 

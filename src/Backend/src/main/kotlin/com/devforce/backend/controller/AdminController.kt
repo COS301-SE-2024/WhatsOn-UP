@@ -1,7 +1,6 @@
 package com.devforce.backend.controller
 
 import com.devforce.backend.dto.ResponseDto
-import com.devforce.backend.model.Status
 import com.devforce.backend.service.AdminService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -50,7 +49,7 @@ class AdminController {
     @GetMapping("/all_applications/{status}")
     fun allApplications(@PathVariable status: String): ResponseEntity<ResponseDto> {
         // convert status to Status enum
-        val validStatuses = listOf("PENDING", "ACCEPTED", "REJECTED", "ACKNOWLEDGED", "DISPUTED")
+        val validStatuses = listOf("PENDING", "ACCEPTED", "REJECTED", "ACKNOWLEDGED", "DISPUTED", "VERIFIED")
 
         if (!validStatuses.contains(status)) {
             return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Invalid status"))
