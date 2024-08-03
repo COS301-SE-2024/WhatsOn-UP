@@ -149,30 +149,31 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
                 "OR a.userId = :userId " +
                 "OR i.userId = :userId " +
                 "OR h.userId = :userId) "+
-                "AND (:#{#filterByDto.startDateTime} IS NULL OR e.startDateTime >= TO_TIMESTAMP(:#{#filterByDto.startDateTime}, 'YYYY-MM-DD HH24:MI:SS')) AND " +
-                "(:#{#filterByDto.endDateTime} IS NULL OR e.endDateTime <= TO_TIMESTAMP(:#{#filterByDto.endDateTime}, 'YYYY-MM-DD HH24:MI:SS')) AND " +
+                "AND (:#{#filterByDto.startDateTime} IS NULL OR e.startDateTime > TO_TIMESTAMP(:#{#filterByDto.startDateTime}, 'YYYY-MM-DD HH24:MI:SS')) AND " +
+                "(:#{#filterByDto.endDateTime} IS NULL OR e.endDateTime < TO_TIMESTAMP(:#{#filterByDto.endDateTime}, 'YYYY-MM-DD HH24:MI:SS')) AND " +
                 "(:#{#filterByDto.isPrivate} IS NULL OR e.isPrivate = :#{#filterByDto.isPrivate}) AND " +
                 "(:#{#filterByDto.maxAttendees} IS NULL OR e.maxAttendees <= :#{#filterByDto.maxAttendees})"
     )
     fun filterEvents(@Param("filterByDto") filterByDto: FilterByDto, @Param("userId") userId: UUID?): List<EventModel>
 
 
-   @Query(value = """
-    SELECT * FROM events e
-    WHERE (:startDateTime IS NULL OR e.start_date_time >= CAST(:startDateTime AS TIMESTAMP))
-    AND (:endDateTime IS NULL OR e.end_date_time <= CAST(:endDateTime AS TIMESTAMP))
-    AND (:minCapacity IS NULL OR e.max_attendees >= :minCapacity)
-    AND (:maxCapacity IS NULL OR e.max_attendees <= :maxCapacity)
-    AND (:isPrivate IS NULL OR  e.is_private = :isPrivate)
-""", nativeQuery = true)
-   fun filteringEvents(
-       @Param("startDate") startDateTime: String?,
-       @Param("endDate") endDateTime: String?,
-       @Param("minCapacity") minCapacity: Int?,
-       @Param("maxCapacity") maxCapacity: Int?,
-       @Param("isPrivate") isPrivate: Boolean?
-   ): List<EventModel>
 
+   /* @Query(value = """
+        SELECT * FROM events e
+        WHERE (:startDateTime IS NULL OR e.start_date_time >= CAST(:startDateTime AS TIMESTAMP))
+        AND (:endDateTime IS NULL OR e.end_date_time <= CAST(:endDateTime AS TIMESTAMP))
+        AND (:minCapacity IS NULL OR e.max_attendees >= :minCapacity)
+        AND (:maxCapacity IS NULL OR e.max_attendees <= :maxCapacity)
+        AND (:isPrivate IS NULL OR e.is_private = :isPrivate)
+    """, nativeQuery = true)
+    fun filteringEvents(
+        @Param("startDateTime") startDateTime: String?,
+        @Param("endDateTime") endDateTime: String?,
+        @Param("minCapacity") minCapacity: Int?,
+        @Param("maxCapacity") maxCapacity: Int?,
+        @Param("isPrivate") isPrivate: Boolean?
+    ): List<EventModel>
+*/
     @Transactional
     @Procedure(procedureName = "delete_event")
     fun deleteEvent(eventId: UUID)
