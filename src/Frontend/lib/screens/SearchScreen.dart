@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:firstapp/widgets/SearchImageTile.dart';
 import 'package:firstapp/services/EventService.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:async';
 
 class SearchScreen extends StatefulWidget {
   @override
@@ -13,13 +15,17 @@ class _SearchScreenState extends State<SearchScreen> {
   final EventService _eventService = EventService(Supabase.instance.client);
   List<Event> _searchResults = [];
   List<String> _categories = [];
+  List<String> _searchHistory = [];
   bool _isLoading = false;
   bool _showSearchTiles = true;
+  bool _showSearchHistory = false;
+  Timer? _debounce;
 
   @override
   void initState() {
     super.initState();
     _fetchCategories();
+    _loadSearchHistory();
   }
 
   void _fetchCategories() async {
@@ -34,7 +40,6 @@ class _SearchScreenState extends State<SearchScreen> {
         _isLoading = false;
       });
     } catch (e) {
-      // Handle error, e.g., show an error message
       print('Error fetching categories: $e');
       setState(() {
         _isLoading = false;
@@ -43,10 +48,12 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   void _searchEvents(String query) async {
+    if (query.isEmpty) return;
     setState(() {
       _isLoading = true;
       _searchResults.clear();
       _showSearchTiles = false;
+      _showSearchHistory = false;
     });
 
     try {
@@ -55,8 +62,8 @@ class _SearchScreenState extends State<SearchScreen> {
         _searchResults = results;
         _isLoading = false;
       });
+      _saveSearchQuery(query);
     } catch (e) {
-      // Handle error, e.g., show an error message
       print('Error searching events: $e');
       setState(() {
         _isLoading = false;
@@ -69,6 +76,48 @@ class _SearchScreenState extends State<SearchScreen> {
       _searchResults.clear();
       _showSearchTiles = true;
     });
+  }
+
+  void _loadSearchHistory() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _searchHistory = prefs.getStringList('searchHistory') ?? [];
+    });
+  }
+
+  void _saveSearchQuery(String query) async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      if (_searchHistory.contains(query)) {
+        _searchHistory.remove(query);
+      }
+      _searchHistory.insert(0, query);
+      if (_searchHistory.length > 5) {
+        _searchHistory.removeLast();
+      }
+      prefs.setStringList('searchHistory', _searchHistory);
+    });
+  }
+
+  void _removeSearchQuery(String query) async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _searchHistory.remove(query);
+      prefs.setStringList('searchHistory', _searchHistory);
+    });
+  }
+
+  void _onSearchChanged(String query) {
+    if (_debounce?.isActive ?? false) _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      _searchEvents(query);
+    });
+  }
+
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    super.dispose();
   }
 
   @override
@@ -112,20 +161,42 @@ class _SearchScreenState extends State<SearchScreen> {
                       onSubmitted: _searchEvents,
                       onTap: () {
                         setState(() {
-                          _showSearchTiles = true;
+                          _showSearchHistory = true;
+                          _showSearchTiles = false;
                         });
                       },
-                      onChanged: (value) {
-                        setState(() {
-                          _showSearchTiles = true;
-                        });
-                      },
+                      onChanged: _onSearchChanged,
                     ),
                   ),
                 ],
               ),
             ),
-            if (_showSearchTiles  && _categories.isNotEmpty)
+            if (_showSearchHistory)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (_searchHistory.isNotEmpty)
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Search History'),
+                        ..._searchHistory.map((history) {
+                          return ListTile(
+                            title: Text(history),
+                            trailing: IconButton(
+                              icon: Icon(Icons.clear),
+                              onPressed: () => _removeSearchQuery(history),
+                            ),
+                            onTap: () {
+                              _searchEvents(history);
+                            },
+                          );
+                        }).toList(),
+                      ],
+                    ),
+                ],
+              ),
+            if (_showSearchTiles)
               GridView.count(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
@@ -141,15 +212,12 @@ class _SearchScreenState extends State<SearchScreen> {
             SizedBox(height: 16.0),
             _isLoading
                 ? Center(child: CircularProgressIndicator())
-                : _searchResults.isEmpty  && _categories.isEmpty
-                ? Center(
-              child: Text('No events found'),
-            )
+                : _searchResults.isEmpty && _categories.isEmpty
+                ? Center(child: Text('No events found'))
                 : Expanded(
               child: ListView.builder(
                 itemCount: _searchResults.length,
                 itemBuilder: (context, index) {
-
                   if (index >= _searchResults.length) {
                     return Container();
                   }
