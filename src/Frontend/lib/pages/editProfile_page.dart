@@ -123,14 +123,14 @@ class _EditprofilePageState extends State<EditprofilePage> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: _editUser,
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.black, backgroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      side: BorderSide(color: Colors.grey, width: 1),
-                    ),
-                    padding: EdgeInsets.symmetric(vertical: 16),
-                  ),
+                  // style: ElevatedButton.styleFrom(
+                  //   foregroundColor: Colors.black, backgroundColor: Colors.white,
+                  //   shape: RoundedRectangleBorder(
+                  //     borderRadius: BorderRadius.circular(20),
+                  //     side: BorderSide(color: Colors.grey, width: 1),
+                  //   ),
+                  //   padding: EdgeInsets.symmetric(vertical: 16),
+                  // ),
                   child: Text(
                     'Save',
 
@@ -155,14 +155,14 @@ class _EditprofilePageState extends State<EditprofilePage> {
                       ),
                     );
                   },
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.black, backgroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      side: BorderSide(color: Colors.grey, width: 1),
-                    ),
-                    padding: EdgeInsets.symmetric(vertical: 16),
-                  ),
+                  // style: ElevatedButton.styleFrom(
+                  //   foregroundColor: Colors.black, backgroundColor: Colors.white,
+                  //   shape: RoundedRectangleBorder(
+                  //     borderRadius: BorderRadius.circular(20),
+                  //     side: BorderSide(color: Colors.grey, width: 1),
+                  //   ),
+                  //   padding: EdgeInsets.symmetric(vertical: 16),
+                  // ),
                   child: Text(
                     'Cancel',
 
@@ -178,6 +178,8 @@ class _EditprofilePageState extends State<EditprofilePage> {
 
   Widget _buildTop() {
     userProvider userP = Provider.of<userProvider>(context);
+    final theme = Theme.of(context);
+    final borderColour = theme.brightness == Brightness.dark ? const Color.fromARGB(255, 61, 61, 61) : const Color.fromARGB(255, 255, 255, 255);
     return Center(
       child: Stack(
         children: [
@@ -205,7 +207,8 @@ class _EditprofilePageState extends State<EditprofilePage> {
                   width: 130,
                   height: 130,
                   decoration: BoxDecoration(
-                    border: Border.all(width: 4, color: Colors.white),
+                    // border: Border.all(width: 4, color: Colors.white),
+                    border: Border.all(width: 4, color: borderColour),
                     boxShadow: [
                       BoxShadow(
                         spreadRadius: 2,
@@ -228,7 +231,8 @@ class _EditprofilePageState extends State<EditprofilePage> {
               child: IconButton(
                   onPressed: selectImage,
                   icon: Icon(Icons.add_a_photo),
-                  color: Colors.black),
+                  // color: Colors.black
+                  ),
             ),
           ),
         ],

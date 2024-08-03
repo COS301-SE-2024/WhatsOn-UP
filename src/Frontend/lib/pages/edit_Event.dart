@@ -171,15 +171,15 @@ class _EditEventState extends State<EditEvent> {
                     onPressed: () {
                       showSubmitDialog(context);
                     },
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.black,
-                      backgroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                        side: BorderSide(color: Colors.grey, width: 1),
-                      ),
-                      padding: EdgeInsets.symmetric(vertical: 16),
-                    ),
+                    // style: ElevatedButton.styleFrom(
+                    //   foregroundColor: Colors.black,
+                    //   backgroundColor: Colors.white,
+                    //   shape: RoundedRectangleBorder(
+                    //     borderRadius: BorderRadius.circular(20),
+                    //     side: BorderSide(color: Colors.grey, width: 1),
+                    //   ),
+                    //   padding: EdgeInsets.symmetric(vertical: 16),
+                    // ),
                     child: const Text('Submit Changes'),
                   ),
                 ),
@@ -309,15 +309,15 @@ class _EditEventState extends State<EditEvent> {
               });
             }
           },
-          style: ElevatedButton.styleFrom(
-            foregroundColor: Colors.black, backgroundColor: Colors.white,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-              side: BorderSide(color: Colors.grey, width: 1),
-            ),
-            padding: const EdgeInsets.symmetric(
-                horizontal: 16.0, vertical: 7.0),
-          ),
+          // style: ElevatedButton.styleFrom(
+          //   foregroundColor: Colors.black, backgroundColor: Colors.white,
+          //   shape: RoundedRectangleBorder(
+          //     borderRadius: BorderRadius.circular(20),
+          //     side: BorderSide(color: Colors.grey, width: 1),
+          //   ),
+          //   padding: const EdgeInsets.symmetric(
+          //       horizontal: 16.0, vertical: 7.0),
+          // ),
           child: const Text('Select Images'),
         ),
         if (selectedImages != null)

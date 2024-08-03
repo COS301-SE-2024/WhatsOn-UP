@@ -89,14 +89,7 @@ final String ADMIN='ADMIN';
                       onPressed: () {
                         _navigateToEditprofile(context);
                       },
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.black, backgroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                          side: BorderSide(color: Colors.grey, width: 1),
-                        ),
-                        padding: EdgeInsets.symmetric(vertical: 16),
-                      ),
+                      
                       child: const Text('Edit Profile'),
                     ),
                   ),
@@ -121,7 +114,16 @@ final String ADMIN='ADMIN';
                         _buildProfileOption(
                           text: 'Security',
                           onTap: () {
-                            Navigator.of(context).pushReplacementNamed('/resetPassword');
+                            // Navigator.of(context).pushReplacementNamed('/resetPassword');
+                            Navigator.of(context).pushNamed('/resetPassword');
+                          },
+                        ),
+                        _buildDivider(),
+                        _buildProfileOption(
+                          text: 'Host Application',
+                          onTap: () {
+                            // Navigator.of(context).pushReplacementNamed('/hostApplication');
+                            Navigator.of(context).pushNamed('/hostApplication');
                           },
                         ),
                         _buildDivider(),
@@ -150,12 +152,13 @@ final String ADMIN='ADMIN';
             left: 10.0,
             child: IconButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => HomePage(
-                        //widget.profileImage,
-                  )),
-                );
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(builder: (context) => HomePage(
+                //         //widget.profileImage,
+                //   )),
+                // );
+                Navigator.pop(context);
               },
               icon: const Icon(LineAwesomeIcons.angle_left_solid),
             ),

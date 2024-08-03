@@ -23,8 +23,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final borderColour =
-        theme.brightness == Brightness.dark ? Colors.white : Colors.black;
+    final borderColour = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
 
     return Scaffold(
       body: Padding(

@@ -348,14 +348,14 @@ bool _obscurePassword=true;
                 ));
               }
             },
-            style: TextButton.styleFrom(
-              foregroundColor: Colors.black, padding: const EdgeInsets.symmetric(vertical: 10.0),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20.0),
-                side: BorderSide(color: Colors.black),
-              ), // Text color
-              backgroundColor: Colors.transparent,
-            ),
+            // style: TextButton.styleFrom(
+            //   foregroundColor: Colors.black, padding: const EdgeInsets.symmetric(vertical: 10.0),
+            //   shape: RoundedRectangleBorder(
+            //     borderRadius: BorderRadius.circular(20.0),
+            //     side: BorderSide(color: Colors.black),
+            //   ), // Text color
+            //   backgroundColor: Colors.transparent,
+            // ),
             child: const Text('Login'),
           ),
           const SizedBox(height: 10),
@@ -368,14 +368,14 @@ bool _obscurePassword=true;
               );
 
               },
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.black, padding: const EdgeInsets.symmetric(vertical: 10.0),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20.0),
-                  side: BorderSide(color: Colors.black),
-                ), // Text color
-                backgroundColor: Colors.transparent,
-              ),
+              // style: TextButton.styleFrom(
+              //   foregroundColor: Colors.black, padding: const EdgeInsets.symmetric(vertical: 10.0),
+              //   shape: RoundedRectangleBorder(
+              //     borderRadius: BorderRadius.circular(20.0),
+              //     side: BorderSide(color: Colors.black),
+              //   ), // Text color
+              //   backgroundColor: Colors.transparent,
+              // ),
               child: Text('Sign Up')
           ),
           const SizedBox(height: 10),

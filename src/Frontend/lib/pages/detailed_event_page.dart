@@ -309,6 +309,7 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
                   ),
                   const SizedBox(height: 16.0),
                   if (!_thisCurrentEvent.attendees.any((attendee) => attendee.userId == userP.userId)) ...[
+                    if (userP.role != "GUEST")
                     if (_thisCurrentEvent.maxAttendees >_thisCurrentEvent.attendees.length )
                       ElevatedButton.icon(
                         onPressed: _addToCalendar,
