@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:firstapp/providers/events_providers.dart';
+import '../main.dart';
 import '../providers/user_provider.dart';
 import '../screens/FilterScreen.dart';
-import '../screens/SearchScreen.dart';
+import '../screens/HostSearchScreenState.dart';
 
 import 'event_card.dart';
 
@@ -22,7 +23,7 @@ class _EventmanagementCategoryState extends State<EventmanagementCategory> {
   @override
   void initState() {
     super.initState();
-
+    final user = supabase.auth.currentUser;
     _loadEvents();
   }
   void _loadEvents() async {
@@ -44,8 +45,9 @@ class _EventmanagementCategoryState extends State<EventmanagementCategory> {
     final theme = Theme.of(context);
     final textColour = theme.colorScheme.onSurface;
     final borderColour = theme.colorScheme.secondary;
-
+    final user = supabase.auth.currentUser;
     return Scaffold(
+
       appBar: AppBar(
         title: Text('Edit Events'), // Adjust the app bar title as needed
       ),
@@ -76,7 +78,8 @@ class _EventmanagementCategoryState extends State<EventmanagementCategory> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => SearchScreen(),
+
+                              builder: (context) => HostSearchScreen(hostId: user!.id),
                             ),
                           );
                         },
