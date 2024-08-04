@@ -275,7 +275,7 @@ class UserService {
         mailSender.send(email)
 
         return ResponseEntity.ok(
-            ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Application submitted successfully. Check your email for verification link"))
+            ResponseDto("success", System.currentTimeMillis(), mapOf("application_id" to hostApplication.applicationId,"message" to "Application submitted successfully. Check your email for verification link"))
         )
     }
 
