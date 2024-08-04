@@ -60,6 +60,34 @@ export class AppController {
     }
   }
 
+  @Post('proof')
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadProof(
+    @UploadedFile() file:  any,
+    @Query('application_id') application_id: string,
+    @Req() request: Request
+  ) {
+
+    if (!application_id) {
+      throw new HttpException(
+        {
+          status: 'error',
+          message: 'application_id not provided or invalid',
+          timestamp: new Date().toISOString(),
+        },
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+
+    const result = await this.appService.uploadProof(file, application_id);
+    return {
+      status: 'success',
+      message: 'File uploaded',
+      timestamp: new Date().toISOString(),
+      data: result,
+    }
+  }
+
   @Delete('delete')
   async deleteFile(@Query('media_name') media_name: string, @Req() request: Request) {
 

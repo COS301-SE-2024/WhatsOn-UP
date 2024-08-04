@@ -25,9 +25,7 @@ class PassedEventModel {
 
     var metadata: String = "" //changed from  var metadata: String = ""
 
-    @OneToOne
-    @JoinColumn(name = "event_id")
-    var availableSlots: AvailableSlotsModel? = null
+    var status: String = ""
 
     @ElementCollection
     @CollectionTable(name = "event_media", joinColumns = [JoinColumn(name = "event_id")])

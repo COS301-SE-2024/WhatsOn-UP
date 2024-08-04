@@ -124,6 +124,7 @@ import 'package:provider/provider.dart';
 import '../providers/user_provider.dart';
 import '../widgets/eventManagement_category.dart';
 import '../widgets/Pastevents.dart';
+import 'Promotion_Applications.dart';
 class ManageEvents extends StatefulWidget {
   ManageEvents({Key? key}) : super(key: key);
 
@@ -198,6 +199,13 @@ String Host='HOST';
                       : 'My Attendees',
                   onTap: ()=> _navigateToAttendeesEvent(context),
                 ),
+                if(userP.role == Admin)
+                  _buildDivider(),
+                _buildProfileOption(
+                  text:'Event Applications',
+                  onTap: ()=> _navigateToGeneralEventApplications(context),
+                ),
+                _buildDivider(),
                 _buildDivider(),
               ],
             ),
@@ -210,7 +218,12 @@ String Host='HOST';
       MaterialPageRoute(builder: (context) => EventmanagementCategory()),
     );
   }
-
+  Future<void> _navigateToGeneralEventApplications(BuildContext context) async {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const Generaleventapplications()),
+    );
+  }
   void _navigateToApplicationEvent(BuildContext context) {
     Navigator.push(
       context,

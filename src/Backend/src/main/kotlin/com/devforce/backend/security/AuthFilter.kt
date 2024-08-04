@@ -27,6 +27,7 @@ class AuthFilter: OncePerRequestFilter() {
         "/api/events/filterEvents",
         "/api/events/get_locations",
         "/api/events/get_passed_events",
+        "/api/user/verify_application",
     )
 
 
