@@ -554,6 +554,7 @@ bool _obscurePassword=true;
         notificationProvider _notificationProvider = Provider.of<notificationProvider>(context, listen: false);
         _notificationProvider.apiInstance=api;
         _notificationProvider.refreshNotifications(userP.userId);
+        userP. Generalusers(userP.userId);
         bool isBase64(String input) {
           final RegExp base64 = RegExp(
             r'^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$',

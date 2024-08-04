@@ -4,17 +4,16 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i6;
-import 'dart:typed_data' as _i12;
+import 'dart:typed_data' as _i11;
 import 'dart:ui' as _i8;
 
-import 'package:firstapp/pages/editProfile_page.dart' as _i10;
 import 'package:firstapp/providers/events_providers.dart' as _i5;
-import 'package:firstapp/providers/notification_providers.dart' as _i14;
+import 'package:firstapp/providers/notification_providers.dart' as _i13;
 import 'package:firstapp/providers/user_provider.dart' as _i4;
 import 'package:firstapp/services/api.dart' as _i2;
 import 'package:firstapp/widgets/event_card.dart' as _i7;
-import 'package:firstapp/widgets/notification_card.dart' as _i11;
-import 'package:image_picker/image_picker.dart' as _i13;
+import 'package:firstapp/widgets/notification_card.dart' as _i10;
+import 'package:image_picker/image_picker.dart' as _i12;
 import 'package:image_picker_platform_interface/image_picker_platform_interface.dart'
     as _i3;
 import 'package:mockito/mockito.dart' as _i1;
@@ -457,10 +456,14 @@ class MockuserProvider extends _i1.Mock implements _i4.userProvider {
       ) as bool);
 
   @override
-  _i6.Future<List<_i10.User>> get generalUserEvents => (super.noSuchMethod(
-        Invocation.getter(#generalUserEvents),
-        returnValue: _i6.Future<List<_i10.User>>.value(<_i10.User>[]),
-      ) as _i6.Future<List<_i10.User>>);
+  set generalapplications(_i6.Future<_i4.GeneralApplications>? value) =>
+      super.noSuchMethod(
+        Invocation.setter(
+          #generalapplications,
+          value,
+        ),
+        returnValueForMissingStub: null,
+      );
 
   @override
   set Fullname(String? value) => super.noSuchMethod(
@@ -575,16 +578,6 @@ class MockuserProvider extends _i1.Mock implements _i4.userProvider {
         ),
         returnValueForMissingStub: null,
       );
-
-  @override
-  _i6.Future<void> refreshGeneralUsers() => (super.noSuchMethod(
-        Invocation.method(
-          #refreshGeneralUsers,
-          [],
-        ),
-        returnValue: _i6.Future<void>.value(),
-        returnValueForMissingStub: _i6.Future<void>.value(),
-      ) as _i6.Future<void>);
 
   @override
   void addListener(_i8.VoidCallback? listener) => super.noSuchMethod(
@@ -809,7 +802,7 @@ class MockApi extends _i1.Mock implements _i2.Api {
       ) as _i6.Future<Map<String, dynamic>>);
 
   @override
-  _i6.Future<List<_i11.AppNotification>> getAllNotification(
+  _i6.Future<List<_i10.AppNotification>> getAllNotification(
           {required String? userId}) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -817,9 +810,9 @@ class MockApi extends _i1.Mock implements _i2.Api {
           [],
           {#userId: userId},
         ),
-        returnValue: _i6.Future<List<_i11.AppNotification>>.value(
-            <_i11.AppNotification>[]),
-      ) as _i6.Future<List<_i11.AppNotification>>);
+        returnValue: _i6.Future<List<_i10.AppNotification>>.value(
+            <_i10.AppNotification>[]),
+      ) as _i6.Future<List<_i10.AppNotification>>);
 
   @override
   _i6.Future<Map<String, dynamic>> AcceptInvite({
@@ -858,13 +851,15 @@ class MockApi extends _i1.Mock implements _i2.Api {
       ) as _i6.Future<Map<String, dynamic>>);
 
   @override
-  _i6.Future<List<_i10.User>> getGeneralusersToHost() => (super.noSuchMethod(
+  _i6.Future<Map<String, dynamic>> getGeneralusersToHost(String? userid) =>
+      (super.noSuchMethod(
         Invocation.method(
           #getGeneralusersToHost,
-          [],
+          [userid],
         ),
-        returnValue: _i6.Future<List<_i10.User>>.value(<_i10.User>[]),
-      ) as _i6.Future<List<_i10.User>>);
+        returnValue:
+            _i6.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
+      ) as _i6.Future<Map<String, dynamic>>);
 
   @override
   _i6.Future<Map<String, dynamic>> DeletersvpEvent(
@@ -975,7 +970,7 @@ class MockApi extends _i1.Mock implements _i2.Api {
 
   @override
   _i6.Future<Map<String, dynamic>> uploadImage(
-    _i12.Uint8List? imageBytes,
+    _i11.Uint8List? imageBytes,
     String? userid,
   ) =>
       (super.noSuchMethod(
@@ -992,7 +987,7 @@ class MockApi extends _i1.Mock implements _i2.Api {
 
   @override
   _i6.Future<Map<String, dynamic>> eventUploadImage(
-    _i12.Uint8List? imageBytes,
+    _i11.Uint8List? imageBytes,
     String? userid,
     String? EventId,
   ) =>
@@ -1013,7 +1008,7 @@ class MockApi extends _i1.Mock implements _i2.Api {
 /// A class which mocks [ImagePicker].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockImagePicker extends _i1.Mock implements _i13.ImagePicker {
+class MockImagePicker extends _i1.Mock implements _i12.ImagePicker {
   MockImagePicker() {
     _i1.throwOnMissingStub(this);
   }
@@ -1159,7 +1154,7 @@ class MockImagePicker extends _i1.Mock implements _i13.ImagePicker {
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MocknotificationProvider extends _i1.Mock
-    implements _i14.notificationProvider {
+    implements _i13.notificationProvider {
   MocknotificationProvider() {
     _i1.throwOnMissingStub(this);
   }
@@ -1201,12 +1196,12 @@ class MocknotificationProvider extends _i1.Mock
       );
 
   @override
-  _i6.Future<List<_i11.AppNotification>> get notifications =>
+  _i6.Future<List<_i10.AppNotification>> get notifications =>
       (super.noSuchMethod(
         Invocation.getter(#notifications),
-        returnValue: _i6.Future<List<_i11.AppNotification>>.value(
-            <_i11.AppNotification>[]),
-      ) as _i6.Future<List<_i11.AppNotification>>);
+        returnValue: _i6.Future<List<_i10.AppNotification>>.value(
+            <_i10.AppNotification>[]),
+      ) as _i6.Future<List<_i10.AppNotification>>);
 
   @override
   set apiInstance(_i2.Api? apiInstance) => super.noSuchMethod(

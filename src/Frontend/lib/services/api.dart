@@ -406,22 +406,45 @@ class Api {
       throw Exception(e.toString());
     }
   }
-  Future<List<User>> getGeneralusersToHost() async {
-    const String generalEventsURL = '';
+  Future<Map<String, dynamic>> getGeneralusersToHost(String userid) async {
 
+    const String notifyUserUrl  = 'http:localhost:8083/api/admin/all_applications';
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $userid',
+    };
     try {
-      var response = await http.get(Uri.parse(generalEventsURL));
+      var response = await http.get(Uri.parse(notifyUserUrl), headers: headers);
 
       if (response.statusCode == 200) {
-        return jsonDecode(response.body)['data'];
+        print('hhhhhhhhhhhh ${jsonDecode(response.body)}');
+        return jsonDecode(response.body);
       } else {
-        throw Exception('Failed to load users');
+        print('something is wrong ${response.body}');
+        throw Exception(jsonDecode(response.body));
       }
     } catch (e) {
 
       throw Exception(e.toString());
     }
+    // final request = http.MultipartRequest('GET', uri);
+    // request.headers['Authorization']= 'Bearer $userid';
+    //
+    // try {
+    //   final response = await request.send();
+    //   if (response.statusCode == 200) {
+    //     print('hhhhhhhhhhhhhhhh $response. ');
+    //     return jsonDecode(response.stream.toString());
+    //   } else {
+    //     throw Exception('Upload failed with status: ${response.statusCode}');
+    //   }
+    // } catch (e) {
+    //   return {'error': e.toString()};
+    // }
   }
+
+
   Future<Map<String, dynamic>> DeletersvpEvent(String eventId, String UserId) async {
     final String _rsvpEventUrl = 'http://localhost:8080/api/user/delete_rspv_event/$eventId';
 
@@ -653,11 +676,7 @@ Future<List<dynamic>> getAllEventsGuest() async {
       return 'profile_image_${userId}_$timestamp.png';
     }
     final uri = Uri.parse('http://localhost:8083/media/update');
-    var headers = {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'Authorization': 'Bearer $userid',
-    };
+
 
     final request = http.MultipartRequest('POST', uri);
     request.headers['Authorization']= 'Bearer $userid';
