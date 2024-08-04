@@ -1,6 +1,11 @@
+import 'dart:typed_data';
+import 'package:firstapp/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:firstapp/services/api.dart';
+import '../providers/user_provider.dart';
+import 'package:provider/provider.dart';
 
 class HostApplicationPage extends StatefulWidget {
   @override
@@ -14,13 +19,12 @@ class _HostApplicationPageState extends State<HostApplicationPage> {
   String _duration = '1 week';
   DateTime _startDate = DateTime.now();
   bool _isStudent = true;
-  XFile? _stickerImage;
+  Uint8List? _stickerImage;
 
   List<String> _durationOptions = ['1 week', '1 month', 'Permanent'];
 
   Future<void> _pickImage() async {
-    final ImagePicker _picker = ImagePicker();
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    Uint8List image = await pickImage(ImageSource.gallery);
     if (image != null) {
       setState(() {
         _stickerImage = image;
@@ -30,6 +34,10 @@ class _HostApplicationPageState extends State<HostApplicationPage> {
 
   @override
   Widget build(BuildContext context) {
+    userProvider user = Provider.of<userProvider>(context);
+    String userId = user.userId;
+
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Host Application'),
@@ -104,11 +112,11 @@ class _HostApplicationPageState extends State<HostApplicationPage> {
                         ),
                       ),
                     ),
-                    if (_stickerImage != null)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 10),
-                        child: Text('Image selected: ${_stickerImage!.name}'),
-                      ),
+                    // if (_stickerImage != null)
+                      // Padding(
+                      //   padding: const EdgeInsets.only(top: 10),
+                      //   child: Text('Image selected: ${_stickerImage!.toString()}'),
+                      // ),
                   ],
                 ),
               const SizedBox(height: 20),
@@ -186,7 +194,9 @@ class _HostApplicationPageState extends State<HostApplicationPage> {
                       );
                       return;
                     }
-                    // Send to backend 
+                    
+                    submitHostApplication(userId);
+
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Application submitted successfully')),
                     );
@@ -203,4 +213,24 @@ class _HostApplicationPageState extends State<HostApplicationPage> {
       ),
     );
   }
+
+
+  Future<void> submitHostApplication(String userID) async {
+  try {
+    var result = await Api().applyForHost(
+      reason: _reason,
+      duration: _duration,
+      fromWhen: _startDate,
+      studentEmail: _isStudent ? _studentEmail : null,
+      proofImage: !_isStudent ? _stickerImage : null,
+      userId: userID,
+    );
+
+    print('Application submitted successfully: ${result['data']['message']}');
+  } catch (e) {
+    print('Failed to submit application: $e');
+  }
+}
+
+
 }
