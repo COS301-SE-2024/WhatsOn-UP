@@ -4,6 +4,7 @@ import com.devforce.backend.dto.CreateEventDto
 import com.devforce.backend.dto.FilterByDto
 import com.devforce.backend.dto.UpdateEventDto
 import com.devforce.backend.model.EventModel
+import com.devforce.backend.model.RoleModel
 import com.devforce.backend.model.UserModel
 import com.devforce.backend.model.VenueModel
 import com.devforce.backend.repo.EventRepo
@@ -46,8 +47,9 @@ class EventServiceTest {
         val id = UUID.randomUUID()
         val user = UserModel().apply {
             userId= id
+            role = RoleModel().apply { name = "ADMIN" }
         }
-        val roleName = "HOST"
+        val roleName = "ADMIN"
         val authorities = setOf(SimpleGrantedAuthority(roleName))
         val userDetails = CustomUser(id, authorities, user)
         val auth = UsernamePasswordAuthenticationToken(userDetails, authorities, userDetails.authorities)
@@ -97,45 +99,45 @@ class EventServiceTest {
         assertEquals("success", response.body?.status)
     }
 
-//    @Test
-//    fun `!!!Update event success!!!`() {
-//        val id = UUID.randomUUID()
-//        val updateEventDto = UpdateEventDto(
-//            title = "Updated Event Title",
-//            description = "Updated Event Description",
-//            startDateTime = LocalDateTime.now(),
-//            endDateTime = LocalDateTime.now().plusHours(2),
-//            location = id,
-//            maxParticipants = 10,
-//            metadata = "Updated Event Metadata",
-//            isPrivate = true
-//        )
-//
-//        val event = EventModel().apply {
-//            this.title = "Event Title"
-//            this.description = "Event Description"
-//            this.startDateTime = LocalDateTime.now()
-//            this.endDateTime = LocalDateTime.now().plusHours(2)
-//            this.venue = VenueModel()
-//            this.maxAttendees = 20
-//            this.metadata = "Event Metadata"
-//            this.isPrivate = false
-//        }
-//
-//        val venueModel = VenueModel().apply {
-//            venueId = updateEventDto.location
-//            available = true
-//            capacity = 100
-//        }
-//
-//        // Mock necessary dependencies and interactions
-//        `when`(eventRepo.findById(id)).thenReturn(Optional.of(event))
-//        `when`(updateEventDto.location?.let { venueRepo.findByVenueId(it) }).thenReturn(venueModel)
-//        `when`(eventRepo.save(event)).thenReturn(event)
-//
-//        val response = eventServiceWithMocks.updateEvent(id, updateEventDto)
-//        assertEquals("success", response.body?.status)
-//    }
+    @Test
+    fun `!!!Update event success!!!`() {
+        val id = UUID.randomUUID()
+        val updateEventDto = UpdateEventDto(
+            title = "Updated Event Title",
+            description = "Updated Event Description",
+            startDateTime = LocalDateTime.now(),
+            endDateTime = LocalDateTime.now().plusHours(2),
+            location = id,
+            maxParticipants = 10,
+            metadata = "Updated Event Metadata",
+            isPrivate = true
+        )
+
+        val event = EventModel().apply {
+            this.title = "Event Title"
+            this.description = "Event Description"
+            this.startDateTime = LocalDateTime.now()
+            this.endDateTime = LocalDateTime.now().plusHours(2)
+            this.venue = VenueModel()
+            this.maxAttendees = 20
+            this.metadata = "Event Metadata"
+            this.isPrivate = false
+        }
+
+        val venueModel = VenueModel().apply {
+            venueId = updateEventDto.location
+            available = true
+            capacity = 100
+        }
+
+        // Mock necessary dependencies and interactions
+        `when`(eventRepo.findById(id)).thenReturn(Optional.of(event))
+        `when`(updateEventDto.location?.let { venueRepo.findByVenueId(it) }).thenReturn(venueModel)
+        `when`(eventRepo.save(event)).thenReturn(event)
+
+        val response = eventServiceWithMocks.updateEvent(id, updateEventDto)
+        assertEquals("success", response.body?.status)
+    }
 
     @Test
     fun `!!!Update event failure!!!`() {
@@ -159,18 +161,18 @@ class EventServiceTest {
         assertEquals("error", response.body?.status)
     }
 
-//    @Test
-//    fun `!!!Delete event success!!!`() {
-//        val id = UUID.randomUUID()
-//        val event = EventModel()
-//
-//        // Mock necessary dependencies and interactions
-//        `when`(eventRepo.findById(id)).thenReturn(Optional.of(event))
-//
-//        val response = eventServiceWithMocks.deleteEvent(id)
-//
-//        assertEquals("success", response.body?.status)
-//    }
+    @Test
+    fun `!!!Delete event success!!!`() {
+        val id = UUID.randomUUID()
+        val event = EventModel()
+
+        // Mock necessary dependencies and interactions
+        `when`(eventRepo.findById(id)).thenReturn(Optional.of(event))
+
+        val response = eventServiceWithMocks.deleteEvent(id)
+
+        assertEquals("success", response.body?.status)
+    }
 
     @Test
     fun `!!!Delete event failure!!!`() {

@@ -5,16 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.time.LocalDateTime
 import java.util.*;
-
-
-enum class Status {
-    PENDING,
-    ACCEPTED,
-    REJECTED,
-    ACKNOWLEDGED,
-    DISPUTED
-}
 
 
 @Data
@@ -25,26 +17,28 @@ enum class Status {
 @AllArgsConstructor
 class HostApplicationsModel {
     @Id
+    @GeneratedValue
     @Column(name = "application_id", columnDefinition = "UUID")
     var applicationId: UUID? = null
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status", columnDefinition = "event_status")
-    var status: Status = Status.PENDING
+    @ManyToOne
+    @JoinColumn(name = "status_id")
+    var status: ApplicationStatusModel? = null
 
     @OneToOne
     @JoinColumn(name = "user_id")
     var user: UserModel? = null
 
     @Column(name = "expiry_date_time")
-    var expiryDateTime: Date = Date()
+    var expiryDateTime: LocalDateTime? = null
 
-    var proof: String = ""
 
     @OneToOne
     @JoinColumn(name = "accepted_rejected_by")
     var acceptedRejectedBy: UserModel? = null
 
-    @Column(name = "how_long")
-    var howLong: Int = 0
+    var reason: String = ""
+
+    @Column(name = "verification_code")
+    var verificationCode: UUID? = null
 }
