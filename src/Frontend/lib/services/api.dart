@@ -520,7 +520,7 @@ Future<List<dynamic>> getAllEventsGuest() async {
         // Non UP affiliated students need to upload proof image
         if (studentEmail == null && proofImage != null) {
           String applicationId = responseData['data']['application_id'];
-          await _uploadProofImage(applicationId, proofImage);
+          await _uploadProofImage(applicationId, proofImage, userId);
         }
 
         return responseData;
@@ -532,11 +532,13 @@ Future<List<dynamic>> getAllEventsGuest() async {
     }
   }
 
-  Future<void> _uploadProofImage(String applicationId, Uint8List imageBytes) async {
+  Future<void> _uploadProofImage(String applicationId, Uint8List imageBytes, String userId) async {
 
-    final String _uploadUrl = 'http://$domain:8080/media/proof?application_id=$applicationId';
+    final String _uploadUrl = 'http://$domain:8083/media/proof?application_id=$applicationId';
     
     var request = http.MultipartRequest('POST', Uri.parse(_uploadUrl));
+
+    request.headers['Authorization'] = 'Bearer $userId';
     request.files.add(http.MultipartFile.fromBytes(
       'file',
       imageBytes,
@@ -545,7 +547,7 @@ Future<List<dynamic>> getAllEventsGuest() async {
 
     var response = await request.send();
 
-    if (response.statusCode != 200) {
+    if (response.statusCode != 201) {
       throw Exception('Failed to upload proof image');
     }
   }
