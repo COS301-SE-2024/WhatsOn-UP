@@ -1,6 +1,9 @@
 spring:
   application:
     name: Backend
+  mail:
+      host: smtp.gmail.com
+      port: 587
   datasource:
     url: ${DB_URL}
     username: ${DB_USERNAME}
