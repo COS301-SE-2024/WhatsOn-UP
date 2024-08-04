@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:image_picker/image_picker.dart';
 
 class HostApplicationPage extends StatefulWidget {
   @override
@@ -12,8 +13,20 @@ class _HostApplicationPageState extends State<HostApplicationPage> {
   String _studentEmail = '';
   String _duration = '1 week';
   DateTime _startDate = DateTime.now();
+  bool _isStudent = true;
+  XFile? _stickerImage;
 
   List<String> _durationOptions = ['1 week', '1 month', 'Permanent'];
+
+  Future<void> _pickImage() async {
+    final ImagePicker _picker = ImagePicker();
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      setState(() {
+        _stickerImage = image;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,27 +43,74 @@ class _HostApplicationPageState extends State<HostApplicationPage> {
             children: [
               const Text(
                 'Apply to become a host',
-                style: TextStyle(fontSize: 20),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 20),
-              TextFormField(
-                decoration: const InputDecoration(
-                  labelText: 'Student Email',
-                  hintText: 'Enter your university email',
-                  border: OutlineInputBorder(),
-                ),
-                keyboardType: TextInputType.emailAddress,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your student email';
-                  }
-                  if (!value.endsWith('tuks.co.za')) {
-                    return 'Please use a valid University of Pretoria email address';
-                  }
-                  return null;
-                },
-                onSaved: (value) => _studentEmail = value!,
+              Row(
+                children: [
+                  const Expanded(
+                    child: Text('Are you a university student?',
+                        style: TextStyle(fontSize: 16)),
+                  ),
+                  Switch(
+                    value: _isStudent,
+                    onChanged: (bool value) {
+                      setState(() {
+                        _isStudent = value;
+                        _formKey.currentState?.reset();
+                        _stickerImage = null;
+                        _studentEmail = '';
+                      });
+                    },
+                  ),
+                  Text(_isStudent ? 'Yes' : 'No',
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                ],
               ),
+              const SizedBox(height: 20),
+              if (_isStudent)
+                TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'Student Email',
+                    hintText: 'Enter your university email',
+                    border: OutlineInputBorder(),
+                  ),
+                  keyboardType: TextInputType.emailAddress,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your student email';
+                    }
+                    if (!value.endsWith('tuks.co.za')) {
+                      return 'Please use a valid University of Pretoria email address';
+                    }
+                    return null;
+                  },
+                  onSaved: (value) => _studentEmail = value!,
+                )
+              else
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text('Upload Permission Sticker'),
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      width: 200.0,
+                      child: ElevatedButton.icon(
+                        onPressed: _pickImage,
+                        icon: const Icon(Icons.upload_file),
+                        label: const Text('Choose Image'),
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                        ),
+                      ),
+                    ),
+                    if (_stickerImage != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10),
+                        child: Text('Image selected: ${_stickerImage!.name}'),
+                      ),
+                  ],
+                ),
               const SizedBox(height: 20),
               TextFormField(
                 decoration: const InputDecoration(
@@ -120,7 +180,13 @@ class _HostApplicationPageState extends State<HostApplicationPage> {
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState!.save();
-                    // Send to backend
+                    if (!_isStudent && _stickerImage == null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Please upload a permission sticker')),
+                      );
+                      return;
+                    }
+                    // Send to backend 
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Application submitted successfully')),
                     );

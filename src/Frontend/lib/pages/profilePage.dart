@@ -147,7 +147,15 @@ class _ProfilePageState extends State<ProfilePage> {
                           _buildProfileOption(
                             text: 'Security',
                             onTap: () {
-                              Navigator.of(context).pushReplacementNamed('/resetPassword');
+                              Navigator.of(context).pushNamed('/resetPassword');
+                            },
+                          ),
+                          _buildDivider(),
+                          // TODO: ONLY ALLOW GENERAL USERS TO SEE THIS
+                          _buildProfileOption(
+                            text: 'Host Application',
+                            onTap: () {
+                              Navigator.of(context).pushNamed('/hostApplication');
                             },
                           ),
                           _buildDivider(),

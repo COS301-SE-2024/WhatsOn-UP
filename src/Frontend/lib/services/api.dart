@@ -404,52 +404,8 @@ class Api {
 
   }
 
-//   Future<List<Event>> getAllEventsGuest() async {
-//   try {
-//       final _allEventsGuestURL = 'http://$domain:8080/api/events/get_all';
-//       var headers = {
-//         'Content-Type': 'application/json',
-//         'Accept': 'application/json',
-//       };
-
-//       var response = await http.get(Uri.parse(_allEventsGuestURL), headers: headers);
-
-//       if (response.statusCode == 200) {
-//         // print('WORKING RSVP API!');
-//         return jsonDecode(response.body)['data'];
-//       } else {
-//         throw Exception(jsonDecode(response.body));
-//       }
-//     }
-//     catch (e) {
-//       print('Error all events guest: $e');
-//       throw Exception(e.toString());
-//     }
-// }
 
 Future<List<dynamic>> getAllEventsGuest() async {
-  
-
-
-  // try {
-  //   var response = await http.get(Uri.parse(_rsvpEventsURL),);
-
-  //   if (response.statusCode == 200) {
-  //     // Parse the JSON response
-  //     final Map<String, dynamic> decodedJson = json.decode(response.body);
-  //     final List<dynamic> eventsJson = decodedJson['data'];
-
-  //     // Map the JSON objects to Event objects
-  //     final List<Event> events = eventsJson.map((jsonEvent) => Event.fromJson(jsonEvent)).toList();
-  //     return events;
-  //   } else {
-  //     throw Exception('Failed to load events');
-  //   }
-  // } catch (e) {
-
-  //   rethrow;
-  // }
-
   try {
       final _rsvpEventsURL = 'http://$domain:8080/api/events/get_all';
       var headers = {
