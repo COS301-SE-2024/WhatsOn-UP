@@ -67,7 +67,8 @@ const String ADMIN='ADMIN';
         onItemTapped: _onItemTapped,
         userRole: userP.role,
       ),
-      floatingActionButton: (userP.role== HOST || userP.role == ADMIN)
+      floatingActionButton: (userP.role== HOST || userP.role == ADMIN) &&
+                            (_selectedIndex != 3)
       ? Padding(
           padding: EdgeInsets.only(right: 15, bottom: 70),
           child: Align(

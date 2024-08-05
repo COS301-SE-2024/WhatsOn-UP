@@ -60,6 +60,7 @@ dependencies:
   flutter_polyline_points: ^2.1.0
   google_maps_flutter: ^2.2.8
   flutter_html: ^3.0.0-beta.2
+  flutter_dotenv: ^5.1.0
 
 
 
@@ -93,6 +94,7 @@ flutter:
     - assets/images/google-icon.svg
     - assets/images/adminBadge.png
     - assets/images/user.png
+    - .env
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

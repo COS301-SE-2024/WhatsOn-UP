@@ -299,6 +299,9 @@ class _EditprofilePageState extends State<EditprofilePage> {
       if(_image != null){
         userp.profileImage=_image;
       }
+      else{
+        userp.profileImage = const AssetImage('assets/images/user.png') as Uint8List?;
+      }
 
       final user = User(
         name: adjustedName,

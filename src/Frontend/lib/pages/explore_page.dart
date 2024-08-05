@@ -1,7 +1,10 @@
+// import 'dart:nativewrappers/_internal/vm/lib/ffi_allocation_patch.dart';
+
 import 'package:firstapp/models/Location.dart';
 import 'package:firstapp/models/Route.dart';
 import 'package:firstapp/services/RouteService.dart';
 import 'package:firstapp/widgets/DirectionsBottomSheet.dart';
+import 'package:firstapp/widgets/PlaceInfoBottomSheet.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:firstapp/services/PlacesService.dart';
@@ -117,6 +120,7 @@ class NavigationPage extends StatefulWidget {
 // }
 
 class _NavigationPageState extends State<NavigationPage> {
+  
   late GoogleMapController _googleMapController;
   static const LatLng initPos = LatLng(-25.756283, 28.231191);
   Marker? _destination;
@@ -266,8 +270,17 @@ class _NavigationPageState extends State<NavigationPage> {
       if (_route != null){
         _route = null;
       }
-      _setDestination(foundLocations[0].location);
+      
+      Location foundLocation = foundLocations[0];
+      _setDestination(foundLocation.location);
+      await _cameraToPosition(foundLocation.location, 18);
+      _showPlaceInfo(context, foundLocation);
     }
+  }
+
+  Future<void> _cameraToPosition(LatLng pos, double zoom, {double tilt = 0}) async{
+    CameraPosition newCamPosition = CameraPosition(target: pos, zoom: zoom, tilt: tilt);
+    await _googleMapController.animateCamera(CameraUpdate.newCameraPosition(newCamPosition));
   }
 
 ///////////////////////////////////////Directions//////////////////////////////////////////////////
@@ -277,6 +290,23 @@ class _NavigationPageState extends State<NavigationPage> {
         context: context,
         builder: (context) {
           return DirectionsModalSheet(directions: directions);
+        },
+      );
+    }
+
+////////////////
+   void _showPlaceInfo(BuildContext context, Location location) {
+      showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return PlaceInformationModalSheet(
+            location: location,
+            startTrip: (LatLng dest){
+              Navigator.of(context).pop();
+              _updateRoute(dest);
+              _cameraToPosition(_origin.position, 19, tilt: 40);
+            }
+          );
         },
       );
     }

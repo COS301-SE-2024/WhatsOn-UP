@@ -72,15 +72,17 @@ import 'package:firstapp/services/api.dart';
 import 'package:firstapp/widgets/event_card.dart';
 import 'package:firstapp/widgets/theme_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 late SupabaseClient supabaseClient;
 void main() async{
   var api = Api();
+  await dotenv.load(fileName: ".env");
   await Supabase.initialize(
     url: 'https://mehgbhiirnmypfgnkaud.supabase.co',
-    anonKey:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1laGdiaGlpcm5teXBmZ25rYXVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTY3ODcxMjMsImV4cCI6MjAzMjM2MzEyM30.IqwbTqO7T_ZyYjkWBAbKCK2kwEzJktZtAEJKlrfjYvY',
+    anonKey:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1laGdiaGlpcm5teXBmZ25rYXVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjI1OTc1ODksImV4cCI6MjAzODE3MzU4OX0.LhJE4sO3YrRi2VwQmbt-24LHUVM3bK9eFzHz1SsvH1s',
 
   );
   // runApp(ChangeNotifierProvider<ThemeNotifier>(

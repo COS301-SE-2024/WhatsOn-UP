@@ -71,6 +71,9 @@ class DirectionsModalSheet extends StatelessWidget {
     else if(directionText.contains(RegExp('southwest'))){
       selectedIcon = const Icon(Icons.south_west_outlined);
     }
+    else if(directionText.contains(RegExp('roundabout'))){
+      selectedIcon = const Icon(Icons.roundabout_right_rounded);
+    }
     else{
       selectedIcon = const Icon(Icons.circle_outlined);
     }
