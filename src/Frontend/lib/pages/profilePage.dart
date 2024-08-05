@@ -38,7 +38,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     children: [
                       CircleAvatar(
                         backgroundImage: user.profileImage != null && user.profileImage!.isNotEmpty
-                            ? MemoryImage(user.profileImage!)
+                            ? NetworkImage(user.profileImage!)
                             : const AssetImage('assets/images/user.png') as ImageProvider,
                         radius: 60.0,
                       ),
@@ -173,7 +173,18 @@ class _ProfilePageState extends State<ProfilePage> {
                               );
                             },
                           ),
-                        ],
+                        //     _buildDivider(),
+                        //     if (user.role!=ADMIN) ...[
+                        //     _buildProfileOption(
+                        //     text: 'Apply for Promotion',
+                        //     onTap: () {
+                        //     Navigator.of(context).pushReplacementNamed(
+                        //     '/PromotionForm');
+                        //     },
+                        //     ),
+                        //     _buildDivider(),
+                        // ],
+    ],
                       ),
                     ),
                   ] else ... [
@@ -219,7 +230,12 @@ class _ProfilePageState extends State<ProfilePage> {
             left: 10.0,
             child: IconButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                  Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const HomePage(
+                  //widget.profileImage,
+                  )),
+                  );
               },
               icon: const Icon(LineAwesomeIcons.angle_left_solid),
             ),

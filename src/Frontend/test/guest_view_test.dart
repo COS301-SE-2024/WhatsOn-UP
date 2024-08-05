@@ -12,6 +12,7 @@ import 'api_test.mocks.dart';
 import 'package:image/image.dart' as img;
 import 'dart:typed_data';
 import 'package:firstapp/providers/events_providers.dart';
+import 'package:mocktail_image_network/mocktail_image_network.dart';
 void main() {
   group('GuestView Tests', () {
     late MockuserProvider mockUserProvider;
@@ -39,11 +40,15 @@ void main() {
       when(mockUserProvider.password).thenReturn('');
       when(mockUserProvider.role).thenReturn('GUEST');
 
-      final placeholderImage = img.Image(width: 20, height: 20);
-      final placeholderImageData = img.encodePng(placeholderImage);
+      // final placeholderImage = img.Image(width: 20, height: 20);
+      // final placeholderImageData = img.encodePng(placeholderImage);
 
+      // when(mockUserProvider.profileImage)
+      //     .thenReturn(Uint8List.fromList(placeholderImageData));
+
+      String mockImageUrl = '';
       when(mockUserProvider.profileImage)
-          .thenReturn(Uint8List.fromList(placeholderImageData));
+          .thenReturn(mockImageUrl);
       when(mockApi.getAllEvents()).thenAnswer((_) async => [
         Event(
           id: '1',
@@ -190,10 +195,11 @@ void main() {
       ]);
 
 
-      when(mockUserProvider.profileimage).thenReturn(Uint8List.fromList(placeholderImageData));
+      // when(mockUserProvider.profileimage).thenReturn(Uint8List.fromList(placeholderImageData));
     });
 
     testWidgets('should display Guest User on HomePage', (WidgetTester tester) async {
+      await mockNetworkImages(() async {
       await tester.pumpWidget(
         MultiProvider(
           providers: [
@@ -206,7 +212,7 @@ void main() {
           ),
         ),
       );
-
+      });
       await tester.pumpAndSettle();
       expect(find.text('Welcome, Guest User'), findsOneWidget);
     });
@@ -238,6 +244,7 @@ void main() {
 
     testWidgets('should display correct buttons and links on ProfilePage for GUEST user', (WidgetTester tester) async {
       when(mockUserProvider.role).thenReturn('GUEST');
+      await mockNetworkImages(() async {
       await tester.pumpWidget(
         MaterialApp(
           home: ChangeNotifierProvider<userProvider>.value(
@@ -246,7 +253,7 @@ void main() {
           ),
         ),
       );
-
+      });
       expect(find.text('Guest User'), findsOneWidget);
       expect(find.text('Create an account to access more features!'), findsOneWidget);
       expect(find.text('Already have an account? Log In'), findsOneWidget);

@@ -22,6 +22,7 @@ import 'package:firstapp/pages/manageEvents.dart';
 import 'package:firstapp/pages/application_event.dart';
 
 import 'allHome_events.dart';
+import 'notifications.dart';
 
 class HomePage extends StatefulWidget {
 
@@ -97,7 +98,7 @@ class _HomePageState extends State<HomePage> {
       case 0:
         return _buildHomePage();
       case 1:
-        return const RsvpEventsPage();
+        return const Notifications();
       case 2:
         return const CalendarPage();
       case 3:
@@ -165,7 +166,7 @@ class _HomePageState extends State<HomePage> {
                         },
                         child: CircleAvatar(
                           backgroundImage: userP.profileImage != null && userP.profileImage!.isNotEmpty
-                              ? MemoryImage(userP.profileImage!)
+                              ? NetworkImage(userP.profileImage!)
                               : const AssetImage('assets/images/user.png') as ImageProvider,
                           radius: 27.0,
                         ),
