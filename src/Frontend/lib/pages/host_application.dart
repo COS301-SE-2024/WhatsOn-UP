@@ -20,14 +20,19 @@ class _HostApplicationPageState extends State<HostApplicationPage> {
   DateTime _startDate = DateTime.now();
   bool _isStudent = true;
   Uint8List? _stickerImage;
+  String? _imageName;
+  bool _isLoading = false;
 
   List<String> _durationOptions = ['1 week', '1 month', 'Permanent'];
 
   Future<void> _pickImage() async {
-    Uint8List image = await pickImage(ImageSource.gallery);
-    if (image != null) {
+    final ImagePicker _picker = ImagePicker();
+    XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      Uint8List image = await pickedFile.readAsBytes();
       setState(() {
         _stickerImage = image;
+        _imageName = pickedFile.name;
       });
     }
   }
@@ -37,19 +42,20 @@ class _HostApplicationPageState extends State<HostApplicationPage> {
     userProvider user = Provider.of<userProvider>(context);
     String userId = user.userId;
 
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Host Application'),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            padding: const EdgeInsets.all(16.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
                 'Apply to become a host',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
@@ -112,11 +118,11 @@ class _HostApplicationPageState extends State<HostApplicationPage> {
                         ),
                       ),
                     ),
-                    // if (_stickerImage != null)
-                      // Padding(
-                      //   padding: const EdgeInsets.only(top: 10),
-                      //   child: Text('Image selected: ${_stickerImage!.toString()}'),
-                      // ),
+                    if (_imageName  != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10),
+                        child: Text('Selected image: $_imageName'),
+                      ),
                   ],
                 ),
               const SizedBox(height: 20),
@@ -183,54 +189,87 @@ class _HostApplicationPageState extends State<HostApplicationPage> {
                   ),
                 ),
               ),
-              const SizedBox(height: 30),
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    _formKey.currentState!.save();
-                    if (!_isStudent && _stickerImage == null) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Please upload a permission sticker')),
-                      );
-                      return;
-                    }
-                    
-                    submitHostApplication(userId);
-
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Application submitted successfully')),
-                    );
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  minimumSize: const Size(double.infinity, 50),
-                ),
-                child: const Text('Submit Application'),
+                  const SizedBox(height: 30),
+                  ElevatedButton(
+                    onPressed: _isLoading ? null : () => _submitForm(userId),
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(double.infinity, 50),
+                    ),
+                    child: _isLoading
+                        ? const CircularProgressIndicator(
+                            color: Colors.white,
+                          )
+                        : const Text('Submit Application'),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
 
+  Future<void> _submitForm(String userId) async {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      if (!_isStudent && _stickerImage == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please upload a permission sticker')),
+        );
+        return;
+      }
+
+      setState(() {
+        _isLoading = true;
+      });
+
+      await submitHostApplication(userId);
+
+      // Reset form after it was submitted
+      _formKey.currentState?.reset();
+      setState(() {
+        _stickerImage = null;
+        _imageName = null;
+        _reason = '';
+        _studentEmail = '';
+        _duration = '1 week';
+        _startDate = DateTime.now();
+        _isStudent = true;
+        _isLoading = false;
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Application submitted successfully. Please check your email for a verification link.')),
+      );
+
+      Navigator.pop(context);
+    }
+  }
 
   Future<void> submitHostApplication(String userID) async {
-  try {
-    var result = await Api().applyForHost(
-      reason: _reason,
-      duration: _duration,
-      fromWhen: _startDate,
-      studentEmail: _isStudent ? _studentEmail : null,
-      proofImage: !_isStudent ? _stickerImage : null,
-      userId: userID,
-    );
+    try {
+      var result = await Api().applyForHost(
+        reason: _reason,
+        duration: _duration,
+        fromWhen: _startDate,
+        studentEmail: _isStudent ? _studentEmail : null,
+        proofImage: !_isStudent ? _stickerImage : null,
+        userId: userID,
+      );
 
-    print('Application submitted successfully: ${result['data']['message']}');
-  } catch (e) {
-    print('Failed to submit application: $e');
+      print('Application submitted successfully: ${result['data']['message']}');
+    } catch (e) {
+      print('Failed to submit application: $e');
+      setState(() {
+        _isLoading = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('There was an error submitting your application. Please try again later.'),
+        backgroundColor: Colors.red,
+      ),
+      );
+    }
   }
-}
-
-
 }

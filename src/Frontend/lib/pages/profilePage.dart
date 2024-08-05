@@ -151,14 +151,15 @@ class _ProfilePageState extends State<ProfilePage> {
                             },
                           ),
                           _buildDivider(),
-                          // TODO: ONLY ALLOW GENERAL USERS TO SEE THIS
-                          _buildProfileOption(
-                            text: 'Host Application',
-                            onTap: () {
-                              Navigator.of(context).pushNamed('/hostApplication');
-                            },
-                          ),
-                          _buildDivider(),
+                          if (userRole != "ADMIN" && userRole != "HOST") ... [
+                            _buildProfileOption(
+                              text: 'Host Application',
+                              onTap: () {
+                                Navigator.of(context).pushNamed('/hostApplication');
+                              },
+                            ),
+                            _buildDivider(),
+                          ],
                           _buildProfileOption(
                             text: 'Logout',
                             onTap: () {

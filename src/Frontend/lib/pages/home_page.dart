@@ -70,7 +70,7 @@ class _HomePageState extends State<HomePage> {
       ),
       floatingActionButton: (userP.role== HOST || userP.role == ADMIN)
       ? Padding(
-          padding: EdgeInsets.only(right: 15, bottom: 70),
+          padding: const EdgeInsets.only(right: 15, bottom: 70),
           child: Align(
             alignment: Alignment.bottomRight,
             child: FloatingActionButton(
@@ -82,7 +82,7 @@ class _HomePageState extends State<HomePage> {
                   )),
                 );
               },
-              child: Icon(Icons.add),
+              child: const Icon(Icons.add),
               backgroundColor: Theme.of(context).primaryColor,
             ),
           ),
@@ -103,7 +103,7 @@ class _HomePageState extends State<HomePage> {
       case 3:
         return const ExplorePage();
       case 4:
-        return SettingsPage();
+        return const SettingsPage();
       case 5:
         return  ManageEvents();
 
@@ -130,7 +130,7 @@ class _HomePageState extends State<HomePage> {
       future: eventP.eventsHome,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: SpinKitPianoWave(
+          return const Center(child: SpinKitPianoWave(
             color:  Color.fromARGB(255, 149, 137, 74),
             size: 50.0,
           ));
@@ -141,7 +141,7 @@ class _HomePageState extends State<HomePage> {
 
           // Add check to ensure events list is not empty
           if (events.isEmpty) {
-            return Center(child: Text('No events found.'));
+            return const Center(child: Text('No events found.'));
           }
 
           return SingleChildScrollView(
@@ -171,15 +171,20 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                     ),
-                    Text(
-                      'Welcome, ${userP.Fullname}',
-                      style: TextStyle(
+                    Flexible(
+                      child: Text(
+                        'Welcome, ${userP.Fullname}',
+                        style: const TextStyle(
                           fontSize: 24.0,
-                          fontWeight: FontWeight.bold),
+                          fontWeight: FontWeight.bold,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
                     ),
                   ],
                 ),
-                SizedBox(height: 20.0),
+                const SizedBox(height: 20.0),
 
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -209,7 +214,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                         ),
-                        SizedBox(width: 35.0),
+                        const SizedBox(width: 35.0),
                         SizedBox(
                           width: MediaQuery.of(context).size.width * 0.27,
                           child: Container(
@@ -236,15 +241,15 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 20.0),
+                const SizedBox(height: 20.0),
                  Padding(
-                  padding: EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.all(16.0),
                   child: Row(children: [
-                    Text(
+                    const Text(
                       'Explore More',
                       style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                     ),
-                    Spacer(),
+                    const Spacer(),
                     TextButton(
                       onPressed: () {
                         Navigator.push(
@@ -254,7 +259,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                         );
                       },
-                      child: Text(
+                      child: const Text(
                         'See more',
                         style: TextStyle(
                           fontSize: 16.0,
@@ -285,17 +290,17 @@ class _HomePageState extends State<HomePage> {
                     },
                   ),
                 ),
-                SizedBox(height: 20.0),
+                const SizedBox(height: 20.0),
                  Padding(
-                  padding: EdgeInsets.all(10.0),
+                  padding: const EdgeInsets.all(10.0),
                   child: Row(
                     children: [
-                      Text(
+                      const Text(
                         'Saved Events',
                         style: TextStyle(
                             fontSize: 18.0, fontWeight: FontWeight.bold),
                       ),
-                      Spacer(),
+                      const Spacer(),
                       TextButton(
                         onPressed: () {
                           Navigator.push(
@@ -305,7 +310,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                           );
                         },
-                        child: Text(
+                        child: const Text(
                           'See more',
                           style: TextStyle(
                             fontSize: 16.0,
@@ -338,7 +343,7 @@ class _HomePageState extends State<HomePage> {
             ),
           );
         } else {
-          return Center(child: Text('No events found.'));
+          return const Center(child: Text('No events found.'));
         }
       },
     );
