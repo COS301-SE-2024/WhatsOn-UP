@@ -65,7 +65,7 @@ class _FilterScreenState extends State<FilterScreen> with SingleTickerProviderSt
             child:Padding(
               padding: const EdgeInsets.all(16.0),
               child: ElevatedButton(
-                style: ElevatedButton.styleFrom(foregroundColor: Colors.white, backgroundColor: Colors.pink[300], ),
+                style: ElevatedButton.styleFrom(minimumSize: const Size(double.infinity, 48),),
                 child: Text(
                   "Filter Events",
                   style: whiteTextTheme,

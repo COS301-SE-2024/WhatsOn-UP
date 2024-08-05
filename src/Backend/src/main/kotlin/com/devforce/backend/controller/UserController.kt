@@ -80,7 +80,7 @@ class UserController {
     fun applyHost(
         @RequestParam howLong: Int,
         @RequestParam reason: String,
-        @RequestParam studentEmail: String,
+        @RequestParam studentEmail: String?,
         @RequestParam fromWhen: String,
     ): ResponseEntity<ResponseDto> {
         return userService.applyForHost(howLong, reason, studentEmail, fromWhen)

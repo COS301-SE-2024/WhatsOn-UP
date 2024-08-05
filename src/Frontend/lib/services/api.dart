@@ -8,6 +8,7 @@ import 'package:firstapp/main.dart';
 import 'globals.dart' as globals;
 import '../pages/editProfile_page.dart';
 import '../widgets/notification_card.dart';
+import 'package:intl/intl.dart';
 class Api {
   // Singleton instance
   static final Api _instance = Api._internal();
@@ -529,52 +530,8 @@ class Api {
 
   }
 
-//   Future<List<Event>> getAllEventsGuest() async {
-//   try {
-//       final _allEventsGuestURL = 'http://$domain:8080/api/events/get_all';
-//       var headers = {
-//         'Content-Type': 'application/json',
-//         'Accept': 'application/json',
-//       };
-
-//       var response = await http.get(Uri.parse(_allEventsGuestURL), headers: headers);
-
-//       if (response.statusCode == 200) {
-//         // print('WORKING RSVP API!');
-//         return jsonDecode(response.body)['data'];
-//       } else {
-//         throw Exception(jsonDecode(response.body));
-//       }
-//     }
-//     catch (e) {
-//       print('Error all events guest: $e');
-//       throw Exception(e.toString());
-//     }
-// }
 
 Future<List<dynamic>> getAllEventsGuest() async {
-  
-
-
-  // try {
-  //   var response = await http.get(Uri.parse(_rsvpEventsURL),);
-
-  //   if (response.statusCode == 200) {
-  //     // Parse the JSON response
-  //     final Map<String, dynamic> decodedJson = json.decode(response.body);
-  //     final List<dynamic> eventsJson = decodedJson['data'];
-
-  //     // Map the JSON objects to Event objects
-  //     final List<Event> events = eventsJson.map((jsonEvent) => Event.fromJson(jsonEvent)).toList();
-  //     return events;
-  //   } else {
-  //     throw Exception('Failed to load events');
-  //   }
-  // } catch (e) {
-
-  //   rethrow;
-  // }
-
   try {
       final _rsvpEventsURL = 'http://${globals.domain}:8080/api/events/get_all';
       var headers = {
@@ -715,7 +672,78 @@ Future<List<dynamic>> getAllEventsGuest() async {
       return {'error': e.toString()};
     }
   }
+  Future<Map<String, dynamic>> applyForHost({
+    required String reason,
+    required String duration,
+    required DateTime fromWhen,
+    String? studentEmail,
+    Uint8List? proofImage,
+    required String userId,
+  }) async {
 
+    final String _applyUrl = 'http://$domain:8080/api/user/apply_for_host';
+    
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $userId',
+    };
+
+    var queryParams = {
+      'reason': reason,
+      'fromWhen': DateFormat("yyyy-MM-dd HH:mm:ss").format(fromWhen),
+    };
+
+    if (duration != 'Permanent') {
+      queryParams['howLong'] = duration == '1 week' ? '7' : '30';
+    }
+
+    if (studentEmail != null) {
+      queryParams['studentEmail'] = studentEmail;
+    }
+
+    var uri = Uri.parse(_applyUrl).replace(queryParameters: queryParams);
+
+    try {
+      var response = await http.put(uri, headers: headers);
+
+      if (response.statusCode == 200) {
+        var responseData = jsonDecode(response.body);
+        
+        // Non UP affiliated students need to upload proof image
+        if (studentEmail == null && proofImage != null) {
+          String applicationId = responseData['data']['application_id'];
+          await _uploadProofImage(applicationId, proofImage, userId);
+        }
+
+        return responseData;
+      } else {
+        throw Exception(jsonDecode(response.body));
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  Future<void> _uploadProofImage(String applicationId, Uint8List imageBytes, String userId) async {
+
+    final String _uploadUrl = 'http://$domain:8083/media/proof?application_id=$applicationId';
+    
+    var request = http.MultipartRequest('POST', Uri.parse(_uploadUrl));
+
+    request.headers['Authorization'] = 'Bearer $userId';
+    request.files.add(http.MultipartFile.fromBytes(
+      'file',
+      imageBytes,
+      filename: 'proof_image.jpg',
+    ));
+
+    var response = await request.send();
+
+    if (response.statusCode != 201) {
+      throw Exception('Failed to upload proof image');
+    }
+  }
 
 
 }

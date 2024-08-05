@@ -230,7 +230,7 @@ bool _obscurePassword=true;
         body: Stack(
           children: [
             Positioned(top: 80, child: _buildTop()),
-            Positioned(bottom: 5, child: _buildBottom()),
+            Positioned(bottom: 0, child: _buildBottom(context)),
           ],
         ),
       ),
@@ -257,13 +257,14 @@ bool _obscurePassword=true;
     );
   }
 
-  Widget _buildBottom() {
+  Widget _buildBottom(BuildContext context) {
     return Container(
       width: mediaSize.width,
       height: mediaSize.height * 0.7,
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: Colors.white,
+        // color: Colors.white,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(30.0),
           topRight: Radius.circular(30.0),
@@ -307,7 +308,8 @@ bool _obscurePassword=true;
             obscureText: _obscurePassword,
           ),
           const SizedBox(height: 20),
-          TextButton(
+          // TextButton(
+          ElevatedButton(
 
             onPressed: () async {
               try {
@@ -350,18 +352,19 @@ bool _obscurePassword=true;
                 ));
               }
             },
-            style: TextButton.styleFrom(
-              foregroundColor: Colors.black, padding: const EdgeInsets.symmetric(vertical: 10.0),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20.0),
-                side: BorderSide(color: Colors.black),
-              ), // Text color
-              backgroundColor: Colors.transparent,
-            ),
+            // style: TextButton.styleFrom(
+            //   foregroundColor: Colors.black, padding: const EdgeInsets.symmetric(vertical: 10.0),
+            //   shape: RoundedRectangleBorder(
+            //     borderRadius: BorderRadius.circular(20.0),
+            //     side: BorderSide(color: Colors.black),
+            //   ), // Text color
+            //   backgroundColor: Colors.transparent,
+            // ),
             child: const Text('Login'),
           ),
           const SizedBox(height: 10),
-          TextButton(
+          // TextButton(
+          ElevatedButton(
               onPressed: () {
 
                 Navigator.push(
@@ -370,14 +373,14 @@ bool _obscurePassword=true;
               );
 
               },
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.black, padding: const EdgeInsets.symmetric(vertical: 10.0),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20.0),
-                  side: BorderSide(color: Colors.black),
-                ), // Text color
-                backgroundColor: Colors.transparent,
-              ),
+              // style: TextButton.styleFrom(
+              //   foregroundColor: Colors.black, padding: const EdgeInsets.symmetric(vertical: 10.0),
+              //   shape: RoundedRectangleBorder(
+              //     borderRadius: BorderRadius.circular(20.0),
+              //     side: BorderSide(color: Colors.black),
+              //   ), // Text color
+              //   backgroundColor: Colors.transparent,
+              // ),
               child: Text('Sign Up')
           ),
           const SizedBox(height: 10),

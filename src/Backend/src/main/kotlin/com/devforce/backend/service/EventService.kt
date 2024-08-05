@@ -1,9 +1,7 @@
 package com.devforce.backend.service
 
 import com.devforce.backend.dto.*
-import com.devforce.backend.model.AvailableSlotsModel
 import com.devforce.backend.model.EventModel
-import com.devforce.backend.model.PassedEventModel
 import com.devforce.backend.model.VenueModel
 import com.devforce.backend.repo.EventRepo
 import com.devforce.backend.repo.PassedEventsRepo
@@ -127,7 +125,7 @@ class EventService {
 
             if (updateEventDto.location != null) {
                 v = venueRepo.findByVenueId(updateEventDto.location)
-                    ?: return ResponseEntity.ok(
+                if (v == null) return ResponseEntity.ok(
                         ResponseDto(
                             "error",
                             System.currentTimeMillis(),
@@ -170,7 +168,7 @@ class EventService {
         } catch (e: NoSuchElementException) {
             return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "Event not found")))
         } catch (e: Exception) {
-            return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "Failed to update event:")))
+            return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "Failed to update event")))
 
 
     }}
