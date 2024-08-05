@@ -576,7 +576,7 @@ Future<List<dynamic>> getAllEventsGuest() async {
   // }
 
   try {
-      final _rsvpEventsURL = 'http://$domain:8080/api/events/get_all';
+      final _rsvpEventsURL = 'http://${globals.domain}:8080/api/events/get_all';
       var headers = {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
