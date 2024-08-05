@@ -118,33 +118,16 @@ class _GoogleSignInPageState extends State<GoogleSignInPage> {
     userP.email = user!.userMetadata?['email'];
     userP.userId = user.id;
 
-    // String profileImageBase64 = base64Encode(user.userMetadata?['avatar_url']!);
-    Uint8List profileImageBytes = user.userMetadata?['avatar_url'];
     Api api = Api();
-    api.postChangeUser(fullname, profileImageBytes, user.id).then((response) {
+    api.postChangeUser(fullname, user.id).then((response) {
       if (response['error'] != null) {
         print('An error occurred: ${response['error']}');
       } else {
 
         userP.role = response['data']['user']['role'] ?? 'Unknown';
 
-        // bool isBase64(String input) {
-        //   final RegExp base64 = RegExp(
-        //     r'^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$',
-        //   );
-        //   return base64.hasMatch(input);
-        // }
 
-        // if (isBase64(profileImageBase64)) {
-        //   try {
-        //     profileImageBytes = base64Decode(profileImageBase64);
-        //   } catch (e) {
-        //     print('Error decoding Base64: $e');
-        //   }
-        // } else {
-        //   print('Invalid Base64 string: $profileImageBase64');
-        // }
-        userP.profileImage = profileImageBytes;
+        userP.profileImage = user.userMetadata?['avatar_url'];
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => HomePage()),

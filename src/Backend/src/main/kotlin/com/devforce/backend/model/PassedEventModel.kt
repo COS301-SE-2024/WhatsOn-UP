@@ -11,11 +11,11 @@ import java.util.*
 @Data
 @Builder
 @Entity
-@Table(name = "events")
+@Table(name = "passed_events")
 @NoArgsConstructor
 @AllArgsConstructor
 
-class EventModel {
+class PassedEventModel {
     @Id
     @Column(name = "event_id", columnDefinition = "UUID")
     var eventId: UUID? = null
@@ -25,9 +25,7 @@ class EventModel {
 
     var metadata: String = "" //changed from  var metadata: String = ""
 
-    @OneToOne
-    @JoinColumn(name = "event_id")
-    var availableSlots: AvailableSlotsModel? = null
+    var status: String = ""
 
     @ElementCollection
     @CollectionTable(name = "event_media", joinColumns = [JoinColumn(name = "event_id")])
@@ -36,6 +34,7 @@ class EventModel {
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private var createdAt: LocalDateTime = LocalDateTime.now()
+
 
     @OneToOne
     @JoinColumn(name = "venue_id")
@@ -90,6 +89,7 @@ class EventModel {
     fun prePersist() {
         createdAt = LocalDateTime.now()
     }
+
 
 
 

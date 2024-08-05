@@ -1,6 +1,8 @@
 
+import 'package:firstapp/pages/Promotion_Applications.dart';
 import 'package:firstapp/pages/application_event.dart';
 import 'package:firstapp/pages/attendee.dart';
+import 'package:firstapp/pages/editProfile_page.dart';
 import 'package:firstapp/providers/events_providers.dart';
 import 'package:firstapp/widgets/eventManagement_category.dart';
 import 'package:firstapp/widgets/event_card.dart';
@@ -11,7 +13,7 @@ import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
 import 'package:firstapp/pages/manageEvents.dart';
 import 'package:firstapp/providers/user_provider.dart';
-
+import 'package:mocktail_image_network/mocktail_image_network.dart';
 import 'api_test.mocks.dart';
 
 void main() {
@@ -29,8 +31,7 @@ void main() {
         Event(
           id: '1',
           nameOfEvent: 'Test Event 1',
-          dateAndTime: '2022-01-01T00:00:00.000Z',
-          location: 'Test Location 1',
+          venue: null,
           description: 'Test Description 1',
           imageUrls: [],
           hosts: [],
@@ -39,7 +40,6 @@ void main() {
           maxAttendees: 100,
           isPrivate: true,
           attendees: [],
-          startDate: DateTime.parse('2022-01-01T10:00:00.000Z'),
           metadata: Metadata(
             mentors: [],
             categories: [],
@@ -49,8 +49,7 @@ void main() {
         Event(
           id: '2',
           nameOfEvent: 'Test Event 2',
-          dateAndTime: '2022-01-02T00:00:00.000Z',
-          location: 'Test Location 2',
+          venue: null,
           description: 'Test Description 2',
           imageUrls: [],
           hosts: [],
@@ -59,7 +58,6 @@ void main() {
           maxAttendees: 150,
           isPrivate: false,
           attendees: [],
-          startDate: DateTime.parse('2022-01-02T10:00:00.000Z'),
           metadata: Metadata(
             mentors: [],
             categories: [],
@@ -71,8 +69,7 @@ void main() {
         Event(
           id: '1',
           nameOfEvent: 'Test Event 1 HOME',
-          dateAndTime: '2022-01-01T00:00:00.000Z',
-          location: 'Test Location 1',
+          venue: null,
           description: 'Test Description 1',
           imageUrls: [],
           hosts: [],
@@ -81,7 +78,6 @@ void main() {
           maxAttendees: 100,
           isPrivate: true,
           attendees: [],
-          startDate: DateTime.parse('2022-01-01T10:00:00.000Z'),
           metadata: Metadata(
             mentors: [],
             categories: [],
@@ -91,8 +87,7 @@ void main() {
         Event(
           id: '2',
           nameOfEvent: 'Test Event 2 HOME',
-          dateAndTime: '2022-01-02T00:00:00.000Z',
-          location: 'Test Location 2',
+          venue: null,
           description: 'Test Description 2',
           imageUrls: [],
           hosts: [],
@@ -101,7 +96,6 @@ void main() {
           maxAttendees: 150,
           isPrivate: false,
           attendees: [],
-          startDate: DateTime.parse('2022-01-02T10:00:00.000Z'),
           metadata: Metadata(
             mentors: [],
             categories: [],
@@ -113,8 +107,7 @@ void main() {
         Event(
           id: '3',
           nameOfEvent: 'Test Event 3 HOME',
-          dateAndTime: '2022-01-03T00:00:00.000Z',
-          location: 'Test Location 3',
+          venue: null,
           description: 'Test Description 3',
           imageUrls: [],
           hosts: [],
@@ -123,7 +116,6 @@ void main() {
           maxAttendees: 200,
           isPrivate: false,
           attendees: [],
-          startDate: DateTime.parse('2022-01-03T10:00:00.000Z'),
           metadata: Metadata(
             mentors: [],
             categories: [],
@@ -135,8 +127,7 @@ void main() {
         Event(
           id: '1',
           nameOfEvent: 'Test Event 1 RSVP',
-          dateAndTime: '2022-01-01T00:00:00.000Z',
-          location: 'Test Location 1',
+          venue: null,
           description: 'Test Description 1',
           imageUrls: [],
           hosts: [],
@@ -145,7 +136,6 @@ void main() {
           maxAttendees: 100,
           isPrivate: true,
           attendees: [],
-          startDate: DateTime.parse('2022-01-01T10:00:00.000Z'),
           metadata: Metadata(
             mentors: [],
             categories: [],
@@ -155,8 +145,7 @@ void main() {
         Event(
           id: '2',
           nameOfEvent: 'Test Event 2 RSVP',
-          dateAndTime: '2022-01-02T00:00:00.000Z',
-          location: 'Test Location 2',
+          venue: null,
           description: 'Test Description 2',
           imageUrls: [],
           hosts: [],
@@ -165,7 +154,6 @@ void main() {
           maxAttendees: 150,
           isPrivate: false,
           attendees: [],
-          startDate: DateTime.parse('2022-01-02T10:00:00.000Z'),
           metadata: Metadata(
             mentors: [],
             categories: [],
@@ -175,8 +163,7 @@ void main() {
         Event(
           id: '3',
           nameOfEvent: 'Test Event 3 RSVP',
-          dateAndTime: '2022-01-03T00:00:00.000Z',
-          location: 'Test Location 3',
+          venue: null,
           description: 'Test Description 3',
           imageUrls: [],
           hosts: [],
@@ -185,7 +172,6 @@ void main() {
           maxAttendees: 200,
           isPrivate: false,
           attendees: [],
-          startDate: DateTime.parse('2022-01-03T10:00:00.000Z'),
           metadata: Metadata(
             mentors: [],
             categories: [],
@@ -216,7 +202,8 @@ void main() {
       expect(find.text('Past Events'), findsOneWidget);
       expect(find.text('Create Event'), findsOneWidget);
       expect(find.text('Attendees for All Events'), findsOneWidget);
-      expect(find.byIcon(Icons.arrow_forward), findsNWidgets(4));
+      expect(find.text('Event Applications'), findsOneWidget);
+      expect(find.byIcon(Icons.arrow_forward), findsNWidgets(5));
     });
 
     testWidgets('Renders ManageEvents correctly for non-ADMIN role', (WidgetTester tester) async {
@@ -349,6 +336,31 @@ testWidgets('setLoading method updates _isLoading state', (WidgetTester tester) 
       expect(find.byType(SpinKitPianoWave), findsOneWidget);
     });
 
+    testWidgets('Navigates to General user applications page when Event Applications is tapped', (WidgetTester tester) async {
+      when(mockUserProvider.role).thenReturn('ADMIN');
+      await mockNetworkImages(() async {
+        final fakeUsers = [
+          User(name: 'John Doe', profileImage: '', userStatus: 'Accepted', email: '', password: '123', userId: '1'),
+          User(name: 'Jane Smith', profileImage: '', userStatus: 'Pending', email: '', password: '123', userId: '2'),
+          User(name: 'Bob Johnson', profileImage: '', userStatus: 'Rejected', email: '', password: '123', userId: '3'),
+        ];
+        when(mockUserProvider.generalUserEvents).thenAnswer((_) async => fakeUsers);
+        await tester.pumpWidget(
+          MultiProvider(
+            providers: [
+              ChangeNotifierProvider<userProvider>(
+                  create: (_) => mockUserProvider),
+            ],
+            child:  MaterialApp(
+              home: ManageEvents(),
+            ),
+          ),
+        );
+      });
 
+      await tester.tap(find.text('Event Applications'));
+      await tester.pumpAndSettle();
+      expect(find.byType(Generaleventapplications), findsOneWidget);
+    });
   });
 }

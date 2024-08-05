@@ -4,6 +4,7 @@ import com.devforce.backend.dto.CreateEventDto
 import com.devforce.backend.dto.FilterByDto
 import com.devforce.backend.dto.UpdateEventDto
 import com.devforce.backend.model.EventModel
+import com.devforce.backend.model.RoleModel
 import com.devforce.backend.model.UserModel
 import com.devforce.backend.model.VenueModel
 import com.devforce.backend.repo.EventRepo
@@ -46,13 +47,24 @@ class EventServiceTest {
         val id = UUID.randomUUID()
         val user = UserModel().apply {
             userId= id
+            role = RoleModel().apply { name = "ADMIN" }
         }
-        val roleName = "HOST"
+        val roleName = "ADMIN"
         val authorities = setOf(SimpleGrantedAuthority(roleName))
         val userDetails = CustomUser(id, authorities, user)
         val auth = UsernamePasswordAuthenticationToken(userDetails, authorities, userDetails.authorities)
         SecurityContextHolder.getContext().authentication = auth
     }
+
+//    @Test
+//    fun `test venue not found`() {
+//        val id = UUID.randomUUID()
+//        `when`(venueRepo.findByVenueId(id)).thenReturn(null)
+//        val response = eventService.createEvent(createEventDto)
+//
+//        assertEquals("error", response.body!!.status)
+//        assertEquals("Venue not found", response.body!!.data["message"])
+//    }
 
     @Test
     fun `!!!Create event success!!!`() {

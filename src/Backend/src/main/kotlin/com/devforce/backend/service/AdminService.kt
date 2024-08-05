@@ -1,9 +1,12 @@
 package com.devforce.backend.service
 
 import com.devforce.backend.dto.ResponseDto
+import com.devforce.backend.model.ApplicationStatusModel
 import com.devforce.backend.repo.*
+import com.devforce.backend.security.CustomUser
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 import java.util.*
 
@@ -16,6 +19,11 @@ class AdminService {
     @Autowired
     lateinit var roleRepo: RoleRepo
 
+    @Autowired
+    lateinit var hostApplicationsRepo: HostApplicationsRepo
+
+    @Autowired
+    lateinit var statusRepo: StatusRepo
 
     fun promoteUser(userId: UUID): ResponseEntity<ResponseDto> {
         val user = userRepo.findById(userId)
@@ -58,9 +66,42 @@ class AdminService {
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "User deleted successfully")))
     }
 
+    fun acceptApplication(applicationId: UUID): ResponseEntity<ResponseDto> {
+        val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
 
+        val application = hostApplicationsRepo.findById(applicationId)
+        if (application.isEmpty) {
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Application not found"))
+        }
+        val applicationModel = application.get()
+        applicationModel.status = statusRepo.findByName("ACCEPTED")
+        applicationModel.acceptedRejectedBy = user
+        hostApplicationsRepo.save(applicationModel)
+        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Application accepted successfully")))
+    }
 
+    fun rejectApplication(applicationId: UUID): ResponseEntity<ResponseDto> {
+        val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
 
+        val application = hostApplicationsRepo.findById(applicationId)
+        if (application.isEmpty) {
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Application not found"))
+        }
+        val applicationModel = application.get()
+        applicationModel.status = statusRepo.findByName("REJECTED")
+        applicationModel.acceptedRejectedBy = user
+        hostApplicationsRepo.save(applicationModel)
+        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Application rejected successfully")))
+    }
 
+    fun getAllApplications(status: String?): ResponseEntity<ResponseDto> {
 
+        val applications = if (status == null) {
+            hostApplicationsRepo.findByStatus(null)
+        } else {
+            hostApplicationsRepo.findByStatus(status)
+        }
+
+        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), applications))
+    }
 }

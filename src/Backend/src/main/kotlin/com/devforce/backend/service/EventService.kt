@@ -3,8 +3,10 @@ package com.devforce.backend.service
 import com.devforce.backend.dto.*
 import com.devforce.backend.model.AvailableSlotsModel
 import com.devforce.backend.model.EventModel
+import com.devforce.backend.model.PassedEventModel
 import com.devforce.backend.model.VenueModel
 import com.devforce.backend.repo.EventRepo
+import com.devforce.backend.repo.PassedEventsRepo
 import com.devforce.backend.repo.VenueRepo
 import com.devforce.backend.security.CustomUser
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -28,6 +30,9 @@ class EventService {
 
     @Autowired
     lateinit var venueRepo: VenueRepo
+
+    @Autowired
+    lateinit var passedEventsRepo: PassedEventsRepo
 
     fun createEvent(createEventDto: CreateEventDto): ResponseEntity<ResponseDto> {
         val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
@@ -94,17 +99,22 @@ class EventService {
         // Implementation goes here
         val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
 
-        val events = eventRepo.findPassedEvents(user.userId)
+        val events = passedEventsRepo.findPassedEvents(user.userId)
 
-        val eventsDto = events.map { event -> EventDto(event, user.userId in event.hosts.map { host -> host.userId }, null) }
-
-        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto)
+        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), events)
         )
     }
 
     // To do: Implement function to update an existing event
     fun updateEvent(id: UUID, updateEventDto: UpdateEventDto): ResponseEntity<ResponseDto> {
         try {
+            val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
+
+            if (user.role!!.name != "ADMIN" && eventRepo.findById(id).get().hosts.none { host -> host.userId == user.userId }) {
+                return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "You are not authorized to update this event")))
+            }
+
+
             val existing = eventRepo.findById(id)
 
             if (existing.isEmpty) {
@@ -140,6 +150,8 @@ class EventService {
                 v.available = false
             }
 
+
+
             existingEvent.apply {
                 updateEventDto.title?.let { title = it }
                 updateEventDto.description?.let { description = it }
@@ -166,10 +178,16 @@ class EventService {
 
     // To do: Implement function to delete an event
     fun deleteEvent(id: UUID): ResponseEntity<ResponseDto> {
+        val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
 
         val event = eventRepo.findById(id)
         if (event.isEmpty) {
             return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "Event not found"))
+            )
+        }
+
+        if (user.role!!.name != "ADMIN" && event.get().hosts.none { host -> host.userId == user.userId }) {
+            return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "You are not authorized to delete this event"))
             )
         }
 

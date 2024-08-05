@@ -2,20 +2,26 @@ package com.devforce.backend.service
 
 import com.devforce.backend.dto.EventDto
 import com.devforce.backend.dto.ResponseDto
-import com.devforce.backend.repo.AvailableSlotsRepo
-import com.devforce.backend.repo.EventRepo
-import com.devforce.backend.repo.RoleRepo
-import com.devforce.backend.repo.UserRepo
+import com.devforce.backend.model.ApplicationStatusModel
+import com.devforce.backend.model.HostApplicationsModel
+import com.devforce.backend.repo.*
 import com.devforce.backend.security.CustomUser
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
+import org.springframework.mail.MailSender
+import org.springframework.mail.SimpleMailMessage
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 @Service
 class UserService {
+
+    @Autowired
+    private lateinit var roleRepo: RoleRepo
 
     @Autowired
     lateinit var userRepo: UserRepo
@@ -26,6 +32,12 @@ class UserService {
 
     @Autowired
     lateinit var availableSlotsRepo: AvailableSlotsRepo
+
+    @Autowired
+    lateinit var hostApplicationsRepo: HostApplicationsRepo
+
+    @Autowired
+    lateinit var statusRepo: StatusRepo
 
 
     // To do: Implement function to save an event for the current user
@@ -200,6 +212,126 @@ class UserService {
 
         return ResponseEntity.ok(
             ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Account deleted successfully"))
+        )
+    }
+
+    @Autowired
+    lateinit var mailSender: MailSender
+
+    fun applyForHost(howLong: Int, reason: String, studentEmail: String, fromWhen: String): ResponseEntity<ResponseDto> {
+        val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
+
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+        val fromWhenDate = try {
+            fromWhen.let { LocalDateTime.parse(it, formatter) }
+        } catch (e: Exception) {
+            null
+        }
+
+        val expiryDateTime = howLong.toLong().let { fromWhenDate?.plusDays(it) }
+
+        // Check if user is already a host
+        if (user.role?.name == "HOST" || user.role?.name == "ADMIN") {
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "User is already a host"))
+        }
+
+        // Check if user has already applied
+        val existingApplication = hostApplicationsRepo.findByUserId(user.userId)
+        if (existingApplication.isNotEmpty()) {
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "User has already applied"))
+        }
+
+        // Check if student email is valid
+        if (!studentEmail.endsWith("@up.ac.za") && !studentEmail.endsWith("@tuks.co.za")) {
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Invalid student email"))
+        }
+
+        if (reason.isBlank()) {
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Reason cannot be blank"))
+        }
+
+        val veriCode = UUID.randomUUID()
+
+        val statusModel = statusRepo.findByName("PENDING")
+
+        val hostApplication = HostApplicationsModel().apply {
+            this.user = user
+            this.expiryDateTime = expiryDateTime
+            this.reason = reason
+            this.verificationCode = veriCode
+            this.status = statusModel
+        }
+
+        hostApplicationsRepo.save(hostApplication)
+
+        val origin = "http://localhost:8080/api/user/verify_application?veriCode=$veriCode"
+
+        val email = SimpleMailMessage().apply {
+            setTo(studentEmail)
+            setSubject("Host Application Verification")
+            setText("Click the link below to verify your application: $origin")
+        }
+
+        mailSender.send(email)
+
+        return ResponseEntity.ok(
+            ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Application submitted successfully. Check your email for verification link"))
+        )
+    }
+
+    fun verifyApplication(veriCode: UUID): ResponseEntity<String> {
+        val application = hostApplicationsRepo.findByVerificationCode(veriCode)
+            ?: return ResponseEntity.badRequest().body("Invalid verification code")
+
+        val statusModel = statusRepo.findByName("VERIFIED")
+
+        application.status = statusModel
+        application.verificationCode = null
+        hostApplicationsRepo.save(application)
+
+        return ResponseEntity.ok("Application verified successfully")
+    }
+
+    fun acknowledgeApplication(applicationId: UUID): ResponseEntity<ResponseDto> {
+        val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
+
+        val application = hostApplicationsRepo.findById(applicationId)
+        if (application.isEmpty) {
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Application not found"))
+        }
+        val applicationModel = application.get()
+        if (applicationModel.status!!.name != "ACCEPTED") {
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Application not accepted"))
+        }
+
+        if (applicationModel.expiryDateTime!!.isBefore(LocalDateTime.now())) {
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Application expired"))
+        }
+        
+        user.role = roleRepo.findByName("HOST")
+        userRepo.save(user)
+
+
+        applicationModel.status = statusRepo.findByName("ACKNOWLEDGED")
+        hostApplicationsRepo.save(applicationModel)
+        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Application acknowledged successfully"))
+        )
+    }
+
+    fun disputeApplication(applicationId: UUID): ResponseEntity<ResponseDto> {
+        val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
+
+        val application = hostApplicationsRepo.findById(applicationId)
+        if (application.isEmpty) {
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Application not found"))
+        }
+        val applicationModel = application.get()
+        if (applicationModel.status!!.name != "REJECTED") {
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Application not rejected"))
+        }
+        applicationModel.status = statusRepo.findByName("DISPUTED")
+        hostApplicationsRepo.save(applicationModel)
+        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Application disputed successfully"))
         )
     }
 

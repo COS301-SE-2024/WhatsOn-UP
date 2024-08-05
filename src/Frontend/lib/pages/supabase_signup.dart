@@ -1,11 +1,15 @@
 import 'dart:async';
+import 'package:firstapp/providers/user_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../main.dart';
 import 'package:firstapp/services/api.dart';
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:firstapp/pages/home_page.dart';
+
+import '../providers/notification_providers.dart';
 class SupabaseSignup extends StatefulWidget {
   const SupabaseSignup({super.key});
 
@@ -180,7 +184,20 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
             child: const Text('Sign Up'),
 
           ),
-
+          // const SizedBox(height: 20),
+          // TextButton(
+          //   onPressed: () {
+            
+          //   },
+          //   style: TextButton.styleFrom(
+          //     padding: const EdgeInsets.symmetric(vertical: 10.0),
+          //     shape: RoundedRectangleBorder(
+          //       borderRadius: BorderRadius.circular(20.0),
+          //     ),
+          //     backgroundColor: Colors.transparent,
+          //   ),
+          //   child: const Text('Sign in as guest'),
+          // ),
         ],
       ),
     );
@@ -190,7 +207,7 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
   Future<void> _usernameInput() async {
       final user = supabase.auth.currentUser;
       String username = _usernameController.text;
-
+userProvider userP = Provider.of<userProvider>(context, listen: false);
       Api api = Api();
       api.postUsername(username,user!.id).then((response) {
         if (response['error'] != null) {
@@ -222,7 +239,9 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
           } else {
             print('Invalid Base64 string: $profileImage');
           }
-
+          notificationProvider _notificationProvider = Provider.of<notificationProvider>(context, listen: false);
+          _notificationProvider.apiInstance=api;
+          _notificationProvider.refreshNotifications(userP.userId);
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => HomePage(
