@@ -8,6 +8,8 @@ import 'package:firstapp/services/EventService.dart';
 import 'package:firstapp/widgets/event_card.dart';
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+
 
 
 class ApplicationEvent extends StatefulWidget {
@@ -24,22 +26,31 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
   late DateTime _startDateTime;
   late DateTime _endDateTime;
   bool _isPublic = true;
-  int _maxAttendees = 10;
+  int _maxAttendees = 100;
   Venue? _selectedVenue;
   List<String> _categories = [];
   List<Venue> _venues = [];
   final _formKey = GlobalKey<FormState>();
+  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
     _categoriesFuture = EventService(Supabase.instance.client).fetchUniqueCategories();
     _venuesFuture = EventService(Supabase.instance.client).getLocations();
+
+
     _venueController = TextEditingController();
     _eventNameController = TextEditingController();
     _eventDescriptionController = TextEditingController();
     _startDateTime = DateTime.now();
     _endDateTime = DateTime.now().add(Duration(hours: 1));
+
+    Future.wait([_categoriesFuture, _venuesFuture]).whenComplete(() {
+      setState(() {
+        _isLoading = false;
+      });
+    });
   }
 
   @override
@@ -74,12 +85,17 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                 validator: (value) => value == null || value.isEmpty ? 'Please enter event description' : null,
               ),
               SizedBox(height: 16.0),
-              FutureBuilder<List<Venue>>(
+              _isLoading
+                  ? Center(
+                child: SpinKitPianoWave(
+                  color: Color.fromARGB(255, 149, 137, 74),
+                  size: 50.0,
+                ),
+              )
+                  : FutureBuilder<List<Venue>>(
                 future: _venuesFuture,
                 builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return CircularProgressIndicator();
-                  } else if (snapshot.hasError) {
+                  if (snapshot.hasError) {
                     return Text('Error: ${snapshot.error}');
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                     return Text('No venues available');
@@ -119,12 +135,15 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                 },
               ),
               SizedBox(height: 16.0),
-              NumberPicker(
+          Visibility(
+            visible: _venues.isNotEmpty,
+            child:NumberPicker(
                 value: _maxAttendees,
                 minValue: 1,
-                maxValue: _selectedVenue?.capacity ?? 10, // Use the capacity of the selected venue
+                maxValue: _selectedVenue?.capacity ?? 100,
                 onChanged: (value) => setState(() => _maxAttendees = value),
               ),
+          ),
               SizedBox(height: 16.0),
               TextFormField(
                 decoration: InputDecoration(
@@ -183,9 +202,10 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
               FutureBuilder<List<String>>(
                 future: _categoriesFuture,
                 builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return CircularProgressIndicator();
-                  } else if (snapshot.hasError) {
+                  if (_isLoading) {
+                    return SizedBox.shrink();
+                  }
+                  else if (snapshot.hasError) {
                     return Text('Error: ${snapshot.error}');
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                     return Text('No categories available');
