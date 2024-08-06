@@ -1,199 +1,230 @@
-import 'package:firstapp/pages/home_page.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:firstapp/pages/profilePage.dart';
-import 'package:flutter/cupertino.dart';
-import 'dart:typed_data';
-import 'package:image_picker/image_picker.dart';
-import 'package:firstapp/widgets/theme_manager.dart';
-import 'package:firstapp/services/api.dart';
+import 'package:flutter/services.dart';
+import 'package:numberpicker/numberpicker.dart';
 import 'package:provider/provider.dart';
-import '../main.dart';
-import '../providers/events_providers.dart';
-import '../widgets/event_card.dart';
-import 'package:multi_select_flutter/multi_select_flutter.dart';
+import 'package:firstapp/providers/events_providers.dart';
+import 'package:firstapp/providers/user_provider.dart';
+import 'package:firstapp/services/EventService.dart';
+import 'package:firstapp/widgets/event_card.dart';
+import 'package:supabase_auth_ui/supabase_auth_ui.dart';
+import 'package:image_picker/image_picker.dart';
+
+
 class ApplicationEvent extends StatefulWidget {
-  ApplicationEvent({
-    Key? key,
-
-  }) : super(key: key);
-
   @override
-  State<ApplicationEvent> createState() => _ApplicationEventState();
-
+  _ApplicationEventPageState createState() => _ApplicationEventPageState();
 }
-class Category{
-  final int id;
-  final String name;
-  Category({
-    required this.id,
-    required this.name,
-  });
-}
-class _ApplicationEventState extends State<ApplicationEvent> {
-  static List<Category> _categories = [
-    Category(id: 1, name: 'Technology'),
-    Category(id: 2, name: 'Music'),
-    Category(id: 3, name: 'Food'),
-    Category(id: 4, name: 'Sports'),
-    Category(id: 5, name: 'Art'),
-    Category(id: 6, name: 'Science'),
-    Category(id: 7, name: 'Charity & Causes'),
-    Category(id: 8, name: 'Entrepreneurship'),
-  ];
-  final _items=_categories.map((category) => MultiSelectItem<Category>(category, category.name)).toList();
-  List<Category> _selectedCategories = [];
-  final _multiSelectKey = GlobalKey<FormFieldState>();
-  void initState() {
-    _selectedCategories=_categories;
-    super.initState();
-  }
-  late Color myColor;
-  late Size mediaSize;
-  TextEditingController eventNameController = TextEditingController();
-  TextEditingController eventDescriptionController = TextEditingController();
-  TextEditingController venueController = TextEditingController();
-  TextEditingController maxAttendeesController = TextEditingController();
-  DateTime startDate = DateTime.now();
-  TimeOfDay startTime = TimeOfDay.now();
-  DateTime endDate = DateTime.now();
-  TimeOfDay endTime = TimeOfDay.now();
-  List<XFile>? selectedImages;
-  bool isPublic = true;
 
-
+class _ApplicationEventPageState extends State<ApplicationEvent> {
+  late Future<List<String>> _categoriesFuture;
+  late Future<List<Venue>> _venuesFuture;
+  late TextEditingController _venueController;
+  late TextEditingController _eventNameController;
+  late TextEditingController _eventDescriptionController;
+  late DateTime _startDateTime;
+  late DateTime _endDateTime;
+  bool _isPublic = true;
+  int _maxAttendees = 10;
+  Venue? _selectedVenue;
+  List<String> _categories = [];
+  List<Venue> _venues = [];
   final _formKey = GlobalKey<FormState>();
 
-  final ImagePicker _picker = ImagePicker();
+  @override
+  void initState() {
+    super.initState();
+    _categoriesFuture = EventService(Supabase.instance.client).fetchUniqueCategories();
+    _venuesFuture = EventService(Supabase.instance.client).getLocations();
+    _venueController = TextEditingController();
+    _eventNameController = TextEditingController();
+    _eventDescriptionController = TextEditingController();
+    _startDateTime = DateTime.now();
+    _endDateTime = DateTime.now().add(Duration(hours: 1));
+  }
+
+  @override
+  void dispose() {
+    _venueController.dispose();
+    _eventNameController.dispose();
+    _eventDescriptionController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    myColor = Theme.of(context).primaryColor;
-    mediaSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        title: const Text('Create Event'),
+        title: Text('Create Event'),
       ),
-      body: _buildForm(),
-
-    );
-  }
-
-  Widget _buildForm() {
-    return Form(
-      key: _formKey,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Event Details',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
+      body: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
+          child: ListView(
+            children: <Widget>[
+              TextFormField(
+                controller: _eventNameController,
+                decoration: InputDecoration(labelText: 'Event Name'),
+                validator: (value) => value == null || value.isEmpty ? 'Please enter event name' : null,
               ),
-              const SizedBox(height: 20),
-              _buildInputField(eventNameController, label: 'Event Name'),
-              const SizedBox(height: 10),
-              _buildInputField(eventDescriptionController, label: 'Description'),
-              const SizedBox(height: 10),
-              _buildInputField(venueController, label: 'Venue'),
-              const SizedBox(height: 10),
-              _buildInputField(maxAttendeesController, label: 'Max Attendees', keyboardType: TextInputType.number),
-              const SizedBox(height: 20),
-              _buildDateTimePicker('Start', startDate, startTime, (date, time) {
-                setState(() {
-                  startDate = date;
-                  startTime = time;
-                });
-              }),
-              const SizedBox(height: 20),
-              _buildDateTimePicker('End', endDate, endTime, (date, time) {
-                setState(() {
-                  endDate = date;
-                  endTime = time;
-                });
-              }),
-              const SizedBox(height: 20),
-              const Text('Event Category:'),
-              Container(
-                decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor.withOpacity(.4),
-                  border: Border.all(
-                    color: Theme.of(context).primaryColor,
-                    width: 2,
-                  ),
-                ),
-                child: Column(
-                  children: <Widget>[
-                    MultiSelectBottomSheetField(
-                      key: _multiSelectKey,
-                      initialChildSize: 0.4,
-                      listType: MultiSelectListType.CHIP,
-                      searchable: true,
-                      buttonText: Text("Categories"),
-                      title: Text("Categories"),
-                      items: _items,
-                      onConfirm: (values) {
+              SizedBox(height: 16.0),
+              TextFormField(
+                controller: _eventDescriptionController,
+                decoration: InputDecoration(labelText: 'Description'),
+                validator: (value) => value == null || value.isEmpty ? 'Please enter event description' : null,
+              ),
+              SizedBox(height: 16.0),
+              FutureBuilder<List<Venue>>(
+                future: _venuesFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return Text('No venues available');
+                  } else {
+                    _venues = snapshot.data!;
+                    return Autocomplete<Venue>(
+                      optionsBuilder: (TextEditingValue textEditingValue) {
+                        if (textEditingValue.text.isEmpty) {
+                          return const Iterable<Venue>.empty();
+                        }
+                        return _venues.where((venue) => venue.name
+                            .toLowerCase()
+                            .contains(textEditingValue.text.toLowerCase()));
+                      },
+                      displayStringForOption: (Venue venue) => venue.name,
+                      fieldViewBuilder: (context, controller, focusNode, onEditingComplete) {
+                        _venueController = controller;
+                        return TextFormField(
+                          controller: controller,
+                          focusNode: focusNode,
+                          onEditingComplete: onEditingComplete,
+                          decoration: InputDecoration(
+                            labelText: 'Venue',
+                          ),
+                          validator: (value) =>
+                          value == null || value.isEmpty ? 'Please select a venue' : null,
+                        );
+                      },
+                      onSelected: (Venue selectedVenue) {
                         setState(() {
-                          _selectedCategories = values.cast<Category>();
+                          _selectedVenue = selectedVenue;
+                          _maxAttendees = selectedVenue.capacity;
                         });
                       },
-                      chipDisplay: MultiSelectChipDisplay(
-                        onTap: (value) {
-                          setState(() {
-                            _selectedCategories.remove(value);
-                          });
-                        },
-                      ),
-                    ),
-                    _selectedCategories == null ||  _selectedCategories.isEmpty
-                        ? Container(
-                        padding: EdgeInsets.all(10),
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          "None selected",
-                          style: TextStyle(color: Colors.black54),
-                        ))
-                        : Container(),
-                  ],
-
-                ),
+                    );
+                  }
+                },
               ),
-
-              const SizedBox(height: 20),
-              _buildPrivacyToggle(),
-              const SizedBox(height: 20),
-              _buildImagePicker(),
-              const SizedBox(height: 35),
-              Center(
-                child: SizedBox(
-                  width: 150,
-                  height: 50,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      showSubmitDialog(context);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.black, backgroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                        side: BorderSide(color: Colors.grey, width: 1),
-                      ),
-                      padding: EdgeInsets.symmetric(vertical: 16),
-                    ),
-                    child: const Text('Submit'),
-                  ),
+              SizedBox(height: 16.0),
+              NumberPicker(
+                value: _maxAttendees,
+                minValue: 1,
+                maxValue: _selectedVenue?.capacity ?? 10, // Use the capacity of the selected venue
+                onChanged: (value) => setState(() => _maxAttendees = value),
+              ),
+              SizedBox(height: 16.0),
+              TextFormField(
+                decoration: InputDecoration(
+                  labelText: 'Start Date and Time',
                 ),
+                readOnly: true,
+                onTap: () async {
+                  final DateTime? picked = await showDatePicker(
+                    context: context,
+                    initialDate: _startDateTime,
+                    firstDate: DateTime.now(),
+                    lastDate: DateTime(2101),
+                  );
+                  if (picked != null && picked != _startDateTime)
+                    setState(() {
+                      _startDateTime = picked;
+                    });
+                },
+                validator: (value) {
+                  if (_startDateTime.isAfter(_endDateTime)) {
+                    return 'Start date and time must be before end date and time';
+                  }
+                  return null;
+                },
+                controller: TextEditingController(
+                    text: "${_startDateTime.toLocal()}".split(' ')[0]),
+              ),
+              SizedBox(height: 16.0),
+              TextFormField(
+                decoration: InputDecoration(
+                  labelText: 'End Date and Time',
+                ),
+                readOnly: true,
+                onTap: () async {
+                  final DateTime? picked = await showDatePicker(
+                    context: context,
+                    initialDate: _endDateTime,
+                    firstDate: DateTime.now(),
+                    lastDate: DateTime(2101),
+                  );
+                  if (picked != null && picked != _endDateTime)
+                    setState(() {
+                      _endDateTime = picked;
+                    });
+                },
+                validator: (value) {
+                  if (_endDateTime.isBefore(_startDateTime)) {
+                    return 'End date and time must be after start date and time';
+                  }
+                  return null;
+                },
+                controller: TextEditingController(
+                    text: "${_endDateTime.toLocal()}".split(' ')[0]),
+              ),
+              SizedBox(height: 16.0),
+              FutureBuilder<List<String>>(
+                future: _categoriesFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return Text('No categories available');
+                  } else {
+                    _categories = snapshot.data!;
+                    return DropdownButtonFormField<String>(
+                      items: _categories
+                          .map((category) =>
+                          DropdownMenuItem(value: category, child: Text(category)))
+                          .toList(),
+                      onChanged: (value) {},
+                      decoration: InputDecoration(labelText: 'Category'),
+                      validator: (value) =>
+                      value == null ? 'Please select a category' : null,
+                    );
+                  }
+                },
+              ),
+              SizedBox(height: 16.0),
+              Row(
+                children: [
+                  Text('Event Visibility:'),
+                  Switch(
+                    value: _isPublic,
+                    onChanged: (value) {
+                      setState(() {
+                        _isPublic = value;
+                      });
+                    },
+                  ),
+                  Text(_isPublic ? 'Public' : 'Private'),
+                ],
+              ),
+              SizedBox(height: 16.0),
+              ElevatedButton(
+                onPressed: () {
+                  _submitForm();
+                },
+                child: Text('Submit'),
               ),
             ],
           ),
@@ -202,241 +233,9 @@ class _ApplicationEventState extends State<ApplicationEvent> {
     );
   }
 
-  Widget _buildPrivacyToggle() {
-  final theme = Theme.of(context);
-  final isLightTheme = theme.brightness == Brightness.light;
-
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      const Text('Event Visibility:'),
-      const SizedBox(height: 10),
-      Row(
-        children: [
-          Switch(
-            value: isPublic,
-            onChanged: (value) {
-              setState(() {
-                isPublic = value;
-              });
-            },
-            activeTrackColor: isLightTheme
-                ? lightPrimaryColor.withOpacity(0.5)
-                : darkPrimaryColor.withOpacity(0.5),
-            activeColor: isLightTheme ? lightPrimaryColor : darkPrimaryColor,
-            inactiveThumbColor: isLightTheme
-                ? Colors.grey[400]
-                : Colors.grey[600],
-            inactiveTrackColor: isLightTheme
-                ? Colors.grey[300]
-                : Colors.grey[700],
-          ),
-          const SizedBox(width: 10),
-          Text(
-            isPublic ? 'Public' : 'Private',
-            style: TextStyle(
-              color: isLightTheme ? lightTextColor : Colors.white,
-            ),
-          ),
-        ],
-      ),
-    ],
-  );
-}
-
-  Widget _buildInputField(TextEditingController controller, {required String label, TextInputType keyboardType = TextInputType.text}) {
-    return TextFormField(
-      controller: controller,
-      decoration: InputDecoration(
-        labelText: label,
-        border: const OutlineInputBorder(),
-      ),
-      keyboardType: keyboardType,
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Please enter $label';
-        }
-        return null;
-      },
-    );
-  }
-
-  Widget _buildDateTimePicker(String label, DateTime date, TimeOfDay time, void Function(DateTime, TimeOfDay) onDateTimeChanged) {
-    final theme = Theme.of(context);
-    final dateAndTimeColour = theme.brightness == Brightness.dark ? const Color.fromARGB(255, 58, 132, 218) : const Color.fromARGB(255, 13, 73, 151);
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('$label Date and Time:'),
-        const SizedBox(height: 10),
-        Row(
-          children: [
-            const Icon(Icons.calendar_today),
-            const SizedBox(width: 10),
-            TextButton(
-              onPressed: () async {
-                final pickedDate = await showDatePicker(
-                  context: context,
-                  initialDate: date,
-                  firstDate: DateTime.now(),
-                  lastDate: DateTime(DateTime.now().year + 1),
-                );
-                if (pickedDate != null) {
-                  final pickedTime = await showTimePicker(
-                    context: context,
-                    initialTime: time,
-                  );
-                  if (pickedTime != null) {
-                    onDateTimeChanged(pickedDate, pickedTime);
-                  }
-                }
-              },
-              child: Text(
-                '${date.day}/${date.month}/${date.year} ${time.format(context)}',
-                style: TextStyle(color: dateAndTimeColour),
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildImagePicker() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text('Upload Images:'),
-        const SizedBox(height: 10),
-        ElevatedButton(
-          onPressed: () async {
-            final List<XFile>? pickedFiles = await _picker.pickMultiImage();
-            if (pickedFiles != null) {
-              setState(() {
-                selectedImages = pickedFiles;
-              });
-            }
-          },
-          style: ElevatedButton.styleFrom(
-            foregroundColor: Colors.black, backgroundColor: Colors.white,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-              side: BorderSide(color: Colors.grey, width: 1),
-            ),
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 7.0),
-          ),
-          child: const Text('Select Images'),
-        ),
-        if (selectedImages != null)
-          Padding(
-            padding: const EdgeInsets.only(top: 10),
-            child: Wrap(
-              spacing: 10,
-              children: selectedImages!.map((file) => Text(file.name)).toList(),
-            ),
-          ),
-      ],
-    );
-  }
-
   void _submitForm() {
-    EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
-
-
-    // eventP.addEventHome(
-    // );
-   // eventP.addEventHome();
-    final userSuperbase = supabase.auth.currentUser;
-  if (_formKey.currentState!.validate()) {
-    String eventName = eventNameController.text;
-    String eventDescription = eventDescriptionController.text;
-    String venue = venueController.text;
-    int? maxAttendees = int.tryParse(maxAttendeesController.text);
-
-    // Combine date and time
-    DateTime startDateTime = DateTime(
-      startDate.year, startDate.month, startDate.day,
-      startTime.hour, startTime.minute
-    );
-    DateTime endDateTime = DateTime(
-      endDate.year, endDate.month, endDate.day,
-      endTime.hour, endTime.minute
-    );
-
-    List<String>? mediaUrls = selectedImages?.map((file) => file.path).toList();
-    List<String> selectedCategoryNames = _selectedCategories.map((category) => category.name).toList();
-    print(selectedCategoryNames);
-    // eventP.addEventHome(newEvent);
-
-//need to return an event as a responds
-
-
-
-    Api().createEvent(
-      title: eventName,
-      description: eventDescription,
-      startDate: startDateTime,
-      endDate: endDateTime,
-      location: venue,
-      maxParticipants: maxAttendees,
-      isPrivate: !isPublic,
-      media: mediaUrls,
-      userId: userSuperbase!.id,
-    ).then((response) {
-      print('Event created successfully');
-      // print('The Event: ');
-      //   print (response['data']);
-        eventP.addEventHome(response['data']);
-      // eventP.;
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => HomePage(),
-        ),
-      );
-      
-      eventNameController.clear();
-      eventDescriptionController.clear();
-      venueController.clear();
-      maxAttendeesController.clear();
-      setState(() {
-        selectedImages = null;
-        isPublic = true;
-      });
-    }).catchError((error) {
-      print('Error creating event: $error');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to create event: $error')),
-      );
-    });
+    if (_formKey.currentState!.validate()) {
+      // Perform your submission logic here
+    }
   }
 }
-
-  void showSubmitDialog(BuildContext context) {
-    bool isValid = _formKey.currentState!.validate();
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return CupertinoAlertDialog(
-          content: Text(isValid ? 'Submitted' : 'Could not submit'),
-          actions: <Widget>[
-            CupertinoDialogAction(
-              child: const Text('Okay'),
-              onPressed: () {
-                Navigator.of(context).pop();
-                if (isValid) {
-                  _submitForm();
-                }
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-
-
-}
-
