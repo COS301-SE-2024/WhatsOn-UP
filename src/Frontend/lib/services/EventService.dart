@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:firstapp/widgets/event_card.dart';
 //import 'api.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:firstapp/widgets/event_card.dart';
 
 
 class EventService {
@@ -149,6 +150,19 @@ class EventService {
       }
     } catch (e) {
       throw Exception('Failed to connect to the server: $e');
+    }
+  }
+
+  Future<List<Venue>> getLocations() async {
+    final response = await http.get(Uri.parse('$baseUrl/api/events/get_locations'));
+    if (response.statusCode == 200) {
+      final responseData = json.decode(response.body);
+      print('Response body: ${response.body}');
+
+      final data = responseData['data'] as List<dynamic>;
+      return data.map((item) => Venue.fromJson(item as Map<String, dynamic>)).toList();
+    } else {
+      throw Exception('Failed to load locations');
     }
   }
 }
