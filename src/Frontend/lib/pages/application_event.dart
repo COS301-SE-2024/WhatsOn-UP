@@ -10,6 +10,7 @@ import 'package:firstapp/services/api.dart';
 import 'package:provider/provider.dart';
 import '../main.dart';
 import '../providers/events_providers.dart';
+import '../providers/user_provider.dart';
 import '../widgets/event_card.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 class ApplicationEvent extends StatefulWidget {
