@@ -61,6 +61,7 @@ import 'package:firstapp/pages/detailed_event_page.dart';
 import 'package:firstapp/pages/editProfile_page.dart';
 
 import 'package:firstapp/pages/home_page.dart';
+import 'package:firstapp/pages/host_application.dart';
 import 'package:firstapp/pages/profilePage.dart';
 import 'package:firstapp/pages/settings_page.dart';
 import 'package:firstapp/pages/supabase_Accountpage.dart';
@@ -126,7 +127,8 @@ class MyApp extends StatelessWidget {
           // '/rsvp': (context)=> const RSVPEventsPage(),
           '/settings': (context)=> const SettingsPage(),
           '/search': (context)=>  SearchScreen(),
-           '/resetPassword': (context)=> const ResetPasswordPage(),
+          '/resetPassword': (context)=> const ResetPasswordPage(),
+          '/hostApplication': (context)=> HostApplicationPage(),
           '/detailed_event': (context) => DetailedEventPage(event: ModalRoute.of(context)!.settings.arguments as Event),
           '/PromotionForm': (context)=> const PromotionForm(),
           '/calendar': (context)=> const CalendarPage(),
