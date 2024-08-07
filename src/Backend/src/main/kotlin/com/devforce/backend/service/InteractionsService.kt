@@ -87,10 +87,6 @@ class InteractionsService {
             return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Invite not found"))
         }
 
-        if (inviteModel.accepted) {
-            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Invite already accepted"))
-        }
-
         val availableSlots = inviteModel.event!!.eventId?.let { availableSlotsRepo.findByEventId(it) }
 
         if (availableSlots != null) {
@@ -99,11 +95,42 @@ class InteractionsService {
             }
         }
 
+        if (inviteModel.accepted != null){
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Invite already accepted or rejected"))
+        }
+
         inviteModel.accepted = true
 
         inviteeRepo.save(inviteModel)
 
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Invite accepted successfully")))
+    }
+
+    fun rejectInvite(inviteId: UUID): ResponseEntity<ResponseDto>{
+        val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
+
+        val invite = inviteeRepo.findById(inviteId)
+
+        if (invite.isEmpty) {
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Invite not found"))
+        }
+
+        val inviteModel = invite.get()
+
+        if (inviteModel.user!!.userId != user.userId) {
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Invite not found"))
+        }
+
+        if (inviteModel.accepted != null){
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Invite already accepted or rejected"))
+        }
+
+        inviteModel.accepted = false
+
+        inviteeRepo.save(inviteModel)
+
+        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Invite rejected successfully")))
+
     }
 
 
