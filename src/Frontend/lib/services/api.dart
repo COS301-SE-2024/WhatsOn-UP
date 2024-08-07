@@ -681,7 +681,7 @@ Future<List<dynamic>> getAllEventsGuest() async {
     required String userId,
   }) async {
 
-    final String _applyUrl = 'http://$domain:8080/api/user/apply_for_host';
+    final String _applyUrl = 'http://${globals.domain}:8080/api/user/apply_for_host';
     
     var headers = {
       'Content-Type': 'application/json',
@@ -727,7 +727,7 @@ Future<List<dynamic>> getAllEventsGuest() async {
 
   Future<void> _uploadProofImage(String applicationId, Uint8List imageBytes, String userId) async {
 
-    final String _uploadUrl = 'http://$domain:8083/media/proof?application_id=$applicationId';
+    final String _uploadUrl = 'http://${globals.domain}:8083/media/proof?application_id=$applicationId';
     
     var request = http.MultipartRequest('POST', Uri.parse(_uploadUrl));
 
