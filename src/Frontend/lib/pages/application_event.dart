@@ -141,6 +141,8 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                 value: _maxAttendees,
                 minValue: 1,
                 maxValue: _selectedVenue?.capacity ?? 100,
+                itemHeight: 100,
+                axis: Axis.horizontal,
                 onChanged: (value) => setState(() => _maxAttendees = value),
               ),
           ),
