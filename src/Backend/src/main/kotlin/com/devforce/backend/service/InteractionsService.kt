@@ -106,6 +106,7 @@ class InteractionsService {
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Invite accepted successfully")))
     }
 
+
     fun getAllUsers(): ResponseEntity<ResponseDto> {
         val users = userRepo.findAllUsers()
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), users))

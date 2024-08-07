@@ -214,10 +214,9 @@ class EventService {
                     event -> EventDto(event, userModel.userId in event.hosts.map { host -> host.userId }, null)
             }
         }
-        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto)
-    )
+        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto))
 
-}
+    }
     //the filter for filtering screen
     fun filteringEvents(startDate: String?, endDate: String?, minCapacity: Int?, maxCapacity: Int?, isPrivate: Boolean?): ResponseEntity<ResponseDto> {
         try {
@@ -310,23 +309,23 @@ class EventService {
 
 
     //FUTURE
-    fun filterEvents(filterBy: FilterByDto): ResponseEntity<ResponseDto>{
-
-        val user = SecurityContextHolder.getContext().authentication.principal
-        var eventsDto: List<EventDto>? = null
-        if (user == "anonymousUser") {
-            val events = eventRepo.filterEvents(filterBy, null)
-            eventsDto = events.map { event -> EventDto(event, false, null) }
-        }
-        else {
-            val userModel = (user as CustomUser).userModel
-            val events = eventRepo.filterEvents(filterBy, userModel.userId)
-            eventsDto = events.map {
-                    event -> EventDto(event, userModel.userId in event.hosts.map { host -> host.userId }, null)
-            }
-        }
-        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto))
-    }
+//    fun filterEvents(filterBy: FilterByDto): ResponseEntity<ResponseDto>{
+//
+//        val user = SecurityContextHolder.getContext().authentication.principal
+//        var eventsDto: List<EventDto>? = null
+//        if (user == "anonymousUser") {
+//            val events = eventRepo.filterEvents(filterBy, null)
+//            eventsDto = events.map { event -> EventDto(event, false, null) }
+//        }
+//        else {
+//            val userModel = (user as CustomUser).userModel
+//            val events = eventRepo.filterEvents(filterBy, userModel.userId)
+//            eventsDto = events.map {
+//                    event -> EventDto(event, userModel.userId in event.hosts.map { host -> host.userId }, null)
+//            }
+//        }
+//        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto))
+//    }
 
     fun getLocations(): ResponseEntity<ResponseDto> {
         val locations = venueRepo.findAll()

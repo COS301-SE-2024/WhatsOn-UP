@@ -9,7 +9,7 @@ import '../services/api.dart';
 
 class notificationProvider extends  ChangeNotifier {
 
-  late final Api api ;
+  late Api api ;
   userProvider userP= userProvider();
   late Future <List<AppNotification>> _Notifications;
    Future <List<AppNotification>> get notifications => _Notifications;
