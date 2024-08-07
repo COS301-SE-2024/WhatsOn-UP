@@ -72,6 +72,11 @@ class AdminService {
         if (application.isEmpty) {
             return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Application not found"))
         }
+
+        if (application.get().status!!.name == "PENDING" && application.get().verificationCode != null) {
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Application not verified"))
+        }
+
         val applicationModel = application.get()
         applicationModel.status = statusRepo.findByName("ACCEPTED")
         applicationModel.acceptedRejectedBy = user

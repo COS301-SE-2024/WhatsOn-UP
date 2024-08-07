@@ -75,7 +75,7 @@ export class NotificationGateway implements OnModuleInit {
           let { data: eventData, error: eventError } = await this.supabase
             .from('events')
             .select(
-              'description, is_private, title, max_attendees, start_date_time, end_date_time, venues(name, buildings(location, name, access_type))'
+              'description, is_private, title, max_attendees, start_date_time, end_date_time, venues(name, buildings(location, name, access_type)), event_invitees(accepted)'
             )
             .eq('event_id', notification.event_id);
 
