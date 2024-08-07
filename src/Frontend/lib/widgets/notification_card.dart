@@ -1,4 +1,6 @@
 
+import '../utils.dart';
+
 class AppNotification {
   final String message;
 
@@ -32,7 +34,7 @@ class AppNotification {
     );
   }
   void markAsSeen() {
-    seenAt = DateTime.now().toIso8601String();
+    seenAt = formatDateTime(DateTime.now().toIso8601String());
   }
   @override
   String toString() {

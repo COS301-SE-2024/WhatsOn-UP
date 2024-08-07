@@ -119,18 +119,11 @@ set generalapplications( Future<GeneralApplications>? value) {
     }
   }
   Future<void> _fetchGeneralusers(String userId) async {
-
-      // final response = await api.getGeneralusersToHost(userId); //await api.getAllEvents();//need list of general users events
-      // print('response: $response');
-      // final GeneralUser=GeneralApplications.fromJson(response);
-      //
-      // generalapplications=Future.value(GeneralUser);
-      // notifyListeners();
     try {
+      print('uhkujgjhgjjbgkjbjkgkj');
       final response = await api.getGeneralusersToHost(userId);
-      print('Response from API: $response'); // Print the JSON response
-      final generalUserApplications = GeneralApplications.fromJson(response);
-      generalapplications = Future.value(generalUserApplications);
+      print('Response from API: $response');
+      generalapplications = Future.value(response);
       notifyListeners();
     } catch (e) {
       print('Error: $e'); // Print the error
@@ -168,7 +161,7 @@ class Role {
 }
 class UserGeneral {
   final String userId;
-  final String fullName;
+  final String? fullName;
   final String profileImage;
   final Role role;
 
@@ -188,12 +181,34 @@ class UserGeneral {
     );
   }
 }
+class AcceptedRejectedBy {
+  final String userId;
+  final String? fullName;
+  final String profileImage;
+  final Role role;
+
+  AcceptedRejectedBy({
+    required this.userId,
+    required this.fullName,
+    required this.profileImage,
+    required this.role,
+  });
+
+  factory AcceptedRejectedBy.fromJson(Map<String, dynamic> json) {
+    return AcceptedRejectedBy(
+      userId: json['userId'],
+      fullName: json['fullName'],
+      profileImage: json['profileImage'],
+      role: Role.fromJson(json['role']),
+    );
+  }
+}
 class Application {
   final String applicationId;
   final Status status;
   final UserGeneral user;
   final String expiryDateTime;
-  final String? acceptedRejectedBy;
+  final AcceptedRejectedBy? acceptedRejectedBy;
   final String reason;
   final String? verificationCode;
 
@@ -213,7 +228,7 @@ class Application {
       status: Status.fromJson(json['status']),
       user:UserGeneral.fromJson(json['user']),
       expiryDateTime: json['expiryDateTime'],
-      acceptedRejectedBy: json['acceptedRejectedBy'],
+      acceptedRejectedBy: json['acceptedRejectedBy'] != null ? AcceptedRejectedBy.fromJson(json['acceptedRejectedBy']) : null,
       reason: json['reason'],
       verificationCode: json['verificationCode'],
     );

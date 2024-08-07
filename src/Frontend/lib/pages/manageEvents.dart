@@ -122,7 +122,7 @@ import 'attendee.dart';
 import 'package:provider/provider.dart';
 import '../providers/user_provider.dart';
 import '../widgets/eventManagement_category.dart';
-import 'Promotion_Applications.dart';
+
 class ManageEvents extends StatefulWidget {
   ManageEvents({Key? key}) : super(key: key);
 
@@ -192,7 +192,7 @@ String Host='HOST';
                 _buildDivider(),
                 if(userP.role == Admin)
                   _buildDivider(),
-                _buildProfileOption(
+                  _buildProfileOption(
                   text:'General user Host Applications',
                   onTap: ()=> _navigateToGeneralEventApplications(context),
                 ),

@@ -184,20 +184,7 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
             child: const Text('Sign Up'),
 
           ),
-          // const SizedBox(height: 20),
-          // TextButton(
-          //   onPressed: () {
-            
-          //   },
-          //   style: TextButton.styleFrom(
-          //     padding: const EdgeInsets.symmetric(vertical: 10.0),
-          //     shape: RoundedRectangleBorder(
-          //       borderRadius: BorderRadius.circular(20.0),
-          //     ),
-          //     backgroundColor: Colors.transparent,
-          //   ),
-          //   child: const Text('Sign in as guest'),
-          // ),
+
         ],
       ),
     );
@@ -221,27 +208,16 @@ userProvider userP = Provider.of<userProvider>(context, listen: false);
           String role=response['data']['user']['role']?? 'Unknown';
           String  profileImage=response['data']['user']['profileImage']?? 'Unknown';
           Uint8List profileImageBytes = Uint8List(0);
-
-          bool isBase64(String input) {
-            final RegExp base64 = RegExp(
-              r'^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$',
-            );
-            return base64.hasMatch(input);
-          }
-
-          if (isBase64(profileImage)) {
-
-            try {
-              profileImageBytes = base64Decode(profileImage);
-            } catch (e) {
-              print('Error decoding Base64: $e');
-            }
-          } else {
-            print('Invalid Base64 string: $profileImage');
-          }
+          userP.userId=user.id;
+          userP.Fullname=fullName;
+          userP.email=userEmail;
+          userP.role=role;
           notificationProvider _notificationProvider = Provider.of<notificationProvider>(context, listen: false);
           _notificationProvider.apiInstance=api;
           _notificationProvider.refreshNotifications(userP.userId);
+          userP. Generalusers(userP.userId);
+
+
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => HomePage(

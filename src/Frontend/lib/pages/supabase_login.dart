@@ -196,18 +196,18 @@ class _SupabaseLoginState extends State<SupabaseLogin> {
   late Size mediaSize;
 bool _obscurePassword=true;
   @override
-  void initState() {
-    super.initState();
-    // _authSubscription = supabase.auth.onAuthStateChange.listen((event) {
-    //   final session = event.session;
-    //   if (session != null) {
-    //     Navigator.of(context).pushReplacementNamed('/account');
-    //   }
-    // });
-
-
-
-  }
+  // void initState() {
+  //   super.initState();
+  //   _authSubscription = supabase.auth.onAuthStateChange.listen((event) {
+  //     final session = event.session;
+  //     if (session != null) {
+  //       Navigator.of(context).pushReplacementNamed('/account');
+  //     }
+  //   });
+  //
+  //
+  //
+  // }
 
   @override
   void dispose() {
@@ -555,22 +555,9 @@ bool _obscurePassword=true;
         _notificationProvider.apiInstance=api;
         _notificationProvider.refreshNotifications(userP.userId);
         userP. Generalusers(userP.userId);
-        bool isBase64(String input) {
-          final RegExp base64 = RegExp(
-            r'^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$',
-          );
-          return base64.hasMatch(input);
-        }
 
-        if (isBase64(profileImage)) {
-          try {
-            profileImageBytes = base64Decode(profileImage);
-          } catch (e) {
-            print('Error decoding Base64: $e');
-          }
-        } else {
-          print('Invalid Base64 string or empty profileImage');
-        }
+
+
 
         userP.setUserData(
           userId: user.id,
@@ -597,3 +584,4 @@ bool _obscurePassword=true;
   }
 }}
 }
+
