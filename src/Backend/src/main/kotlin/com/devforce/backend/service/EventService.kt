@@ -1,9 +1,7 @@
 package com.devforce.backend.service
 
 import com.devforce.backend.dto.*
-import com.devforce.backend.model.AvailableSlotsModel
 import com.devforce.backend.model.EventModel
-import com.devforce.backend.model.PassedEventModel
 import com.devforce.backend.model.VenueModel
 import com.devforce.backend.repo.EventRepo
 import com.devforce.backend.repo.PassedEventsRepo
@@ -127,7 +125,7 @@ class EventService {
 
             if (updateEventDto.location != null) {
                 v = venueRepo.findByVenueId(updateEventDto.location)
-                    ?: return ResponseEntity.ok(
+                if (v == null) return ResponseEntity.ok(
                         ResponseDto(
                             "error",
                             System.currentTimeMillis(),
@@ -170,7 +168,7 @@ class EventService {
         } catch (e: NoSuchElementException) {
             return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "Event not found")))
         } catch (e: Exception) {
-            return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "Failed to update event:")))
+            return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "Failed to update event")))
 
 
     }}
@@ -216,10 +214,9 @@ class EventService {
                     event -> EventDto(event, userModel.userId in event.hosts.map { host -> host.userId }, null)
             }
         }
-        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto)
-    )
+        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto))
 
-}
+    }
     //the filter for filtering screen
     fun filteringEvents(startDate: String?, endDate: String?, minCapacity: Int?, maxCapacity: Int?, isPrivate: Boolean?): ResponseEntity<ResponseDto> {
         try {
@@ -312,23 +309,23 @@ class EventService {
 
 
     //FUTURE
-    fun filterEvents(filterBy: FilterByDto): ResponseEntity<ResponseDto>{
-
-        val user = SecurityContextHolder.getContext().authentication.principal
-        var eventsDto: List<EventDto>? = null
-        if (user == "anonymousUser") {
-            val events = eventRepo.filterEvents(filterBy, null)
-            eventsDto = events.map { event -> EventDto(event, false, null) }
-        }
-        else {
-            val userModel = (user as CustomUser).userModel
-            val events = eventRepo.filterEvents(filterBy, userModel.userId)
-            eventsDto = events.map {
-                    event -> EventDto(event, userModel.userId in event.hosts.map { host -> host.userId }, null)
-            }
-        }
-        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto))
-    }
+//    fun filterEvents(filterBy: FilterByDto): ResponseEntity<ResponseDto>{
+//
+//        val user = SecurityContextHolder.getContext().authentication.principal
+//        var eventsDto: List<EventDto>? = null
+//        if (user == "anonymousUser") {
+//            val events = eventRepo.filterEvents(filterBy, null)
+//            eventsDto = events.map { event -> EventDto(event, false, null) }
+//        }
+//        else {
+//            val userModel = (user as CustomUser).userModel
+//            val events = eventRepo.filterEvents(filterBy, userModel.userId)
+//            eventsDto = events.map {
+//                    event -> EventDto(event, userModel.userId in event.hosts.map { host -> host.userId }, null)
+//            }
+//        }
+//        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto))
+//    }
 
     fun getLocations(): ResponseEntity<ResponseDto> {
         val locations = venueRepo.findAll()

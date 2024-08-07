@@ -110,7 +110,8 @@ class _ForgotPassState extends State<ForgotPass> {
           ),
 
           const SizedBox(height: 20),
-          TextButton(
+          // TextButton(
+          ElevatedButton(
 
             onPressed: () async {
               try {
@@ -126,7 +127,7 @@ class _ForgotPassState extends State<ForgotPass> {
                 );
                 if (mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("reset your password link has been sent to your inbox ")));
+                      SnackBar(content: Text("A link to reset your password has been sent to your inbox.")));
                 }
               } on AuthException catch (error) {
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -135,20 +136,20 @@ class _ForgotPassState extends State<ForgotPass> {
                 ));
               } catch (error) {
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text('Error occurred, please try again'),
+                  content: Text('An error occurred, please try again'),
                   backgroundColor: Theme.of(context).colorScheme.error,
                 ));
               }
             },
-            style: TextButton.styleFrom(
-              foregroundColor: Colors.black, padding: const EdgeInsets.symmetric(vertical: 10.0),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20.0),
-                side: BorderSide(color: Colors.black),
-              ), // Text color
-              backgroundColor: Colors.transparent,
-            ),
-            child: const Text('reset password'),
+            // style: TextButton.styleFrom(
+            //   foregroundColor: Colors.black, padding: const EdgeInsets.symmetric(vertical: 10.0),
+            //   shape: RoundedRectangleBorder(
+            //     borderRadius: BorderRadius.circular(20.0),
+            //     side: BorderSide(color: Colors.black),
+            //   ), // Text color
+            //   backgroundColor: Colors.transparent,
+            // ),
+            child: const Text('Reset Password'),
           ),
 
         ],

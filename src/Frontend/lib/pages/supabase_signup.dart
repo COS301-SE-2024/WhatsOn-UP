@@ -65,7 +65,7 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
         body: Stack(
           children: [
             Positioned(top: 80, child: _buildTop()),
-            Positioned(bottom: 3, child: _buildBottom()),
+            Positioned(bottom: 0, child: _buildBottom(context)),
           ],
         ),
       ),
@@ -92,14 +92,15 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
     );
   }
 
-  Widget _buildBottom() {
+  Widget _buildBottom(BuildContext context) {
     return Container(
       width: mediaSize.width,
       height: mediaSize.height * 0.6,
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.only(
+        // color: Colors.white,
+        color: Theme.of(context).colorScheme.surface,
+        borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(30.0),
           topRight: Radius.circular(30.0),
         ),
@@ -139,7 +140,8 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
             ),
           ),
           const SizedBox(height: 20),
-          TextButton(
+          // TextButton(
+          ElevatedButton(
 
             onPressed: () async {
               try {
@@ -167,19 +169,19 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
                 ));
               } catch (error) {
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text('Error occurred, please try again'),
+                  content: const Text('Error occurred, please try again'),
                   backgroundColor: Theme.of(context).colorScheme.error,
                 ));
               }
             },
-            style: TextButton.styleFrom(
-              foregroundColor: Colors.black, padding: const EdgeInsets.symmetric(vertical: 10.0),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20.0),
-                side: BorderSide(color: Colors.black),
-              ), // Text color
-              backgroundColor: Colors.transparent,
-            ),
+            // style: TextButton.styleFrom(
+            //   foregroundColor: Colors.black, padding: const EdgeInsets.symmetric(vertical: 10.0),
+            //   shape: RoundedRectangleBorder(
+            //     borderRadius: BorderRadius.circular(20.0),
+            //     side: BorderSide(color: Colors.black),
+            //   ), // Text color
+            //   backgroundColor: Colors.transparent,
+            // ),
 
             child: const Text('Sign Up'),
 
@@ -220,7 +222,7 @@ userProvider userP = Provider.of<userProvider>(context, listen: false);
 
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => HomePage(
+            MaterialPageRoute(builder: (context) => const HomePage(
 
             )),
           );

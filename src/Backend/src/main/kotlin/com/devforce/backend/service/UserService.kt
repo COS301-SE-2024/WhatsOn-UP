@@ -218,7 +218,7 @@ class UserService {
     @Autowired
     lateinit var mailSender: MailSender
 
-    fun applyForHost(howLong: Int, reason: String, studentEmail: String, fromWhen: String): ResponseEntity<ResponseDto> {
+    fun applyForHost(howLong: Int, reason: String, studentEmail: String?, fromWhen: String): ResponseEntity<ResponseDto> {
         val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
 
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
@@ -242,8 +242,10 @@ class UserService {
         }
 
         // Check if student email is valid
-        if (!studentEmail.endsWith("@up.ac.za") && !studentEmail.endsWith("@tuks.co.za")) {
-            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Invalid student email"))
+        if (studentEmail != null) {
+            if (!studentEmail.endsWith("@up.ac.za") && !studentEmail.endsWith("@tuks.co.za")) {
+                return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Invalid student email"))
+            }
         }
 
         if (reason.isBlank()) {
@@ -264,19 +266,26 @@ class UserService {
 
         hostApplicationsRepo.save(hostApplication)
 
-        val origin = "http://localhost:8080/api/user/verify_application?veriCode=$veriCode"
+        if (studentEmail != null){
+            val origin = "http://localhost:8080/api/user/verify_application?veriCode=$veriCode"
 
-        val email = SimpleMailMessage().apply {
-            setTo(studentEmail)
-            setSubject("Host Application Verification")
-            setText("Click the link below to verify your application: $origin")
+            val email = SimpleMailMessage().apply {
+                setTo(studentEmail)
+                setSubject("Host Application Verification")
+                setText("Click the link below to verify your application: $origin")
+            }
+
+            mailSender.send(email)
+
+            return ResponseEntity.ok(
+                ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Application submitted successfully. Check your email for verification link"))
+            )
         }
-
-        mailSender.send(email)
-
-        return ResponseEntity.ok(
-            ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Application submitted successfully. Check your email for verification link"))
-        )
+        else{
+            return ResponseEntity.ok(
+                ResponseDto("success", System.currentTimeMillis(), mapOf("application_id" to hostApplication.applicationId,"message" to "Application submitted successfully"))
+            )
+        }
     }
 
     fun verifyApplication(veriCode: UUID): ResponseEntity<String> {

@@ -10,7 +10,8 @@ const Color lightTextColor = Colors.black;
 // Dark colours
 const Color darkPrimaryColor = Color.fromARGB(255, 13, 71, 161);
 const Color darkSecondaryColor = Color.fromARGB(255, 149, 137, 74);
-const Color darkBackgroundColor = Color.fromARGB(255, 31, 31, 31);
+// const Color darkBackgroundColor = Color.fromARGB(255, 31, 31, 31);
+const Color darkBackgroundColor = Color.fromARGB(255, 18, 18, 18);
 
 class ThemeNotifier with ChangeNotifier {
   final lightTheme = ThemeData(
@@ -37,9 +38,23 @@ class ThemeNotifier with ChangeNotifier {
       selectedItemColor: lightSecondaryColor,
       unselectedItemColor: Color.fromARGB(255, 47, 86, 194),
     ),
-    elevatedButtonTheme: const ElevatedButtonThemeData(
-      style: ButtonStyle(
-        backgroundColor: WidgetStatePropertyAll(Color.fromARGB(255, 214, 214, 214)),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        // foregroundColor: Colors.black,
+        foregroundColor: Colors.white,
+        // backgroundColor: Colors.white,
+        backgroundColor: lightPrimaryColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+          // side: const BorderSide(color: Colors.grey, width: 1),
+          // side: const BorderSide(color: Color.fromARGB(255, 255, 255, 255), width: 1),
+        ),
+        padding: const EdgeInsets.symmetric(vertical: 16),
+      ),
+    ),
+    textButtonTheme: TextButtonThemeData(
+      style: TextButton.styleFrom(
+        foregroundColor: Color.fromARGB(255, 13, 71, 161),
       ),
     ),
   );
@@ -68,12 +83,23 @@ class ThemeNotifier with ChangeNotifier {
       selectedItemColor: darkSecondaryColor,
       unselectedItemColor: Color.fromARGB(255, 79, 114, 207),
     ),
-    elevatedButtonTheme: const ElevatedButtonThemeData(
-      style: ButtonStyle(
-        backgroundColor: WidgetStatePropertyAll(Color.fromARGB(255, 88, 88, 88)),
-        foregroundColor: WidgetStatePropertyAll(Colors.white),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        foregroundColor: Colors.white,
+        // backgroundColor: Color.fromARGB(255, 18, 18, 18),
+        backgroundColor: darkPrimaryColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+          // side: BorderSide(color: const Color.fromARGB(255, 255, 255, 255), width: 1),
         ),
+        padding: EdgeInsets.symmetric(vertical: 16),
       ),
+    ),
+    textButtonTheme: TextButtonThemeData(
+      style: TextButton.styleFrom(
+        foregroundColor: Color.fromARGB(255, 60, 128, 230),
+      ),
+    ),
     );
   
 
@@ -81,14 +107,12 @@ class ThemeNotifier with ChangeNotifier {
   ThemeData getTheme() => _themeData;
 
   ThemeNotifier() {
-    _themeData = lightTheme; // Setting light as the default theme because _themeData was uninitialised before which caused errors
+    _themeData = lightTheme;
     StorageManager.readData('themeMode').then((value) {
-      // print('value read from storage: ' + value.toString());
       var themeMode = value ?? 'light';
       if (themeMode == 'light') {
         _themeData = lightTheme;
       } else {
-        // print('setting dark theme');
         _themeData = darkTheme;
       }
       notifyListeners();
