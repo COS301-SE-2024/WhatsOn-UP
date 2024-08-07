@@ -7,7 +7,7 @@ class AppNotification {
   final String eventId;
   final String userId;
   final String sentAt;
-
+  bool? eventInvite;
   final String notificationId;
   String? seenAt;
   final String notificationTypes;
@@ -21,6 +21,7 @@ class AppNotification {
     required this.notificationId,
     required this.notificationTypes,
     this.seenAt,
+    this.eventInvite,
   });
   factory AppNotification.fromJson(Map<String, dynamic> json) {
     return AppNotification(
@@ -31,6 +32,7 @@ class AppNotification {
       seenAt: json['seen_at'],
       notificationId: json['notification_id'],
       notificationTypes: json['notification_types']['name'],
+      eventInvite: json['event_invitees'] != null ? json['event_invitees']['accepted'] : null,
     );
   }
   void markAsSeen() {
@@ -38,7 +40,7 @@ class AppNotification {
   }
   @override
   String toString() {
-    return 'Notification(message: $message, eventId: $eventId, userId: $userId, sentAt: $sentAt, notificationId: $notificationId, notificationTypes: $notificationTypes)';
+    return 'Notification(message: $message, eventId: $eventId, userId: $userId, sentAt: $sentAt, notificationId: $notificationId, notificationTypes: $notificationTypes, seenAt: $seenAt, eventInvite: $eventInvite)';
   }
 }
 

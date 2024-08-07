@@ -24,6 +24,7 @@ class notificationProvider extends  ChangeNotifier {
 
       return response;
     } catch (e) {
+      print(e);
       throw Exception('Failed to fetch notifications providers: $e');
     }
   }
@@ -40,3 +41,4 @@ class notificationProvider extends  ChangeNotifier {
 
 
 }
+

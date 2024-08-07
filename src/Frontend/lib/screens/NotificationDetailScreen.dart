@@ -311,6 +311,7 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
                   //   ),
                   //   child: Text('Decline'),
                   // ),
+                  if(widget.notification.eventInvite ==null || widget.notification.eventInvite == false)
                   TextButton(
                     onPressed: _Accept,
                     style: TextButton.styleFrom(
@@ -320,6 +321,20 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
                     ),
                     child: Text('Accept'),
                   ),
+                  if(widget.notification.eventInvite == true)
+                    TextButton(
+                      onPressed: () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("This invite has been already accepted"))
+                        );
+                      },
+                      style: TextButton.styleFrom(
+                        foregroundColor: Colors.greenAccent,
+                        side: BorderSide(color: Colors.black),
+                        padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 20.0),
+                      ),
+                      child: Text('Accepted'),
+                    ),
                 ],
               ),
             ],

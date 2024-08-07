@@ -55,6 +55,7 @@
 
 
 
+import 'package:firstapp/pages/ManageGeneralApplicationsTabs.dart';
 import 'package:firstapp/pages/Promotion_form.dart';
 import 'package:firstapp/pages/calendar_page.dart';
 import 'package:firstapp/pages/detailed_event_page.dart';
@@ -135,7 +136,7 @@ class MyApp extends StatelessWidget {
           '/PromotionForm': (context)=> const PromotionForm(),
           '/calendar': (context)=> const CalendarPage(),
           '/notifications': (context)=> const Notifications (),
-
+'/generaluserapplications': (context)=> const TabGeneral(),
         },
 
         debugShowCheckedModeBanner: false,
