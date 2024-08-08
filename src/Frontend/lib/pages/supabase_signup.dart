@@ -5,11 +5,11 @@ import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../main.dart';
 import 'package:firstapp/services/api.dart';
-import 'dart:convert';
-import 'dart:typed_data';
+
 import 'package:firstapp/pages/home_page.dart';
 
 import '../providers/notification_providers.dart';
+import '../services/socket_client.dart';
 class SupabaseSignup extends StatefulWidget {
   const SupabaseSignup({super.key});
 
@@ -209,16 +209,17 @@ userProvider userP = Provider.of<userProvider>(context, listen: false);
           String UserId=user.id;
           String role=response['data']['user']['role']?? 'Unknown';
           String  profileImage=response['data']['user']['profileImage']?? 'Unknown';
-          Uint8List profileImageBytes = Uint8List(0);
+
           userP.userId=user.id;
           userP.Fullname=fullName;
           userP.email=userEmail;
           userP.role=role;
+          userP.profileImage=profileImage;
           notificationProvider _notificationProvider = Provider.of<notificationProvider>(context, listen: false);
           _notificationProvider.apiInstance=api;
           _notificationProvider.refreshNotifications(userP.userId);
           userP. Generalusers(userP.userId);
-
+          SocketService('http://localhost:8082', userP.userId);
 
           Navigator.push(
             context,

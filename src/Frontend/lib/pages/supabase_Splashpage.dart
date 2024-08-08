@@ -10,8 +10,8 @@ import '../providers/notification_providers.dart';
 import '../providers/user_provider.dart';
 import '../services/api.dart';
 
-import 'dart:convert';
-import 'dart:typed_data';
+
+import '../services/socket_client.dart';
 
 class  SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -67,14 +67,13 @@ Future<void>_redirect() async{
 
   Future<void> _login() async {
     userProvider userP = Provider.of<userProvider>(context, listen: false);
-    // eventProvider eventP = Provider.of<eventProvider>(context, listen: false);
+
     EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
     final user = supabase.auth.currentUser;
     eventP.fetchfortheFirstTimeRsvp(user!.id);
 
     Api api = Api();
-    // final List<Event> events=await api.getAllEvents();
-    //eventP.addEventsHome(events);
+
     api. getUser(user!.id).then((response){
       if (response['error'] != null) {
 
@@ -87,33 +86,19 @@ Future<void>_redirect() async{
         String UserId=user.id;
         String role=response['data']['user']['role']?? 'Unknown';
         String  profileImage=response['data']['user']['profileImage']?? 'Unknown';
-        Uint8List profileImageBytes = Uint8List(0);
+
         userP.userId=user.id;
         userP.Fullname=fullName;
         userP.email=userEmail;
         userP.role=role;
+        userP.profileImage=profileImage;
         notificationProvider _notificationProvider = Provider.of<notificationProvider>(context, listen: false);
         _notificationProvider.apiInstance=api;
         _notificationProvider.refreshNotifications(userP.userId);
         userP. Generalusers(userP.userId);
+        SocketService('http://localhost:8082', userP.userId);
 
-        bool isBase64(String input) {
-          final RegExp base64 = RegExp(
-            r'^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$',
-          );
-          return base64.hasMatch(input);
-        }
 
-        if (isBase64(profileImage)) {
-
-          try {
-            profileImageBytes = base64Decode(profileImage);
-          } catch (e) {
-            print('Error decoding Base64: $e');
-          }
-        } else {
-          print('Invalid Base64 string: $profileImage');
-        }
 
         userP.profileimage= profileImage;
 

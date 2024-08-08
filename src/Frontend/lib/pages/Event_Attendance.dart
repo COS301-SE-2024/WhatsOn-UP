@@ -6,7 +6,7 @@ import '../widgets/event_card.dart';
 
 class EventAttendance extends StatefulWidget {
 
-  Event event;
+   Event event;
    EventAttendance({super.key , required this.event});
 
   @override
@@ -59,7 +59,7 @@ class _EventAttendanceState extends State<EventAttendance> {
           Expanded(
             child: filteredAttendees.isEmpty
                 ? Center(
-              child: Text("No matching attendees found."),
+              child: Text("No attendees found."),
             )
                 : ListView.builder(
               itemCount: filteredAttendees.length,
@@ -67,7 +67,7 @@ class _EventAttendanceState extends State<EventAttendance> {
 
                 return ListTile(
                   leading: CircleAvatar(
-                    backgroundImage: filteredAttendees[index].profileImage.isNotEmpty
+                    backgroundImage: filteredAttendees[index].profileImage!=null && filteredAttendees[index].profileImage.isNotEmpty
                         ? NetworkImage(filteredAttendees[index].profileImage)
                         : AssetImage('assets/images/user.png'),
                     radius: 20,
