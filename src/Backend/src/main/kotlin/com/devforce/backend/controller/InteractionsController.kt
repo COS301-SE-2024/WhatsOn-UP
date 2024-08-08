@@ -34,4 +34,10 @@ class InteractionsController {
         return interactionsService.acceptInvite(id)
     }
 
+    @PostMapping("/reject_invite/{id}")
+    @PreAuthorize("isAuthenticated()")
+    fun rejectInvite(@PathVariable id: UUID): ResponseEntity<ResponseDto> {
+        return interactionsService.rejectInvite(id)
+    }
+
 }
