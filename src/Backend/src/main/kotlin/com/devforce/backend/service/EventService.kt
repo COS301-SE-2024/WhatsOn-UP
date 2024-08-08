@@ -24,6 +24,9 @@ import java.time.format.DateTimeFormatter
 class EventService {
 
     @Autowired
+    private lateinit var objectMapper: ObjectMapper
+
+    @Autowired
     lateinit var eventRepo: EventRepo
 
     @Autowired
@@ -60,7 +63,7 @@ class EventService {
             this.endDateTime = createEventDto.endDateTime
             this.venue = venue
             this.maxAttendees = createEventDto.maxParticipants ?: 1
-            this.metadata = createEventDto.metadata ?: ""
+            this.metadata = createEventDto.metadata?.let { objectMapper.writeValueAsString(it) } ?: "" 
             this.isPrivate = createEventDto.isPrivate ?: false
             this.hosts = setOf(user)
         }
