@@ -313,7 +313,7 @@ class Api {
   }
 
   Future<Map<String, dynamic>> AcceptInvite(
-      {required String userId, required String notificationId}) async {
+      { String? userId,String? notificationId}) async {
     String notifyUserUrl = 'http://localhost:8080/api/interactions/accept_invite/$notificationId';
 
 

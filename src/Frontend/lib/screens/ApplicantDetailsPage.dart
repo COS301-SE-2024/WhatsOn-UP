@@ -82,7 +82,10 @@ class ApplicantDetailsPage extends StatelessWidget {
           children: [
             // Display CircleAvatar only if status is ACCEPTED or REJECTED
             CircleAvatar(
-              backgroundImage: NetworkImage(acceptedRejectedBy.profileImage),
+              backgroundImage: acceptedRejectedBy.profileImage != null && acceptedRejectedBy.profileImage!.isNotEmpty
+                  ?  NetworkImage(acceptedRejectedBy.profileImage)
+                  : const AssetImage('assets/images/user.png') as ImageProvider,
+
               radius: 20,
             ),
             SizedBox(width: 10.0),

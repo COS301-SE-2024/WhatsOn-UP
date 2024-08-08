@@ -202,7 +202,7 @@ void main() {
       expect(find.text('Past Events'), findsOneWidget);
       expect(find.text('Create Event'), findsOneWidget);
       expect(find.text('Attendees for All Events'), findsOneWidget);
-      expect(find.text('Event Applications'), findsOneWidget);
+      expect(find.text('General user Host Applications'), findsOneWidget);
       expect(find.byIcon(Icons.arrow_forward), findsNWidgets(5));
     });
 
@@ -344,7 +344,7 @@ testWidgets('setLoading method updates _isLoading state', (WidgetTester tester) 
           User(name: 'Jane Smith', profileImage: '', userStatus: 'Pending', email: '', password: '123', userId: '2'),
           User(name: 'Bob Johnson', profileImage: '', userStatus: 'Rejected', email: '', password: '123', userId: '3'),
         ];
-        when(mockUserProvider.generalUserEvents).thenAnswer((_) async => fakeUsers);
+         when(mockUserProvider.Generalusers("")).thenAnswer((_) async => fakeUsers);
         await tester.pumpWidget(
           MultiProvider(
             providers: [
@@ -358,7 +358,7 @@ testWidgets('setLoading method updates _isLoading state', (WidgetTester tester) 
         );
       });
 
-      await tester.tap(find.text('Event Applications'));
+      await tester.tap(find.text('General user Host Applications'));
       await tester.pumpAndSettle();
       // expect(find.byType(Generaleventapplications), findsOneWidget);
     });

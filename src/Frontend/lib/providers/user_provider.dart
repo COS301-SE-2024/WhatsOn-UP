@@ -11,7 +11,7 @@ import '../services/api.dart';
 //will let the listeners know when the state has changed
 
 class userProvider extends ChangeNotifier{
-  late final Api api= Api();
+  late  Api api= Api();
   String _Fullname = 'Testing';
   String _Email = '';
   String _Password = '';
