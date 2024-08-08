@@ -8,6 +8,7 @@ import 'package:firstapp/widgets/PlaceInfoBottomSheet.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:firstapp/services/PlacesService.dart';
+import 'package:location/location.dart' as LocationController;
 
 class NavigationPage extends StatefulWidget {
   @override
@@ -122,31 +123,40 @@ class NavigationPage extends StatefulWidget {
 class _NavigationPageState extends State<NavigationPage> {
   
   late GoogleMapController _googleMapController;
-  static const LatLng initPos = LatLng(-25.756283, 28.231191);
+  // static const LatLng initPos = LatLng(-25.756283, 28.231191);
+  LatLng? _currentLocation;
   Marker? _destination;
+  LatLng? _currentDestination;
   MapRoute? _route;
-  late BitmapDescriptor _customIcon;
+
+  late BitmapDescriptor _customOriginIcon;
+  late BitmapDescriptor _customDestinationIcon;
+
+  // late CameraPosition _initialCameraPosition;
+
   final PlacesService places = PlacesService();
+  final locationController = LocationController.Location();
 
-  final Marker _origin = Marker(
-      markerId: const MarkerId("origin"),
-      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
-      position: initPos
-  );
+  static const double farZoom = 17;
+  static const double closeZoom = 18;
 
-  final _textFieldController = TextEditingController();
-
+  double currentTilt = 0;
+  double currentZoom = farZoom;
   
 
-  static const _initialCameraPosition = CameraPosition(
-    target: initPos,
-    zoom: 17,
-  );
+  bool locationFound = false;
+
+  final _textFieldController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _loadCustomIcons();
+    WidgetsBinding.instance
+      .addPostFrameCallback((_) async {
+        await _getLocationUpdates();
+        print("Current LOCATION: $_currentLocation");
+      });
   }
 
   @override
@@ -162,11 +172,20 @@ class _NavigationPageState extends State<NavigationPage> {
       resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
-          GoogleMap(
-            initialCameraPosition: _initialCameraPosition,
+          _currentLocation == null 
+          ? const Center(child: CircularProgressIndicator()) 
+          : GoogleMap(
+            initialCameraPosition:  CameraPosition(
+              target: _currentLocation!,
+              zoom: farZoom,
+            ),
             onMapCreated: (controller) => _googleMapController = controller,
             markers: {
-              if (_origin != null) _origin as Marker,
+              Marker(
+                markerId: const MarkerId("currentPosition"),
+                icon: _customOriginIcon,
+                position: _currentLocation!
+              ),
               if (_destination != null) _destination as Marker
             },
             polylines: {
@@ -183,7 +202,7 @@ class _NavigationPageState extends State<NavigationPage> {
             onLongPress: _updateRoute,
           ),
           Positioned(
-            top: 10,
+            top: 35,
             left: 15,
             right: 15,
             child: SearchBar(
@@ -206,7 +225,10 @@ class _NavigationPageState extends State<NavigationPage> {
               backgroundColor: Theme.of(context).primaryColor,
               foregroundColor: Colors.white,
               onPressed: () => _googleMapController.animateCamera(
-                CameraUpdate.newCameraPosition(_initialCameraPosition),
+                CameraUpdate.newCameraPosition( CameraPosition(
+                  target: _currentLocation!,
+                  zoom: farZoom,
+                )),
               ),
               child: const Icon(Icons.center_focus_strong)
             ),
@@ -235,17 +257,59 @@ class _NavigationPageState extends State<NavigationPage> {
       });
   }
 
-  void _updateRoute(LatLng _destinationPosition) async {
-    _setDestination(_destinationPosition);
+  Future<void> _updateRoute(LatLng _destinationLocation) async {
+    _setDestination(_destinationLocation);
     
-    final updatedRoute = await RouteService().getRoute(origin: _origin!.position, destination: _destinationPosition);
+    final updatedRoute = await RouteService().getRoute(origin: _currentLocation!, destination: _destinationLocation);
     setState(() {
       _route = updatedRoute;
     });
     print('\n ${updatedRoute}');
   }
 
+  Future<void>_getLocationUpdates() async {
+    try{
+      bool locationServiceEnabled = await locationController.serviceEnabled();
+      if (!locationServiceEnabled) {
+        locationServiceEnabled = await locationController.requestService();
+        if (!locationServiceEnabled) {
+          throw Exception("Location service is not enabled");
+        }
+      }
+
+      LocationController.PermissionStatus permissionStatus = await locationController.hasPermission();
+      if (permissionStatus == LocationController.PermissionStatus.denied) {
+        permissionStatus = await locationController.requestPermission();
+        if (permissionStatus != LocationController.PermissionStatus.granted) {
+          throw Exception("Location permission has not been granted");
+        }
+      }
+
+      locationController.onLocationChanged.listen((currentLocation) async {
+      if(currentLocation.latitude != null && currentLocation.longitude != null){
+        if (mounted) { // Check if the widget is still mounted
+          if(_currentDestination != null && _route != null){
+            await _updateRoute(_currentDestination!);
+            print("CALLED");
+          };
+        setState((){
+          _currentLocation = LatLng(currentLocation.latitude!, currentLocation.longitude!);
+          if (!locationFound) {
+            _cameraToPosition(_currentLocation);
+          }
+        });
+      }
+      }
+    });
+    }
+    catch(e){
+      print(e);
+      rethrow;
+    }
+  }
+
   void _loadCustomIcons() async {
+    _customOriginIcon = BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure);
     // _customIcon = await BitmapDescriptor.asset(const ImageConfiguration(size: Size(512,512)), 'assets/images/target.png');
     // print(_customIcon.toJson());
 
@@ -271,15 +335,25 @@ class _NavigationPageState extends State<NavigationPage> {
         _route = null;
       }
       
+      //Choose closest matching location
       Location foundLocation = foundLocations[0];
+
+      //change the camera angle
+      setState(() {
+        currentTilt = 0;
+        currentZoom = farZoom;
+      });
+
+      //locate place
       _setDestination(foundLocation.location);
-      await _cameraToPosition(foundLocation.location, 18);
+      _cameraToPosition(foundLocation.location);
       _showPlaceInfo(context, foundLocation);
     }
   }
 
-  Future<void> _cameraToPosition(LatLng pos, double zoom, {double tilt = 0}) async{
-    CameraPosition newCamPosition = CameraPosition(target: pos, zoom: zoom, tilt: tilt);
+  Future<void> _cameraToPosition(LatLng? pos) async{
+    if(pos == null) return;
+    CameraPosition newCamPosition = CameraPosition(target: LatLng(pos.latitude,pos.longitude), zoom: currentZoom, tilt: currentTilt);
     await _googleMapController.animateCamera(CameraUpdate.newCameraPosition(newCamPosition));
   }
 
@@ -296,6 +370,7 @@ class _NavigationPageState extends State<NavigationPage> {
 
 ////////////////
    void _showPlaceInfo(BuildContext context, Location location) {
+      locationFound = true;
       showModalBottomSheet(
         context: context,
         builder: (context) {
@@ -304,7 +379,13 @@ class _NavigationPageState extends State<NavigationPage> {
             startTrip: (LatLng dest){
               Navigator.of(context).pop();
               _updateRoute(dest);
-              _cameraToPosition(_origin.position, 19, tilt: 40);
+              setState(() {
+                _currentDestination = LatLng(dest.latitude,dest.longitude);
+                currentZoom = closeZoom;
+                currentTilt = 40;
+                locationFound = false;
+              });
+              _cameraToPosition(_currentLocation);
             }
           );
         },

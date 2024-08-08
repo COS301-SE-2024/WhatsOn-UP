@@ -194,20 +194,30 @@ class _SupabaseLoginState extends State<SupabaseLogin> {
   late final StreamSubscription<AuthState> _authSubscription;
   late Color myColor;
   late Size mediaSize;
-bool _obscurePassword=true;
+  bool _obscurePassword=true;
+  late Api api = Api();
+
+
   @override
-  void initState() {
-    super.initState();
-    // _authSubscription = supabase.auth.onAuthStateChange.listen((event) {
-    //   final session = event.session;
-    //   if (session != null) {
-    //     Navigator.of(context).pushReplacementNamed('/account');
-    //   }
-    // });
 
+void initState() {
 
+  super.initState();
 
-  }
+  _authSubscription = Supabase.instance.client.auth.onAuthStateChange.listen((event) {
+
+    if (event == AuthChangeEvent.signedIn) {
+
+      print("User signed in");
+
+    } else if (event == AuthChangeEvent.signedOut) {
+      print("User signed out");
+
+    }
+
+  });
+
+}
 
   @override
   void dispose() {
@@ -537,7 +547,6 @@ bool _obscurePassword=true;
     
       eventP.fetchfortheFirstTimeRsvp(user!.id);
 
-    Api api = Api();
     try {
       final response = await api.getUser(user.id);
       if (response['error'] != null) {
@@ -565,24 +574,15 @@ bool _obscurePassword=true;
           return base64.hasMatch(input);
         }
 
-        if (isBase64(profileImage)) {
-          try {
-            profileImageBytes = base64Decode(profileImage);
-          } catch (e) {
-            print('Error decoding Base64: $e');
-          }
-        } else {
-          print('Invalid Base64 string or empty profileImage');
-        }
 
-        userP.setUserData(
-          userId: user.id,
-          fullName: fullName,
-          email: userEmail,
-          role: role,
-          profileImage: profileImage,
-          isGuest: false,
-        );
+        // userP.setUserData(
+        //   userId: user.id,
+        //   fullName: fullName,
+        //   email: userEmail,
+        //   role: role,
+        //   profileImage: profileImage,
+        //   isGuest: false,
+        // );
 
         Navigator.push(
           context,

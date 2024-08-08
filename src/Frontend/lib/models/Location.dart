@@ -47,5 +47,15 @@ class Location {
     return photoUrls;
   }
 
+  Location.copy(Location other)
+      : name = other.name,
+        id = other.id,
+        formattedAddress = other.formattedAddress,
+        displayName = other.displayName,
+        languageCode = other.languageCode,
+        location = other.location,
+        imageUrls = List.from(other.imageUrls),
+        types = List.from(other.types);
+
   
 }

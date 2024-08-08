@@ -44,7 +44,7 @@ class PlaceInformationModalSheet extends StatelessWidget {
                         options: CarouselOptions(
                           aspectRatio: 16 / 9,
                           enlargeCenterPage: true,
-                          enableInfiniteScroll: true,
+                          enableInfiniteScroll: (location.imageUrls.length >= 3) ? true : false,
                           autoPlay: true,
                           autoPlayAnimationDuration: Duration(seconds: 2)
                         ),
@@ -130,19 +130,25 @@ class PlaceInformationModalSheet extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       ElevatedButton(
-                        child: const Row(children: [
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16.0),
+                          child: Row(children: [
                           Icon(Icons.directions),
                           Text('Start Navigation')
                         ],),
+                        ),
                         onPressed: () => {
                           startTrip(location.location)
                         },
                       ),
                       ElevatedButton(
-                      child: const Row(children: [
+                      child: const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16.0),
+                        child: Row(children: [
                           Icon(Icons.share),
                           Text('Share')
                         ],),
+                      ),
                       onPressed: () => {},
                       ),
                       // ElevatedButton(
