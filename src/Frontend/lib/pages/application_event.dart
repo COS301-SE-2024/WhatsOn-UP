@@ -51,7 +51,14 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
   bool _tutorialShown = false;
   List<XFile>? selectedImages;
   String? _selectedCategory;
-
+  final List<String> predefinedCategories = [
+    'Clubs & Organizations',
+    'Sports & Fitness',
+    'Academic',
+    'Social',
+    'Cultural',
+    'Career & Professional Development'
+  ];
 
   @override
   void initState() {
@@ -397,7 +404,7 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                     return Text('No categories available');
                   } else {
-                    _categories = snapshot.data!;
+                    _categories = snapshot.data! + predefinedCategories;
                     return DropdownButton<String>(
                       value: _selectedCategory,
                       hint: Text('Select a category'),
