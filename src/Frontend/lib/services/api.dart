@@ -228,7 +228,7 @@ class Api {
     required DateTime endDate,
     required String locationId,
     int? maxParticipants,
-    String? metadata,
+    Map<String, String>? metadata,
     bool? isPrivate,
     //List<String>? media,
     required String userId,
@@ -242,19 +242,6 @@ class Api {
       'Accept': 'application/json',
       'Authorization': 'Bearer $userId',
     };
-
-   /* final Map<String, dynamic> body = {
-      "title": title,
-      "description": description,
-      "startDateTime": startDate.toIso8601String(),
-      "endDateTime": endDate.toIso8601String(),
-      "location": locationId,
-      "maxParticipants": maxParticipants,
-      "metadata": metadata,
-      "isPrivate": isPrivate,
-    //  'media': media,
-    };*/
-
     var body = jsonEncode({
       'title': title,
       'description': description,

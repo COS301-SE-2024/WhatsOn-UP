@@ -25,6 +25,8 @@ import '../providers/user_provider.dart';
 
 
 class ApplicationEvent extends StatefulWidget {
+//  const ApplicationEvent({super.key});
+
   @override
   _ApplicationEventPageState createState() => _ApplicationEventPageState();
 }
@@ -467,6 +469,9 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
 
                     try {
                       String userId = userP.userId;
+                      Map<String, String> metadata = {
+                        'category': _selectedCategory!,
+                      };
                       Map<String, dynamic> response = await Api().createEvent(
                         title: _eventNameController.text,
                         description: _eventDescriptionController.text,
@@ -474,7 +479,7 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                         endDate: _endDateTime,
                         locationId: _selectedVenue!.venueId,
                         maxParticipants: _maxAttendees,
-                        metadata: _categories.join(','),
+                        metadata: metadata,
                         isPrivate: !_isPublic,
                         userId: userId,
                       );
