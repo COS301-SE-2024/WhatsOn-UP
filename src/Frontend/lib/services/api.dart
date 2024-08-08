@@ -226,14 +226,16 @@ class Api {
     required String description,
     required DateTime startDate,
     required DateTime endDate,
-    required String location,
+    required String locationId,
     int? maxParticipants,
     String? metadata,
-    bool isPrivate = false,
-    List<String>? media,
+    bool? isPrivate,
+    //List<String>? media,
     required String userId,
   }) async {
+
     final String _createEventUrl = 'http://$domain:8080/api/events/create';
+
 
     var headers = {
       'Content-Type': 'application/json',
@@ -241,16 +243,28 @@ class Api {
       'Authorization': 'Bearer $userId',
     };
 
+   /* final Map<String, dynamic> body = {
+      "title": title,
+      "description": description,
+      "startDateTime": startDate.toIso8601String(),
+      "endDateTime": endDate.toIso8601String(),
+      "location": locationId,
+      "maxParticipants": maxParticipants,
+      "metadata": metadata,
+      "isPrivate": isPrivate,
+    //  'media': media,
+    };*/
+
     var body = jsonEncode({
       'title': title,
       'description': description,
-      'startDate': startDate.toIso8601String(),
-      'endDate': endDate.toIso8601String(),
-      'location': location,
+      'startDateTime': startDate.toIso8601String(),
+      'endDateTime': endDate.toIso8601String(),
+      'location': locationId,
       'maxParticipants': maxParticipants,
       'metadata': metadata,
       'isPrivate': isPrivate,
-      'media': media,
+     // 'media': media,
     });
 
     try {
