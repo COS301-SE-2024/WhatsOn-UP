@@ -32,5 +32,5 @@ class InviteeModel {
     @JoinColumn(name = "from_id", nullable = false)
     var from: UserModel? = null
 
-    var accepted: Boolean = false
+    var accepted: Boolean? = null
 }
