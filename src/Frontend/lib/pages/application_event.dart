@@ -4,6 +4,7 @@ import 'package:numberpicker/numberpicker.dart';
 import 'package:provider/provider.dart';
 import 'package:firstapp/providers/events_providers.dart';
 import 'package:firstapp/providers/user_provider.dart';
+import 'package:firstapp/services/api.dart';
 import 'package:firstapp/services/EventService.dart';
 import 'package:firstapp/widgets/event_card.dart';
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
@@ -19,6 +20,8 @@ import 'package:firstapp/widgets/theme_manager.dart';
 import 'package:firstapp/services/api.dart';
 import '../main.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
+
+import '../providers/user_provider.dart';
 
 
 class ApplicationEvent extends StatefulWidget {
@@ -45,6 +48,8 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
   late TutorialCoachMark tutorialCoachMark;
   bool _tutorialShown = false;
   List<XFile>? selectedImages;
+  String? _selectedCategory;
+
 
   @override
   void initState() {
@@ -102,7 +107,7 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
       ),
       child: Row(
         children: [
-          // NumberPicker
+
           Expanded(
             child: NumberPicker(
               key: _numberPickerKey,
@@ -114,7 +119,7 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
               onChanged: _updateMaxAttendeesFromPicker,
             ),
           ),
-          // TextField
+
           Container(
             key: _textFieldKey,
             width: 80,
@@ -205,6 +210,9 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
 
   @override
   Widget build(BuildContext context) {
+    bool isLightTheme = Theme.of(context).brightness == Brightness.light;
+
+    userProvider userP = Provider.of<userProvider>(context,listen: false);
     return Scaffold(
       appBar: AppBar(
         title: Text('Create Event'),
@@ -388,44 +396,107 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                     return Text('No categories available');
                   } else {
                     _categories = snapshot.data!;
-                    return Wrap(
-                      spacing: 8.0,
-                      runSpacing: 4.0,
-                      children: _categories.map((category) {
-                        return FilterChip(
-                          label: Text(category),
-                          selected: false,
-                          onSelected: (bool selected) {
-                            // Handle category selection
-                          },
+                    return DropdownButton<String>(
+                      value: _selectedCategory,
+                      hint: Text('Select a category'),
+                      isExpanded: true,
+                      items: _categories.map((String category) {
+                        return DropdownMenuItem<String>(
+                          value: category,
+                          child: Text(category),
                         );
                       }).toList(),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          _selectedCategory = newValue;
+                        });
+                      },
                     );
                   }
                 },
               ),
+
+
               SizedBox(height: 16.0),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text('Event Visibility'),
-                  Switch(
-                    value: _isPublic,
-                    onChanged: (bool value) {
-                      setState(() {
-                        _isPublic = value;
-                      });
-                    },
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      Switch(
+                        value: _isPublic,
+                        onChanged: (value) {
+                          setState(() {
+                            _isPublic = value;
+                          });
+                        },
+                        activeTrackColor: isLightTheme
+                            ? lightPrimaryColor.withOpacity(0.5)
+                            : darkPrimaryColor.withOpacity(0.5),
+                        activeColor: isLightTheme ? lightPrimaryColor : darkPrimaryColor,
+                        inactiveThumbColor: isLightTheme
+                            ? Colors.grey[400]
+                            : Colors.grey[600],
+                        inactiveTrackColor: isLightTheme
+                            ? Colors.grey[300]
+                            : Colors.grey[700],
+                      ),
+                      const SizedBox(width: 10),
+                      Text(
+                        _isPublic ? 'Public' : 'Private',
+                        style: TextStyle(
+                          color: isLightTheme ? lightTextColor : Colors.white,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
+
               SizedBox(height: 16.0),
               ElevatedButton(
                 onPressed: _isLoading
                     ? null
-                    : () {
-                  if (_formKey.currentState!.validate()) {
-                    // Handle form submission
+                    : () async {
+                  if (_formKey.currentState!.validate() &&_selectedVenue != null && _selectedCategory != null) {
+                    setState(() {
+                      _isLoading = true;
+                    });
+
+                    try {
+                      String userId = userP.userId;
+                      Map<String, dynamic> response = await Api().createEvent(
+                        title: _eventNameController.text,
+                        description: _eventDescriptionController.text,
+                        startDate: _startDateTime,
+                        endDate: _endDateTime,
+                        locationId: _selectedVenue!.venueId,
+                        maxParticipants: _maxAttendees,
+                        metadata: _categories.join(','),
+                        isPrivate: !_isPublic,
+                        userId: userId,
+                      );
+
+
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Event created successfully!')),
+                      );
+
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: (context) => HomePage()),
+                      );
+                    } catch (e) {
+
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Failed to create event: $e')),
+                      );
+                    } finally {
+                      setState(() {
+                        _isLoading = false;
+                      });
+                    }
                   }
                 },
                 child: _isLoading
