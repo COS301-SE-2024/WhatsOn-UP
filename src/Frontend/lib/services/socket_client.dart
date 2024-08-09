@@ -6,13 +6,15 @@ class SocketService {
   SocketService(String url, String userId) {
 
     final headers = {
-      'authorization': 'Bearer $userId',
+      'Authorization': 'Bearer $userId',
     };
 
 
     socket = IO.io(url, <String, dynamic>{
       'transports': ['websocket'],
-      'extraHeaders': headers,
+      'extraHeaders': <String, String>{
+        'Authorization': 'Bearer $userId',
+      },
     });
 
     // Add event listeners

@@ -120,7 +120,7 @@ set generalapplications( Future<GeneralApplications>? value) {
   }
   Future<void> _fetchGeneralusers(String userId) async {
     try {
-      print('uhkujgjhgjjbgkjbjkgkj');
+
       final response = await api.getGeneralusersToHost(userId);
       print('Response from API: $response');
       generalapplications = Future.value(response);

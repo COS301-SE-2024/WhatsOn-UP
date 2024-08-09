@@ -18,6 +18,11 @@ class NotificationDetailScreen extends StatefulWidget {
 
 class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
   bool isLoading = false;
+  void setLoading(bool isLoading) {
+    setState(() {
+      isLoading = isLoading;
+    });
+  }
   Future<void> _Accept() async {
     setState(() {
       isLoading = true;
@@ -31,7 +36,7 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
 
 
       } else {
-        print('Invite accepted');
+
         Navigator.of(context).pushReplacementNamed('/notifications');
       }
     } catch (e) {
@@ -52,25 +57,6 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
     }
   }
 
-  // Future<void> _Decline() async {
-  //   setState(() {
-  //     isLoading = true;
-  //   });
-  //
-  //   Api api = Api();
-  //   var response = await api.DeclineInvite(userId: widget.notification.userId, notificationId: widget.notification.notificationId);
-  //   if (response['error'] != null) {
-  //     print('An error occurred: ${response['error']}');
-  //   } else {
-  //     print('Invite declined');
-  //   }
-  //
-  //   setState(() {
-  //     isLoading = false;
-  //   });
-  //
-  //   Navigator.of(context).pushReplacementNamed( '/notifications');
-  // }
 
   @override
   Widget build(BuildContext context) {
