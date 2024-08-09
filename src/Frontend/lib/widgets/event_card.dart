@@ -281,6 +281,7 @@ class Event {
         categories: [],
         sessions: [],
       ),
+
     );
     return eventVat;
   }
