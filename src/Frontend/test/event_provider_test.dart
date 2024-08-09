@@ -35,7 +35,7 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ),
+          ), invitees: [],
         ),
         Event(
           id: '2',
@@ -57,7 +57,7 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ),
+          ), invitees: [],
         ),
       ]);
 
@@ -100,6 +100,7 @@ void main() {
            categories: [],
            sessions: [],
          ),
+        invitees: [],
       );
 
        await eventProvider.addEventHome(eventToAdd.toJson());

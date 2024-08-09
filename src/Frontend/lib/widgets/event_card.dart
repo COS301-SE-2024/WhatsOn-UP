@@ -286,7 +286,7 @@ class Event {
       ),
       invitees: json.containsKey('invitees') && (json['invitees'] as List).isNotEmpty
           ? List<Attendee>.from(json['invitees'].map((invitee) => Attendee.fromJson(invitee)))
-          : null,
+          : [],
     );
     return eventVat;
   }
