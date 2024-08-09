@@ -4,7 +4,7 @@ import '../utils.dart';
 class AppNotification {
   final String message;
 
-  final String eventId;
+  String? eventId;
   final String userId;
   final String sentAt;
   bool? eventInvite;
