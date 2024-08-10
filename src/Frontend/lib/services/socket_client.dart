@@ -6,7 +6,6 @@ class SocketService {
   SocketService(String url, String userId) {
 
     final headers = {
-
       'token': 'Bearer $userId',
     };
 
