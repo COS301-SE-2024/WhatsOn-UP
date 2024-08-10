@@ -1,11 +1,15 @@
 import 'dart:async';
+import 'package:firstapp/providers/user_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../main.dart';
 import 'package:firstapp/services/api.dart';
-import 'dart:convert';
-import 'dart:typed_data';
+
 import 'package:firstapp/pages/home_page.dart';
+
+import '../providers/notification_providers.dart';
+import '../services/socket_client.dart';
 class SupabaseSignup extends StatefulWidget {
   const SupabaseSignup({super.key});
 
@@ -61,7 +65,7 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
         body: Stack(
           children: [
             Positioned(top: 80, child: _buildTop()),
-            Positioned(bottom: 3, child: _buildBottom()),
+            Positioned(bottom: 0, child: _buildBottom(context)),
           ],
         ),
       ),
@@ -88,14 +92,15 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
     );
   }
 
-  Widget _buildBottom() {
+  Widget _buildBottom(BuildContext context) {
     return Container(
       width: mediaSize.width,
       height: mediaSize.height * 0.6,
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.only(
+        // color: Colors.white,
+        color: Theme.of(context).colorScheme.surface,
+        borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(30.0),
           topRight: Radius.circular(30.0),
         ),
@@ -135,7 +140,8 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
             ),
           ),
           const SizedBox(height: 20),
-          TextButton(
+          // TextButton(
+          ElevatedButton(
 
             onPressed: () async {
               try {
@@ -163,37 +169,24 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
                 ));
               } catch (error) {
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text('Error occurred, please try again'),
+                  content: const Text('Error occurred, please try again'),
                   backgroundColor: Theme.of(context).colorScheme.error,
                 ));
               }
             },
-            style: TextButton.styleFrom(
-              foregroundColor: Colors.black, padding: const EdgeInsets.symmetric(vertical: 10.0),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20.0),
-                side: BorderSide(color: Colors.black),
-              ), // Text color
-              backgroundColor: Colors.transparent,
-            ),
+            // style: TextButton.styleFrom(
+            //   foregroundColor: Colors.black, padding: const EdgeInsets.symmetric(vertical: 10.0),
+            //   shape: RoundedRectangleBorder(
+            //     borderRadius: BorderRadius.circular(20.0),
+            //     side: BorderSide(color: Colors.black),
+            //   ), // Text color
+            //   backgroundColor: Colors.transparent,
+            // ),
 
             child: const Text('Sign Up'),
 
           ),
-          // const SizedBox(height: 20),
-          // TextButton(
-          //   onPressed: () {
-            
-          //   },
-          //   style: TextButton.styleFrom(
-          //     padding: const EdgeInsets.symmetric(vertical: 10.0),
-          //     shape: RoundedRectangleBorder(
-          //       borderRadius: BorderRadius.circular(20.0),
-          //     ),
-          //     backgroundColor: Colors.transparent,
-          //   ),
-          //   child: const Text('Sign in as guest'),
-          // ),
+
         ],
       ),
     );
@@ -203,7 +196,7 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
   Future<void> _usernameInput() async {
       final user = supabase.auth.currentUser;
       String username = _usernameController.text;
-
+userProvider userP = Provider.of<userProvider>(context, listen: false);
       Api api = Api();
       api.postUsername(username,user!.id).then((response) {
         if (response['error'] != null) {
@@ -216,29 +209,21 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
           String UserId=user.id;
           String role=response['data']['user']['role']?? 'Unknown';
           String  profileImage=response['data']['user']['profileImage']?? 'Unknown';
-          Uint8List profileImageBytes = Uint8List(0);
 
-          bool isBase64(String input) {
-            final RegExp base64 = RegExp(
-              r'^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$',
-            );
-            return base64.hasMatch(input);
-          }
-
-          if (isBase64(profileImage)) {
-
-            try {
-              profileImageBytes = base64Decode(profileImage);
-            } catch (e) {
-              print('Error decoding Base64: $e');
-            }
-          } else {
-            print('Invalid Base64 string: $profileImage');
-          }
+          userP.userId=user.id;
+          userP.Fullname=fullName;
+          userP.email=userEmail;
+          userP.role=role;
+          userP.profileImage=profileImage;
+          notificationProvider _notificationProvider = Provider.of<notificationProvider>(context, listen: false);
+          _notificationProvider.apiInstance=api;
+          _notificationProvider.refreshNotifications(userP.userId);
+          userP. Generalusers(userP.userId);
+          SocketService('http://localhost:8082', userP.userId);
 
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => HomePage(
+            MaterialPageRoute(builder: (context) => const HomePage(
 
             )),
           );

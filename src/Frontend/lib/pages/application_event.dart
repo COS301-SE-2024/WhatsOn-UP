@@ -10,6 +10,7 @@ import 'package:firstapp/services/api.dart';
 import 'package:provider/provider.dart';
 import '../main.dart';
 import '../providers/events_providers.dart';
+import '../providers/user_provider.dart';
 import '../widgets/event_card.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 class ApplicationEvent extends StatefulWidget {
@@ -43,6 +44,7 @@ class _ApplicationEventState extends State<ApplicationEvent> {
   ];
   final _items=_categories.map((category) => MultiSelectItem<Category>(category, category.name)).toList();
   List<Category> _selectedCategories = [];
+  List<Uint8List> imageBytesList = [];
   final _multiSelectKey = GlobalKey<FormFieldState>();
   void initState() {
     _selectedCategories=_categories;
@@ -342,7 +344,7 @@ class _ApplicationEventState extends State<ApplicationEvent> {
 
   void _submitForm() {
     EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
-
+    userProvider userP = Provider.of<userProvider>(context, listen: false);
 
     // eventP.addEventHome(
     // );
@@ -388,7 +390,9 @@ class _ApplicationEventState extends State<ApplicationEvent> {
       // print('The Event: ');
       //   print (response['data']);
         eventP.addEventHome(response['data']);
-      // eventP.;
+      for(Uint8List imageBytes in imageBytesList){
+        Api().eventUploadImage(imageBytes,userP.userId ,response['data']['id']);
+      }
       Navigator.push(
         context,
         MaterialPageRoute(

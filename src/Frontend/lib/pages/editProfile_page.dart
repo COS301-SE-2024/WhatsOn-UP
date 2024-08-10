@@ -31,25 +31,41 @@ class EditprofilePage extends StatefulWidget {
 class _EditprofilePageState extends State<EditprofilePage> {
 
   Uint8List? _image;
-
   Future<void> selectImage() async {
+
     try {
-      Uint8List img = await pickImage(ImageSource.gallery);
-      setState(() {
-        _image = img;
-      });
+      await pickImage(ImageSource.gallery);
+
     } catch (e) {
       print('Failed to pick image: $e');
     }
+
   }
 
-  Future<Uint8List> pickImage(ImageSource source) async {
-    final ImagePicker _imagePicker = ImagePicker();
-    final XFile? image = await _imagePicker.pickImage(source: source);
-    if (image != null) {
-      return await image.readAsBytes();
-    } else {
-      throw 'No image selected';
+  Future<void> pickImage(ImageSource source) async {
+    userProvider userP = Provider.of<userProvider>(context,listen: false);
+    try {
+      final ImagePicker imagePicker = ImagePicker();
+      final XFile? image = await imagePicker.pickImage(source: ImageSource.gallery);
+
+      if (image != null) {
+
+        final Uint8List imageBytes = await image.readAsBytes();
+        Api api = Api();
+        var response = await api.uploadImage(imageBytes,userP.userId);
+        print(response);
+        if (response['success']) {
+          print('Upload successful: ${response}');
+          userP.profileImage = response['data']['media_link'];
+          print('profile image: ${userP.profileImage}');
+        } else {
+          print('Upload failed: ${response['error']}');
+        }
+      } else {
+        throw 'No image selected';
+      }
+    } catch (e) {
+      print('Failed to pick image: $e');
     }
   }
 
@@ -115,14 +131,14 @@ class _EditprofilePageState extends State<EditprofilePage> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: _editUser,
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.black, backgroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      side: BorderSide(color: Colors.grey, width: 1),
-                    ),
-                    padding: EdgeInsets.symmetric(vertical: 16),
-                  ),
+                  // style: ElevatedButton.styleFrom(
+                  //   foregroundColor: Colors.black, backgroundColor: Colors.white,
+                  //   shape: RoundedRectangleBorder(
+                  //     borderRadius: BorderRadius.circular(20),
+                  //     side: BorderSide(color: Colors.grey, width: 1),
+                  //   ),
+                  //   padding: EdgeInsets.symmetric(vertical: 16),
+                  // ),
                   child: Text(
                     'Save',
 
@@ -147,14 +163,14 @@ class _EditprofilePageState extends State<EditprofilePage> {
                       ),
                     );
                   },
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.black, backgroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      side: BorderSide(color: Colors.grey, width: 1),
-                    ),
-                    padding: EdgeInsets.symmetric(vertical: 16),
-                  ),
+                  // style: ElevatedButton.styleFrom(
+                  //   foregroundColor: Colors.black, backgroundColor: Colors.white,
+                  //   shape: RoundedRectangleBorder(
+                  //     borderRadius: BorderRadius.circular(20),
+                  //     side: BorderSide(color: Colors.grey, width: 1),
+                  //   ),
+                  //   padding: EdgeInsets.symmetric(vertical: 16),
+                  // ),
                   child: Text(
                     'Cancel',
 
@@ -170,6 +186,8 @@ class _EditprofilePageState extends State<EditprofilePage> {
 
   Widget _buildTop() {
     userProvider userP = Provider.of<userProvider>(context);
+    final theme = Theme.of(context);
+    final borderColour = theme.brightness == Brightness.dark ? const Color.fromARGB(255, 61, 61, 61) : const Color.fromARGB(255, 255, 255, 255);
     return Center(
       child: Stack(
         children: [
@@ -189,7 +207,7 @@ class _EditprofilePageState extends State<EditprofilePage> {
                     shape: BoxShape.circle,
                     image: DecorationImage(
                       fit: BoxFit.cover,
-                      image: MemoryImage(_image!),
+                      image:  NetworkImage(userP.profileImage!),
                     ),
                   ),
                 )
@@ -197,7 +215,8 @@ class _EditprofilePageState extends State<EditprofilePage> {
                   width: 130,
                   height: 130,
                   decoration: BoxDecoration(
-                    border: Border.all(width: 4, color: Colors.white),
+                    // border: Border.all(width: 4, color: Colors.white),
+                    border: Border.all(width: 4, color: borderColour),
                     boxShadow: [
                       BoxShadow(
                         spreadRadius: 2,
@@ -208,7 +227,7 @@ class _EditprofilePageState extends State<EditprofilePage> {
                     shape: BoxShape.circle,
                     image: DecorationImage(
                         fit: BoxFit.cover,
-                        image: MemoryImage(userP.profileImage!)),
+                        image: NetworkImage(userP.profileImage!)),
                   ),
                 ),
           Positioned(
@@ -220,7 +239,8 @@ class _EditprofilePageState extends State<EditprofilePage> {
               child: IconButton(
                   onPressed: selectImage,
                   icon: Icon(Icons.add_a_photo),
-                  color: Colors.black),
+                  // color: Colors.black
+                  ),
             ),
           ),
         ],
@@ -296,16 +316,16 @@ class _EditprofilePageState extends State<EditprofilePage> {
       // profileImageBase64 = _image != null
       //     ? base64Encode(_image!)
       //     : base64Encode(userp.profileimage!);
-      if(_image != null){
-        userp.profileImage=_image;
-      }
+      // if(_image != null){
+      //   userp.profileImage=_image;
+      // }
 
       final user = User(
         name: adjustedName,
         email: adjustedEmail,
         password: adjustedPassword,
         userId: user1!.id,
-        profileImage: _image,
+        profileImage: userp.profileImage,
       );
 
       Api api = Api();
@@ -313,7 +333,7 @@ class _EditprofilePageState extends State<EditprofilePage> {
       // profileImageBase64 =base64Encode(userp.profileimage!);
 
       api
-          .postChangeUser(user.name, user.profileImage,user1.id)
+          .postChangeUser(user.name,user1.id)
           .then((response) {
         if (response['error'] != null) {
           print('An error occurred: ${response['error']}');
@@ -396,7 +416,8 @@ class User {
   final String email;
   final String password;
   final String userId;
-  Uint8List? profileImage;
+  String? profileImage;
+  String? userStatus;
 
   User({
     required this.name,
@@ -404,10 +425,11 @@ class User {
     required this.password,
     required this.userId,
     required this.profileImage,
+    this.userStatus,
   });
 
   @override
    String toString() {//userId: $userId
-    return 'User(name: $name, email: $email, password: $password, userId: $userId )';
+    return 'User(name: $name, email: $email, password: $password, userId: $userId,userStatus: $userStatus)';
   }
 }

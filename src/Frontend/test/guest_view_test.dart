@@ -1,36 +1,58 @@
+import 'package:firstapp/widgets/event_card.dart';
+import 'package:firstapp/widgets/theme_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:provider/provider.dart';
-import 'package:firstapp/providers/events_providers.dart';
-import 'package:firstapp/providers/user_provider.dart';
-import 'api_test.mocks.dart';
-import 'package:firstapp/widgets/event_card.dart';
-import 'package:firstapp/widgets/eventManagement_category.dart';
-
 import 'package:mockito/mockito.dart';
-
-
-
-
+import 'package:provider/provider.dart';
+import 'package:firstapp/providers/user_provider.dart';
+import 'package:firstapp/pages/home_page.dart';
+import 'package:firstapp/pages/settings_page.dart';
+import 'package:firstapp/pages/profilePage.dart';
+import 'api_test.mocks.dart';
+import 'package:image/image.dart' as img;
+import 'dart:typed_data';
+import 'package:firstapp/providers/events_providers.dart';
+import 'package:mocktail_image_network/mocktail_image_network.dart';
 void main() {
-
-  group('ManageEventsCategory Widget Tests', ()
-  {
-    late MockEventProvider mockEventProvider;
+  group('GuestView Tests', () {
     late MockuserProvider mockUserProvider;
+    late MockEventProvider mockEventProvider;
     late MockApi mockApi;
+    late MockThemeNotifier mockThemeNotifier;
 
     setUp(() {
       mockApi = MockApi();
       mockEventProvider = MockEventProvider();
+      
       mockUserProvider = MockuserProvider();
-      when(mockUserProvider.Fullname).thenReturn('User Name');
-      when(mockApi.getAllEvents()).thenAnswer((_) async =>
-      [
+
+      mockThemeNotifier=MockThemeNotifier();
+      final ThemeData lightThemeData = ThemeData.light();
+
+
+      when(mockThemeNotifier.lightTheme).thenReturn(lightThemeData);
+
+
+      when(mockThemeNotifier.getTheme()).thenReturn(lightThemeData);
+      
+      when(mockUserProvider.Fullname).thenReturn('Guest User');
+      when(mockUserProvider.email).thenReturn('');
+      when(mockUserProvider.password).thenReturn('');
+      when(mockUserProvider.role).thenReturn('GUEST');
+
+      // final placeholderImage = img.Image(width: 20, height: 20);
+      // final placeholderImageData = img.encodePng(placeholderImage);
+
+      // when(mockUserProvider.profileImage)
+      //     .thenReturn(Uint8List.fromList(placeholderImageData));
+
+      String mockImageUrl = '';
+      when(mockUserProvider.profileImage)
+          .thenReturn(mockImageUrl);
+      when(mockApi.getAllEvents()).thenAnswer((_) async => [
         Event(
           id: '1',
           nameOfEvent: 'Test Event 1',
-          venue: null,
           description: 'Test Description 1',
           imageUrls: [],
           hosts: [],
@@ -39,7 +61,6 @@ void main() {
           maxAttendees: 100,
           isPrivate: true,
           attendees: [],
-
           metadata: Metadata(
             mentors: [],
             categories: [],
@@ -49,7 +70,6 @@ void main() {
         Event(
           id: '2',
           nameOfEvent: 'Test Event 2',
-          venue: null,
           description: 'Test Description 2',
           imageUrls: [],
           hosts: [],
@@ -58,7 +78,6 @@ void main() {
           maxAttendees: 150,
           isPrivate: false,
           attendees: [],
-
           metadata: Metadata(
             mentors: [],
             categories: [],
@@ -66,12 +85,10 @@ void main() {
           ), invitees: [],
         ),
       ]);
-      when(mockEventProvider.eventsHome).thenAnswer((_) async =>
-      [
+      when(mockEventProvider.eventsHome).thenAnswer((_) async => [
         Event(
           id: '1',
           nameOfEvent: 'Test Event 1 HOME',
-          venue: null,
           description: 'Test Description 1',
           imageUrls: [],
           hosts: [],
@@ -80,7 +97,6 @@ void main() {
           maxAttendees: 100,
           isPrivate: true,
           attendees: [],
-
           metadata: Metadata(
             mentors: [],
             categories: [],
@@ -90,7 +106,6 @@ void main() {
         Event(
           id: '2',
           nameOfEvent: 'Test Event 2 HOME',
-          venue: null,
           description: 'Test Description 2',
           imageUrls: [],
           hosts: [],
@@ -99,17 +114,17 @@ void main() {
           maxAttendees: 150,
           isPrivate: false,
           attendees: [],
-
           metadata: Metadata(
             mentors: [],
             categories: [],
             sessions: [],
-          ), invitees: [],
+          ),
+
+
         ),
         Event(
           id: '3',
           nameOfEvent: 'Test Event 3 HOME',
-          venue: null,
           description: 'Test Description 3',
           imageUrls: [],
           hosts: [],
@@ -118,7 +133,6 @@ void main() {
           maxAttendees: 200,
           isPrivate: false,
           attendees: [],
-
           metadata: Metadata(
             mentors: [],
             categories: [],
@@ -126,12 +140,10 @@ void main() {
           ), invitees: [],
         ),
       ]);
-      when(mockEventProvider.eventsRsvp).thenAnswer((_) async =>
-      [
+      when(mockEventProvider.eventsRsvp).thenAnswer((_) async => [
         Event(
           id: '1',
           nameOfEvent: 'Test Event 1 RSVP',
-          venue: null,
           description: 'Test Description 1',
           imageUrls: [],
           hosts: [],
@@ -140,7 +152,6 @@ void main() {
           maxAttendees: 100,
           isPrivate: true,
           attendees: [],
-
           metadata: Metadata(
             mentors: [],
             categories: [],
@@ -150,7 +161,6 @@ void main() {
         Event(
           id: '2',
           nameOfEvent: 'Test Event 2 RSVP',
-          venue: null,
           description: 'Test Description 2',
           imageUrls: [],
           hosts: [],
@@ -159,7 +169,6 @@ void main() {
           maxAttendees: 150,
           isPrivate: false,
           attendees: [],
-
           metadata: Metadata(
             mentors: [],
             categories: [],
@@ -169,7 +178,6 @@ void main() {
         Event(
           id: '3',
           nameOfEvent: 'Test Event 3 RSVP',
-          venue: null,
           description: 'Test Description 3',
           imageUrls: [],
           hosts: [],
@@ -178,7 +186,6 @@ void main() {
           maxAttendees: 200,
           isPrivate: false,
           attendees: [],
-
           metadata: Metadata(
             mentors: [],
             categories: [],
@@ -186,105 +193,73 @@ void main() {
           ), invitees: [],
         ),
       ]);
+
+
+      // when(mockUserProvider.profileimage).thenReturn(Uint8List.fromList(placeholderImageData));
     });
 
-
-    testWidgets('EventmanagementCategory widget builds correctly', (
-        WidgetTester tester) async {
+    testWidgets('should display Guest User on HomePage', (WidgetTester tester) async {
+      await mockNetworkImages(() async {
       await tester.pumpWidget(
         MultiProvider(
           providers: [
 
-            ChangeNotifierProvider<EventProvider>(
-                create: (_) => mockEventProvider),
-            ChangeNotifierProvider<userProvider>(
-                create: (_) => mockUserProvider),
+            ChangeNotifierProvider<userProvider>(create: (_) => mockUserProvider),
+            ChangeNotifierProvider<EventProvider>(create: (_) => mockEventProvider),
           ],
-          child: MaterialApp(
-            home: EventmanagementCategory(),
+          child: const MaterialApp(
+            home: HomePage(),
           ),
         ),
       );
-      expect(find.text('Edit Events'), findsOneWidget);
-      expect(find.byType(EventmanagementCategory), findsOneWidget);
-    });
-
-
-    testWidgets(
-        'Search and Filter buttons are present', (WidgetTester tester) async {
-      await tester.pumpWidget(
-        MultiProvider(
-          providers: [
-
-            ChangeNotifierProvider<EventProvider>(
-                create: (_) => mockEventProvider),
-            ChangeNotifierProvider<userProvider>(
-                create: (_) => mockUserProvider),
-          ],
-          child: MaterialApp(
-            home: EventmanagementCategory(),
-          ),
-        ),
-      );
-
-      expect(find.text('Search'), findsOneWidget);
-      expect(find.text('Filter'), findsOneWidget);
-    });
-
-
-    testWidgets('Displays error message when data fails to load', (
-        WidgetTester tester) async {
-      when(mockEventProvider.eventsHome).thenThrow(
-          Exception('Error loading events'));
-      when(mockUserProvider.role).thenReturn('ADMIN');
-      await tester.pumpWidget(
-        MultiProvider(
-          providers: [
-
-            ChangeNotifierProvider<EventProvider>(
-                create: (_) => mockEventProvider),
-            ChangeNotifierProvider<userProvider>(
-                create: (_) => mockUserProvider),
-          ],
-          child: MaterialApp(
-            home: EventmanagementCategory(),
-          ),
-        ),
-      );
+      });
       await tester.pumpAndSettle();
-      expect(find.text('Error loading events'), findsOneWidget);
+      expect(find.text('Welcome, Guest User'), findsOneWidget);
     });
-    testWidgets('Displays no events message when data is empty', (
-        WidgetTester tester) async {
-      when(mockEventProvider.eventsHome).thenAnswer((_) async => []);
 
+    testWidgets('should not display Account button on SettingsPage for GUEST role', (WidgetTester tester) async {
+      when(mockUserProvider.role).thenReturn('GUEST');
       await tester.pumpWidget(
         MultiProvider(
           providers: [
 
-            ChangeNotifierProvider<EventProvider>(
-                create: (_) => mockEventProvider),
-            ChangeNotifierProvider<userProvider>(
-                create: (_) => mockUserProvider),
+            ChangeNotifierProvider<EventProvider>(create: (_) => mockEventProvider),
+            ChangeNotifierProvider<userProvider>(create: (_) => mockUserProvider),
+            ChangeNotifierProvider<ThemeNotifier>(create:(_)=>mockThemeNotifier),
           ],
-          child: MaterialApp(
-            home: EventmanagementCategory(),
+          child: const MaterialApp(
+            home:  SettingsPage(),
           ),
         ),
       );
-      await tester.pump();
-      await tester.pump();
 
-      expect(find.text('No events available'), findsOneWidget);
+      expect(find.text('Account'), findsNothing);
+      
+      expect(find.text('Profile'), findsOneWidget);
+      expect(find.text('Notifications'), findsOneWidget);
+      expect(find.text('Theme'), findsOneWidget);
+      expect(find.text('Privacy'), findsOneWidget);
+      expect(find.text('Help'), findsOneWidget);
+    });
+
+    testWidgets('should display correct buttons and links on ProfilePage for GUEST user', (WidgetTester tester) async {
+      when(mockUserProvider.role).thenReturn('GUEST');
+      await mockNetworkImages(() async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: ChangeNotifierProvider<userProvider>.value(
+            value: mockUserProvider,
+            child: ProfilePage(),
+          ),
+        ),
+      );
+      });
+      expect(find.text('Guest User'), findsOneWidget);
+      expect(find.text('Create an account to access more features!'), findsOneWidget);
+      expect(find.text('Already have an account? Log In'), findsOneWidget);
+
+      expect(find.widgetWithText(ElevatedButton, 'Sign Up'), findsOneWidget);
+      expect(find.text('Limited Guest Features'), findsOneWidget);
     });
   });
 }
-
-
-
-
-
-
-
-
-

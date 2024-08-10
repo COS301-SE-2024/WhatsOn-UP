@@ -25,7 +25,7 @@ class SocketService {
       print('Disconnected');
     });
 
-    socket.on('notification', (data) {
+    socket.on('event', (data) {
       print('Event received: $data');
     });
     socket.on('error', (error) {

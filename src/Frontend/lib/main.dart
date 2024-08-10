@@ -55,10 +55,15 @@
 
 
 
+import 'package:firstapp/pages/ManageGeneralApplicationsTabs.dart';
+
+import 'package:firstapp/pages/calendar_page.dart';
 import 'package:firstapp/pages/detailed_event_page.dart';
 import 'package:firstapp/pages/editProfile_page.dart';
 
 import 'package:firstapp/pages/home_page.dart';
+import 'package:firstapp/pages/notifications.dart';
+import 'package:firstapp/pages/host_application.dart';
 import 'package:firstapp/pages/profilePage.dart';
 import 'package:firstapp/pages/settings_page.dart';
 import 'package:firstapp/pages/supabase_Accountpage.dart';
@@ -66,6 +71,7 @@ import 'package:firstapp/pages/supabase_Splashpage.dart';
 import 'package:firstapp/pages/supabase_login.dart';
 import 'package:firstapp/pages/supabase_resetPassword.dart';
 import 'package:firstapp/providers/events_providers.dart';
+import 'package:firstapp/providers/notification_providers.dart';
 import 'package:firstapp/providers/user_provider.dart';
 import 'package:firstapp/screens/SearchScreen.dart';
 import 'package:firstapp/services/api.dart';
@@ -80,7 +86,7 @@ void main() async{
   var api = Api();
   await Supabase.initialize(
     url: 'https://mehgbhiirnmypfgnkaud.supabase.co',
-    anonKey:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1laGdiaGlpcm5teXBmZ25rYXVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjI1OTc1ODksImV4cCI6MjAzODE3MzU4OX0.LhJE4sO3YrRi2VwQmbt-24LHUVM3bK9eFzHz1SsvH1s',
+    anonKey:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1laGdiaGlpcm5teXBmZ25rYXVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjI5NDMyMzYsImV4cCI6MjAzODUxOTIzNn0.g_oLlSZE3AH_nBntVe_hBPdthFDQHZqn0wxzS23kyrc',
 
   );
   // runApp(ChangeNotifierProvider<ThemeNotifier>(
@@ -99,6 +105,7 @@ void main() async{
       ChangeNotifierProvider(create: (context) => EventProvider(api: api)),
       ChangeNotifierProvider(create: (context) => userProvider()),
       ChangeNotifierProvider(create: (context) => ThemeNotifier()),
+      ChangeNotifierProvider(create: (context) => notificationProvider()),
     ],
       child: MyApp(),
   ),
@@ -123,9 +130,13 @@ class MyApp extends StatelessWidget {
           // '/rsvp': (context)=> const RSVPEventsPage(),
           '/settings': (context)=> const SettingsPage(),
           '/search': (context)=>  SearchScreen(),
-           '/resetPassword': (context)=> const ResetPasswordPage(),
+          '/resetPassword': (context)=> const ResetPasswordPage(),
+          '/hostApplication': (context)=> HostApplicationPage(),
           '/detailed_event': (context) => DetailedEventPage(event: ModalRoute.of(context)!.settings.arguments as Event),
-          //
+
+          '/calendar': (context)=> const CalendarPage(),
+          '/notifications': (context)=> const Notifications (),
+          '/generaluserapplications': (context)=> const TabGeneral(),
         },
 
         debugShowCheckedModeBanner: false,

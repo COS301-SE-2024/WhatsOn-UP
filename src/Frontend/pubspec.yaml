@@ -40,7 +40,7 @@ dependencies:
   supabase_flutter: ^2.5.6
   google_sign_in: ^6.2.1
   supabase_auth_ui: ^0.5.0
-
+  mocktail_image_network: ^1.2.0
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.6
@@ -56,7 +56,8 @@ dependencies:
   mockito: ^5.4.4
   image: ^4.2.0
   multi_select_flutter: ^4.1.3
-
+  socket_io_client: ^2.0.3+1
+  flutter_chat_bubble: ^2.0.2
 
 
 dev_dependencies:
