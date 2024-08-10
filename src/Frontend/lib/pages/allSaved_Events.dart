@@ -59,7 +59,7 @@ class _AllsavedEventsState extends State<AllsavedEvents> {
           : hasError
           ? Center(
         child: Text(
-          'Failed to load events. Please try again later.',
+          'You do not have saved events.',
           style: TextStyle(color: Colors.red),
         ),
       )

@@ -502,8 +502,7 @@ bool _obscurePassword=true;
         _notificationProvider.apiInstance=api;
         _notificationProvider.refreshNotifications(userP.userId);
         userP. Generalusers(userP.userId);
-
-        SocketService('http:localhost//:8082', userP.userId);
+        SocketService('http://localhost:8082', userP.userId);
 
 
 

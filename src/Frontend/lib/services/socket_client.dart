@@ -1,3 +1,4 @@
+import 'package:firstapp/providers/notification_providers.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class SocketService {
@@ -20,6 +21,7 @@ class SocketService {
     // Add event listeners
     socket.on('connect', (_) {
       print('Connected: ${socket.id}');
+
     });
 
     socket.on('disconnect', (_) {
@@ -28,6 +30,7 @@ class SocketService {
 
     socket.on('event', (data) {
       print('Event received: $data');
+      notificationProvider().refreshNotifications(userId);
     });
     socket.on('error', (error) {
       print('Error: $error');

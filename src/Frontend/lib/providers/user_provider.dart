@@ -114,7 +114,7 @@ set generalapplications( Future<GeneralApplications>? value) {
        _fetchGeneralusers(userId);
       notifyListeners();
     } catch (e) {
-      print('something is wrong');
+
       throw Exception('Failed to refresh events: $e');
     }
   }
@@ -122,7 +122,7 @@ set generalapplications( Future<GeneralApplications>? value) {
     try {
 
       final response = await api.getGeneralusersToHost(userId);
-      print('Response from API: $response');
+
       generalapplications = Future.value(response);
       notifyListeners();
     } catch (e) {
@@ -246,9 +246,9 @@ class GeneralApplications {
   });
 
   factory  GeneralApplications.fromJson(Map<String, dynamic> json) {
-    print('GeneralApplications: $json');
+
     var list = json['data'] as List;
-    print('list: $list');
+
     List<Application> applicationsList = list.map((i) => Application.fromJson(i)).toList();
 
     return  GeneralApplications(

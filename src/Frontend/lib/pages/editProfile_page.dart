@@ -337,6 +337,7 @@ class _EditprofilePageState extends State<EditprofilePage> {
           .then((response) {
         if (response['error'] != null) {
           print('An error occurred: ${response['error']}');
+
         } else {
 
           fullName = response['data']['user']['fullName'] ?? 'Unknown';
@@ -344,27 +345,27 @@ class _EditprofilePageState extends State<EditprofilePage> {
           String profileImage =
               response['data']['user']['profileImage'] ?? 'Unknown';
 
-          bool isBase64(String input) {
-            final RegExp base64 = RegExp(
-              r'^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$',
-            );
-            return base64.hasMatch(input);
-          }
-
-          if (isBase64(profileImage)) {
-            try {
-              profileImageBytes = base64Decode(profileImage);
-
-              // setState(() {
-              //   widget.profileImage = profileImageBytes;
-              // });
-            } catch (e) {
-              print('Failed to decode base64 image: $e');
-            }
-          } else {
-            print('Invalid base64 image string: $profileImage');
-          }
-          print('User profile updated successfully');
+          // bool isBase64(String input) {
+          //   final RegExp base64 = RegExp(
+          //     r'^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$',
+          //   );
+          //   return base64.hasMatch(input);
+          // }
+          //
+          // if (isBase64(profileImage)) {
+          //   try {
+          //     profileImageBytes = base64Decode(profileImage);
+          //
+          //     // setState(() {
+          //     //   widget.profileImage = profileImageBytes;
+          //     // });
+          //   } catch (e) {
+          //     print('Failed to decode base64 image: $e');
+          //   }
+          // } else {
+          //   print('Invalid base64 image string: $profileImage');
+          // }
+          // print('User profile updated successfully');
           // await Future.delayed(Duration(seconds: 2));
 
           // setState(() {
