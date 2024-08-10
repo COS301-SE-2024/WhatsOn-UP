@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:numberpicker/numberpicker.dart';
@@ -20,6 +22,7 @@ import 'package:firstapp/widgets/theme_manager.dart';
 import 'package:firstapp/services/api.dart';
 import '../main.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
+import 'package:firstapp/widgets/theme_manager.dart';
 
 import '../providers/user_provider.dart';
 
@@ -49,7 +52,7 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
   late TextEditingController _maxAttendeesController;
   late TutorialCoachMark tutorialCoachMark;
   bool _tutorialShown = false;
-  List<XFile>? selectedImages;
+  List<XFile>? selectedImages = [];
   String? _selectedCategory;
   final List<String> predefinedCategories = [
     'Clubs & Organizations',
@@ -60,10 +63,15 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
     'Career & Professional Development'
   ];
 
+  //List<Uint8List> imageBytesList = [];
+  Uint8List? imageBytesList;
+  final _multiSelectKey = GlobalKey<FormFieldState>();
+
   @override
   void initState() {
     super.initState();
-    _categoriesFuture = EventService(Supabase.instance.client).fetchUniqueCategories();
+    _categoriesFuture =
+        EventService(Supabase.instance.client).fetchUniqueCategories();
     _venuesFuture = EventService(Supabase.instance.client).getLocations();
 
     _venueController = TextEditingController();
@@ -77,9 +85,19 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
         _isLoading = false;
       });
     });
-
-    _maxAttendeesController = TextEditingController(text: _maxAttendees.toString());
+    //R _selectedCategory = predefinedCategories.isNotEmpty ? predefinedCategories[0] : null;
+    _maxAttendeesController =
+        TextEditingController(text: _maxAttendees.toString());
   }
+
+  late Color myColor;
+  String? _imageName;
+  late Size mediaSize;
+
+  //List<XFile>? selectedImages;
+  final ImagePicker _picker = ImagePicker();
+  final GlobalKey _numberPickerKey = GlobalKey();
+  final GlobalKey _textFieldKey = GlobalKey();
 
   @override
   void dispose() {
@@ -92,7 +110,8 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
 
   void _updateMaxAttendeesFromTextField(String value) {
     final int? newValue = int.tryParse(value);
-    if (newValue != null && newValue >= 1 && newValue <= (_selectedVenue?.capacity ?? 100)) {
+    if (_selectedVenue != null && newValue != null && newValue >= 1 &&
+        newValue <= (_selectedVenue?.capacity ?? 100)) {
       setState(() {
         _maxAttendees = newValue;
       });
@@ -105,6 +124,84 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
       _maxAttendeesController.text = _maxAttendees.toString();
     });
   }
+
+  Future<void> _pickImage() async {
+    try {
+      final ImagePicker _picker = ImagePicker();
+      XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+
+      if (pickedFile != null) {
+        Uint8List imageBytes = await pickedFile.readAsBytes();
+        setState(() {
+          imageBytesList = imageBytes;
+          _imageName = pickedFile.name;
+        });
+      }
+    } catch (e) {
+      print('Error picking image: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to pick image. Please try again.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  Widget _buildImagePicker() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ElevatedButton.icon(
+          onPressed: _pickImage,
+          // icon: Icon(Icons.add_a_photo),
+          icon: const Icon(Icons.upload_file),
+          label: const Text('Choose Image'),
+          style: ElevatedButton.styleFrom(
+            padding: const EdgeInsets.symmetric(vertical: 12),
+          ),
+        ),
+        if (_imageName != null)
+          Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: Text('Selected image: $_imageName'),
+          ),
+      ],
+    );
+  }
+
+       /* SizedBox(height: 10.0),
+        selectedImages != null && selectedImages!.isNotEmpty
+            ? Wrap(
+          spacing: 10.0,
+          runSpacing: 10.0,
+          children: selectedImages!.map((image) {
+            return FutureBuilder<Uint8List>(
+              future: image.readAsBytes(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  if (snapshot.hasData) {
+                    return Image.memory(
+                      snapshot.data!,
+                      width: 100,
+                      height: 100,
+                      fit: BoxFit.cover,
+                    );
+                  } else {
+                    return Text('Error loading image');
+                  }
+                } else {
+                  return CircularProgressIndicator();
+                }
+              },
+            );
+          }).toList(),
+        )
+            : Text('No images selected'),
+      ],
+    );
+  }
+*/
 
   Widget _buildNumberPickerWithTextField() {
     return Container(
@@ -214,14 +311,16 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
     )..show(context: context);
   }
 
-  final GlobalKey _numberPickerKey = GlobalKey();
-  final GlobalKey _textFieldKey = GlobalKey();
+  //final GlobalKey _numberPickerKey = GlobalKey();
+  //final GlobalKey _textFieldKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
     bool isLightTheme = Theme.of(context).brightness == Brightness.light;
-
+    myColor = Theme.of(context).primaryColor;
+    mediaSize = MediaQuery.of(context).size;
     userProvider userP = Provider.of<userProvider>(context,listen: false);
+    EventProvider eventP=Provider.of<EventProvider>(context,listen: false);
     return Scaffold(
       appBar: AppBar(
         title: Text('Create Event'),
@@ -357,7 +456,17 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                     }
                   }
                 },
-                controller: TextEditingController(text: _startDateTime.toString()),
+                validator: (value) {
+                  if (_startDateTime.isBefore(DateTime.now())) {
+                    return 'Start date and time must be in the future';
+                  }
+                  return null;
+                },
+                controller: TextEditingController(
+                  text: "${_startDateTime.toLocal()}".split(' ')[0] +
+                      ' ' +
+                      TimeOfDay.fromDateTime(_startDateTime).format(context),
+                ),
               ),
               SizedBox(height: 16.0),
               TextFormField(
@@ -393,7 +502,17 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                     }
                   }
                 },
-                controller: TextEditingController(text: _endDateTime.toString()),
+                validator: (value) {
+                  if (_endDateTime.isBefore(_startDateTime)) {
+                    return 'End date and time must be after the start date and time';
+                  }
+                  return null;
+                },
+                controller: TextEditingController(
+                  text: "${_endDateTime.toLocal()}".split(' ')[0] +
+                      ' ' +
+                      TimeOfDay.fromDateTime(_endDateTime).format(context),
+                ),
               ),
               SizedBox(height: 16.0),
               FutureBuilder<List<String>>(
@@ -463,6 +582,8 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                   ),
                 ],
               ),
+          SizedBox(height: 16.0),
+            _buildImagePicker(),
 
               SizedBox(height: 16.0),
               ElevatedButton(
@@ -475,10 +596,12 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                     });
 
                     try {
+
                       String userId = userP.userId;
                       Map<String, String> metadata = {
                         'category': _selectedCategory!,
                       };
+                      //List<String>? mediaUrls = selectedImages?.map((file) => file.path).toList();
                       Map<String, dynamic> response = await Api().createEvent(
                         title: _eventNameController.text,
                         description: _eventDescriptionController.text,
@@ -489,25 +612,54 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                         metadata: metadata,
                         isPrivate: !_isPublic,
                         userId: userId,
+
                       );
+                      //eventP.addEventHome(response['data']);
+                      if(imageBytesList!=null){
+
+                        try{
+                          Api().eventUploadImage(imageBytesList,userP.userId ,response['data']['id']);
+                          print("image uploaded");
+                        //  eventP.refreshEvents();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Event created successfully!')),
+                          );
+
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(builder: (context) => HomePage()),
+                          );
+                      }
+                      catch(e)
+                            {
+                              print('Failed to submit application: $e');
+                              setState(() {
+                                _isLoading = false;
+                              });
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('There was an error submitting your application. Please try again later.'),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                          }
+
+                                            }
 
 
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Event created successfully!')),
-                      );
-
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (context) => HomePage()),
-                      );
                     } catch (e) {
 
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text('Failed to create event: $e')),
                       );
                     } finally {
+                      print("ARRRIVEDDDDD AT FINALLY");
+                      eventP.refreshEvents();
                       setState(() {
                         _isLoading = false;
+                        selectedImages = null;
                       });
+                     // eventP.refreshEvents();
+                     // eventP.re
                     }
                   }
                 },
