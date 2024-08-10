@@ -41,4 +41,5 @@ class HostApplicationsModel {
 
     @Column(name = "verification_code")
     var verificationCode: UUID? = null
+
 }
