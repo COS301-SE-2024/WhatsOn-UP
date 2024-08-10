@@ -45,7 +45,9 @@ export class NotificationGateway implements OnModuleInit {
           }
 
           if (typeData && typeData.length > 0) {
-            notification.type = typeData[0].name;
+            notification['notification_types'] = {
+              name : typeData[0].name
+            };
           }
 
           const client = Object.values(this.clients).find(
@@ -86,11 +88,13 @@ export class NotificationGateway implements OnModuleInit {
           }
 
           if (eventData && eventData.length > 0) {
-            notification.event = eventData[0];
+            notification['events'] = eventData[0];
           } else {
             this.emitError(notification.user_id, 'Event not found');
             return;
           }
+          
+          notification['event_invitees'] = { accepted: null};
 
           if (client) {
             client.socket.emit('notification', {
