@@ -47,7 +47,7 @@ class Attendee {
       userId: json['userId'] ?? '',
       fullName: json['fullName']?.toString() ?? 'Unknown',
       profileImage: json['profileImage'] ?? '',
-      role: json['role'] ?? {},
+      // role: json['role'] ?? {},
       role: Role.fromJson(json['role']),
     );
   }
