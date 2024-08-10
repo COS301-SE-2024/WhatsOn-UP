@@ -179,6 +179,7 @@ import 'package:firstapp/services/api.dart';
 import '../providers/events_providers.dart';
 import '../providers/notification_providers.dart';
 import '../providers/user_provider.dart';
+import '../services/socket_client.dart';
 
 class SupabaseLogin extends StatefulWidget {
   const SupabaseLogin({super.key});
@@ -195,25 +196,25 @@ class _SupabaseLoginState extends State<SupabaseLogin> {
   late Color myColor;
   late Size mediaSize;
 bool _obscurePassword=true;
-  @override
-  void initState() {
-    super.initState();
-    // _authSubscription = supabase.auth.onAuthStateChange.listen((event) {
-    //   final session = event.session;
-    //   if (session != null) {
-    //     Navigator.of(context).pushReplacementNamed('/account');
-    //   }
-    // });
 
-
-
-  }
+  // void initState() {
+  //   super.initState();
+  //   _authSubscription = supabase.auth.onAuthStateChange.listen((event) {
+  //
+  //
+  //   });
+  //
+  //
+  //
+  // }
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
-    _authSubscription.cancel();
+    // if (_authSubscription != null) {
+    //   _authSubscription.cancel();
+    // }
 
     super.dispose();
   }
@@ -450,70 +451,12 @@ bool _obscurePassword=true;
 
 
 
-  // Future<void> _login() async {
-  //   userProvider userP = Provider.of<userProvider>(context, listen: false);
-  //   // eventProvider eventP = Provider.of<eventProvider>(context, listen: false);
-  //   EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
-  //   final user = supabase.auth.currentUser;
-  //    eventP.fetchfortheFirstTimeRsvp(user!.id);
 
-  //   Api api = Api();
-  //   // final List<Event> events=await api.getAllEvents();
-  //   //eventP.addEventsHome(events);
-  //   api. getUser(user!.id).then((response){
-  //     if (response['error'] != null) {
-
-  //       print('An error occurred: ${response['error']}');
-  //     } else {
-
-  //       print('Username added successfully');
-  //       String fullName = response['data']['user']['fullName']?? 'Unknown';
-  //       String userEmail = user.userMetadata?['email'];
-  //       String UserId=user.id;
-  //       String role=response['data']['user']['role']?? 'Unknown';
-  //       String  profileImage=response['data']['user']['profileImage']?? 'Unknown';
-  //       Uint8List profileImageBytes = Uint8List(0);
-  //       userP.userId=user.id;
-  //       userP.Fullname=fullName;
-  //       userP.email=userEmail;
-  //       userP.role=role;
-  //       bool isBase64(String input) {
-  //         final RegExp base64 = RegExp(
-  //           r'^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$',
-  //         );
-  //         return base64.hasMatch(input);
-  //       }
-
-  //       if (isBase64(profileImage)) {
-
-  //         try {
-  //           profileImageBytes = base64Decode(profileImage);
-  //         } catch (e) {
-  //           print('Error decoding Base64: $e');
-  //         }
-  //       } else {
-  //         print('Invalid Base64 string: $profileImage');
-  //       }
-
-  //   userP.profileimage=profileImageBytes;
-
-  //       Navigator.push(
-  //         context,
-  //         MaterialPageRoute(builder: (context) => HomePage(
-
-  //         )),
-  //       );
-  //     }
-  //   });
-
-
-  //   print('signup successful');
-
-  // }
 
   Future<void> _login({bool isGuest = false}) async {
   userProvider userP = Provider.of<userProvider>(context, listen: false);
   EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
+
 
   if (isGuest) {
     userP.setGuestUser();
@@ -534,7 +477,7 @@ bool _obscurePassword=true;
       }
 
     
-      eventP.fetchfortheFirstTimeRsvp(user!.id);
+      // eventP.fetchfortheFirstTimeRsvp(user!.id);
 
     Api api = Api();
     try {
@@ -549,30 +492,23 @@ bool _obscurePassword=true;
         String UserId=user.id;
         String role=response['data']['user']['role']?? 'Unknown';
         String  profileImage=response['data']['user']['profileImage']?? 'Unknown';
-        Uint8List profileImageBytes = Uint8List(0);
+
         userP.userId=user.id;
         userP.Fullname=fullName;
         userP.email=userEmail;
         userP.role=role;
+        userP.profileImage=profileImage;
         notificationProvider _notificationProvider = Provider.of<notificationProvider>(context, listen: false);
         _notificationProvider.apiInstance=api;
         _notificationProvider.refreshNotifications(userP.userId);
-        bool isBase64(String input) {
-          final RegExp base64 = RegExp(
-            r'^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$',
-          );
-          return base64.hasMatch(input);
-        }
+        userP. Generalusers(userP.userId);
 
-        if (isBase64(profileImage)) {
-          try {
-            profileImageBytes = base64Decode(profileImage);
-          } catch (e) {
-            print('Error decoding Base64: $e');
-          }
-        } else {
-          print('Invalid Base64 string or empty profileImage');
-        }
+        SocketService('http:localhost//:8082', userP.userId);
+
+
+
+
+
 
         userP.setUserData(
           userId: user.id,
@@ -599,3 +535,4 @@ bool _obscurePassword=true;
   }
 }}
 }
+

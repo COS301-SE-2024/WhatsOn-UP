@@ -3,12 +3,24 @@ import 'package:flutter/material.dart';
 import 'package:firstapp/pages/detailed_event_page.dart';
 import 'package:provider/provider.dart';
 import '../providers/user_provider.dart';
+class Role {
+  final int id;
+  final String name;
 
+  Role({required this.id, required this.name});
+
+  factory Role.fromJson(Map<String, dynamic> json) {
+    return Role(
+      id: json['id'],
+      name: json['name'],
+    );
+  }
+}
 class Attendee {
   final String userId;
   final String fullName;
   final String profileImage;
-  final Map<String, dynamic> role;
+  final  Role role;
 
   Attendee({
     required this.userId,
@@ -35,12 +47,13 @@ class Attendee {
       userId: json['userId'] ?? '',
       fullName: json['fullName']?.toString() ?? 'Unknown',
       profileImage: json['profileImage'] ?? '',
-      role: json['role'] ?? {},
+      // role: json['role'] ?? {},
+      role: Role.fromJson(json['role']),
     );
   }
   @override
   String toString() {
-    return 'Attendee(id: $userId, name: $fullName, role: $role)';
+    return 'Attendee(id: $userId, name: $fullName, role: $role,profileImage: $profileImage)';  // Include all properties
   }
 }
 

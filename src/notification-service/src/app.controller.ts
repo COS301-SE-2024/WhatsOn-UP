@@ -8,7 +8,9 @@ export class AppController {
 
   @Get('get_all')
   async getNotifications(@Headers('authorization') token: string): Promise<any> {
+    console.log('Token:', token);
     if (!token) {
+      
       throw new UnauthorizedException({
         status: 'error',
         message: 'No token provided',

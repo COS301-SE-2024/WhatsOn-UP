@@ -114,7 +114,10 @@ export class NotificationGateway implements OnModuleInit {
 
   onModuleInit() {
     this.server.on('connection', (socket) => {
-      const token = socket.handshake.headers['authorization']?.split(' ')[1];
+      // Extract token from query
+      const token: string = socket.handshake.query.token.toString();
+      console.log(token);
+      
 
       if (token) {
         this.clients[socket.id] = { socket, token };

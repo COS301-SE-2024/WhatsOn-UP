@@ -143,7 +143,7 @@ class _NotificationsState extends State<Notifications> {
   @override
   Widget build(BuildContext context) {
     userProvider userP = Provider.of<userProvider>(context, listen: false);
-    // notificationProvider _notificationProvider = notificationProvider(userP.userId);
+
     notificationProvider notif=Provider.of<notificationProvider>(context, listen: false);
 
     return ChangeNotifierProvider<notificationProvider>(
@@ -189,11 +189,11 @@ class _NotificationsState extends State<Notifications> {
                 children: [
                   if (invites.isNotEmpty)...[    SizedBox(height: 20.0),_buildCategory('INVITES', invites)],
 
-                  if (broadcasts.isNotEmpty)...[   SizedBox(height: 20.0), _buildDivider(), _buildCategory('BROADCASTS', broadcasts)],
+                  if (broadcasts.isNotEmpty)...[   SizedBox(height: 20.0),  _buildCategory('BROADCASTS', broadcasts)],
 
-                  if (reminders.isNotEmpty)...[    SizedBox(height: 20.0),_buildDivider(), _buildCategory('REMINDERS', reminders)],
+                  if (reminders.isNotEmpty)...[    SizedBox(height: 20.0), _buildCategory('REMINDERS', reminders)],
 
-                  if (recommendations.isNotEmpty)...[ SizedBox(height: 20.0),_buildDivider(), _buildCategory('RECOMMENDATIONS', recommendations)]
+                  if (recommendations.isNotEmpty)...[ SizedBox(height: 20.0),_buildCategory('RECOMMENDATIONS', recommendations)]
 
                 ],
               );
@@ -236,22 +236,28 @@ class _NotificationsState extends State<Notifications> {
             else if(notification.notificationTypes=='recommendation'){
                texttitle = 'Recommendation';
             }
-            return ListTile(
 
+            return Container(
+              margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey, width: 1.0),
+                borderRadius: BorderRadius.circular(8.0), // Optional: rounded corners
+              ),
+              child: ListTile(
+                title: Text(texttitle),
+                subtitle: Text(notification.message),
+                onTap: () {
+                  notification.markAsSeen();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => NotificationDetailScreen(notification: notification),
+                    ),
+                  ).then((_) {
 
-              title: Text(texttitle),
-              subtitle: Text(notification.message),
-              onTap: () {
-                notification.markAsSeen();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => NotificationDetailScreen(notification: notification),
-                  ),
-                ).then((_) {
-                  setState(() {});
-                });
-              },
+                  });
+                },
+              ),
             );
           },
           separatorBuilder: (context, index) => _buildDividerA(),

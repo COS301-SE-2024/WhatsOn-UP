@@ -11,7 +11,7 @@ import '../services/api.dart';
 //will let the listeners know when the state has changed
 
 class userProvider extends ChangeNotifier{
-  late final Api api= Api();
+  late  Api api= Api();
   String _Fullname = 'Testing';
   String _Email = '';
   String _Password = '';
@@ -27,10 +27,17 @@ class userProvider extends ChangeNotifier{
   String get role => _Role;
   String get userId => _userId;
   bool get isGuest => _isGuest;
-  Future<List<User>> get generalUserEvents => _generaluserTohost;
+  Future<GeneralApplications>? _generalApplications;
+  Future<GeneralApplications>? get  generalApplications => _generalApplications;
 
 
 
+
+
+set generalapplications( Future<GeneralApplications>? value) {
+    _generalApplications = value;
+    notifyListeners();
+}
    set Fullname(String value){
     _Fullname = value;
     notifyListeners();
@@ -101,19 +108,155 @@ class userProvider extends ChangeNotifier{
     _isGuest = false;
     notifyListeners();
   }
-  Future<void> refreshGeneralUsers() async {
+
+  Future<void> Generalusers(String userId) async {
     try {
-      _generaluserTohost = _fetchGeneralusers();
+       _fetchGeneralusers(userId);
       notifyListeners();
     } catch (e) {
+      print('something is wrong');
       throw Exception('Failed to refresh events: $e');
     }
   }
-  Future<List<User>> _fetchGeneralusers() async {
+  Future<void> _fetchGeneralusers(String userId) async {
     try {
-      return  await api.getGeneralusersToHost(); //await api.getAllEvents();//need list of general users events
+
+      final response = await api.getGeneralusersToHost(userId);
+      print('Response from API: $response');
+      generalapplications = Future.value(response);
+      notifyListeners();
     } catch (e) {
-      throw Exception('Failed to fetch General user events: $e');
+      print('Error: $e'); // Print the error
+      throw Exception('Failed to load general users');
     }
+
   }
 }
+
+class Status {
+  final int id;
+  final String name;
+
+  Status({required this.id, required this.name});
+
+  factory Status.fromJson(Map<String, dynamic> json) {
+    return Status(
+      id: json['id'],
+      name: json['name'],
+    );
+  }
+}
+class Role {
+  final int id;
+  final String name;
+
+  Role({required this.id, required this.name});
+
+  factory Role.fromJson(Map<String, dynamic> json) {
+    return Role(
+      id: json['id'],
+      name: json['name'],
+    );
+  }
+}
+class UserGeneral {
+  final String userId;
+  final String? fullName;
+  final String profileImage;
+  final Role role;
+
+  UserGeneral({
+    required this.userId,
+    required this.fullName,
+    required this.profileImage,
+    required this.role,
+  });
+
+  factory UserGeneral.fromJson(Map<String, dynamic> json) {
+    return UserGeneral(
+      userId: json['userId'],
+      fullName: json['fullName'],
+      profileImage: json['profileImage'],
+      role: Role.fromJson(json['role']),
+    );
+  }
+}
+class AcceptedRejectedBy {
+  final String userId;
+  final String? fullName;
+  final String profileImage;
+  final Role role;
+
+  AcceptedRejectedBy({
+    required this.userId,
+    required this.fullName,
+    required this.profileImage,
+    required this.role,
+  });
+
+  factory AcceptedRejectedBy.fromJson(Map<String, dynamic> json) {
+    return AcceptedRejectedBy(
+      userId: json['userId'],
+      fullName: json['fullName'],
+      profileImage: json['profileImage'],
+      role: Role.fromJson(json['role']),
+    );
+  }
+}
+class Application {
+  final String applicationId;
+  final Status status;
+  final UserGeneral user;
+  final String expiryDateTime;
+  final AcceptedRejectedBy? acceptedRejectedBy;
+  final String reason;
+  final String? verificationCode;
+
+  Application({
+    required this.applicationId,
+    required this.status,
+    required this.user,
+    required this.expiryDateTime,
+    this.acceptedRejectedBy,
+    required this.reason,
+    this.verificationCode,
+  });
+
+  factory Application.fromJson(Map<String, dynamic> json) {
+    return Application(
+      applicationId: json['applicationId'],
+      status: Status.fromJson(json['status']),
+      user:UserGeneral.fromJson(json['user']),
+      expiryDateTime: json['expiryDateTime'],
+      acceptedRejectedBy: json['acceptedRejectedBy'] != null ? AcceptedRejectedBy.fromJson(json['acceptedRejectedBy']) : null,
+      reason: json['reason'],
+      verificationCode: json['verificationCode'],
+    );
+  }
+}
+class GeneralApplications {
+  final String status;
+  final int timestamp;
+  final List<Application> data;
+
+  GeneralApplications({
+    required this.status,
+    required this.timestamp,
+    required this.data,
+  });
+
+  factory  GeneralApplications.fromJson(Map<String, dynamic> json) {
+    print('GeneralApplications: $json');
+    var list = json['data'] as List;
+    print('list: $list');
+    List<Application> applicationsList = list.map((i) => Application.fromJson(i)).toList();
+
+    return  GeneralApplications(
+      status: json['status'],
+      timestamp: json['timestamp'],
+      data: applicationsList,
+    );
+  }
+}
+
+

@@ -131,6 +131,7 @@ class _EventmanagementCategoryState extends State<EventmanagementCategory> {
 
                   List<Event> events = snapshot.data!;
                   if (userP.role!='ADMIN') {
+
                     events = events.where((event) => event.hosts.contains(userP.Fullname)).toList();
                   }
                   int rowCount = (events.length / 2).ceil();
