@@ -8,6 +8,8 @@ import 'package:firstapp/main.dart';
 import '../pages/editProfile_page.dart';
 import '../widgets/notification_card.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter/services.dart';
+
 class Api {
   // Singleton instance
   static final Api _instance = Api._internal();
@@ -232,10 +234,11 @@ class Api {
     bool? isPrivate,
     //List<String>? media,
     required String userId,
+    //List<String> imageUrls,
   }) async {
 
     final String _createEventUrl = 'http://$domain:8080/api/events/create';
-
+    //final request = http.MultipartRequest('POST', _createEventUrl);
 
     var headers = {
       'Content-Type': 'application/json',
@@ -258,7 +261,21 @@ class Api {
       var response = await http.post(Uri.parse(_createEventUrl), headers: headers, body: body);
 
       if (response.statusCode == 200) {
-        return jsonDecode(response.body);
+        var responseData = jsonDecode(response.body);
+        print( responseData['data']);
+        String eventId = responseData['data']['id'];
+       // for (String imagePath in imageUrls) {
+         // Uint8List imageBytes = await _loadImageAsBytes(imagePath);
+        //  var uploadResult = await eventUploadImage(imageBytes, userId, eventId);
+         // if (uploadResult.containsKey('error')) {
+         //   throw Exception('Image upload failed: ${uploadResult['error']}');
+
+         // }
+
+
+
+        //print("image uploaded");
+        return responseData;
       } else {
         throw Exception(jsonDecode(response.body));
       }
@@ -267,8 +284,25 @@ class Api {
       throw Exception(e.toString());
     }
   }
+  /*Future<void> _uploadEventImage(String eventId, String imagePath, String userId) async {
+    final String _uploadUrl = 'http://$domain:8083/media/upload?event_id=$eventId';
 
+    var request = http.MultipartRequest('POST', Uri.parse(_uploadUrl));
 
+    request.headers['Authorization'] = 'Bearer $userId';
+    request.files.add(await http.MultipartFile.fromPath(
+      'file',
+      imagePath,
+    ));
+
+    var response = await request.send();
+
+    if (response.statusCode != 201) {
+      throw Exception('Failed to upload image');
+    }
+  }
+
+*/
   Future<Map<String, dynamic>> rsvpEvent(String eventId, String UserId) async {
     final String _rsvpEventUrl = 'http://$domain:8080/api/user/rspv_event/$eventId';
     
@@ -642,30 +676,68 @@ Future<List<dynamic>> getAllEventsGuest() async {
     }
   }
 
-  Future<Map<String, dynamic>> eventUploadImage(Uint8List imageBytes, String userid, String EventId) async {
-    String generateFilename(String userId) {
+  Future<Uint8List> _loadImageAsBytes(String imagePath) async {
+    try {
+      return await rootBundle.load(imagePath).then((data) => data.buffer.asUint8List());
+    } catch (e) {
+      throw Exception("Failed to load image: $e");
+    }
+  }
+/*Future<void> _uploadProofImage(String applicationId, Uint8List imageBytes, String userId) async {
+
+    final String _uploadUrl = 'http://$domain:8083/media/proof?application_id=$applicationId';
+
+    var request = http.MultipartRequest('POST', Uri.parse(_uploadUrl));
+
+    request.headers['Authorization'] = 'Bearer $userId';
+    request.files.add(http.MultipartFile.fromBytes(
+      'file',
+      imageBytes,
+      filename: 'proof_image.jpg',
+    ));
+
+    var response = await request.send();
+
+    if (response.statusCode != 201) {
+      throw Exception('Failed to upload proof image');
+    }
+  }*/
+  Future<Map<String, dynamic>> eventUploadImage(Uint8List? imageBytes, String userid, String EventId) async {
+    String generateFilename(String EventId) {
       final timestamp = DateTime.now().millisecondsSinceEpoch;
-      return 'profile_image_${userId}_$timestamp.png';
+      return 'event_image_${EventId}_$timestamp.png';
     }
     final uri = Uri.parse('http://localhost:8083/media/upload?event_id=$EventId');
 
-
     final request = http.MultipartRequest('POST', uri);
+    request.headers['Authorization'] = 'Bearer $userid';
+    request.files.add(
+        http.MultipartFile.fromBytes(
+          'file',
+          imageBytes as List<int>,
+          filename: generateFilename(EventId),
+        ),
+      );
+
+   /* final request = http.MultipartRequest('POST', uri);
     request.headers['Authorization']= 'Bearer $userid';
 
-    final filename = generateFilename(userid);
+    final filename = generateFilename(EventId);
     request.files.add(
       http.MultipartFile.fromBytes(
         'file',
         imageBytes,
         filename: filename,
       ),
-    );
+    );*/
 
     try {
       final response = await request.send();
       if (response.statusCode == 201) {
-        return jsonDecode(response.stream.toString());
+        final responseBody = await response.stream.bytesToString();
+        print(jsonDecode(responseBody));
+        return jsonDecode(responseBody);
+       // return jsonDecode(response.stream.toString());
       } else {
 
         throw Exception('Upload failed with status: ${response.statusCode}');
