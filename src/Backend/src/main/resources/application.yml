@@ -36,4 +36,4 @@ logging:
 
 
 server:
-  port: 8085
+  port: 8080
