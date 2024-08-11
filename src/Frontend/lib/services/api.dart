@@ -158,7 +158,7 @@ class Api {
   Future<Map<String, dynamic>> postChangeUser(String name,
       String userId) async {
     var userChangeUrl = Uri.parse(
-        'http://localhost:8080/api/user/update_profile?fullName=$name');
+        'http://$domain:8080/api/user/update_profile?fullName=$name');
 
 
     var headers = {
@@ -280,8 +280,9 @@ class Api {
     }
   }
 
-  Future<List<AppNotification>> getAllNotification({required String userId}) async {
-    const String notifyUserUrl = 'http://localhost:8081/notifications/get_all';
+  Future<List<AppNotification>> getAllNotification(
+      {required String userId}) async {
+    const String notifyUserUrl = 'http://$domain:8081/notifications/get_all';
 
     var headers = {
       'Content-Type': 'application/json',
@@ -313,7 +314,7 @@ class Api {
 
   Future<Map<String, dynamic>> AcceptInvite(
       { String? userId,String? notificationId}) async {
-    String notifyUserUrl = 'http://localhost:8080/api/interactions/accept_invite/$notificationId';
+    String notifyUserUrl = 'http://$domain:8080/api/interactions/accept_invite/$notificationId';
 
 
     var headers = {
@@ -369,7 +370,7 @@ class Api {
   }
 
   Future<GeneralApplications> getGeneralusersToHost(String userid) async {
-    const String notifyUserUrl = 'http://localhost:8080/api/admin/all_applications';
+    const String notifyUserUrl = 'http://$domain:8080/api/admin/all_applications';
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -396,7 +397,7 @@ class Api {
 
   Future<Map<String, dynamic>> DeletersvpEvent(String eventId,
       String UserId) async {
-    final String _rsvpEventUrl = 'http://localhost:8080/api/user/delete_rspv_event/$eventId';
+    final String _rsvpEventUrl = 'http://$domain:8080/api/user/delete_rspv_event/$eventId';
 
     var headers = {
       'Content-Type': 'application/json',
@@ -420,7 +421,7 @@ class Api {
 
   Future<Map<String, dynamic>> DeleteEvent(String eventId,
       String userid) async {
-    var Url = Uri.parse('http://localhost:8080/api/events/delete/$eventId');
+    var Url = Uri.parse('http://$domain:8080/api/events/delete/$eventId');
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -575,7 +576,7 @@ class Api {
     return 'profile_image_${userId}_$timestamp.png';
   }
 
-  final uri = Uri.parse('http://localhost:8083/media/update');
+  final uri = Uri.parse('http://$domain:8083/media/update');
 
   final request = http.MultipartRequest('POST', uri);
   request.headers['Authorization'] = 'Bearer $userid';
@@ -622,7 +623,7 @@ class Api {
       return 'profile_image_${userId}_$timestamp.png';
     }
     final uri = Uri.parse(
-        'http://localhost:8083/media/upload?event_id=$EventId');
+        'http://$domain:8083/media/upload?event_id=$EventId');
 
 
     final request = http.MultipartRequest('POST', uri);
@@ -723,7 +724,7 @@ class Api {
 
   Future<Map<String, dynamic>> AcceptApplication(
       {required String userId, required String applicationId}) async {
-    String notifyUserUrl = 'http://localhost:8080/api/admin/accept_application?applicationId=$applicationId';
+    String notifyUserUrl = 'http://$domain:8080/api/admin/accept_application?applicationId=$applicationId';
 
 
     var headers = {
@@ -749,7 +750,7 @@ class Api {
 
   Future<Map<String, dynamic>> DeclineApplication(
       {required String userId, required String applicationId}) async {
-    String notifyUserUrl = 'http://localhost:8080/api/admin/reject_application??applicationId=$applicationId';
+    String notifyUserUrl = 'http://$domain:8080/api/admin/reject_application??applicationId=$applicationId';
 
 
     var headers = {
@@ -776,7 +777,7 @@ class Api {
 
   Future<Map<String, dynamic>> DemoteApplicant(
       {required String userIdAdmin, required String userId, required String applicationId}) async {
-    String notifyUserUrl = 'http://localhost:8080/api/admin/demote?userId=$userId';
+    String notifyUserUrl = 'http://$domain:8080/api/admin/demote?userId=$userId';
 
 
     var headers = {

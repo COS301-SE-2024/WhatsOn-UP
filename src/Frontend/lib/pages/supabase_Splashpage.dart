@@ -70,7 +70,7 @@ Future<void>_redirect() async{
 
     EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
     final user = supabase.auth.currentUser;
-    eventP.fetchfortheFirstTimeRsvp(user!.id);
+    // eventP.fetchfortheFirstTimeRsvp(user!.id);
 
     Api api = Api();
 

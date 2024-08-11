@@ -37,10 +37,17 @@ class Attendee {
     };
   }
   factory Attendee.fromJson(Map<String, dynamic> json) {
+    /*print("Printing Attendee From Json...");
+    print(json['userId']);
+    print( json['fullName']);
+    print(json['profileImage']);
+    print(json['role']);
+*/
     return Attendee(
-      userId: json['userId'],
-      fullName: json['fullName'],
+      userId: json['userId'] ?? '',
+      fullName: json['fullName']?.toString() ?? 'Unknown',
       profileImage: json['profileImage'] ?? '',
+      // role: json['role'] ?? {},
       role: Role.fromJson(json['role']),
     );
   }
@@ -127,7 +134,14 @@ class Building {
   });
 
   factory Building.fromJson(Map<String, dynamic> json) {
-    print("Printing Building From Json...");
+    /* print("Printing Building From Json...");
+    print(json['buildingId']);
+    print(json['name']);
+    print(json['accessType']);
+    print(json['location']);
+    print(json['campus'] );
+
+    */
     Building building;
     building = Building(
       buildingId: json['buildingId'],
@@ -180,7 +194,8 @@ class Venue {
   });
 
   factory Venue.fromJson(Map<String, dynamic> json) {
-    print("Printing Venue fromJson...");
+    // print("Printing Venue fromJson...");
+
     Venue venue = Venue(
       venueId: json['venueId'],
       building: json['building'] != null ? Building.fromJson(json['building']) : null,
@@ -232,8 +247,7 @@ class Event {
   late final bool isPrivate;
   final List<Attendee> attendees;
   final Metadata metadata;
-
-
+  final List<Attendee>? invitees;
   Event({
 
     required this.nameOfEvent,
@@ -248,13 +262,15 @@ class Event {
     required this.isPrivate,
     required this.attendees,
     required this.metadata,
+    this.invitees,
   });
 
   factory Event.fromJson(Map<String, dynamic> json) {
-    print("Printing Event fromJson...");
-    print( json['startDateTime']);
-    print( json['endDateTime']);
-    print( json['isPrivate']);
+    /*print("Printing Event fromJson...");
+    print("title");
+    print(json['title']);
+    print("Invities ");
+    print(json['invitees']);*/
     var eventVat ;
     eventVat = Event(
       nameOfEvent: json['title']?.toString() ?? '',
@@ -281,6 +297,9 @@ class Event {
         categories: [],
         sessions: [],
       ),
+      invitees: json.containsKey('invitees') && (json['invitees'] as List).isNotEmpty
+          ? List<Attendee>.from(json['invitees'].map((invitee) => Attendee.fromJson(invitee)))
+          : [],
     );
     return eventVat;
   }
@@ -301,6 +320,8 @@ class Event {
       'hosts': hosts.map((host) => {'fullName': host}).toList(),
       'attendees': attendees.map((attendee) => attendee.toJson()).toList(),
       'metadata': metadata.toJson(),
+      'invitees': invitees?.map((invitee) => invitee.toJson()).toList(),
+
     };
   }
 }
@@ -311,7 +332,7 @@ class EventCard extends StatefulWidget {
   final Event event;
   bool showBookmarkButton;
 
- 
+
 
   EventCard({Key? key, required this.event, this.showBookmarkButton = true})
       : super(key: key);
