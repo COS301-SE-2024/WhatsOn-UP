@@ -10,6 +10,7 @@ import 'package:firstapp/pages/home_page.dart';
 
 import '../providers/notification_providers.dart';
 import '../services/socket_client.dart';
+
 class SupabaseSignup extends StatefulWidget {
   const SupabaseSignup({super.key});
 
@@ -19,8 +20,8 @@ class SupabaseSignup extends StatefulWidget {
 
 class _SupabaseSignupState extends State<SupabaseSignup> {
   final _emailController = TextEditingController();
-  final _fullnameController= TextEditingController();
-  final _passwordController= TextEditingController();
+  final _fullnameController = TextEditingController();
+  final _passwordController = TextEditingController();
   late final StreamSubscription<AuthState> _authSubscription;
   late Color myColor;
   late Size mediaSize;
@@ -142,15 +143,12 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
           const SizedBox(height: 20),
           // TextButton(
           ElevatedButton(
-
             onPressed: () async {
               try {
                 final email = _emailController.text.trim();
-                final password= _passwordController.text.trim();
-                final AuthResponse res = await supabase.auth.signUp(
-                    email: email,
-                    password: password
-                );
+                final password = _passwordController.text.trim();
+                final AuthResponse res = await supabase.auth
+                    .signUp(email: email, password: password);
                 if (mounted) {
                   print("CALLING USERNAME INPUT");
                   await _usernameInput(); // Ensure the username is saved
@@ -171,13 +169,11 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
               }
             },
             child: const Text('Sign Up'),
-
           ),
         ],
       ),
     );
   }
-
 
   Future<void> _usernameInput() async {
     final user = supabase.auth.currentUser;
@@ -187,38 +183,36 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
     Api api = Api();
     api.postUsername(fullname, user!.id).then((response) {
       if (response['error'] != null) {
-
         print('An error occurred: ${response['error']}');
       } else {
         print('Username added successfully');
-        String fullName = response['data']['user']['fullName']?? 'Unknown';
+        String fullName = response['data']['user']['fullName'] ?? 'Unknown';
         String userEmail = user.userMetadata?['email'];
-        String UserId=user.id;
-        String role=response['data']['user']['role']?? 'Unknown';
-        String  profileImage=response['data']['user']['profileImage']?? 'Unknown';
+        String UserId = user.id;
+        String role = response['data']['user']['role'] ?? 'Unknown';
+        String profileImage =
+            response['data']['user']['profileImage'] ?? 'Unknown';
 
-        userP.userId=user.id;
-        userP.Fullname=fullName;
-        userP.email=userEmail;
-        userP.role=role;
-        userP.profileImage=profileImage;
-        notificationProvider _notificationProvider = Provider.of<notificationProvider>(context, listen: false);
+        userP.userId = user.id;
+        userP.Fullname = fullName;
+        userP.email = userEmail;
+        userP.role = role;
+        userP.profileImage = profileImage;
+        notificationProvider _notificationProvider =
+            Provider.of<notificationProvider>(context, listen: false);
         // _notificationProvider.apiInstance=api;
         _notificationProvider.refreshNotifications(userP.userId);
-        userP. Generalusers(userP.userId);
-        SocketService('http://localhost:8082', userP.userId,_notificationProvider);
+        userP.Generalusers(userP.userId);
+        SocketService(
+            'http://localhost:8082', userP.userId, _notificationProvider);
 
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const HomePage(
-
-          )),
+          MaterialPageRoute(builder: (context) => const HomePage()),
         );
       }
     });
 
-
     print('signup successful');
-
   }
 }

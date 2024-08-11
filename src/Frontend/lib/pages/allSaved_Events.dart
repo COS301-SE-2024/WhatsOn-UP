@@ -49,26 +49,26 @@ class _AllsavedEventsState extends State<AllsavedEvents> {
       appBar: AppBar(
         title: const Text('Saved Events'),
       ),
-      body:  isLoading
+      body: isLoading
           ? Center(
-        child: SpinKitPianoWave(
-          color: Color.fromARGB(255, 149, 137, 74),
-          size: 50.0,
-        ),
-      )
+              child: SpinKitPianoWave(
+                color: Color.fromARGB(255, 149, 137, 74),
+                size: 50.0,
+              ),
+            )
           : hasError
-          ? Center(
-        child: Text(
-          'You do not have saved events.',
-          style: TextStyle(color: Colors.red),
-        ),
-      )
-          : ListView.builder(
-        itemCount: events.length,
-        itemBuilder: (context, index) {
-          return EventCardS(event: events[index]);
-        },
-      ),
+              ? Center(
+                  child: Text(
+                    'You do not have saved events.',
+                    style: TextStyle(color: Colors.red),
+                  ),
+                )
+              : ListView.builder(
+                  itemCount: events.length,
+                  itemBuilder: (context, index) {
+                    return EventCardS(event: events[index]);
+                  },
+                ),
     );
   }
 }
@@ -123,17 +123,17 @@ class EventCardS extends StatelessWidget {
                     borderRadius: BorderRadius.circular(16.0),
                     child: event.imageUrls!.isNotEmpty
                         ? Image.network(
-                      event.imageUrls![0],
-                      height: 120.0,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                    )
+                            event.imageUrls![0],
+                            height: 120.0,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                          )
                         : Image.asset(
-                      'assets/images/user.png',
-                      height: 120.0,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                    ),
+                            'assets/images/user.png',
+                            height: 120.0,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                          ),
                   ),
                 ),
                 Text(

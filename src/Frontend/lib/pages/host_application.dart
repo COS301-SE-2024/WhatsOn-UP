@@ -56,139 +56,140 @@ class _HostApplicationPageState extends State<HostApplicationPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                'Apply to become a host',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 20),
-              Row(
-                children: [
-                  const Expanded(
-                    child: Text('Are you a university student?',
-                        style: TextStyle(fontSize: 16)),
+                    'Apply to become a host',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
-                  Switch(
-                    value: _isStudent,
-                    onChanged: (bool value) {
+                  const SizedBox(height: 20),
+                  Row(
+                    children: [
+                      const Expanded(
+                        child: Text('Are you a university student?',
+                            style: TextStyle(fontSize: 16)),
+                      ),
+                      Switch(
+                        value: _isStudent,
+                        onChanged: (bool value) {
+                          setState(() {
+                            _isStudent = value;
+                            _formKey.currentState?.reset();
+                            _stickerImage = null;
+                            _studentEmail = '';
+                          });
+                        },
+                      ),
+                      Text(_isStudent ? 'Yes' : 'No',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  if (_isStudent)
+                    TextFormField(
+                      decoration: const InputDecoration(
+                        labelText: 'Student Email',
+                        hintText: 'Enter your university email',
+                        border: OutlineInputBorder(),
+                      ),
+                      keyboardType: TextInputType.emailAddress,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your student email';
+                        }
+                        if (!value.endsWith('tuks.co.za')) {
+                          return 'Please use a valid University of Pretoria email address';
+                        }
+                        return null;
+                      },
+                      onSaved: (value) => _studentEmail = value!,
+                    )
+                  else
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text('Upload Permission Sticker'),
+                        const SizedBox(height: 10),
+                        SizedBox(
+                          width: 200.0,
+                          child: ElevatedButton.icon(
+                            onPressed: _pickImage,
+                            icon: const Icon(Icons.upload_file),
+                            label: const Text('Choose Image'),
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                            ),
+                          ),
+                        ),
+                        if (_imageName != null)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10),
+                            child: Text('Selected image: $_imageName'),
+                          ),
+                      ],
+                    ),
+                  const SizedBox(height: 20),
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      labelText: 'Reason for becoming a host',
+                      hintText: 'Explain why you want to become a host',
+                      border: OutlineInputBorder(),
+                    ),
+                    maxLines: 3,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please provide a reason';
+                      }
+                      return null;
+                    },
+                    onSaved: (value) => _reason = value!,
+                  ),
+                  const SizedBox(height: 20),
+                  DropdownButtonFormField<String>(
+                    decoration: const InputDecoration(
+                      labelText: 'Duration',
+                      border: OutlineInputBorder(),
+                    ),
+                    value: _duration,
+                    items: _durationOptions.map((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
                       setState(() {
-                        _isStudent = value;
-                        _formKey.currentState?.reset();
-                        _stickerImage = null;
-                        _studentEmail = '';
+                        _duration = newValue!;
                       });
                     },
                   ),
-                  Text(_isStudent ? 'Yes' : 'No',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                ],
-              ),
-              const SizedBox(height: 20),
-              if (_isStudent)
-                TextFormField(
-                  decoration: const InputDecoration(
-                    labelText: 'Student Email',
-                    hintText: 'Enter your university email',
-                    border: OutlineInputBorder(),
-                  ),
-                  keyboardType: TextInputType.emailAddress,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your student email';
-                    }
-                    if (!value.endsWith('tuks.co.za')) {
-                      return 'Please use a valid University of Pretoria email address';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) => _studentEmail = value!,
-                )
-              else
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text('Upload Permission Sticker'),
-                    const SizedBox(height: 10),
-                    SizedBox(
-                      width: 200.0,
-                      child: ElevatedButton.icon(
-                        onPressed: _pickImage,
-                        icon: const Icon(Icons.upload_file),
-                        label: const Text('Choose Image'),
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                        ),
+                  const SizedBox(height: 20),
+                  InkWell(
+                    onTap: () async {
+                      final DateTime? picked = await showDatePicker(
+                        context: context,
+                        initialDate: _startDate,
+                        firstDate: DateTime.now(),
+                        lastDate: DateTime.now().add(const Duration(days: 365)),
+                      );
+                      if (picked != null && picked != _startDate) {
+                        setState(() {
+                          _startDate = picked;
+                        });
+                      }
+                    },
+                    child: InputDecorator(
+                      decoration: const InputDecoration(
+                        labelText: 'Start Date',
+                        border: OutlineInputBorder(),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(DateFormat('yyyy-MM-dd').format(_startDate)),
+                          const Icon(Icons.calendar_today),
+                        ],
                       ),
                     ),
-                    if (_imageName  != null)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 10),
-                        child: Text('Selected image: $_imageName'),
-                      ),
-                  ],
-                ),
-              const SizedBox(height: 20),
-              TextFormField(
-                decoration: const InputDecoration(
-                  labelText: 'Reason for becoming a host',
-                  hintText: 'Explain why you want to become a host',
-                  border: OutlineInputBorder(),
-                ),
-                maxLines: 3,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please provide a reason';
-                  }
-                  return null;
-                },
-                onSaved: (value) => _reason = value!,
-              ),
-              const SizedBox(height: 20),
-              DropdownButtonFormField<String>(
-                decoration: const InputDecoration(
-                  labelText: 'Duration',
-                  border: OutlineInputBorder(),
-                ),
-                value: _duration,
-                items: _durationOptions.map((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    _duration = newValue!;
-                  });
-                },
-              ),
-              const SizedBox(height: 20),
-              InkWell(
-                onTap: () async {
-                  final DateTime? picked = await showDatePicker(
-                    context: context,
-                    initialDate: _startDate,
-                    firstDate: DateTime.now(),
-                    lastDate: DateTime.now().add(const Duration(days: 365)),
-                  );
-                  if (picked != null && picked != _startDate) {
-                    setState(() {
-                      _startDate = picked;
-                    });
-                  }
-                },
-                child: InputDecorator(
-                  decoration: const InputDecoration(
-                    labelText: 'Start Date',
-                    border: OutlineInputBorder(),
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(DateFormat('yyyy-MM-dd').format(_startDate)),
-                      const Icon(Icons.calendar_today),
-                    ],
-                  ),
-                ),
-              ),
                   const SizedBox(height: 30),
                   ElevatedButton(
                     onPressed: _isLoading ? null : () => _submitForm(userId),
@@ -240,7 +241,9 @@ class _HostApplicationPageState extends State<HostApplicationPage> {
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Application submitted successfully. Please check your email for a verification link.')),
+        const SnackBar(
+            content: Text(
+                'Application submitted successfully. Please check your email for a verification link.')),
       );
 
       Navigator.pop(context);
@@ -265,10 +268,11 @@ class _HostApplicationPageState extends State<HostApplicationPage> {
         _isLoading = false;
       });
       ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('There was an error submitting your application. Please try again later.'),
-        backgroundColor: Colors.red,
-      ),
+        const SnackBar(
+          content: Text(
+              'There was an error submitting your application. Please try again later.'),
+          backgroundColor: Colors.red,
+        ),
       );
     }
   }

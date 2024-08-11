@@ -22,7 +22,8 @@ class _NotificationsState extends State<Notifications> {
     userProvider userP = Provider.of<userProvider>(context, listen: false);
     String userRole = userP.role;
 
-    notificationProvider notif = Provider.of<notificationProvider>(context, listen: false);
+    notificationProvider notif =
+        Provider.of<notificationProvider>(context, listen: false);
 
     return ChangeNotifierProvider<notificationProvider>(
       create: (context) => notif,
@@ -30,7 +31,9 @@ class _NotificationsState extends State<Notifications> {
         appBar: AppBar(
           title: Text('Notifications'),
         ),
-        body: userRole == "GUEST" ? _buildGuestView() : _buildNotificationsView(notif),
+        body: userRole == "GUEST"
+            ? _buildGuestView()
+            : _buildNotificationsView(notif),
       ),
     );
   }
@@ -55,7 +58,8 @@ class _NotificationsState extends State<Notifications> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const SupabaseSignup()),
+                    MaterialPageRoute(
+                        builder: (context) => const SupabaseSignup()),
                   );
                 },
                 child: const Text('Sign Up', style: TextStyle(fontSize: 18)),
@@ -66,7 +70,8 @@ class _NotificationsState extends State<Notifications> {
               onPressed: () {
                 Navigator.pushNamed(context, '/login');
               },
-              child: const Text('Already have an account? Log In', style: TextStyle(fontSize: 16)),
+              child: const Text('Already have an account? Log In',
+                  style: TextStyle(fontSize: 16)),
             ),
           ],
         ),
@@ -102,19 +107,44 @@ class _NotificationsState extends State<Notifications> {
                 );
               } else {
                 final notifications = snapshot.data!;
-                final invites = notifications.where((n) => n.notificationTypes == 'invite').toList();
-                final broadcasts = notifications.where((n) => n.notificationTypes == 'broadcast').toList();
-                final reminders = notifications.where((n) => n.notificationTypes == 'reminder').toList();
-                final recommendations = notifications.where((n) => n.notificationTypes == 'recommendation').toList();
-                final applications = notifications.where((n) => n.notificationTypes == 'application').toList();
+                final invites = notifications
+                    .where((n) => n.notificationTypes == 'invite')
+                    .toList();
+                final broadcasts = notifications
+                    .where((n) => n.notificationTypes == 'broadcast')
+                    .toList();
+                final reminders = notifications
+                    .where((n) => n.notificationTypes == 'reminder')
+                    .toList();
+                final recommendations = notifications
+                    .where((n) => n.notificationTypes == 'recommendation')
+                    .toList();
+                final applications = notifications
+                    .where((n) => n.notificationTypes == 'application')
+                    .toList();
 
                 return ListView(
                   children: [
-                    if (invites.isNotEmpty) ...[SizedBox(height: 20.0), _buildCategory('INVITES', invites)],
-                    if (broadcasts.isNotEmpty) ...[SizedBox(height: 20.0), _buildCategory('BROADCASTS', broadcasts)],
-                    if (reminders.isNotEmpty) ...[SizedBox(height: 20.0), _buildCategory('REMINDERS', reminders)],
-                    if (recommendations.isNotEmpty) ...[SizedBox(height: 20.0), _buildCategory('RECOMMENDATIONS', recommendations)],
-                    if (applications.isNotEmpty)...[ SizedBox(height: 20.0),_buildCategory('APPLICATIONS', applications)]
+                    if (invites.isNotEmpty) ...[
+                      SizedBox(height: 20.0),
+                      _buildCategory('INVITES', invites)
+                    ],
+                    if (broadcasts.isNotEmpty) ...[
+                      SizedBox(height: 20.0),
+                      _buildCategory('BROADCASTS', broadcasts)
+                    ],
+                    if (reminders.isNotEmpty) ...[
+                      SizedBox(height: 20.0),
+                      _buildCategory('REMINDERS', reminders)
+                    ],
+                    if (recommendations.isNotEmpty) ...[
+                      SizedBox(height: 20.0),
+                      _buildCategory('RECOMMENDATIONS', recommendations)
+                    ],
+                    if (applications.isNotEmpty) ...[
+                      SizedBox(height: 20.0),
+                      _buildCategory('APPLICATIONS', applications)
+                    ]
                   ],
                 );
               }
@@ -132,9 +162,7 @@ class _NotificationsState extends State<Notifications> {
           child: Text(
             title,
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-
           ),
-
         ),
         ListView.separated(
           shrinkWrap: true,
@@ -142,27 +170,25 @@ class _NotificationsState extends State<Notifications> {
           itemCount: notifications.length,
           itemBuilder: (context, index) {
             final notification = notifications[index];
-            if(notification.notificationTypes=='invite'){
+            if (notification.notificationTypes == 'invite') {
               texttitle = 'Invite';
-            }
-            else if(notification.notificationTypes=='broadcast'){
+            } else if (notification.notificationTypes == 'broadcast') {
               texttitle = 'Broadcast';
-            }
-            else if(notification.notificationTypes=='reminder'){
-               texttitle = 'Reminder';
-            }
-            else if(notification.notificationTypes=='recommendation'){
-               texttitle = 'Recommendation';
-            }
-            else if(notification.notificationTypes=='application'){
+            } else if (notification.notificationTypes == 'reminder') {
+              texttitle = 'Reminder';
+            } else if (notification.notificationTypes == 'recommendation') {
+              texttitle = 'Recommendation';
+            } else if (notification.notificationTypes == 'application') {
               texttitle = 'Application';
             }
 
             return Container(
-              margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+              margin:
+                  const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.grey, width: 1.0),
-                borderRadius: BorderRadius.circular(8.0), // Optional: rounded corners
+                borderRadius:
+                    BorderRadius.circular(8.0), // Optional: rounded corners
               ),
               child: ListTile(
                 title: Text(texttitle),
@@ -172,11 +198,10 @@ class _NotificationsState extends State<Notifications> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => NotificationDetailScreen(notification: notification),
+                      builder: (context) =>
+                          NotificationDetailScreen(notification: notification),
                     ),
-                  ).then((_) {
-
-                  });
+                  ).then((_) {});
                 },
               ),
             );
@@ -195,6 +220,7 @@ class _NotificationsState extends State<Notifications> {
       endIndent: 2,
     );
   }
+
   Widget _buildDividerA() {
     return const Divider(
       height: 1,
@@ -204,4 +230,3 @@ class _NotificationsState extends State<Notifications> {
     );
   }
 }
-

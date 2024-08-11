@@ -10,7 +10,7 @@ class ApplicantDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String formattedDateSentAt = formatDateTime( user.expiryDateTime);
+    String formattedDateSentAt = formatDateTime(user.expiryDateTime);
     return Scaffold(
       appBar: AppBar(
         title: Text('Applicant Details'),
@@ -63,21 +63,21 @@ class ApplicantDetailsPage extends StatelessWidget {
                 _showDocument(context);
               },
               style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0), // Adjust padding if needed
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 20.0), // Adjust padding if needed
               ),
               child: Text('View Document'),
             ),
             SizedBox(height: 16.0),
             _buildAcceptedRejectedByInfo(user.acceptedRejectedBy, user.status),
-
           ],
         ),
       ),
     );
   }
 
-  Widget _buildAcceptedRejectedByInfo(AcceptedRejectedBy? acceptedRejectedBy,
-      Status status) {
+  Widget _buildAcceptedRejectedByInfo(
+      AcceptedRejectedBy? acceptedRejectedBy, Status status) {
     if (acceptedRejectedBy == null) {
       return Padding(
         padding: const EdgeInsets.all(16.0),
@@ -97,10 +97,9 @@ class ApplicantDetailsPage extends StatelessWidget {
             // Display CircleAvatar only if status is ACCEPTED or REJECTED
             CircleAvatar(
               backgroundImage: acceptedRejectedBy.profileImage != null &&
-                  acceptedRejectedBy.profileImage.isNotEmpty
+                      acceptedRejectedBy.profileImage.isNotEmpty
                   ? NetworkImage(acceptedRejectedBy.profileImage)
                   : const AssetImage('assets/images/user.png') as ImageProvider,
-
               radius: 20,
             ),
             SizedBox(width: 10.0),
@@ -109,11 +108,9 @@ class ApplicantDetailsPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '${status.name == 'ACCEPTED'
-                        ? 'Accepted by:'
-                        : 'Rejected by:'} ${acceptedRejectedBy.fullName}',
-                    style: TextStyle(
-                        fontSize: 18.0, fontWeight: FontWeight.w600),
+                    '${status.name == 'ACCEPTED' ? 'Accepted by:' : 'Rejected by:'} ${acceptedRejectedBy.fullName}',
+                    style:
+                        TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
                   ),
                   SizedBox(height: 4.0),
                   Text(
@@ -147,7 +144,6 @@ class ApplicantDetailsPage extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-
             child: Text('Close'),
           ),
         ],

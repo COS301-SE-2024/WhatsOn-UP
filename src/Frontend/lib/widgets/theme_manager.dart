@@ -22,9 +22,9 @@ class ThemeNotifier with ChangeNotifier {
       surface: lightBackgroundColor,
     ),
     textTheme: const TextTheme(
-      // bodyText1: TextStyle(color: lightTextColor),
-      // bodyText2: TextStyle(color: lightTextColor),
-    ),
+        // bodyText1: TextStyle(color: lightTextColor),
+        // bodyText2: TextStyle(color: lightTextColor),
+        ),
     appBarTheme: const AppBarTheme(
       backgroundColor: lightPrimaryColor,
       iconTheme: IconThemeData(color: Colors.white),
@@ -67,9 +67,9 @@ class ThemeNotifier with ChangeNotifier {
       surface: darkBackgroundColor,
     ),
     textTheme: const TextTheme(
-      // bodyText1: TextStyle(color: darkTextColor),
-      // bodyText2: TextStyle(color: darkTextColor),
-    ),
+        // bodyText1: TextStyle(color: darkTextColor),
+        // bodyText2: TextStyle(color: darkTextColor),
+        ),
     appBarTheme: const AppBarTheme(
       backgroundColor: darkPrimaryColor,
       iconTheme: IconThemeData(color: Colors.white),
@@ -100,8 +100,7 @@ class ThemeNotifier with ChangeNotifier {
         foregroundColor: Color.fromARGB(255, 60, 128, 230),
       ),
     ),
-    );
-  
+  );
 
   late ThemeData _themeData;
   ThemeData getTheme() => _themeData;

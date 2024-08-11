@@ -23,7 +23,8 @@ class _EditprofilePageState extends State<EditprofilePage> {
     final userP = Provider.of<userProvider>(context, listen: false);
     try {
       final ImagePicker imagePicker = ImagePicker();
-      final XFile? image = await imagePicker.pickImage(source: ImageSource.gallery);
+      final XFile? image =
+          await imagePicker.pickImage(source: ImageSource.gallery);
 
       if (image != null) {
         final Uint8List imageBytes = await image.readAsBytes();
@@ -63,7 +64,6 @@ class _EditprofilePageState extends State<EditprofilePage> {
     }
   }
 
-
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController nameController = TextEditingController();
@@ -86,6 +86,7 @@ class _EditprofilePageState extends State<EditprofilePage> {
     nameController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     final userP = context.watch<userProvider>();
@@ -104,7 +105,8 @@ class _EditprofilePageState extends State<EditprofilePage> {
             title: Text('Edit Profile'),
           ),
           body: _isLoading
-              ? const Center(child: SpinKitPianoWave(
+              ? const Center(
+                  child: SpinKitPianoWave(
                   color: Color.fromARGB(255, 149, 137, 74),
                   size: 50.0,
                 ))
@@ -150,7 +152,6 @@ class _EditprofilePageState extends State<EditprofilePage> {
     );
   }
 
-
   Widget _buildTop() {
     final userP = Provider.of<userProvider>(context);
     return Center(
@@ -165,9 +166,11 @@ class _EditprofilePageState extends State<EditprofilePage> {
                 fit: BoxFit.cover,
                 image: _image != null
                     ? MemoryImage(_image!)
-                    : (userP.profileImage != null && userP.profileImage!.isNotEmpty
-                        ? NetworkImage(userP.profileImage!)
-                        : AssetImage('assets/default_profile_image.png')) as ImageProvider,
+                    : (userP.profileImage != null &&
+                                userP.profileImage!.isNotEmpty
+                            ? NetworkImage(userP.profileImage!)
+                            : AssetImage('assets/default_profile_image.png'))
+                        as ImageProvider,
               ),
             ),
           ),
@@ -189,7 +192,7 @@ class _EditprofilePageState extends State<EditprofilePage> {
   }
 
   Widget _buildTextField(
-    String labelText, TextEditingController controller, bool isPassword) {
+      String labelText, TextEditingController controller, bool isPassword) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 30),
       child: TextFormField(
@@ -258,11 +261,11 @@ class _EditprofilePageState extends State<EditprofilePage> {
       api.postChangeUser(user.name, user1.id).then((response) {
         if (response['error'] != null) {
           print('An error occurred: ${response['error']}');
-        }
-        else {
+        } else {
           String fullName = response['data']['user']['fullName'] ?? 'Unknown';
           String userEmail = response['data']['user']['email'] ?? 'Unknown';
-          String profileImage = response['data']['user']['profileImage'] ?? 'Unknown';
+          String profileImage =
+              response['data']['user']['profileImage'] ?? 'Unknown';
 
           print('User profile updated successfully');
           showChangedDialog();
@@ -275,7 +278,6 @@ class _EditprofilePageState extends State<EditprofilePage> {
       });
     }
   }
-
 
   Future<void> showChangedDialog() async {
     await showDialog<void>(

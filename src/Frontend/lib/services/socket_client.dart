@@ -6,39 +6,33 @@ import '../providers/notification_providers.dart';
 
 import 'api.dart';
 
-
 class SocketService {
   late IO.Socket socket;
   notificationProvider _notificationProvider;
 
-
-  SocketService(String url, String userId,this._notificationProvider) {
-
+  SocketService(String url, String userId, this._notificationProvider) {
     final headers = {
       'token': 'Bearer $userId',
     };
-
 
     socket = IO.io(url, <String, dynamic>{
       'transports': ['websocket'],
       'query': {'token': userId},
     });
 
-
     // Add event listeners
     socket.on('connect', (_) {
       print('Connected: ${socket.id}');
-
     });
 
     socket.on('disconnect', (_) {
       print('Disconnected');
     });
 
-    socket.on('notification', (data)  {
+    socket.on('notification', (data) {
       print('Event received: $data');
 
-         refreshNotifications(userId);
+      refreshNotifications(userId);
     });
     socket.on('error', (error) {
       print('Error: $error');
@@ -48,9 +42,11 @@ class SocketService {
   void sendMessage(String event, dynamic message) {
     socket.emit(event, message);
   }
-void refreshNotifications(String userId) {
+
+  void refreshNotifications(String userId) {
     _notificationProvider.refreshNotifications(userId);
   }
+
   void dispose() {
     socket.dispose();
   }

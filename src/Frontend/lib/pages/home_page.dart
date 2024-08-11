@@ -25,10 +25,8 @@ import 'allHome_events.dart';
 import 'notifications.dart';
 
 class HomePage extends StatefulWidget {
-
   const HomePage({
     Key? key,
-
   }) : super(key: key);
   @override
   _HomePageState createState() => _HomePageState();
@@ -52,13 +50,12 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     userProvider userP = Provider.of<userProvider>(context);
     print("user role: ${userP.role}");
-    const String HOST='HOST';
-    const String ADMIN='ADMIN';
+    const String HOST = 'HOST';
+    const String ADMIN = 'ADMIN';
     return Scaffold(
       body: Container(
         // color: Colors.grey[200],
@@ -69,25 +66,25 @@ class _HomePageState extends State<HomePage> {
         onItemTapped: _onItemTapped,
         userRole: userP.role,
       ),
-      floatingActionButton: (userP.role== HOST || userP.role == ADMIN)
-      ? Padding(
-          padding: const EdgeInsets.only(right: 15, bottom: 70),
-          child: Align(
-            alignment: Alignment.bottomRight,
-            child: FloatingActionButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ApplicationEvent(
-
-                  )),
-                );
-              },
-              child: const Icon(Icons.add),
-              backgroundColor: Theme.of(context).primaryColor,
-            ),
-          ),
-        ) : null,
+      floatingActionButton: (userP.role == HOST || userP.role == ADMIN)
+          ? Padding(
+              padding: const EdgeInsets.only(right: 15, bottom: 70),
+              child: Align(
+                alignment: Alignment.bottomRight,
+                child: FloatingActionButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ApplicationEvent()),
+                    );
+                  },
+                  child: const Icon(Icons.add),
+                  backgroundColor: Theme.of(context).primaryColor,
+                ),
+              ),
+            )
+          : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
@@ -106,7 +103,7 @@ class _HomePageState extends State<HomePage> {
       case 4:
         return const SettingsPage();
       case 5:
-        return  ManageEvents();
+        return ManageEvents();
 
       case 6:
         return const Broadcast();
@@ -116,23 +113,23 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-
-
-
   Widget _buildHomePage() {
     userProvider userP = Provider.of<userProvider>(context);
     EventProvider eventP = Provider.of<EventProvider>(context);
 
     final theme = Theme.of(context);
-    final borderColour = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
-    final textColour = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
+    final borderColour =
+        theme.brightness == Brightness.dark ? Colors.white : Colors.black;
+    final textColour =
+        theme.brightness == Brightness.dark ? Colors.white : Colors.black;
     // futureEvents=eventP.eventsHome;
     return FutureBuilder<List<Event>>(
       future: eventP.eventsHome,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: SpinKitPianoWave(
-            color:  Color.fromARGB(255, 149, 137, 74),
+          return const Center(
+              child: SpinKitPianoWave(
+            color: Color.fromARGB(255, 149, 137, 74),
             size: 50.0,
           ));
         } else if (snapshot.hasError) {
@@ -158,16 +155,16 @@ class _HomePageState extends State<HomePage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => ProfilePage(
-
-                              ),
+                              builder: (context) => ProfilePage(),
                             ),
                           );
                         },
                         child: CircleAvatar(
-                          backgroundImage: userP.profileImage != null && userP.profileImage!.isNotEmpty
+                          backgroundImage: userP.profileImage != null &&
+                                  userP.profileImage!.isNotEmpty
                               ? NetworkImage(userP.profileImage!)
-                              : const AssetImage('assets/images/user.png') as ImageProvider,
+                              : const AssetImage('assets/images/user.png')
+                                  as ImageProvider,
                           radius: 27.0,
                         ),
                       ),
@@ -186,7 +183,6 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
                 const SizedBox(height: 20.0),
-
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: Center(
@@ -211,7 +207,8 @@ class _HomePageState extends State<HomePage> {
                                 );
                               },
                               icon: Icon(Icons.search, color: textColour),
-                              label: Text('Search', style: TextStyle(color: textColour)),
+                              label: Text('Search',
+                                  style: TextStyle(color: textColour)),
                             ),
                           ),
                         ),
@@ -234,7 +231,8 @@ class _HomePageState extends State<HomePage> {
                                 );
                               },
                               icon: Icon(Icons.filter_list, color: textColour),
-                              label: Text('Filter', style: TextStyle(color: textColour)),
+                              label: Text('Filter',
+                                  style: TextStyle(color: textColour)),
                             ),
                           ),
                         ),
@@ -243,39 +241,41 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 const SizedBox(height: 20.0),
-                 Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Row(children: [
-                    const Text(
-                      'Explore More',
-                      style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-                    ),
-                    const Spacer(),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => AllhomeEvents(),
-                          ),
-                        );
-                      },
-                      child: const Text(
-                        'See more',
-                        style: TextStyle(
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.bold,
+                Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Row(
+                      children: [
+                        const Text(
+                          'Explore More',
+                          style: TextStyle(
+                              fontSize: 18.0, fontWeight: FontWeight.bold),
                         ),
-                      ),
-                    ),
-
-        ],)
-                ),
+                        const Spacer(),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => AllhomeEvents(),
+                              ),
+                            );
+                          },
+                          child: const Text(
+                            'See more',
+                            style: TextStyle(
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    )),
                 SizedBox(
                   height: 250.0,
                   child: GridView.builder(
                     scrollDirection: Axis.horizontal,
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 1,
                     ),
                     itemCount: events.length,
@@ -292,7 +292,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 const SizedBox(height: 20.0),
-                 Padding(
+                Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Row(
                     children: [
@@ -302,32 +302,32 @@ class _HomePageState extends State<HomePage> {
                             fontSize: 18.0, fontWeight: FontWeight.bold),
                       ),
                       const Spacer(),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => AllsavedEvents(),
-                            ),
-                          );
-                        },
-                        child: const Text(
-                          'See more',
-                          style: TextStyle(
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
+                      // TextButton(
+                      //   onPressed: () {
+                      //     Navigator.push(
+                      //       context,
+                      //       MaterialPageRoute(
+                      //         builder: (context) => AllsavedEvents(),
+                      //       ),
+                      //     );
+                      //   },
+                      //   child: const Text(
+                      //     'See more',
+                      //     style: TextStyle(
+                      //       fontSize: 16.0,
+                      //       fontWeight: FontWeight.bold,
+                      //     ),
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),
-
                 SizedBox(
                   height: 250.0,
                   child: GridView.builder(
                     scrollDirection: Axis.horizontal,
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 1,
                     ),
                     itemCount: events.length,
@@ -348,6 +348,5 @@ class _HomePageState extends State<HomePage> {
         }
       },
     );
-
   }
 }

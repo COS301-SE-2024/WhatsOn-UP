@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:firstapp/widgets/event_card.dart';
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
@@ -6,11 +5,7 @@ import '../main.dart';
 import '../services/api.dart';
 
 class EventProvider with ChangeNotifier {
-
-
-
-
-  late final Api api ;
+  late final Api api;
 
   late Future<List<Event>> _eventsHome;
   late Future<List<Event>> _eventsRsvp;
@@ -29,12 +24,13 @@ class EventProvider with ChangeNotifier {
   }
   Future<void> refreshEvents() async {
     try {
-       _eventsHome = _fetchEventsHome();
+      _eventsHome = _fetchEventsHome();
       notifyListeners();
     } catch (e) {
       throw Exception('Failed to refresh events: $e');
     }
   }
+
   Future<void> refreshRSVPEvents(String userId) async {
     try {
       _eventsRsvp = _fetchEventsRsvp(userId);
@@ -43,6 +39,7 @@ class EventProvider with ChangeNotifier {
       throw Exception('Failed to refresh events: $e');
     }
   }
+
   Future<List<Event>> _fetchEventsHome() async {
     try {
       return await api.getAllEvents();
@@ -51,12 +48,11 @@ class EventProvider with ChangeNotifier {
     }
   }
 
-
   Future<List<Event>> _fetchCalendarEventsGuest() async {
     try {
       // return await api.getAllEventsGuest();
       return await api.getAllEvents();
-          } catch (e) {
+    } catch (e) {
       throw Exception('Failed to fetch home events: $e');
     }
   }
@@ -85,7 +81,8 @@ class EventProvider with ChangeNotifier {
   // }
 
   Future<List<Event>> _fetchEventsRsvp(String userId) async {
-    if (userId == "guest") { // If id received is "guest", user is a guest
+    if (userId == "guest") {
+      // If id received is "guest", user is a guest
       print("ID RECEIVED IN FETCHEVENTSRSVP WAS GUEST");
       final response = await api.getAllEventsGuest();
       List<Event> events = (response as List)
@@ -93,31 +90,32 @@ class EventProvider with ChangeNotifier {
           .toList();
 
       print("RESPONSE IN GUEST VIEW EVENTS: $response");
-      List<Map<String, dynamic>> eventMaps = events.map((event) => event.toJson()).toList();
-      List<Event> events2 = eventMaps.map((map) => Event.fromJson(map)).toList();
+      List<Map<String, dynamic>> eventMaps =
+          events.map((event) => event.toJson()).toList();
+      List<Event> events2 =
+          eventMaps.map((map) => Event.fromJson(map)).toList();
 
       print("GUEST VIEW EVENTS: $events2");
       return events2;
     }
-  try {
-    // return await api.getRSVPEvents(userId!);
-    print("USER ID IN RSVPEVENTS CALL: $userId");
-    final response= await api.getRSVPEvents(userId);
+    try {
+      // return await api.getRSVPEvents(userId!);
+      print("USER ID IN RSVPEVENTS CALL: $userId");
+      final response = await api.getRSVPEvents(userId);
       List<Event> events = (response as List)
           .map((eventData) => Event.fromJson(eventData))
           .toList();
 
       print("RSVP EVENTS FOR SIGNED IN USERS: $events");
       return events;
-  } catch (e) {
-    throw Exception('Failed to fetch RSVP events: $e');
+    } catch (e) {
+      throw Exception('Failed to fetch RSVP events: $e');
+    }
   }
-}
 
   void fetchfortheFirstTimeRsvp(String userId) {
-    _eventsRsvp =  _fetchEventsRsvp(userId);
+    _eventsRsvp = _fetchEventsRsvp(userId);
   }
-
 
   Future<List<Event>> get eventsHome async {
     try {
@@ -126,13 +124,14 @@ class EventProvider with ChangeNotifier {
       throw Exception('Failed to fetch home events: $e');
     }
   }
-     Future<List<Event>> get eventsRsvp async {
+
+  Future<List<Event>> get eventsRsvp async {
     try {
-       return await _eventsRsvp;
-     } catch (e) {
-       throw Exception('Failed to fetch RSVP events: $e');
-     }
-   }
+      return await _eventsRsvp;
+    } catch (e) {
+      throw Exception('Failed to fetch RSVP events: $e');
+    }
+  }
 
   // Future<List<Event>> get eventsSaved async {
   //   try {
@@ -162,6 +161,7 @@ class EventProvider with ChangeNotifier {
     events.add(event);
     notifyListeners();
   }
+
   void addEventsHome(List<Event> events) {
     _eventsHome.then((existingEvents) {
       existingEvents.addAll(events);
@@ -185,6 +185,7 @@ class EventProvider with ChangeNotifier {
       notifyListeners();
     });
   }
+
   //
   void addEventsRSVP(List<Event> events) {
     _eventsHome.then((existingEvents) {
@@ -192,6 +193,7 @@ class EventProvider with ChangeNotifier {
       notifyListeners();
     });
   }
+
   //
   void removeEventRSVP(Event event) {
     _eventsHome.then((events) {
@@ -219,17 +221,16 @@ class EventProvider with ChangeNotifier {
     _eventsSaved.remove(event);
     notifyListeners();
   }
+
   Future<Event?> getEventById(String id) async {
     try {
       List<Event> events = await _eventsHome;
-      Event? event= events.firstWhere((event) => event.id == id);
+      Event? event = events.firstWhere((event) => event.id == id);
       return event;
     } catch (e) {
       throw Exception('Failed to get event by ID: $e');
     }
   }
-
-
 
   // void EditEventName(String id, String eventName) async {
   //   try {
@@ -259,13 +260,12 @@ class EventProvider with ChangeNotifier {
   void EditEventDescription(String id, String Description) async {
     try {
       List<Event> events = await _eventsHome;
-      Event? event= events.firstWhere((event) => event.id == id);
-      event.description=Description;
+      Event? event = events.firstWhere((event) => event.id == id);
+      event.description = Description;
       notifyListeners();
     } catch (e) {
       throw Exception('Failed to get event by ID: $e');
     }
-
   }
 
 //modified here - check here
@@ -274,52 +274,54 @@ class EventProvider with ChangeNotifier {
       List<Event> events = await _eventsHome;
       Event? event = events.firstWhere((event) => event.id == id);
       if (event != null) {
-        event.venue?.name = Location ;
+        event.venue?.name = Location;
         notifyListeners();
       }
-
     } catch (e) {
       throw Exception('Failed to get event by ID: $e');
     }
   }
+
   Future<void> EditEventMaxParticipants(String id, int maxParticipants) async {
     try {
       List<Event> events = await _eventsHome;
       Event? event = events.firstWhere((event) => event.id == id);
       if (event != null) {
-        event.maxAttendees = maxParticipants ;
+        event.maxAttendees = maxParticipants;
         notifyListeners();
       }
-
     } catch (e) {
       throw Exception('Failed to get event by ID: $e');
     }
   }
+
   void EditEventsIsPrivate(String id, bool isPrivate) async {
     try {
       List<Event> events = await _eventsHome;
       Event? event = events.firstWhere((event) => event.id == id);
-      event.isPrivate = isPrivate ;
+      event.isPrivate = isPrivate;
       notifyListeners();
     } catch (e) {
       throw Exception('Failed to get event by ID: $e');
     }
   }
+
   void EditEventStartTime(String id, DateTime startTime) async {
     try {
       List<Event> events = await _eventsHome;
       Event? event = events.firstWhere((event) => event.id == id);
-      event.startTime = startTime as String ;
+      event.startTime = startTime as String;
       notifyListeners();
     } catch (e) {
       throw Exception('Failed to get event by ID: $e');
     }
   }
+
   void EditEventEndTime(String id, DateTime endTime) async {
     try {
       List<Event> events = await _eventsHome;
       Event? event = events.firstWhere((event) => event.id == id);
-      event.endTime = endTime as String ;
+      event.endTime = endTime as String;
       notifyListeners();
     } catch (e) {
       throw Exception('Failed to get event by ID: $e');
@@ -335,11 +337,7 @@ class EventProvider with ChangeNotifier {
   //     throw Exception('Failed to get event by ID: $e');
   //   }
   // }
-
-
-
 }
-
 
 // void addEventSaved(Event event) {
 //   _eventsHome.then((events) {
@@ -361,5 +359,3 @@ class EventProvider with ChangeNotifier {
 //     notifyListeners();
 //   });
 // }
-
-

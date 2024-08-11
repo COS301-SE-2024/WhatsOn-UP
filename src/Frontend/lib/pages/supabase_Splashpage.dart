@@ -10,60 +10,51 @@ import '../providers/notification_providers.dart';
 import '../providers/user_provider.dart';
 import '../services/api.dart';
 
-
 import '../services/socket_client.dart';
 
-class  SplashPage extends StatefulWidget {
+class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
   @override
   State<SplashPage> createState() => _SplashPageState();
 }
 
 class _SplashPageState extends State<SplashPage> {
-
   @override
   void initState() {
     super.initState();
     _redirect();
   }
-Future<void>_redirect() async{
-  await Future.delayed(Duration(seconds: 2));
-  final session = supabase.auth.currentSession;
-  if(!mounted) return;
-  if(session != null) {
 
-     // Navigator.of(context).pushReplacementNamed('/home');
-    await _login();
-
+  Future<void> _redirect() async {
+    await Future.delayed(Duration(seconds: 2));
+    final session = supabase.auth.currentSession;
+    if (!mounted) return;
+    if (session != null) {
+      // Navigator.of(context).pushReplacementNamed('/home');
+      await _login();
+    } else {
+      Navigator.of(context).pushReplacementNamed('/login');
+    }
   }
-  else{
-    Navigator.of(context).pushReplacementNamed('/login');
-  }
-}
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:  AnimatedSplashScreen(
-    splash: const Center(
-    child: Text(
-      'WhatsOn@UP',
-      style: TextStyle(
-        fontSize: 50,
-        fontWeight: FontWeight.bold,
-      ),
-    ),
-    ),
-    splashTransition: SplashTransition.slideTransition,
+      body: AnimatedSplashScreen(
+        splash: const Center(
+          child: Text(
+            'WhatsOn@UP',
+            style: TextStyle(
+              fontSize: 50,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        splashTransition: SplashTransition.slideTransition,
         nextScreen: SupabaseLogin(),
-    ),
+      ),
     );
   }
-
-
-
-
 
   Future<void> _login() async {
     userProvider userP = Provider.of<userProvider>(context, listen: false);
@@ -74,43 +65,34 @@ Future<void>_redirect() async{
 
     Api api = Api();
 
-    api. getUser(user!.id).then((response){
+    api.getUser(user!.id).then((response) {
       if (response['error'] != null) {
-
         print('An error occurred: ${response['error']}');
       } else {
-
-
-        String fullName = response['data']['user']['fullName']?? 'Unknown';
+        String fullName = response['data']['user']['fullName'] ?? 'Unknown';
         String userEmail = user.userMetadata?['email'];
-        String UserId=user.id;
-        String role=response['data']['user']['role']?? 'Unknown';
-        String  profileImage=response['data']['user']['profileImage']?? 'Unknown';
+        String UserId = user.id;
+        String role = response['data']['user']['role'] ?? 'Unknown';
+        String profileImage =
+            response['data']['user']['profileImage'] ?? 'Unknown';
 
-        userP.userId=user.id;
-        userP.Fullname=fullName;
-        userP.email=userEmail;
-        userP.role=role;
-        userP.profileImage=profileImage;
-        notificationProvider _notificationProvider = Provider.of<notificationProvider>(context, listen: false);
+        userP.userId = user.id;
+        userP.Fullname = fullName;
+        userP.email = userEmail;
+        userP.role = role;
+        userP.profileImage = profileImage;
+        notificationProvider _notificationProvider =
+            Provider.of<notificationProvider>(context, listen: false);
         // _notificationProvider.apiInstance=api;
         _notificationProvider.refreshNotifications(userP.userId);
-        userP. Generalusers(userP.userId);
-        SocketService('http://localhost:8082', userP.userId,_notificationProvider);
+        userP.Generalusers(userP.userId);
+        SocketService(
+            'http://localhost:8082', userP.userId, _notificationProvider);
 
-
-
-        userP.profileimage= profileImage;
+        userP.profileimage = profileImage;
 
         Navigator.of(context).pushReplacementNamed('/home');
       }
     });
-
-
-
-
   }
 }
-
-
-

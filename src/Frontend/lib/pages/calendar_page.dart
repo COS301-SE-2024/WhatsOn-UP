@@ -18,10 +18,8 @@ class CalendarPage extends StatefulWidget {
   State<CalendarPage> createState() => _CalendarPageState();
 }
 
-class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClientMixin {
-
-
-
+class _CalendarPageState extends State<CalendarPage>
+    with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
 
@@ -59,7 +57,7 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
   //       _groupedEvents = _groupEventsByDate(parsedEvents);
   //       _isLoading = false;
   //     });
-      
+
   //   } catch (e) {
   //     print('RSVP Error: $e');
   //     setState(() {
@@ -69,22 +67,21 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
   // }
 
   Future<void> _fetchEvents() async {
-  try {
-    EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
-    userProvider userP = Provider.of<userProvider>(context, listen: false);
-    
-    String? userId = userP.role == 'guest' ? null : userP.userId;
-    eventP.fetchfortheFirstTimeRsvp(userId!);
+    try {
+      EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
+      userProvider userP = Provider.of<userProvider>(context, listen: false);
 
-    List<Event> events = await eventP.eventsRsvp;
-    // final parsedEvents = parseEvents(response);
-    print("EVENTS IN CALENDAR PAGE: $events");
+      String? userId = userP.role == 'guest' ? null : userP.userId;
+      eventP.fetchfortheFirstTimeRsvp(userId!);
+
+      List<Event> events = await eventP.eventsRsvp;
+      // final parsedEvents = parseEvents(response);
+      print("EVENTS IN CALENDAR PAGE: $events");
 
       setState(() {
         _groupedEvents = _groupEventsByDate(events);
         _isLoading = false;
       });
-      
     } catch (e) {
       print('RSVP Error: $e');
       setState(() {
@@ -96,54 +93,60 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
   List<Map<String, dynamic>> parseEvents(List<dynamic> events) {
     return events.map((event) {
       return {
-
         'startTime': event['startTime']?.toString() ?? '',
         'endTime': event['endTime']?.toString() ?? '',
         'isPrivate': event['isPrivate'] ?? false,
         'name': event['title'],
         'date': event['startTime'].substring(0, 10),
         'time': event['startTime'].substring(11, 16),
-        'venue': event['venue'] != null ? {
-          'name': event['venue']['name'] ?? '',
-          'boards': event['venue']['boards'] ?? '',
-          'ac': event['venue']['ac'] ?? false,
-          'wifi': event['venue']['wifi'] ?? false,
-          'dataProject': event['venue']['dataProject'] ?? 0,
-          'docCam': event['venue']['docCam'] ?? false,
-          'mic': event['venue']['mic'] ?? false,
-          'windows': event['venue']['windows'] ?? false,
-          'capacity': event['venue']['capacity'] ?? 0,
-          'available': event['venue']['available'] ?? false,
-        } : null,
+        'venue': event['venue'] != null
+            ? {
+                'name': event['venue']['name'] ?? '',
+                'boards': event['venue']['boards'] ?? '',
+                'ac': event['venue']['ac'] ?? false,
+                'wifi': event['venue']['wifi'] ?? false,
+                'dataProject': event['venue']['dataProject'] ?? 0,
+                'docCam': event['venue']['docCam'] ?? false,
+                'mic': event['venue']['mic'] ?? false,
+                'windows': event['venue']['windows'] ?? false,
+                'capacity': event['venue']['capacity'] ?? 0,
+                'available': event['venue']['available'] ?? false,
+              }
+            : null,
         // 'attendees': event['attendees'].length.toString(),
-        'maxAttendees': event['maxAttendees'] is int ? event['maxAttendees'] : 0,
+        'maxAttendees':
+            event['maxAttendees'] is int ? event['maxAttendees'] : 0,
         'url': 'https://picsum.photos/200',
         'description': event['description'],
         'id': event['id'],
-        'hosts': (event.containsKey('hosts') && (event['hosts'] as List).isNotEmpty)
+        'hosts': (event.containsKey('hosts') &&
+                (event['hosts'] as List).isNotEmpty)
             ? List<String>.from(event['hosts'].map((host) => host['fullName']))
             : [],
         'attendees': (event.containsKey('attendees') &&
-            (event['attendees'] as List).isNotEmpty)
-            ? List<Attendee>.from(event['attendees'].map((attendee) => Attendee.fromJson(attendee)))
+                (event['attendees'] as List).isNotEmpty)
+            ? List<Attendee>.from(event['attendees']
+                .map((attendee) => Attendee.fromJson(attendee)))
             : [],
-        'metadata': event.containsKey('metadata') && event['metadata'] is Map<String, dynamic>
+        'metadata': event.containsKey('metadata') &&
+                event['metadata'] is Map<String, dynamic>
             ? Metadata.fromJson(event['metadata'])
             : Metadata(
-          mentors: [],
-          categories: [],
-          sessions: [],
-        ),
-
+                mentors: [],
+                categories: [],
+                sessions: [],
+              ),
       };
     }).toList();
   }
 
-  Map<DateTime, List<Map<String, dynamic>>> _groupEventsByDate(List<Event> events) {
+  Map<DateTime, List<Map<String, dynamic>>> _groupEventsByDate(
+      List<Event> events) {
     Map<DateTime, List<Map<String, dynamic>>> groupedEvents = {};
 
     events.forEach((event) {
-      DateTime date = DateTime.parse(event.startTime); // Assuming startTime is a DateTime string
+      DateTime date = DateTime.parse(
+          event.startTime); // Assuming startTime is a DateTime string
       DateTime eventDay = DateTime(date.year, date.month, date.day);
 
       if (groupedEvents[eventDay] == null) {
@@ -157,25 +160,29 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
         'name': event.nameOfEvent,
         'date': event.startTime.substring(0, 10),
         'time': event.startTime.substring(11, 16),
-        'venue': event.venue != null ? {
-          'venueId': event.venue?.venueId,
-          'name': event.venue?.name ?? '',
-          'boards': event.venue?.boards ?? '',
-          'ac': event.venue?.ac ?? false,
-          'wifi': event.venue?.wifi ?? false,
-          'dataProject': event.venue?.dataProject ?? 0,
-          'docCam': event.venue?.docCam ?? false,
-          'mic': event.venue?.mic ?? false,
-          'windows': event.venue?.windows ?? false,
-          'capacity': event.venue?.capacity ?? 0,
-          'available': event.venue?.available ?? false,
-        } : null,
+        'venue': event.venue != null
+            ? {
+                'venueId': event.venue?.venueId,
+                'name': event.venue?.name ?? '',
+                'boards': event.venue?.boards ?? '',
+                'ac': event.venue?.ac ?? false,
+                'wifi': event.venue?.wifi ?? false,
+                'dataProject': event.venue?.dataProject ?? 0,
+                'docCam': event.venue?.docCam ?? false,
+                'mic': event.venue?.mic ?? false,
+                'windows': event.venue?.windows ?? false,
+                'capacity': event.venue?.capacity ?? 0,
+                'available': event.venue?.available ?? false,
+              }
+            : null,
         'url': 'https://picsum.photos/200',
         'maxAttendees': event.maxAttendees ?? 0,
         'description': event.description ?? '',
         'id': event.id,
         'hosts': event.hosts != null ? List<String>.from(event.hosts!) : [],
-        'attendees': event.attendees != null ? List<Attendee>.from(event.attendees!) : [],
+        'attendees': event.attendees != null
+            ? List<Attendee>.from(event.attendees!)
+            : [],
         'metadata': event.metadata.toJson(),
       });
     });
@@ -205,17 +212,14 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
     return DateFormat('d MMMM yyyy').format(date);
   }
 
-
   String _getEventListTitle(userProvider userP) {
     // print("USER ROLE IN CALEDNAR PAGE: ${userP.role}");
     if (_selectedDay != null) {
       return "Events on ${_formatDate(_selectedDay!)}";
-    } 
-    else {
+    } else {
       if (userP.role == 'GUEST') {
         return "Events happening in ${_formatMonth(_focusedDay)}";
-      } 
-      else {
+      } else {
         return "Your RSVP'd Events for ${_formatMonth(_focusedDay)}";
       }
     }
@@ -232,12 +236,12 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
           const Padding(
             padding: EdgeInsets.all(16.0),
             child: Text(
-                'Calendar',
-                style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                ),
+              'Calendar',
+              style: TextStyle(
+                fontSize: 32,
+                fontWeight: FontWeight.bold,
               ),
+            ),
           ),
           TableCalendar(
             firstDay: DateTime.utc(2023, 1, 1),
@@ -249,7 +253,8 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
             },
             onDaySelected: (selectedDay, focusedDay) {
               setState(() {
-                _selectedDay = isSameDay(_selectedDay, selectedDay) ? null : selectedDay;
+                _selectedDay =
+                    isSameDay(_selectedDay, selectedDay) ? null : selectedDay;
                 _focusedDay = focusedDay;
               });
             },
@@ -328,37 +333,37 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
           const SizedBox(height: 16.0),
           Expanded(
             child: _isLoading
-              ? const Center(child: SpinKitPianoWave(
-                  color: Color.fromARGB(255, 149, 137, 74),
-                  size: 50.0,
-                ))
-              : ListView.builder(
-                  itemCount: _selectedDay != null
-                      ? _getEventsForDay(_selectedDay!).length
-                      : _getEventsForMonth(_focusedDay).length,
-                  itemBuilder: (context, index) {
-                    final events = _selectedDay != null
-                        ? _getEventsForDay(_selectedDay!)
-                        : _getEventsForMonth(_focusedDay);
-                    final event = events[index];
+                ? const Center(
+                    child: SpinKitPianoWave(
+                    color: Color.fromARGB(255, 149, 137, 74),
+                    size: 50.0,
+                  ))
+                : ListView.builder(
+                    itemCount: _selectedDay != null
+                        ? _getEventsForDay(_selectedDay!).length
+                        : _getEventsForMonth(_focusedDay).length,
+                    itemBuilder: (context, index) {
+                      final events = _selectedDay != null
+                          ? _getEventsForDay(_selectedDay!)
+                          : _getEventsForMonth(_focusedDay);
+                      final event = events[index];
 
-                    return GestureDetector(
-                      onTap: () {
-                        Event eventObject = Event(
-                          nameOfEvent: event['name'],
-                          venue: Venue.fromJson(event['venue']),
-                          description: event['description'],
-                          imageUrls: [event['url']],
-                          id: event['id'],
-                          hosts: event['hosts'],
-                          attendees:event['attendees'],
-                          startTime: event['startTime'],
-                          endTime: event['endTime'],
-                          maxAttendees: event['maxAttendees'],
-                          isPrivate: event['isPrivate'],
-                          metadata:Metadata.fromJson(event['metadata']),
-
-                        );
+                      return GestureDetector(
+                        onTap: () {
+                          Event eventObject = Event(
+                            nameOfEvent: event['name'],
+                            venue: Venue.fromJson(event['venue']),
+                            description: event['description'],
+                            imageUrls: [event['url']],
+                            id: event['id'],
+                            hosts: event['hosts'],
+                            attendees: event['attendees'],
+                            startTime: event['startTime'],
+                            endTime: event['endTime'],
+                            maxAttendees: event['maxAttendees'],
+                            isPrivate: event['isPrivate'],
+                            metadata: Metadata.fromJson(event['metadata']),
+                          );
 /* venue: event['venue'] != null ? Venue(
                             name: event['venue']['name'] ?? '',
                             boards: event['venue']['boards'] ?? '',
@@ -372,94 +377,100 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
                             available: event['venue']['available'] ?? false,
                             venueId: '', // addded via reccomendations
                           ) : null,*/
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => DetailedEventPage(event: eventObject),
-                          ),
-                        );
-                      },
-                      child: Card(
-                        margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                width: 120,
-                                height: 80,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  image: DecorationImage(
-                                    image: NetworkImage(event['url']),
-                                    fit: BoxFit.cover,
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  DetailedEventPage(event: eventObject),
+                            ),
+                          );
+                        },
+                        child: Card(
+                          margin: const EdgeInsets.symmetric(
+                              vertical: 8.0, horizontal: 16.0),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  width: 120,
+                                  height: 80,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    image: DecorationImage(
+                                      image: NetworkImage(event['url']),
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(width: 16.0),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      event['name'],
-                                      style: const TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 1,
-                                    ),
-                                    const SizedBox(height: 8.0),
-                                    Row(
-                                      children: [
-                                        const Icon(Icons.calendar_today, size: 16),
-                                        const SizedBox(width: 4.0),
-                                        Text(event['date']),
-                                        const SizedBox(width: 16.0),
-                                        const Icon(Icons.access_time, size: 16),
-                                        const SizedBox(width: 4.0),
-                                        Text(event['time']),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 8.0),
-                                    Row(
-                                      children: [
-                                        const Icon(Icons.location_on, size: 16),
-                                        const SizedBox(width: 4.0),
-                                        Expanded(
-                                          child: Text(
-                                            event['venue']['name'],
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 1,
-                                          ),
+                                const SizedBox(width: 16.0),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        event['name'],
+                                        style: const TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
                                         ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 4.0),
-                                    Row(
-                                      children: [
-                                        const Icon(Icons.people, size: 16),
-                                        const SizedBox(width: 4.0),
-                                        Text(event['attendees'].length.toString()),
-                                      ],
-                                    ),
-                                  ],
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                      ),
+                                      const SizedBox(height: 8.0),
+                                      Row(
+                                        children: [
+                                          const Icon(Icons.calendar_today,
+                                              size: 16),
+                                          const SizedBox(width: 4.0),
+                                          Text(event['date']),
+                                          const SizedBox(width: 16.0),
+                                          const Icon(Icons.access_time,
+                                              size: 16),
+                                          const SizedBox(width: 4.0),
+                                          Text(event['time']),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 8.0),
+                                      Row(
+                                        children: [
+                                          const Icon(Icons.location_on,
+                                              size: 16),
+                                          const SizedBox(width: 4.0),
+                                          Expanded(
+                                            child: Text(
+                                              event['venue']['name'],
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 1,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 4.0),
+                                      Row(
+                                        children: [
+                                          const Icon(Icons.people, size: 16),
+                                          const SizedBox(width: 4.0),
+                                          Text(event['attendees']
+                                              .length
+                                              .toString()),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    );
-                  },
-                ),
+                      );
+                    },
+                  ),
           ),
         ],
       ),
     );
   }
 }
-
-

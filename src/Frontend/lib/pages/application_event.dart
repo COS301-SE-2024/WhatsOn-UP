@@ -13,17 +13,17 @@ import '../providers/events_providers.dart';
 import '../providers/user_provider.dart';
 import '../widgets/event_card.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
+
 class ApplicationEvent extends StatefulWidget {
   ApplicationEvent({
     Key? key,
-
   }) : super(key: key);
 
   @override
   State<ApplicationEvent> createState() => _ApplicationEventState();
-
 }
-class Category{
+
+class Category {
   final int id;
   final String name;
   Category({
@@ -31,6 +31,7 @@ class Category{
     required this.name,
   });
 }
+
 class _ApplicationEventState extends State<ApplicationEvent> {
   static List<Category> _categories = [
     Category(id: 1, name: 'Technology'),
@@ -42,14 +43,17 @@ class _ApplicationEventState extends State<ApplicationEvent> {
     Category(id: 7, name: 'Charity & Causes'),
     Category(id: 8, name: 'Entrepreneurship'),
   ];
-  final _items=_categories.map((category) => MultiSelectItem<Category>(category, category.name)).toList();
+  final _items = _categories
+      .map((category) => MultiSelectItem<Category>(category, category.name))
+      .toList();
   List<Category> _selectedCategories = [];
   List<Uint8List> imageBytesList = [];
   final _multiSelectKey = GlobalKey<FormFieldState>();
   void initState() {
-    _selectedCategories=_categories;
+    _selectedCategories = _categories;
     super.initState();
   }
+
   late Color myColor;
   late Size mediaSize;
   TextEditingController eventNameController = TextEditingController();
@@ -62,7 +66,6 @@ class _ApplicationEventState extends State<ApplicationEvent> {
   TimeOfDay endTime = TimeOfDay.now();
   List<XFile>? selectedImages;
   bool isPublic = true;
-
 
   final _formKey = GlobalKey<FormState>();
 
@@ -83,7 +86,6 @@ class _ApplicationEventState extends State<ApplicationEvent> {
         title: const Text('Create Event'),
       ),
       body: _buildForm(),
-
     );
   }
 
@@ -106,11 +108,13 @@ class _ApplicationEventState extends State<ApplicationEvent> {
               const SizedBox(height: 20),
               _buildInputField(eventNameController, label: 'Event Name'),
               const SizedBox(height: 10),
-              _buildInputField(eventDescriptionController, label: 'Description'),
+              _buildInputField(eventDescriptionController,
+                  label: 'Description'),
               const SizedBox(height: 10),
               _buildInputField(venueController, label: 'Venue'),
               const SizedBox(height: 10),
-              _buildInputField(maxAttendeesController, label: 'Max Attendees', keyboardType: TextInputType.number),
+              _buildInputField(maxAttendeesController,
+                  label: 'Max Attendees', keyboardType: TextInputType.number),
               const SizedBox(height: 20),
               _buildDateTimePicker('Start', startDate, startTime, (date, time) {
                 setState(() {
@@ -158,20 +162,18 @@ class _ApplicationEventState extends State<ApplicationEvent> {
                         },
                       ),
                     ),
-                    _selectedCategories == null ||  _selectedCategories.isEmpty
+                    _selectedCategories == null || _selectedCategories.isEmpty
                         ? Container(
-                        padding: EdgeInsets.all(10),
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          "None selected",
-                          style: TextStyle(color: Colors.black54),
-                        ))
+                            padding: EdgeInsets.all(10),
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              "None selected",
+                              style: TextStyle(color: Colors.black54),
+                            ))
                         : Container(),
                   ],
-
                 ),
               ),
-
               const SizedBox(height: 20),
               _buildPrivacyToggle(),
               const SizedBox(height: 20),
@@ -186,7 +188,8 @@ class _ApplicationEventState extends State<ApplicationEvent> {
                       showSubmitDialog(context);
                     },
                     style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.black, backgroundColor: Colors.white,
+                      foregroundColor: Colors.black,
+                      backgroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                         side: BorderSide(color: Colors.grey, width: 1),
@@ -205,48 +208,48 @@ class _ApplicationEventState extends State<ApplicationEvent> {
   }
 
   Widget _buildPrivacyToggle() {
-  final theme = Theme.of(context);
-  final isLightTheme = theme.brightness == Brightness.light;
+    final theme = Theme.of(context);
+    final isLightTheme = theme.brightness == Brightness.light;
 
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      const Text('Event Visibility:'),
-      const SizedBox(height: 10),
-      Row(
-        children: [
-          Switch(
-            value: isPublic,
-            onChanged: (value) {
-              setState(() {
-                isPublic = value;
-              });
-            },
-            activeTrackColor: isLightTheme
-                ? lightPrimaryColor.withOpacity(0.5)
-                : darkPrimaryColor.withOpacity(0.5),
-            activeColor: isLightTheme ? lightPrimaryColor : darkPrimaryColor,
-            inactiveThumbColor: isLightTheme
-                ? Colors.grey[400]
-                : Colors.grey[600],
-            inactiveTrackColor: isLightTheme
-                ? Colors.grey[300]
-                : Colors.grey[700],
-          ),
-          const SizedBox(width: 10),
-          Text(
-            isPublic ? 'Public' : 'Private',
-            style: TextStyle(
-              color: isLightTheme ? lightTextColor : Colors.white,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text('Event Visibility:'),
+        const SizedBox(height: 10),
+        Row(
+          children: [
+            Switch(
+              value: isPublic,
+              onChanged: (value) {
+                setState(() {
+                  isPublic = value;
+                });
+              },
+              activeTrackColor: isLightTheme
+                  ? lightPrimaryColor.withOpacity(0.5)
+                  : darkPrimaryColor.withOpacity(0.5),
+              activeColor: isLightTheme ? lightPrimaryColor : darkPrimaryColor,
+              inactiveThumbColor:
+                  isLightTheme ? Colors.grey[400] : Colors.grey[600],
+              inactiveTrackColor:
+                  isLightTheme ? Colors.grey[300] : Colors.grey[700],
             ),
-          ),
-        ],
-      ),
-    ],
-  );
-}
+            const SizedBox(width: 10),
+            Text(
+              isPublic ? 'Public' : 'Private',
+              style: TextStyle(
+                color: isLightTheme ? lightTextColor : Colors.white,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
 
-  Widget _buildInputField(TextEditingController controller, {required String label, TextInputType keyboardType = TextInputType.text}) {
+  Widget _buildInputField(TextEditingController controller,
+      {required String label,
+      TextInputType keyboardType = TextInputType.text}) {
     return TextFormField(
       controller: controller,
       decoration: InputDecoration(
@@ -263,9 +266,12 @@ class _ApplicationEventState extends State<ApplicationEvent> {
     );
   }
 
-  Widget _buildDateTimePicker(String label, DateTime date, TimeOfDay time, void Function(DateTime, TimeOfDay) onDateTimeChanged) {
+  Widget _buildDateTimePicker(String label, DateTime date, TimeOfDay time,
+      void Function(DateTime, TimeOfDay) onDateTimeChanged) {
     final theme = Theme.of(context);
-    final dateAndTimeColour = theme.brightness == Brightness.dark ? const Color.fromARGB(255, 58, 132, 218) : const Color.fromARGB(255, 13, 73, 151);
+    final dateAndTimeColour = theme.brightness == Brightness.dark
+        ? const Color.fromARGB(255, 58, 132, 218)
+        : const Color.fromARGB(255, 13, 73, 151);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -321,12 +327,14 @@ class _ApplicationEventState extends State<ApplicationEvent> {
             }
           },
           style: ElevatedButton.styleFrom(
-            foregroundColor: Colors.black, backgroundColor: Colors.white,
+            foregroundColor: Colors.black,
+            backgroundColor: Colors.white,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),
               side: BorderSide(color: Colors.grey, width: 1),
             ),
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 7.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 7.0),
           ),
           child: const Text('Select Images'),
         ),
@@ -348,74 +356,73 @@ class _ApplicationEventState extends State<ApplicationEvent> {
 
     // eventP.addEventHome(
     // );
-   // eventP.addEventHome();
+    // eventP.addEventHome();
     final userSuperbase = supabase.auth.currentUser;
-  if (_formKey.currentState!.validate()) {
-    String eventName = eventNameController.text;
-    String eventDescription = eventDescriptionController.text;
-    String venue = venueController.text;
-    int? maxAttendees = int.tryParse(maxAttendeesController.text);
+    if (_formKey.currentState!.validate()) {
+      String eventName = eventNameController.text;
+      String eventDescription = eventDescriptionController.text;
+      String venue = venueController.text;
+      int? maxAttendees = int.tryParse(maxAttendeesController.text);
 
-    // Combine date and time
-    DateTime startDateTime = DateTime(
-      startDate.year, startDate.month, startDate.day,
-      startTime.hour, startTime.minute
-    );
-    DateTime endDateTime = DateTime(
-      endDate.year, endDate.month, endDate.day,
-      endTime.hour, endTime.minute
-    );
+      // Combine date and time
+      DateTime startDateTime = DateTime(startDate.year, startDate.month,
+          startDate.day, startTime.hour, startTime.minute);
+      DateTime endDateTime = DateTime(endDate.year, endDate.month, endDate.day,
+          endTime.hour, endTime.minute);
 
-    List<String>? mediaUrls = selectedImages?.map((file) => file.path).toList();
-    List<String> selectedCategoryNames = _selectedCategories.map((category) => category.name).toList();
-    print(selectedCategoryNames);
-    // eventP.addEventHome(newEvent);
+      List<String>? mediaUrls =
+          selectedImages?.map((file) => file.path).toList();
+      List<String> selectedCategoryNames =
+          _selectedCategories.map((category) => category.name).toList();
+      print(selectedCategoryNames);
+      // eventP.addEventHome(newEvent);
 
 //need to return an event as a responds
 
-
-
-    Api().createEvent(
-      title: eventName,
-      description: eventDescription,
-      startDate: startDateTime,
-      endDate: endDateTime,
-      location: venue,
-      maxParticipants: maxAttendees,
-      isPrivate: !isPublic,
-      media: mediaUrls,
-      userId: userSuperbase!.id,
-    ).then((response) {
-      print('Event created successfully');
-      // print('The Event: ');
-      //   print (response['data']);
+      Api()
+          .createEvent(
+        title: eventName,
+        description: eventDescription,
+        startDate: startDateTime,
+        endDate: endDateTime,
+        location: venue,
+        maxParticipants: maxAttendees,
+        isPrivate: !isPublic,
+        media: mediaUrls,
+        userId: userSuperbase!.id,
+      )
+          .then((response) {
+        print('Event created successfully');
+        // print('The Event: ');
+        //   print (response['data']);
         eventP.addEventHome(response['data']);
-      for(Uint8List imageBytes in imageBytesList){
-        Api().eventUploadImage(imageBytes,userP.userId ,response['data']['id']);
-      }
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => HomePage(),
-        ),
-      );
-      
-      eventNameController.clear();
-      eventDescriptionController.clear();
-      venueController.clear();
-      maxAttendeesController.clear();
-      setState(() {
-        selectedImages = null;
-        isPublic = true;
+        for (Uint8List imageBytes in imageBytesList) {
+          Api().eventUploadImage(
+              imageBytes, userP.userId, response['data']['id']);
+        }
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomePage(),
+          ),
+        );
+
+        eventNameController.clear();
+        eventDescriptionController.clear();
+        venueController.clear();
+        maxAttendeesController.clear();
+        setState(() {
+          selectedImages = null;
+          isPublic = true;
+        });
+      }).catchError((error) {
+        print('Error creating event: $error');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to create event: $error')),
+        );
       });
-    }).catchError((error) {
-      print('Error creating event: $error');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to create event: $error')),
-      );
-    });
+    }
   }
-}
 
   void showSubmitDialog(BuildContext context) {
     bool isValid = _formKey.currentState!.validate();
@@ -439,8 +446,4 @@ class _ApplicationEventState extends State<ApplicationEvent> {
       },
     );
   }
-
-
-
 }
-
