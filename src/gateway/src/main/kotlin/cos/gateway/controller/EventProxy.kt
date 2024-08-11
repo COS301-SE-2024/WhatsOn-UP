@@ -1,10 +1,7 @@
 package cos.gateway.controller
 
 import cos.gateway.config.AuthConfig
-import org.springframework.http.HttpEntity
-import org.springframework.http.HttpHeaders
-import org.springframework.http.HttpMethod
-import org.springframework.http.ResponseEntity
+import org.springframework.http.*
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 import java.util.*
@@ -19,9 +16,22 @@ class EventProxy {
     @PostMapping("/create")
     @PreAuthorize("hasAnyRole('HOST', 'ADMIN')")
     fun createEvent(@RequestHeader headers: HttpHeaders, @RequestBody event: Any): ResponseEntity<Any> {
+        val url = "$targetUrl/create"
+        println(headers)
         val entity = HttpEntity(event, headers)
-        return restTemplate.exchange("$targetUrl/create", HttpMethod.POST, entity, Any::class.java)
+        return try {
+            val response = restTemplate.exchange(
+                url, HttpMethod.POST, entity,
+                Any::class.java
+            )
+
+            ResponseEntity.ok(response.body)
+        } catch (e: Exception) {
+            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("Error creating an event: ${e.message}")
+        }
     }
+
 
     @GetMapping("/get_all")
     @PreAuthorize("permitAll()")

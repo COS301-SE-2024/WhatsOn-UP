@@ -19,16 +19,10 @@ class NotificationProxy {
 
     @GetMapping("/get_all")
     @PreAuthorize("isAuthenticated()")
-    fun getNotifications(@RequestHeader("authorization") token: String?): ResponseEntity<*> {
-
-        val bearerToken = if (token!!.startsWith("Bearer ")) token else "Bearer $token"
+    fun getNotifications(@RequestHeader headers: HttpHeaders): ResponseEntity<*> {
 
         val url = "$notificationsServiceUrl/get_all"
-        val headers = HttpHeaders().apply {
-            this["Authorization"] = bearerToken
-        }
         val entity = HttpEntity<String>(headers)
-
         return try {
             val response = restTemplate.exchange(
                 url, HttpMethod.GET, entity,

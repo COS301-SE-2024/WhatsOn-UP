@@ -2,7 +2,6 @@ package com.devforce.backend.service
 
 import com.devforce.backend.dto.EventDto
 import com.devforce.backend.dto.ResponseDto
-import com.devforce.backend.model.ApplicationStatusModel
 import com.devforce.backend.model.HostApplicationsModel
 import com.devforce.backend.repo.*
 import com.devforce.backend.security.CustomUser
@@ -11,7 +10,6 @@ import org.springframework.http.ResponseEntity
 import org.springframework.mail.MailSender
 import org.springframework.mail.SimpleMailMessage
 import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter

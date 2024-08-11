@@ -15,7 +15,7 @@ class UserProxy {
 
     private val restTemplate = RestTemplate()
 
-    @Value("\${user.service.url:http://localhost:8085/api/user}")
+    @Value("\${user.service.url:http://localhost:8080/api/user}")
     private lateinit var userServiceUrl: String
 
     @PutMapping("/save_event/{id}")
