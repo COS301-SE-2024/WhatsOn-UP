@@ -56,7 +56,41 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
       });
     }
   }
+  Future<void> _Acknowledge() async {
+    setState(() {
+      isLoading = true;
+    });
 
+    Api api = Api();
+    try {
+      var response = await api.Acknowledgeapplication(userId: widget.notification.userId);
+
+      if (response['status'] == 'error') {
+
+
+      } else {
+       SnackBar(content: Text("Application Acknowledged"));
+
+      }
+    } catch (e) {
+      String errorMessage = e.toString();
+      if (errorMessage.contains("Invite already accepted")) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("This invite has been already accepted"))
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("An error occurred: $e"))
+        );
+      }
+    } finally {
+      Navigator.of(context).pushReplacementNamed('/notifications');
+      setState(() {
+        isLoading = false;
+      });
+
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -157,6 +191,17 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
                 child: Text('Go to Calendar'),
               ),
               SizedBox(height: 20.0),
+            ],
+            if(widget.notification.notificationTypes=='application')...[
+              TextButton(
+                onPressed: _Acknowledge,
+                style: TextButton.styleFrom(
+                  foregroundColor: Colors.black,
+                  side: BorderSide(color: Colors.black),
+                  padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 20.0),
+                ),
+                child: const Text('Acknowledge'),
+              ),
             ],
           ],
         ),

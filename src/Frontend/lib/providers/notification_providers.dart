@@ -1,4 +1,6 @@
 
+import 'dart:convert';
+
 import 'package:firstapp/providers/user_provider.dart';
 import 'package:firstapp/widgets/notification_card.dart';
 import 'package:flutter/material.dart';
@@ -9,14 +11,13 @@ import '../services/api.dart';
 
 class notificationProvider extends  ChangeNotifier {
 
-  late final Api api ;
+  final Api api;
   userProvider userP= userProvider();
   late Future <List<AppNotification>> _Notifications;
    Future <List<AppNotification>> get notifications => _Notifications;
-   set apiInstance(Api apiInstance){
-     api=apiInstance;
-   }
 
+
+  notificationProvider({required this.api});
 
   Future<List<AppNotification>> _fetchNotifications(String userId) async {
     try {
@@ -32,10 +33,27 @@ class notificationProvider extends  ChangeNotifier {
   Future<void> refreshNotifications(String userId) async {
     try {
       _Notifications = _fetchNotifications(userId);
-      await _Notifications;
       notifyListeners();
     } catch (e) {
       throw Exception('Failed to refresh notifications: $e');
+    }
+  }
+  void addNotification(var eventData) {
+    try {
+      Map<String, dynamic> eventJson;
+      if (eventData is String) {
+        eventJson = json.decode(eventData);
+      } else {
+        eventJson = eventData;
+      }
+      AppNotification newNotification = AppNotification.fromJson(eventJson['data']);
+      print(newNotification);
+
+       _Notifications.then((value) => value.add(newNotification));
+
+      notifyListeners();
+    } catch (e) {
+      throw Exception('Failed to add notification: $e');
     }
   }
 

@@ -120,9 +120,9 @@ class EventCardH extends StatelessWidget {
                 Container(
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(16.0),
-                    child: event.imageUrls.isNotEmpty
+                    child: event.imageUrls!.isNotEmpty
                         ? Image.network(
-                      event.imageUrls[0],
+                      event.imageUrls![0],
                       height: 120.0,
                       width: double.infinity,
                       fit: BoxFit.cover,

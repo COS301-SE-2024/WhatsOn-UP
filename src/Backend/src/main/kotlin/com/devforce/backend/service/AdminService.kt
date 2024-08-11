@@ -46,9 +46,15 @@ class AdminService {
         if (user.isEmpty) {
             return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "User not found"))
         }
+
         val userModel = user.get()
         if (userModel.role!!.name == "ADMIN") {
             return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "User is an admin"))
+        }
+
+        val application = hostApplicationsRepo.findByUserId(userId)
+        if (application.isNotEmpty()) {
+            application[0]?.status = statusRepo.findByName("VERIFIED")
         }
 
         userModel.role = roleRepo.findByName("GENERAL")
@@ -73,6 +79,11 @@ class AdminService {
         if (application.isEmpty) {
             return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Application not found"))
         }
+
+        if (application.get().status!!.name == "PENDING" && (application.get().verificationCode != null || application.get().proofUrl == null)) {
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Application not verified"))
+        }
+
         val applicationModel = application.get()
         applicationModel.status = statusRepo.findByName("ACCEPTED")
         applicationModel.acceptedRejectedBy = user
