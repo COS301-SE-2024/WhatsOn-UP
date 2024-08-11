@@ -203,7 +203,7 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
                   });
                 },
               ),
-              items: widget.event.imageUrls.map((url) {
+              items: widget.event.imageUrls?.map((url) {
                 return Builder(
                   builder: (BuildContext context) {
                     return ClipRRect(
@@ -220,7 +220,7 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
             ),
             Row( // Dots indicator for carousel
               mainAxisAlignment: MainAxisAlignment.center,
-              children: widget.event.imageUrls.asMap().entries.map((entry) {
+              children: widget.event.imageUrls!.asMap().entries.map((entry) {
                 int index = entry.key;
                 return Container(
                   width: 8.0,
