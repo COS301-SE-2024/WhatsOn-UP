@@ -23,6 +23,7 @@ void main() {
     when(mockUserProvider.email).thenReturn('user@gmail.com');
     when(mockUserProvider.password).thenReturn('password123');
     when(mockUserProvider.userId).thenReturn('1');
+    when(mockUserProvider.role).thenReturn("GENERAL");
 
     String mockImageUrl = 'https://via.placeholder.com/150';
     when(mockUserProvider.profileImage).thenReturn(mockImageUrl);
