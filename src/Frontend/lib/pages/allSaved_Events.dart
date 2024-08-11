@@ -43,34 +43,75 @@ class _AllsavedEventsState extends State<AllsavedEvents> {
     }
   }
 
+  // @override
+  // Widget build(BuildContext context) {
+  //   return Scaffold(
+  //     appBar: AppBar(
+  //       title: const Text('Saved Events'),
+  //     ),
+  //     body:  isLoading
+  //         ? const Center(
+  //       child: SpinKitPianoWave(
+  //         color: Color.fromARGB(255, 149, 137, 74),
+  //         size: 50.0,
+  //       ),
+  //     )
+  //         : hasError
+  //         ? const Center(
+  //       child: Text(
+  //         'Failed to load events. Please try again later.',
+  //         style: TextStyle(color: Colors.red),
+  //       ),
+  //     )
+  //         : ListView.builder(
+  //       itemCount: events.length,
+  //       itemBuilder: (context, index) {
+  //         return EventCardS(event: events[index]);
+  //       },
+  //     ),
+  //   );
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Saved Events'),
       ),
-      body:  isLoading
-          ? Center(
-        child: SpinKitPianoWave(
-          color: Color.fromARGB(255, 149, 137, 74),
-          size: 50.0,
-        ),
-      )
+      body: isLoading
+          ? const Center(
+              child: SpinKitPianoWave(
+                color: Color.fromARGB(255, 149, 137, 74),
+                size: 50.0,
+              ),
+            )
           : hasError
-          ? Center(
-        child: Text(
-          'Failed to load events. Please try again later.',
-          style: TextStyle(color: Colors.red),
-        ),
-      )
-          : ListView.builder(
-        itemCount: events.length,
-        itemBuilder: (context, index) {
-          return EventCardS(event: events[index]);
-        },
-      ),
+              ? const Center(
+                  child: Text(
+                    'Failed to load events. Please try again later.',
+                    style: TextStyle(color: Colors.red),
+                  ),
+                )
+              : events.isEmpty
+                  ? const Center(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16.0),
+                        child: Text(
+                          'You have no saved events. Tap the bookmark button on any event card to save it for later viewing here.',
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    )
+                  : ListView.builder(
+                      itemCount: events.length,
+                      itemBuilder: (context, index) {
+                        return EventCardS(event: events[index]);
+                      },
+                    ),
     );
-  }
+}
+
+
 }
 
 class EventCardS extends StatelessWidget {
