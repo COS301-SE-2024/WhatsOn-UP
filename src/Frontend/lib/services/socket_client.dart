@@ -1,10 +1,18 @@
 import 'package:firstapp/providers/notification_providers.dart';
+import 'package:provider/provider.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+
+import '../providers/notification_providers.dart';
+
+import 'api.dart';
+
 
 class SocketService {
   late IO.Socket socket;
+  notificationProvider _notificationProvider;
 
-  SocketService(String url, String userId) {
+
+  SocketService(String url, String userId,this._notificationProvider) {
 
     final headers = {
       'token': 'Bearer $userId',
@@ -27,9 +35,10 @@ class SocketService {
       print('Disconnected');
     });
 
-    socket.on('event', (data) {
+    socket.on('notification', (data)  {
       print('Event received: $data');
-      notificationProvider().refreshNotifications(userId);
+
+         refreshNotifications(userId);
     });
     socket.on('error', (error) {
       print('Error: $error');
@@ -39,7 +48,9 @@ class SocketService {
   void sendMessage(String event, dynamic message) {
     socket.emit(event, message);
   }
-
+void refreshNotifications(String userId) {
+    _notificationProvider.refreshNotifications(userId);
+  }
   void dispose() {
     socket.dispose();
   }

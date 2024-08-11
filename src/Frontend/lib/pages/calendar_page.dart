@@ -116,7 +116,9 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
         } : null,
         // 'attendees': event['attendees'].length.toString(),
         'maxAttendees': event['maxAttendees'] is int ? event['maxAttendees'] : 0,
-        'url': 'https://picsum.photos/200', // TODO: This still needs to change to the actual url of the image. Currently nothing is being returned in the eventMedia field
+        'imageUrls': (event.containsKey('eventMedia') && (event['eventMedia'] as List).isNotEmpty)
+            ? List<String>.from(event['eventMedia'].map((media) => media?.toString() ?? ''))
+            : ['https://images.pexels.com/photos/1190297/pexels-photo-1190297.jpeg'],
         'description': event['description'],
         'id': event['id'],
         'hosts': (event.containsKey('hosts') && (event['hosts'] as List).isNotEmpty)
@@ -170,8 +172,8 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
           'capacity': event.venue?.capacity ?? 0,
           'available': event.venue?.available ?? false,
         } : null,
+        'eventMedia': event.imageUrls,
         'maxAttendees': event.maxAttendees ?? 0,
-        'url': 'https://picsum.photos/200', // Placeholder URL, update as needed
         'description': event.description ?? '',
         'id': event.id,
         'hosts': event.hosts != null ? List<String>.from(event.hosts!) : [],

@@ -216,10 +216,10 @@ userProvider userP = Provider.of<userProvider>(context, listen: false);
           userP.role=role;
           userP.profileImage=profileImage;
           notificationProvider _notificationProvider = Provider.of<notificationProvider>(context, listen: false);
-          _notificationProvider.apiInstance=api;
+          // _notificationProvider.apiInstance=api;
           _notificationProvider.refreshNotifications(userP.userId);
           userP. Generalusers(userP.userId);
-          SocketService('http://localhost:8082', userP.userId);
+          SocketService('http://localhost:8082', userP.userId,_notificationProvider);
 
           Navigator.push(
             context,
