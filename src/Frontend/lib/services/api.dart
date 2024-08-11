@@ -510,9 +510,7 @@ class Api {
 
       if (response.statusCode == 200) {
         var decodedJson = jsonDecode(response.body)['data'];
-        print('Decoded Json getAllEventsGuest: $decodedJson');
         return decodedJson;
-        // return jsonDecode(response.body)['data'];
       } else {
         throw Exception(jsonDecode(response.body));
       }

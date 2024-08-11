@@ -76,6 +76,7 @@ import 'package:firstapp/widgets/event_card.dart';
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 import '../main.dart';
 import '../services/api.dart';
+import 'dart:convert';
 
 class EventProvider with ChangeNotifier {
 
@@ -155,35 +156,66 @@ class EventProvider with ChangeNotifier {
   //   }
   // }
 
-  Future<List<Event>> _fetchEventsRsvp(String userId) async {
-    if (userId == "guest") { // If id received is "guest", user is a guest
-      print("ID RECEIVED IN FETCHEVENTSRSVP WAS GUEST");
-      final response = await api.getAllEventsGuest();
-      List<Event> events = (response as List)
-          .map((eventData) => Event.fromJson(eventData))
-          .toList();
 
-      print("RESPONSE IN GUEST VIEW EVENTS: $response");
-      List<Map<String, dynamic>> eventMaps = events.map((event) => event.toJson()).toList();
-      List<Event> events2 = eventMaps.map((map) => Event.fromJson(map)).toList();
 
-      print("GUEST VIEW EVENTS: $events2");
-      return events2;
-    }
+//   Future<List<Event>> _fetchEventsRsvp(String userId) async {
+//     if (userId == "guest") { // If id received is "guest", user is a guest
+//       final response = await api.getAllEventsGuest();
+//       List<Event> events = (response as List)
+//           .map((eventData) => Event.fromJson(eventData))
+//           .toList();
+
+//       print("RESPONSE IN GUEST VIEW EVENTS: $response");
+//       List<Map<String, dynamic>> eventMaps = events.map((event) => event.toJson()).toList();
+//       List<Event> events2 = eventMaps.map((map) => Event.fromJson(map)).toList();
+
+//       print("GUEST VIEW EVENTS: $events2");
+//       return events2;
+//     }
+//   try {
+//     // return await api.getRSVPEvents(userId!);
+//     print("USER ID IN RSVPEVENTS CALL: $userId");
+//     final response= await api.getRSVPEvents(userId);
+//       List<Event> events = (response as List)
+//           .map((eventData) => Event.fromJson(eventData))
+//           .toList();
+
+//       print("RSVP EVENTS FOR SIGNED IN USERS: $events");
+//       return events;
+//   } catch (e) {
+//     throw Exception('Failed to fetch RSVP events: $e');
+//   }
+// }
+
+Future<List<Event>> _fetchEventsRsvp(String userId) async {
   try {
-    // return await api.getRSVPEvents(userId!);
-    print("USER ID IN RSVPEVENTS CALL: $userId");
-    final response= await api.getRSVPEvents(userId);
-      List<Event> events = (response as List)
-          .map((eventData) => Event.fromJson(eventData))
-          .toList();
+    List<dynamic> responseData;
+    if (userId == "guest") {
+      responseData = await api.getAllEventsGuest();
+    } 
+    else {
+      responseData = await api.getRSVPEvents(userId);
+    }
 
-      print("RSVP EVENTS FOR SIGNED IN USERS: $events");
-      return events;
-  } catch (e) {
+    List<Event> events = responseData
+        .map((eventData) => Event.fromJson(eventData as Map<String, dynamic>))
+        .toList();
+
+    // if (userId == "guest") {
+    //   print("GUEST VIEW EVENTS: $events");
+    // } 
+    // else {
+    //   print("RSVP EVENTS FOR SIGNED IN USERS: $events");
+    // }
+
+    return events;
+  } 
+  catch (e) {
+    print('Error in _fetchEventsRsvp: $e');
     throw Exception('Failed to fetch RSVP events: $e');
   }
 }
+
 
   void fetchfortheFirstTimeRsvp(String userId) {
     _eventsRsvp =  _fetchEventsRsvp(userId);

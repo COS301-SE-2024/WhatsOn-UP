@@ -269,7 +269,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
 
-        ],)
+                  ],)
                 ),
                 SizedBox(
                   height: 250.0,
@@ -292,8 +292,33 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 const SizedBox(height: 20.0),
+                if (userP.role == "GUEST") ... [
+                  const Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Saved Events',
+                          style: TextStyle(
+                            fontSize: 18.0, 
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 16.0),
+                        Text(
+                          'Log in or create an account to save events and view them here.',
+                          style: TextStyle(
+                            fontSize: 16.0, 
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+                if (userP.role != "GUEST") ... [
                  Padding(
-                  padding: const EdgeInsets.all(10.0),
+                  padding: const EdgeInsets.all(16.0),
                   child: Row(
                     children: [
                       const Text(
@@ -340,6 +365,7 @@ class _HomePageState extends State<HomePage> {
                     },
                   ),
                 ),
+                ],
               ],
             ),
           );
