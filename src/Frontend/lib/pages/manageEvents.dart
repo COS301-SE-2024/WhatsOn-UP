@@ -123,6 +123,9 @@ import 'package:provider/provider.dart';
 import '../providers/user_provider.dart';
 import '../widgets/eventManagement_category.dart';
 
+import 'package:supabase_auth_ui/supabase_auth_ui.dart';
+import '../services/EventService.dart';
+import '../widgets/Pastevents.dart';
 class ManageEvents extends StatefulWidget {
   ManageEvents({Key? key}) : super(key: key);
 
@@ -145,6 +148,7 @@ String Host='HOST';
   @override
   Widget build(BuildContext context) {
     userProvider userP = Provider.of<userProvider>(context);
+    SupabaseClient supabaseClient = Supabase.instance.client;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -174,8 +178,15 @@ String Host='HOST';
                 _buildProfileOption(
                   text: 'Past Events',
                   onTap: () {
-                    // Handle onTap for 'Past Events'
-                  },
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Pastevents(
+                          eventService: EventService(supabaseClient),
+                        ),
+                      ),
+                    );
+                    },
                 ),
                 _buildDivider(),
                 _buildProfileOption(
