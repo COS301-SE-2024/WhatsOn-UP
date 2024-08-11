@@ -78,6 +78,7 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
 
     List<Event> events = await eventP.eventsRsvp;
     // final parsedEvents = parseEvents(response);
+    print("EVENTS IN CALENDAR PAGE: $events");
 
       setState(() {
         _groupedEvents = _groupEventsByDate(events);
@@ -140,7 +141,6 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
 
   Map<DateTime, List<Map<String, dynamic>>> _groupEventsByDate(List<Event> events) {
     Map<DateTime, List<Map<String, dynamic>>> groupedEvents = {};
-
 
     events.forEach((event) {
       DateTime date = DateTime.parse(event.startTime); // Assuming startTime is a DateTime string
@@ -317,9 +317,6 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                // _selectedDay != null
-                //     ? "Events on ${_formatDate(_selectedDay!)}"
-                //     : "Your RSVP'd Events for ${_formatMonth(_focusedDay)}",
                 _getEventListTitle(userP),
                 style: const TextStyle(
                   fontSize: 20,
@@ -427,23 +424,6 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
                                       ],
                                     ),
                                     const SizedBox(height: 8.0),
-                                    // Row(
-                                    //   children: [
-                                    //     const Icon(Icons.location_on, size: 16),
-                                    //     const SizedBox(width: 4.0),
-                                    //     Expanded(
-                                    //       child: Text(
-                                    //         event['location'],
-                                    //         overflow: TextOverflow.ellipsis,
-                                    //         maxLines: 1,
-                                    //       ),
-                                    //     ),
-                                    //     const SizedBox(width: 16.0),
-                                    //     const Icon(Icons.people, size: 16),
-                                    //     const SizedBox(width: 4.0),
-                                    //     Text(event['attendees']),
-                                    //   ],
-                                    // ),
                                     Row(
                                       children: [
                                         const Icon(Icons.location_on, size: 16),

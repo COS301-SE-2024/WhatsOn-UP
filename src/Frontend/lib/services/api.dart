@@ -442,30 +442,31 @@ class Api {
   }
 
 
-  Future<Map<String, dynamic>> postUsername(String username,
-      String userid) async {
-    var userChangeUrl = Uri.parse(
-        'http://$domain:8080/api/user/update_profile');
+  Future<Map<String, dynamic>> postUsername(String username, String userid) async {
+    String encodedUsername = Uri.encodeComponent(username);
+    var userChangeUrl = Uri.parse('http://$domain:8080/api/user/update_profile?fullName=$encodedUsername');
+
+    print("Username received in postUsername: $username");
+    print("Encoded url: $userChangeUrl");
 
     var headers = {
-      'Content-Type': 'application/json',
       'Accept': 'application/json',
       'Authorization': 'Bearer $userid',
     };
-    var body = jsonEncode({
-      'fullName': username
-    });
 
     try {
-      var response = await http.put(
-          userChangeUrl, headers: headers, body: body);
+      var response = await http.put(userChangeUrl, headers: headers);
 
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
-      } else {
-        throw Exception('Failed to change user');
+      } 
+      else {
+        print('Failed to change user: ${response.statusCode}');
+        print('Response body: ${response.body}');
+        throw Exception('Failed to change user: ${response.statusCode}');
       }
-    } catch (e) {
+    } 
+    catch (e) {
       print('Error: $e');
       return {'error': e.toString()};
     }
@@ -508,7 +509,10 @@ class Api {
           Uri.parse(_rsvpEventsURL), headers: headers);
 
       if (response.statusCode == 200) {
-        return jsonDecode(response.body)['data'];
+        var decodedJson = jsonDecode(response.body)['data'];
+        print('Decoded Json getAllEventsGuest: $decodedJson');
+        return decodedJson;
+        // return jsonDecode(response.body)['data'];
       } else {
         throw Exception(jsonDecode(response.body));
       }
@@ -565,40 +569,50 @@ class Api {
     }
   }
 
-  Future<Map<String, dynamic>> uploadImage(Uint8List imageBytes,
-      String userid) async {
-    String generateFilename(String userId) {
-      final timestamp = DateTime
-          .now()
-          .millisecondsSinceEpoch;
-      return 'profile_image_${userId}_$timestamp.png';
-    }
-    final uri = Uri.parse('http://$domain:8083/media/update');
 
-
-    final request = http.MultipartRequest('POST', uri);
-    request.headers['Authorization'] = 'Bearer $userid';
-
-    final filename = generateFilename(userid);
-    request.files.add(
-      http.MultipartFile.fromBytes(
-        'file',
-        imageBytes,
-        filename: filename,
-      ),
-    );
-
-    try {
-      final response = await request.send();
-      if (response.statusCode == 201) {
-        return jsonDecode(response.stream.toString());
-      } else {
-        throw Exception('Upload failed with status: ${response.statusCode}');
-      }
-    } catch (e) {
-      return {'error': e.toString()};
-    }
+  Future<Map<String, dynamic>> uploadImage(Uint8List imageBytes, String userid) async {
+  String generateFilename(String userId) {
+    final timestamp = DateTime.now().millisecondsSinceEpoch;
+    return 'profile_image_${userId}_$timestamp.png';
   }
+
+  final uri = Uri.parse('http://$domain:8083/media/update');
+
+  final request = http.MultipartRequest('POST', uri);
+  request.headers['Authorization'] = 'Bearer $userid';
+
+  final filename = generateFilename(userid);
+  request.files.add(
+    http.MultipartFile.fromBytes(
+      'file',
+      imageBytes,
+      filename: filename,
+    ),
+  );
+
+  try {
+    final streamedResponse = await request.send();
+    final response = await http.Response.fromStream(streamedResponse);
+
+    if (response.statusCode == 201) {
+      try {
+        return jsonDecode(response.body) as Map<String, dynamic>;
+      } catch (e) {
+        print('Failed to parse response as JSON: ${response.body}');
+        return {
+          'success': true,
+          'raw_response': response.body,
+        };
+      }
+    } else {
+      throw Exception('Upload failed with status: ${response.statusCode}');
+    }
+  } catch (e) {
+    print('Exception during upload: $e');
+    return {'error': e.toString()};
+  }
+}
+
 
   Future<Map<String, dynamic>> eventUploadImage(Uint8List imageBytes,
       String userid, String EventId) async {
