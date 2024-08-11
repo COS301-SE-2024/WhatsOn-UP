@@ -1,6 +1,7 @@
 package com.devforce.backend.service
 
 import com.devforce.backend.dto.ResponseDto
+import com.devforce.backend.model.ApplicationStatusModel
 import com.devforce.backend.repo.*
 import com.devforce.backend.security.CustomUser
 import org.springframework.beans.factory.annotation.Autowired

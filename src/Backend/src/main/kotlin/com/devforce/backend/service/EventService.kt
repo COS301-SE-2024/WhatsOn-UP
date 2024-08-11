@@ -24,6 +24,9 @@ import java.time.format.DateTimeFormatter
 class EventService {
 
     @Autowired
+    private lateinit var objectMapper: ObjectMapper
+
+    @Autowired
     lateinit var eventRepo: EventRepo
 
     @Autowired
@@ -60,7 +63,7 @@ class EventService {
             this.endDateTime = createEventDto.endDateTime
             this.venue = venue
             this.maxAttendees = createEventDto.maxParticipants ?: 1
-            this.metadata = createEventDto.metadata ?: ""
+            this.metadata = (createEventDto.metadata ?: "").toString()
             this.isPrivate = createEventDto.isPrivate ?: false
             this.hosts = setOf(user)
         }
@@ -153,7 +156,7 @@ class EventService {
             existingEvent.apply {
                 updateEventDto.title?.let { title = it }
                 updateEventDto.description?.let { description = it }
-                updateEventDto.metadata?.let { metadata = it }
+                updateEventDto.metadata?.let { metadata = it.toString() }
                 updateEventDto.location?.let { venue = v}
                 updateEventDto.startDateTime?.let { startDateTime = it }
                 updateEventDto.endDateTime?.let { endDateTime = it }
@@ -214,9 +217,10 @@ class EventService {
                     event -> EventDto(event, userModel.userId in event.hosts.map { host -> host.userId }, null)
             }
         }
-        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto))
+        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto)
+    )
 
-    }
+}
     //the filter for filtering screen
     fun filteringEvents(startDate: String?, endDate: String?, minCapacity: Int?, maxCapacity: Int?, isPrivate: Boolean?): ResponseEntity<ResponseDto> {
         try {
@@ -309,23 +313,23 @@ class EventService {
 
 
     //FUTURE
-//    fun filterEvents(filterBy: FilterByDto): ResponseEntity<ResponseDto>{
-//
-//        val user = SecurityContextHolder.getContext().authentication.principal
-//        var eventsDto: List<EventDto>? = null
-//        if (user == "anonymousUser") {
-//            val events = eventRepo.filterEvents(filterBy, null)
-//            eventsDto = events.map { event -> EventDto(event, false, null) }
-//        }
-//        else {
-//            val userModel = (user as CustomUser).userModel
-//            val events = eventRepo.filterEvents(filterBy, userModel.userId)
-//            eventsDto = events.map {
-//                    event -> EventDto(event, userModel.userId in event.hosts.map { host -> host.userId }, null)
-//            }
-//        }
-//        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto))
-//    }
+    fun filterEvents(filterBy: FilterByDto): ResponseEntity<ResponseDto>{
+
+        val user = SecurityContextHolder.getContext().authentication.principal
+        var eventsDto: List<EventDto>? = null
+        if (user == "anonymousUser") {
+            val events = eventRepo.filterEvents(filterBy, null)
+            eventsDto = events.map { event -> EventDto(event, false, null) }
+        }
+        else {
+            val userModel = (user as CustomUser).userModel
+            val events = eventRepo.filterEvents(filterBy, userModel.userId)
+            eventsDto = events.map {
+                    event -> EventDto(event, userModel.userId in event.hosts.map { host -> host.userId }, null)
+            }
+        }
+        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto))
+    }
 
     fun getLocations(): ResponseEntity<ResponseDto> {
         val locations = venueRepo.findAll()
