@@ -13,6 +13,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/events_providers.dart';
+import '../providers/notification_providers.dart';
 import '../providers/user_provider.dart';
 import '../screens/FilterScreen.dart';
 import '../screens/SearchScreen.dart';
@@ -21,6 +22,7 @@ import 'package:firstapp/pages/Broadcast.dart';
 import 'package:firstapp/pages/manageEvents.dart';
 import 'package:firstapp/pages/application_event.dart';
 
+import '../services/socket_client.dart';
 import 'allHome_events.dart';
 import 'notifications.dart';
 
@@ -53,6 +55,11 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     userProvider userP = Provider.of<userProvider>(context);
+
+
+
+
+
     print("user role: ${userP.role}");
     const String HOST = 'HOST';
     const String ADMIN = 'ADMIN';
@@ -302,23 +309,23 @@ class _HomePageState extends State<HomePage> {
                             fontSize: 18.0, fontWeight: FontWeight.bold),
                       ),
                       const Spacer(),
-                      // TextButton(
-                      //   onPressed: () {
-                      //     Navigator.push(
-                      //       context,
-                      //       MaterialPageRoute(
-                      //         builder: (context) => AllsavedEvents(),
-                      //       ),
-                      //     );
-                      //   },
-                      //   child: const Text(
-                      //     'See more',
-                      //     style: TextStyle(
-                      //       fontSize: 16.0,
-                      //       fontWeight: FontWeight.bold,
-                      //     ),
-                      //   ),
-                      // ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => AllsavedEvents(),
+                            ),
+                          );
+                        },
+                        child: const Text(
+                          'See more',
+                          style: TextStyle(
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),

@@ -12,9 +12,10 @@ import 'api.dart';
 
 class SocketService {
   late IO.Socket socket;
-  notificationProvider _notificationProvider;
+  final notificationProvider _notificationProvider;
   final BuildContext context;
-  SocketService(String url, String userId, this._notificationProvider,this.context) {
+  SocketService(String url, this._notificationProvider,String userId,this.context) {
+    // _notificationProvider=Provider.of<notificationProvider>(context, listen: true);
     final headers = {
       'token': 'Bearer $userId',
     };
@@ -36,24 +37,32 @@ class SocketService {
     socket.on('notification', (data) {
       print('Event received: $data');
 
-      refreshNotifications(userId);
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => Notifications()),
-      );
+      _notificationProvider.refreshNotifications(userId);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("You have a new notification")));
+     navigateToHomePage(context);
+
     });
     socket.on('error', (error) {
       print('Error: $error');
     });
   }
+  void refreshNotifications(String userId) {
+    _notificationProvider.refreshNotifications(userId);
+  }
 
+  void navigateToHomePage(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => HomePage()),
+    );
+  }
   void sendMessage(String event, dynamic message) {
     socket.emit(event, message);
   }
 
-  void refreshNotifications(String userId) {
-    _notificationProvider.refreshNotifications(userId);
-  }
+
 
 
   void dispose() {

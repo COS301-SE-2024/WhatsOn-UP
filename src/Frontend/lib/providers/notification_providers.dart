@@ -7,14 +7,12 @@ import 'package:flutter/material.dart';
 import '../services/api.dart';
 
 class notificationProvider extends ChangeNotifier {
-  late final Api api;
+  late Api api = Api();
   userProvider userP = userProvider();
   late Future<List<AppNotification>> _Notifications;
   Future<List<AppNotification>> get notifications => _Notifications;
 
-void apiInstance(Api api){
-  this.api=api;
-}
+
 
 
 
