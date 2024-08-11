@@ -132,15 +132,15 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
                 "OR a.userId = :userId " +
                 "OR i.userId = :userId " +
                 "OR h.userId = :userId) "+
-                "AND (:#{#filterByDto.startDateTime} IS NULL OR e.startDateTime >= TO_TIMESTAMP(:#{#filterByDto.startDateTime}, 'YYYY-MM-DD HH24:MI:SS')) AND " +
-                "(:#{#filterByDto.endDateTime} IS NULL OR e.endDateTime <= TO_TIMESTAMP(:#{#filterByDto.endDateTime}, 'YYYY-MM-DD HH24:MI:SS')) AND " +
+                "AND (:#{#filterByDto.startDateTime} IS NULL OR e.startDateTime > TO_TIMESTAMP(:#{#filterByDto.startDateTime}, 'YYYY-MM-DD HH24:MI:SS')) AND " +
+                "(:#{#filterByDto.endDateTime} IS NULL OR e.endDateTime < TO_TIMESTAMP(:#{#filterByDto.endDateTime}, 'YYYY-MM-DD HH24:MI:SS')) AND " +
                 "(:#{#filterByDto.isPrivate} IS NULL OR e.isPrivate = :#{#filterByDto.isPrivate}) AND " +
                 "(:#{#filterByDto.maxAttendees} IS NULL OR e.maxAttendees <= :#{#filterByDto.maxAttendees})"
     )
     fun filterEvents(@Param("filterByDto") filterByDto: FilterByDto, @Param("userId") userId: UUID?): List<EventModel>
 
 
-   @Query(value = """
+   /*@Query(value = """
     SELECT * FROM events e
     WHERE (:startDateTime IS NULL OR e.start_date_time >= CAST(:startDateTime AS TIMESTAMP))
     AND (:endDateTime IS NULL OR e.end_date_time <= CAST(:endDateTime AS TIMESTAMP))
@@ -155,7 +155,7 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
        @Param("maxCapacity") maxCapacity: Int?,
        @Param("isPrivate") isPrivate: Boolean?
    ): List<EventModel>
-
+*/
     @Transactional
     @Procedure(procedureName = "delete_event")
     fun deleteEvent(eventId: UUID)
