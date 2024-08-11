@@ -75,7 +75,7 @@ class EventServiceTest {
             endDateTime = LocalDateTime.now().plusHours(2),
             location = UUID.randomUUID(),
             maxParticipants = 10,
-            metadata = "Event Metadata",
+            metadata = mapOf("key1" to "value1", "key2" to "value2"),
             isPrivate = false
         )
 
@@ -109,7 +109,7 @@ class EventServiceTest {
             endDateTime = LocalDateTime.now().plusHours(2),
             location = id,
             maxParticipants = 10,
-            metadata = "Updated Event Metadata",
+            metadata = mapOf("key1" to "value1", "key2" to "value2"),
             isPrivate = true
         )
 
@@ -120,7 +120,7 @@ class EventServiceTest {
             this.endDateTime = LocalDateTime.now().plusHours(2)
             this.venue = VenueModel()
             this.maxAttendees = 20
-            this.metadata = "Event Metadata"
+            this.metadata = mapOf("key1" to "value1", "key2" to "value2").toString()
             this.isPrivate = false
         }
 
@@ -149,7 +149,7 @@ class EventServiceTest {
             endDateTime = LocalDateTime.now().plusHours(2),
             location = id,
             maxParticipants = 20,
-            metadata = "Updated Event Metadata",
+            metadata = mapOf("key1" to "value1", "key2" to "value2"),
             isPrivate = true
         )
 
