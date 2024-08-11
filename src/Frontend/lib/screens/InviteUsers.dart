@@ -1,6 +1,7 @@
 import 'package:firstapp/pages/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firstapp/services/api.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/user_provider.dart';
@@ -19,6 +20,7 @@ class _InviteUsersWidgetState extends State<InviteUsers> {
   List<UserModel> _foundUsers = [];
   List<UserModel> _invitedUsers = [];
   bool _isSearching = false;
+  bool _isSendingInvites = false;
 
   @override
   void initState() {
@@ -38,14 +40,19 @@ class _InviteUsersWidgetState extends State<InviteUsers> {
 
     setState(() {
       _foundUsers = users
-          .where((user) => user.fullName.toLowerCase().contains(query.toLowerCase()))
+          .where((user) =>  user.userId != userId && user.fullName.toLowerCase().contains(query.toLowerCase()))
           .toList();
       _isSearching = false;
     });
   }
 
   Future<void> _sendInvites() async {
-    userProvider userP = Provider.of<userProvider>(context, listen: false);
+    try {
+      setState(() {
+        _isSendingInvites = true;
+      });
+
+      userProvider userP = Provider.of<userProvider>(context, listen: false);
     String userId = userP.userId;
 
     for (var user in _invitedUsers) {
@@ -54,6 +61,7 @@ class _InviteUsersWidgetState extends State<InviteUsers> {
 
     setState(() {
       _invitedUsers.clear();
+      _isSendingInvites = false;
     });
 
     ScaffoldMessenger.of(context).showSnackBar(
@@ -63,6 +71,13 @@ class _InviteUsersWidgetState extends State<InviteUsers> {
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(builder: (context) =>HomePage()),
     );
+  }
+    catch (e) {
+      setState(() {
+        _isSendingInvites = false;
+      });
+      _showErrorDialog('Error', 'Failed to send invites. Please try again.');
+    }
   }
 
   void _addUserToInvite(UserModel user) {
@@ -82,7 +97,23 @@ class _InviteUsersWidgetState extends State<InviteUsers> {
       }
     });
   }
-
+  void _showErrorDialog(String title, String message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -97,15 +128,20 @@ class _InviteUsersWidgetState extends State<InviteUsers> {
           decoration: InputDecoration(
             labelText: 'Search users to invite',
             prefixIcon: Icon(Icons.search),
-            suffixIcon: IconButton(
+            suffixIcon: _isSendingInvites
+                ? SpinKitPianoWave(
+              color: Color.fromARGB(255, 149, 137, 74),
+              size: 50.0,
+            )
+                : IconButton(
               icon: Icon(Icons.send),
-              onPressed: _sendInvites,
+              onPressed: _invitedUsers.isEmpty ? null : _sendInvites,
             ),
           ),
         ),
         SizedBox(height: 10),
         if (_isSearching)
-          Center(child: CircularProgressIndicator())
+          Center(child: SpinKitPianoWave(color: Color.fromARGB(255, 149, 137, 74), size: 50.0))
         else if (_foundUsers.isNotEmpty)
           Expanded(
             child: ListView.builder(
@@ -116,7 +152,7 @@ class _InviteUsersWidgetState extends State<InviteUsers> {
                   leading: CircleAvatar(
                     backgroundImage: NetworkImage(user.profileImageUrl), // Assuming UserModel has a profileImageUrl field
                   ),
-                  title: Text(user.fullName), // Assuming UserModel has a fullName field
+                  title: Text(user.fullName),
                   trailing: IconButton(
                     icon: Icon(Icons.add),
                     onPressed: () => _addUserToInvite(user),
@@ -129,7 +165,7 @@ class _InviteUsersWidgetState extends State<InviteUsers> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Invited Users:'),
+              Text('Invited Users: (${_invitedUsers.length}):'),
               SizedBox(height: 10),
               ListView.builder(
                 shrinkWrap: true, // Important to avoid overflow in Column
@@ -142,7 +178,7 @@ class _InviteUsersWidgetState extends State<InviteUsers> {
                     ),
                     title: Text(user.fullName),
                     trailing: IconButton(
-                      icon: Icon(Icons.delete),
+                      icon: Icon(Icons.delete , color: Colors.red),
                       onPressed: () => _removeUserFromInvite(user),
                     ),
                   );
@@ -150,11 +186,7 @@ class _InviteUsersWidgetState extends State<InviteUsers> {
               ),
             ],
           ),
-        SizedBox(height: 20),
-        ElevatedButton(
-          onPressed: _invitedUsers.isEmpty ? null : _sendInvites,
-          child: Text('Send Invites'),
-        ),
+
       ],
     ),
     );
