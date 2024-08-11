@@ -327,23 +327,23 @@ class _HomePageState extends State<HomePage> {
                             fontSize: 18.0, fontWeight: FontWeight.bold),
                       ),
                       const Spacer(),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => AllsavedEvents(),
-                            ),
-                          );
-                        },
-                        child: const Text(
-                          'See more',
-                          style: TextStyle(
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
+                      // TextButton(
+                      //   onPressed: () {
+                      //     Navigator.push(
+                      //       context,
+                      //       MaterialPageRoute(
+                      //         builder: (context) => AllsavedEvents(),
+                      //       ),
+                      //     );
+                      //   },
+                      //   child: const Text(
+                      //     'See more',
+                      //     style: TextStyle(
+                      //       fontSize: 16.0,
+                      //       fontWeight: FontWeight.bold,
+                      //     ),
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),
