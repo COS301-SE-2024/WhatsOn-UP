@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:firstapp/pages/edit_Event.dart';
 import 'package:firstapp/providers/events_providers.dart';
 import 'package:flutter/material.dart';
@@ -7,9 +6,9 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firstapp/widgets/event_card.dart';
 import 'package:firstapp/services/api.dart';
 import 'package:provider/provider.dart';
-
 import '../main.dart';
 import '../providers/user_provider.dart';
+import 'package:intl/intl.dart';
 
 class DetailedEventPage extends StatefulWidget {
   final Event event;
@@ -254,6 +253,28 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
                     ),
                   ),
                   const SizedBox(height: 8.0),
+                  // Row(
+                  //   children: [
+                  //     const Icon(Icons.calendar_today),
+                  //     const SizedBox(width: 8.0),
+                  //     Column(
+                  //       crossAxisAlignment: CrossAxisAlignment.start,
+                  //       children: [
+                  //         Text(
+                  //           'Start: ${_thisCurrentEvent.startTime}',
+                  //           style: const TextStyle(fontSize: 16.0),
+                  //         ),
+                  //         const SizedBox(height: 4.0),
+                  //         Text(
+                  //           'End: ${_thisCurrentEvent.endTime}',
+                  //           style: const TextStyle(fontSize: 16.0),
+                  //         ),
+
+                  //       ],
+                  //     ),
+                  //   ],
+                  // ),
+
                   Row(
                     children: [
                       const Icon(Icons.calendar_today),
@@ -262,19 +283,19 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Start: ${_thisCurrentEvent.startTime}',
+                            'Start: ${DateFormat.yMMMMd().add_jm().format(DateTime.parse(_thisCurrentEvent.startTime))}',
                             style: const TextStyle(fontSize: 16.0),
                           ),
                           const SizedBox(height: 4.0),
                           Text(
-                            'End: ${_thisCurrentEvent.endTime}',
+                            'End: ${DateFormat.yMMMMd().add_jm().format(DateTime.parse(_thisCurrentEvent.endTime))}',
                             style: const TextStyle(fontSize: 16.0),
                           ),
-
                         ],
                       ),
                     ],
                   ),
+
                   const SizedBox(height: 8.0),
                   Row(
                     children: [

@@ -12,6 +12,7 @@ import '../main.dart';
 import '../providers/events_providers.dart';
 import '../providers/user_provider.dart';
 import '../widgets/event_card.dart';
+import 'package:firstapp/screens/InviteUsers.dart';
 
 class EditEvent extends StatefulWidget {
 
@@ -162,6 +163,8 @@ class _EditEventState extends State<EditEvent> {
               const SizedBox(height: 20),
               _buildPrivacyToggle(),
               const SizedBox(height: 20),
+              _buildAddGuestsButton(),
+              const SizedBox(height: 20),
               _buildImagePicker(),
               const SizedBox(height: 35),
               Center(
@@ -191,7 +194,31 @@ class _EditEventState extends State<EditEvent> {
       ),
     );
   }
-
+  Widget _buildAddGuestsButton() {
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => InviteUsers(eventId: widget.eventId), // Pass the eventId to InviteUser page
+          ),
+        );
+      },
+      child: Row(
+        children: [
+          const Icon(Icons.people, color: Colors.grey),
+          const SizedBox(width: 10),
+          const Text(
+            'Add Guests',
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.black,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
   Widget _buildPrivacyToggle() {
     final theme = Theme.of(context);
     final isLightTheme = theme.brightness == Brightness.light;

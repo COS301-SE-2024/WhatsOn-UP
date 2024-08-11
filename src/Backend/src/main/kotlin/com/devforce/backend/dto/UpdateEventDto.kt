@@ -10,6 +10,6 @@ data class UpdateEventDto(
     val endDateTime: LocalDateTime?,
     val location: UUID?,
     val maxParticipants: Int?,
-    val metadata: String?,
+    val metadata: Map<String, String>?,
     val isPrivate: Boolean?,
 )

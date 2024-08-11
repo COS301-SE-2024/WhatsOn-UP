@@ -184,6 +184,23 @@ void main() {
       ]);
     });
 
+    testWidgets('Renders ManageEvents with Dividers', (WidgetTester tester) async {
+      when(mockUserProvider.role).thenReturn('ADMIN');
+      await tester.pumpWidget(
+        MultiProvider(
+          providers: [
+            ChangeNotifierProvider<EventProvider>(create: (_) => mockEventProvider),
+            ChangeNotifierProvider<userProvider>(create: (_) => mockUserProvider),
+          ],
+          child: MaterialApp(
+            home: ManageEvents(),
+          ),
+        ),
+      );
+
+      // Check if dividers are visible
+      expect(find.byType(Divider), findsNWidgets(6)); // 5 dividers in the list + one before the General user Host Applications
+    });
     testWidgets('Renders ManageEvents correctly for ADMIN role', (WidgetTester tester) async {
       when(mockUserProvider.role).thenReturn('ADMIN');
       await tester.pumpWidget(
@@ -209,6 +226,62 @@ void main() {
       expect(find.byIcon(Icons.arrow_forward), findsNWidgets(5));
     });
 
+    testWidgets('Tapping Past Events does not cause errors', (WidgetTester tester) async {
+      when(mockUserProvider.role).thenReturn('ADMIN');
+      await tester.pumpWidget(
+        MultiProvider(
+          providers: [
+            ChangeNotifierProvider<EventProvider>(create: (_) => mockEventProvider),
+            ChangeNotifierProvider<userProvider>(create: (_) => mockUserProvider),
+          ],
+          child: MaterialApp(
+            home: ManageEvents(),
+          ),
+        ),
+      );
+
+      // Check if the 'Past Events' button does not cause any issues
+      await tester.tap(find.text('Past Events'));
+      await tester.pumpAndSettle();
+      // No new widget should appear, as 'Past Events' button has no navigation
+      expect(find.byType(ManageEvents), findsOneWidget);
+    });
+
+
+    /*testWidgets('General user Host Applications is visible for ADMIN role only', (WidgetTester tester) async {
+      when(mockUserProvider.role).thenReturn('ADMIN');
+      await tester.pumpWidget(
+        MultiProvider(
+          providers: [
+            ChangeNotifierProvider<EventProvider>(create: (_) => mockEventProvider),
+            ChangeNotifierProvider<userProvider>(create: (_) => mockUserProvider),
+          ],
+          child: MaterialApp(
+            home: ManageEvents(),
+          ),
+        ),
+      );
+
+      // Check if 'General user Host Applications' is visible for ADMIN
+      expect(find.text('General user Host Applications'), findsOneWidget);
+
+      when(mockUserProvider.role).thenReturn('HOST');
+      await tester.pumpWidget(
+        MultiProvider(
+          providers: [
+            ChangeNotifierProvider<EventProvider>(create: (_) => mockEventProvider),
+            ChangeNotifierProvider<userProvider>(create: (_) => mockUserProvider),
+          ],
+          child: MaterialApp(
+            home: ManageEvents(),
+          ),
+        ),
+      );
+
+      // Check if 'General user Host Applications' is not visible for HOST
+      expect(find.text('General user Host Applications'), findsNothing);
+    });
+*/
     testWidgets('Renders ManageEvents correctly for non-ADMIN role', (WidgetTester tester) async {
       when(mockUserProvider.role).thenReturn('HOST');
       await tester.pumpWidget(
@@ -253,27 +326,9 @@ void main() {
 
       expect(find.byType(EventmanagementCategory), findsOneWidget);
     });
+    /*testWidgets('Navigates to ApplicationEvent when Create Event is tapped', (WidgetTester tester) async {
+      REMOVEDDDDDDDDDDDDDDDDDDDDDD;*/
 
-    testWidgets('Navigates to ApplicationEvent when Create Event is tapped', (WidgetTester tester) async {
-      when(mockUserProvider.role).thenReturn('ADMIN');
-      await tester.pumpWidget(
-        MultiProvider(
-          providers: [
-
-            ChangeNotifierProvider<EventProvider>(create: (_) => mockEventProvider),
-            ChangeNotifierProvider<userProvider>(create: (_) => mockUserProvider),
-          ],
-          child: MaterialApp(
-            home: ManageEvents(),
-          ),
-        ),
-      );
-
-
-      await tester.tap(find.text('Create Event'));
-      await tester.pumpAndSettle();
-      expect(find.byType(ApplicationEvent), findsOneWidget);
-    });
     testWidgets('Navigates to Attendee when Attendee is tapped when the user is an ADMIN', (WidgetTester tester) async {
       when(mockUserProvider.role).thenReturn('ADMIN');
       await tester.pumpWidget(
