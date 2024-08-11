@@ -45,9 +45,15 @@ class AdminService {
         if (user.isEmpty) {
             return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "User not found"))
         }
+
         val userModel = user.get()
         if (userModel.role!!.name == "ADMIN") {
             return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "User is an admin"))
+        }
+
+        val application = hostApplicationsRepo.findByUserId(userId)
+        if (application.isNotEmpty()) {
+            application[0]?.status = statusRepo.findByName("VERIFIED")
         }
 
         userModel.role = roleRepo.findByName("GENERAL")
