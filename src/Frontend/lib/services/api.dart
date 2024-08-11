@@ -800,12 +800,24 @@ class Api {
   static Future<List<UserModel>> getAllUsers(String userId) async {
     print("User Id below");
     print(userId);
-    final response = await http.get(Uri.parse('http://$domain:8080/api/interactions/get_all_users'));
-    var headers = {
+
+      //var response = await http.put(uri, headers: headers);
+/* final String _userUrl = 'http://$domain:8080/api/auth/get_user';
+      var headers = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $jwtKey',
+      };
+
+      var response = await http.get(Uri.parse(_userUrl), headers: headers);
+*/
+    final String _userUrl = 'http://$domain:8080/api/interactions/get_all_users';
+      var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
       'Authorization': 'Bearer $userId',
     };
+    final response = await http.get(Uri.parse(_userUrl), headers: headers);
     if (response.statusCode == 200) {
       List<dynamic> data = json.decode(response.body)['data'];
       return data.map((json) => UserModel.fromJson(json)).toList(); // Adjust based on your UserModel structure
