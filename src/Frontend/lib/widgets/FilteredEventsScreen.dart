@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+/*import 'package:flutter/material.dart';
 
 class FilteredEventsScreen extends StatelessWidget {
   final List<dynamic> events;
@@ -36,3 +36,4 @@ class FilteredEventsScreen extends StatelessWidget {
     );
   }
 }
+*/
