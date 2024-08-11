@@ -1137,6 +1137,19 @@ class MockApi extends _i1.Mock implements _i2.Api {
         returnValue:
             _i7.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
       ) as _i7.Future<Map<String, dynamic>>);
+
+  @override
+  _i7.Future<Map<String, dynamic>> Acknowledgeapplication(
+          {required String? userId}) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #Acknowledgeapplication,
+          [],
+          {#userId: userId},
+        ),
+        returnValue:
+            _i7.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
+      ) as _i7.Future<Map<String, dynamic>>);
 }
 
 /// A class which mocks [ImagePicker].
@@ -1338,19 +1351,19 @@ class MocknotificationProvider extends _i1.Mock
       ) as _i7.Future<List<_i11.AppNotification>>);
 
   @override
-  set apiInstance(_i2.Api? apiInstance) => super.noSuchMethod(
-        Invocation.setter(
-          #apiInstance,
-          apiInstance,
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
   bool get hasListeners => (super.noSuchMethod(
         Invocation.getter(#hasListeners),
         returnValue: false,
       ) as bool);
+
+  @override
+  void apiInstance(_i2.Api? api) => super.noSuchMethod(
+        Invocation.method(
+          #apiInstance,
+          [api],
+        ),
+        returnValueForMissingStub: null,
+      );
 
   @override
   _i7.Future<void> refreshNotifications(String? userId) => (super.noSuchMethod(
@@ -1361,6 +1374,15 @@ class MocknotificationProvider extends _i1.Mock
         returnValue: _i7.Future<void>.value(),
         returnValueForMissingStub: _i7.Future<void>.value(),
       ) as _i7.Future<void>);
+
+  @override
+  void addNotification(dynamic eventData) => super.noSuchMethod(
+        Invocation.method(
+          #addNotification,
+          [eventData],
+        ),
+        returnValueForMissingStub: null,
+      );
 
   @override
   void addListener(_i9.VoidCallback? listener) => super.noSuchMethod(
