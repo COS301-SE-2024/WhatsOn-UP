@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'package:firstapp/main.dart';
+import 'package:firstapp/pages/home_page.dart';
 import 'package:firstapp/pages/profilePage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -264,8 +265,7 @@ class _EditprofilePageState extends State<EditprofilePage> {
         } else {
           String fullName = response['data']['user']['fullName'] ?? 'Unknown';
           String userEmail = response['data']['user']['email'] ?? 'Unknown';
-          String profileImage =
-              response['data']['user']['profileImage'] ?? 'Unknown';
+          String profileImage = response['data']['user']['profileImage'] ?? 'Unknown';
 
           print('User profile updated successfully');
           showChangedDialog();
@@ -294,7 +294,7 @@ class _EditprofilePageState extends State<EditprofilePage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ProfilePage(),
+                    builder: (context) => HomePage(),
                   ),
                 );
               },
