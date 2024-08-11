@@ -24,3 +24,6 @@ logging:
     org.springframework.web.client.RestTemplate: DEBUG
     org.springframework.http: DEBUG
     org.springframework.web: DEBUG
+
+server:
+    port: 8085
