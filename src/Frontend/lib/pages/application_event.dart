@@ -23,9 +23,9 @@ import 'package:firstapp/services/api.dart';
 import '../main.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:firstapp/widgets/theme_manager.dart';
-
+//import 'package:firstapp/screens/InviteUsers.dart';
 import '../providers/user_provider.dart';
-
+import '../screens/InviteUsers.dart';
 
 class ApplicationEvent extends StatefulWidget {
 //  const ApplicationEvent({super.key});
@@ -42,6 +42,7 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
   late TextEditingController _eventDescriptionController;
   late DateTime _startDateTime;
   late DateTime _endDateTime;
+  late TextEditingController _guestsController;
   bool _isPublic = true;
   int _maxAttendees = 100;
   Venue? _selectedVenue;
@@ -66,7 +67,30 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
   //List<Uint8List> imageBytesList = [];
   Uint8List? imageBytesList;
   final _multiSelectKey = GlobalKey<FormFieldState>();
+ // List<UserModel> _invitedUsers = [];
+  /*Future<void> _openInviteUserPopup() async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          child: InviteUsersWidget(eventId: 'your_event_id_here'),
+        );
+      },
+    );
+  }
 
+  void _addUserToInvite(UserModel user) {
+    setState(() {
+      _invitedUsers.add(user);
+    });
+  }
+
+  void _removeUserFromInvite(UserModel user) {
+    setState(() {
+      _invitedUsers.remove(user);
+    });
+  }*/
   @override
   void initState() {
     super.initState();
@@ -79,7 +103,7 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
     _eventDescriptionController = TextEditingController();
     _startDateTime = DateTime.now();
     _endDateTime = DateTime.now().add(Duration(hours: 1));
-
+    _guestsController = TextEditingController();
     Future.wait([_categoriesFuture, _venuesFuture]).whenComplete(() {
       setState(() {
         _isLoading = false;
@@ -105,9 +129,42 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
     _eventNameController.dispose();
     _eventDescriptionController.dispose();
     _maxAttendeesController.dispose();
+    _guestsController.dispose();
     super.dispose();
   }
 
+  /*void _showGuestPopup() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Add Guests"),
+          content: TextField(
+            controller: _guestsController,
+            decoration: InputDecoration(
+              hintText: "Enter guest name",
+              border: OutlineInputBorder(),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () {
+                // Handle adding guest logic here
+                Navigator.of(context).pop();
+              },
+              child: Text("Add"),
+            ),
+          ],
+        );
+      },
+    );
+  }*/
   void _updateMaxAttendeesFromTextField(String value) {
     final int? newValue = int.tryParse(value);
     if (_selectedVenue != null && newValue != null && newValue >= 1 &&
@@ -582,6 +639,9 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                   ),
                 ],
               ),
+
+
+
           SizedBox(height: 16.0),
             _buildImagePicker(),
 
@@ -626,7 +686,7 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                           );
 
                           Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(builder: (context) => HomePage()),
+                            MaterialPageRoute(builder: (context) =>InviteUsers(eventId:response['data']['id'])),
                           );
                       }
                       catch(e)
