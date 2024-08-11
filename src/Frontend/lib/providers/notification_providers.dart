@@ -7,12 +7,16 @@ import 'package:flutter/material.dart';
 import '../services/api.dart';
 
 class notificationProvider extends ChangeNotifier {
-  final Api api;
+  late final Api api;
   userProvider userP = userProvider();
   late Future<List<AppNotification>> _Notifications;
   Future<List<AppNotification>> get notifications => _Notifications;
 
-  notificationProvider({required this.api});
+void apiInstance(Api api){
+  this.api=api;
+}
+
+
 
   Future<List<AppNotification>> _fetchNotifications(String userId) async {
     try {
@@ -45,7 +49,7 @@ class notificationProvider extends ChangeNotifier {
       }
       AppNotification newNotification =
           AppNotification.fromJson(eventJson['data']);
-      print(newNotification);
+
 
       _Notifications.then((value) => value.add(newNotification));
 

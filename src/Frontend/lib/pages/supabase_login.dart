@@ -481,11 +481,12 @@ class _SupabaseLoginState extends State<SupabaseLogin> {
             userP.role = role;
             userP.profileImage = profileImage;
             notificationProvider _notificationProvider =
-                Provider.of<notificationProvider>(context, listen: false);
+                Provider.of<notificationProvider>(context, listen: true);
+            _notificationProvider.apiInstance(api);
             _notificationProvider.refreshNotifications(userP.userId);
             userP.Generalusers(userP.userId);
             SocketService(
-                'http://localhost:8082', userP.userId, _notificationProvider);
+                'http://localhost:8082', userP.userId, _notificationProvider,context);
 
             userP.setUserData(
               userId: user.id,

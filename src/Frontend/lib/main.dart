@@ -106,7 +106,7 @@ void main() async {
         ChangeNotifierProvider(create: (context) => userProvider()),
         ChangeNotifierProvider(create: (context) => ThemeNotifier()),
         ChangeNotifierProvider(
-            create: (context) => notificationProvider(api: api)),
+            create: (context) => notificationProvider()),
       ],
       child: MyApp(),
     ),

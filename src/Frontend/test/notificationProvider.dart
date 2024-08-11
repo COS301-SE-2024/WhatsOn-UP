@@ -14,7 +14,7 @@ void main() {
 
   setUp(() {
     mockApi = MockApi();
-    provider = notificationProvider(api: mockApi);
+    provider = notificationProvider();
     // provider.api = mockApi;
 
   });

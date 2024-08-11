@@ -1,7 +1,11 @@
+import 'package:firstapp/pages/home_page.dart';
 import 'package:firstapp/providers/notification_providers.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
+import '../pages/notifications.dart';
 import '../providers/notification_providers.dart';
 
 import 'api.dart';
@@ -9,8 +13,8 @@ import 'api.dart';
 class SocketService {
   late IO.Socket socket;
   notificationProvider _notificationProvider;
-
-  SocketService(String url, String userId, this._notificationProvider) {
+  final BuildContext context;
+  SocketService(String url, String userId, this._notificationProvider,this.context) {
     final headers = {
       'token': 'Bearer $userId',
     };
@@ -33,6 +37,10 @@ class SocketService {
       print('Event received: $data');
 
       refreshNotifications(userId);
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => Notifications()),
+      );
     });
     socket.on('error', (error) {
       print('Error: $error');
@@ -46,6 +54,7 @@ class SocketService {
   void refreshNotifications(String userId) {
     _notificationProvider.refreshNotifications(userId);
   }
+
 
   void dispose() {
     socket.dispose();

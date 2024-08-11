@@ -83,11 +83,11 @@ class _SplashPageState extends State<SplashPage> {
         userP.profileImage = profileImage;
         notificationProvider _notificationProvider =
             Provider.of<notificationProvider>(context, listen: false);
-        // _notificationProvider.apiInstance=api;
+        _notificationProvider.apiInstance(api);
         _notificationProvider.refreshNotifications(userP.userId);
         userP.Generalusers(userP.userId);
         SocketService(
-            'http://localhost:8082', userP.userId, _notificationProvider);
+            'http://localhost:8082', userP.userId, _notificationProvider,context);
 
         userP.profileimage = profileImage;
 
