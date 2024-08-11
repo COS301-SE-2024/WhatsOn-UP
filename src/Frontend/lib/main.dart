@@ -56,6 +56,7 @@
 
 
 import 'package:firstapp/pages/ManageGeneralApplicationsTabs.dart';
+import 'package:firstapp/pages/application_event.dart';
 
 import 'package:firstapp/pages/calendar_page.dart';
 import 'package:firstapp/pages/detailed_event_page.dart';
@@ -132,7 +133,7 @@ class MyApp extends StatelessWidget {
           '/resetPassword': (context)=> const ResetPasswordPage(),
           '/hostApplication': (context)=> HostApplicationPage(),
           '/detailed_event': (context) => DetailedEventPage(event: ModalRoute.of(context)!.settings.arguments as Event),
-
+          '/application_event': (context) => ApplicationEvent(),
           '/calendar': (context)=> const CalendarPage(),
           '/notifications': (context)=> const Notifications (),
           '/generaluserapplications': (context)=> const TabGeneral(),
