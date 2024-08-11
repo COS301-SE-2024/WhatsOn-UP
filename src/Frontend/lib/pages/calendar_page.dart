@@ -117,9 +117,7 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
         } : null,
         // 'attendees': event['attendees'].length.toString(),
         'maxAttendees': event['maxAttendees'] is int ? event['maxAttendees'] : 0,
-        'imageUrls': (event.containsKey('eventMedia') && (event['eventMedia'] as List).isNotEmpty)
-            ? List<String>.from(event['eventMedia'].map((media) => media?.toString() ?? ''))
-            : ['https://images.pexels.com/photos/1190297/pexels-photo-1190297.jpeg'],
+        'url': 'https://picsum.photos/200',
         'description': event['description'],
         'id': event['id'],
         'hosts': (event.containsKey('hosts') && (event['hosts'] as List).isNotEmpty)
@@ -172,7 +170,7 @@ class _CalendarPageState extends State<CalendarPage> with AutomaticKeepAliveClie
           'capacity': event.venue?.capacity ?? 0,
           'available': event.venue?.available ?? false,
         } : null,
-        'eventMedia': event.imageUrls,
+        'url': 'https://picsum.photos/200',
         'maxAttendees': event.maxAttendees ?? 0,
         'description': event.description ?? '',
         'id': event.id,
