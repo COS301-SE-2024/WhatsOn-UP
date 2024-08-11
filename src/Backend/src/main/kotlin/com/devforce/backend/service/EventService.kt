@@ -156,7 +156,7 @@ class EventService {
             existingEvent.apply {
                 updateEventDto.title?.let { title = it }
                 updateEventDto.description?.let { description = it }
-                updateEventDto.metadata?.let { metadata = it }
+                updateEventDto.metadata?.let { metadata = it.toString() }
                 updateEventDto.location?.let { venue = v}
                 updateEventDto.startDateTime?.let { startDateTime = it }
                 updateEventDto.endDateTime?.let { endDateTime = it }
