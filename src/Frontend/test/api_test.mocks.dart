@@ -369,6 +369,16 @@ class MockEventProvider extends _i1.Mock implements _i6.EventProvider {
       );
 
   @override
+  _i7.Future<List<_i8.Event>> getHostEvents(String? hostId) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getHostEvents,
+          [hostId],
+        ),
+        returnValue: _i7.Future<List<_i8.Event>>.value(<_i8.Event>[]),
+      ) as _i7.Future<List<_i8.Event>>);
+
+  @override
   void addListener(_i9.VoidCallback? listener) => super.noSuchMethod(
         Invocation.method(
           #addListener,
@@ -1137,6 +1147,19 @@ class MockApi extends _i1.Mock implements _i2.Api {
         returnValue:
             _i7.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
       ) as _i7.Future<Map<String, dynamic>>);
+
+  @override
+  _i7.Future<Map<String, dynamic>> Acknowledgeapplication(
+          {required String? userId}) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #Acknowledgeapplication,
+          [],
+          {#userId: userId},
+        ),
+        returnValue:
+            _i7.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
+      ) as _i7.Future<Map<String, dynamic>>);
 }
 
 /// A class which mocks [ImagePicker].
@@ -1303,15 +1326,6 @@ class MocknotificationProvider extends _i1.Mock
       ) as _i2.Api);
 
   @override
-  set api(_i2.Api? _api) => super.noSuchMethod(
-        Invocation.setter(
-          #api,
-          _api,
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
   _i3.userProvider get userP => (super.noSuchMethod(
         Invocation.getter(#userP),
         returnValue: _FakeuserProvider_3(
@@ -1338,15 +1352,6 @@ class MocknotificationProvider extends _i1.Mock
       ) as _i7.Future<List<_i11.AppNotification>>);
 
   @override
-  set apiInstance(_i2.Api? apiInstance) => super.noSuchMethod(
-        Invocation.setter(
-          #apiInstance,
-          apiInstance,
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
   bool get hasListeners => (super.noSuchMethod(
         Invocation.getter(#hasListeners),
         returnValue: false,
@@ -1361,6 +1366,15 @@ class MocknotificationProvider extends _i1.Mock
         returnValue: _i7.Future<void>.value(),
         returnValueForMissingStub: _i7.Future<void>.value(),
       ) as _i7.Future<void>);
+
+  @override
+  void addNotification(dynamic eventData) => super.noSuchMethod(
+        Invocation.method(
+          #addNotification,
+          [eventData],
+        ),
+        returnValueForMissingStub: null,
+      );
 
   @override
   void addListener(_i9.VoidCallback? listener) => super.noSuchMethod(
