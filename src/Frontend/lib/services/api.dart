@@ -9,6 +9,7 @@ import '../pages/editProfile_page.dart';
 import '../widgets/notification_card.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
+import 'package:firstapp/screens/InviteUsers.dart';
 
 class Api {
   // Singleton instance
@@ -818,6 +819,33 @@ Future<List<dynamic>> getAllEventsGuest() async {
       throw Exception('Failed to upload proof image');
     }
   }
+  static Future<List<UserModel>> getAllUsers(String userId) async {
+    print("User Id below");
+    print(userId);
+    final response = await http.get(Uri.parse('http://$domain:8080/api/interactions/get_all_users'));
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $userId',
+    };
+    if (response.statusCode == 200) {
+      List<dynamic> data = json.decode(response.body)['data'];
+      return data.map((json) => UserModel.fromJson(json)).toList(); // Adjust based on your UserModel structure
+    } else {
+      throw Exception('Failed to load users');
+    }
+  }
+  static Future<void> inviteUser(String eventId, String userId , String inviteeUserId) async {
+    final response = await http.put(
+      Uri.parse('http://$domain:8080/api/interactions/send_invite?eventId=$eventId&userId=$inviteeUserId'),
+      headers: {
+        'Authorization': 'Bearer $userId', // Adjust for authentication
+        'Content-Type': 'application/json',
+      },
+    );
 
-
+    if (response.statusCode != 200) {
+      throw Exception('Failed to send invite');
+    }
+  }
 }
