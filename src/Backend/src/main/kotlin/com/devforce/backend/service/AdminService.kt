@@ -79,7 +79,7 @@ class AdminService {
             return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Application not found"))
         }
 
-        if (application.get().status!!.name == "PENDING" && application.get().verificationCode != null) {
+        if (application.get().status!!.name == "PENDING" && (application.get().verificationCode != null || application.get().proofUrl == null)) {
             return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Application not verified"))
         }
 
