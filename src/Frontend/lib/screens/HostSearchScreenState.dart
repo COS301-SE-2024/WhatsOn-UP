@@ -1,29 +1,28 @@
-import 'package:firstapp/widgets/event_card.dart';
-import 'package:flutter/material.dart';
-import 'package:firstapp/widgets/SearchImageTile.dart';
-import 'package:firstapp/services/EventService.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
-import 'package:firstapp/screens/FilterScreen.dart'; // Import the FilterScreen
+import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:firstapp/providers/events_providers.dart';
+import 'package:firstapp/widgets/event_card.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:supabase_auth_ui/supabase_auth_ui.dart';
+import 'FilterScreen.dart';
+import 'package:firstapp/services/api.dart';  // Import the API file
 
+class HostSearchScreen extends StatefulWidget {
+  final String hostId;
 
-class SearchScreen extends StatefulWidget {
-  final bool showSearchHistoryOnStart;
-
-  SearchScreen({this.showSearchHistoryOnStart = false});
+  HostSearchScreen({required this.hostId});
 
   @override
-  _SearchScreenState createState() => _SearchScreenState();
+  _HostSearchScreenState createState() => _HostSearchScreenState();
 }
 
-class _SearchScreenState extends State<SearchScreen> {
-  final EventService _eventService = EventService(Supabase.instance.client);
+class _HostSearchScreenState extends State<HostSearchScreen> {
+  final Api _api = Api(); // Use the Api class
   List<Event> _searchResults = [];
-  List<String> _categories = [];
   List<String> _searchHistory = [];
   bool _isLoading = false;
-  bool _showSearchTiles = true;
   bool _showSearchHistory = false;
   bool _hasSearched = false;
   Timer? _debounce;
@@ -31,32 +30,7 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   void initState() {
     super.initState();
-    _fetchCategories();
     _loadSearchHistory();
-
-    if (widget.showSearchHistoryOnStart) {
-      _showSearchHistory = true;
-      _showSearchTiles = false;
-    }
-  }
-
-  void _fetchCategories() async {
-    setState(() {
-      _isLoading = true;
-    });
-
-    try {
-      final categories = await _eventService.fetchUniqueCategories();
-      setState(() {
-        _categories = categories;
-        _isLoading = false;
-      });
-    } catch (e) {
-      print('Error fetching categories: $e');
-      setState(() {
-        _isLoading = false;
-      });
-    }
   }
 
   void _searchEvents(String query) async {
@@ -64,15 +38,24 @@ class _SearchScreenState extends State<SearchScreen> {
     setState(() {
       _isLoading = true;
       _searchResults.clear();
-      _showSearchTiles = false;
       _showSearchHistory = false;
       _hasSearched = true;
     });
 
     try {
-      final results = await _eventService.searchEvents(query) as List<Event>;
+      final results = await _api.getAllEvents(); // Fetch all events
+      final hostEvents = results.where((event) {
+        if (event.hosts is List<Map<String, dynamic>>) {
+          return (event.hosts as List<Map<String, dynamic>>)
+              .any((host) => host['userId'] == widget.hostId);
+        } else if (event.hosts is List<String>) {
+          return (event.hosts as List<String>).contains(widget.hostId);
+        }
+        return false;
+      }).toList();
+
       setState(() {
-        _searchResults = results;
+        _searchResults = hostEvents;
         _isLoading = false;
       });
       _saveSearchQuery(query);
@@ -87,7 +70,6 @@ class _SearchScreenState extends State<SearchScreen> {
   void _clearSearchResults() {
     setState(() {
       _searchResults.clear();
-      _showSearchTiles = true;
       _hasSearched = false;
     });
   }
@@ -152,7 +134,7 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Search Events'),
+        title: Text('Host Events'),
         actions: [
           if (_searchResults.isNotEmpty)
             IconButton(
@@ -174,7 +156,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 borderRadius: BorderRadius.all(
                   Radius.circular(50),
                 ),
-                color: Colors.grey[200],
+                color: Colors.grey[200], // Light grey for better visibility
               ),
               child: Row(
                 children: [
@@ -190,7 +172,6 @@ class _SearchScreenState extends State<SearchScreen> {
                       onTap: () {
                         setState(() {
                           _showSearchHistory = true;
-                          _showSearchTiles = false;
                         });
                       },
                       onChanged: _onSearchChanged,
@@ -229,31 +210,15 @@ class _SearchScreenState extends State<SearchScreen> {
                     ),
                 ],
               ),
-            if (_showSearchTiles)
-              GridView.count(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                crossAxisCount: 2,
-                children: _categories.map((category) {
-                  return SearchImageTile(
-                    title: category,
-                    imageUrl: 'images/$category.jpg',
-                    onTap: (title) => _searchEvents(title),
-                  );
-                }).toList(),
-              ),
             SizedBox(height: 16.0),
             _isLoading
                 ? Center(child: CircularProgressIndicator())
                 : _hasSearched && _searchResults.isEmpty
-                ? Center(child: Text('No events found'))
+                ? Center(child: Text('No events found for this host.'))
                 : Expanded(
               child: ListView.builder(
                 itemCount: _searchResults.length,
                 itemBuilder: (context, index) {
-                  if (index >= _searchResults.length) {
-                    return Container();
-                  }
                   return EventCard(event: _searchResults[index]);
                 },
               ),
