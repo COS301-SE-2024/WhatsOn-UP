@@ -21,10 +21,10 @@ class notificationProvider extends  ChangeNotifier {
   Future<List<AppNotification>> _fetchNotifications(String userId) async {
     try {
       List<AppNotification> response=await api.getAllNotification(userId: userId);
-      print("below is the notification response");
-      print(response);
+
       return response;
     } catch (e) {
+      print(e);
       throw Exception('Failed to fetch notifications providers: $e');
     }
   }
@@ -41,3 +41,4 @@ class notificationProvider extends  ChangeNotifier {
 
 
 }
+

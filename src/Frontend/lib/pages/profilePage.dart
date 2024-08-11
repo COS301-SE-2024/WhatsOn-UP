@@ -77,15 +77,6 @@ class _ProfilePageState extends State<ProfilePage> {
                           context,
                           MaterialPageRoute(builder: (context) => EditprofilePage()),
                         ),
-                        // style: ElevatedButton.styleFrom(
-                        //   foregroundColor: Colors.black,
-                        //   backgroundColor: Colors.white,
-                        //   shape: RoundedRectangleBorder(
-                        //     borderRadius: BorderRadius.circular(20),
-                        //     side: BorderSide(color: Colors.grey, width: 1),
-                        //   ),
-                        //   padding: EdgeInsets.symmetric(vertical: 16),
-                        // ),
                         child: const Text('Edit Profile', style: TextStyle(fontSize: 16)),
                       ),
                     ),
@@ -106,15 +97,6 @@ class _ProfilePageState extends State<ProfilePage> {
                             MaterialPageRoute(builder: (context) => const SupabaseSignup ()),
                           );
                         },
-                        // style: ElevatedButton.styleFrom(
-                        //   foregroundColor: Colors.black,
-                        //   backgroundColor: Colors.white,
-                        //   shape: RoundedRectangleBorder(
-                        //     borderRadius: BorderRadius.circular(20),
-                        //     side: BorderSide(color: Colors.grey, width: 1),
-                        //   ),
-                        //   padding: EdgeInsets.symmetric(vertical: 12),
-                        // ),
                         child: const Text('Sign Up', style: TextStyle(fontSize: 16)),
                       ),
                     ),

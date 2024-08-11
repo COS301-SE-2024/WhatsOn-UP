@@ -4,21 +4,20 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i7;
-import 'dart:typed_data' as _i13;
+import 'dart:typed_data' as _i12;
 import 'dart:ui' as _i9;
 
-import 'package:firstapp/pages/editProfile_page.dart' as _i11;
 import 'package:firstapp/providers/events_providers.dart' as _i6;
-import 'package:firstapp/providers/notification_providers.dart' as _i15;
-import 'package:firstapp/providers/user_provider.dart' as _i4;
+import 'package:firstapp/providers/notification_providers.dart' as _i14;
+import 'package:firstapp/providers/user_provider.dart' as _i3;
 import 'package:firstapp/services/api.dart' as _i2;
 import 'package:firstapp/widgets/event_card.dart' as _i8;
-import 'package:firstapp/widgets/notification_card.dart' as _i12;
-import 'package:firstapp/widgets/theme_manager.dart' as _i16;
+import 'package:firstapp/widgets/notification_card.dart' as _i11;
+import 'package:firstapp/widgets/theme_manager.dart' as _i15;
 import 'package:flutter/material.dart' as _i5;
-import 'package:image_picker/image_picker.dart' as _i14;
+import 'package:image_picker/image_picker.dart' as _i13;
 import 'package:image_picker_platform_interface/image_picker_platform_interface.dart'
-    as _i3;
+    as _i4;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i10;
 
@@ -45,9 +44,9 @@ class _FakeApi_0 extends _i1.SmartFake implements _i2.Api {
         );
 }
 
-class _FakeLostDataResponse_1 extends _i1.SmartFake
-    implements _i3.LostDataResponse {
-  _FakeLostDataResponse_1(
+class _FakeGeneralApplications_1 extends _i1.SmartFake
+    implements _i3.GeneralApplications {
+  _FakeGeneralApplications_1(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -56,8 +55,9 @@ class _FakeLostDataResponse_1 extends _i1.SmartFake
         );
 }
 
-class _FakeuserProvider_2 extends _i1.SmartFake implements _i4.userProvider {
-  _FakeuserProvider_2(
+class _FakeLostDataResponse_2 extends _i1.SmartFake
+    implements _i4.LostDataResponse {
+  _FakeLostDataResponse_2(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -66,8 +66,18 @@ class _FakeuserProvider_2 extends _i1.SmartFake implements _i4.userProvider {
         );
 }
 
-class _FakeThemeData_3 extends _i1.SmartFake implements _i5.ThemeData {
-  _FakeThemeData_3(
+class _FakeuserProvider_3 extends _i1.SmartFake implements _i3.userProvider {
+  _FakeuserProvider_3(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakeThemeData_4 extends _i1.SmartFake implements _i5.ThemeData {
+  _FakeThemeData_4(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -398,7 +408,7 @@ class MockEventProvider extends _i1.Mock implements _i6.EventProvider {
 /// A class which mocks [userProvider].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockuserProvider extends _i1.Mock implements _i4.userProvider {
+class MockuserProvider extends _i1.Mock implements _i3.userProvider {
   MockuserProvider() {
     _i1.throwOnMissingStub(this);
   }
@@ -411,6 +421,15 @@ class MockuserProvider extends _i1.Mock implements _i4.userProvider {
           Invocation.getter(#api),
         ),
       ) as _i2.Api);
+
+  @override
+  set api(_i2.Api? _api) => super.noSuchMethod(
+        Invocation.setter(
+          #api,
+          _api,
+        ),
+        returnValueForMissingStub: null,
+      );
 
   @override
   set profileimage(String? _profileimage) => super.noSuchMethod(
@@ -473,10 +492,14 @@ class MockuserProvider extends _i1.Mock implements _i4.userProvider {
       ) as bool);
 
   @override
-  _i7.Future<List<_i11.User>> get generalUserEvents => (super.noSuchMethod(
-        Invocation.getter(#generalUserEvents),
-        returnValue: _i7.Future<List<_i11.User>>.value(<_i11.User>[]),
-      ) as _i7.Future<List<_i11.User>>);
+  set generalapplications(_i7.Future<_i3.GeneralApplications>? value) =>
+      super.noSuchMethod(
+        Invocation.setter(
+          #generalapplications,
+          value,
+        ),
+        returnValueForMissingStub: null,
+      );
 
   @override
   set Fullname(String? value) => super.noSuchMethod(
@@ -593,10 +616,10 @@ class MockuserProvider extends _i1.Mock implements _i4.userProvider {
       );
 
   @override
-  _i7.Future<void> refreshGeneralUsers() => (super.noSuchMethod(
+  _i7.Future<void> Generalusers(String? userId) => (super.noSuchMethod(
         Invocation.method(
-          #refreshGeneralUsers,
-          [],
+          #Generalusers,
+          [userId],
         ),
         returnValue: _i7.Future<void>.value(),
         returnValueForMissingStub: _i7.Future<void>.value(),
@@ -825,7 +848,7 @@ class MockApi extends _i1.Mock implements _i2.Api {
       ) as _i7.Future<Map<String, dynamic>>);
 
   @override
-  _i7.Future<List<_i12.AppNotification>> getAllNotification(
+  _i7.Future<List<_i11.AppNotification>> getAllNotification(
           {required String? userId}) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -833,14 +856,14 @@ class MockApi extends _i1.Mock implements _i2.Api {
           [],
           {#userId: userId},
         ),
-        returnValue: _i7.Future<List<_i12.AppNotification>>.value(
-            <_i12.AppNotification>[]),
-      ) as _i7.Future<List<_i12.AppNotification>>);
+        returnValue: _i7.Future<List<_i11.AppNotification>>.value(
+            <_i11.AppNotification>[]),
+      ) as _i7.Future<List<_i11.AppNotification>>);
 
   @override
   _i7.Future<Map<String, dynamic>> AcceptInvite({
-    required String? userId,
-    required String? notificationId,
+    String? userId,
+    String? notificationId,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -874,13 +897,21 @@ class MockApi extends _i1.Mock implements _i2.Api {
       ) as _i7.Future<Map<String, dynamic>>);
 
   @override
-  _i7.Future<List<_i11.User>> getGeneralusersToHost() => (super.noSuchMethod(
+  _i7.Future<_i3.GeneralApplications> getGeneralusersToHost(String? userid) =>
+      (super.noSuchMethod(
         Invocation.method(
           #getGeneralusersToHost,
-          [],
+          [userid],
         ),
-        returnValue: _i7.Future<List<_i11.User>>.value(<_i11.User>[]),
-      ) as _i7.Future<List<_i11.User>>);
+        returnValue: _i7.Future<_i3.GeneralApplications>.value(
+            _FakeGeneralApplications_1(
+          this,
+          Invocation.method(
+            #getGeneralusersToHost,
+            [userid],
+          ),
+        )),
+      ) as _i7.Future<_i3.GeneralApplications>);
 
   @override
   _i7.Future<Map<String, dynamic>> DeletersvpEvent(
@@ -991,7 +1022,7 @@ class MockApi extends _i1.Mock implements _i2.Api {
 
   @override
   _i7.Future<Map<String, dynamic>> uploadImage(
-    _i13.Uint8List? imageBytes,
+    _i12.Uint8List? imageBytes,
     String? userid,
   ) =>
       (super.noSuchMethod(
@@ -1008,7 +1039,7 @@ class MockApi extends _i1.Mock implements _i2.Api {
 
   @override
   _i7.Future<Map<String, dynamic>> eventUploadImage(
-    _i13.Uint8List? imageBytes,
+    _i12.Uint8List? imageBytes,
     String? userid,
     String? EventId,
   ) =>
@@ -1031,7 +1062,7 @@ class MockApi extends _i1.Mock implements _i2.Api {
     required String? duration,
     required DateTime? fromWhen,
     String? studentEmail,
-    _i13.Uint8List? proofImage,
+    _i12.Uint8List? proofImage,
     required String? userId,
   }) =>
       (super.noSuchMethod(
@@ -1050,23 +1081,79 @@ class MockApi extends _i1.Mock implements _i2.Api {
         returnValue:
             _i7.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
       ) as _i7.Future<Map<String, dynamic>>);
+
+  @override
+  _i7.Future<Map<String, dynamic>> AcceptApplication({
+    required String? userId,
+    required String? applicationId,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #AcceptApplication,
+          [],
+          {
+            #userId: userId,
+            #applicationId: applicationId,
+          },
+        ),
+        returnValue:
+            _i7.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
+      ) as _i7.Future<Map<String, dynamic>>);
+
+  @override
+  _i7.Future<Map<String, dynamic>> DeclineApplication({
+    required String? userId,
+    required String? applicationId,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #DeclineApplication,
+          [],
+          {
+            #userId: userId,
+            #applicationId: applicationId,
+          },
+        ),
+        returnValue:
+            _i7.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
+      ) as _i7.Future<Map<String, dynamic>>);
+
+  @override
+  _i7.Future<Map<String, dynamic>> DemoteApplicant({
+    required String? userIdAdmin,
+    required String? userId,
+    required String? applicationId,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #DemoteApplicant,
+          [],
+          {
+            #userIdAdmin: userIdAdmin,
+            #userId: userId,
+            #applicationId: applicationId,
+          },
+        ),
+        returnValue:
+            _i7.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
+      ) as _i7.Future<Map<String, dynamic>>);
 }
 
 /// A class which mocks [ImagePicker].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockImagePicker extends _i1.Mock implements _i14.ImagePicker {
+class MockImagePicker extends _i1.Mock implements _i13.ImagePicker {
   MockImagePicker() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i7.Future<_i3.XFile?> pickImage({
-    required _i3.ImageSource? source,
+  _i7.Future<_i4.XFile?> pickImage({
+    required _i4.ImageSource? source,
     double? maxWidth,
     double? maxHeight,
     int? imageQuality,
-    _i3.CameraDevice? preferredCameraDevice = _i3.CameraDevice.rear,
+    _i4.CameraDevice? preferredCameraDevice = _i4.CameraDevice.rear,
     bool? requestFullMetadata = true,
   }) =>
       (super.noSuchMethod(
@@ -1082,11 +1169,11 @@ class MockImagePicker extends _i1.Mock implements _i14.ImagePicker {
             #requestFullMetadata: requestFullMetadata,
           },
         ),
-        returnValue: _i7.Future<_i3.XFile?>.value(),
-      ) as _i7.Future<_i3.XFile?>);
+        returnValue: _i7.Future<_i4.XFile?>.value(),
+      ) as _i7.Future<_i4.XFile?>);
 
   @override
-  _i7.Future<List<_i3.XFile>> pickMultiImage({
+  _i7.Future<List<_i4.XFile>> pickMultiImage({
     double? maxWidth,
     double? maxHeight,
     int? imageQuality,
@@ -1105,11 +1192,11 @@ class MockImagePicker extends _i1.Mock implements _i14.ImagePicker {
             #requestFullMetadata: requestFullMetadata,
           },
         ),
-        returnValue: _i7.Future<List<_i3.XFile>>.value(<_i3.XFile>[]),
-      ) as _i7.Future<List<_i3.XFile>>);
+        returnValue: _i7.Future<List<_i4.XFile>>.value(<_i4.XFile>[]),
+      ) as _i7.Future<List<_i4.XFile>>);
 
   @override
-  _i7.Future<_i3.XFile?> pickMedia({
+  _i7.Future<_i4.XFile?> pickMedia({
     double? maxWidth,
     double? maxHeight,
     int? imageQuality,
@@ -1126,11 +1213,11 @@ class MockImagePicker extends _i1.Mock implements _i14.ImagePicker {
             #requestFullMetadata: requestFullMetadata,
           },
         ),
-        returnValue: _i7.Future<_i3.XFile?>.value(),
-      ) as _i7.Future<_i3.XFile?>);
+        returnValue: _i7.Future<_i4.XFile?>.value(),
+      ) as _i7.Future<_i4.XFile?>);
 
   @override
-  _i7.Future<List<_i3.XFile>> pickMultipleMedia({
+  _i7.Future<List<_i4.XFile>> pickMultipleMedia({
     double? maxWidth,
     double? maxHeight,
     int? imageQuality,
@@ -1149,13 +1236,13 @@ class MockImagePicker extends _i1.Mock implements _i14.ImagePicker {
             #requestFullMetadata: requestFullMetadata,
           },
         ),
-        returnValue: _i7.Future<List<_i3.XFile>>.value(<_i3.XFile>[]),
-      ) as _i7.Future<List<_i3.XFile>>);
+        returnValue: _i7.Future<List<_i4.XFile>>.value(<_i4.XFile>[]),
+      ) as _i7.Future<List<_i4.XFile>>);
 
   @override
-  _i7.Future<_i3.XFile?> pickVideo({
-    required _i3.ImageSource? source,
-    _i3.CameraDevice? preferredCameraDevice = _i3.CameraDevice.rear,
+  _i7.Future<_i4.XFile?> pickVideo({
+    required _i4.ImageSource? source,
+    _i4.CameraDevice? preferredCameraDevice = _i4.CameraDevice.rear,
     Duration? maxDuration,
   }) =>
       (super.noSuchMethod(
@@ -1168,27 +1255,27 @@ class MockImagePicker extends _i1.Mock implements _i14.ImagePicker {
             #maxDuration: maxDuration,
           },
         ),
-        returnValue: _i7.Future<_i3.XFile?>.value(),
-      ) as _i7.Future<_i3.XFile?>);
+        returnValue: _i7.Future<_i4.XFile?>.value(),
+      ) as _i7.Future<_i4.XFile?>);
 
   @override
-  _i7.Future<_i3.LostDataResponse> retrieveLostData() => (super.noSuchMethod(
+  _i7.Future<_i4.LostDataResponse> retrieveLostData() => (super.noSuchMethod(
         Invocation.method(
           #retrieveLostData,
           [],
         ),
         returnValue:
-            _i7.Future<_i3.LostDataResponse>.value(_FakeLostDataResponse_1(
+            _i7.Future<_i4.LostDataResponse>.value(_FakeLostDataResponse_2(
           this,
           Invocation.method(
             #retrieveLostData,
             [],
           ),
         )),
-      ) as _i7.Future<_i3.LostDataResponse>);
+      ) as _i7.Future<_i4.LostDataResponse>);
 
   @override
-  bool supportsImageSource(_i3.ImageSource? source) => (super.noSuchMethod(
+  bool supportsImageSource(_i4.ImageSource? source) => (super.noSuchMethod(
         Invocation.method(
           #supportsImageSource,
           [source],
@@ -1201,7 +1288,7 @@ class MockImagePicker extends _i1.Mock implements _i14.ImagePicker {
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MocknotificationProvider extends _i1.Mock
-    implements _i15.notificationProvider {
+    implements _i14.notificationProvider {
   MocknotificationProvider() {
     _i1.throwOnMissingStub(this);
   }
@@ -1225,16 +1312,16 @@ class MocknotificationProvider extends _i1.Mock
       );
 
   @override
-  _i4.userProvider get userP => (super.noSuchMethod(
+  _i3.userProvider get userP => (super.noSuchMethod(
         Invocation.getter(#userP),
-        returnValue: _FakeuserProvider_2(
+        returnValue: _FakeuserProvider_3(
           this,
           Invocation.getter(#userP),
         ),
-      ) as _i4.userProvider);
+      ) as _i3.userProvider);
 
   @override
-  set userP(_i4.userProvider? _userP) => super.noSuchMethod(
+  set userP(_i3.userProvider? _userP) => super.noSuchMethod(
         Invocation.setter(
           #userP,
           _userP,
@@ -1243,12 +1330,12 @@ class MocknotificationProvider extends _i1.Mock
       );
 
   @override
-  _i7.Future<List<_i12.AppNotification>> get notifications =>
+  _i7.Future<List<_i11.AppNotification>> get notifications =>
       (super.noSuchMethod(
         Invocation.getter(#notifications),
-        returnValue: _i7.Future<List<_i12.AppNotification>>.value(
-            <_i12.AppNotification>[]),
-      ) as _i7.Future<List<_i12.AppNotification>>);
+        returnValue: _i7.Future<List<_i11.AppNotification>>.value(
+            <_i11.AppNotification>[]),
+      ) as _i7.Future<List<_i11.AppNotification>>);
 
   @override
   set apiInstance(_i2.Api? apiInstance) => super.noSuchMethod(
@@ -1315,7 +1402,7 @@ class MocknotificationProvider extends _i1.Mock
 /// A class which mocks [ThemeNotifier].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockThemeNotifier extends _i1.Mock implements _i16.ThemeNotifier {
+class MockThemeNotifier extends _i1.Mock implements _i15.ThemeNotifier {
   MockThemeNotifier() {
     _i1.throwOnMissingStub(this);
   }
@@ -1323,7 +1410,7 @@ class MockThemeNotifier extends _i1.Mock implements _i16.ThemeNotifier {
   @override
   _i5.ThemeData get lightTheme => (super.noSuchMethod(
         Invocation.getter(#lightTheme),
-        returnValue: _FakeThemeData_3(
+        returnValue: _FakeThemeData_4(
           this,
           Invocation.getter(#lightTheme),
         ),
@@ -1332,7 +1419,7 @@ class MockThemeNotifier extends _i1.Mock implements _i16.ThemeNotifier {
   @override
   _i5.ThemeData get darkTheme => (super.noSuchMethod(
         Invocation.getter(#darkTheme),
-        returnValue: _FakeThemeData_3(
+        returnValue: _FakeThemeData_4(
           this,
           Invocation.getter(#darkTheme),
         ),
@@ -1350,7 +1437,7 @@ class MockThemeNotifier extends _i1.Mock implements _i16.ThemeNotifier {
           #getTheme,
           [],
         ),
-        returnValue: _FakeThemeData_3(
+        returnValue: _FakeThemeData_4(
           this,
           Invocation.method(
             #getTheme,

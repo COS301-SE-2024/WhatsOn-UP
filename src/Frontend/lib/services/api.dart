@@ -6,6 +6,7 @@ import 'dart:typed_data';
 import 'package:firstapp/widgets/event_card.dart';
 import 'package:firstapp/main.dart';
 import '../pages/editProfile_page.dart';
+import '../providers/user_provider.dart';
 import '../widgets/notification_card.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
@@ -14,18 +15,17 @@ import 'package:firstapp/screens/InviteUsers.dart';
 class Api {
   // Singleton instance
   static final Api _instance = Api._internal();
+
   // static const String domain = '10.0.2.2';
   static const String domain = 'localhost';
+
   factory Api() => _instance;
+
   Api._internal();
 
-  // Secure Storage instance
-  // final _secureStorage = const FlutterSecureStorage();
 
-  // Keys for storing JWT and refresh token
   var jwtKey = 'jwtToken';
   var refreshToken = 'refreshToken';
-
 
 
   // Method to log in the user and store JWT token
@@ -41,7 +41,8 @@ class Api {
     });
 
     try {
-      var response = await http.post(Uri.parse(_loginUrl), headers: headers, body: body);
+      var response = await http.post(
+          Uri.parse(_loginUrl), headers: headers, body: body);
 
       if (response.statusCode == 200) {
         var responseBody = jsonDecode(response.body)['data'];
@@ -56,7 +57,6 @@ class Api {
         throw Exception(jsonDecode(response.body));
       }
     } catch (e) {
-
       throw Exception(e.toString());
     }
   }
@@ -64,8 +64,6 @@ class Api {
   // Method to retrieve user details using stored JWT token
   Future<Map<String, dynamic>> getUserDetails() async {
     try {
-
-
       final String _userUrl = 'http://$domain:8080/api/auth/get_user';
       var headers = {
         'Content-Type': 'application/json',
@@ -81,35 +79,34 @@ class Api {
         throw Exception(jsonDecode(response.body));
       }
     } catch (e) {
-
       throw Exception(e.toString());
     }
   }
 
   Future<List<Event>> getAllEvents() async {
-  final _rsvpEventsURL = 'http://$domain:8080/api/events/get_all';
+    final _rsvpEventsURL = 'http://$domain:8080/api/events/get_all';
 
 
-  try {
-    var response = await http.get(Uri.parse(_rsvpEventsURL),);
+    try {
+      var response = await http.get(Uri.parse(_rsvpEventsURL),);
 
-    if (response.statusCode == 200) {
-      // Parse the JSON response
-      final Map<String, dynamic> decodedJson = json.decode(response.body);
-      final List<dynamic> eventsJson = decodedJson['data'];
-      // Map the JSON objects to Event objects
-      final List<Event> events = eventsJson.map((jsonEvent) => Event.fromJson(jsonEvent)).toList();
-      print("events");
-      print(events);
-      return events;
-    } else {
-      throw Exception('Failed to load events');
+      if (response.statusCode == 200) {
+        // Parse the JSON response
+        final Map<String, dynamic> decodedJson = json.decode(response.body);
+        final List<dynamic> eventsJson = decodedJson['data'];
+
+        final List<Event> events = eventsJson.map((jsonEvent) =>
+            Event.fromJson(jsonEvent)).toList();
+
+        return events;
+      } else {
+        throw Exception('Failed to load events');
+      }
+    } catch (e) {
+      rethrow;
     }
-  } catch (e) {
-
-    rethrow;
   }
-}
+
   Future<List<Event>> getAllSavedEvents(String userId) async {
     final _savedEventsURL = 'http://$domain:8080/api/events/get_saved_events';
     var headers = {
@@ -119,27 +116,26 @@ class Api {
     };
 
     try {
-      var response = await http.get(Uri.parse(_savedEventsURL),headers: headers,);
+      var response = await http.get(
+        Uri.parse(_savedEventsURL), headers: headers,);
 
       if (response.statusCode == 200) {
-
         final Map<String, dynamic> decodedJson = json.decode(response.body);
         final List<dynamic> eventsJson = decodedJson['data'];
 
 
-        final List<Event> events = eventsJson.map((jsonEvent) => Event.fromJson(jsonEvent)).toList();
+        final List<Event> events = eventsJson.map((jsonEvent) =>
+            Event.fromJson(jsonEvent)).toList();
         return events;
       } else {
         throw Exception('Failed to load events');
       }
     } catch (e) {
-
       rethrow;
     }
   }
-//Method to retrieve rsvpd events
-  Future<List<dynamic>> getRSVPEvents(String userId) async {
 
+  Future<List<dynamic>> getRSVPEvents(String userId) async {
     try {
       final String _rsvpEventsURL = 'http://$domain:8080/api/user/get_rspv_events';
       var headers = {
@@ -148,24 +144,24 @@ class Api {
         'Authorization': 'Bearer $userId',
       };
 
-      var response = await http.get(Uri.parse(_rsvpEventsURL), headers: headers);
+      var response = await http.get(
+          Uri.parse(_rsvpEventsURL), headers: headers);
 
       if (response.statusCode == 200) {
-
         return jsonDecode(response.body)['data'];
       } else {
         throw Exception(jsonDecode(response.body));
       }
     }
     catch (e) {
-
       throw Exception(e.toString());
     }
   }
 
-  Future<Map<String, dynamic>> postChangeUser(String name, String userId) async {
-
-    var userChangeUrl = Uri.parse('http://localhost:8080/api/user/update_profile?fullName=$name');
+  Future<Map<String, dynamic>> postChangeUser(String name,
+      String userId) async {
+    var userChangeUrl = Uri.parse(
+        'http://$domain:8080/api/user/update_profile?fullName=$name');
 
 
     var headers = {
@@ -177,23 +173,20 @@ class Api {
 
 
     try {
-
       var response = await http.put(userChangeUrl, headers: headers);
 
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
-
       } else {
         throw Exception('Failed to change user');
       }
     } catch (e) {
-
       return {'error': e.toString()};
     }
-
   }
-  Future<Map<String, dynamic>> updatePassword(String password,String userId) async {
 
+  Future<Map<String, dynamic>> updatePassword(String password,
+      String userId) async {
     var Url = Uri.parse('http://$domain:8080/api/auth/reset_password');
     var headers = {
       'Content-Type': 'application/json',
@@ -203,23 +196,20 @@ class Api {
     };
     var body = jsonEncode({
 
-      'password':password,
+      'password': password,
 
     });
 
     try {
-
       var response = await http.post(Url, headers: headers, body: body);
 
       if (response.statusCode == 200) {
         print("sucessfully changed password");
         return jsonDecode(response.body);
-
       } else {
         throw Exception('Failed to change password');
       }
     } catch (e) {
-
       return {'error': e.toString()};
     }
   }
@@ -237,7 +227,6 @@ class Api {
     required String userId,
     //List<String> imageUrls,
   }) async {
-
     final String _createEventUrl = 'http://$domain:8080/api/events/create';
     //final request = http.MultipartRequest('POST', _createEventUrl);
 
@@ -259,7 +248,8 @@ class Api {
     });
 
     try {
-      var response = await http.post(Uri.parse(_createEventUrl), headers: headers, body: body);
+      var response = await http.post(
+          Uri.parse(_createEventUrl), headers: headers, body: body);
 
       if (response.statusCode == 200) {
         var responseData = jsonDecode(response.body);
@@ -281,7 +271,6 @@ class Api {
         throw Exception(jsonDecode(response.body));
       }
     } catch (e) {
-
       throw Exception(e.toString());
     }
   }
@@ -306,7 +295,7 @@ class Api {
 */
   Future<Map<String, dynamic>> rsvpEvent(String eventId, String UserId) async {
     final String _rsvpEventUrl = 'http://$domain:8080/api/user/rspv_event/$eventId';
-    
+
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -322,64 +311,46 @@ class Api {
         throw Exception(jsonDecode(response.body));
       }
     } catch (e) {
-
       throw Exception(e.toString());
     }
-
-
   }
-  Future<List<AppNotification>> getAllNotification({required String userId}) async {
 
-    const String notifyUserUrl = 'http://localhost:8081/notifications/get_all';
+  Future<List<AppNotification>> getAllNotification(
+      {required String userId}) async {
+    const String notifyUserUrl = 'http://$domain:8081/notifications/get_all';
 
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
       'Authorization': 'Bearer $userId',
     };
-
 
 
     try {
       var response = await http.get(Uri.parse(notifyUserUrl), headers: headers);
 
       if (response.statusCode == 200) {
-
-
         final Map<String, dynamic> decodedJson = json.decode(response.body);
         final List<dynamic> eventsJson = decodedJson['data'];
 
-        // Map the JSON objects to Event objects
-        final List<AppNotification> events = eventsJson.map((jsonEvent) =>  AppNotification.fromJson(jsonEvent)).toList();
+
+        final List<AppNotification> events = eventsJson.map((jsonEvent) =>
+            AppNotification.fromJson(jsonEvent)).toList();
         return events;
-
-
-
-
-
-        // // return jsonDecode(response.body);
-        // final List<dynamic> jsonResponse = json.decode(response.body);
-        //
-        // return jsonResponse.map((json) => AppNotification.fromJson(json)).toList();
       } else {
-
         print(jsonDecode(response.body
         ));
         throw Exception(jsonDecode(response.body));
       }
     } catch (e) {
-
       throw Exception(e.toString());
     }
   }
-  Future<Map<String, dynamic>> AcceptInvite({required String userId, required String notificationId}) async {
 
-    String notifyUserUrl = 'http:localhost:8081/api/invite/accept/$notificationId';
-    // final uri = Uri.parse('http://localhost:8083/media/upload?event_id=$EventId');
+  Future<Map<String, dynamic>> AcceptInvite(
+      { String? userId,String? notificationId}) async {
+    String notifyUserUrl = 'http://$domain:8080/api/interactions/accept_invite/$notificationId';
 
-
-    // final request = http.MultipartRequest('POST', uri);
-    // request.headers['Authorization']= 'Bearer $userid';
 
     var headers = {
       'Content-Type': 'application/json',
@@ -388,35 +359,24 @@ class Api {
     };
 
 
-
     try {
-      var response = await http.post(Uri.parse(notifyUserUrl), headers: headers);
+      var response = await http.post(
+          Uri.parse(notifyUserUrl), headers: headers);
 
       if (response.statusCode == 200) {
-
-
         return jsonDecode(response.body);
-
-
-
-
-
-        // // return jsonDecode(response.body);
-        // final List<dynamic> jsonResponse = json.decode(response.body);
-        //
-        // return jsonResponse.map((json) => AppNotification.fromJson(json)).toList();
       } else {
-
         print(jsonDecode(response.body
         ));
         throw Exception(jsonDecode(response.body));
       }
     } catch (e) {
-
       throw Exception(e.toString());
     }
   }
-  Future<Map<String, dynamic>> postNotifyUser({required String userId, required String message}) async {
+
+  Future<Map<String, dynamic>> postNotifyUser(
+      {required String userId, required String message}) async {
     const String notifyUserUrl = '';
 
     var headers = {
@@ -431,7 +391,8 @@ class Api {
     });
 
     try {
-      var response = await http.post(Uri.parse(notifyUserUrl), headers: headers, body: body);
+      var response = await http.post(
+          Uri.parse(notifyUserUrl), headers: headers, body: body);
 
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
@@ -439,28 +400,39 @@ class Api {
         throw Exception(jsonDecode(response.body));
       }
     } catch (e) {
-
       throw Exception(e.toString());
     }
   }
-  Future<List<User>> getGeneralusersToHost() async {
-    const String generalEventsURL = '';
+
+  Future<GeneralApplications> getGeneralusersToHost(String userid) async {
+    const String notifyUserUrl = 'http://$domain:8080/api/admin/all_applications';
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $userid',
+    };
 
     try {
-      var response = await http.get(Uri.parse(generalEventsURL));
+      var response = await http.get(Uri.parse(notifyUserUrl), headers: headers);
 
       if (response.statusCode == 200) {
-        return jsonDecode(response.body)['data'];
+        var jsonResponse = json.decode(response.body);
+        print('Response body decoded in applications: $jsonResponse');
+        var generalApplications = GeneralApplications.fromJson(jsonResponse);
+
+        return generalApplications;
       } else {
-        throw Exception('Failed to load users');
+        throw Exception(jsonDecode(response.body));
       }
     } catch (e) {
-
       throw Exception(e.toString());
     }
   }
-  Future<Map<String, dynamic>> DeletersvpEvent(String eventId, String UserId) async {
-    final String _rsvpEventUrl = 'http://localhost:8080/api/user/delete_rspv_event/$eventId';
+
+
+  Future<Map<String, dynamic>> DeletersvpEvent(String eventId,
+      String UserId) async {
+    final String _rsvpEventUrl = 'http://$domain:8080/api/user/delete_rspv_event/$eventId';
 
     var headers = {
       'Content-Type': 'application/json',
@@ -469,7 +441,8 @@ class Api {
     };
 
     try {
-      var response = await http.delete(Uri.parse(_rsvpEventUrl), headers: headers);
+      var response = await http.delete(
+          Uri.parse(_rsvpEventUrl), headers: headers);
 
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
@@ -477,15 +450,13 @@ class Api {
         throw Exception(jsonDecode(response.body));
       }
     } catch (e) {
-
       throw Exception(e.toString());
     }
-
-
   }
 
-  Future<Map<String, dynamic>> DeleteEvent(String eventId,String userid) async {
-    var Url = Uri.parse('http://localhost:8080/api/events/delete/$eventId');
+  Future<Map<String, dynamic>> DeleteEvent(String eventId,
+      String userid) async {
+    var Url = Uri.parse('http://$domain:8080/api/events/delete/$eventId');
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -493,52 +464,49 @@ class Api {
     };
 
     try {
-    var response = await http.delete( Url,headers: headers );
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
-
-    } else {
-      throw Exception('Failed to delete event');
+      var response = await http.delete(Url, headers: headers);
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        throw Exception('Failed to delete event');
+      }
+    } catch (e) {
+      print('Error: $e');
+      return {'error': e.toString()};
     }
-
-  } catch (e) {
-  print('Error: $e');
-  return {'error': e.toString()};
-  }
   }
 
 
+  Future<Map<String, dynamic>> postUsername(String username, String userid) async {
+    String encodedUsername = Uri.encodeComponent(username);
+    var userChangeUrl = Uri.parse('http://$domain:8080/api/user/update_profile?fullName=$encodedUsername');
 
-   Future<Map<String, dynamic>> postUsername(String username,String userid) async {
+    print("Username received in postUsername: $username");
+    print("Encoded url: $userChangeUrl");
 
-    var userChangeUrl = Uri.parse('http://$domain:8080/api/user/update_profile');
-  //
-  //   // Define the headers and body for login request
     var headers = {
-      'Content-Type': 'application/json',
       'Accept': 'application/json',
       'Authorization': 'Bearer $userid',
-     };
-     var body = jsonEncode({
-       'fullName':username
-     });
+    };
 
-     try {
-
-       var response = await http.put(userChangeUrl, headers: headers, body: body);
+    try {
+      var response = await http.put(userChangeUrl, headers: headers);
 
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
+      }
+      else {
+        print('Failed to change user: ${response.statusCode}');
+        print('Response body: ${response.body}');
+        throw Exception('Failed to change user: ${response.statusCode}');
+      }
+    }
+    catch (e) {
+      print('Error: $e');
+      return {'error': e.toString()};
+    }
+  }
 
-      } else {
-         throw Exception('Failed to change user');
-       }
-    } catch (e) {
-       print('Error: $e');
-       return {'error': e.toString()};
-     }
-
-   }
   Future<Map<String, dynamic>> getUser(String userid) async {
     final String _userUrl = 'http://$domain:8080/api/user/get_user';
 
@@ -552,44 +520,42 @@ class Api {
 
 
     try {
-
       var response = await http.get(Uri.parse(_userUrl), headers: headers);
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
-
       } else {
         throw Exception('Failed to get user details');
       }
     } catch (e) {
-
       return {'error': e.toString()};
     }
-
   }
 
 
-Future<List<dynamic>> getAllEventsGuest() async {
-  try {
+  Future<List<dynamic>> getAllEventsGuest() async {
+    try {
       final _rsvpEventsURL = 'http://$domain:8080/api/events/get_all';
       var headers = {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
       };
 
-      var response = await http.get(Uri.parse(_rsvpEventsURL), headers: headers);
+      var response = await http.get(
+          Uri.parse(_rsvpEventsURL), headers: headers);
 
       if (response.statusCode == 200) {
-
-        return jsonDecode(response.body)['data'];
+        var decodedJson = jsonDecode(response.body)['data'];
+        print('Decoded Json getAllEventsGuest: $decodedJson');
+        return decodedJson;
+        // return jsonDecode(response.body)['data'];
       } else {
         throw Exception(jsonDecode(response.body));
       }
     }
     catch (e) {
-
       throw Exception(e.toString());
     }
-}
+  }
 
 
   Future<Map<String, dynamic>> updateEvent({
@@ -606,7 +572,7 @@ Future<List<dynamic>> getAllEventsGuest() async {
     bool isPrivate = false,
     List<String>? media,
 
-  })async {
+  }) async {
     final String _userUrl = 'http://$domain:8080/api/events/update/$eventId';
 
     var headers = {
@@ -626,57 +592,70 @@ Future<List<dynamic>> getAllEventsGuest() async {
     });
 
     try {
-
-      var response = await http.put(Uri.parse(_userUrl), headers: headers,body: body);
+      var response = await http.put(
+          Uri.parse(_userUrl), headers: headers, body: body);
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
-
       } else {
         throw Exception('Failed to get user details');
       }
     } catch (e) {
-
       return {'error': e.toString()};
     }
-
   }
+
+
   Future<Map<String, dynamic>> uploadImage(Uint8List imageBytes, String userid) async {
-    String generateFilename(String userId) {
-      final timestamp = DateTime.now().millisecondsSinceEpoch;
-      return 'profile_image_${userId}_$timestamp.png';
-    }
-    final uri = Uri.parse('http://localhost:8083/media/update');
-    var headers = {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'Authorization': 'Bearer $userid',
-    };
-
-    final request = http.MultipartRequest('POST', uri);
-    request.headers['Authorization']= 'Bearer $userid';
-
-    final filename = generateFilename(userid);
-    request.files.add(
-      http.MultipartFile.fromBytes(
-        'file',
-        imageBytes,
-        filename: filename,
-      ),
-    );
-
-    try {
-      final response = await request.send();
-      if (response.statusCode == 201) {
-        return jsonDecode(response.stream.toString());
-      } else {
-
-        throw Exception('Upload failed with status: ${response.statusCode}');
-      }
-    } catch (e) {
-      return {'error': e.toString()};
-    }
+  String generateFilename(String userId) {
+    final timestamp = DateTime.now().millisecondsSinceEpoch;
+    return 'profile_image_${userId}_$timestamp.png';
   }
 
+  final uri = Uri.parse('http://$domain:8083/media/update');
+
+  final request = http.MultipartRequest('POST', uri);
+  request.headers['Authorization'] = 'Bearer $userid';
+
+  final filename = generateFilename(userid);
+  request.files.add(
+    http.MultipartFile.fromBytes(
+      'file',
+      imageBytes,
+      filename: filename,
+    ),
+  );
+
+  try {
+    final streamedResponse = await request.send();
+    final response = await http.Response.fromStream(streamedResponse);
+
+    if (response.statusCode == 201) {
+      try {
+        return jsonDecode(response.body) as Map<String, dynamic>;
+      } catch (e) {
+        print('Failed to parse response as JSON: ${response.body}');
+        return {
+          'success': true,
+          'raw_response': response.body,
+        };
+      }
+    } else {
+      throw Exception('Upload failed with status: ${response.statusCode}');
+    }
+  } catch (e) {
+    print('Exception during upload: $e');
+    return {'error': e.toString()};
+  }
+}
+/*from dev
+*   Future<Map<String, dynamic>> eventUploadImage(Uint8List imageBytes,
+      String userid, String EventId) async {
+    String generateFilename(String userId) {
+      final timestamp = DateTime
+          .now()
+          .millisecondsSinceEpoch;
+      return 'profile_image_${userId}_$timestamp.png';
+    }*/
   Future<Uint8List> _loadImageAsBytes(String imagePath) async {
     try {
       return await rootBundle.load(imagePath).then((data) => data.buffer.asUint8List());
@@ -740,13 +719,13 @@ Future<List<dynamic>> getAllEventsGuest() async {
         return jsonDecode(responseBody);
        // return jsonDecode(response.stream.toString());
       } else {
-
         throw Exception('Upload failed with status: ${response.statusCode}');
       }
     } catch (e) {
       return {'error': e.toString()};
     }
   }
+
   Future<Map<String, dynamic>> applyForHost({
     required String reason,
     required String duration,
@@ -755,9 +734,8 @@ Future<List<dynamic>> getAllEventsGuest() async {
     Uint8List? proofImage,
     required String userId,
   }) async {
-
     final String _applyUrl = 'http://$domain:8080/api/user/apply_for_host';
-    
+
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -784,7 +762,7 @@ Future<List<dynamic>> getAllEventsGuest() async {
 
       if (response.statusCode == 200) {
         var responseData = jsonDecode(response.body);
-        
+
         // Non UP affiliated students need to upload proof image
         if (studentEmail == null && proofImage != null) {
           String applicationId = responseData['data']['application_id'];
@@ -800,10 +778,10 @@ Future<List<dynamic>> getAllEventsGuest() async {
     }
   }
 
-  Future<void> _uploadProofImage(String applicationId, Uint8List imageBytes, String userId) async {
-
+  Future<void> _uploadProofImage(String applicationId, Uint8List imageBytes,
+      String userId) async {
     final String _uploadUrl = 'http://$domain:8083/media/proof?application_id=$applicationId';
-    
+
     var request = http.MultipartRequest('POST', Uri.parse(_uploadUrl));
 
     request.headers['Authorization'] = 'Bearer $userId';
@@ -848,4 +826,85 @@ Future<List<dynamic>> getAllEventsGuest() async {
       throw Exception('Failed to send invite');
     }
   }
+  Future<Map<String, dynamic>> AcceptApplication(
+      {required String userId, required String applicationId}) async {
+    String notifyUserUrl = 'http://$domain:8080/api/admin/accept_application?applicationId=$applicationId';
+
+
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $userId',
+    };
+    try {
+      var response = await http.post(
+          Uri.parse(notifyUserUrl), headers: headers);
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        print(jsonDecode(response.body
+        ));
+        throw Exception(jsonDecode(response.body));
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  Future<Map<String, dynamic>> DeclineApplication(
+      {required String userId, required String applicationId}) async {
+    String notifyUserUrl = 'http://$domain:8080/api/admin/reject_application??applicationId=$applicationId';
+
+
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $userId',
+    };
+    try {
+      var response = await http.post(
+          Uri.parse(notifyUserUrl), headers: headers);
+      print('RESPONSE FROM DECLINE APPLICATION ${response.body}');
+      if (response.statusCode == 200) {
+        print('IT IS A SUCCESS');
+        return jsonDecode(response.body);
+      } else {
+        print(jsonDecode(response.body
+        ));
+        throw Exception(jsonDecode(response.body));
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  Future<Map<String, dynamic>> DemoteApplicant(
+      {required String userIdAdmin, required String userId, required String applicationId}) async {
+    String notifyUserUrl = 'http://$domain:8080/api/admin/demote?userId=$userId';
+
+
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $userIdAdmin',
+    };
+    try {
+      var response = await http.post(
+          Uri.parse(notifyUserUrl), headers: headers);
+      print('RESPONSE FROM DECLINE APPLICATION ${response.body}');
+      if (response.statusCode == 200) {
+
+        return jsonDecode(response.body);
+      } else {
+        print(jsonDecode(response.body
+        ));
+        throw Exception(jsonDecode(response.body));
+      }
+    } catch (e) {
+
+      throw Exception(e.toString());
+    }
+  }
 }
+

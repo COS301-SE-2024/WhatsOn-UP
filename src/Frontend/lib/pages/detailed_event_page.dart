@@ -24,6 +24,7 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
   int _currentImageIndex = 0;
   final user = supabase.auth.currentUser;
   late Event _thisCurrentEvent;
+  bool _isLoading = false;
 
   @override
   void didChangeDependencies() {
@@ -50,28 +51,32 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
 
 
 
-
-
-
-
-
-
   Future<void> _addToCalendar() async {
     EventProvider eventProvider = Provider.of<EventProvider>(context,listen: false);
     try {
+      setState(() {
+        _isLoading = true;
+      });
+
       var result = await Api().rsvpEvent(widget.event.id,user!.id);
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Successfully RSVP\'d to event!')),
+        const SnackBar(content: Text('Successfully RSVP\'d to event!')),
       );
       await eventProvider.refreshRSVPEvents(user!.id);
       await eventProvider.refreshEvents();
       print('amount of attendees after event added to the calendar ${_thisCurrentEvent.attendees.length}');
+      setState(() {
+        _isLoading = false;
+      });
       Navigator.of(context).pushReplacementNamed('/home');
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to RSVP: ${e.toString()}')),
       );
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -84,7 +89,7 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
        });
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Successfully removed RSVP !')),
+        const SnackBar(content: Text('Successfully removed RSVP !')),
       );
        await eventProvider.refreshRSVPEvents(user!.id);
        await eventProvider.refreshEvents();
@@ -130,20 +135,20 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Confirm Delete'),
-          content: Text('Are you sure you want to delete this event?'),
+          title: const Text('Confirm Delete'),
+          content: const Text('Are you sure you want to delete this event?'),
           actions: <Widget>[
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(false);
               },
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(true);
               },
-              child: Text('Delete'),
+              child: const Text('Delete'),
             ),
           ],
         );
@@ -313,13 +318,23 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
                   if (!_thisCurrentEvent.attendees.any((attendee) => attendee.userId == userP.userId)) ...[
                     if (userP.role != "GUEST")
                     if (_thisCurrentEvent.maxAttendees >_thisCurrentEvent.attendees.length )
-                      ElevatedButton.icon(
-                        onPressed: _addToCalendar,
-                        icon: const Icon(Icons.calendar_today),
-                        label: const Text('Add to my Calendar'),
+                      ElevatedButton(
+                        onPressed: _isLoading ? null : () => _addToCalendar(),
                         style: ElevatedButton.styleFrom(
                           minimumSize: const Size(double.infinity, 48),
                         ),
+                        child: _isLoading
+                            ? const CircularProgressIndicator(
+                                color: Colors.white,
+                              )
+                            : const Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(Icons.calendar_today),
+                                  SizedBox(width: 8),
+                                  Text('Add to my Calendar'),
+                                ],
+                              ),
                       ),
                     if (_thisCurrentEvent.maxAttendees <= _thisCurrentEvent.attendees.length + 1)
                       ElevatedButton.icon(

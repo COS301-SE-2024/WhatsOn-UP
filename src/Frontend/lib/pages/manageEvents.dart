@@ -117,11 +117,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:firstapp/pages/application_event.dart';
+import 'ManageGeneralApplicationsTabs.dart';
 import 'attendee.dart';
 import 'package:provider/provider.dart';
 import '../providers/user_provider.dart';
 import '../widgets/eventManagement_category.dart';
-import 'Promotion_Applications.dart';
+
 class ManageEvents extends StatefulWidget {
   ManageEvents({Key? key}) : super(key: key);
 
@@ -188,14 +189,15 @@ String Host='HOST';
                       : 'My Attendees',
                   onTap: ()=> _navigateToAttendeesEvent(context),
                 ),
+                _buildDivider(),
                 if(userP.role == Admin)
                   _buildDivider(),
-                _buildProfileOption(
-                  text:'Event Applications',
+                  _buildProfileOption(
+                  text:'General user Host Applications',
                   onTap: ()=> _navigateToGeneralEventApplications(context),
                 ),
                 _buildDivider(),
-                _buildDivider(),
+
               ],
             ),
     );
@@ -210,7 +212,7 @@ String Host='HOST';
   Future<void> _navigateToGeneralEventApplications(BuildContext context) async {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const Generaleventapplications()),
+      MaterialPageRoute(builder: (context) => const TabGeneral()),
     );
   }
   void _navigateToApplicationEvent(BuildContext context) {
