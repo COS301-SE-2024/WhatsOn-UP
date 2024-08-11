@@ -70,7 +70,7 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
 
       } else {
        SnackBar(content: Text("Application Acknowledged"));
-        Navigator.of(context).pushReplacementNamed('/notifications');
+
       }
     } catch (e) {
       String errorMessage = e.toString();
@@ -84,9 +84,11 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
         );
       }
     } finally {
+      Navigator.of(context).pushReplacementNamed('/notifications');
       setState(() {
         isLoading = false;
       });
+
     }
   }
 
@@ -194,7 +196,7 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
               TextButton(
                 onPressed: _Acknowledge,
                 style: TextButton.styleFrom(
-                  foregroundColor: Colors.greenAccent,
+                  foregroundColor: Colors.black,
                   side: BorderSide(color: Colors.black),
                   padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 20.0),
                 ),

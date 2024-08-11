@@ -124,6 +124,7 @@ set generalapplications( Future<GeneralApplications>? value) {
       final response = await api.getGeneralusersToHost(userId);
 
       generalapplications = Future.value(response);
+      print('General users: $response');
       notifyListeners();
     } catch (e) {
       print('Error: $e'); // Print the error
@@ -211,6 +212,10 @@ class Application {
   final AcceptedRejectedBy? acceptedRejectedBy;
   final String reason;
   final String? verificationCode;
+  final String? proofUrl;
+  final String? proofName;
+
+
 
   Application({
     required this.applicationId,
@@ -220,6 +225,8 @@ class Application {
     this.acceptedRejectedBy,
     required this.reason,
     this.verificationCode,
+    this.proofUrl,
+    this.proofName,
   });
 
   factory Application.fromJson(Map<String, dynamic> json) {
@@ -230,7 +237,9 @@ class Application {
       expiryDateTime: json['expiryDateTime'],
       acceptedRejectedBy: json['acceptedRejectedBy'] != null ? AcceptedRejectedBy.fromJson(json['acceptedRejectedBy']) : null,
       reason: json['reason'],
-      verificationCode: json['verificationCode'],
+      verificationCode: json['verificationCode']?.toString() ?? '',
+      proofUrl: json['proofUrl'],
+      proofName: json['proofName']?.toString() ?? '',
     );
   }
 }

@@ -194,7 +194,8 @@ class _NotificationsState extends State<Notifications> {
                   if (reminders.isNotEmpty)...[    SizedBox(height: 20.0), _buildCategory('REMINDERS', reminders)],
 
                   if (recommendations.isNotEmpty)...[ SizedBox(height: 20.0),_buildCategory('RECOMMENDATIONS', recommendations)],
-                  if (applications.isNotEmpty)...[ SizedBox(height: 20.0),_buildCategory('APPLICATIONS', recommendations)]
+
+                  if (applications.isNotEmpty)...[ SizedBox(height: 20.0),_buildCategory('APPLICATIONS', applications)]
 
                 ],
               );

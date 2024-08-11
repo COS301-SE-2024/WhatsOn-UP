@@ -790,7 +790,7 @@ class Api {
 
   Future<Map<String, dynamic>> Acknowledgeapplication(
       {required String userId}) async {
-    String notifyUserUrl = 'http://$domain:/api/user/acknowledge_application';
+    String notifyUserUrl = 'http://$domain:8080/api/user/acknowledge_application';
 
 
     var headers = {
