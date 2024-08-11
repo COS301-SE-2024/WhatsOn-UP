@@ -306,8 +306,6 @@ class Api {
             AppNotification.fromJson(jsonEvent)).toList();
         return events;
       } else {
-        print(jsonDecode(response.body
-        ));
         throw Exception(jsonDecode(response.body));
       }
     } catch (e) {
@@ -751,7 +749,7 @@ class Api {
 
   Future<Map<String, dynamic>> DeclineApplication(
       {required String userId, required String applicationId}) async {
-    String notifyUserUrl = 'http://$domain:8080/api/admin/reject_application??applicationId=$applicationId';
+    String notifyUserUrl = 'http://$domain:8080/api/admin/reject_application?applicationId=$applicationId';
 
 
     var headers = {
@@ -762,9 +760,9 @@ class Api {
     try {
       var response = await http.post(
           Uri.parse(notifyUserUrl), headers: headers);
-      print('RESPONSE FROM DECLINE APPLICATION ${response.body}');
+
       if (response.statusCode == 200) {
-        print('IT IS A SUCCESS');
+
         return jsonDecode(response.body);
       } else {
         print(jsonDecode(response.body
@@ -789,7 +787,7 @@ class Api {
     try {
       var response = await http.post(
           Uri.parse(notifyUserUrl), headers: headers);
-      print('RESPONSE FROM DECLINE APPLICATION ${response.body}');
+
       if (response.statusCode == 200) {
 
         return jsonDecode(response.body);
@@ -803,5 +801,35 @@ class Api {
       throw Exception(e.toString());
     }
   }
+
+
+  Future<Map<String, dynamic>> Acknowledgeapplication(
+      {required String userId}) async {
+    String notifyUserUrl = 'http://$domain:8080/api/user/acknowledge_application';
+
+
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $userId',
+    };
+    try {
+      var response = await http.post(
+          Uri.parse(notifyUserUrl), headers: headers);
+
+      if (response.statusCode == 200) {
+
+        return jsonDecode(response.body);
+      } else {
+        print(jsonDecode(response.body
+        ));
+        throw Exception(jsonDecode(response.body));
+      }
+    } catch (e) {
+
+      throw Exception(e.toString());
+    }
+  }
+
 }
 

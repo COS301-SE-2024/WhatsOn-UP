@@ -54,7 +54,6 @@ export class NotificationGateway implements OnModuleInit {
             (client) => client.token == notification.user_id
           );
 
-          console.log('Client:', client);
 
           if (!client) {
             console.error('Client not found:', notification.user_id);
@@ -120,7 +119,6 @@ export class NotificationGateway implements OnModuleInit {
     this.server.on('connection', (socket) => {
       // Extract token from query
       const token: string = socket.handshake.query.token.toString();
-      console.log(token);
       
 
       if (token) {

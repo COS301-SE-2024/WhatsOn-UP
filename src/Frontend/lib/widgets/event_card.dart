@@ -230,7 +230,7 @@ class Event {
   late  String nameOfEvent;
   // late final String dateAndTime;
   late final Venue? venue;
-  List<String> imageUrls;
+  List<String>? imageUrls;
   String description;
   final String id;
   List<String> hosts;
@@ -245,7 +245,7 @@ class Event {
 
     required this.nameOfEvent,
     this.venue,
-    required this.imageUrls,
+    this.imageUrls,
     required this.description,
     required this.id,
     required this.hosts,
@@ -390,9 +390,9 @@ class _EventCardState extends State<EventCard> {
                 Container(
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(16.0),
-                    child: widget.event.imageUrls.isNotEmpty
+                    child: widget.event.imageUrls!.isNotEmpty
                         ? Image.network(
-                      widget.event.imageUrls[0],
+                      widget.event.imageUrls![0],
                       height: 120.0,
                       width: double.infinity,
                       fit: BoxFit.cover,

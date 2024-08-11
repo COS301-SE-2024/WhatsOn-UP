@@ -1,6 +1,7 @@
 
 import 'package:firstapp/providers/user_provider.dart';
 import 'package:firstapp/screens/ApplicantDetailsPage.dart';
+import 'package:firstapp/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail_image_network/mocktail_image_network.dart';
@@ -27,7 +28,7 @@ void main() {
       reason: 'Test reason',
       verificationCode: '1234',
     );
-
+    var testTimeandDate2 = formatDateTime('2024-12-31T23:59:59Z');
     await mockNetworkImages(() async {
       await tester.pumpWidget(
         MaterialApp(
@@ -43,7 +44,7 @@ void main() {
 
       // Check if the duration is displayed correctly
       expect(find.text('Duration:'), findsOneWidget);
-      expect(find.text('2024-12-31T23:59:59Z'), findsOneWidget);
+      expect(find.text(testTimeandDate2), findsOneWidget);
 
 
       expect(find.text('Accepted by: Admin User'), findsOneWidget);
@@ -73,7 +74,7 @@ void main() {
       reason: 'Test reason',
       verificationCode: '1234',
     );
-
+    var testTimeandDate = formatDateTime('2024-12-31T23:59:59Z');
     await mockNetworkImages(() async {
       await tester.pumpWidget(
         MaterialApp(
@@ -89,7 +90,7 @@ void main() {
 
 
       expect(find.text('Duration:'), findsOneWidget);
-      expect(find.text('2024-12-31T23:59:59Z'), findsOneWidget);
+      expect(find.text(testTimeandDate), findsOneWidget);
 
 
       expect(find.text('Rejected by: Admin User'), findsOneWidget);
@@ -115,7 +116,7 @@ void main() {
       reason: 'Test reason',
       verificationCode: '1234',
     );
-
+    var testTimeandDate = formatDateTime('2024-12-31T23:59:59Z');
     await mockNetworkImages(() async {
       await tester.pumpWidget(
         MaterialApp(
@@ -132,7 +133,7 @@ void main() {
 
 
       expect(find.text('Duration:'), findsOneWidget);
-      expect(find.text('2024-12-31T23:59:59Z'), findsOneWidget);
+      expect(find.text(testTimeandDate), findsOneWidget);
 
 
 

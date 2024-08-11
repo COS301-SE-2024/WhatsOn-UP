@@ -88,14 +88,14 @@ class UserController {
 
     @PostMapping("/acknowledge_application")
     @PreAuthorize("isAuthenticated()")
-    fun acknowledgeApplication(@RequestParam applicationId: UUID): ResponseEntity<ResponseDto> {
-        return userService.acknowledgeApplication(applicationId)
+    fun acknowledgeApplication(): ResponseEntity<ResponseDto> {
+        return userService.acknowledgeApplication()
     }
 
     @PostMapping("/dispute_application")
     @PreAuthorize("isAuthenticated()")
-    fun disputeApplication(@RequestParam applicationId: UUID): ResponseEntity<ResponseDto> {
-        return userService.disputeApplication(applicationId)
+    fun disputeApplication(): ResponseEntity<ResponseDto> {
+        return userService.disputeApplication()
     }
 
     @GetMapping("/verify_application")

@@ -121,21 +121,21 @@ class _NotificationsState extends State<Notifications> {
                 final broadcasts = notifications.where((n) => n.notificationTypes == 'broadcast').toList();
                 final reminders = notifications.where((n) => n.notificationTypes == 'reminder').toList();
                 final recommendations = notifications.where((n) => n.notificationTypes == 'recommendation').toList();
+                final applications = notifications.where((n) => n.notificationTypes == 'application').toList();
 
                 return ListView(
                   children: [
                     if (invites.isNotEmpty) ...[SizedBox(height: 20.0), _buildCategory('INVITES', invites)],
                     if (broadcasts.isNotEmpty) ...[SizedBox(height: 20.0), _buildCategory('BROADCASTS', broadcasts)],
                     if (reminders.isNotEmpty) ...[SizedBox(height: 20.0), _buildCategory('REMINDERS', reminders)],
-                    if (recommendations.isNotEmpty) ...[SizedBox(height: 20.0), _buildCategory('RECOMMENDATIONS', recommendations)]
+                    if (recommendations.isNotEmpty) ...[SizedBox(height: 20.0), _buildCategory('RECOMMENDATIONS', recommendations)],
+                    if (applications.isNotEmpty)...[ SizedBox(height: 20.0),_buildCategory('APPLICATIONS', applications)]
                   ],
                 );
               }
             },
           );
   }
-
-  
 
   Widget _buildCategory(String title, List<AppNotification> notifications) {
     String texttitle = '';
@@ -168,6 +168,9 @@ class _NotificationsState extends State<Notifications> {
             }
             else if(notification.notificationTypes=='recommendation'){
                texttitle = 'Recommendation';
+            }
+            else if(notification.notificationTypes=='application'){
+              texttitle = 'Application';
             }
 
             return Container(

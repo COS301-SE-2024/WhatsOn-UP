@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
@@ -61,7 +60,6 @@ class UserList extends StatelessWidget {
             child: Text('An error occurred: ${snapshot.error}'),
           );
         } else if (!snapshot.hasData) {
-
           return Center(
             child: Text('No users found'),
           );
@@ -81,15 +79,14 @@ class UserList extends StatelessWidget {
                   border: Border.all(color: Colors.grey, width: 1.0),
                   borderRadius: BorderRadius.circular(8.0),
                 ),
-                child:  Material(
-
+                child: Material(
                   child: ListTile(
                     leading: CircleAvatar(
                       backgroundImage: user.user.profileImage.isNotEmpty &&
-                          user.user.profileImage != null
+                              user.user.profileImage != null
                           ? NetworkImage(user.user.profileImage)
                           : const AssetImage('assets/images/user.png')
-                      as ImageProvider,
+                              as ImageProvider,
                       radius: 20,
                     ),
                     title: Center(
@@ -213,7 +210,35 @@ class _ApplicantState extends State<Applicant> {
                   ),
                 ),
                 SizedBox(height: 10.0),
-                if (widget.user.status.name == 'PENDING')
+                if (widget.user.proofUrl != null ) ...[
+
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            _updateApplication(context, 'Reject');
+                          },
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(horizontal: 20.0), // Adjust padding if needed
+                          ),
+                          child: Text('Reject'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            _updateApplication(context, 'Accept');
+                          },
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(horizontal: 20.0), // Adjust padding if needed
+                          ),
+                          child: Text('Accept'),
+                        ),
+                      ],
+                    ),
+                  ),
+                ] else if (widget.user.status.name == 'PENDING')
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Text(
@@ -225,18 +250,7 @@ class _ApplicantState extends State<Applicant> {
                           color: Colors.red),
                     ),
                   )
-                else if (widget.user.status.name == 'ACCEPTED')
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Text(
-                      'This person is yet to acknowledge the application.',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.red),
-                    ),
-                  )
+
                 else if (widget.user.status.name == 'ACKNOWLEDGED') ...[
                   Padding(
                     padding: const EdgeInsets.all(16.0),
@@ -247,13 +261,15 @@ class _ApplicantState extends State<Applicant> {
                           onPressed: () {
                             _updateApplication(context, 'Demote');
                           },
-
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(horizontal: 20.0), // Adjust padding if needed
+                          ),
                           child: Text('Demote'),
                         ),
                       ],
                     ),
                   ),
-                ] else ...[
+                ] else if (widget.user.status.name == 'VERIFIED') ...[
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Row(
@@ -263,20 +279,25 @@ class _ApplicantState extends State<Applicant> {
                           onPressed: () {
                             _updateApplication(context, 'Reject');
                           },
-
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(horizontal: 20.0), // Adjust padding if needed
+                          ),
                           child: Text('Reject'),
                         ),
                         ElevatedButton(
                           onPressed: () {
                             _updateApplication(context, 'Accept');
                           },
-
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(horizontal: 20.0), // Adjust padding if needed
+                          ),
                           child: Text('Accept'),
                         ),
                       ],
                     ),
                   ),
                 ],
+
               ],
             ),
     );
@@ -306,8 +327,7 @@ class _ApplicantState extends State<Applicant> {
       _isLoading = false;
     });
 
-    if (response['status']=='success') {
-
+    if (response['status'] == 'success') {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('$action successful')),
       );
