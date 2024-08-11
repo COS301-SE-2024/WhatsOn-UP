@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/api.dart';
 import '../providers/user_provider.dart';
+import '../utils.dart';
 
 class ApplicantDetailsPage extends StatelessWidget {
   final Application user;
@@ -9,6 +10,7 @@ class ApplicantDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String formattedDateSentAt = formatDateTime( user.expiryDateTime);
     return Scaffold(
       appBar: AppBar(
         title: Text('Applicant Details'),
@@ -51,10 +53,20 @@ class ApplicantDetailsPage extends StatelessWidget {
             ),
             SizedBox(height: 8.0),
             Text(
-              user.expiryDateTime ?? 'No duration provided.',
+              formattedDateSentAt ?? 'No duration provided.',
               style: TextStyle(fontSize: 18.0),
             ),
-
+            SizedBox(height: 16.0),
+            SizedBox(height: 16.0),
+            ElevatedButton(
+              onPressed: () {
+                _showDocument(context);
+              },
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0), // Adjust padding if needed
+              ),
+              child: Text('View Document'),
+            ),
             SizedBox(height: 16.0),
             _buildAcceptedRejectedByInfo(user.acceptedRejectedBy, user.status),
 
@@ -63,7 +75,9 @@ class ApplicantDetailsPage extends StatelessWidget {
       ),
     );
   }
-  Widget _buildAcceptedRejectedByInfo(AcceptedRejectedBy? acceptedRejectedBy, Status status) {
+
+  Widget _buildAcceptedRejectedByInfo(AcceptedRejectedBy? acceptedRejectedBy,
+      Status status) {
     if (acceptedRejectedBy == null) {
       return Padding(
         padding: const EdgeInsets.all(16.0),
@@ -82,8 +96,9 @@ class ApplicantDetailsPage extends StatelessWidget {
           children: [
             // Display CircleAvatar only if status is ACCEPTED or REJECTED
             CircleAvatar(
-              backgroundImage: acceptedRejectedBy.profileImage != null && acceptedRejectedBy.profileImage!.isNotEmpty
-                  ?  NetworkImage(acceptedRejectedBy.profileImage)
+              backgroundImage: acceptedRejectedBy.profileImage != null &&
+                  acceptedRejectedBy.profileImage.isNotEmpty
+                  ? NetworkImage(acceptedRejectedBy.profileImage)
                   : const AssetImage('assets/images/user.png') as ImageProvider,
 
               radius: 20,
@@ -94,8 +109,11 @@ class ApplicantDetailsPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '${status.name == 'ACCEPTED' ? 'Accepted by:' : 'Rejected by:'} ${acceptedRejectedBy.fullName}',
-                    style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
+                    '${status.name == 'ACCEPTED'
+                        ? 'Accepted by:'
+                        : 'Rejected by:'} ${acceptedRejectedBy.fullName}',
+                    style: TextStyle(
+                        fontSize: 18.0, fontWeight: FontWeight.w600),
                   ),
                   SizedBox(height: 4.0),
                   Text(
@@ -117,5 +135,30 @@ class ApplicantDetailsPage extends StatelessWidget {
         ),
       );
     }
+  }
+
+  void _showDocument(BuildContext context) {
+    final Widget documentWidget = _getDocument(user.proofUrl);
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Document'),
+        content: documentWidget,
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+
+            child: Text('Close'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _getDocument(String? documentUrl) {
+    if (documentUrl != null && documentUrl.isNotEmpty) {
+      return Image.network(documentUrl);
+    }
+    return Text('No document provided');
   }
 }

@@ -27,24 +27,24 @@ class _EditprofilePageState extends State<EditprofilePage> {
 
       if (image != null) {
         final Uint8List imageBytes = await image.readAsBytes();
-        
+
         setState(() {
           _image = imageBytes;
         });
 
         Api api = Api();
         var response = await api.uploadImage(imageBytes, userP.userId);
-        
+
         if (response['status'] == 'success') {
           print('Upload successful: $response');
           String newProfileImage = response['data']['media_link'];
-          
+
           setState(() {
             userP.profileImage = newProfileImage;
           });
-          
+
           userP.notifyListeners();
-          
+
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Image updated successfully')),
           );
@@ -258,7 +258,7 @@ class _EditprofilePageState extends State<EditprofilePage> {
       api.postChangeUser(user.name, user1.id).then((response) {
         if (response['error'] != null) {
           print('An error occurred: ${response['error']}');
-        } 
+        }
         else {
           String fullName = response['data']['user']['fullName'] ?? 'Unknown';
           String userEmail = response['data']['user']['email'] ?? 'Unknown';
@@ -275,6 +275,7 @@ class _EditprofilePageState extends State<EditprofilePage> {
       });
     }
   }
+
 
   Future<void> showChangedDialog() async {
     await showDialog<void>(
