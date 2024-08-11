@@ -108,7 +108,7 @@ class Api {
   }
 
   Future<List<Event>> getAllSavedEvents(String userId) async {
-    final _savedEventsURL = 'http://$domain:8080/api/events/get_saved_events';
+    final _savedEventsURL = 'http://$domain:8080/api/user/get_saved_events';
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -124,8 +124,11 @@ class Api {
         final List<dynamic> eventsJson = decodedJson['data'];
 
 
-        final List<Event> events = eventsJson.map((jsonEvent) =>
-            Event.fromJson(jsonEvent)).toList();
+        final List<Event> events = eventsJson.map((jsonEvent) => Event.fromJson(jsonEvent)).toList();
+
+        print("Events in getAllSavedEvents: $events");
+
+
         return events;
       } else {
         throw Exception('Failed to load events');
@@ -543,9 +546,7 @@ class Api {
 
       if (response.statusCode == 200) {
         var decodedJson = jsonDecode(response.body)['data'];
-        print('Decoded Json getAllEventsGuest: $decodedJson');
         return decodedJson;
-        // return jsonDecode(response.body)['data'];
       } else {
         throw Exception(jsonDecode(response.body));
       }
