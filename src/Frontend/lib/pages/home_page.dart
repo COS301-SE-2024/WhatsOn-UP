@@ -73,7 +73,8 @@ class _HomePageState extends State<HomePage> {
         onItemTapped: _onItemTapped,
         userRole: userP.role,
       ),
-      floatingActionButton: (userP.role == HOST || userP.role == ADMIN)
+      floatingActionButton: (userP.role == HOST || userP.role == ADMIN) &&
+                            (_selectedIndex != 3)
           ? Padding(
               padding: const EdgeInsets.only(right: 15, bottom: 70),
               child: Align(
@@ -106,7 +107,7 @@ class _HomePageState extends State<HomePage> {
       case 2:
         return const CalendarPage();
       case 3:
-        return const ExplorePage();
+        return NavigationPage();
       case 4:
         return const SettingsPage();
       case 5:

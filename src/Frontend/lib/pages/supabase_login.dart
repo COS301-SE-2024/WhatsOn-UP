@@ -226,6 +226,7 @@ class _SupabaseLoginState extends State<SupabaseLogin> {
     return Container(
       color: const Color.fromARGB(255, 149, 137, 74),
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: Colors.transparent,
         body: Stack(
           children: [
