@@ -7,7 +7,7 @@ import java.util.*
 
 
 interface VenueRepo : JpaRepository<VenueModel, UUID> {
-    fun findByVenueId(userId: UUID?): VenueModel?
+    fun findByVenueId(userId: UUID): VenueModel?
 
     @Query(
         "SELECT DISTINCT e FROM VenueModel e " +

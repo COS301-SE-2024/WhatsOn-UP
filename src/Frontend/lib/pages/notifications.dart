@@ -28,15 +28,28 @@ class _NotificationsState extends State<Notifications> {
     return ChangeNotifierProvider<notificationProvider>(
       create: (context) => notif,
       child: Scaffold(
-        appBar: AppBar(
-          title: Text('Notifications'),
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Text(
+                'Notifications',
+                style: TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            Expanded(
+              child: userRole == "GUEST" ? _buildGuestView() : _buildNotificationsView(notif),
+            ),
+          ],
         ),
-        body: userRole == "GUEST"
-            ? _buildGuestView()
-            : _buildNotificationsView(notif),
       ),
     );
   }
+
 
   Widget _buildGuestView() {
     return Center(
@@ -58,8 +71,7 @@ class _NotificationsState extends State<Notifications> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                        builder: (context) => const SupabaseSignup()),
+                    MaterialPageRoute(builder: (context) => const SupabaseSignup()),
                   );
                 },
                 child: const Text('Sign Up', style: TextStyle(fontSize: 18)),
@@ -70,8 +82,7 @@ class _NotificationsState extends State<Notifications> {
               onPressed: () {
                 Navigator.pushNamed(context, '/login');
               },
-              child: const Text('Already have an account? Log In',
-                  style: TextStyle(fontSize: 16)),
+              child: const Text('Already have an account? Log In', style: TextStyle(fontSize: 16)),
             ),
           ],
         ),

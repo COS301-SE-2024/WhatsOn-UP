@@ -110,7 +110,7 @@ class _HomePageState extends State<HomePage> {
       case 4:
         return const SettingsPage();
       case 5:
-        return ManageEvents();
+        return  ManageEvents();
 
       case 6:
         return const Broadcast();
@@ -125,18 +125,15 @@ class _HomePageState extends State<HomePage> {
     EventProvider eventP = Provider.of<EventProvider>(context);
 
     final theme = Theme.of(context);
-    final borderColour =
-        theme.brightness == Brightness.dark ? Colors.white : Colors.black;
-    final textColour =
-        theme.brightness == Brightness.dark ? Colors.white : Colors.black;
+    final borderColour = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
+    final textColour = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
     // futureEvents=eventP.eventsHome;
     return FutureBuilder<List<Event>>(
       future: eventP.eventsHome,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-              child: SpinKitPianoWave(
-            color: Color.fromARGB(255, 149, 137, 74),
+          return const Center(child: SpinKitPianoWave(
+            color:  Color.fromARGB(255, 149, 137, 74),
             size: 50.0,
           ));
         } else if (snapshot.hasError) {
@@ -162,16 +159,16 @@ class _HomePageState extends State<HomePage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => ProfilePage(),
+                              builder: (context) => ProfilePage(
+
+                              ),
                             ),
                           );
                         },
                         child: CircleAvatar(
-                          backgroundImage: userP.profileImage != null &&
-                                  userP.profileImage!.isNotEmpty
+                          backgroundImage: userP.profileImage != null && userP.profileImage!.isNotEmpty
                               ? NetworkImage(userP.profileImage!)
-                              : const AssetImage('assets/images/user.png')
-                                  as ImageProvider,
+                              : const AssetImage('assets/images/user.png') as ImageProvider,
                           radius: 27.0,
                         ),
                       ),
@@ -238,8 +235,7 @@ class _HomePageState extends State<HomePage> {
                                 );
                               },
                               icon: Icon(Icons.filter_list, color: textColour),
-                              label: Text('Filter',
-                                  style: TextStyle(color: textColour)),
+                              label: Text('Filter', style: TextStyle(color: textColour)),
                             ),
                           ),
                         ),
@@ -248,41 +244,39 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 const SizedBox(height: 20.0),
-                Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Row(
-                      children: [
-                        const Text(
-                          'Explore More',
-                          style: TextStyle(
-                              fontSize: 18.0, fontWeight: FontWeight.bold),
-                        ),
-                        const Spacer(),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => AllhomeEvents(),
-                              ),
-                            );
-                          },
-                          child: const Text(
-                            'See more',
-                            style: TextStyle(
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.bold,
-                            ),
+                 Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(children: [
+                    const Text(
+                      'Explore More',
+                      style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                    ),
+                    const Spacer(),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AllhomeEvents(),
                           ),
+                        );
+                      },
+                      child: const Text(
+                        'See more',
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.bold,
                         ),
-                      ],
-                    )),
+                      ),
+                    ),
+
+                  ],)
+                ),
                 SizedBox(
                   height: 250.0,
                   child: GridView.builder(
                     scrollDirection: Axis.horizontal,
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 1,
                     ),
                     itemCount: events.length,
@@ -299,8 +293,33 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 const SizedBox(height: 20.0),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
+                if (userP.role == "GUEST") ... [
+                  const Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Saved Events',
+                          style: TextStyle(
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 16.0),
+                        Text(
+                          'Log in or create an account to save events and view them here.',
+                          style: TextStyle(
+                            fontSize: 16.0,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+                if (userP.role != "GUEST") ... [
+                 Padding(
+                  padding: const EdgeInsets.all(16.0),
                   child: Row(
                     children: [
                       const Text(
@@ -309,32 +328,32 @@ class _HomePageState extends State<HomePage> {
                             fontSize: 18.0, fontWeight: FontWeight.bold),
                       ),
                       const Spacer(),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => AllsavedEvents(),
-                            ),
-                          );
-                        },
-                        child: const Text(
-                          'See more',
-                          style: TextStyle(
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
+                      // TextButton(
+                      //   onPressed: () {
+                      //     Navigator.push(
+                      //       context,
+                      //       MaterialPageRoute(
+                      //         builder: (context) => AllsavedEvents(),
+                      //       ),
+                      //     );
+                      //   },
+                      //   child: const Text(
+                      //     'See more',
+                      //     style: TextStyle(
+                      //       fontSize: 16.0,
+                      //       fontWeight: FontWeight.bold,
+                      //     ),
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),
+
                 SizedBox(
                   height: 250.0,
                   child: GridView.builder(
                     scrollDirection: Axis.horizontal,
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 1,
                     ),
                     itemCount: events.length,
@@ -347,6 +366,7 @@ class _HomePageState extends State<HomePage> {
                     },
                   ),
                 ),
+                ],
               ],
             ),
           );

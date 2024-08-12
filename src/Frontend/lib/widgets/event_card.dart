@@ -40,17 +40,10 @@ class Attendee {
   }
 
   factory Attendee.fromJson(Map<String, dynamic> json) {
-    /*print("Printing Attendee From Json...");
-    print(json['userId']);
-    print( json['fullName']);
-    print(json['profileImage']);
-    print(json['role']);
-*/
     return Attendee(
       userId: json['userId'] ?? '',
       fullName: json['fullName']?.toString() ?? 'Unknown',
       profileImage: json['profileImage'] ?? '',
-      // role: json['role'] ?? {},
       role: Role.fromJson(json['role']),
     );
   }

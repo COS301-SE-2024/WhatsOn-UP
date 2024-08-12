@@ -228,13 +228,14 @@ class _ProfilePageState extends State<ProfilePage> {
             left: 10.0,
             child: IconButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const HomePage(
-                          //widget.profileImage,
-                          )),
-                );
+                  // Navigator.push(
+                  // context,
+                  // MaterialPageRoute(builder: (context) => const HomePage(
+                  // //widget.profileImage,
+                  // )),
+                  // );
+
+                  Navigator.pop(context);
               },
               icon: const Icon(LineAwesomeIcons.angle_left_solid),
             ),

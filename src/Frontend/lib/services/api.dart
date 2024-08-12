@@ -9,6 +9,9 @@ import '../pages/editProfile_page.dart';
 import '../providers/user_provider.dart';
 import '../widgets/notification_card.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter/services.dart';
+import 'package:firstapp/screens/InviteUsers.dart';
+
 
 class Api {
   // Singleton instance
@@ -21,8 +24,10 @@ class Api {
 
   Api._internal();
 
+
   var jwtKey = 'jwtToken';
   var refreshToken = 'refreshToken';
+
 
   // Method to log in the user and store JWT token
   Future<Map<String, dynamic>> loginUser(String email, String password) async {
@@ -31,11 +36,14 @@ class Api {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
     };
-    var body = jsonEncode({'email': email, 'password': password});
+    var body = jsonEncode({
+      'email': email,
+      'password': password
+    });
 
     try {
-      var response =
-          await http.post(Uri.parse(_loginUrl), headers: headers, body: body);
+      var response = await http.post(
+          Uri.parse(_loginUrl), headers: headers, body: body);
 
       if (response.statusCode == 200) {
         var responseBody = jsonDecode(response.body)['data'];
@@ -102,7 +110,7 @@ class Api {
   }
 
   Future<List<Event>> getAllSavedEvents(String userId) async {
-    final _savedEventsURL = 'http://$domain:8080/api/events/get_saved_events';
+    final _savedEventsURL = 'http://$domain:8080/api/user/get_saved_events';
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -208,31 +216,32 @@ class Api {
     required String description,
     required DateTime startDate,
     required DateTime endDate,
-    required String location,
+    required String locationId,
     int? maxParticipants,
-    String? metadata,
-    bool isPrivate = false,
-    List<String>? media,
+    Map<String, String>? metadata,
+    bool? isPrivate,
+    //List<String>? media,
     required String userId,
+    //List<String> imageUrls,
   }) async {
     final String _createEventUrl = 'http://$domain:8080/api/events/create';
+    //final request = http.MultipartRequest('POST', _createEventUrl);
 
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
       'Authorization': 'Bearer $userId',
     };
-
     var body = jsonEncode({
       'title': title,
       'description': description,
-      'startDate': startDate.toIso8601String(),
-      'endDate': endDate.toIso8601String(),
-      'location': location,
+      'startDateTime': startDate.toIso8601String(),
+      'endDateTime': endDate.toIso8601String(),
+      'location': locationId,
       'maxParticipants': maxParticipants,
       'metadata': metadata,
       'isPrivate': isPrivate,
-      'media': media,
+     // 'media': media,
     });
 
     try {
@@ -240,7 +249,21 @@ class Api {
           headers: headers, body: body);
 
       if (response.statusCode == 200) {
-        return jsonDecode(response.body);
+        var responseData = jsonDecode(response.body);
+        print( responseData['data']);
+        String eventId = responseData['data']['id'];
+       // for (String imagePath in imageUrls) {
+         // Uint8List imageBytes = await _loadImageAsBytes(imagePath);
+        //  var uploadResult = await eventUploadImage(imageBytes, userId, eventId);
+         // if (uploadResult.containsKey('error')) {
+         //   throw Exception('Image upload failed: ${uploadResult['error']}');
+
+         // }
+
+
+
+        //print("image uploaded");
+        return responseData;
       } else {
         throw Exception(jsonDecode(response.body));
       }
@@ -248,7 +271,25 @@ class Api {
       throw Exception(e.toString());
     }
   }
+  /*Future<void> _uploadEventImage(String eventId, String imagePath, String userId) async {
+    final String _uploadUrl = 'http://$domain:8083/media/upload?event_id=$eventId';
 
+    var request = http.MultipartRequest('POST', Uri.parse(_uploadUrl));
+
+    request.headers['Authorization'] = 'Bearer $userId';
+    request.files.add(await http.MultipartFile.fromPath(
+      'file',
+      imagePath,
+    ));
+
+    var response = await request.send();
+
+    if (response.statusCode != 201) {
+      throw Exception('Failed to upload image');
+    }
+  }
+
+*/
   Future<Map<String, dynamic>> rsvpEvent(String eventId, String UserId) async {
     final String _rsvpEventUrl =
         'http://$domain:8080/api/user/rspv_event/$eventId';
@@ -448,7 +489,8 @@ class Api {
 
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
-      } else {
+      }
+      else {
         print('Failed to change user: ${response.statusCode}');
         print('Response body: ${response.body}');
         throw Exception('Failed to change user: ${response.statusCode}');
@@ -495,9 +537,7 @@ class Api {
 
       if (response.statusCode == 200) {
         var decodedJson = jsonDecode(response.body)['data'];
-        print('Decoded Json getAllEventsGuest: $decodedJson');
         return decodedJson;
-        // return jsonDecode(response.body)['data'];
       } else {
         throw Exception(jsonDecode(response.body));
       }
@@ -574,50 +614,93 @@ class Api {
       final streamedResponse = await request.send();
       final response = await http.Response.fromStream(streamedResponse);
 
-      if (response.statusCode == 201) {
-        try {
-          return jsonDecode(response.body) as Map<String, dynamic>;
-        } catch (e) {
-          print('Failed to parse response as JSON: ${response.body}');
-          return {
-            'success': true,
-            'raw_response': response.body,
-          };
-        }
-      } else {
-        throw Exception('Upload failed with status: ${response.statusCode}');
+    if (response.statusCode == 201) {
+      try {
+        return jsonDecode(response.body) as Map<String, dynamic>;
+      } catch (e) {
+        print('Failed to parse response as JSON: ${response.body}');
+        return {
+          'success': true,
+          'raw_response': response.body,
+        };
       }
-    } catch (e) {
-      print('Exception during upload: $e');
-      return {'error': e.toString()};
+    } else {
+      throw Exception('Upload failed with status: ${response.statusCode}');
     }
+  } catch (e) {
+    print('Exception during upload: $e');
+    return {'error': e.toString()};
   }
-
-  Future<Map<String, dynamic>> eventUploadImage(
-      Uint8List imageBytes, String userid, String EventId) async {
+}
+/*from dev
+*   Future<Map<String, dynamic>> eventUploadImage(Uint8List imageBytes,
+      String userid, String EventId) async {
     String generateFilename(String userId) {
       final timestamp = DateTime.now().millisecondsSinceEpoch;
       return 'profile_image_${userId}_$timestamp.png';
+    }*/
+  Future<Uint8List> _loadImageAsBytes(String imagePath) async {
+    try {
+      return await rootBundle.load(imagePath).then((data) => data.buffer.asUint8List());
+    } catch (e) {
+      throw Exception("Failed to load image: $e");
     }
+  }
+/*Future<void> _uploadProofImage(String applicationId, Uint8List imageBytes, String userId) async {
 
-    final uri = Uri.parse('http://$domain:8083/media/upload?event_id=$EventId');
+    final String _uploadUrl = 'http://$domain:8083/media/proof?application_id=$applicationId';
+
+    var request = http.MultipartRequest('POST', Uri.parse(_uploadUrl));
+
+    request.headers['Authorization'] = 'Bearer $userId';
+    request.files.add(http.MultipartFile.fromBytes(
+      'file',
+      imageBytes,
+      filename: 'proof_image.jpg',
+    ));
+
+    var response = await request.send();
+
+    if (response.statusCode != 201) {
+      throw Exception('Failed to upload proof image');
+    }
+  }*/
+  Future<Map<String, dynamic>> eventUploadImage(Uint8List? imageBytes, String userid, String EventId) async {
+    String generateFilename(String EventId) {
+      final timestamp = DateTime.now().millisecondsSinceEpoch;
+      return 'event_image_${EventId}_$timestamp.png';
+    }
+    final uri = Uri.parse('http://localhost:8083/media/upload?event_id=$EventId');
 
     final request = http.MultipartRequest('POST', uri);
     request.headers['Authorization'] = 'Bearer $userid';
+    request.files.add(
+        http.MultipartFile.fromBytes(
+          'file',
+          imageBytes as List<int>,
+          filename: generateFilename(EventId),
+        ),
+      );
 
-    final filename = generateFilename(userid);
+   /* final request = http.MultipartRequest('POST', uri);
+    request.headers['Authorization']= 'Bearer $userid';
+
+    final filename = generateFilename(EventId);
     request.files.add(
       http.MultipartFile.fromBytes(
         'file',
         imageBytes,
         filename: filename,
       ),
-    );
+    );*/
 
     try {
       final response = await request.send();
       if (response.statusCode == 201) {
-        return jsonDecode(response.stream.toString());
+        final responseBody = await response.stream.bytesToString();
+        print(jsonDecode(responseBody));
+        return jsonDecode(responseBody);
+       // return jsonDecode(response.stream.toString());
       } else {
         throw Exception('Upload failed with status: ${response.statusCode}');
       }
@@ -698,7 +781,47 @@ class Api {
       throw Exception('Failed to upload proof image');
     }
   }
+  static Future<List<UserModel>> getAllUsers(String userId) async {
+    print("User Id below");
+    print(userId);
 
+      //var response = await http.put(uri, headers: headers);
+/* final String _userUrl = 'http://$domain:8080/api/auth/get_user';
+      var headers = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $jwtKey',
+      };
+
+      var response = await http.get(Uri.parse(_userUrl), headers: headers);
+*/
+    final String _userUrl = 'http://$domain:8080/api/interactions/get_all_users';
+      var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $userId',
+    };
+    final response = await http.get(Uri.parse(_userUrl), headers: headers);
+    if (response.statusCode == 200) {
+      List<dynamic> data = json.decode(response.body)['data'];
+      return data.map((json) => UserModel.fromJson(json)).toList(); // Adjust based on your UserModel structure
+    } else {
+      throw Exception('Failed to load users');
+    }
+  }
+  static Future<void> inviteUser(String eventId, String userId , String inviteeUserId) async {
+    final response = await http.put(
+      Uri.parse('http://$domain:8080/api/interactions/send_invite?eventId=$eventId&userId=$inviteeUserId'),
+      headers: {
+        'Authorization': 'Bearer $userId', // Adjust for authentication
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to send invite');
+    }
+  }
   Future<Map<String, dynamic>> AcceptApplication(
       {required String userId, required String applicationId}) async {
     String notifyUserUrl =

@@ -53,7 +53,10 @@
 //   }
 // }
 
+
+
 import 'package:firstapp/pages/ManageGeneralApplicationsTabs.dart';
+import 'package:firstapp/pages/application_event.dart';
 
 import 'package:firstapp/pages/calendar_page.dart';
 import 'package:firstapp/pages/detailed_event_page.dart';
@@ -79,14 +82,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
-
 late SupabaseClient supabaseClient;
-void main() async {
+void main() async{
   var api = Api();
   await Supabase.initialize(
     url: 'https://mehgbhiirnmypfgnkaud.supabase.co',
-    anonKey:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1laGdiaGlpcm5teXBmZ25rYXVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjI5NDMyMzYsImV4cCI6MjAzODUxOTIzNn0.g_oLlSZE3AH_nBntVe_hBPdthFDQHZqn0wxzS23kyrc',
+    anonKey:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1laGdiaGlpcm5teXBmZ25rYXVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjI5NDMyMzYsImV4cCI6MjAzODUxOTIzNn0.g_oLlSZE3AH_nBntVe_hBPdthFDQHZqn0wxzS23kyrc'
   );
   // runApp(ChangeNotifierProvider<ThemeNotifier>(
   //   create: (_) => new ThemeNotifier(),
@@ -130,16 +131,15 @@ class MyApp extends StatelessWidget {
           '/editProfile': (context) => EditprofilePage(),
           '/home': (context) => const HomePage(),
           // '/rsvp': (context)=> const RSVPEventsPage(),
-          '/settings': (context) => const SettingsPage(),
-          '/search': (context) => SearchScreen(),
-          '/resetPassword': (context) => const ResetPasswordPage(),
-          '/hostApplication': (context) => HostApplicationPage(),
-          '/detailed_event': (context) => DetailedEventPage(
-              event: ModalRoute.of(context)!.settings.arguments as Event),
-
-          '/calendar': (context) => const CalendarPage(),
-          '/notifications': (context) => const Notifications(),
-          '/generaluserapplications': (context) => const TabGeneral(),
+          '/settings': (context)=> const SettingsPage(),
+          '/search': (context)=>  SearchScreen(),
+          '/resetPassword': (context)=> const ResetPasswordPage(),
+          '/hostApplication': (context)=> HostApplicationPage(),
+          '/detailed_event': (context) => DetailedEventPage(event: ModalRoute.of(context)!.settings.arguments as Event),
+          '/application_event': (context) => ApplicationEvent(),
+          '/calendar': (context)=> const CalendarPage(),
+          '/notifications': (context)=> const Notifications (),
+          '/generaluserapplications': (context)=> const TabGeneral(),
         },
         debugShowCheckedModeBanner: false,
       ),
