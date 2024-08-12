@@ -6,6 +6,12 @@
 4. [View Calendar](#view-calendar)
 5. [Manage Profile](#manage-profile)
 6. [Create Events](#create-events)
+8. [Invite Users](#invite-users)
+9. [Admin management Host Application](#Admin management Host Application)
+10. [Admin management events](#Admin management events)
+11. [Location](#location)
+12. [HOST Application](#host-application)
+13. [Notifications](#notifications)
 7. [Sign Out](#sign-out)
 
 ## Register and Login
@@ -46,7 +52,37 @@ You are able to view and manage your profile details, along with adding profile 
 
 
 ## Create Events
-
+## Invite Users
+1. Navigate to the `Create Event` page or press the `+` button on the home page
+2. Fill in the event details
+3. press submit
+4. it will navigate to the `Invite Users` page
+5. Enter the fullname of the user you want to invite
+6. press the `Invite` button
+7. The user will receive an invite to the event
+8. The user can accept or decline the invite in their notifications
+## Admin management Host Application
+1. Navigate to manage events
+2. Select the General Host Application tab
+3. you will see a list of applications
+4. you can accept or decline the application
+5. If the user is not verified you won't be able to accept the application or decline only if they have submitted documents.
+## Admin management events
+1. Navigate to manage events
+2. You can navigate All attendees for a specific event
+3. You can navigate to all events to see any event as an admin
+4. You can delete an event or even edit the event
+## Location
+1. Retrieving real campus venues when an even is created 
+2. The user can view the location of the event on the map
+## HOST Application
+1. general  user can apply for a promotion with the necessary details shown on the form as a UP student or non UP student
+2. User can then acknowledge the application response they got from the admin in their notifications if the admin has accepted their application
+3. If the application has been rejected the user will also receive a notification 
+## Notifications
+1. The user will receive a notification when they have been invited to an event
+2. The user will receive a notification when their application has been accepted or rejected
+3. The user will receive broadcast if an event was edited that they have RSVP'd to
 ## Sign Out
 To sign out
 1. select the `more` button on the navbar
