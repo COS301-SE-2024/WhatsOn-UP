@@ -63,7 +63,10 @@ class EventService {
             this.endDateTime = createEventDto.endDateTime
             this.venue = venue
             this.maxAttendees = createEventDto.maxParticipants ?: 1
-            this.metadata = (createEventDto.metadata ?: "").toString()
+            this.metadata = createEventDto.metadata?.let {
+                // Assuming metadata is passed as a Map<String, Any> in DTO
+                ObjectMapper().writeValueAsString(it)
+            } ?: "{}"
             this.isPrivate = createEventDto.isPrivate ?: false
             this.hosts = setOf(user)
         }

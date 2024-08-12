@@ -22,7 +22,7 @@ class _AttendeesState extends State<Attendees> {
     EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
     userProvider userP = Provider.of<userProvider>(context, listen: false);
     if (userP.role == 'HOST') {
-      _eventsRsvp = eventP.eventsRsvp;
+      _eventsRsvp = eventP.eventsHome;
     } else {
       _eventsRsvp = eventP.eventsHome;
     }

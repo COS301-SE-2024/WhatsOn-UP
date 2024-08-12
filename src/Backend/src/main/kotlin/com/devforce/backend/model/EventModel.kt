@@ -23,7 +23,8 @@ class EventModel {
     var title: String = ""
     var description: String = ""
 
-    var metadata: String = "" //changed from  var metadata: String = ""
+    @Column(name = "metadata", columnDefinition = "TEXT")
+    var metadata: String = ""
 
     @OneToOne
     @JoinColumn(name = "event_id")
