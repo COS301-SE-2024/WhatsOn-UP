@@ -64,8 +64,8 @@ class _EventAttendanceState extends State<EventAttendance> {
                 : ListView.builder(
               itemCount: filteredAttendees.length,
               itemBuilder: (context, index) {
-                Uint8List profileImageBytes =
-                base64Decode(filteredAttendees[index].profileImage);
+                // Uint8List profileImageBytes =
+                // base64Decode(filteredAttendees[index].profileImage);
                 return ListTile(
                   leading: CircleAvatar(
                     backgroundImage: filteredAttendees[index].profileImage.isNotEmpty
