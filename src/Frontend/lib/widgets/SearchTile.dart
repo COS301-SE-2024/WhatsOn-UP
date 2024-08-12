@@ -6,7 +6,7 @@ class SearchTile extends StatelessWidget {
   final Function(String) onFilterSelected;
 
   SearchTile({required this.onFilterSelected});
-  String technologyTitle ="Tech";
+  String technologyTitle = "Tech";
   @override
   Widget build(BuildContext context) {
     return GridView.count(

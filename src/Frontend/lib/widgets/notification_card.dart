@@ -1,4 +1,3 @@
-
 import '../utils.dart';
 
 class AppNotification {
@@ -14,7 +13,6 @@ class AppNotification {
 
   AppNotification({
     required this.message,
-
     required this.eventId,
     required this.userId,
     required this.sentAt,
@@ -32,12 +30,15 @@ class AppNotification {
       seenAt: json['seen_at'],
       notificationId: json['notification_id'],
       notificationTypes: json['notification_types']['name'],
-      eventInvite: json['event_invitees'] != null ? json['event_invitees']['accepted'] : null,
+      eventInvite: json['event_invitees'] != null
+          ? json['event_invitees']['accepted']
+          : null,
     );
   }
   void markAsSeen() {
     seenAt = formatDateTime(DateTime.now().toIso8601String());
   }
+
   @override
   String toString() {
     return 'Notification(message: $message, eventId: $eventId, userId: $userId, sentAt: $sentAt, notificationId: $notificationId, notificationTypes: $notificationTypes, seenAt: $seenAt, eventInvite: $eventInvite)';

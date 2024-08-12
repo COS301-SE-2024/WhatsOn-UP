@@ -101,18 +101,21 @@ void main() async{
   // );
 
   runApp(
-    MultiProvider(providers: [
-      ChangeNotifierProvider(create: (context) => EventProvider(api: api)),
-      ChangeNotifierProvider(create: (context) => userProvider()),
-      ChangeNotifierProvider(create: (context) => ThemeNotifier()),
-      ChangeNotifierProvider(create: (context) => notificationProvider(api: api)),
-    ],
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => EventProvider(api: api)),
+        ChangeNotifierProvider(create: (context) => userProvider()),
+        ChangeNotifierProvider(create: (context) => ThemeNotifier()),
+        ChangeNotifierProvider(
+            create: (context) => notificationProvider()),
+      ],
       child: MyApp(),
-  ),
+    ),
   );
 }
 
 final supabase = Supabase.instance.client;
+
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -124,9 +127,9 @@ class MyApp extends StatelessWidget {
           '/': (context) => const SplashPage(),
           '/login': (context) => const SupabaseLogin(),
           '/account': (context) => const SupabaseAccountpage(),
-          '/profile': (context)=> ProfilePage(),
-          '/editProfile': (context)=>  EditprofilePage(),
-          '/home': (context)=> const HomePage(),
+          '/profile': (context) => ProfilePage(),
+          '/editProfile': (context) => EditprofilePage(),
+          '/home': (context) => const HomePage(),
           // '/rsvp': (context)=> const RSVPEventsPage(),
           '/settings': (context)=> const SettingsPage(),
           '/search': (context)=>  SearchScreen(),
@@ -138,10 +141,8 @@ class MyApp extends StatelessWidget {
           '/notifications': (context)=> const Notifications (),
           '/generaluserapplications': (context)=> const TabGeneral(),
         },
-
         debugShowCheckedModeBanner: false,
       ),
-
     );
   }
 }

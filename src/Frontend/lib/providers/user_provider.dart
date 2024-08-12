@@ -1,25 +1,20 @@
 import 'package:flutter/material.dart';
 
-
-
 import '../pages/editProfile_page.dart';
 import '../services/api.dart';
 
-
-
-
 //will let the listeners know when the state has changed
 
-class userProvider extends ChangeNotifier{
-  late  Api api= Api();
+class userProvider extends ChangeNotifier {
+  late Api api = Api();
   String _Fullname = 'Testing';
   String _Email = '';
   String _Password = '';
-  String _Role= '';
-  String _userId= '';
+  String _Role = '';
+  String _userId = '';
   String? profileimage;
   bool _isGuest = false;
-  late  Future<List<User>> _generaluserTohost;
+  late Future<List<User>> _generaluserTohost;
   String get Fullname => _Fullname;
   String get email => _Email;
   String get password => _Password;
@@ -28,45 +23,47 @@ class userProvider extends ChangeNotifier{
   String get userId => _userId;
   bool get isGuest => _isGuest;
   Future<GeneralApplications>? _generalApplications;
-  Future<GeneralApplications>? get  generalApplications => _generalApplications;
+  Future<GeneralApplications>? get generalApplications => _generalApplications;
 
-
-
-
-
-set generalapplications( Future<GeneralApplications>? value) {
+  set generalapplications(Future<GeneralApplications>? value) {
     _generalApplications = value;
     notifyListeners();
-}
-   set Fullname(String value){
-    _Fullname = value;
-    notifyListeners();
-   }
-    set email(String value){
-      _Email = value;
-      notifyListeners();
-    }
-    set password(String value){
-      _Password = value;
-      notifyListeners();
-    }
-    set profileImage(String?value){
-      profileimage = value;
-      notifyListeners();
-    }
-    set role(String value){
-      _Role = value;
-      notifyListeners();
-    }
-    set userId(String value){
-      _userId = value;
-      notifyListeners();
-    }
-    set isGuest(bool value) {
-      _isGuest = value;
-      notifyListeners();
   }
 
+  set Fullname(String value) {
+    _Fullname = value;
+    notifyListeners();
+  }
+
+  set email(String value) {
+    _Email = value;
+    notifyListeners();
+  }
+
+  set password(String value) {
+    _Password = value;
+    notifyListeners();
+  }
+
+  set profileImage(String? value) {
+    profileimage = value;
+    notifyListeners();
+  }
+
+  set role(String value) {
+    _Role = value;
+    notifyListeners();
+  }
+
+  set userId(String value) {
+    _userId = value;
+    notifyListeners();
+  }
+
+  set isGuest(bool value) {
+    _isGuest = value;
+    notifyListeners();
+  }
 
   void setUserData({
     required String userId,
@@ -111,16 +108,15 @@ set generalapplications( Future<GeneralApplications>? value) {
 
   Future<void> Generalusers(String userId) async {
     try {
-       _fetchGeneralusers(userId);
+      _fetchGeneralusers(userId);
       notifyListeners();
     } catch (e) {
-
       throw Exception('Failed to refresh events: $e');
     }
   }
+
   Future<void> _fetchGeneralusers(String userId) async {
     try {
-
       final response = await api.getGeneralusersToHost(userId);
 
       generalapplications = Future.value(response);
@@ -130,7 +126,6 @@ set generalapplications( Future<GeneralApplications>? value) {
       print('Error: $e'); // Print the error
       throw Exception('Failed to load general users');
     }
-
   }
 }
 
@@ -147,6 +142,7 @@ class Status {
     );
   }
 }
+
 class Role {
   final int id;
   final String name;
@@ -160,6 +156,7 @@ class Role {
     );
   }
 }
+
 class UserGeneral {
   final String userId;
   final String? fullName;
@@ -182,6 +179,7 @@ class UserGeneral {
     );
   }
 }
+
 class AcceptedRejectedBy {
   final String userId;
   final String? fullName;
@@ -204,6 +202,7 @@ class AcceptedRejectedBy {
     );
   }
 }
+
 class Application {
   final String applicationId;
   final Status status;
@@ -214,8 +213,6 @@ class Application {
   final String? verificationCode;
   final String? proofUrl;
   final String? proofName;
-
-
 
   Application({
     required this.applicationId,
@@ -233,9 +230,11 @@ class Application {
     return Application(
       applicationId: json['applicationId'],
       status: Status.fromJson(json['status']),
-      user:UserGeneral.fromJson(json['user']),
+      user: UserGeneral.fromJson(json['user']),
       expiryDateTime: json['expiryDateTime'],
-      acceptedRejectedBy: json['acceptedRejectedBy'] != null ? AcceptedRejectedBy.fromJson(json['acceptedRejectedBy']) : null,
+      acceptedRejectedBy: json['acceptedRejectedBy'] != null
+          ? AcceptedRejectedBy.fromJson(json['acceptedRejectedBy'])
+          : null,
       reason: json['reason'],
       verificationCode: json['verificationCode']?.toString() ?? '',
       proofUrl: json['proofUrl'],
@@ -243,6 +242,7 @@ class Application {
     );
   }
 }
+
 class GeneralApplications {
   final String status;
   final int timestamp;
@@ -254,18 +254,16 @@ class GeneralApplications {
     required this.data,
   });
 
-  factory  GeneralApplications.fromJson(Map<String, dynamic> json) {
-
+  factory GeneralApplications.fromJson(Map<String, dynamic> json) {
     var list = json['data'] as List;
 
-    List<Application> applicationsList = list.map((i) => Application.fromJson(i)).toList();
+    List<Application> applicationsList =
+        list.map((i) => Application.fromJson(i)).toList();
 
-    return  GeneralApplications(
+    return GeneralApplications(
       status: json['status'],
       timestamp: json['timestamp'],
       data: applicationsList,
     );
   }
 }
-
-
