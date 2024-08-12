@@ -3,10 +3,10 @@ import 'package:firstapp/pages/supabase_signup.dart';
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:firstapp/pages/editProfile_page.dart';
-import 'package:firstapp/pages/home_page.dart';
 import 'package:provider/provider.dart';
 import '../main.dart';
 import '../providers/user_provider.dart';
+import 'notifications.dart';
 
 class ProfilePage extends StatefulWidget {
   ProfilePage({Key? key}) : super(key: key);
@@ -23,7 +23,8 @@ class _ProfilePageState extends State<ProfilePage> {
     userProvider user = Provider.of<userProvider>(context);
     String userRole = user.role;
     final theme = Theme.of(context);
-    final borderColour = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
+    final borderColour =
+        theme.brightness == Brightness.dark ? Colors.white : Colors.black;
 
     return Scaffold(
       body: Stack(
@@ -37,9 +38,11 @@ class _ProfilePageState extends State<ProfilePage> {
                   Stack(
                     children: [
                       CircleAvatar(
-                        backgroundImage: user.profileImage != null && user.profileImage!.isNotEmpty
+                        backgroundImage: user.profileImage != null &&
+                                user.profileImage!.isNotEmpty
                             ? NetworkImage(user.profileImage!)
-                            : const AssetImage('assets/images/user.png') as ImageProvider,
+                            : const AssetImage('assets/images/user.png')
+                                as ImageProvider,
                         radius: 60.0,
                       ),
                       if (user.role == ADMIN)
@@ -61,30 +64,35 @@ class _ProfilePageState extends State<ProfilePage> {
                   const SizedBox(height: 10),
                   Text(
                     userRole == "GUEST" ? "Guest User" : user.Fullname,
-                    style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        fontSize: 20, fontWeight: FontWeight.bold),
                   ),
-                  if (userRole != "GUEST") ... [
+                  if (userRole != "GUEST") ...[
                     const SizedBox(height: 20),
                     Text(
                       user.email,
                       style: const TextStyle(fontSize: 18),
                     ),
-                    const SizedBox(height: 20),             
+                    const SizedBox(height: 20),
                     SizedBox(
                       width: 200,
                       child: ElevatedButton(
                         onPressed: () => Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => EditprofilePage()),
+                          MaterialPageRoute(
+                              builder: (context) => EditprofilePage()),
                         ),
-                        child: const Text('Edit Profile', style: TextStyle(fontSize: 16)),
+                        child: const Text('Edit Profile',
+                            style: TextStyle(fontSize: 16)),
                       ),
                     ),
-                  ] else ... [
+                  ] else ...[
                     const SizedBox(height: 20),
                     Text(
                       "Create an account to access more features!",
-                      style: TextStyle(fontSize: 16, color: const Color.fromARGB(255, 151, 151, 151)),
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: const Color.fromARGB(255, 151, 151, 151)),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 20),
@@ -94,10 +102,12 @@ class _ProfilePageState extends State<ProfilePage> {
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => const SupabaseSignup ()),
+                            MaterialPageRoute(
+                                builder: (context) => const SupabaseSignup()),
                           );
                         },
-                        child: const Text('Sign Up', style: TextStyle(fontSize: 16)),
+                        child: const Text('Sign Up',
+                            style: TextStyle(fontSize: 16)),
                       ),
                     ),
                     const SizedBox(height: 10),
@@ -105,13 +115,15 @@ class _ProfilePageState extends State<ProfilePage> {
                       onPressed: () {
                         Navigator.pushNamed(context, '/login');
                       },
-                      child:  const Text('Already have an account? Log In',),
+                      child: const Text(
+                        'Already have an account? Log In',
+                      ),
                     ),
                   ],
                   const SizedBox(height: 30),
                   const Divider(),
                   const SizedBox(height: 10),
-                  if (userRole != "GUEST") ... [
+                  if (userRole != "GUEST") ...[
                     Container(
                       decoration: BoxDecoration(
                         border: Border.all(color: borderColour),
@@ -122,7 +134,11 @@ class _ProfilePageState extends State<ProfilePage> {
                           _buildProfileOption(
                             text: 'Notifications',
                             onTap: () {
-                              // Handle notifications
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const Notifications()),
+                              );
                             },
                           ),
                           _buildDivider(),
@@ -133,11 +149,12 @@ class _ProfilePageState extends State<ProfilePage> {
                             },
                           ),
                           _buildDivider(),
-                          if (userRole != "ADMIN" && userRole != "HOST") ... [
+                          if (userRole != "ADMIN" && userRole != "HOST") ...[
                             _buildProfileOption(
                               text: 'Host Application',
                               onTap: () {
-                                Navigator.of(context).pushNamed('/hostApplication');
+                                Navigator.of(context)
+                                    .pushNamed('/hostApplication');
                               },
                             ),
                             _buildDivider(),
@@ -151,25 +168,17 @@ class _ProfilePageState extends State<ProfilePage> {
                               }
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => const SupabaseLogin()),
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const SupabaseLogin()),
                               );
                             },
                           ),
-                        //     _buildDivider(),
-                        //     if (user.role!=ADMIN) ...[
-                        //     _buildProfileOption(
-                        //     text: 'Apply for Promotion',
-                        //     onTap: () {
-                        //     Navigator.of(context).pushReplacementNamed(
-                        //     '/PromotionForm');
-                        //     },
-                        //     ),
-                        //     _buildDivider(),
-                        // ],
-    ],
+
+                        ],
                       ),
                     ),
-                  ] else ... [
+                  ] else ...[
                     Container(
                       decoration: BoxDecoration(
                         border: Border.all(color: borderColour),
@@ -185,7 +194,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                 builder: (BuildContext context) {
                                   return AlertDialog(
                                     title: const Text('Limited Access'),
-                                    content: const Text('As a guest user, you have limited access to features. Sign up or log in to unlock functionality such as saving events or adding events to your calendar!'),
+                                    content: const Text(
+                                        'As a guest user, you have limited access to features. Sign up or log in to unlock functionality such as saving events or adding events to your calendar!'),
                                     actions: <Widget>[
                                       TextButton(
                                         child: const Text('OK'),
@@ -212,12 +222,6 @@ class _ProfilePageState extends State<ProfilePage> {
             left: 10.0,
             child: IconButton(
               onPressed: () {
-                  // Navigator.push(
-                  // context,
-                  // MaterialPageRoute(builder: (context) => const HomePage(
-                  // //widget.profileImage,
-                  // )),
-                  // );
 
                   Navigator.pop(context);
               },
@@ -230,21 +234,12 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
 
-
-// Future<void> _navigateToEditprofile(BuildContext context) async {
-//   Navigator.push(
-//     context,
-//     MaterialPageRoute(builder: (context) => EditprofilePage()),
-//   );
-// }
-   Widget _buildProfileOption({
-  
+  Widget _buildProfileOption({
     required String text,
     Widget? trailing,
     required VoidCallback onTap,
   }) {
     return ListTile(
-      
       title: Text(text),
       trailing: trailing != null
           ? SizedBox(
@@ -264,6 +259,4 @@ class _ProfilePageState extends State<ProfilePage> {
       endIndent: 16,
     );
   }
-
-
 }

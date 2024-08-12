@@ -5,13 +5,12 @@ import 'package:firstapp/pages/profilePage.dart';
 import 'dart:typed_data';
 import 'package:url_launcher/url_launcher.dart';
 import '../providers/user_provider.dart';
+import 'notifications.dart';
 
 class SettingsPage extends StatefulWidget {
-
   const SettingsPage({
     Key? key,
     // required this.profileImageUrl,
-
   }) : super(key: key);
 
   @override
@@ -24,7 +23,8 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final borderColour =theme.brightness == Brightness.dark ? Colors.white : Colors.black;
+    final borderColour =
+        theme.brightness == Brightness.dark ? Colors.white : Colors.black;
 
     userProvider userP = Provider.of<userProvider>(context, listen: false);
     String userRole = userP.role;
@@ -59,79 +59,83 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   List<Widget> _buildSettings(String userRole) {
-  List<Widget> options = [
-    _buildSettingsOption(
-      icon: Icons.person,
-      text: 'Profile',
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ProfilePage(),
-          ),
-        );
-      },
-    ),
-    _buildDivider(),
-    _buildSettingsOption(
-      icon: Icons.notifications,
-      text: 'Notifications',
-      onTap: () {
-        // Handle notifications tap
-      },
-    ),
-    _buildDivider(),
-    _buildSettingsOption(
-      icon: Icons.brightness_6,
-      text: 'Theme',
-      trailing: _buildThemeToggle(),
-      onTap: () {
-        // Handle theme tap
-      },
-    ),
-  ];
+    List<Widget> options = [
+      _buildSettingsOption(
+        icon: Icons.person,
+        text: 'Profile',
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ProfilePage(),
+            ),
+          );
+        },
+      ),
+      _buildDivider(),
+      _buildSettingsOption(
+        icon: Icons.notifications,
+        text: 'Notifications',
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const Notifications()),
+          );
+        },
+      ),
+      _buildDivider(),
+      _buildSettingsOption(
+        icon: Icons.brightness_6,
+        text: 'Theme',
+        trailing: _buildThemeToggle(),
+        onTap: () {
+          // Handle theme tap
+        },
+      ),
+    ];
 
-  if (userRole != "GUEST") { // Only display account option if user is not a guest
+    if (userRole != "GUEST") {
+      // Only display account option if user is not a guest
+      options.add(_buildDivider());
+      options.add(
+        _buildSettingsOption(
+          icon: Icons.vpn_key,
+          text: 'Account',
+          onTap: () {
+            // Handle account tap
+          },
+        ),
+      );
+    }
+
     options.add(_buildDivider());
     options.add(
       _buildSettingsOption(
-        icon: Icons.vpn_key,
-        text: 'Account',
+        icon: Icons.lock,
+        text: 'Privacy',
         onTap: () {
-          // Handle account tap
+          // Handle privacy tap
         },
       ),
     );
-  }
 
-  options.add(_buildDivider());
-  options.add(
-    _buildSettingsOption(
-      icon: Icons.lock,
-      text: 'Privacy',
-      onTap: () {
-        // Handle privacy tap
-      },
-    ),
-  );
-
-  options.add(_buildDivider());
-  options.add(
-    _buildSettingsOption(
-      icon: Icons.info,
-      text: 'Help',
-      onTap: () {
-        if(Theme.of(context).platform == TargetPlatform.iOS || Theme.of(context).platform == TargetPlatform.android)
+    options.add(_buildDivider());
+    options.add(
+      _buildSettingsOption(
+        icon: Icons.info,
+        text: 'Help',
+        onTap: () {
+          if(Theme.of(context).platform == TargetPlatform.iOS || Theme.of(context).platform == TargetPlatform.android)
           Navigator.of(context).pushNamed('/userManual');
         else
           _launchURL();
-      },
-    ),
-    
-  );
+        },
+      ),
+    );
 
-  return options;
-}
+    return options;
+  }
 
   Widget _buildSettingsOption({
     required IconData icon,

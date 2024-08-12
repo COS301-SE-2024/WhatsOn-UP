@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firstapp/pages/detailed_event_page.dart';
 import 'package:provider/provider.dart';
 import '../providers/user_provider.dart';
+
 class Role {
   final int id;
   final String name;
@@ -16,11 +17,12 @@ class Role {
     );
   }
 }
+
 class Attendee {
   final String userId;
   final String fullName;
   final String profileImage;
-  final  Role role;
+  final Role role;
 
   Attendee({
     required this.userId,
@@ -36,6 +38,7 @@ class Attendee {
       'role': role,
     };
   }
+
   factory Attendee.fromJson(Map<String, dynamic> json) {
     return Attendee(
       userId: json['userId'] ?? '',
@@ -46,7 +49,7 @@ class Attendee {
   }
   @override
   String toString() {
-    return 'Attendee(id: $userId, name: $fullName, role: $role,profileImage: $profileImage)';  // Include all properties
+    return 'Attendee(id: $userId, name: $fullName, role: $role,profileImage: $profileImage)'; // Include all properties
   }
 }
 
@@ -63,9 +66,13 @@ class Metadata {
 
   factory Metadata.fromJson(Map<String, dynamic> json) {
     return Metadata(
-      mentors: json['mentors'] != null ? List<String>.from(json['mentors']) : [],
-      categories: json['categories'] != null ? List<String>.from(json['categories']) : [],
-      sessions: json['sessions'] != null ? List<String>.from(json['sessions']) : [],
+      mentors:
+          json['mentors'] != null ? List<String>.from(json['mentors']) : [],
+      categories: json['categories'] != null
+          ? List<String>.from(json['categories'])
+          : [],
+      sessions:
+          json['sessions'] != null ? List<String>.from(json['sessions']) : [],
     );
   }
 
@@ -191,7 +198,8 @@ class Venue {
 
     Venue venue = Venue(
       venueId: json['venueId'],
-      building: json['building'] != null ? Building.fromJson(json['building']) : null,
+      building:
+          json['building'] != null ? Building.fromJson(json['building']) : null,
       name: json['name'],
       boards: json['boards'],
       ac: json['ac'],
@@ -224,10 +232,8 @@ class Venue {
   }
 }
 
-
-
 class Event {
-  late  String nameOfEvent;
+  late String nameOfEvent;
   // late final String dateAndTime;
   late final Venue? venue;
   List<String>? imageUrls;
@@ -242,7 +248,6 @@ class Event {
   final Metadata metadata;
   final List<Attendee>? invitees;
   Event({
-
     required this.nameOfEvent,
     this.venue,
     this.imageUrls,
@@ -264,7 +269,7 @@ class Event {
     print(json['title']);
     print("Invities ");
     print(json['invitees']);*/
-    var eventVat ;
+    var eventVat;
     eventVat = Event(
       nameOfEvent: json['title']?.toString() ?? '',
       startTime: json['startDateTime']?.toString() ?? '',
@@ -272,32 +277,40 @@ class Event {
       maxAttendees: json['maxAttendees'] is int ? json['maxAttendees'] : 0,
       venue: json['location'] != null ? Venue.fromJson(json['location']) : null,
       isPrivate: json['isPrivate'] ?? false,
-      imageUrls: (json.containsKey('eventMedia') && (json['eventMedia'] as List).isNotEmpty)
-          ? List<String>.from(json['eventMedia'].map((media) => media?.toString() ?? ''))
-          : ['https://images.pexels.com/photos/1190297/pexels-photo-1190297.jpeg'],
+      imageUrls: (json.containsKey('eventMedia') &&
+              (json['eventMedia'] as List).isNotEmpty)
+          ? List<String>.from(
+              json['eventMedia'].map((media) => media?.toString() ?? ''))
+          : [
+              'https://images.pexels.com/photos/1190297/pexels-photo-1190297.jpeg'
+            ],
       description: json['description']?.toString() ?? '',
       id: json['id']?.toString() ?? '',
       hosts: (json.containsKey('hosts') && (json['hosts'] as List).isNotEmpty)
-          ? List<String>.from(json['hosts'].map((host) => host['fullName']?.toString() ?? ''))
+          ? List<String>.from(
+              json['hosts'].map((host) => host['fullName']?.toString() ?? ''))
           : [],
-      attendees: (json.containsKey('attendees') && (json['attendees'] as List).isNotEmpty)
-          ? List<Attendee>.from(json['attendees'].map((attendee) => Attendee.fromJson(attendee)))
+      attendees: (json.containsKey('attendees') &&
+              (json['attendees'] as List).isNotEmpty)
+          ? List<Attendee>.from(
+              json['attendees'].map((attendee) => Attendee.fromJson(attendee)))
           : [],
-      metadata: json.containsKey('metadata') && json['metadata'] is Map<String, dynamic>
+      metadata: json.containsKey('metadata') &&
+              json['metadata'] is Map<String, dynamic>
           ? Metadata.fromJson(json['metadata'])
           : Metadata(
-        mentors: [],
-        categories: [],
-        sessions: [],
-      ),
-      invitees: json.containsKey('invitees') && (json['invitees'] as List).isNotEmpty
-          ? List<Attendee>.from(json['invitees'].map((invitee) => Attendee.fromJson(invitee)))
-          : [],
+              mentors: [],
+              categories: [],
+              sessions: [],
+            ),
+      invitees:
+          json.containsKey('invitees') && (json['invitees'] as List).isNotEmpty
+              ? List<Attendee>.from(
+                  json['invitees'].map((invitee) => Attendee.fromJson(invitee)))
+              : [],
     );
     return eventVat;
   }
-
-
 
   Map<String, dynamic> toJson() {
     return {
@@ -314,28 +327,19 @@ class Event {
       'attendees': attendees.map((attendee) => attendee.toJson()).toList(),
       'metadata': metadata.toJson(),
       'invitees': invitees?.map((invitee) => invitee.toJson()).toList(),
-
     };
   }
 }
-
-
 
 class EventCard extends StatefulWidget {
   final Event event;
   bool showBookmarkButton;
 
-
-
   EventCard({Key? key, required this.event, this.showBookmarkButton = true})
       : super(key: key);
 
-
-
   @override
   _EventCardState createState() => _EventCardState();
-
-
 }
 
 class _EventCardState extends State<EventCard> {
@@ -343,11 +347,12 @@ class _EventCardState extends State<EventCard> {
 
   @override
   Widget build(BuildContext context) {
-
     EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
     userProvider userP = Provider.of<userProvider>(context, listen: false);
     String userRole = userP.role;
-    widget.showBookmarkButton = userRole == "GUEST" ? false : true; // if user is a guest, don't show bookmark button
+    widget.showBookmarkButton = userRole == "GUEST"
+        ? false
+        : true; // if user is a guest, don't show bookmark button
 
     final theme = Theme.of(context);
     final cardColour = theme.colorScheme.surface;
@@ -392,17 +397,17 @@ class _EventCardState extends State<EventCard> {
                     borderRadius: BorderRadius.circular(16.0),
                     child: widget.event.imageUrls!.isNotEmpty
                         ? Image.network(
-                      widget.event.imageUrls![0],
-                      height: 120.0,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                    )
+                            widget.event.imageUrls![0],
+                            height: 120.0,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                          )
                         : Image.asset(
-                      'assets/images/user.png',
-                      height: 120.0,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                    ),
+                            'assets/images/user.png',
+                            height: 120.0,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                          ),
                   ),
                 ),
                 Text(
@@ -446,7 +451,6 @@ class _EventCardState extends State<EventCard> {
                               //api to add this event
                             } else {
                               eventP.removeEventSaved(widget.event);
-
                             }
                           });
                         },

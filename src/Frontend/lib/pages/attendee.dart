@@ -6,9 +6,8 @@ import '../providers/user_provider.dart';
 import '../widgets/event_card.dart';
 import 'Event_Attendance.dart';
 
-
 class Attendees extends StatefulWidget {
-   Attendees({super.key});
+  Attendees({super.key});
 
   @override
   State<Attendees> createState() => _AttendeesState();
@@ -22,22 +21,15 @@ class _AttendeesState extends State<Attendees> {
     super.initState();
     EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
     userProvider userP = Provider.of<userProvider>(context, listen: false);
-    if(userP.role== 'HOST'){
+    if (userP.role == 'HOST') {
       _eventsRsvp = eventP.eventsRsvp;
-    }
-    else{
-
+    } else {
       _eventsRsvp = eventP.eventsHome;
-
     }
-
   }
-
-
 
   @override
   Widget build(BuildContext context) {
-
     final theme = Theme.of(context);
     final textColour = theme.colorScheme.onSurface;
     final borderColour = theme.colorScheme.secondary;
@@ -56,25 +48,28 @@ class _AttendeesState extends State<Attendees> {
                 child: Text('An error occurred: ${snapshot.error}'),
               );
             } else {
-              userProvider userP = Provider.of<userProvider>(context, listen: false);
+              userProvider userP =
+                  Provider.of<userProvider>(context, listen: false);
               var events = snapshot.data!;
-            if(userP.role == 'HOST'){
-              events = events.where((event) => event.hosts.contains(userP.Fullname)).toList();
-            }
+              if (userP.role == 'HOST') {
+                events = events
+                    .where((event) => event.hosts.contains(userP.Fullname))
+                    .toList();
+              }
 
               return ListView.separated(
                 itemCount: events.length,
                 itemBuilder: (context, index) {
-                  return   InkWell(
+                  return InkWell(
                     onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>EventAttendance(event: events[index]),
+                          builder: (context) =>
+                              EventAttendance(event: events[index]),
                         ),
                       );
                     },
-
                     child: Container(
                       height: 50,
                       color: Colors.grey[200],
@@ -82,30 +77,25 @@ class _AttendeesState extends State<Attendees> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-
                           Text('${events[index].nameOfEvent}'),
-
-
                           Row(
-                            children:[
+                            children: [
                               Icon(Icons.people, size: 16),
                               SizedBox(width: 4),
-                               Text(events[index].attendees.length.toString())
-
+                              Text(events[index].attendees.length.toString())
                             ],
                           ),
-
                         ],
                       ),
                     ),
                   );
                 },
-                separatorBuilder: (BuildContext context, int index) => const Divider(),
+                separatorBuilder: (BuildContext context, int index) =>
+                    const Divider(),
               );
             }
           },
         ));
-
   }
 }
 // class Attendees extends StatefulWidget {

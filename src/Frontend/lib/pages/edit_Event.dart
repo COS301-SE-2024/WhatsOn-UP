@@ -15,11 +15,9 @@ import '../widgets/event_card.dart';
 import 'package:firstapp/screens/InviteUsers.dart';
 
 class EditEvent extends StatefulWidget {
-
-
   final String eventId;
 
-  const  EditEvent({super.key, required this.eventId});
+  const EditEvent({super.key, required this.eventId});
 
   @override
   State<EditEvent> createState() => _EditEventState();
@@ -37,8 +35,8 @@ class _EditEventState extends State<EditEvent> {
 
   Future<void> _fetchEvent() async {
     try {
-      EventProvider eventProvider = Provider.of<EventProvider>(
-          context, listen: false);
+      EventProvider eventProvider =
+          Provider.of<EventProvider>(context, listen: false);
       Event? event = await eventProvider.getEventById(widget.eventId);
       if (event != null) {
         setState(() {
@@ -47,17 +45,17 @@ class _EditEventState extends State<EditEvent> {
           eventDescriptionController.text = _thisCurrentEvent.description;
           //modified here
           venueController.text = _thisCurrentEvent.venue!.name;
-          maxAttendeesController.text = _thisCurrentEvent.maxAttendees.toString();
+          maxAttendeesController.text =
+              _thisCurrentEvent.maxAttendees.toString();
           isPublic = _thisCurrentEvent.isPrivate;
           startDate = DateTime.parse(_thisCurrentEvent.startTime);
           startTime = TimeOfDay.fromDateTime(startDate);
           endDate = DateTime.parse(_thisCurrentEvent.endTime);
           endTime = TimeOfDay.fromDateTime(endDate);
-          print( startDate);
-          print( startTime);
-          print( endDate);
-          print( endTime);
-
+          print(startDate);
+          print(startTime);
+          print(endDate);
+          print(endTime);
         });
       } else {
         print('Event with ID ${widget.eventId} not found.');
@@ -86,13 +84,8 @@ class _EditEventState extends State<EditEvent> {
 
   @override
   Widget build(BuildContext context) {
-
-    myColor = Theme
-        .of(context)
-        .primaryColor;
-    mediaSize = MediaQuery
-        .of(context)
-        .size;
+    myColor = Theme.of(context).primaryColor;
+    mediaSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -103,19 +96,19 @@ class _EditEventState extends State<EditEvent> {
         ),
         title: const Text('Update Event'),
       ),
-      body:  isLoading
+      body: isLoading
           ? Center(
-        child: SpinKitPianoWave(
-          color: Color.fromARGB(255, 149, 137, 74),
-          size: 50.0,
-        ),
-      )
+              child: SpinKitPianoWave(
+                color: Color.fromARGB(255, 149, 137, 74),
+                size: 50.0,
+              ),
+            )
           : _buildForm(),
     );
   }
 
   Widget _buildForm() {
-    String maxAttendees= _thisCurrentEvent.maxAttendees.toString();
+    String maxAttendees = _thisCurrentEvent.maxAttendees.toString();
     print('this current event is ${_thisCurrentEvent.startTime}');
     print('this current event is ${_thisCurrentEvent.endTime}');
     EventProvider eventP = Provider.of<EventProvider>(context);
@@ -135,17 +128,15 @@ class _EditEventState extends State<EditEvent> {
                 ),
               ),
               const SizedBox(height: 20),
-              _buildInputField(
-                  eventNameController, label: 'Name of Event'),
+              _buildInputField(eventNameController, label: 'Name of Event'),
               const SizedBox(height: 10),
               _buildInputField(eventDescriptionController,
                   label: 'Description'),
               const SizedBox(height: 10),
-              _buildInputField(
-                  venueController, label: 'Location'),
+              _buildInputField(venueController, label: 'Location'),
               const SizedBox(height: 10),
-              _buildInputField(maxAttendeesController, label: 'Max Attendees',
-                  keyboardType: TextInputType.number),
+              _buildInputField(maxAttendeesController,
+                  label: 'Max Attendees', keyboardType: TextInputType.number),
               const SizedBox(height: 20),
               _buildDateTimePicker('Start', startDate, startTime, (date, time) {
                 setState(() {
@@ -241,12 +232,10 @@ class _EditEventState extends State<EditEvent> {
                   ? lightPrimaryColor.withOpacity(0.5)
                   : darkPrimaryColor.withOpacity(0.5),
               activeColor: isLightTheme ? lightPrimaryColor : darkPrimaryColor,
-              inactiveThumbColor: isLightTheme
-                  ? Colors.grey[400]
-                  : Colors.grey[600],
-              inactiveTrackColor: isLightTheme
-                  ? Colors.grey[300]
-                  : Colors.grey[700],
+              inactiveThumbColor:
+                  isLightTheme ? Colors.grey[400] : Colors.grey[600],
+              inactiveTrackColor:
+                  isLightTheme ? Colors.grey[300] : Colors.grey[700],
             ),
             const SizedBox(width: 10),
             Text(
@@ -262,8 +251,8 @@ class _EditEventState extends State<EditEvent> {
   }
 
   Widget _buildInputField(TextEditingController controller,
-      {required String label, TextInputType keyboardType = TextInputType
-          .text}) {
+      {required String label,
+      TextInputType keyboardType = TextInputType.text}) {
     return TextFormField(
       controller: controller,
       decoration: InputDecoration(
@@ -271,15 +260,15 @@ class _EditEventState extends State<EditEvent> {
         border: const OutlineInputBorder(),
       ),
       keyboardType: keyboardType,
-
     );
   }
 
   Widget _buildDateTimePicker(String label, DateTime date, TimeOfDay time,
       void Function(DateTime, TimeOfDay) onDateTimeChanged) {
     final theme = Theme.of(context);
-    final dateAndTimeColour = theme.brightness == Brightness.dark ? const Color
-        .fromARGB(255, 58, 132, 218) : const Color.fromARGB(255, 13, 73, 151);
+    final dateAndTimeColour = theme.brightness == Brightness.dark
+        ? const Color.fromARGB(255, 58, 132, 218)
+        : const Color.fromARGB(255, 13, 73, 151);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -295,10 +284,8 @@ class _EditEventState extends State<EditEvent> {
                 final pickedDate = await showDatePicker(
                   context: context,
                   initialDate: date,
-                  firstDate:  startDate,
-                  lastDate: DateTime(DateTime
-                      .now()
-                      .year + 1),
+                  firstDate: startDate,
+                  lastDate: DateTime(DateTime.now().year + 1),
                 );
                 if (pickedDate != null) {
                   final pickedTime = await showTimePicker(
@@ -311,8 +298,7 @@ class _EditEventState extends State<EditEvent> {
                 }
               },
               child: Text(
-                '${date.day}/${date.month}/${date.year} ${time.format(
-                    context)}',
+                '${date.day}/${date.month}/${date.year} ${time.format(context)}',
                 style: TextStyle(color: dateAndTimeColour),
               ),
             ),
@@ -379,37 +365,31 @@ class _EditEventState extends State<EditEvent> {
         eventP.EditEventLocation(_thisCurrentEvent.id, venueController.text);
       }
 
-
       final maxAttendees = int.tryParse(maxAttendeesController.text);
-      if(maxAttendeesController.text.isNotEmpty){
+      if (maxAttendeesController.text.isNotEmpty) {
         eventP.EditEventMaxParticipants(_thisCurrentEvent.id, maxAttendees!);
       }
 
-      DateTime startDateTime = DateTime(
-          startDate.year, startDate.month, startDate.day,
-          startTime.hour, startTime.minute
-      );
-      DateTime endDateTime = DateTime(
-          endDate.year, endDate.month, endDate.day,
-          endTime.hour, endTime.minute
-      );
+      DateTime startDateTime = DateTime(startDate.year, startDate.month,
+          startDate.day, startTime.hour, startTime.minute);
+      DateTime endDateTime = DateTime(endDate.year, endDate.month, endDate.day,
+          endTime.hour, endTime.minute);
 
-      List<String>? mediaUrls = selectedImages?.map((file) => file.path)
-          .toList();
-
+      List<String>? mediaUrls =
+          selectedImages?.map((file) => file.path).toList();
 
       Event? event = await eventP.getEventById(widget.eventId);
       if (event != null) {
         setState(() {
           _thisCurrentEvent = event;
-
         });
         Api api = Api();
 
-        api.updateEvent(
+        api
+            .updateEvent(
           userId: userSuperbase!.id,
           eventId: _thisCurrentEvent.id,
-          title:eventNameController.text,
+          title: eventNameController.text,
           description: eventDescriptionController.text,
           startDate: startDateTime,
           endDate: endDateTime,
@@ -417,8 +397,8 @@ class _EditEventState extends State<EditEvent> {
           maxParticipants: maxAttendees,
           isPrivate: isPublic,
           media: mediaUrls,
-
-        ).then((response) {
+        )
+            .then((response) {
           setState(() {
             isLoading = false;
           });
@@ -443,8 +423,6 @@ class _EditEventState extends State<EditEvent> {
         });
       }
     }
-
-
   }
 
   void showSubmitDialog(BuildContext context) {
@@ -468,11 +446,5 @@ class _EditEventState extends State<EditEvent> {
         );
       },
     );
-
-
-
-
   }
 }
-
-

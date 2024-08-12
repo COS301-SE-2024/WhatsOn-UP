@@ -126,16 +126,14 @@ import '../widgets/eventManagement_category.dart';
 class ManageEvents extends StatefulWidget {
   ManageEvents({Key? key}) : super(key: key);
 
-
-
   @override
   _ManageEventsState createState() => _ManageEventsState();
 }
 
 class _ManageEventsState extends State<ManageEvents> {
   bool _isLoading = false;
-String Admin = 'ADMIN';
-String Host='HOST';
+  String Admin = 'ADMIN';
+  String Host = 'HOST';
   void setLoading(bool isLoading) {
     setState(() {
       _isLoading = isLoading;
@@ -165,10 +163,9 @@ String Host='HOST';
           : Column(
               children: [
                 _buildProfileOption(
-                  text: userP.role == Admin
-                      ? 'All Events'
-                      : 'My Events',
-                  onTap: () async => await _navigateToEventManagementCategory(context),
+                  text: userP.role == Admin ? 'All Events' : 'My Events',
+                  onTap: () async =>
+                      await _navigateToEventManagementCategory(context),
                 ),
                 _buildDivider(),
                 _buildProfileOption(
@@ -187,17 +184,15 @@ String Host='HOST';
                   text: userP.role == Admin
                       ? 'Attendees for All Events'
                       : 'My Attendees',
-                  onTap: ()=> _navigateToAttendeesEvent(context),
+                  onTap: () => _navigateToAttendeesEvent(context),
                 ),
                 _buildDivider(),
-                if(userP.role == Admin)
-                  _buildDivider(),
-                  _buildProfileOption(
-                  text:'General user Host Applications',
-                  onTap: ()=> _navigateToGeneralEventApplications(context),
+                if (userP.role == Admin) _buildDivider(),
+                _buildProfileOption(
+                  text: 'General user Host Applications',
+                  onTap: () => _navigateToGeneralEventApplications(context),
                 ),
                 _buildDivider(),
-
               ],
             ),
     );
@@ -209,12 +204,14 @@ String Host='HOST';
       MaterialPageRoute(builder: (context) => EventmanagementCategory()),
     );
   }
+
   Future<void> _navigateToGeneralEventApplications(BuildContext context) async {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const TabGeneral()),
     );
   }
+
   void _navigateToApplicationEvent(BuildContext context) {
     Navigator.push(
       context,

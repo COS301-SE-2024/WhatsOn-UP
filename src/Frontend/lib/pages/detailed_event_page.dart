@@ -29,17 +29,17 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     _fetchEvent();
-
   }
+
   Future<void> _fetchEvent() async {
     try {
-      EventProvider eventProvider = Provider.of<EventProvider>(context,listen: false);
-      Event? event = await eventProvider.getEventById(widget.event.id );
+      EventProvider eventProvider =
+          Provider.of<EventProvider>(context, listen: false);
+      Event? event = await eventProvider.getEventById(widget.event.id);
       if (event != null) {
         setState(() {
           _thisCurrentEvent = event;
         });
-
       } else {
         print('Event with ID ${widget.event.id} not found.');
       }
@@ -48,23 +48,23 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
     }
   }
 
-
-
   Future<void> _addToCalendar() async {
-    EventProvider eventProvider = Provider.of<EventProvider>(context,listen: false);
+    EventProvider eventProvider =
+        Provider.of<EventProvider>(context, listen: false);
     try {
       setState(() {
         _isLoading = true;
       });
 
-      var result = await Api().rsvpEvent(widget.event.id,user!.id);
+      var result = await Api().rsvpEvent(widget.event.id, user!.id);
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Successfully RSVP\'d to event!')),
       );
       await eventProvider.refreshRSVPEvents(user!.id);
       await eventProvider.refreshEvents();
-      print('amount of attendees after event added to the calendar ${_thisCurrentEvent.attendees.length}');
+      print(
+          'amount of attendees after event added to the calendar ${_thisCurrentEvent.attendees.length}');
       setState(() {
         _isLoading = false;
       });
@@ -80,20 +80,21 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
   }
 
   Future<void> _removeFromCalendar() async {
-    EventProvider eventProvider = Provider.of<EventProvider>(context,listen: false);
+    EventProvider eventProvider =
+        Provider.of<EventProvider>(context, listen: false);
     print('Removing RSVP for event: ${widget.event.id}');
     try {
-       await Api().DeletersvpEvent(widget.event.id,user!.id).then((response){
-
-       });
+      await Api()
+          .DeletersvpEvent(widget.event.id, user!.id)
+          .then((response) {});
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Successfully removed RSVP !')),
       );
-       await eventProvider.refreshRSVPEvents(user!.id);
-       await eventProvider.refreshEvents();
+      await eventProvider.refreshRSVPEvents(user!.id);
+      await eventProvider.refreshEvents();
 
-       Navigator.of(context).pushReplacementNamed('/home');
+      Navigator.of(context).pushReplacementNamed('/home');
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to remove RSVP: ${e.toString()}')),
@@ -110,12 +111,14 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
   }
 
   Future<void> _editEvent() async {
-    EventProvider eventProvider = Provider.of<EventProvider>(context,listen: false);
+    EventProvider eventProvider =
+        Provider.of<EventProvider>(context, listen: false);
     if (widget.event.id != null && widget.event.id is String) {
       print('Navigating to EditEvent with eventId: ${widget.event.id}');
-      final resultEdit= await Navigator.push(
+      final resultEdit = await Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => EditEvent(eventId: widget.event.id)),
+        MaterialPageRoute(
+            builder: (context) => EditEvent(eventId: widget.event.id)),
       );
       if (resultEdit == true) {
         await eventProvider.refreshEvents();
@@ -126,8 +129,10 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
       print('Event ID is null or not a String');
     }
   }
+
   Future<void> _DeleteEvent() async {
-    EventProvider eventProvider = Provider.of<EventProvider>(context, listen: false);
+    EventProvider eventProvider =
+        Provider.of<EventProvider>(context, listen: false);
     userProvider userP = Provider.of<userProvider>(context, listen: false);
 
     bool confirmDelete = await showDialog(
@@ -156,40 +161,39 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
 
     if (confirmDelete ?? false) {
       Api api = Api();
-      api.DeleteEvent(_thisCurrentEvent.id, userP.userId).then((response) async {
-        if(response['status'] == 'success'){
+      api.DeleteEvent(_thisCurrentEvent.id, userP.userId)
+          .then((response) async {
+        if (response['status'] == 'success') {
           print('Event deleted successfully. Response: $response');
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Event deleted successfully')),
           );
           await eventProvider.refreshEvents();
           Navigator.of(context).pushReplacementNamed('/home');
-        }
-        else{
+        } else {
           print('Failed to delete event. Response: $response');
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Failed to delete event')),
           );
         }
       });
-
-
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
-
     userProvider userP = Provider.of<userProvider>(context, listen: false);
     final theme = Theme.of(context);
-    final dotColour = theme.brightness == Brightness.dark ? const Color.fromARGB(255, 116, 116, 116) : Colors.grey;
-    final activeDotColour = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
+    final dotColour = theme.brightness == Brightness.dark
+        ? const Color.fromARGB(255, 116, 116, 116)
+        : Colors.grey;
+    final activeDotColour =
+        theme.brightness == Brightness.dark ? Colors.white : Colors.black;
 
     return Scaffold(
       appBar: AppBar(
         title: Text(_thisCurrentEvent.nameOfEvent),
-      ), 
+      ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -222,20 +226,21 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
                 );
               }).toList(),
             ),
-            Row( // Dots indicator for carousel
+            Row(
+              // Dots indicator for carousel
               mainAxisAlignment: MainAxisAlignment.center,
               children: widget.event.imageUrls!.asMap().entries.map((entry) {
                 int index = entry.key;
                 return Container(
                   width: 8.0,
                   height: 8.0,
-                  margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
+                  margin: const EdgeInsets.symmetric(
+                      vertical: 10.0, horizontal: 2.0),
                   decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: _currentImageIndex == index
-                        ? activeDotColour
-                        : dotColour
-                  ),
+                      shape: BoxShape.circle,
+                      color: _currentImageIndex == index
+                          ? activeDotColour
+                          : dotColour),
                 );
               }).toList(),
             ),
@@ -307,9 +312,7 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
                       ),
                     ],
                   ),
-
-
-                  const SizedBox(height:8.0 ),
+                  const SizedBox(height: 8.0),
                   Row(
                     children: [
                       const Icon(Icons.location_on),
@@ -336,28 +339,31 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
                     style: const TextStyle(fontSize: 16.0),
                   ),
                   const SizedBox(height: 16.0),
-                  if (!_thisCurrentEvent.attendees.any((attendee) => attendee.userId == userP.userId)) ...[
+                  if (!_thisCurrentEvent.attendees
+                      .any((attendee) => attendee.userId == userP.userId)) ...[
                     if (userP.role != "GUEST")
-                    if (_thisCurrentEvent.maxAttendees >_thisCurrentEvent.attendees.length )
-                      ElevatedButton(
-                        onPressed: _isLoading ? null : () => _addToCalendar(),
-                        style: ElevatedButton.styleFrom(
-                          minimumSize: const Size(double.infinity, 48),
+                      if (_thisCurrentEvent.maxAttendees >
+                          _thisCurrentEvent.attendees.length)
+                        ElevatedButton(
+                          onPressed: _isLoading ? null : () => _addToCalendar(),
+                          style: ElevatedButton.styleFrom(
+                            minimumSize: const Size(double.infinity, 48),
+                          ),
+                          child: _isLoading
+                              ? const CircularProgressIndicator(
+                                  color: Colors.white,
+                                )
+                              : const Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(Icons.calendar_today),
+                                    SizedBox(width: 8),
+                                    Text('Add to my Calendar'),
+                                  ],
+                                ),
                         ),
-                        child: _isLoading
-                            ? const CircularProgressIndicator(
-                                color: Colors.white,
-                              )
-                            : const Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Icon(Icons.calendar_today),
-                                  SizedBox(width: 8),
-                                  Text('Add to my Calendar'),
-                                ],
-                              ),
-                      ),
-                    if (_thisCurrentEvent.maxAttendees <= _thisCurrentEvent.attendees.length + 1)
+                    if (_thisCurrentEvent.maxAttendees <=
+                        _thisCurrentEvent.attendees.length + 1)
                       ElevatedButton.icon(
                         onPressed: () {},
                         icon: const Icon(Icons.calendar_today),
@@ -367,9 +373,9 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
                         ),
                       ),
                   ],
-
                   const SizedBox(height: 8.0),
-                  if (_thisCurrentEvent.attendees.any((attendee) => attendee.userId == userP.userId)) ...[
+                  if (_thisCurrentEvent.attendees
+                      .any((attendee) => attendee.userId == userP.userId)) ...[
                     ElevatedButton.icon(
                       onPressed: _removeFromCalendar,
                       icon: const Icon(Icons.calendar_today),
@@ -388,24 +394,23 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
                       minimumSize: const Size(double.infinity, 48),
                     ),
                   ),
-
                   const SizedBox(height: 8.0),
                   if (userP.role != "GUEST")
-                  ElevatedButton.icon(
-                    onPressed: _reportEvent,
-                    icon: const Icon(Icons.report),
-                    label: const Text('Report Event'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
-                      minimumSize: const Size(double.infinity, 48),
+                    ElevatedButton.icon(
+                      onPressed: _reportEvent,
+                      icon: const Icon(Icons.report),
+                      label: const Text('Report Event'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                        minimumSize: const Size(double.infinity, 48),
+                      ),
                     ),
-                  ),
-
                   const SizedBox(height: 16.0),
                   if (_thisCurrentEvent != null &&
                       (_thisCurrentEvent!.hosts != null &&
-                          _thisCurrentEvent!.hosts.isNotEmpty &&
-                          _thisCurrentEvent!.hosts[0] == userP.Fullname || userP.role=='ADMIN')) ...[
+                              _thisCurrentEvent!.hosts.isNotEmpty &&
+                              _thisCurrentEvent!.hosts[0] == userP.Fullname ||
+                          userP.role == 'ADMIN')) ...[
                     const SizedBox(height: 8.0),
                     ElevatedButton.icon(
                       onPressed: _editEvent,
@@ -431,7 +436,6 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
                       ),
                     ),
                   ],
-
                 ],
               ),
             ),
@@ -439,9 +443,5 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
         ),
       ),
     );
-
-
-
   }
-
 }

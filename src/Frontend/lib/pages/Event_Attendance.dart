@@ -1,13 +1,11 @@
-
 import 'package:flutter/material.dart';
 import 'dart:typed_data';
 import 'dart:convert';
 import '../widgets/event_card.dart';
 
 class EventAttendance extends StatefulWidget {
-
-   Event event;
-   EventAttendance({super.key , required this.event});
+  Event event;
+  EventAttendance({super.key, required this.event});
 
   @override
   State<EventAttendance> createState() => _EventAttendanceState();
@@ -27,8 +25,9 @@ class _EventAttendanceState extends State<EventAttendance> {
   void filterAttendees() {
     String query = searchController.text.toLowerCase();
     setState(() {
-      filteredAttendees = widget.event.attendees.where((attendee) =>
-          attendee.fullName.toLowerCase().contains(query)).toList();
+      filteredAttendees = widget.event.attendees
+          .where((attendee) => attendee.fullName.toLowerCase().contains(query))
+          .toList();
     });
   }
 
@@ -37,8 +36,8 @@ class _EventAttendanceState extends State<EventAttendance> {
     searchController.dispose();
     super.dispose();
   }
-  @override
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -59,25 +58,29 @@ class _EventAttendanceState extends State<EventAttendance> {
           Expanded(
             child: filteredAttendees.isEmpty
                 ? Center(
-              child: Text("No attendees found."),
-            )
+                    child: Text("No attendees found."),
+                  )
                 : ListView.builder(
-              itemCount: filteredAttendees.length,
-              itemBuilder: (context, index) {
-
-                return ListTile(
-                  leading: CircleAvatar(
-                    backgroundImage: filteredAttendees[index].profileImage!=null && filteredAttendees[index].profileImage.isNotEmpty
-                        ? NetworkImage(filteredAttendees[index].profileImage)
-                        : AssetImage('assets/images/user.png'),
-                    radius: 20,
+                    itemCount: filteredAttendees.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        leading: CircleAvatar(
+                          backgroundImage:
+                              filteredAttendees[index].profileImage != null &&
+                                      filteredAttendees[index]
+                                          .profileImage
+                                          .isNotEmpty
+                                  ? NetworkImage(
+                                      filteredAttendees[index].profileImage)
+                                  : AssetImage('assets/images/user.png'),
+                          radius: 20,
+                        ),
+                        title: Center(
+                          child: Text(filteredAttendees[index].fullName),
+                        ),
+                      );
+                    },
                   ),
-                  title: Center(
-                    child: Text(filteredAttendees[index].fullName),
-                  ),
-                );
-              },
-            ),
           ),
         ],
       ),

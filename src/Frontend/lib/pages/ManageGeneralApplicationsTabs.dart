@@ -210,35 +210,7 @@ class _ApplicantState extends State<Applicant> {
                   ),
                 ),
                 SizedBox(height: 10.0),
-                if (widget.user.proofUrl != null ) ...[
-
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            _updateApplication(context, 'Reject');
-                          },
-                          style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(horizontal: 20.0), // Adjust padding if needed
-                          ),
-                          child: Text('Reject'),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            _updateApplication(context, 'Accept');
-                          },
-                          style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(horizontal: 20.0), // Adjust padding if needed
-                          ),
-                          child: Text('Accept'),
-                        ),
-                      ],
-                    ),
-                  ),
-                ] else if (widget.user.status.name == 'PENDING')
+                 if (widget.user.status.name == 'PENDING')
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Text(
@@ -249,8 +221,8 @@ class _ApplicantState extends State<Applicant> {
                           fontWeight: FontWeight.w600,
                           color: Colors.red),
                     ),
-                  )
 
+                  )
                 else if (widget.user.status.name == 'ACKNOWLEDGED') ...[
                   Padding(
                     padding: const EdgeInsets.all(16.0),
@@ -262,7 +234,8 @@ class _ApplicantState extends State<Applicant> {
                             _updateApplication(context, 'Demote');
                           },
                           style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(horizontal: 20.0), // Adjust padding if needed
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20.0), // Adjust padding if needed
                           ),
                           child: Text('Demote'),
                         ),
@@ -280,7 +253,8 @@ class _ApplicantState extends State<Applicant> {
                             _updateApplication(context, 'Reject');
                           },
                           style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(horizontal: 20.0), // Adjust padding if needed
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20.0), // Adjust padding if needed
                           ),
                           child: Text('Reject'),
                         ),
@@ -289,7 +263,8 @@ class _ApplicantState extends State<Applicant> {
                             _updateApplication(context, 'Accept');
                           },
                           style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(horizontal: 20.0), // Adjust padding if needed
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20.0), // Adjust padding if needed
                           ),
                           child: Text('Accept'),
                         ),
@@ -297,7 +272,66 @@ class _ApplicantState extends State<Applicant> {
                     ),
                   ),
                 ],
-
+                if (widget.user.proofUrl != null && widget.user.status.name == 'PENDING') ...[
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            _updateApplication(context, 'Reject');
+                          },
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20.0),
+                          ),
+                          child: Text('Reject'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            _updateApplication(context, 'Accept');
+                          },
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20.0),
+                          ),
+                          child: Text('Accept'),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+                if (widget.user.proofUrl != null && widget.user.status.name =='VERIFIED') ...[
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            _updateApplication(context, 'Reject');
+                          },
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20.0),
+                          ),
+                          child: Text('Reject'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            _updateApplication(context, 'Accept');
+                          },
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20.0),
+                          ),
+                          child: Text('Accept'),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ],
             ),
     );
