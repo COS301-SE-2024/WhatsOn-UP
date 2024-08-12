@@ -20,6 +20,7 @@ import 'package:mocktail_image_network/mocktail_image_network.dart';
 import 'api_test.mocks.dart';
 
 void main() {
+
   group('ManageEvents Widget Tests', () {
     late MockEventProvider mockEventProvider;
     late MockuserProvider mockUserProvider;
