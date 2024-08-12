@@ -27,13 +27,28 @@ class _NotificationsState extends State<Notifications> {
     return ChangeNotifierProvider<notificationProvider>(
       create: (context) => notif,
       child: Scaffold(
-        appBar: AppBar(
-          title: Text('Notifications'),
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Text(
+                'Notifications',
+                style: TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            Expanded(
+              child: userRole == "GUEST" ? _buildGuestView() : _buildNotificationsView(notif),
+            ),
+          ],
         ),
-        body: userRole == "GUEST" ? _buildGuestView() : _buildNotificationsView(notif),
       ),
     );
   }
+
 
   Widget _buildGuestView() {
     return Center(
