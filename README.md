@@ -37,6 +37,9 @@ WhatsOn@UP system aims to be a central hub for all University of Pretoria events
        <li><a href="./docs/Contracts/Contracts.md">Contracts</a></li>
        <li><a href="https://www.figma.com/design/OjxWQqAXxuycjBsvbRyU0f/WhatsOn%40UP?node-id=0-1&t=rWZnW452JgRBb5ha-0">Wireframes</a></li>
        <li><a href="https://docs.google.com/document/d/1_oVeZqWZemT3urwrFUN708oN37bDlg5WAx-VP4TaVw4/edit?usp=drive_link">Coding Standards</a></li>
+       <li><a href="https://github.com/COS301-SE-2024/WhatsOn-UP/blob/main/docs/SRS-document.md">Technical Installation Manual</a></li> 
+
+       
 
 </ul>
     </td>
