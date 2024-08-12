@@ -450,7 +450,7 @@ class Api {
 
   Future<Map<String, dynamic>> DeleteEvent(
       String eventId, String userid) async {
-    var Url = Uri.parse('http://$domain:8080/api/events/delete/$eventId');
+    var Url = Uri.parse('http://$domain:8080/api/events/remove/$eventId');
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -566,11 +566,12 @@ class Api {
       'Accept': 'application/json',
       'Authorization': 'Bearer $userId',
     };
+    print(location);
     var body = jsonEncode({
       'title': title,
       'description': description,
-      'startDate': startDate.toIso8601String(),
-      'endDate': endDate.toIso8601String(),
+      // 'startDate': startDate.toIso8601String(),
+      // 'endDate': endDate.toIso8601String(),
       'location': location,
       'maxParticipants': maxParticipants,
       'metadata': metadata,
@@ -582,7 +583,7 @@ class Api {
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
       } else {
-        throw Exception('Failed to get user details');
+        throw Exception(jsonDecode(response.body));
       }
     } catch (e) {
       return {'error': e.toString()};
