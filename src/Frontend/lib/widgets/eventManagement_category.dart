@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
@@ -14,7 +13,8 @@ class EventmanagementCategory extends StatefulWidget {
   EventmanagementCategory({Key? key}) : super(key: key);
 
   @override
-  _EventmanagementCategoryState createState() => _EventmanagementCategoryState();
+  _EventmanagementCategoryState createState() =>
+      _EventmanagementCategoryState();
 }
 
 class _EventmanagementCategoryState extends State<EventmanagementCategory> {
@@ -26,18 +26,19 @@ class _EventmanagementCategoryState extends State<EventmanagementCategory> {
     final user = supabase.auth.currentUser;
     _loadEvents();
   }
+
   void _loadEvents() async {
     try {
       EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
       _eventsHome = eventP.eventsHome;
     } catch (e) {
       setState(() {
-
         _errorMessage = 'Error loading events';
         _errorOccurred = true;
       });
     }
   }
+
   late String _errorMessage;
   late bool _errorOccurred = false;
   @override
@@ -51,7 +52,6 @@ class _EventmanagementCategoryState extends State<EventmanagementCategory> {
       appBar: AppBar(
         title: Text('Edit Events'), // Adjust the app bar title as needed
       ),
-
       body: _errorOccurred
           ? Center(child: Text(_errorMessage))
           : Column(
