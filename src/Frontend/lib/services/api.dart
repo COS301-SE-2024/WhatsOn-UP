@@ -450,7 +450,7 @@ class Api {
 
   Future<Map<String, dynamic>> DeleteEvent(
       String eventId, String userid) async {
-    var Url = Uri.parse('http://$domain:8080/api/events/delete/$eventId');
+    var Url = Uri.parse('http://$domain:8080/api/events/remove/$eventId');
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
