@@ -11,19 +11,23 @@ import java.util.*
 @Data
 @Builder
 @Entity
-@Table(name = "event")
+@Table(name = "events")
 @NoArgsConstructor
 @AllArgsConstructor
 
 class EventModel {
     @Id
-    @GeneratedValue
     @Column(name = "event_id", columnDefinition = "UUID")
-    var eventId: UUID = UUID.randomUUID()
+    var eventId: UUID? = null
 
     var title: String = ""
     var description: String = ""
-    var metadata: String = ""
+
+    var metadata: String = "" //changed from  var metadata: String = ""
+
+    @OneToOne
+    @JoinColumn(name = "event_id")
+    var availableSlots: AvailableSlotsModel? = null
 
     @ElementCollection
     @CollectionTable(name = "event_media", joinColumns = [JoinColumn(name = "event_id")])
@@ -33,16 +37,16 @@ class EventModel {
     @Column(name = "created_at", nullable = false, updatable = false)
     private var createdAt: LocalDateTime = LocalDateTime.now()
 
-    @Column(name = "updated_at", nullable = false)
-    private var updatedAt: LocalDateTime = LocalDateTime.now()
+    @OneToOne
+    @JoinColumn(name = "venue_id")
+    var venue: VenueModel? = null
 
-    var location: String = ""
 
-    @Column(name = "start_time", nullable = false)
-    var startTime: LocalDateTime = LocalDateTime.now()
+    @Column(name = "start_date_time", nullable = false)
+    var startDateTime: LocalDateTime = LocalDateTime.now()
 
-    @Column(name = "end_time", nullable = false)
-    var endTime: LocalDateTime = LocalDateTime.now()
+    @Column(name = "end_date_time", nullable = false)
+    var endDateTime: LocalDateTime = LocalDateTime.now()
 
     @Column(name = "max_attendees", nullable = false)
     var maxAttendees: Int = 0
@@ -85,21 +89,8 @@ class EventModel {
     @PrePersist
     fun prePersist() {
         createdAt = LocalDateTime.now()
-        updatedAt = LocalDateTime.now()
-    }
-
-    @PreUpdate
-    fun preUpdate() {
-        updatedAt = LocalDateTime.now()
     }
 
 
 
-  /*  fun getEsId(): String {
-        return eventId.toString()
-    }
-
-    fun setEsId(esId: String) {
-        eventId = UUID.fromString(esId)
-    }*/
 }

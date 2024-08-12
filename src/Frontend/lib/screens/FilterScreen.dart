@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:firstapp/services/EventService.dart';
-
+import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 
 class FilterScreen extends StatefulWidget {
   @override
   _FilterScreenState createState() => _FilterScreenState();
 }
 
-class _FilterScreenState extends State<FilterScreen> with SingleTickerProviderStateMixin {
-  EventService eventService = EventService();
+class _FilterScreenState extends State<FilterScreen>
+    with SingleTickerProviderStateMixin {
+  EventService eventService = EventService(Supabase.instance.client);
 
-  late String selectedDateRange="";
-  late String selectedCapacityRange="";
-  late String selectedEventType="";
+  late String selectedDateRange = "";
+  late String selectedCapacityRange = "";
+  late String selectedEventType = "";
 
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
@@ -21,20 +22,23 @@ class _FilterScreenState extends State<FilterScreen> with SingleTickerProviderSt
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(vsync: this, duration: Duration(milliseconds: 500));
+    _controller =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 500));
 
     _scaleAnimation = Tween<double>(begin: 1.0, end: 1.2).animate(
       CurvedAnimation(parent: _controller, curve: Curves.elasticInOut),
     );
 
-    _colorAnimation = ColorTween(begin: Colors.blue[800], end: Colors.pink[300]).animate(
+    _colorAnimation =
+        ColorTween(begin: Colors.blue[800], end: Colors.pink[300]).animate(
       CurvedAnimation(parent: _controller, curve: Curves.elasticInOut),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    TextStyle whiteTextTheme = Theme.of(context).textTheme.labelLarge!.copyWith(color: Colors.white);
+    TextStyle whiteTextTheme =
+        Theme.of(context).textTheme.labelLarge!.copyWith(color: Colors.white);
 
     return Scaffold(
       appBar: AppBar(
@@ -43,12 +47,20 @@ class _FilterScreenState extends State<FilterScreen> with SingleTickerProviderSt
       body: SafeArea(
         child: Column(
           children: <Widget>[
-            _buildFilterOptions("Date Range", ["Last week", "Today", "Next week"], (value) {
+            _buildFilterOptions(
+                "Date Range", ["Last week", "Today", "Next week"], (value) {
               setState(() {
                 selectedDateRange = value;
               });
             }),
-            _buildFilterOptions("Capacity Range", ["0 - 50", "50 - 100", "100 - 200", "200 - 300", "300 - 400", "400 - 500"], (value) {
+            _buildFilterOptions("Capacity Range", [
+              "0 - 50",
+              "50 - 100",
+              "100 - 200",
+              "200 - 300",
+              "300 - 400",
+              "400 - 500"
+            ], (value) {
               setState(() {
                 selectedCapacityRange = value;
               });
@@ -60,17 +72,19 @@ class _FilterScreenState extends State<FilterScreen> with SingleTickerProviderSt
             }),
             Spacer(),
             Center(
-            child:Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(foregroundColor: Colors.white, backgroundColor: Colors.pink[300], ),
-                child: Text(
-                  "Filter Events",
-                  style: whiteTextTheme,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: const Size(double.infinity, 48),
+                  ),
+                  child: Text(
+                    "Filter Events",
+                    style: whiteTextTheme,
+                  ),
+                  onPressed: _filterEvents,
                 ),
-                onPressed: _filterEvents,
               ),
-            ),
             ),
           ],
         ),
@@ -78,7 +92,8 @@ class _FilterScreenState extends State<FilterScreen> with SingleTickerProviderSt
     );
   }
 
-  Widget _buildFilterOptions(String title, List<String> options, Function(String) onSelected) {
+  Widget _buildFilterOptions(
+      String title, List<String> options, Function(String) onSelected) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 16.0),
       child: Column(
@@ -86,7 +101,10 @@ class _FilterScreenState extends State<FilterScreen> with SingleTickerProviderSt
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.only(left: 16.0),
-            child: Text(title, style: Theme.of(context).textTheme.titleMedium), // Use subtitle1 for the title style
+            child: Text(title,
+                style: Theme.of(context)
+                    .textTheme
+                    .titleMedium), // Use subtitle1 for the title style
           ),
           Wrap(
             alignment: WrapAlignment.start,
@@ -109,10 +127,12 @@ class _FilterScreenState extends State<FilterScreen> with SingleTickerProviderSt
                   duration: Duration(milliseconds: 300),
                   curve: Curves.easeInOut,
                   decoration: BoxDecoration(
-                    color: isSelected ? _colorAnimation.value : Colors.grey[200],
+                    color:
+                        isSelected ? _colorAnimation.value : Colors.grey[200],
                     borderRadius: BorderRadius.circular(30.0),
                   ),
-                  padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                   child: Stack(
                     alignment: Alignment.center,
                     children: [
@@ -120,7 +140,8 @@ class _FilterScreenState extends State<FilterScreen> with SingleTickerProviderSt
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           isSelected
-                              ? Icon(Icons.check_circle, color: Colors.white, size: 20.0)
+                              ? Icon(Icons.check_circle,
+                                  color: Colors.white, size: 20.0)
                               : SizedBox.shrink(),
                           SizedBox(width: 8.0), //  space between icon and text
                           Text(
@@ -148,7 +169,9 @@ class _FilterScreenState extends State<FilterScreen> with SingleTickerProviderSt
                                 selectedEventType = "";
                               } else {
                                 onSelected(option);
-                                _controller.forward(from: 0.0); // Start animation from beginning
+                                _controller.forward(
+                                    from:
+                                        0.0); // Start animation from beginning
                               }
                             });
                           },
@@ -166,9 +189,10 @@ class _FilterScreenState extends State<FilterScreen> with SingleTickerProviderSt
     );
   }
 
-
   bool _isSelected(String option) {
-    return option == selectedDateRange || option == selectedCapacityRange || option == selectedEventType;
+    return option == selectedDateRange ||
+        option == selectedCapacityRange ||
+        option == selectedEventType;
   }
 
   void _filterEvents() {
@@ -193,7 +217,8 @@ class _FilterScreenState extends State<FilterScreen> with SingleTickerProviderSt
       default:
       //  TODO
     }
-    print("Selected Date Range: $selectedDateRange, Start Date: $startDate, End Date: $endDate");
+    print(
+        "Selected Date Range: $selectedDateRange, Start Date: $startDate, End Date: $endDate");
 
     // Prepare capacity range
     int minCapacity = 0;
@@ -232,7 +257,10 @@ class _FilterScreenState extends State<FilterScreen> with SingleTickerProviderSt
     bool isPrivate = selectedEventType == "Private";
 
     // Call EventService to filter events
-    eventService.filterEvents(startDate.toString(), endDate.toString(), minCapacity, maxCapacity, isPrivate).then((events) {
+    eventService
+        .filterEvents(startDate.toString(), endDate.toString(), minCapacity,
+            maxCapacity, isPrivate)
+        .then((events) {
       // Handle the filtered events
       print("Filtered Events: $events");
       // Example: Displaying events in rows
@@ -243,7 +271,8 @@ class _FilterScreenState extends State<FilterScreen> with SingleTickerProviderSt
           content: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: events.map<Widget>((event) => _buildEventRow(event)).toList(),
+              children:
+                  events.map<Widget>((event) => _buildEventRow(event)).toList(),
             ),
           ),
           actions: <Widget>[
@@ -263,13 +292,9 @@ class _FilterScreenState extends State<FilterScreen> with SingleTickerProviderSt
   }
 
   Widget _buildEventRow(dynamic event) {
-
     return ListTile(
       title: Text(event['title']),
       subtitle: Text(event['description']),
-
-
     );
   }
-
 }

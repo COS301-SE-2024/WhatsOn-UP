@@ -1,8 +1,8 @@
+import 'package:firstapp/widgets/event_card.dart';
 import 'package:flutter/material.dart';
-import 'package:firstapp/widgets/SearchTile.dart';
+import 'package:firstapp/widgets/SearchImageTile.dart';
 import 'package:firstapp/services/EventService.dart';
-
-import '../widgets/FilteredEventsScreen.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SearchScreen extends StatefulWidget {
   @override
@@ -10,69 +10,67 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  final EventService _eventService = EventService();
-  List<dynamic> _searchResults = [];
+  final EventService _eventService = EventService(Supabase.instance.client);
+  List<Event> _searchResults = [];
+  List<String> _categories = [];
   bool _isLoading = false;
   bool _showSearchTiles = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchCategories();
+  }
+
+  void _fetchCategories() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final categories = await _eventService.fetchUniqueCategories();
+      setState(() {
+        _categories = categories;
+        _isLoading = false;
+      });
+    } catch (e) {
+      // Handle error, e.g., show an error message
+      print('Error fetching categories: $e');
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
 
   void _searchEvents(String query) async {
     setState(() {
       _isLoading = true;
-      _searchResults.clear(); // Clear previous results
+      _searchResults.clear();
+      _showSearchTiles = false;
     });
 
     try {
-      final results = await _eventService.searchEvents(query);
+      final results = await _eventService.searchEvents(query) as List<Event>;
       setState(() {
         _searchResults = results;
         _isLoading = false;
-        _showSearchTiles = false;
       });
     } catch (e) {
-     //probably add an  alert
+      // Handle error, e.g., show an error message
       print('Error searching events: $e');
       setState(() {
         _isLoading = false;
       });
     }
   }
-/*  void _applyFilter(String filter) async {
-    setState(() {
-      _isLoading = true;
-      _searchResults.clear();
-    });
 
-    try {
-      final results = await _eventService.filterEventsByKeyword(filter);
-      setState(() {
-        _searchResults = results;
-        _isLoading = false;
-      });
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => FilteredEventsScreen(events: _searchResults),
-        ),
-      ).then((value) {
-        // Clear search results when returning from FilteredEventsScreen
-        setState(() {
-          _searchResults.clear();
-        });
-      });
-    } catch (e) {
-      //probably add an  alert
-      print('Error filtering events: $e');
-      setState(() {
-        _isLoading = false;
-      });
-    }
-  }*/
   void _clearSearchResults() {
     setState(() {
       _searchResults.clear();
-      _showSearchTiles = true; // Show search tiles again
+      _showSearchTiles = true;
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -114,12 +112,12 @@ class _SearchScreenState extends State<SearchScreen> {
                       onSubmitted: _searchEvents,
                       onTap: () {
                         setState(() {
-                          _showSearchTiles = true; // Show search tiles on tap
+                          _showSearchTiles = true;
                         });
                       },
                       onChanged: (value) {
                         setState(() {
-                          _showSearchTiles = true; // Show search tiles on change
+                          _showSearchTiles = true;
                         });
                       },
                     ),
@@ -127,29 +125,37 @@ class _SearchScreenState extends State<SearchScreen> {
                 ],
               ),
             ),
-            if (_showSearchTiles)
-              SearchTile(
-                onFilterSelected: _searchEvents,
+            if (_showSearchTiles && _categories.isNotEmpty)
+              GridView.count(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                crossAxisCount: 2,
+                children: _categories.map((category) {
+                  return SearchImageTile(
+                    title: category,
+                    imageUrl: 'images/$category.jpg',
+                    onTap: (title) => _searchEvents(title),
+                  );
+                }).toList(),
               ),
             SizedBox(height: 16.0),
             _isLoading
                 ? Center(child: CircularProgressIndicator())
-                : _searchResults.isEmpty
-                ? Center(
-              child: Text('No events found'),
-            )
-                : Expanded(
-              child: ListView.builder(
-                itemCount: _searchResults.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return ListTile(
-                    title: Text(_searchResults[index]['title']),
-                    subtitle: Text(_searchResults[index]['description']),
-                    // TODO: Implement onTap to navigate to event details page
-                  );
-                },
-              ),
-            ),
+                : _searchResults.isEmpty && _categories.isEmpty
+                    ? Center(
+                        child: Text('No events found'),
+                      )
+                    : Expanded(
+                        child: ListView.builder(
+                          itemCount: _searchResults.length,
+                          itemBuilder: (context, index) {
+                            if (index >= _searchResults.length) {
+                              return Container();
+                            }
+                            return EventCard(event: _searchResults[index]);
+                          },
+                        ),
+                      ),
           ],
         ),
       ),

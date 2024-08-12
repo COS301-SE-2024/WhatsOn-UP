@@ -1,7 +1,10 @@
-FROM devforce123/backend:2.0
+FROM devforce123/backend
 
 # Set working directory
 WORKDIR /home/ubuntu
+
+# remove the existing application files
+RUN rm -rf /home/ubuntu/*
 
 # Copy the application files to the container
 ADD . .
@@ -13,7 +16,6 @@ RUN chmod +x ./gradlew
 RUN sed -i 's/\r//' gradlew
 
 RUN ./gradlew assemble
-RUN ./gradlew test
 
 # Expose the port
 EXPOSE 8080

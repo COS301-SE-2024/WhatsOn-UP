@@ -1,11 +1,9 @@
 package com.devforce.backend.controller
 
-import com.devforce.backend.dto.CreateEventDto
-import com.devforce.backend.dto.FilterByDto
-import com.devforce.backend.dto.ResponseDto
-import com.devforce.backend.dto.UpdateEventDto
+import com.devforce.backend.dto.*
 import com.devforce.backend.model.EventModel
 import com.devforce.backend.service.EventService
+import com.devforce.backend.service.UserService
 import jakarta.annotation.security.RolesAllowed
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.format.annotation.DateTimeFormat
@@ -24,11 +22,12 @@ import java.time.format.DateTimeParseException
 @RestController
 @RequestMapping("/api/events")
 class EventController {
+
     @Autowired
     lateinit var eventService: EventService
 
     @PostMapping("/create")
-    @RolesAllowed("HOST", "ADMIN")
+    @PreAuthorize("hasAnyRole('HOST', 'ADMIN')")
     fun createEvent(@RequestBody event: CreateEventDto): ResponseEntity<ResponseDto> {
         return eventService.createEvent(event)
     }
@@ -40,21 +39,31 @@ class EventController {
     }
 
     @PutMapping("/update/{id}")
-    @RolesAllowed("HOST", "ADMIN")
+    @PreAuthorize("hasAnyRole('HOST', 'ADMIN')")
     fun updateEvent(@PathVariable id: UUID, @RequestBody event: UpdateEventDto): ResponseEntity<ResponseDto> {
         return eventService.updateEvent(id, event)
     }
 
-    @DeleteMapping("/delete/{id}")
-    @RolesAllowed("HOST", "ADMIN")
+    @DeleteMapping("/remove/{id}")
+    @PreAuthorize("hasAnyRole('HOST', 'ADMIN')")
     fun deleteEvent(@PathVariable id: UUID): ResponseEntity<ResponseDto> {
         return eventService.deleteEvent(id)
     }
-
-    @GetMapping("/search/{searchString}")
+    @GetMapping("/categories")
     @PreAuthorize("permitAll()")
-    fun searchEvents(@PathVariable searchString: String): ResponseEntity<ResponseDto> {
-        val events = eventService.searchEvents(searchString)
+    fun getUniqueCategories(): ResponseEntity<ResponseDto> {
+        val categories = eventService.getUniqueCategories()
+        return ResponseEntity.ok(ResponseDto("Categories fetched successfully", System.currentTimeMillis(), categories))
+
+    }
+
+
+    @GetMapping("/search")
+    @PreAuthorize("permitAll()")
+    fun searchEvents(
+        @RequestParam(required = true) searchString: String)
+    : ResponseEntity<ResponseDto>? {
+        val events = searchString.let { eventService.searchEvents(it) }
         return events
     }
 
@@ -81,14 +90,26 @@ class EventController {
     @GetMapping("/filter")
     @PreAuthorize("permitAll()")
     fun filterEvents(
-        @RequestParam(required = false) startTime: String?,
-        @RequestParam(required = false) endTime: String?,
-        @RequestParam(required = false) location: String?,
+        @RequestParam(required = false) startDateTime: String?,
+        @RequestParam(required = false) endDateTime: String?,
         @RequestParam(required = false) isPrivate: Boolean?,
         @RequestParam(required = false) maxAttendees: Int?
     ): ResponseEntity<ResponseDto> {
-        val filterByDto = FilterByDto(startTime, endTime, location, isPrivate, maxAttendees)
+        val filterByDto = FilterByDto(startDateTime, endDateTime, isPrivate, maxAttendees)
 
         return eventService.filterEvents(filterByDto)
+    }
+
+
+    @GetMapping("/get_passed_events")
+    @PreAuthorize("hasAnyRole('HOST', 'ADMIN')")
+    fun getPassedEvents(): ResponseEntity<ResponseDto> {
+        return eventService.getPassedEvents()
+    }
+
+    @GetMapping("/get_locations")
+    @PreAuthorize("permitAll()")
+    fun getLocations(): ResponseEntity<ResponseDto> {
+        return eventService.getLocations()
     }
 }

@@ -1,3 +1,4 @@
+import 'package:firstapp/pages/allSaved_Events.dart';
 import 'package:firstapp/widgets/event_card.dart';
 import 'package:flutter/material.dart';
 import 'package:firstapp/pages/rsvp_events_page.dart';
@@ -6,50 +7,44 @@ import 'package:firstapp/pages/explore_page.dart';
 import 'package:firstapp/pages/settings_page.dart';
 import 'package:firstapp/widgets/nav_bar.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:firstapp/pages/searchbar.dart';
-import 'package:firstapp/pages/data_search.dart';
-import 'package:firstapp/pages/profilePage.dart';
 
+import 'package:firstapp/pages/profilePage.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/events_providers.dart';
+import '../providers/notification_providers.dart';
+import '../providers/user_provider.dart';
 import '../screens/FilterScreen.dart';
 import '../screens/SearchScreen.dart';
 import 'package:firstapp/services/api.dart';
-// import 'package:firstapp/widgets/eventcard.dart';
-import 'dart:typed_data';
 import 'package:firstapp/pages/Broadcast.dart';
 import 'package:firstapp/pages/manageEvents.dart';
 import 'package:firstapp/pages/application_event.dart';
 
-class HomePage extends StatefulWidget {
-  final String userName;
-  final String userEmail;
-  final String userId;
-  final String role;
-  final Uint8List? profileImage;
+import '../services/socket_client.dart';
+import 'allHome_events.dart';
+import 'notifications.dart';
 
+class HomePage extends StatefulWidget {
   const HomePage({
     Key? key,
-    // required this.profileImageUrl,
-    required this.userName,
-    required this.userEmail,
-    required this.userId,
-    required this.role,
-    required this.profileImage,
   }) : super(key: key);
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  late Future<List<Event>> futureEvents;
+  // late Future<List<Event>> futureEvents;
   Api api = Api();
 
   int _selectedIndex = 0;
 
-  @override
-  void initState() {
-    super.initState();
-    futureEvents = api.getAllEvents();
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   futureEvents = api.getAllEvents();
+  // }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -57,9 +52,17 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
+    userProvider userP = Provider.of<userProvider>(context);
+
+
+
+
+
+    print("user role: ${userP.role}");
+    const String HOST = 'HOST';
+    const String ADMIN = 'ADMIN';
     return Scaffold(
       body: Container(
         // color: Colors.grey[200],
@@ -68,56 +71,46 @@ class _HomePageState extends State<HomePage> {
       bottomNavigationBar: NavBar(
         selectedIndex: _selectedIndex,
         onItemTapped: _onItemTapped,
-        userRole: widget.role,
+        userRole: userP.role,
       ),
-      floatingActionButton: (widget.role == 'HOST' || widget.role == 'ADMIN')
-      ? Padding(
-          padding: EdgeInsets.only(right: 15, bottom: 70),
-          child: Align(
-            alignment: Alignment.bottomRight,
-            child: FloatingActionButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ApplicationEvent(
-                    userName: widget.userName,
-                    userEmail: widget.userEmail,
-                    userId: widget.userId,
-                    role: widget.role,
-                    profileImage: widget.profileImage,
-                  )),
-                );
-              },
-              child: Icon(Icons.add),
-              backgroundColor: Theme.of(context).primaryColor,
-            ),
-          ),
-        ) : null,
+      floatingActionButton: (userP.role == HOST || userP.role == ADMIN)
+          ? Padding(
+              padding: const EdgeInsets.only(right: 15, bottom: 70),
+              child: Align(
+                alignment: Alignment.bottomRight,
+                child: FloatingActionButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ApplicationEvent()),
+                    );
+                  },
+                  child: const Icon(Icons.add),
+                  backgroundColor: Theme.of(context).primaryColor,
+                ),
+              ),
+            )
+          : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 
   Widget _getSelectedPage(int index) {
+    userProvider userP = Provider.of<userProvider>(context);
     switch (index) {
       case 0:
         return _buildHomePage();
       case 1:
-        return const RsvpEventsPage();
+        return const Notifications();
       case 2:
         return const CalendarPage();
       case 3:
         return const ExplorePage();
       case 4:
-        return SettingsPage(
-          //profileImageUrl: widget.profileImageUrl,
-          userName: widget.userName,
-          userEmail: widget.userEmail,
-          role: widget.role,
-          userId: widget.userId,
-          profileImage: widget.profileImage,
-        );
+        return const SettingsPage();
       case 5:
-        return const ManageEvents();
+        return  ManageEvents();
 
       case 6:
         return const Broadcast();
@@ -128,26 +121,29 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildHomePage() {
+    userProvider userP = Provider.of<userProvider>(context);
+    EventProvider eventP = Provider.of<EventProvider>(context);
+
     final theme = Theme.of(context);
     final borderColour = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
     final textColour = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
-
+    // futureEvents=eventP.eventsHome;
     return FutureBuilder<List<Event>>(
-      future: futureEvents,
+      future: eventP.eventsHome,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: SpinKitPianoWave(
+            color:  Color.fromARGB(255, 149, 137, 74),
+            size: 50.0,
+          ));
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (snapshot.hasData) {
           final events = snapshot.data!;
 
-          print('second events call: $events');
-          print("Number of events: ${events.length}");
-
           // Add check to ensure events list is not empty
           if (events.isEmpty) {
-            return Center(child: Text('No events found.'));
+            return const Center(child: Text('No events found.'));
           }
 
           return SingleChildScrollView(
@@ -164,36 +160,33 @@ class _HomePageState extends State<HomePage> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => ProfilePage(
-                                // profileImageUrl: widget.profileImageUrl,
-                                userName: widget.userName,
-                                userEmail: widget.userEmail,
-                                // role: widget.role,
-                                userId: widget.userId,
-                                role: widget.role,
-                                profileImage: widget.profileImage,
+
                               ),
                             ),
                           );
                         },
                         child: CircleAvatar(
-                          backgroundImage: widget.profileImage != null
-                              ? MemoryImage(widget.profileImage!)
-                              : AssetImage('http/example-image')
-                          as ImageProvider, // Replace the URL with your profile image URL
+                          backgroundImage: userP.profileImage != null && userP.profileImage!.isNotEmpty
+                              ? NetworkImage(userP.profileImage!)
+                              : const AssetImage('assets/images/user.png') as ImageProvider,
                           radius: 27.0,
                         ),
                       ),
                     ),
-                    Text(
-                      'Welcome, ${widget.userName}',
-                      style: TextStyle(
+                    Flexible(
+                      child: Text(
+                        'Welcome, ${userP.Fullname}',
+                        style: const TextStyle(
                           fontSize: 24.0,
-                          fontWeight: FontWeight.bold),
+                          fontWeight: FontWeight.bold,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
                     ),
                   ],
                 ),
-                SizedBox(height: 20.0),
-
+                const SizedBox(height: 20.0),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: Center(
@@ -218,11 +211,12 @@ class _HomePageState extends State<HomePage> {
                                 );
                               },
                               icon: Icon(Icons.search, color: textColour),
-                              label: Text('Search', style: TextStyle(color: textColour)),
+                              label: Text('Search',
+                                  style: TextStyle(color: textColour)),
                             ),
                           ),
                         ),
-                        SizedBox(width: 35.0),
+                        const SizedBox(width: 35.0),
                         SizedBox(
                           width: MediaQuery.of(context).size.width * 0.27,
                           child: Container(
@@ -249,13 +243,34 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 20.0),
-                const Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: Text(
-                    'Explore More',
-                    style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-                  ),
+                const SizedBox(height: 20.0),
+                 Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(children: [
+                    const Text(
+                      'Explore More',
+                      style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                    ),
+                    const Spacer(),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AllhomeEvents(),
+                          ),
+                        );
+                      },
+                      child: const Text(
+                        'See more',
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+
+                  ],)
                 ),
                 SizedBox(
                   height: 250.0,
@@ -270,19 +285,70 @@ class _HomePageState extends State<HomePage> {
                       if (index >= events.length) {
                         return Container(); // or handle error gracefully
                       }
+
                       EventCard card = EventCard(event: events[index]);
+
                       return card;
                     },
                   ),
                 ),
-                SizedBox(height: 20.0),
-                const Padding(
-                  padding: EdgeInsets.all(10.0),
-                  child: Text(
-                    'Saved',
-                    style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                const SizedBox(height: 20.0),
+                if (userP.role == "GUEST") ... [
+                  const Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Saved Events',
+                          style: TextStyle(
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 16.0),
+                        Text(
+                          'Log in or create an account to save events and view them here.',
+                          style: TextStyle(
+                            fontSize: 16.0,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+                if (userP.role != "GUEST") ... [
+                 Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(
+                    children: [
+                      const Text(
+                        'Saved Events',
+                        style: TextStyle(
+                            fontSize: 18.0, fontWeight: FontWeight.bold),
+                      ),
+                      const Spacer(),
+                      // TextButton(
+                      //   onPressed: () {
+                      //     Navigator.push(
+                      //       context,
+                      //       MaterialPageRoute(
+                      //         builder: (context) => AllsavedEvents(),
+                      //       ),
+                      //     );
+                      //   },
+                      //   child: const Text(
+                      //     'See more',
+                      //     style: TextStyle(
+                      //       fontSize: 16.0,
+                      //       fontWeight: FontWeight.bold,
+                      //     ),
+                      //   ),
+                      // ),
+                    ],
                   ),
                 ),
+
                 SizedBox(
                   height: 250.0,
                   child: GridView.builder(
@@ -300,14 +366,14 @@ class _HomePageState extends State<HomePage> {
                     },
                   ),
                 ),
+                ],
               ],
             ),
           );
         } else {
-          return Center(child: Text('No events found.'));
+          return const Center(child: Text('No events found.'));
         }
       },
     );
-
   }
 }

@@ -18,8 +18,22 @@ spring:
   main:
     allow-bean-definition-overriding: true
 
-  logging:
-    level:
-      org.springframework: DEBUG
-      org.hibernate.SQL: DEBUG
-      org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+
+
+#logging:
+#  level:
+#    org.springframework: DEBUG
+#    org.hibernate.SQL: DEBUG
+#    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+#
+#
+#server:
+#  port: 8080

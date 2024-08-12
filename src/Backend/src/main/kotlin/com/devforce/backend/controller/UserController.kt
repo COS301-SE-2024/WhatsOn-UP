@@ -1,7 +1,6 @@
 package com.devforce.backend.controller
 
 import com.devforce.backend.dto.ResponseDto
-import com.devforce.backend.dto.UpdateUserDto
 import com.devforce.backend.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -59,9 +58,51 @@ class UserController {
 
     @PutMapping("/update_profile")
     @PreAuthorize("isAuthenticated()")
-    fun updateProfile(@RequestBody userDto: UpdateUserDto, ): ResponseEntity<ResponseDto> {
+    fun updateProfile(@RequestParam fullName: String): ResponseEntity<ResponseDto> {
         
-        return userService.updateProfile(userDto)
+        return userService.updateProfile(fullName)
     }
+
+    @GetMapping("/get_user")
+    @PreAuthorize("isAuthenticated()")
+    fun getUser(): ResponseEntity<ResponseDto> {
+        return userService.getUser()
+    }
+
+    @DeleteMapping("/delete_user")
+    @PreAuthorize("isAuthenticated()")
+    fun deleteUser(): ResponseEntity<ResponseDto> {
+        return userService.deleteUser()
+    }
+
+    @PutMapping("/apply_for_host")
+    @PreAuthorize("isAuthenticated()")
+    fun applyHost(
+        @RequestParam howLong: Int,
+        @RequestParam reason: String,
+        @RequestParam studentEmail: String?,
+        @RequestParam fromWhen: String,
+    ): ResponseEntity<ResponseDto> {
+        return userService.applyForHost(howLong, reason, studentEmail, fromWhen)
+    }
+
+    @PostMapping("/acknowledge_application")
+    @PreAuthorize("isAuthenticated()")
+    fun acknowledgeApplication(): ResponseEntity<ResponseDto> {
+        return userService.acknowledgeApplication()
+    }
+
+    @PostMapping("/dispute_application")
+    @PreAuthorize("isAuthenticated()")
+    fun disputeApplication(): ResponseEntity<ResponseDto> {
+        return userService.disputeApplication()
+    }
+
+    @GetMapping("/verify_application")
+    @PreAuthorize("permitAll()")
+    fun verifyApplication(@RequestParam veriCode: UUID): ResponseEntity<String> {
+        return userService.verifyApplication(veriCode)
+    }
+
 
 }
