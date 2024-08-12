@@ -74,7 +74,7 @@ You are able to view and manage your profile details, along with adding profile 
 4. You can delete an event or even edit the event
 ## Location
 1. Retrieving real campus venues when an even is created 
-2. The user can view the location of the event on the map
+
 ## HOST Application
 1. general  user can apply for a promotion with the necessary details shown on the form as a UP student or non UP student
 2. User can then acknowledge the application response they got from the admin in their notifications if the admin has accepted their application
