@@ -344,74 +344,59 @@
 //     }
 //   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  // Future<void> _login() async {
-  //   if (_formKey.currentState!.validate()) {
-  //     String email = emailController.text;
-  //     String password = passwordController.text;
-  //     Api api = Api();
-  //     api.loginUser(email, password).then((response) {
-  //       if (response['error'] != null) {
-  //
-  //         print('An error occurred: ${response['error']}');
-  //       } else {
-  //         String fullName = response['data']['user']['fullName']?? 'Unknown';
-  //         String userEmail = response['data']['user']['email'] ?? 'Unknown';
-  //         String UserId=response['data']['user']['id']?? 'Unknown';
-  //         String role=response['data']['user']['role']?? 'Unknown';
-  //         String  profileImage=response['data']['user']['profileImage']?? 'Unknown';
-  //         Uint8List profileImageBytes = Uint8List(0);
-  //
-  //         bool isBase64(String input) {
-  //           final RegExp base64 = RegExp(
-  //             r'^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$',
-  //           );
-  //           return base64.hasMatch(input);
-  //         }
-  //
-  //         if (isBase64(profileImage)) {
-  //
-  //           try {
-  //             profileImageBytes = base64Decode(profileImage);
-  //           } catch (e) {
-  //             print('Error decoding Base64: $e');
-  //           }
-  //         } else {
-  //           print('Invalid Base64 string: $profileImage');
-  //         }
-  //
-  //
-  //         Navigator.push(
-  //           context,
-  //           MaterialPageRoute(builder: (context) => HomePage(
-  //             userName:  fullName,
-  //             userEmail: userEmail,
-  //             userId:UserId,
-  //             role:role,
-  //             profileImage: profileImageBytes,
-  //           )),
-  //         );
-  //         print('Login successful');
-  //       }
-  //     });
-  //
-  //
-  //   }
-  // }
+// Future<void> _login() async {
+//   if (_formKey.currentState!.validate()) {
+//     String email = emailController.text;
+//     String password = passwordController.text;
+//     Api api = Api();
+//     api.loginUser(email, password).then((response) {
+//       if (response['error'] != null) {
+//
+//         print('An error occurred: ${response['error']}');
+//       } else {
+//         String fullName = response['data']['user']['fullName']?? 'Unknown';
+//         String userEmail = response['data']['user']['email'] ?? 'Unknown';
+//         String UserId=response['data']['user']['id']?? 'Unknown';
+//         String role=response['data']['user']['role']?? 'Unknown';
+//         String  profileImage=response['data']['user']['profileImage']?? 'Unknown';
+//         Uint8List profileImageBytes = Uint8List(0);
+//
+//         bool isBase64(String input) {
+//           final RegExp base64 = RegExp(
+//             r'^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$',
+//           );
+//           return base64.hasMatch(input);
+//         }
+//
+//         if (isBase64(profileImage)) {
+//
+//           try {
+//             profileImageBytes = base64Decode(profileImage);
+//           } catch (e) {
+//             print('Error decoding Base64: $e');
+//           }
+//         } else {
+//           print('Invalid Base64 string: $profileImage');
+//         }
+//
+//
+//         Navigator.push(
+//           context,
+//           MaterialPageRoute(builder: (context) => HomePage(
+//             userName:  fullName,
+//             userEmail: userEmail,
+//             userId:UserId,
+//             role:role,
+//             profileImage: profileImageBytes,
+//           )),
+//         );
+//         print('Login successful');
+//       }
+//     });
+//
+//
+//   }
+// }
 // void loginGoogle{
 //   final user = supabase.auth.currentUser;
 //   final profileImageUrl = user?.userMetadata?['avatar_url'];
@@ -426,9 +411,6 @@
 //
 //   Api api = Api();
 // }
-
-
-
 
 // Uint8List decodeProfileImage(String profileImage) {
 //   Uint8List profileImageBytes = Uint8List(0);
@@ -452,6 +434,5 @@
 //
 //   return profileImageBytes;
 // }
-
 
 //}

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
@@ -41,7 +40,8 @@ class _GoogleSignInPageState extends State<GoogleSignInPage> {
   }
 
   Future<AuthResponse> _googleSignIn() async {
-    const webClientId = '996897743188-1pofp20d27p2c9kdlr7hj082m3a80p7s.apps.googleusercontent.com';
+    const webClientId =
+        '996897743188-1pofp20d27p2c9kdlr7hj082m3a80p7s.apps.googleusercontent.com';
 
     final GoogleSignIn googleSignIn = GoogleSignIn(
       serverClientId: webClientId,
@@ -123,9 +123,7 @@ class _GoogleSignInPageState extends State<GoogleSignInPage> {
       if (response['error'] != null) {
         print('An error occurred: ${response['error']}');
       } else {
-
         userP.role = response['data']['user']['role'] ?? 'Unknown';
-
 
         userP.profileImage = user.userMetadata?['avatar_url'];
         Navigator.push(

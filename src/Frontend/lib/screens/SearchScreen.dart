@@ -125,7 +125,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 ],
               ),
             ),
-            if (_showSearchTiles  && _categories.isNotEmpty)
+            if (_showSearchTiles && _categories.isNotEmpty)
               GridView.count(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
@@ -141,22 +141,21 @@ class _SearchScreenState extends State<SearchScreen> {
             SizedBox(height: 16.0),
             _isLoading
                 ? Center(child: CircularProgressIndicator())
-                : _searchResults.isEmpty  && _categories.isEmpty
-                ? Center(
-              child: Text('No events found'),
-            )
-                : Expanded(
-              child: ListView.builder(
-                itemCount: _searchResults.length,
-                itemBuilder: (context, index) {
-
-                  if (index >= _searchResults.length) {
-                    return Container();
-                  }
-                  return EventCard(event: _searchResults[index]);
-                },
-              ),
-            ),
+                : _searchResults.isEmpty && _categories.isEmpty
+                    ? Center(
+                        child: Text('No events found'),
+                      )
+                    : Expanded(
+                        child: ListView.builder(
+                          itemCount: _searchResults.length,
+                          itemBuilder: (context, index) {
+                            if (index >= _searchResults.length) {
+                              return Container();
+                            }
+                            return EventCard(event: _searchResults[index]);
+                          },
+                        ),
+                      ),
           ],
         ),
       ),

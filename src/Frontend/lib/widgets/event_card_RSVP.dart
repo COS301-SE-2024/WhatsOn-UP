@@ -215,7 +215,8 @@ class _EventCardState extends State<EventCard> {
                       borderRadius: BorderRadius.circular(20),
                       side: BorderSide(color: Colors.grey, width: 1),
                     ),
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 5.0),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16.0, vertical: 5.0),
                   ),
                   child: const Text('Cancel'),
                 ),
@@ -243,7 +244,8 @@ class _EventCardState extends State<EventCard> {
               child: const Text('Delete'),
               onPressed: () {
                 print("Deleting event: ${widget.event.nameOfEvent}");
-                widget.removeEvent(widget.event.nameOfEvent, widget.event.imageUrl);
+                widget.removeEvent(
+                    widget.event.nameOfEvent, widget.event.imageUrl);
                 Navigator.pop(context);
               },
             ),
