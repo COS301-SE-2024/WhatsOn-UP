@@ -68,6 +68,7 @@ dependencies:
 
   socket_io_client: ^2.0.3+1
   flutter_chat_bubble: ^2.0.2
+  webview_flutter: ^4.8.0
 dio: ^5.5.0+1
 
 dev_dependencies:
