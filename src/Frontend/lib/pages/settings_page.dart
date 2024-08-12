@@ -5,6 +5,7 @@ import 'package:firstapp/pages/profilePage.dart';
 import 'dart:typed_data';
 import 'package:url_launcher/url_launcher.dart';
 import '../providers/user_provider.dart';
+import 'notifications.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({
@@ -76,7 +77,11 @@ class _SettingsPageState extends State<SettingsPage> {
         icon: Icons.notifications,
         text: 'Notifications',
         onTap: () {
-          // Handle notifications tap
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const Notifications()),
+          );
         },
       ),
       _buildDivider(),

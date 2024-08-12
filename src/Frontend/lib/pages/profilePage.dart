@@ -3,10 +3,10 @@ import 'package:firstapp/pages/supabase_signup.dart';
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:firstapp/pages/editProfile_page.dart';
-import 'package:firstapp/pages/home_page.dart';
 import 'package:provider/provider.dart';
 import '../main.dart';
 import '../providers/user_provider.dart';
+import 'notifications.dart';
 
 class ProfilePage extends StatefulWidget {
   ProfilePage({Key? key}) : super(key: key);
@@ -134,7 +134,11 @@ class _ProfilePageState extends State<ProfilePage> {
                           _buildProfileOption(
                             text: 'Notifications',
                             onTap: () {
-                              // Handle notifications
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const Notifications()),
+                              );
                             },
                           ),
                           _buildDivider(),
@@ -170,17 +174,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               );
                             },
                           ),
-                          //     _buildDivider(),
-                          //     if (user.role!=ADMIN) ...[
-                          //     _buildProfileOption(
-                          //     text: 'Apply for Promotion',
-                          //     onTap: () {
-                          //     Navigator.of(context).pushReplacementNamed(
-                          //     '/PromotionForm');
-                          //     },
-                          //     ),
-                          //     _buildDivider(),
-                          // ],
+
                         ],
                       ),
                     ),
@@ -228,12 +222,6 @@ class _ProfilePageState extends State<ProfilePage> {
             left: 10.0,
             child: IconButton(
               onPressed: () {
-                  // Navigator.push(
-                  // context,
-                  // MaterialPageRoute(builder: (context) => const HomePage(
-                  // //widget.profileImage,
-                  // )),
-                  // );
 
                   Navigator.pop(context);
               },
@@ -245,12 +233,7 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-// Future<void> _navigateToEditprofile(BuildContext context) async {
-//   Navigator.push(
-//     context,
-//     MaterialPageRoute(builder: (context) => EditprofilePage()),
-//   );
-// }
+
   Widget _buildProfileOption({
     required String text,
     Widget? trailing,
