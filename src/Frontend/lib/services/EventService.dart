@@ -94,15 +94,22 @@ class EventService {
       if (response.statusCode == 200) {
         print("processing..");
         final Map<String, dynamic> decodedJson = json.decode(response.body);
-        final List<dynamic> categoriesJson = decodedJson['data'];
+        final List<dynamic>? categoriesJson = decodedJson['data'];
+
+        if (categoriesJson == null || categoriesJson.isEmpty) {
+          print('No categories found.');
+          return [];
+        }
         final List<String> categories =
             categoriesJson.map((category) => category.toString()).toList();
         print('Fetched categories: $categories');
         return categories;
       } else if (response.statusCode == 401) {
+        print('Unauthorized request');
         throw Exception('Unauthorized request');
         print("Unauth req");
       } else {
+        print('Failed to load categories');
         throw Exception('Failed to load categories');
       }
     } catch (e) {
