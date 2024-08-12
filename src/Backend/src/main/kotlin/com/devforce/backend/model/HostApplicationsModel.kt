@@ -41,4 +41,11 @@ class HostApplicationsModel {
 
     @Column(name = "verification_code")
     var verificationCode: UUID? = null
+
+    @Column(name = "proof_url")
+    var proofUrl: String? = null
+
+    @Column(name = "proof_name")
+    var proofName: String? = null
+
 }

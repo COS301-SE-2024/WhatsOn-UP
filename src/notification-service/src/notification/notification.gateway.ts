@@ -45,14 +45,15 @@ export class NotificationGateway implements OnModuleInit {
           }
 
           if (typeData && typeData.length > 0) {
-            notification.type = typeData[0].name;
+            notification['notification_types'] = {
+              name : typeData[0].name
+            };
           }
 
           const client = Object.values(this.clients).find(
             (client) => client.token == notification.user_id
           );
 
-          console.log('Client:', client);
 
           if (!client) {
             console.error('Client not found:', notification.user_id);
@@ -75,7 +76,7 @@ export class NotificationGateway implements OnModuleInit {
           let { data: eventData, error: eventError } = await this.supabase
             .from('events')
             .select(
-              'description, is_private, title, max_attendees, start_date_time, end_date_time, venues(name, buildings(location, name, access_type)), event_invitees(accepted)'
+              'description, is_private, title, max_attendees, start_date_time, end_date_time, venues(name, buildings(location, name, access_type))'
             )
             .eq('event_id', notification.event_id);
 
@@ -86,11 +87,13 @@ export class NotificationGateway implements OnModuleInit {
           }
 
           if (eventData && eventData.length > 0) {
-            notification.event = eventData[0];
+            notification['events'] = eventData[0];
           } else {
             this.emitError(notification.user_id, 'Event not found');
             return;
           }
+          
+          notification['event_invitees'] = { accepted: null};
 
           if (client) {
             client.socket.emit('notification', {
@@ -114,7 +117,9 @@ export class NotificationGateway implements OnModuleInit {
 
   onModuleInit() {
     this.server.on('connection', (socket) => {
-      const token = socket.handshake.headers['authorization']?.split(' ')[1];
+      // Extract token from query
+      const token: string = socket.handshake.query.token.toString();
+      
 
       if (token) {
         this.clients[socket.id] = { socket, token };

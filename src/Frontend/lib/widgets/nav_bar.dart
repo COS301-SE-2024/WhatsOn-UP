@@ -135,8 +135,6 @@
 //     );
 //   }}
 
-
-
 // import 'package:flutter/material.dart';
 // import 'package:firstapp/pages/Broadcast.dart';
 // import 'package:firstapp/pages/manageEvents.dart';
@@ -264,8 +262,6 @@
 //   }
 // }
 
-
-
 import 'package:flutter/material.dart';
 import 'package:firstapp/pages/Broadcast.dart';
 import 'package:firstapp/pages/manageEvents.dart';
@@ -288,16 +284,20 @@ class NavBar extends StatelessWidget {
 
     List<BottomNavigationBarItem> navBarItems = [
       const BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-      const BottomNavigationBarItem(icon: Icon(Icons.notifications), label: 'Notifications'),
-      const BottomNavigationBarItem(icon: Icon(Icons.calendar_today), label: 'Calendar'),
-      const BottomNavigationBarItem(icon: Icon(Icons.explore), label: 'Explore'),
+      const BottomNavigationBarItem(
+          icon: Icon(Icons.notifications), label: 'Notifications'),
+      const BottomNavigationBarItem(
+          icon: Icon(Icons.calendar_today), label: 'Calendar'),
+      const BottomNavigationBarItem(
+          icon: Icon(Icons.explore), label: 'Explore'),
       if (isAdminOrHost)
         BottomNavigationBarItem(
           icon: Icon(Icons.more_vert),
           label: 'More',
         )
       else
-        const BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings'),
+        const BottomNavigationBarItem(
+            icon: Icon(Icons.settings), label: 'Settings'),
     ];
 
     return BottomNavigationBar(
@@ -310,31 +310,54 @@ class NavBar extends StatelessWidget {
         }
       },
       type: BottomNavigationBarType.fixed,
-      backgroundColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
-      selectedItemColor: Theme.of(context).bottomNavigationBarTheme.selectedItemColor,
-      unselectedItemColor: Theme.of(context).bottomNavigationBarTheme.unselectedItemColor,
+      backgroundColor:
+          Theme.of(context).bottomNavigationBarTheme.backgroundColor,
+      selectedItemColor:
+          Theme.of(context).bottomNavigationBarTheme.selectedItemColor,
+      unselectedItemColor:
+          Theme.of(context).bottomNavigationBarTheme.unselectedItemColor,
       currentIndex: selectedIndex.clamp(0, navBarItems.length - 1),
     );
   }
 
   void _showMoreMenu(BuildContext context) {
-    final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
+    final RenderBox overlay =
+        Overlay.of(context).context.findRenderObject() as RenderBox;
     final screenSize = overlay.size;
-    
+
     showMenu(
       context: context,
-      position: RelativeRect.fromLTRB(screenSize.width - 200, screenSize.height - 230, 0, 0),
+      position: RelativeRect.fromLTRB(
+          screenSize.width - 200, screenSize.height - 230, 0, 0),
       items: [
-        PopupMenuItem<int>(value: 0, child: ListTile(leading: Icon(Icons.settings), title: Text('Settings'))),
-        PopupMenuItem<int>(value: 1, child: ListTile(leading: Icon(Icons.event), title: Text('Manage Events'))),
-        PopupMenuItem<int>(value: 2, child: ListTile(leading: Icon(Icons.broadcast_on_home), title: Text('Broadcast'))),
+        PopupMenuItem<int>(
+            value: 0,
+            child: ListTile(
+                leading: Icon(Icons.settings), title: Text('Settings'))),
+        PopupMenuItem<int>(
+            value: 1,
+            child: ListTile(
+                leading: Icon(Icons.event), title: Text('Manage Events'))),
+        PopupMenuItem<int>(
+            value: 2,
+            child: ListTile(
+                leading: Icon(Icons.broadcast_on_home),
+                title: Text('Broadcast'))),
       ],
     ).then((int? result) {
       if (result != null) {
         switch (result) {
-          case 0: onItemTapped(4); break;
-          case 1: Navigator.push(context, MaterialPageRoute(builder: (context) => ManageEvents())); break;
-          case 2: Navigator.push(context, MaterialPageRoute(builder: (context) => Broadcast())); break;
+          case 0:
+            onItemTapped(4);
+            break;
+          case 1:
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => ManageEvents()));
+            break;
+          case 2:
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => Broadcast()));
+            break;
         }
       }
     });

@@ -2,7 +2,6 @@ package com.devforce.backend.service
 
 import com.devforce.backend.dto.EventDto
 import com.devforce.backend.dto.ResponseDto
-import com.devforce.backend.model.ApplicationStatusModel
 import com.devforce.backend.model.HostApplicationsModel
 import com.devforce.backend.repo.*
 import com.devforce.backend.security.CustomUser
@@ -11,7 +10,6 @@ import org.springframework.http.ResponseEntity
 import org.springframework.mail.MailSender
 import org.springframework.mail.SimpleMailMessage
 import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -301,14 +299,16 @@ class UserService {
         return ResponseEntity.ok("Application verified successfully")
     }
 
-    fun acknowledgeApplication(applicationId: UUID): ResponseEntity<ResponseDto> {
+    fun acknowledgeApplication(): ResponseEntity<ResponseDto> {
         val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
 
-        val application = hostApplicationsRepo.findById(applicationId)
-        if (application.isEmpty) {
+        val application = hostApplicationsRepo.findByUserId(user.userId)
+        if (application.isEmpty()) {
             return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Application not found"))
         }
-        val applicationModel = application.get()
+        val applicationModel = application[0]
+            ?: return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Application not found"))
+
         if (applicationModel.status!!.name != "ACCEPTED") {
             return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Application not accepted"))
         }
@@ -327,14 +327,16 @@ class UserService {
         )
     }
 
-    fun disputeApplication(applicationId: UUID): ResponseEntity<ResponseDto> {
+    fun disputeApplication(): ResponseEntity<ResponseDto> {
         val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
 
-        val application = hostApplicationsRepo.findById(applicationId)
-        if (application.isEmpty) {
+        val application = hostApplicationsRepo.findByUserId(user.userId)
+        if (application.isEmpty()) {
             return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Application not found"))
         }
-        val applicationModel = application.get()
+        val applicationModel = application[0]
+            ?: return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Application not found"))
+
         if (applicationModel.status!!.name != "REJECTED") {
             return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Application not rejected"))
         }

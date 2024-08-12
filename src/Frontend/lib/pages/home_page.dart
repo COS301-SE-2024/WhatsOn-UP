@@ -13,6 +13,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/events_providers.dart';
+import '../providers/notification_providers.dart';
 import '../providers/user_provider.dart';
 import '../screens/FilterScreen.dart';
 import '../screens/SearchScreen.dart';
@@ -21,14 +22,13 @@ import 'package:firstapp/pages/Broadcast.dart';
 import 'package:firstapp/pages/manageEvents.dart';
 import 'package:firstapp/pages/application_event.dart';
 
+import '../services/socket_client.dart';
 import 'allHome_events.dart';
 import 'notifications.dart';
 
 class HomePage extends StatefulWidget {
-
   const HomePage({
     Key? key,
-
   }) : super(key: key);
   @override
   _HomePageState createState() => _HomePageState();
@@ -51,15 +51,18 @@ class _HomePageState extends State<HomePage> {
       _selectedIndex = index;
     });
   }
-  
-
 
   @override
   Widget build(BuildContext context) {
     userProvider userP = Provider.of<userProvider>(context);
+
+
+
+
+
     print("user role: ${userP.role}");
-    const String HOST='HOST';
-    const String ADMIN='ADMIN';
+    const String HOST = 'HOST';
+    const String ADMIN = 'ADMIN';
     return Scaffold(
       body: Container(
         // color: Colors.grey[200],
@@ -70,26 +73,26 @@ class _HomePageState extends State<HomePage> {
         onItemTapped: _onItemTapped,
         userRole: userP.role,
       ),
-      floatingActionButton: (userP.role== HOST || userP.role == ADMIN) &&
+      floatingActionButton: (userP.role == HOST || userP.role == ADMIN) &&
                             (_selectedIndex != 3)
-      ? Padding(
-          padding: const EdgeInsets.only(right: 15, bottom: 70),
-          child: Align(
-            alignment: Alignment.bottomRight,
-            child: FloatingActionButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ApplicationEvent(
-
-                  )),
-                );
-              },
-              child: const Icon(Icons.add),
-              backgroundColor: Theme.of(context).primaryColor,
-            ),
-          ),
-        ) : null,
+          ? Padding(
+              padding: const EdgeInsets.only(right: 15, bottom: 70),
+              child: Align(
+                alignment: Alignment.bottomRight,
+                child: FloatingActionButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ApplicationEvent()),
+                    );
+                  },
+                  child: const Icon(Icons.add),
+                  backgroundColor: Theme.of(context).primaryColor,
+                ),
+              ),
+            )
+          : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
@@ -117,9 +120,6 @@ class _HomePageState extends State<HomePage> {
         return _buildHomePage();
     }
   }
-
-
-
 
   Widget _buildHomePage() {
     userProvider userP = Provider.of<userProvider>(context);
@@ -188,7 +188,6 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
                 const SizedBox(height: 20.0),
-
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: Center(
@@ -213,7 +212,8 @@ class _HomePageState extends State<HomePage> {
                                 );
                               },
                               icon: Icon(Icons.search, color: textColour),
-                              label: Text('Search', style: TextStyle(color: textColour)),
+                              label: Text('Search',
+                                  style: TextStyle(color: textColour)),
                             ),
                           ),
                         ),
@@ -271,7 +271,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
 
-        ],)
+                  ],)
                 ),
                 SizedBox(
                   height: 250.0,
@@ -294,8 +294,33 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 const SizedBox(height: 20.0),
+                if (userP.role == "GUEST") ... [
+                  const Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Saved Events',
+                          style: TextStyle(
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 16.0),
+                        Text(
+                          'Log in or create an account to save events and view them here.',
+                          style: TextStyle(
+                            fontSize: 16.0,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+                if (userP.role != "GUEST") ... [
                  Padding(
-                  padding: const EdgeInsets.all(10.0),
+                  padding: const EdgeInsets.all(16.0),
                   child: Row(
                     children: [
                       const Text(
@@ -304,23 +329,23 @@ class _HomePageState extends State<HomePage> {
                             fontSize: 18.0, fontWeight: FontWeight.bold),
                       ),
                       const Spacer(),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => AllsavedEvents(),
-                            ),
-                          );
-                        },
-                        child: const Text(
-                          'See more',
-                          style: TextStyle(
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
+                      // TextButton(
+                      //   onPressed: () {
+                      //     Navigator.push(
+                      //       context,
+                      //       MaterialPageRoute(
+                      //         builder: (context) => AllsavedEvents(),
+                      //       ),
+                      //     );
+                      //   },
+                      //   child: const Text(
+                      //     'See more',
+                      //     style: TextStyle(
+                      //       fontSize: 16.0,
+                      //       fontWeight: FontWeight.bold,
+                      //     ),
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),
@@ -342,6 +367,7 @@ class _HomePageState extends State<HomePage> {
                     },
                   ),
                 ),
+                ],
               ],
             ),
           );
@@ -350,6 +376,5 @@ class _HomePageState extends State<HomePage> {
         }
       },
     );
-
   }
 }

@@ -1,24 +1,25 @@
+import '../utils.dart';
 
 class AppNotification {
   final String message;
 
-  final String eventId;
+  String? eventId;
   final String userId;
   final String sentAt;
-
+  bool? eventInvite;
   final String notificationId;
   String? seenAt;
   final String notificationTypes;
 
   AppNotification({
     required this.message,
-
     required this.eventId,
     required this.userId,
     required this.sentAt,
     required this.notificationId,
     required this.notificationTypes,
     this.seenAt,
+    this.eventInvite,
   });
   factory AppNotification.fromJson(Map<String, dynamic> json) {
     return AppNotification(
@@ -29,14 +30,18 @@ class AppNotification {
       seenAt: json['seen_at'],
       notificationId: json['notification_id'],
       notificationTypes: json['notification_types']['name'],
+      eventInvite: json['event_invitees'] != null
+          ? json['event_invitees']['accepted']
+          : null,
     );
   }
   void markAsSeen() {
-    seenAt = DateTime.now().toIso8601String();
+    seenAt = formatDateTime(DateTime.now().toIso8601String());
   }
+
   @override
   String toString() {
-    return 'Notification(message: $message, eventId: $eventId, userId: $userId, sentAt: $sentAt, notificationId: $notificationId, notificationTypes: $notificationTypes)';
+    return 'Notification(message: $message, eventId: $eventId, userId: $userId, sentAt: $sentAt, notificationId: $notificationId, notificationTypes: $notificationTypes, seenAt: $seenAt, eventInvite: $eventInvite)';
   }
 }
 

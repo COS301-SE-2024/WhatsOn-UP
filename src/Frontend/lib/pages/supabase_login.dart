@@ -35,61 +35,61 @@
 //     super.dispose();
 //   }
 
-  // @override
-  // Widget build(BuildContext context) {
-  //   return Scaffold(
-  //       appBar: AppBar(
-  //         title: const Text('login'),
-  //       ),
-  //       body: ListView(
-  //         padding: const EdgeInsets.all(12),
-  //         children: [
-  //           TextFormField(
-  //             controller: _emailController,
-  //             decoration: const InputDecoration(labelText: 'Email'),
-  //           ),
-  //
-  //           SizedBox(height: 12),
-  //           ElevatedButton(
-  //             onPressed: () async {
-  //               try {
-  //                 final email = _emailController.text.trim();
-  //                 await supabase.auth.signInWithOtp(
-  //                   email: email,
-  //                   emailRedirectTo:
-  //                       'io.supabase.flutterquickstart://login-callback/',
-  //
-  //                 );
-  //
-  //                 if (mounted) {
-  //                   ScaffoldMessenger.of(context).showSnackBar(
-  //                       const SnackBar(content: Text('Check your inbox')));
-  //                 }
-  //               } on AuthException catch (error) {
-  //                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-  //                   content: Text(error.message),
-  //                   backgroundColor: Theme.of(context).colorScheme.error,
-  //                 ));
-  //               } catch (error) {
-  //                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-  //                   content: Text('Error occured please try again '),
-  //                   backgroundColor: Theme.of(context).colorScheme.error,
-  //                 ));
-  //               }
-  //
-  //               // final password = _passwordController.text;
-  //               // final response = await supabase.auth.signIn(email: email, password: password);
-  //               // if (response.error != null) {
-  //               //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-  //               //     content: Text('Error: ${response.error!.message}'),
-  //               //   ));
-  //               // }
-  //             },
-  //             child: const Text('Login'),
-  //           ),
-  //         ],
-  //       ));
-  // }
+// @override
+// Widget build(BuildContext context) {
+//   return Scaffold(
+//       appBar: AppBar(
+//         title: const Text('login'),
+//       ),
+//       body: ListView(
+//         padding: const EdgeInsets.all(12),
+//         children: [
+//           TextFormField(
+//             controller: _emailController,
+//             decoration: const InputDecoration(labelText: 'Email'),
+//           ),
+//
+//           SizedBox(height: 12),
+//           ElevatedButton(
+//             onPressed: () async {
+//               try {
+//                 final email = _emailController.text.trim();
+//                 await supabase.auth.signInWithOtp(
+//                   email: email,
+//                   emailRedirectTo:
+//                       'io.supabase.flutterquickstart://login-callback/',
+//
+//                 );
+//
+//                 if (mounted) {
+//                   ScaffoldMessenger.of(context).showSnackBar(
+//                       const SnackBar(content: Text('Check your inbox')));
+//                 }
+//               } on AuthException catch (error) {
+//                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+//                   content: Text(error.message),
+//                   backgroundColor: Theme.of(context).colorScheme.error,
+//                 ));
+//               } catch (error) {
+//                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+//                   content: Text('Error occured please try again '),
+//                   backgroundColor: Theme.of(context).colorScheme.error,
+//                 ));
+//               }
+//
+//               // final password = _passwordController.text;
+//               // final response = await supabase.auth.signIn(email: email, password: password);
+//               // if (response.error != null) {
+//               //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+//               //     content: Text('Error: ${response.error!.message}'),
+//               //   ));
+//               // }
+//             },
+//             child: const Text('Login'),
+//           ),
+//         ],
+//       ));
+// }
 //   @override
 //   Widget build(BuildContext context) {
 //     return Scaffold(
@@ -179,6 +179,7 @@ import 'package:firstapp/services/api.dart';
 import '../providers/events_providers.dart';
 import '../providers/notification_providers.dart';
 import '../providers/user_provider.dart';
+import '../services/socket_client.dart';
 
 class SupabaseLogin extends StatefulWidget {
   const SupabaseLogin({super.key});
@@ -190,40 +191,30 @@ class SupabaseLogin extends StatefulWidget {
 class _SupabaseLoginState extends State<SupabaseLogin> {
   final _emailController = TextEditingController();
 
-  final _passwordController= TextEditingController();
+  final _passwordController = TextEditingController();
   late final StreamSubscription<AuthState> _authSubscription;
   late Color myColor;
   late Size mediaSize;
-  bool _obscurePassword=true;
-  late Api api = Api();
+  bool _obscurePassword = true;
 
-
-  @override
-
-void initState() {
-
-  super.initState();
-
-  _authSubscription = Supabase.instance.client.auth.onAuthStateChange.listen((event) {
-
-    if (event == AuthChangeEvent.signedIn) {
-
-      print("User signed in");
-
-    } else if (event == AuthChangeEvent.signedOut) {
-      print("User signed out");
-
-    }
-
-  });
-
-}
+  // void initState() {
+  //   super.initState();
+  //   _authSubscription = supabase.auth.onAuthStateChange.listen((event) {
+  //
+  //
+  //   });
+  //
+  //
+  //
+  // }
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
-    _authSubscription.cancel();
+    // if (_authSubscription != null) {
+    //   _authSubscription.cancel();
+    // }
 
     super.dispose();
   }
@@ -302,15 +293,12 @@ void initState() {
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(20.0),
               ),
-
-
-
-
               suffixIcon: IconButton(
-                icon: Icon(_obscurePassword?Icons.visibility_off:Icons.visibility),
-                onPressed: (){
+                icon: Icon(
+                    _obscurePassword ? Icons.visibility_off : Icons.visibility),
+                onPressed: () {
                   setState(() {
-                    _obscurePassword=!_obscurePassword;
+                    _obscurePassword = !_obscurePassword;
                   });
                 },
               ),
@@ -320,33 +308,33 @@ void initState() {
           const SizedBox(height: 20),
           // TextButton(
           ElevatedButton(
-
             onPressed: () async {
               try {
                 final email = _emailController.text.trim();
-                final password= _passwordController.text.trim();
+                final password = _passwordController.text.trim();
                 // await supabase.auth.signInWithOtp(
                 //   email: email,
                 //   emailRedirectTo:
                 //   'io.supabase.flutterquickstart://login-callback/',
                 // );
-               final authResponse= await supabase.auth.signInWithPassword(password:password, email:email);
+                final authResponse = await supabase.auth
+                    .signInWithPassword(password: password, email: email);
 
                 //for reset password workd
-               //  await supabase.auth.resetPasswordForEmail(email,
-               //    redirectTo: 'io.supabase.flutterquickstart://login-callback/',
-               //  );
+                //  await supabase.auth.resetPasswordForEmail(email,
+                //    redirectTo: 'io.supabase.flutterquickstart://login-callback/',
+                //  );
 
                 //update password
-               //  await supabase.auth.updateUser({
-               //    password: password,
-               //  } as UserAttributes);
+                //  await supabase.auth.updateUser({
+                //    password: password,
+                //  } as UserAttributes);
 
                 if (mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("Logged In: ${authResponse.user!.email!}")));
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content:
+                          Text("Logged In: ${authResponse.user!.email!}")));
                   await _login();
-
                 }
               } on AuthException catch (error) {
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -354,10 +342,8 @@ void initState() {
                   backgroundColor: Theme.of(context).colorScheme.error,
                 ));
               } catch (error) {
-
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                   content: Text('Error occurred, please try again : $error'),
-
                   backgroundColor: Theme.of(context).colorScheme.error,
                 ));
               }
@@ -376,12 +362,11 @@ void initState() {
           // TextButton(
           ElevatedButton(
               onPressed: () {
-
                 Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const SupabaseSignup ()),
-              );
-
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const SupabaseSignup()),
+                );
               },
               // style: TextButton.styleFrom(
               //   foregroundColor: Colors.black, padding: const EdgeInsets.symmetric(vertical: 10.0),
@@ -391,19 +376,16 @@ void initState() {
               //   ), // Text color
               //   backgroundColor: Colors.transparent,
               // ),
-              child: Text('Sign Up')
-          ),
+              child: Text('Sign Up')),
           const SizedBox(height: 10),
           TextButton(
               onPressed: () {
-
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const ForgotPass()),
                 );
-
-              }, child: Text('I forgot my password')
-          ),
+              },
+              child: Text('I forgot my password')),
           const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -414,15 +396,14 @@ void initState() {
                   height: 32,
                   image: Svg('assets/images/google-icon.svg'),
                 ),
-                onPressed:() {
+                onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const GoogleSignInPage ()),
+                    MaterialPageRoute(
+                        builder: (context) => const GoogleSignInPage()),
                   );
                 },
-
               ),
-
             ],
           ),
           const SizedBox(height: 20),
@@ -430,7 +411,7 @@ void initState() {
             onPressed: () async {
               try {
                 await _login(isGuest: true);
-                
+
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => HomePage()),
@@ -453,150 +434,79 @@ void initState() {
             ),
             child: const Text('Log in as guest'),
           ),
-
         ],
       ),
     );
   }
 
-
-
-  // Future<void> _login() async {
-  //   userProvider userP = Provider.of<userProvider>(context, listen: false);
-  //   // eventProvider eventP = Provider.of<eventProvider>(context, listen: false);
-  //   EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
-  //   final user = supabase.auth.currentUser;
-  //    eventP.fetchfortheFirstTimeRsvp(user!.id);
-
-  //   Api api = Api();
-  //   // final List<Event> events=await api.getAllEvents();
-  //   //eventP.addEventsHome(events);
-  //   api. getUser(user!.id).then((response){
-  //     if (response['error'] != null) {
-
-  //       print('An error occurred: ${response['error']}');
-  //     } else {
-
-  //       print('Username added successfully');
-  //       String fullName = response['data']['user']['fullName']?? 'Unknown';
-  //       String userEmail = user.userMetadata?['email'];
-  //       String UserId=user.id;
-  //       String role=response['data']['user']['role']?? 'Unknown';
-  //       String  profileImage=response['data']['user']['profileImage']?? 'Unknown';
-  //       Uint8List profileImageBytes = Uint8List(0);
-  //       userP.userId=user.id;
-  //       userP.Fullname=fullName;
-  //       userP.email=userEmail;
-  //       userP.role=role;
-  //       bool isBase64(String input) {
-  //         final RegExp base64 = RegExp(
-  //           r'^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$',
-  //         );
-  //         return base64.hasMatch(input);
-  //       }
-
-  //       if (isBase64(profileImage)) {
-
-  //         try {
-  //           profileImageBytes = base64Decode(profileImage);
-  //         } catch (e) {
-  //           print('Error decoding Base64: $e');
-  //         }
-  //       } else {
-  //         print('Invalid Base64 string: $profileImage');
-  //       }
-
-  //   userP.profileimage=profileImageBytes;
-
-  //       Navigator.push(
-  //         context,
-  //         MaterialPageRoute(builder: (context) => HomePage(
-
-  //         )),
-  //       );
-  //     }
-  //   });
-
-
-  //   print('signup successful');
-
-  // }
-
   Future<void> _login({bool isGuest = false}) async {
-  userProvider userP = Provider.of<userProvider>(context, listen: false);
-  EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
+    userProvider userP = Provider.of<userProvider>(context, listen: false);
+    EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
 
-  if (isGuest) {
-    userP.setGuestUser();
-    // eventP.fetchfortheFirstTimeRsvp('guest');
-    // Skip getting events
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => HomePage()),
-    );
-  } else {
-    final user = supabase.auth.currentUser;
+    if (isGuest) {
+      userP.setGuestUser();
+      // eventP.fetchfortheFirstTimeRsvp('guest');
+      // Skip getting events
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage()),
+      );
+    } else {
+      final user = supabase.auth.currentUser;
 
-    //changes by Khanya - check if user is logged and return session data
-    if (user != null) {
-      final session = supabase.auth.currentSession;
-      if (session != null) {
-        print('JWT Token: ${session.accessToken}');
-      }
-
-    
-      eventP.fetchfortheFirstTimeRsvp(user!.id);
-
-    try {
-      final response = await api.getUser(user.id);
-      if (response['error'] != null) {
-        print('An error occurred: ${response['error']}');
-      } else {
-
-
-        String fullName = response['data']['user']['fullName']?? 'Unknown';
-        String userEmail = user.userMetadata?['email'];
-        String UserId=user.id;
-        String role=response['data']['user']['role']?? 'Unknown';
-        String  profileImage=response['data']['user']['profileImage']?? 'Unknown';
-        Uint8List profileImageBytes = Uint8List(0);
-        userP.userId=user.id;
-        userP.Fullname=fullName;
-        userP.email=userEmail;
-        userP.role=role;
-        notificationProvider _notificationProvider = Provider.of<notificationProvider>(context, listen: false);
-        _notificationProvider.apiInstance=api;
-        _notificationProvider.refreshNotifications(userP.userId);
-        bool isBase64(String input) {
-          final RegExp base64 = RegExp(
-            r'^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$',
-          );
-          return base64.hasMatch(input);
+      //changes by Khanya - check if user is logged and return session data
+      if (user != null) {
+        final session = supabase.auth.currentSession;
+        if (session != null) {
+          print('JWT Token: ${session.accessToken}');
         }
 
+        // eventP.fetchfortheFirstTimeRsvp(user!.id);
 
-        // userP.setUserData(
-        //   userId: user.id,
-        //   fullName: fullName,
-        //   email: userEmail,
-        //   role: role,
-        //   profileImage: profileImage,
-        //   isGuest: false,
-        // );
+        Api api = Api();
+        try {
+          final response = await api.getUser(user.id);
+          if (response['error'] != null) {
+            print('An error occurred: ${response['error']}');
+          } else {
+            String fullName = response['data']['user']['fullName'] ?? 'Unknown';
+            String userEmail = user.userMetadata?['email'];
+            String UserId = user.id;
+            String role = response['data']['user']['role'] ?? 'Unknown';
+            String profileImage =
+                response['data']['user']['profileImage'] ?? 'Unknown';
 
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => HomePage(
+            userP.userId = user.id;
+            userP.Fullname = fullName;
+            userP.email = userEmail;
+            userP.role = role;
+            userP.profileImage = profileImage;
+            notificationProvider _notificationProvider =
+            Provider.of<notificationProvider>(context, listen: false);
+            // _notificationProvider.apiInstance(api);
+            _notificationProvider.refreshNotifications(userP.userId);
+            SocketService('http://localhost:8082',_notificationProvider, userP.userId, context);
+            userP.Generalusers(userP.userId);
 
-          )),
-        );
+            userP.setUserData(
+              userId: user.id,
+              fullName: fullName,
+              email: userEmail,
+              role: role,
+              profileImage: profileImage,
+              isGuest: false,
+            );
+
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => HomePage()),
+            );
+          }
+        } catch (e) {
+          print('Error getting user data: $e');
+        }
+        print('signup successful');
       }
     }
-    catch (e) {
-      print('Error getting user data: $e');
-    }
-    print('signup successful');
-
   }
-}}
 }

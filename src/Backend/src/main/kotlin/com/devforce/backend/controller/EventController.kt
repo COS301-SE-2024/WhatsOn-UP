@@ -87,18 +87,18 @@ class EventController {
     }
 
         //FUTURE
-//    @GetMapping("/filter")
-//    @PreAuthorize("permitAll()")
-//    fun filterEvents(
-//        @RequestParam(required = false) startDateTime: String?,
-//        @RequestParam(required = false) endDateTime: String?,
-//        @RequestParam(required = false) isPrivate: Boolean?,
-//        @RequestParam(required = false) maxAttendees: Int?
-//    ): ResponseEntity<ResponseDto> {
-//        val filterByDto = FilterByDto(startDateTime, endDateTime, isPrivate, maxAttendees)
-//
-//        return eventService.filterEvents(filterByDto)
-//    }
+    @GetMapping("/filter")
+    @PreAuthorize("permitAll()")
+    fun filterEvents(
+        @RequestParam(required = false) startDateTime: String?,
+        @RequestParam(required = false) endDateTime: String?,
+        @RequestParam(required = false) isPrivate: Boolean?,
+        @RequestParam(required = false) maxAttendees: Int?
+    ): ResponseEntity<ResponseDto> {
+        val filterByDto = FilterByDto(startDateTime, endDateTime, isPrivate, maxAttendees)
+
+        return eventService.filterEvents(filterByDto)
+    }
 
 
     @GetMapping("/get_passed_events")

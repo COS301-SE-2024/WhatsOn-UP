@@ -3,8 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:firstapp/pages/detailed_event_page.dart';
 import '../pages/detailed_event_page.dart';
 import '../providers/events_providers.dart';
-import  'event_card.dart';
-
+import 'event_card.dart';
 
 class EventCardM extends StatefulWidget {
   final Event event;
@@ -16,8 +15,6 @@ class EventCardM extends StatefulWidget {
 }
 
 class _EventCardMState extends State<EventCard> {
-
-
   @override
   Widget build(BuildContext context) {
     EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
@@ -58,7 +55,6 @@ class _EventCardMState extends State<EventCard> {
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Column(
               children: [
-
                 Text(
                   widget.event.nameOfEvent,
                   style: TextStyle(
@@ -86,7 +82,6 @@ class _EventCardMState extends State<EventCard> {
                         ),
                       ),
                     ),
-
                   ],
                 ),
               ],

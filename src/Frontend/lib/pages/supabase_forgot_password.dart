@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../main.dart';
+
 class ForgotPass extends StatefulWidget {
   const ForgotPass({super.key});
 
@@ -112,7 +113,6 @@ class _ForgotPassState extends State<ForgotPass> {
           const SizedBox(height: 20),
           // TextButton(
           ElevatedButton(
-
             onPressed: () async {
               try {
                 final email = _emailController.text.trim();
@@ -122,12 +122,14 @@ class _ForgotPassState extends State<ForgotPass> {
                 //   emailRedirectTo:
                 //   'io.supabase.flutterquickstart://login-callback/',
                 // );
-                await supabase.auth.resetPasswordForEmail(email,
-                 redirectTo: 'io.supabase.flutterquickstart://login-callback/',
+                await supabase.auth.resetPasswordForEmail(
+                  email,
+                  redirectTo: 'io.supabase.flutterquickstart://login-callback/',
                 );
                 if (mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("A link to reset your password has been sent to your inbox.")));
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text(
+                          "A link to reset your password has been sent to your inbox.")));
                 }
               } on AuthException catch (error) {
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -151,16 +153,13 @@ class _ForgotPassState extends State<ForgotPass> {
             // ),
             child: const Text('Reset Password'),
           ),
-
         ],
       ),
     );
   }
 
-
   Future<void> _sendVerificationEmail(String email) async {
     //API endpoint
     print('Sending verification email to $email');
-
   }
 }

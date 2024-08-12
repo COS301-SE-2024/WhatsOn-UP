@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
@@ -48,26 +47,26 @@ class _AllhomeEventsState extends State<AllhomeEvents> {
       appBar: AppBar(
         title: const Text('All Events'),
       ),
-      body:  isLoading
+      body: isLoading
           ? Center(
-        child: SpinKitPianoWave(
-          color: Color.fromARGB(255, 149, 137, 74),
-          size: 50.0,
-        ),
-      )
+              child: SpinKitPianoWave(
+                color: Color.fromARGB(255, 149, 137, 74),
+                size: 50.0,
+              ),
+            )
           : hasError
-          ? Center(
-        child: Text(
-          'Failed to load events. Please try again later.',
-          style: TextStyle(color: Colors.red),
-        ),
-      )
-          : ListView.builder(
-        itemCount: events.length,
-        itemBuilder: (context, index) {
-          return EventCardH(event: events[index]);
-        },
-      ),
+              ? Center(
+                  child: Text(
+                    'Failed to load events. Please try again later.',
+                    style: TextStyle(color: Colors.red),
+                  ),
+                )
+              : ListView.builder(
+                  itemCount: events.length,
+                  itemBuilder: (context, index) {
+                    return EventCardH(event: events[index]);
+                  },
+                ),
     );
   }
 }
@@ -120,19 +119,19 @@ class EventCardH extends StatelessWidget {
                 Container(
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(16.0),
-                    child: event.imageUrls.isNotEmpty
+                    child: event.imageUrls!.isNotEmpty
                         ? Image.network(
-                      event.imageUrls[0],
-                      height: 120.0,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                    )
+                            event.imageUrls![0],
+                            height: 120.0,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                          )
                         : Image.asset(
-                      'assets/images/user.png',
-                      height: 120.0,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                    ),
+                            'assets/images/user.png',
+                            height: 120.0,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                          ),
                   ),
                 ),
                 Text(

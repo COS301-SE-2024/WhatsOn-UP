@@ -5,11 +5,12 @@ import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../main.dart';
 import 'package:firstapp/services/api.dart';
-import 'dart:convert';
-import 'dart:typed_data';
+
 import 'package:firstapp/pages/home_page.dart';
 
 import '../providers/notification_providers.dart';
+import '../services/socket_client.dart';
+
 class SupabaseSignup extends StatefulWidget {
   const SupabaseSignup({super.key});
 
@@ -19,8 +20,8 @@ class SupabaseSignup extends StatefulWidget {
 
 class _SupabaseSignupState extends State<SupabaseSignup> {
   final _emailController = TextEditingController();
-  final _usernameController= TextEditingController();
-  final _passwordController= TextEditingController();
+  final _fullnameController = TextEditingController();
+  final _passwordController = TextEditingController();
   late final StreamSubscription<AuthState> _authSubscription;
   late Color myColor;
   late Size mediaSize;
@@ -111,7 +112,7 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
         children: [
           const SizedBox(height: 30),
           TextFormField(
-            controller: _usernameController,
+            controller: _fullnameController,
             decoration: InputDecoration(
               labelText: 'Fullname',
               border: OutlineInputBorder(
@@ -142,21 +143,14 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
           const SizedBox(height: 20),
           // TextButton(
           ElevatedButton(
-
             onPressed: () async {
               try {
                 final email = _emailController.text.trim();
-                final password= _passwordController.text.trim();
-                // await supabase.auth.signInWithOtp(
-                //   email: email,
-                //   emailRedirectTo:
-                //   'io.supabase.flutterquickstart://login-callback/',
-                // );
-                final AuthResponse res = await supabase.auth.signUp(
-                    email: email,
-                    password: password
-                );
+                final password = _passwordController.text.trim();
+                final AuthResponse res = await supabase.auth
+                    .signUp(email: email, password: password);
                 if (mounted) {
+                  print("CALLING USERNAME INPUT");
                   await _usernameInput(); // Ensure the username is saved
                   ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text("Signed up successfully")));
@@ -174,87 +168,51 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
                 ));
               }
             },
-            // style: TextButton.styleFrom(
-            //   foregroundColor: Colors.black, padding: const EdgeInsets.symmetric(vertical: 10.0),
-            //   shape: RoundedRectangleBorder(
-            //     borderRadius: BorderRadius.circular(20.0),
-            //     side: BorderSide(color: Colors.black),
-            //   ), // Text color
-            //   backgroundColor: Colors.transparent,
-            // ),
-
             child: const Text('Sign Up'),
-
           ),
-          // const SizedBox(height: 20),
-          // TextButton(
-          //   onPressed: () {
-            
-          //   },
-          //   style: TextButton.styleFrom(
-          //     padding: const EdgeInsets.symmetric(vertical: 10.0),
-          //     shape: RoundedRectangleBorder(
-          //       borderRadius: BorderRadius.circular(20.0),
-          //     ),
-          //     backgroundColor: Colors.transparent,
-          //   ),
-          //   child: const Text('Sign in as guest'),
-          // ),
         ],
       ),
     );
   }
 
-
   Future<void> _usernameInput() async {
-      final user = supabase.auth.currentUser;
-      String username = _usernameController.text;
-userProvider userP = Provider.of<userProvider>(context, listen: false);
-      Api api = Api();
-      api.postUsername(username,user!.id).then((response) {
-        if (response['error'] != null) {
+    final user = supabase.auth.currentUser;
+    String fullname = _fullnameController.text;
+    print('Username: $fullname');
+    userProvider userP = Provider.of<userProvider>(context, listen: false);
+    Api api = Api();
+    api.postUsername(fullname, user!.id).then((response) {
+      if (response['error'] != null) {
+        print('An error occurred: ${response['error']}');
+      } else {
+        print('Username added successfully');
+        String fullName = response['data']['user']['fullName'] ?? 'Unknown';
+        String userEmail = user.userMetadata?['email'];
+        String UserId = user.id;
+        String role = response['data']['user']['role'] ?? 'Unknown';
+        String profileImage =
+            response['data']['user']['profileImage'] ?? 'Unknown';
 
-          print('An error occurred: ${response['error']}');
-        } else {
-          print('Username added successfully');
-          String fullName = response['data']['user']['fullName']?? 'Unknown';
-          String userEmail = user.userMetadata?['email'];
-          String UserId=user.id;
-          String role=response['data']['user']['role']?? 'Unknown';
-          String  profileImage=response['data']['user']['profileImage']?? 'Unknown';
-          Uint8List profileImageBytes = Uint8List(0);
-
-          bool isBase64(String input) {
-            final RegExp base64 = RegExp(
-              r'^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$',
-            );
-            return base64.hasMatch(input);
-          }
-
-          if (isBase64(profileImage)) {
-
-            try {
-              profileImageBytes = base64Decode(profileImage);
-            } catch (e) {
-              print('Error decoding Base64: $e');
-            }
-          } else {
-            print('Invalid Base64 string: $profileImage');
-          }
-          notificationProvider _notificationProvider = Provider.of<notificationProvider>(context, listen: false);
-          _notificationProvider.apiInstance=api;
-          _notificationProvider.refreshNotifications(userP.userId);
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const HomePage(
-
-            )),
-          );
-        }
-      });
+        userP.userId = user.id;
+        userP.Fullname = fullName;
+        userP.email = userEmail;
+        userP.role = role;
+        userP.profileImage = profileImage;
+        notificationProvider _notificationProvider =
+        Provider.of<notificationProvider>(context, listen: false);
+        // _notificationProvider.apiInstance(api);
+        _notificationProvider.refreshNotifications(userP.userId);
+        SocketService('http://localhost:8082',_notificationProvider, userP.userId, context);
+        userP.Generalusers(userP.userId);
 
 
-      print('signup successful');
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const HomePage()),
+        );
+      }
+    });
 
+    print('signup successful');
   }
 }

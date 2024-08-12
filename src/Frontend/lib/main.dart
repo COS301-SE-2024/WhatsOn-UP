@@ -55,12 +55,15 @@
 
 
 
-import 'package:firstapp/pages/Promotion_form.dart';
+import 'package:firstapp/pages/ManageGeneralApplicationsTabs.dart';
+import 'package:firstapp/pages/application_event.dart';
+
 import 'package:firstapp/pages/calendar_page.dart';
 import 'package:firstapp/pages/detailed_event_page.dart';
 import 'package:firstapp/pages/editProfile_page.dart';
 
 import 'package:firstapp/pages/home_page.dart';
+import 'package:firstapp/pages/notifications.dart';
 import 'package:firstapp/pages/host_application.dart';
 import 'package:firstapp/pages/profilePage.dart';
 import 'package:firstapp/pages/settings_page.dart';
@@ -100,18 +103,21 @@ void main() async{
   // );
 
   runApp(
-    MultiProvider(providers: [
-      ChangeNotifierProvider(create: (context) => EventProvider(api: api)),
-      ChangeNotifierProvider(create: (context) => userProvider()),
-      ChangeNotifierProvider(create: (context) => ThemeNotifier()),
-      ChangeNotifierProvider(create: (context) => notificationProvider()),
-    ],
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => EventProvider(api: api)),
+        ChangeNotifierProvider(create: (context) => userProvider()),
+        ChangeNotifierProvider(create: (context) => ThemeNotifier()),
+        ChangeNotifierProvider(
+            create: (context) => notificationProvider()),
+      ],
       child: MyApp(),
-  ),
+    ),
   );
 }
 
 final supabase = Supabase.instance.client;
+
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -123,23 +129,22 @@ class MyApp extends StatelessWidget {
           '/': (context) => const SplashPage(),
           '/login': (context) => const SupabaseLogin(),
           '/account': (context) => const SupabaseAccountpage(),
-          '/profile': (context)=> ProfilePage(),
-          '/editProfile': (context)=>  EditprofilePage(),
-          '/home': (context)=> const HomePage(),
+          '/profile': (context) => ProfilePage(),
+          '/editProfile': (context) => EditprofilePage(),
+          '/home': (context) => const HomePage(),
           // '/rsvp': (context)=> const RSVPEventsPage(),
           '/settings': (context)=> const SettingsPage(),
           '/search': (context)=>  SearchScreen(),
           '/resetPassword': (context)=> const ResetPasswordPage(),
           '/hostApplication': (context)=> HostApplicationPage(),
           '/detailed_event': (context) => DetailedEventPage(event: ModalRoute.of(context)!.settings.arguments as Event),
-          '/PromotionForm': (context)=> const PromotionForm(),
+          '/application_event': (context) => ApplicationEvent(),
           '/calendar': (context)=> const CalendarPage(),
-          //
+          '/notifications': (context)=> const Notifications (),
+          '/generaluserapplications': (context)=> const TabGeneral(),
         },
-
         debugShowCheckedModeBanner: false,
       ),
-
     );
   }
 }

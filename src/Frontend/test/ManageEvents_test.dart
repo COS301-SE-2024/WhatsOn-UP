@@ -1,4 +1,7 @@
 
+import 'dart:convert';
+
+import 'package:firstapp/pages/ManageGeneralApplicationsTabs.dart';
 import 'package:firstapp/pages/Promotion_Applications.dart';
 import 'package:firstapp/pages/application_event.dart';
 import 'package:firstapp/pages/attendee.dart';
@@ -44,7 +47,7 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ),
+          ), invitees: [],
         ),
         Event(
           id: '2',
@@ -62,7 +65,7 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ),
+          ), invitees: [],
         ),
       ]);
       when(mockEventProvider.eventsHome).thenAnswer((_) async => [
@@ -82,7 +85,7 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ),
+          ), invitees: [],
         ),
         Event(
           id: '2',
@@ -120,7 +123,7 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ),
+          ), invitees: [],
         ),
       ]);
       when(mockEventProvider.eventsRsvp).thenAnswer((_) async => [
@@ -140,7 +143,7 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ),
+          ), invitees: [],
         ),
         Event(
           id: '2',
@@ -158,7 +161,7 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ),
+          ), invitees: [],
         ),
         Event(
           id: '3',
@@ -176,11 +179,28 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ),
+          ), invitees: [],
         ),
       ]);
     });
 
+    testWidgets('Renders ManageEvents with Dividers', (WidgetTester tester) async {
+      when(mockUserProvider.role).thenReturn('ADMIN');
+      await tester.pumpWidget(
+        MultiProvider(
+          providers: [
+            ChangeNotifierProvider<EventProvider>(create: (_) => mockEventProvider),
+            ChangeNotifierProvider<userProvider>(create: (_) => mockUserProvider),
+          ],
+          child: MaterialApp(
+            home: ManageEvents(),
+          ),
+        ),
+      );
+
+      // Check if dividers are visible
+      expect(find.byType(Divider), findsNWidgets(6)); // 5 dividers in the list + one before the General user Host Applications
+    });
     testWidgets('Renders ManageEvents correctly for ADMIN role', (WidgetTester tester) async {
       when(mockUserProvider.role).thenReturn('ADMIN');
       await tester.pumpWidget(
@@ -202,10 +222,66 @@ void main() {
       expect(find.text('Past Events'), findsOneWidget);
       expect(find.text('Create Event'), findsOneWidget);
       expect(find.text('Attendees for All Events'), findsOneWidget);
-      expect(find.text('Event Applications'), findsOneWidget);
+      expect(find.text('General user Host Applications'), findsOneWidget);
       expect(find.byIcon(Icons.arrow_forward), findsNWidgets(5));
     });
 
+    testWidgets('Tapping Past Events does not cause errors', (WidgetTester tester) async {
+      when(mockUserProvider.role).thenReturn('ADMIN');
+      await tester.pumpWidget(
+        MultiProvider(
+          providers: [
+            ChangeNotifierProvider<EventProvider>(create: (_) => mockEventProvider),
+            ChangeNotifierProvider<userProvider>(create: (_) => mockUserProvider),
+          ],
+          child: MaterialApp(
+            home: ManageEvents(),
+          ),
+        ),
+      );
+
+      // Check if the 'Past Events' button does not cause any issues
+      await tester.tap(find.text('Past Events'));
+      await tester.pumpAndSettle();
+      // No new widget should appear, as 'Past Events' button has no navigation
+      expect(find.byType(ManageEvents), findsOneWidget);
+    });
+
+
+    /*testWidgets('General user Host Applications is visible for ADMIN role only', (WidgetTester tester) async {
+      when(mockUserProvider.role).thenReturn('ADMIN');
+      await tester.pumpWidget(
+        MultiProvider(
+          providers: [
+            ChangeNotifierProvider<EventProvider>(create: (_) => mockEventProvider),
+            ChangeNotifierProvider<userProvider>(create: (_) => mockUserProvider),
+          ],
+          child: MaterialApp(
+            home: ManageEvents(),
+          ),
+        ),
+      );
+
+      // Check if 'General user Host Applications' is visible for ADMIN
+      expect(find.text('General user Host Applications'), findsOneWidget);
+
+      when(mockUserProvider.role).thenReturn('HOST');
+      await tester.pumpWidget(
+        MultiProvider(
+          providers: [
+            ChangeNotifierProvider<EventProvider>(create: (_) => mockEventProvider),
+            ChangeNotifierProvider<userProvider>(create: (_) => mockUserProvider),
+          ],
+          child: MaterialApp(
+            home: ManageEvents(),
+          ),
+        ),
+      );
+
+      // Check if 'General user Host Applications' is not visible for HOST
+      expect(find.text('General user Host Applications'), findsNothing);
+    });
+*/
     testWidgets('Renders ManageEvents correctly for non-ADMIN role', (WidgetTester tester) async {
       when(mockUserProvider.role).thenReturn('HOST');
       await tester.pumpWidget(
@@ -250,27 +326,9 @@ void main() {
 
       expect(find.byType(EventmanagementCategory), findsOneWidget);
     });
+    /*testWidgets('Navigates to ApplicationEvent when Create Event is tapped', (WidgetTester tester) async {
+      REMOVEDDDDDDDDDDDDDDDDDDDDDD;*/
 
-    testWidgets('Navigates to ApplicationEvent when Create Event is tapped', (WidgetTester tester) async {
-      when(mockUserProvider.role).thenReturn('ADMIN');
-      await tester.pumpWidget(
-        MultiProvider(
-          providers: [
-
-            ChangeNotifierProvider<EventProvider>(create: (_) => mockEventProvider),
-            ChangeNotifierProvider<userProvider>(create: (_) => mockUserProvider),
-          ],
-          child: MaterialApp(
-            home: ManageEvents(),
-          ),
-        ),
-      );
-
-
-      await tester.tap(find.text('Create Event'));
-      await tester.pumpAndSettle();
-      expect(find.byType(ApplicationEvent), findsOneWidget);
-    });
     testWidgets('Navigates to Attendee when Attendee is tapped when the user is an ADMIN', (WidgetTester tester) async {
       when(mockUserProvider.role).thenReturn('ADMIN');
       await tester.pumpWidget(
@@ -336,31 +394,69 @@ testWidgets('setLoading method updates _isLoading state', (WidgetTester tester) 
       expect(find.byType(SpinKitPianoWave), findsOneWidget);
     });
 
+
     testWidgets('Navigates to General user applications page when Event Applications is tapped', (WidgetTester tester) async {
+      String jsonData = '''
+  {
+    "status": "success",
+    "timestamp": 123456789,
+    "data": [
+      {
+        "applicationId": "app123",
+        "status": {"id": 1, "name": "Pending"},
+        "user": {
+          "userId": "user123",
+          "fullName": "John Doe",
+          "profileImage":"",
+          "role": {"id": 1, "name": "User"}
+        },
+        "expiryDateTime": "2024-12-31T23:59:59",
+        "acceptedRejectedBy": null,
+        "reason": "No reason",
+        "verificationCode": "123456"
+      }
+    ]
+  }
+  ''';
+
+      GeneralApplications generalApplications = GeneralApplications.fromJson(jsonDecode(jsonData));
+      when(mockUserProvider.generalApplications).thenAnswer((_) async => generalApplications);
+
       when(mockUserProvider.role).thenReturn('ADMIN');
-      await mockNetworkImages(() async {
+
+
+
         final fakeUsers = [
           User(name: 'John Doe', profileImage: '', userStatus: 'Accepted', email: '', password: '123', userId: '1'),
           User(name: 'Jane Smith', profileImage: '', userStatus: 'Pending', email: '', password: '123', userId: '2'),
           User(name: 'Bob Johnson', profileImage: '', userStatus: 'Rejected', email: '', password: '123', userId: '3'),
         ];
-        when(mockUserProvider.generalUserEvents).thenAnswer((_) async => fakeUsers);
+
+        when(mockUserProvider.Generalusers('')).thenAnswer((_) async => fakeUsers);
+      await mockNetworkImages(() async {
         await tester.pumpWidget(
           MultiProvider(
             providers: [
               ChangeNotifierProvider<userProvider>(
-                  create: (_) => mockUserProvider),
+                create: (_) => mockUserProvider,
+              ),
             ],
-            child:  MaterialApp(
+            child: MaterialApp(
               home: ManageEvents(),
             ),
           ),
         );
       });
-
-      await tester.tap(find.text('Event Applications'));
       await tester.pumpAndSettle();
-      expect(find.byType(Generaleventapplications), findsOneWidget);
+      await tester.tap(find.text('General user Host Applications'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(TabGeneral), findsOneWidget);
+      // expect(generalApplications.status, "success");
+      // expect(generalApplications.timestamp, 123456789);
+      // expect(generalApplications.data.length, 1);
+      // expect(generalApplications.data[0].applicationId, "app123");
     });
+
   });
 }

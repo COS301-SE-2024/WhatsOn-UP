@@ -40,7 +40,8 @@ class CustomSearchBar extends StatelessWidget {
                 ),
                 border: InputBorder.none, // Remove underline
               ),
-              style: TextStyle(color: Colors.white), // Adjust text color to white
+              style:
+                  TextStyle(color: Colors.white), // Adjust text color to white
             ),
           ),
         ],

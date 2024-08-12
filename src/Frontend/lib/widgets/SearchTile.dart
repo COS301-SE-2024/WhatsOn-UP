@@ -6,7 +6,7 @@ class SearchTile extends StatelessWidget {
   final Function(String) onFilterSelected;
 
   SearchTile({required this.onFilterSelected});
-  String technologyTitle ="Tech";
+  String technologyTitle = "Tech";
   @override
   Widget build(BuildContext context) {
     return GridView.count(
@@ -31,7 +31,7 @@ class SearchTile extends StatelessWidget {
         ),
         SearchImageTile(
           title: 'Health',
-          imageUrl: 'assets/images/sportImage.jpg',
+          imageUrl: 'assets/images/Sports & Fitness.jpg',
           onTap: (title) => onFilterSelected(title),
         ),
       ],
