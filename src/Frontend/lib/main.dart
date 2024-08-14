@@ -71,6 +71,7 @@ import 'package:firstapp/pages/supabase_Accountpage.dart';
 import 'package:firstapp/pages/supabase_Splashpage.dart';
 import 'package:firstapp/pages/supabase_login.dart';
 import 'package:firstapp/pages/supabase_resetPassword.dart';
+import 'package:firstapp/pages/userManual.dart';
 import 'package:firstapp/providers/events_providers.dart';
 import 'package:firstapp/providers/notification_providers.dart';
 import 'package:firstapp/providers/user_provider.dart';
@@ -79,12 +80,14 @@ import 'package:firstapp/services/api.dart';
 import 'package:firstapp/widgets/event_card.dart';
 import 'package:firstapp/widgets/theme_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 late SupabaseClient supabaseClient;
 void main() async{
   var api = Api();
+  await dotenv.load(fileName: ".env");
   await Supabase.initialize(
     url: 'https://mehgbhiirnmypfgnkaud.supabase.co',
     anonKey:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1laGdiaGlpcm5teXBmZ25rYXVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjI5NDMyMzYsImV4cCI6MjAzODUxOTIzNn0.g_oLlSZE3AH_nBntVe_hBPdthFDQHZqn0wxzS23kyrc'
@@ -140,6 +143,7 @@ class MyApp extends StatelessWidget {
           '/calendar': (context)=> const CalendarPage(),
           '/notifications': (context)=> const Notifications (),
           '/generaluserapplications': (context)=> const TabGeneral(),
+          '/userManual': (context)=> const UserManualWebView(),
         },
         debugShowCheckedModeBanner: false,
       ),

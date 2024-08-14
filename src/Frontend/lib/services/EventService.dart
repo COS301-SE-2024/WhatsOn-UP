@@ -4,13 +4,15 @@ import 'dart:typed_data';
 import 'package:firstapp/widgets/event_card.dart';
 //import 'api.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'globals.dart' as globals;
+
 import 'package:intl/intl.dart';
 import 'package:firstapp/widgets/event_card.dart';
 
 class EventService {
   final SupabaseClient supabase;
   EventService(this.supabase);
-  static const String baseUrl = 'http://localhost:8080';
+  static final String baseUrl = 'http://${globals.domain}:8080';
 
   Future<String?> _getJwtToken() async {
     final session = supabase.auth.currentSession;
