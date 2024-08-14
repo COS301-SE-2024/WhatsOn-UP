@@ -8,7 +8,7 @@ class RouteService{
       'https://maps.googleapis.com/maps/api/directions/json?';
 
   final Dio _dio;
-  final String key = dotenv.env['Google_Maps_API_Key'] ?? 'No API Key Found';
+  static const String key = String.fromEnvironment("GOOGLE_MAPS_API_KEY", defaultValue: "No api key found");
 
   RouteService({Dio? dio}) : _dio = dio ?? Dio();
 
