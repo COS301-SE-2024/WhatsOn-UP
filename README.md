@@ -21,7 +21,9 @@ WhatsOn@UP system aims to be a central hub for all University of Pretoria events
     <th>Demo Videos</th>
     <td><ul><li><a href="https://drive.google.com/file/d/1NjTF3Wyfv0JfyUvZUSzZ3Qs84BKFjVUM/view?usp=sharing">Demo 1 Video</a></li></ul>
 <br/>
-    <ul><li><a href="https://drive.google.com/file/d/1tH-Z4wL-U17SL5ecBKT7rOWEyJ3HX0MR/view?usp=drive_link">Demo 2 Video</a></li></ul></td>
+    <ul><li><a href="https://drive.google.com/file/d/1tH-Z4wL-U17SL5ecBKT7rOWEyJ3HX0MR/view?usp=drive_link">Demo 2 Video</a></li></ul>
+     <ul><li><a href="https://drive.google.com/file/d/1MWEgor5A3dLAVuCLGt-PwdRHh4tB8tA6/view?usp=drive_link">Demo 3 Video</a></li></ul>
+    </td>
   </tr>
   <tr>
     <th>Project Board</th>
@@ -37,6 +39,9 @@ WhatsOn@UP system aims to be a central hub for all University of Pretoria events
        <li><a href="./docs/Contracts/Contracts.md">Contracts</a></li>
        <li><a href="https://www.figma.com/design/OjxWQqAXxuycjBsvbRyU0f/WhatsOn%40UP?node-id=0-1&t=rWZnW452JgRBb5ha-0">Wireframes</a></li>
        <li><a href="https://docs.google.com/document/d/1_oVeZqWZemT3urwrFUN708oN37bDlg5WAx-VP4TaVw4/edit?usp=drive_link">Coding Standards</a></li>
+       <li><a href="https://github.com/COS301-SE-2024/WhatsOn-UP/blob/main/docs/SRS-document.md">Technical Installation Manual</a></li> 
+
+       
 
 </ul>
     </td>

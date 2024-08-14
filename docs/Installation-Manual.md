@@ -146,12 +146,3 @@ To deploy and run the system:
 2. Access the application via the mobile frontend.
 3. For detailed usage instructions, refer to the User Manual.
 
-## Screenshots
-
-Include relevant screenshots for each step to improve clarity. For example:
-
-- Backend run output
-- Gateway
-- Frontend build and run output
-- Storage service run output
-- Notification service run output

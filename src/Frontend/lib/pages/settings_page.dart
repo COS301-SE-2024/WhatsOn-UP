@@ -126,6 +126,9 @@ class _SettingsPageState extends State<SettingsPage> {
         icon: Icons.info,
         text: 'Help',
         onTap: () {
+          if(Theme.of(context).platform == TargetPlatform.iOS || Theme.of(context).platform == TargetPlatform.android)
+          Navigator.of(context).pushNamed('/userManual');
+        else
           _launchURL();
         },
       ),

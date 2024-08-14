@@ -71,6 +71,7 @@ import 'package:firstapp/pages/supabase_Accountpage.dart';
 import 'package:firstapp/pages/supabase_Splashpage.dart';
 import 'package:firstapp/pages/supabase_login.dart';
 import 'package:firstapp/pages/supabase_resetPassword.dart';
+import 'package:firstapp/pages/userManual.dart';
 import 'package:firstapp/providers/events_providers.dart';
 import 'package:firstapp/providers/notification_providers.dart';
 import 'package:firstapp/providers/user_provider.dart';
@@ -141,6 +142,7 @@ class MyApp extends StatelessWidget {
           '/calendar': (context)=> const CalendarPage(),
           '/notifications': (context)=> const Notifications (),
           '/generaluserapplications': (context)=> const TabGeneral(),
+          '/userManual': (context)=> const UserManualWebView(),
         },
         debugShowCheckedModeBanner: false,
       ),
