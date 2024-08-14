@@ -100,7 +100,6 @@ flutter:
     - assets/images/google-icon.svg
     - assets/images/adminBadge.png
     - assets/images/user.png
-    # - .env
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
