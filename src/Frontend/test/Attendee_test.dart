@@ -233,8 +233,8 @@ void main() {
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
       await tester.pumpAndSettle();
       expect(find.text('Attendees'), findsOneWidget);
-      verify(mockEventProvider.eventsRsvp).called(1);
-      verifyNever(mockEventProvider.eventsHome);
+      verify(mockEventProvider.eventsHome).called(1);
+      verifyNever(mockEventProvider.eventsRsvp);
       final events = await mockEventProvider.eventsRsvp;
       expect(events.length, 3);
       expect(events[0].nameOfEvent, 'Test Event 1 RSVP');

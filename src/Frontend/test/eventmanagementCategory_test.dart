@@ -4,6 +4,7 @@ import 'package:mocktail_image_network/mocktail_image_network.dart';
 import 'package:provider/provider.dart';
 import 'package:firstapp/providers/events_providers.dart';
 import 'package:firstapp/providers/user_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'api_test.mocks.dart';
 import 'package:firstapp/widgets/event_card.dart';
 import 'package:firstapp/widgets/eventManagement_category.dart';
@@ -15,6 +16,8 @@ import 'package:mockito/mockito.dart';
 
 void main() {
   setUpAll(() async {
+    SharedPreferences.setMockInitialValues({}); // Mock shared preferences
+    
     await Supabase.initialize(
       url: 'https://mehgbhiirnmypfgnkaud.supabase.co',
       anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1laGdiaGlpcm5teXBmZ25rYXVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjI5NDMyMzYsImV4cCI6MjAzODUxOTIzNn0.g_oLlSZE3AH_nBntVe_hBPdthFDQHZqn0wxzS23kyrc',
@@ -271,7 +274,9 @@ void main() {
         await tester.pumpAndSettle();
         expect(find.text('Error loading events'), findsOneWidget);
       });
-      testWidgets('Displays no events message when data is empty', (
+    });
+
+    testWidgets('Displays no events message when data is empty', (
           WidgetTester tester) async {
         when(mockEventProvider.eventsHome).thenAnswer((_) async => []);
         await mockNetworkImages(() async {
@@ -295,7 +300,6 @@ void main() {
 
         expect(find.text('No events available'), findsOneWidget);
       });
-    });
   });
 }
 
