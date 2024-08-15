@@ -10,6 +10,8 @@ import 'package:firstapp/pages/home_page.dart';
 
 import '../providers/notification_providers.dart';
 import '../services/socket_client.dart';
+import '../services/globals.dart' as globals;
+
 
 class SupabaseSignup extends StatefulWidget {
   const SupabaseSignup({super.key});
@@ -202,7 +204,7 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
         Provider.of<notificationProvider>(context, listen: false);
         // _notificationProvider.apiInstance(api);
         _notificationProvider.refreshNotifications(userP.userId);
-        SocketService('http://localhost:8082',_notificationProvider, userP.userId, context);
+        SocketService('http://${globals.domain}:8082',_notificationProvider, userP.userId, context);
         userP.Generalusers(userP.userId);
 
 
