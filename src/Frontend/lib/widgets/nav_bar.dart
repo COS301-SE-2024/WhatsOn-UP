@@ -265,6 +265,7 @@
 import 'package:flutter/material.dart';
 import 'package:firstapp/pages/Broadcast.dart';
 import 'package:firstapp/pages/manageEvents.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class NavBar extends StatelessWidget {
   final int selectedIndex;
@@ -352,7 +353,7 @@ class NavBar extends StatelessWidget {
             break;
           case 1:
             Navigator.push(context,
-                MaterialPageRoute(builder: (context) => ManageEvents()));
+                MaterialPageRoute(builder: (context) => ManageEvents(supabaseClient: Supabase.instance.client)));
             break;
           case 2:
             Navigator.push(

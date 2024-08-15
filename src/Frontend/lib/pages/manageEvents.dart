@@ -127,7 +127,12 @@ import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 import '../services/EventService.dart';
 import '../widgets/Pastevents.dart';
 class ManageEvents extends StatefulWidget {
-  ManageEvents({Key? key}) : super(key: key);
+  final SupabaseClient supabaseClient;
+
+  ManageEvents({
+    Key? key,
+    required this.supabaseClient,
+  }) : super(key: key);
 
   @override
   _ManageEventsState createState() => _ManageEventsState();
@@ -146,7 +151,7 @@ class _ManageEventsState extends State<ManageEvents> {
   @override
   Widget build(BuildContext context) {
     userProvider userP = Provider.of<userProvider>(context);
-    SupabaseClient supabaseClient = Supabase.instance.client;
+    SupabaseClient supabaseClient = widget.supabaseClient;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(

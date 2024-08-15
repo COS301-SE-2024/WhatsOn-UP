@@ -11,6 +11,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:firstapp/pages/profilePage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../providers/events_providers.dart';
 import '../providers/notification_providers.dart';
@@ -111,7 +112,7 @@ class _HomePageState extends State<HomePage> {
       case 4:
         return const SettingsPage();
       case 5:
-        return  ManageEvents();
+        return  ManageEvents(supabaseClient: Supabase.instance.client);
 
       case 6:
         return const Broadcast();
