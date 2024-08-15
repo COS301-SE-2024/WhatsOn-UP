@@ -53,23 +53,19 @@ class _EventmanagementCategoryState extends State<EventmanagementCategory> {
     final borderColour = theme.colorScheme.secondary;
     final user = supabaseClient.auth.currentUser;
     return Scaffold(
-
       appBar: AppBar(
-        title: Text('Edit Events'), // Adjust the app bar title as needed
+        title: Text('Edit Events'),
       ),
       body: _errorOccurred
           ? Center(child: Text(_errorMessage))
           : Column(
         children: [
-          SizedBox(width: 35.0),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
             child: Center(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-
-
                   SizedBox(
                     width: MediaQuery.of(context).size.width * 0.27,
                     child: Container(
@@ -79,11 +75,9 @@ class _EventmanagementCategoryState extends State<EventmanagementCategory> {
                       ),
                       child: TextButton.icon(
                         onPressed: () {
-                          // Navigate to SearchScreen when Search button is pressed
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-
                               builder: (context) => HostSearchScreen(hostId: user!.id),
                             ),
                           );
@@ -103,7 +97,6 @@ class _EventmanagementCategoryState extends State<EventmanagementCategory> {
                       ),
                       child: TextButton.icon(
                         onPressed: () {
-                          // Navigate to FilterScreen when Filter button is pressed
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -120,49 +113,39 @@ class _EventmanagementCategoryState extends State<EventmanagementCategory> {
               ),
             ),
           ),
-          SizedBox(width: 35.0),
           Expanded(
             child: FutureBuilder<List<Event>>(
               future: _eventsHome,
               builder: (context, AsyncSnapshot<List<Event>> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: SpinKitPianoWave(
-                    color:  Color.fromARGB(255, 149, 137, 74),
-                    size: 50.0,
-                  ));
+                  return Center(
+                    child: SpinKitPianoWave(
+                      color: Color.fromARGB(255, 149, 137, 74),
+                      size: 50.0,
+                    ),
+                  );
                 } else if (snapshot.hasError) {
                   return Center(child: Text('Error loading events'));
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                   return Center(child: Text('No events available'));
                 } else {
                   userProvider userP = Provider.of<userProvider>(context, listen: false);
-
                   List<Event> events = snapshot.data!;
-                  if (userP.role!='ADMIN') {
+                  if (userP.role != 'ADMIN') {
                     events = events.where((event) => event.hosts.contains(userP.Fullname)).toList();
                   }
-                  if (events.isEmpty)
-                  {
+                  if (events.isEmpty) {
                     return Center(child: Text('No upcoming or current events found.'));
-
                   }
-                  int rowCount = (events.length / 2).ceil();
                   return ListView.builder(
-                    itemCount: rowCount,
-                    itemBuilder: (context, rowIndex) {
-                      int index1 = rowIndex * 2;
-                      int index2 = index1 + 1;
-                      return Row(
-                        children: [
-                          if (index1 < events.length)
-                            Expanded(
-                              child: EventCard(event: events[index1],showBookmarkButton:false),
-                            ),
-                          if (index2 < events.length)
-                            Expanded(
-                              child: EventCard(event: events[index2],showBookmarkButton:false),
-                            ),
-                        ],
+                    itemCount: events.length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                        child: EventCard(
+                          event: events[index],
+                          showBookmarkButton: false,
+                        ),
                       );
                     },
                   );
