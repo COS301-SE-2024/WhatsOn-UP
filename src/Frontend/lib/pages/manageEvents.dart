@@ -174,7 +174,7 @@ class _ManageEventsState extends State<ManageEvents> {
                 _buildProfileOption(
                   text: userP.role == Admin ? 'All Events' : 'My Events',
                   onTap: () async =>
-                      await _navigateToEventManagementCategory(context),
+                      await _navigateToEventManagementCategory(context, supabaseClient),
                 ),
                 _buildDivider(),
                 _buildProfileOption(
@@ -185,6 +185,7 @@ class _ManageEventsState extends State<ManageEvents> {
                       MaterialPageRoute(
                         builder: (context) => Pastevents(
                           eventService: EventService(supabaseClient),
+                          supabaseClient: supabaseClient,
                         ),
                       ),
                     );
@@ -214,10 +215,10 @@ class _ManageEventsState extends State<ManageEvents> {
     );
   }
 
-  Future<void> _navigateToEventManagementCategory(BuildContext context) async {
+  Future<void> _navigateToEventManagementCategory(BuildContext context, SupabaseClient supabaseClient) async {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => EventmanagementCategory()),
+      MaterialPageRoute(builder: (context) => EventmanagementCategory(supabaseClient: supabaseClient)),
     );
   }
 

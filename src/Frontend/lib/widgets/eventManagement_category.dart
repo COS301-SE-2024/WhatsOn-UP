@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:firstapp/providers/events_providers.dart';
-import '../main.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+// import '../main.dart';
 import '../providers/user_provider.dart';
 import '../screens/FilterScreen.dart';
 import '../screens/HostSearchScreenState.dart';
@@ -10,7 +11,8 @@ import '../screens/HostSearchScreenState.dart';
 import 'event_card.dart';
 
 class EventmanagementCategory extends StatefulWidget {
-  EventmanagementCategory({Key? key}) : super(key: key);
+  final SupabaseClient supabaseClient;
+  EventmanagementCategory({Key? key, required this.supabaseClient,}) : super(key: key);
 
   @override
   _EventmanagementCategoryState createState() =>
@@ -19,11 +21,14 @@ class EventmanagementCategory extends StatefulWidget {
 
 class _EventmanagementCategoryState extends State<EventmanagementCategory> {
   late Future<List<Event>> _eventsHome;
+  late SupabaseClient supabaseClient;
 
   @override
   void initState() {
     super.initState();
-    final user = supabase.auth.currentUser;
+      supabaseClient = widget.supabaseClient;
+
+    final user = supabaseClient.auth.currentUser;
     _loadEvents();
   }
 
@@ -46,7 +51,7 @@ class _EventmanagementCategoryState extends State<EventmanagementCategory> {
     final theme = Theme.of(context);
     final textColour = theme.colorScheme.onSurface;
     final borderColour = theme.colorScheme.secondary;
-    final user = supabase.auth.currentUser;
+    final user = supabaseClient.auth.currentUser;
     return Scaffold(
 
       appBar: AppBar(

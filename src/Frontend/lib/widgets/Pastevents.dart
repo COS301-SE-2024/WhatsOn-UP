@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:firstapp/services/EventService.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../screens/FilterScreen.dart';
 import '../screens/SearchScreen.dart';
 import 'event_card.dart';
-import 'package:firstapp/main.dart';
+// import 'package:firstapp/main.dart';
 
 
 class Pastevents extends StatefulWidget {
   final EventService eventService;
+  final SupabaseClient supabaseClient;
 
-  Pastevents({Key? key, required this.eventService}) : super(key: key);
+  Pastevents({Key? key, required this.eventService, required this.supabaseClient}) : super(key: key);
 
   @override
   _PasteventsState createState() => _PasteventsState();
@@ -18,11 +20,13 @@ class Pastevents extends StatefulWidget {
 
 class _PasteventsState extends State<Pastevents> {
   late Future<List<Event>> _pastEvents;
+  late SupabaseClient supabaseClient;
 
   @override
   void initState() {
     super.initState();
-    final user = supabase.auth.currentUser;
+    supabaseClient = widget.supabaseClient;
+    final user = supabaseClient.auth.currentUser;
     _pastEvents = widget.eventService.fetchPastEvents(user!.id);
   }
 
