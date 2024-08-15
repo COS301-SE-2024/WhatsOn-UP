@@ -36,7 +36,7 @@ class Location {
   }
   
   static List<String> _extractUrls(List<dynamic> jsonPhotos) {
-    String apiKey = dotenv.env['Google_Maps_API_Key'] ?? 'No API Key Found';
+    const String apiKey = String.fromEnvironment("GOOGLE_MAPS_API_KEY", defaultValue: "No api key found");
     List<String> photoUrls = [];
      for (var photo in jsonPhotos) {
         String photoReference = photo['name'].split('/').last;

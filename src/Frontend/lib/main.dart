@@ -87,7 +87,6 @@ import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 late SupabaseClient supabaseClient;
 void main() async{
   var api = Api();
-  await dotenv.load(fileName: ".env");
   await Supabase.initialize(
     url: 'https://mehgbhiirnmypfgnkaud.supabase.co',
     anonKey:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1laGdiaGlpcm5teXBmZ25rYXVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjI5NDMyMzYsImV4cCI6MjAzODUxOTIzNn0.g_oLlSZE3AH_nBntVe_hBPdthFDQHZqn0wxzS23kyrc'

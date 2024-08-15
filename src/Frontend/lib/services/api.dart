@@ -669,7 +669,7 @@ Future<List<AppNotification>> getAllNotification(
       final timestamp = DateTime.now().millisecondsSinceEpoch;
       return 'event_image_${EventId}_$timestamp.png';
     }
-    final uri = Uri.parse('http://localhost:8083/media/upload?event_id=$EventId');
+    final uri = Uri.parse('http://${globals.domain}:8083/media/upload?event_id=$EventId');
 
     final request = http.MultipartRequest('POST', uri);
     request.headers['Authorization'] = 'Bearer $userid';

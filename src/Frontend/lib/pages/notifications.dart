@@ -23,7 +23,7 @@ class _NotificationsState extends State<Notifications> {
     String userRole = userP.role;
 
     notificationProvider notif =
-        Provider.of<notificationProvider>(context, listen: false);
+        Provider.of<notificationProvider>(context, listen: true);
 
     return ChangeNotifierProvider<notificationProvider>(
       create: (context) => notif,
