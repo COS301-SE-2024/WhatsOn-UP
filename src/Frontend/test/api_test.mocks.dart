@@ -200,6 +200,89 @@ class _FakeRealtimeChannel_14 extends _i1.SmartFake
         );
 }
 
+class _FakeGoTrueAdminApi_15 extends _i1.SmartFake
+    implements _i6.GoTrueAdminApi {
+  _FakeGoTrueAdminApi_15(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakeGoTrueMFAApi_16 extends _i1.SmartFake implements _i6.GoTrueMFAApi {
+  _FakeGoTrueMFAApi_16(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakeAuthResponse_17 extends _i1.SmartFake implements _i6.AuthResponse {
+  _FakeAuthResponse_17(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakeOAuthResponse_18 extends _i1.SmartFake implements _i6.OAuthResponse {
+  _FakeOAuthResponse_18(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakeAuthSessionUrlResponse_19 extends _i1.SmartFake
+    implements _i6.AuthSessionUrlResponse {
+  _FakeAuthSessionUrlResponse_19(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakeResendResponse_20 extends _i1.SmartFake
+    implements _i6.ResendResponse {
+  _FakeResendResponse_20(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakeUserResponse_21 extends _i1.SmartFake implements _i6.UserResponse {
+  _FakeUserResponse_21(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakeObject_22 extends _i1.SmartFake implements Object {
+  _FakeObject_22(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
 /// A class which mocks [EventProvider].
 ///
 /// See the documentation for Mockito's code generation for more information.
@@ -1913,4 +1996,658 @@ class MockSupabaseClient extends _i1.Mock implements _i6.SupabaseClient {
         returnValue: _i8.Future<void>.value(),
         returnValueForMissingStub: _i8.Future<void>.value(),
       ) as _i8.Future<void>);
+}
+
+/// A class which mocks [GoTrueClient].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockGoTrueClient extends _i1.Mock implements _i6.GoTrueClient {
+  MockGoTrueClient() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i6.GoTrueAdminApi get admin => (super.noSuchMethod(
+        Invocation.getter(#admin),
+        returnValue: _FakeGoTrueAdminApi_15(
+          this,
+          Invocation.getter(#admin),
+        ),
+      ) as _i6.GoTrueAdminApi);
+
+  @override
+  set admin(_i6.GoTrueAdminApi? _admin) => super.noSuchMethod(
+        Invocation.setter(
+          #admin,
+          _admin,
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  _i6.GoTrueMFAApi get mfa => (super.noSuchMethod(
+        Invocation.getter(#mfa),
+        returnValue: _FakeGoTrueMFAApi_16(
+          this,
+          Invocation.getter(#mfa),
+        ),
+      ) as _i6.GoTrueMFAApi);
+
+  @override
+  set mfa(_i6.GoTrueMFAApi? _mfa) => super.noSuchMethod(
+        Invocation.setter(
+          #mfa,
+          _mfa,
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  _i8.Stream<_i6.AuthState> get onAuthStateChange => (super.noSuchMethod(
+        Invocation.getter(#onAuthStateChange),
+        returnValue: _i8.Stream<_i6.AuthState>.empty(),
+      ) as _i8.Stream<_i6.AuthState>);
+
+  @override
+  _i8.Stream<_i6.AuthState> get onAuthStateChangeSync => (super.noSuchMethod(
+        Invocation.getter(#onAuthStateChangeSync),
+        returnValue: _i8.Stream<_i6.AuthState>.empty(),
+      ) as _i8.Stream<_i6.AuthState>);
+
+  @override
+  Map<String, String> get headers => (super.noSuchMethod(
+        Invocation.getter(#headers),
+        returnValue: <String, String>{},
+      ) as Map<String, String>);
+
+  @override
+  _i8.Future<_i6.AuthResponse> signInAnonymously({
+    Map<String, dynamic>? data,
+    String? captchaToken,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #signInAnonymously,
+          [],
+          {
+            #data: data,
+            #captchaToken: captchaToken,
+          },
+        ),
+        returnValue: _i8.Future<_i6.AuthResponse>.value(_FakeAuthResponse_17(
+          this,
+          Invocation.method(
+            #signInAnonymously,
+            [],
+            {
+              #data: data,
+              #captchaToken: captchaToken,
+            },
+          ),
+        )),
+      ) as _i8.Future<_i6.AuthResponse>);
+
+  @override
+  _i8.Future<_i6.AuthResponse> signUp({
+    String? email,
+    String? phone,
+    required String? password,
+    String? emailRedirectTo,
+    Map<String, dynamic>? data,
+    String? captchaToken,
+    _i6.OtpChannel? channel = _i6.OtpChannel.sms,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #signUp,
+          [],
+          {
+            #email: email,
+            #phone: phone,
+            #password: password,
+            #emailRedirectTo: emailRedirectTo,
+            #data: data,
+            #captchaToken: captchaToken,
+            #channel: channel,
+          },
+        ),
+        returnValue: _i8.Future<_i6.AuthResponse>.value(_FakeAuthResponse_17(
+          this,
+          Invocation.method(
+            #signUp,
+            [],
+            {
+              #email: email,
+              #phone: phone,
+              #password: password,
+              #emailRedirectTo: emailRedirectTo,
+              #data: data,
+              #captchaToken: captchaToken,
+              #channel: channel,
+            },
+          ),
+        )),
+      ) as _i8.Future<_i6.AuthResponse>);
+
+  @override
+  _i8.Future<_i6.AuthResponse> signInWithPassword({
+    String? email,
+    String? phone,
+    required String? password,
+    String? captchaToken,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #signInWithPassword,
+          [],
+          {
+            #email: email,
+            #phone: phone,
+            #password: password,
+            #captchaToken: captchaToken,
+          },
+        ),
+        returnValue: _i8.Future<_i6.AuthResponse>.value(_FakeAuthResponse_17(
+          this,
+          Invocation.method(
+            #signInWithPassword,
+            [],
+            {
+              #email: email,
+              #phone: phone,
+              #password: password,
+              #captchaToken: captchaToken,
+            },
+          ),
+        )),
+      ) as _i8.Future<_i6.AuthResponse>);
+
+  @override
+  _i8.Future<_i6.OAuthResponse> getOAuthSignInUrl({
+    required _i6.OAuthProvider? provider,
+    String? redirectTo,
+    String? scopes,
+    Map<String, String>? queryParams,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getOAuthSignInUrl,
+          [],
+          {
+            #provider: provider,
+            #redirectTo: redirectTo,
+            #scopes: scopes,
+            #queryParams: queryParams,
+          },
+        ),
+        returnValue: _i8.Future<_i6.OAuthResponse>.value(_FakeOAuthResponse_18(
+          this,
+          Invocation.method(
+            #getOAuthSignInUrl,
+            [],
+            {
+              #provider: provider,
+              #redirectTo: redirectTo,
+              #scopes: scopes,
+              #queryParams: queryParams,
+            },
+          ),
+        )),
+      ) as _i8.Future<_i6.OAuthResponse>);
+
+  @override
+  _i8.Future<_i6.AuthSessionUrlResponse> exchangeCodeForSession(
+          String? authCode) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #exchangeCodeForSession,
+          [authCode],
+        ),
+        returnValue: _i8.Future<_i6.AuthSessionUrlResponse>.value(
+            _FakeAuthSessionUrlResponse_19(
+          this,
+          Invocation.method(
+            #exchangeCodeForSession,
+            [authCode],
+          ),
+        )),
+      ) as _i8.Future<_i6.AuthSessionUrlResponse>);
+
+  @override
+  _i8.Future<_i6.AuthResponse> signInWithIdToken({
+    required _i6.OAuthProvider? provider,
+    required String? idToken,
+    String? accessToken,
+    String? nonce,
+    String? captchaToken,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #signInWithIdToken,
+          [],
+          {
+            #provider: provider,
+            #idToken: idToken,
+            #accessToken: accessToken,
+            #nonce: nonce,
+            #captchaToken: captchaToken,
+          },
+        ),
+        returnValue: _i8.Future<_i6.AuthResponse>.value(_FakeAuthResponse_17(
+          this,
+          Invocation.method(
+            #signInWithIdToken,
+            [],
+            {
+              #provider: provider,
+              #idToken: idToken,
+              #accessToken: accessToken,
+              #nonce: nonce,
+              #captchaToken: captchaToken,
+            },
+          ),
+        )),
+      ) as _i8.Future<_i6.AuthResponse>);
+
+  @override
+  _i8.Future<void> signInWithOtp({
+    String? email,
+    String? phone,
+    String? emailRedirectTo,
+    bool? shouldCreateUser,
+    Map<String, dynamic>? data,
+    String? captchaToken,
+    _i6.OtpChannel? channel = _i6.OtpChannel.sms,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #signInWithOtp,
+          [],
+          {
+            #email: email,
+            #phone: phone,
+            #emailRedirectTo: emailRedirectTo,
+            #shouldCreateUser: shouldCreateUser,
+            #data: data,
+            #captchaToken: captchaToken,
+            #channel: channel,
+          },
+        ),
+        returnValue: _i8.Future<void>.value(),
+        returnValueForMissingStub: _i8.Future<void>.value(),
+      ) as _i8.Future<void>);
+
+  @override
+  _i8.Future<_i6.AuthResponse> verifyOTP({
+    String? email,
+    String? phone,
+    String? token,
+    required _i6.OtpType? type,
+    String? redirectTo,
+    String? captchaToken,
+    String? tokenHash,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #verifyOTP,
+          [],
+          {
+            #email: email,
+            #phone: phone,
+            #token: token,
+            #type: type,
+            #redirectTo: redirectTo,
+            #captchaToken: captchaToken,
+            #tokenHash: tokenHash,
+          },
+        ),
+        returnValue: _i8.Future<_i6.AuthResponse>.value(_FakeAuthResponse_17(
+          this,
+          Invocation.method(
+            #verifyOTP,
+            [],
+            {
+              #email: email,
+              #phone: phone,
+              #token: token,
+              #type: type,
+              #redirectTo: redirectTo,
+              #captchaToken: captchaToken,
+              #tokenHash: tokenHash,
+            },
+          ),
+        )),
+      ) as _i8.Future<_i6.AuthResponse>);
+
+  @override
+  _i8.Future<String> getSSOSignInUrl({
+    String? providerId,
+    String? domain,
+    String? redirectTo,
+    String? captchaToken,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getSSOSignInUrl,
+          [],
+          {
+            #providerId: providerId,
+            #domain: domain,
+            #redirectTo: redirectTo,
+            #captchaToken: captchaToken,
+          },
+        ),
+        returnValue: _i8.Future<String>.value(_i11.dummyValue<String>(
+          this,
+          Invocation.method(
+            #getSSOSignInUrl,
+            [],
+            {
+              #providerId: providerId,
+              #domain: domain,
+              #redirectTo: redirectTo,
+              #captchaToken: captchaToken,
+            },
+          ),
+        )),
+      ) as _i8.Future<String>);
+
+  @override
+  _i8.Future<_i6.AuthResponse> refreshSession([String? refreshToken]) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #refreshSession,
+          [refreshToken],
+        ),
+        returnValue: _i8.Future<_i6.AuthResponse>.value(_FakeAuthResponse_17(
+          this,
+          Invocation.method(
+            #refreshSession,
+            [refreshToken],
+          ),
+        )),
+      ) as _i8.Future<_i6.AuthResponse>);
+
+  @override
+  _i8.Future<void> reauthenticate() => (super.noSuchMethod(
+        Invocation.method(
+          #reauthenticate,
+          [],
+        ),
+        returnValue: _i8.Future<void>.value(),
+        returnValueForMissingStub: _i8.Future<void>.value(),
+      ) as _i8.Future<void>);
+
+  @override
+  _i8.Future<_i6.ResendResponse> resend({
+    String? email,
+    String? phone,
+    required _i6.OtpType? type,
+    String? emailRedirectTo,
+    String? captchaToken,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #resend,
+          [],
+          {
+            #email: email,
+            #phone: phone,
+            #type: type,
+            #emailRedirectTo: emailRedirectTo,
+            #captchaToken: captchaToken,
+          },
+        ),
+        returnValue:
+            _i8.Future<_i6.ResendResponse>.value(_FakeResendResponse_20(
+          this,
+          Invocation.method(
+            #resend,
+            [],
+            {
+              #email: email,
+              #phone: phone,
+              #type: type,
+              #emailRedirectTo: emailRedirectTo,
+              #captchaToken: captchaToken,
+            },
+          ),
+        )),
+      ) as _i8.Future<_i6.ResendResponse>);
+
+  @override
+  _i8.Future<_i6.UserResponse> getUser([String? jwt]) => (super.noSuchMethod(
+        Invocation.method(
+          #getUser,
+          [jwt],
+        ),
+        returnValue: _i8.Future<_i6.UserResponse>.value(_FakeUserResponse_21(
+          this,
+          Invocation.method(
+            #getUser,
+            [jwt],
+          ),
+        )),
+      ) as _i8.Future<_i6.UserResponse>);
+
+  @override
+  _i8.Future<_i6.UserResponse> updateUser(
+    _i6.UserAttributes? attributes, {
+    String? emailRedirectTo,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #updateUser,
+          [attributes],
+          {#emailRedirectTo: emailRedirectTo},
+        ),
+        returnValue: _i8.Future<_i6.UserResponse>.value(_FakeUserResponse_21(
+          this,
+          Invocation.method(
+            #updateUser,
+            [attributes],
+            {#emailRedirectTo: emailRedirectTo},
+          ),
+        )),
+      ) as _i8.Future<_i6.UserResponse>);
+
+  @override
+  _i8.Future<_i6.AuthResponse> setSession(String? refreshToken) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #setSession,
+          [refreshToken],
+        ),
+        returnValue: _i8.Future<_i6.AuthResponse>.value(_FakeAuthResponse_17(
+          this,
+          Invocation.method(
+            #setSession,
+            [refreshToken],
+          ),
+        )),
+      ) as _i8.Future<_i6.AuthResponse>);
+
+  @override
+  _i8.Future<_i6.AuthSessionUrlResponse> getSessionFromUrl(
+    Uri? originUrl, {
+    bool? storeSession = true,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getSessionFromUrl,
+          [originUrl],
+          {#storeSession: storeSession},
+        ),
+        returnValue: _i8.Future<_i6.AuthSessionUrlResponse>.value(
+            _FakeAuthSessionUrlResponse_19(
+          this,
+          Invocation.method(
+            #getSessionFromUrl,
+            [originUrl],
+            {#storeSession: storeSession},
+          ),
+        )),
+      ) as _i8.Future<_i6.AuthSessionUrlResponse>);
+
+  @override
+  _i8.Future<void> signOut(
+          {_i6.SignOutScope? scope = _i6.SignOutScope.local}) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #signOut,
+          [],
+          {#scope: scope},
+        ),
+        returnValue: _i8.Future<void>.value(),
+        returnValueForMissingStub: _i8.Future<void>.value(),
+      ) as _i8.Future<void>);
+
+  @override
+  _i8.Future<void> resetPasswordForEmail(
+    String? email, {
+    String? redirectTo,
+    String? captchaToken,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #resetPasswordForEmail,
+          [email],
+          {
+            #redirectTo: redirectTo,
+            #captchaToken: captchaToken,
+          },
+        ),
+        returnValue: _i8.Future<void>.value(),
+        returnValueForMissingStub: _i8.Future<void>.value(),
+      ) as _i8.Future<void>);
+
+  @override
+  _i8.Future<List<_i6.UserIdentity>> getUserIdentities() => (super.noSuchMethod(
+        Invocation.method(
+          #getUserIdentities,
+          [],
+        ),
+        returnValue:
+            _i8.Future<List<_i6.UserIdentity>>.value(<_i6.UserIdentity>[]),
+      ) as _i8.Future<List<_i6.UserIdentity>>);
+
+  @override
+  _i8.Future<_i6.OAuthResponse> getLinkIdentityUrl(
+    _i6.OAuthProvider? provider, {
+    String? redirectTo,
+    String? scopes,
+    Map<String, String>? queryParams,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getLinkIdentityUrl,
+          [provider],
+          {
+            #redirectTo: redirectTo,
+            #scopes: scopes,
+            #queryParams: queryParams,
+          },
+        ),
+        returnValue: _i8.Future<_i6.OAuthResponse>.value(_FakeOAuthResponse_18(
+          this,
+          Invocation.method(
+            #getLinkIdentityUrl,
+            [provider],
+            {
+              #redirectTo: redirectTo,
+              #scopes: scopes,
+              #queryParams: queryParams,
+            },
+          ),
+        )),
+      ) as _i8.Future<_i6.OAuthResponse>);
+
+  @override
+  _i8.Future<void> unlinkIdentity(_i6.UserIdentity? identity) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #unlinkIdentity,
+          [identity],
+        ),
+        returnValue: _i8.Future<void>.value(),
+        returnValueForMissingStub: _i8.Future<void>.value(),
+      ) as _i8.Future<void>);
+
+  @override
+  _i8.Future<void> setInitialSession(String? jsonStr) => (super.noSuchMethod(
+        Invocation.method(
+          #setInitialSession,
+          [jsonStr],
+        ),
+        returnValue: _i8.Future<void>.value(),
+        returnValueForMissingStub: _i8.Future<void>.value(),
+      ) as _i8.Future<void>);
+
+  @override
+  _i8.Future<_i6.AuthResponse> recoverSession(String? jsonStr) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #recoverSession,
+          [jsonStr],
+        ),
+        returnValue: _i8.Future<_i6.AuthResponse>.value(_FakeAuthResponse_17(
+          this,
+          Invocation.method(
+            #recoverSession,
+            [jsonStr],
+          ),
+        )),
+      ) as _i8.Future<_i6.AuthResponse>);
+
+  @override
+  void startAutoRefresh() => super.noSuchMethod(
+        Invocation.method(
+          #startAutoRefresh,
+          [],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void stopAutoRefresh() => super.noSuchMethod(
+        Invocation.method(
+          #stopAutoRefresh,
+          [],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void notifyAllSubscribers(_i6.AuthChangeEvent? event) => super.noSuchMethod(
+        Invocation.method(
+          #notifyAllSubscribers,
+          [event],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  Object notifyException(
+    Object? exception, [
+    StackTrace? stackTrace,
+  ]) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #notifyException,
+          [
+            exception,
+            stackTrace,
+          ],
+        ),
+        returnValue: _FakeObject_22(
+          this,
+          Invocation.method(
+            #notifyException,
+            [
+              exception,
+              stackTrace,
+            ],
+          ),
+        ),
+      ) as Object);
 }

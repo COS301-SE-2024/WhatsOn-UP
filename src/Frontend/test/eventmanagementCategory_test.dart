@@ -218,7 +218,7 @@ void main() {
                   create: (_) => mockUserProvider),
             ],
             child: MaterialApp(
-              home: EventmanagementCategory(),
+              home: EventmanagementCategory(supabaseClient: Supabase.instance.client,),
             ),
           ),
         );
@@ -241,7 +241,7 @@ void main() {
                   create: (_) => mockUserProvider),
             ],
             child: MaterialApp(
-              home: EventmanagementCategory(),
+              home: EventmanagementCategory(supabaseClient: Supabase.instance.client),
             ),
           ),
         );
@@ -267,7 +267,7 @@ void main() {
                   create: (_) => mockUserProvider),
             ],
             child: MaterialApp(
-              home: EventmanagementCategory(),
+              home: EventmanagementCategory(supabaseClient: Supabase.instance.client,),
             ),
           ),
         );
@@ -290,7 +290,7 @@ void main() {
                     create: (_) => mockUserProvider),
               ],
               child: MaterialApp(
-                home: EventmanagementCategory(),
+                home: EventmanagementCategory(supabaseClient: Supabase.instance.client,),
               ),
             ),
           );

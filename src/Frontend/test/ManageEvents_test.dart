@@ -57,9 +57,9 @@ void main() {
     late MockuserProvider mockUserProvider;
     late MockApi mockApi;
     late MockSupabase mockSupabase;
+    late MockSupabaseClient mockSupabaseClient;
 
     // // Mock supabase objects
-    // late MockSupabaseClient mockSupabaseClient;
     // late MockSupabaseAuth mockSupabaseAuth;
     // late MockSession mockSession;
     // late MockSupabaseUser mockSupabaseUser;
@@ -70,13 +70,31 @@ void main() {
       // mockSession = MockSession();
       // mockSupabaseUser = MockSupabaseUser();
        mockSupabase = MockSupabase();
-
       // mock behavior
       // when(mockSupabaseClient.auth).thenReturn(mockSupabaseAuth);
       // when(mockSupabaseAuth.currentSession).thenReturn(mockSession);
       // when(mockSupabaseAuth.currentUser).thenReturn(mockSupabaseUser);
 
-        when(mockSupabase.client).thenReturn(MockSupabaseClient());
+      final mockSupabaseClient = MockSupabaseClient();
+      final mockAuth = MockGoTrueClient(); // Create a mock for the auth object
+
+      when(mockSupabase.client).thenReturn(mockSupabaseClient);
+      when(mockSupabaseClient.auth).thenReturn(mockAuth);
+      when(mockAuth.currentUser).thenReturn(
+        const SupabaseAuthUI.User(
+        id: '12345',
+        appMetadata: {'role': 'admin'},
+        userMetadata: {'name': 'John Doe', 'email': 'john.doe@example.com'},
+        aud: 'authenticated',
+        createdAt: "now"
+      ));
+
+      // when(mockAuth.currentSession).thenReturn(MockSession());
+      // when(mockAuth.currentUser).thenReturn(MockSupabaseUser());
+  
+
+        // when(mockSupabase.client).thenReturn(MockSupabaseClient());
+        // when(mockSupabase.client.auth).thenReturn(SupabaseAuthUI.GoTrueClient());
     });
 
     setUp(() {

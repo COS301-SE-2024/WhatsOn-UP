@@ -7,5 +7,5 @@ import 'package:image_picker/image_picker.dart';
 import 'package:firstapp/widgets/theme_manager.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-@GenerateMocks([EventProvider, userProvider, Api,ImagePicker,notificationProvider, ThemeNotifier, Supabase, SupabaseClient])
+@GenerateMocks([EventProvider, userProvider, Api,ImagePicker,notificationProvider, ThemeNotifier, Supabase, SupabaseClient, GoTrueClient])
 void main() {}
