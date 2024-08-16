@@ -70,6 +70,7 @@ dependencies:
   flutter_chat_bubble: ^2.0.2
   webview_flutter: ^4.8.0
   json_schema: ^5.2.0
+  flutter_local_notifications: ^17.2.2
 dio: ^5.5.0+1
 
 dev_dependencies:
