@@ -1,67 +1,50 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:provider/provider.dart';
-import 'package:firstapp/providers/events_providers.dart';
+import 'package:firstapp/services/EventService.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-// import '../main.dart';
-import '../providers/user_provider.dart';
 import '../screens/FilterScreen.dart';
-import '../screens/HostSearchScreenState.dart';
-
+import '../screens/SearchScreen.dart';
 import 'event_card.dart';
+// import 'package:firstapp/main.dart';
 
-class EventmanagementCategory extends StatefulWidget {
+
+class Pastevents extends StatefulWidget {
+  final EventService eventService;
   final SupabaseClient supabaseClient;
-  EventmanagementCategory({Key? key, required this.supabaseClient,}) : super(key: key);
+
+  Pastevents({Key? key, required this.eventService, required this.supabaseClient}) : super(key: key);
 
   @override
-  _EventmanagementCategoryState createState() =>
-      _EventmanagementCategoryState();
+  _PasteventsState createState() => _PasteventsState();
 }
 
-class _EventmanagementCategoryState extends State<EventmanagementCategory> {
-  late Future<List<Event>> _eventsHome;
+class _PasteventsState extends State<Pastevents> {
+  late Future<List<Event>> _pastEvents;
   late SupabaseClient supabaseClient;
 
   @override
   void initState() {
     super.initState();
-      supabaseClient = widget.supabaseClient;
-
+    supabaseClient = widget.supabaseClient;
     final user = supabaseClient.auth.currentUser;
-    _loadEvents();
+    _pastEvents = widget.eventService.fetchPastEvents(user!.id);
   }
 
-  void _loadEvents() async {
-    try {
-      EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
-      _eventsHome = eventP.eventsHome;
-    } catch (e) {
-      setState(() {
-        _errorMessage = 'Error loading events';
-        _errorOccurred = true;
-      });
-    }
-  }
-
-  late String _errorMessage;
-  late bool _errorOccurred = false;
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final textColour = theme.colorScheme.onSurface;
     final borderColour = theme.colorScheme.secondary;
-    final user = supabaseClient.auth.currentUser;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Edit Events'),
+        title: Text('Past Events'),
       ),
-      body: _errorOccurred
-          ? Center(child: Text(_errorMessage))
-          : Column(
+      body: Column(
         children: [
+          SizedBox(width: 35.0),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: Center(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -78,7 +61,7 @@ class _EventmanagementCategoryState extends State<EventmanagementCategory> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => HostSearchScreen(hostId: user!.id),
+                              builder: (context) => SearchScreen(),
                             ),
                           );
                         },
@@ -113,9 +96,10 @@ class _EventmanagementCategoryState extends State<EventmanagementCategory> {
               ),
             ),
           ),
+          SizedBox(width: 35.0),
           Expanded(
             child: FutureBuilder<List<Event>>(
-              future: _eventsHome,
+              future: _pastEvents,
               builder: (context, AsyncSnapshot<List<Event>> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(
@@ -129,32 +113,40 @@ class _EventmanagementCategoryState extends State<EventmanagementCategory> {
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                   return Center(child: Text('No events available'));
                 } else {
-                  userProvider userP = Provider.of<userProvider>(context, listen: false);
                   List<Event> events = snapshot.data!;
-                  if (userP.role != 'ADMIN') {
-                    events = events.where((event) => event.hosts.contains(userP.Fullname)).toList();
-                  }
-                  if (events.isEmpty) {
-                    return Center(child: Text('No upcoming or current events found.'));
-                  }
+                  DateTime now = DateTime.now();
+
+                  events = events.where((event) =>
+                      DateTime.parse(event.endTime).isBefore(now)
+                  ).toList();
+
+
                   return ListView.builder(
                     itemCount: events.length,
                     itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-                        child: EventCard(
-                          event: events[index],
-                          showBookmarkButton: false,
-                        ),
+                      return EventCard(
+                          event: events[index], showBookmarkButton: false,
                       );
+
                     },
+
                   );
+
                 }
+
               },
+
             ),
+
           ),
+
         ],
+
       ),
+
     );
+
   }
+
 }
+

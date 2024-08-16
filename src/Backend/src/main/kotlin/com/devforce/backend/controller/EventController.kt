@@ -67,7 +67,7 @@ class EventController {
         return events
     }
 
-    @GetMapping("/filterEvents")
+    /*@GetMapping("/filterEvents")
     @PreAuthorize("permitAll()")
     fun filterEvents(
         @RequestParam(required = false) startDate: String?,
@@ -85,15 +85,15 @@ class EventController {
         )
         return filteredEvents
     }
-
+*/
         //FUTURE
-    @GetMapping("/filter")
+   @GetMapping("/filter")
     @PreAuthorize("permitAll()")
     fun filterEvents(
         @RequestParam(required = false) startDateTime: String?,
-        @RequestParam(required = false) endDateTime: String?,
-        @RequestParam(required = false) isPrivate: Boolean?,
-        @RequestParam(required = false) maxAttendees: Int?
+       @RequestParam(required = false) endDateTime: String?,
+       @RequestParam(required = false) isPrivate: Boolean?,
+       @RequestParam(required = false) maxAttendees: Int?
     ): ResponseEntity<ResponseDto> {
         val filterByDto = FilterByDto(startDateTime, endDateTime, isPrivate, maxAttendees)
 

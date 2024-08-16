@@ -231,6 +231,56 @@ class Venue {
     };
   }
 }
+class Host {
+
+  final String userId;
+
+  final String eventId;
+
+  Host({
+
+    required this.userId,
+
+    required this.eventId,
+
+  });
+
+
+
+
+
+  factory Host.fromJson(Map<String, dynamic> json) {
+
+    return Host(
+
+      userId: json['user_id'],
+
+      eventId: json['event_id'],
+
+
+
+    );
+
+  }
+
+
+
+
+
+  Map<String, dynamic> toJson() {
+
+    return {
+
+      'user_id': userId,
+
+      'event_id': eventId,
+
+    };
+
+  }
+
+}
+
 
 class Event {
   late String nameOfEvent;

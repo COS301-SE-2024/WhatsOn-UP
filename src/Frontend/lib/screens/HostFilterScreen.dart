@@ -1,16 +1,18 @@
-import 'package:flutter/material.dart';
+/*import 'package:flutter/material.dart';
 import 'package:firstapp/services/EventService.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:firstapp/widgets/event_card.dart';
 import 'package:firstapp/widgets/FilteredResultScreen.dart';
 import 'package:intl/intl.dart';
+import 'package:firstapp/widgets/event_card.dart';
+import 'package:firstapp/widgets/HostFilteredResultScreen.dart';
 
-class FilterScreen extends StatefulWidget {
+class HostFilterScreen extends StatefulWidget {
   @override
-  _FilterScreenState createState() => _FilterScreenState();
+  _HostFilterScreenState createState() => _HostFilterScreenState();
 }
 
-class _FilterScreenState extends State<FilterScreen> with SingleTickerProviderStateMixin {
+class _HostFilterScreenState extends State<HostFilterScreen> with SingleTickerProviderStateMixin {
   EventService eventService = EventService(Supabase.instance.client);
 
   late String selectedDateRange = "";
@@ -45,7 +47,7 @@ class _FilterScreenState extends State<FilterScreen> with SingleTickerProviderSt
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Event Filter'),
+        title: Text('Host Event Filter'),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -238,8 +240,15 @@ class _FilterScreenState extends State<FilterScreen> with SingleTickerProviderSt
     bool isPrivate = selectedEventType == "Private";
     try {
       List<Event> events = await eventService.filterEvents(startDate, endDate, maxCapacity, isPrivate);
+
+      // Get the logged-in user ID
+      final userId = Supabase.instance.client.auth.currentUser?.id;
+
+      // Filter the events for those hosted by the logged-in user
+      List<Event> hostEvents = events.where((event) => event.hosts.any((host) => host.userId == userId)).toList();
+
       Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => FilteredResultScreen(filteredEvents: events),
+        builder: (context) => HostFilteredResultScreen(filteredEvents: hostEvents),
       ));
     }
     catch (error) {
@@ -262,3 +271,40 @@ class _FilterScreenState extends State<FilterScreen> with SingleTickerProviderSt
     super.dispose();
   }
 }
+
+
+
+import 'package:flutter/material.dart';
+import 'package:firstapp/models/Event.dart';
+import 'package:firstapp/widgets/event_card.dart';
+
+class HostFilteredResultScreen extends StatelessWidget {
+  final List<Event> filteredEvents;
+
+  HostFilteredResultScreen({required this.filteredEvents});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Filtered Host Events'),
+      ),
+      body: SafeArea(
+        child: filteredEvents.isNotEmpty
+            ? ListView.builder(
+          itemCount: filteredEvents.length,
+          itemBuilder: (context, index) {
+            return EventCard(event: filteredEvents[index]);
+          },
+        )
+            : Center(
+          child: Text(
+            'No events found for the selected filters.',
+            style: Theme.of(context).textTheme.headline6,
+          ),
+        ),
+      ),
+    );
+  }
+}
+*/

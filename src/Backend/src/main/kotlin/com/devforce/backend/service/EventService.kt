@@ -63,7 +63,10 @@ class EventService {
             this.endDateTime = createEventDto.endDateTime
             this.venue = venue
             this.maxAttendees = createEventDto.maxParticipants ?: 1
-            this.metadata = (createEventDto.metadata ?: "").toString()
+            this.metadata = createEventDto.metadata?.let {
+                // Assuming metadata is passed as a Map<String, Any> in DTO
+                ObjectMapper().writeValueAsString(it)
+            } ?: "{}"
             this.isPrivate = createEventDto.isPrivate ?: false
             this.hosts = setOf(user)
         }
@@ -222,7 +225,7 @@ class EventService {
 
 }
     //the filter for filtering screen
-    fun filteringEvents(startDate: String?, endDate: String?, minCapacity: Int?, maxCapacity: Int?, isPrivate: Boolean?): ResponseEntity<ResponseDto> {
+  /*  fun filteringEvents(startDate: String?, endDate: String?, minCapacity: Int?, maxCapacity: Int?, isPrivate: Boolean?): ResponseEntity<ResponseDto> {
         try {
             println("Before anything: $startDate")
             println("Before anything: $endDate")
@@ -291,7 +294,7 @@ class EventService {
             return ResponseEntity.internalServerError()
                 .body(ResponseDto("Error filtering events", System.currentTimeMillis(), null))
         }
-    }
+    }*/
 
     fun getUniqueCategories(): List<String> {
         return eventRepo.findUniqueCategories()
@@ -301,7 +304,7 @@ class EventService {
         return json.get("category")?.asText()
     }
 
-    fun parseToLocalDateTime(timestamp: String?): LocalDateTime? {
+  /*  fun parseToLocalDateTime(timestamp: String?): LocalDateTime? {
         return if (timestamp.isNullOrBlank()) {
             null
         } else {
@@ -310,7 +313,7 @@ class EventService {
             }
         }
     }
-
+*/
 
     //FUTURE
     fun filterEvents(filterBy: FilterByDto): ResponseEntity<ResponseDto>{
@@ -322,13 +325,13 @@ class EventService {
             eventsDto = events.map { event -> EventDto(event, false, null) }
         }
         else {
-            val userModel = (user as CustomUser).userModel
-            val events = eventRepo.filterEvents(filterBy, userModel.userId)
+           val userModel = (user as CustomUser).userModel
+           val events = eventRepo.filterEvents(filterBy, userModel.userId)
             eventsDto = events.map {
-                    event -> EventDto(event, userModel.userId in event.hosts.map { host -> host.userId }, null)
-            }
-        }
-        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto))
+                   event -> EventDto(event, userModel.userId in event.hosts.map { host -> host.userId }, null)
+           }
+       }
+       return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto))
     }
 
     fun getLocations(): ResponseEntity<ResponseDto> {

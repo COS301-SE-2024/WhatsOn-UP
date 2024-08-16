@@ -123,8 +123,16 @@ import 'package:provider/provider.dart';
 import '../providers/user_provider.dart';
 import '../widgets/eventManagement_category.dart';
 
+import 'package:supabase_auth_ui/supabase_auth_ui.dart';
+import '../services/EventService.dart';
+import '../widgets/Pastevents.dart';
 class ManageEvents extends StatefulWidget {
-  ManageEvents({Key? key}) : super(key: key);
+  final SupabaseClient supabaseClient;
+
+  ManageEvents({
+    Key? key,
+    required this.supabaseClient,
+  }) : super(key: key);
 
   @override
   _ManageEventsState createState() => _ManageEventsState();
@@ -143,6 +151,7 @@ class _ManageEventsState extends State<ManageEvents> {
   @override
   Widget build(BuildContext context) {
     userProvider userP = Provider.of<userProvider>(context);
+    SupabaseClient supabaseClient = widget.supabaseClient;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -165,14 +174,22 @@ class _ManageEventsState extends State<ManageEvents> {
                 _buildProfileOption(
                   text: userP.role == Admin ? 'All Events' : 'My Events',
                   onTap: () async =>
-                      await _navigateToEventManagementCategory(context),
+                      await _navigateToEventManagementCategory(context, supabaseClient),
                 ),
                 _buildDivider(),
                 _buildProfileOption(
                   text: 'Past Events',
                   onTap: () {
-                    // Handle onTap for 'Past Events'
-                  },
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Pastevents(
+                          eventService: EventService(supabaseClient),
+                          supabaseClient: supabaseClient,
+                        ),
+                      ),
+                    );
+                    },
                 ),
                 _buildDivider(),
                 _buildProfileOption(
@@ -198,10 +215,10 @@ class _ManageEventsState extends State<ManageEvents> {
     );
   }
 
-  Future<void> _navigateToEventManagementCategory(BuildContext context) async {
+  Future<void> _navigateToEventManagementCategory(BuildContext context, SupabaseClient supabaseClient) async {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => EventmanagementCategory()),
+      MaterialPageRoute(builder: (context) => EventmanagementCategory(supabaseClient: supabaseClient)),
     );
   }
 

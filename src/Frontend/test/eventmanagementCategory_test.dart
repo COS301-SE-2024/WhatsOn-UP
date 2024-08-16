@@ -1,21 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail_image_network/mocktail_image_network.dart';
 import 'package:provider/provider.dart';
 import 'package:firstapp/providers/events_providers.dart';
 import 'package:firstapp/providers/user_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'api_test.mocks.dart';
 import 'package:firstapp/widgets/event_card.dart';
 import 'package:firstapp/widgets/eventManagement_category.dart';
-
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:mockito/mockito.dart';
 
 
 
 
 void main() {
-
-  group('ManageEventsCategory Widget Tests', ()
-  {
+  setUpAll(() async {
+    SharedPreferences.setMockInitialValues({}); // Mock shared preferences
+    
+    await Supabase.initialize(
+      url: 'https://mehgbhiirnmypfgnkaud.supabase.co',
+      anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1laGdiaGlpcm5teXBmZ25rYXVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjI5NDMyMzYsImV4cCI6MjAzODUxOTIzNn0.g_oLlSZE3AH_nBntVe_hBPdthFDQHZqn0wxzS23kyrc',
+    );
+  });
+  group('ManageEventsCategory Widget Tests', () {
     late MockEventProvider mockEventProvider;
     late MockuserProvider mockUserProvider;
     late MockApi mockApi;
@@ -44,7 +52,8 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ), invitees: [],
+          ),
+          invitees: [],
         ),
         Event(
           id: '2',
@@ -63,7 +72,8 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ), invitees: [],
+          ),
+          invitees: [],
         ),
       ]);
       when(mockEventProvider.eventsHome).thenAnswer((_) async =>
@@ -85,7 +95,8 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ), invitees: [],
+          ),
+          invitees: [],
         ),
         Event(
           id: '2',
@@ -104,7 +115,8 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ), invitees: [],
+          ),
+          invitees: [],
         ),
         Event(
           id: '3',
@@ -123,7 +135,8 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ), invitees: [],
+          ),
+          invitees: [],
         ),
       ]);
       when(mockEventProvider.eventsRsvp).thenAnswer((_) async =>
@@ -145,7 +158,8 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ), invitees: [],
+          ),
+          invitees: [],
         ),
         Event(
           id: '2',
@@ -164,7 +178,8 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ), invitees: [],
+          ),
+          invitees: [],
         ),
         Event(
           id: '3',
@@ -183,7 +198,8 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ), invitees: [],
+          ),
+          invitees: [],
         ),
       ]);
     });
@@ -191,20 +207,22 @@ void main() {
 
     testWidgets('EventmanagementCategory widget builds correctly', (
         WidgetTester tester) async {
-      await tester.pumpWidget(
-        MultiProvider(
-          providers: [
+      await mockNetworkImages(() async {
+        await tester.pumpWidget(
+          MultiProvider(
+            providers: [
 
-            ChangeNotifierProvider<EventProvider>(
-                create: (_) => mockEventProvider),
-            ChangeNotifierProvider<userProvider>(
-                create: (_) => mockUserProvider),
-          ],
-          child: MaterialApp(
-            home: EventmanagementCategory(),
+              ChangeNotifierProvider<EventProvider>(
+                  create: (_) => mockEventProvider),
+              ChangeNotifierProvider<userProvider>(
+                  create: (_) => mockUserProvider),
+            ],
+            child: MaterialApp(
+              home: EventmanagementCategory(supabaseClient: Supabase.instance.client,),
+            ),
           ),
-        ),
-      );
+        );
+      });
       expect(find.text('Edit Events'), findsOneWidget);
       expect(find.byType(EventmanagementCategory), findsOneWidget);
     });
@@ -212,21 +230,22 @@ void main() {
 
     testWidgets(
         'Search and Filter buttons are present', (WidgetTester tester) async {
-      await tester.pumpWidget(
-        MultiProvider(
-          providers: [
+      await mockNetworkImages(() async {
+        await tester.pumpWidget(
+          MultiProvider(
+            providers: [
 
-            ChangeNotifierProvider<EventProvider>(
-                create: (_) => mockEventProvider),
-            ChangeNotifierProvider<userProvider>(
-                create: (_) => mockUserProvider),
-          ],
-          child: MaterialApp(
-            home: EventmanagementCategory(),
+              ChangeNotifierProvider<EventProvider>(
+                  create: (_) => mockEventProvider),
+              ChangeNotifierProvider<userProvider>(
+                  create: (_) => mockUserProvider),
+            ],
+            child: MaterialApp(
+              home: EventmanagementCategory(supabaseClient: Supabase.instance.client),
+            ),
           ),
-        ),
-      );
-
+        );
+      });
       expect(find.text('Search'), findsOneWidget);
       expect(find.text('Filter'), findsOneWidget);
     });
@@ -237,46 +256,50 @@ void main() {
       when(mockEventProvider.eventsHome).thenThrow(
           Exception('Error loading events'));
       when(mockUserProvider.role).thenReturn('ADMIN');
-      await tester.pumpWidget(
-        MultiProvider(
-          providers: [
+      await mockNetworkImages(() async {
+        await tester.pumpWidget(
+          MultiProvider(
+            providers: [
 
-            ChangeNotifierProvider<EventProvider>(
-                create: (_) => mockEventProvider),
-            ChangeNotifierProvider<userProvider>(
-                create: (_) => mockUserProvider),
-          ],
-          child: MaterialApp(
-            home: EventmanagementCategory(),
+              ChangeNotifierProvider<EventProvider>(
+                  create: (_) => mockEventProvider),
+              ChangeNotifierProvider<userProvider>(
+                  create: (_) => mockUserProvider),
+            ],
+            child: MaterialApp(
+              home: EventmanagementCategory(supabaseClient: Supabase.instance.client,),
+            ),
           ),
-        ),
-      );
-      await tester.pumpAndSettle();
-      expect(find.text('Error loading events'), findsOneWidget);
+        );
+        await tester.pumpAndSettle();
+        expect(find.text('Error loading events'), findsOneWidget);
+      });
     });
+
     testWidgets('Displays no events message when data is empty', (
-        WidgetTester tester) async {
-      when(mockEventProvider.eventsHome).thenAnswer((_) async => []);
+          WidgetTester tester) async {
+        when(mockEventProvider.eventsHome).thenAnswer((_) async => []);
+        await mockNetworkImages(() async {
+          await tester.pumpWidget(
+            MultiProvider(
+              providers: [
 
-      await tester.pumpWidget(
-        MultiProvider(
-          providers: [
+                ChangeNotifierProvider<EventProvider>(
+                    create: (_) => mockEventProvider),
+                ChangeNotifierProvider<userProvider>(
+                    create: (_) => mockUserProvider),
+              ],
+              child: MaterialApp(
+                home: EventmanagementCategory(supabaseClient: Supabase.instance.client,),
+              ),
+            ),
+          );
+        });
+        await tester.pump();
+        await tester.pump();
 
-            ChangeNotifierProvider<EventProvider>(
-                create: (_) => mockEventProvider),
-            ChangeNotifierProvider<userProvider>(
-                create: (_) => mockUserProvider),
-          ],
-          child: MaterialApp(
-            home: EventmanagementCategory(),
-          ),
-        ),
-      );
-      await tester.pump();
-      await tester.pump();
-
-      expect(find.text('No events available'), findsOneWidget);
-    });
+        expect(find.text('No events available'), findsOneWidget);
+      });
   });
 }
 

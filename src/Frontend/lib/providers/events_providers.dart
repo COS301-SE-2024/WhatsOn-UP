@@ -358,6 +358,25 @@ Future<List<Event>> _fetchEventsRsvp(String userId) async {
     }
   }
 
+  Future<List<Event>> _fetchHostEvents(String hostId) async {
+
+    try {
+      List<Event> allEvents = await api.getAllEvents();
+      List<Event> hostEvents = allEvents.where((event) => event.hosts.contains(hostId)).toList();
+      return hostEvents;
+    }
+    catch (e) {
+      throw Exception('Failed to fetch host events: $e');
+    }
+  }
+  Future<List<Event>> getHostEvents(String hostId) async {
+
+    try {
+      return await _fetchHostEvents(hostId);
+    } catch (e) {
+      throw Exception('Failed to fetch host events: $e');
+    }
+  }
   // void EditEventDateandTime(String id, String startDate) async {
   //   try {
   //     List<Event> events = await _eventsHome;
