@@ -11,6 +11,12 @@ import 'package:firstapp/services/PlacesService.dart';
 import 'package:location/location.dart' as LocationController;
 
 class NavigationPage extends StatefulWidget {
+  final String? initSearchQuery;
+
+  NavigationPage(
+    {String? this.initSearchQuery}
+  );
+
   @override
   _NavigationPageState createState() => _NavigationPageState();
 }
@@ -52,6 +58,9 @@ class _NavigationPageState extends State<NavigationPage> {
         await _getLocationUpdates();
         print("Current LOCATION: $_currentLocation");
       });
+    
+    if(widget.initSearchQuery != null)
+      _searchPlaces(widget.initSearchQuery!);
   }
 
   @override

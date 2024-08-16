@@ -61,6 +61,7 @@ import 'package:firstapp/pages/application_event.dart';
 import 'package:firstapp/pages/calendar_page.dart';
 import 'package:firstapp/pages/detailed_event_page.dart';
 import 'package:firstapp/pages/editProfile_page.dart';
+import 'package:firstapp/pages/explore_page.dart';
 
 import 'package:firstapp/pages/home_page.dart';
 import 'package:firstapp/pages/notifications.dart';
@@ -143,6 +144,7 @@ class MyApp extends StatelessWidget {
           '/notifications': (context)=> const Notifications (),
           '/generaluserapplications': (context)=> const TabGeneral(),
           '/userManual': (context)=> const UserManualWebView(),
+          '/navigation' : (context) => NavigationPage(),
         },
         debugShowCheckedModeBanner: false,
       ),

@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'package:firstapp/pages/edit_Event.dart';
+import 'package:firstapp/pages/explore_page.dart';
 import 'package:firstapp/providers/events_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firstapp/widgets/event_card.dart';
 import 'package:firstapp/services/api.dart';
 import 'package:provider/provider.dart';
+import 'package:socket_io_client/socket_io_client.dart';
 import '../main.dart';
 import '../providers/user_provider.dart';
 import 'package:intl/intl.dart';
@@ -103,7 +105,14 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
   }
 
   void _viewLocationOnMap() {
-    // Logic for viewing location on map
+    Venue? venue = _thisCurrentEvent.venue;
+    String? buildingName = (venue != null && venue.building != null) ? venue.building!.name : null;
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => NavigationPage(
+        initSearchQuery: buildingName
+      )),
+    );
   }
 
   void _reportEvent() {
