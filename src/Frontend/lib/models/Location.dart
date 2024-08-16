@@ -1,5 +1,6 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:json_schema/json_schema.dart';
 
 class Location {
   final String name;
@@ -23,6 +24,18 @@ class Location {
   });
 
   factory Location.fromJson(Map<String, dynamic> json) {
+    final schema = JsonSchema.create(locationSchema);
+    final ValidationResults validationResult = schema.validate(json);
+
+    if (validationResult.isValid) {
+      print('JSON is valid!');
+    } else {
+      print('JSON is invalid! Errors:');
+      for (var error in validationResult.errors) {
+        print(error);
+      }
+    }
+
     return Location(
       name: json['name'],
       id: json['id'],
@@ -30,7 +43,7 @@ class Location {
       displayName: json['displayName']['text'],
       languageCode: json['displayName']['languageCode'],
       location: LatLng(json['location']['latitude'], json['location']['longitude']),
-      imageUrls: _extractUrls(json['photos']),
+      imageUrls: (json['photos'] != null) ? _extractUrls(json['photos']) : ['https://meshhevents.com/wp-content/plugins/elementor/assets/images/placeholder.png'],
       types: List<String>.from(json['types'])
     );
   }
@@ -56,6 +69,60 @@ class Location {
         location = other.location,
         imageUrls = List.from(other.imageUrls),
         types = List.from(other.types);
+  
+  static final Map<String, dynamic> locationSchema = {
+  "type": "object",
+  "properties": {
+    "name": {"type": "string"},
+    "id": {"type": "string"},
+    "types": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "formattedAddress": {"type": "string"},
+    "location": {
+      "type": "object",
+      "properties": {
+        "latitude": {"type": "number"},
+        "longitude": {"type": "number"}
+      },
+      "required": ["latitude", "longitude"]
+    },
+    "displayName": {
+      "type": "object",
+      "properties": {
+        "text": {"type": "string"},
+        "languageCode": {"type": "string"}
+      },
+      "required": ["text", "languageCode"]
+    },
+    "photos": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {"type": "string"},
+          "widthPx": {"type": "integer"},
+          "heightPx": {"type": "integer"},
+          "authorAttributions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "displayName": {"type": "string"},
+                "uri": {"type": "string"},
+                "photoUri": {"type": "string"}
+              },
+              "required": ["displayName", "uri", "photoUri"]
+            }
+          }
+        },
+        "required": ["name", "widthPx", "heightPx", "authorAttributions"]
+      }
+    }
+  },
+  "required": ["name", "id", "types", "formattedAddress", "location", "displayName", "photos"]
+};
 
   
 }
