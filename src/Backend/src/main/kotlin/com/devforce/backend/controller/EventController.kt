@@ -112,4 +112,10 @@ class EventController {
     fun getLocations(): ResponseEntity<ResponseDto> {
         return eventService.getLocations()
     }
+
+    @PutMapping("/broadcast")
+    @PreAuthorize("hasAnyRole('HOST', 'ADMIN')")
+    fun broadcastMessage(@RequestParam eventId: UUID, @RequestParam message: String): ResponseEntity<ResponseDto> {
+        return eventService.broadcastMessage(message, eventId)
+    }
 }
