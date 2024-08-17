@@ -1,6 +1,7 @@
 import 'package:firstapp/pages/supabase_signup.dart';
 import 'package:firstapp/providers/notification_providers.dart';
 import 'package:firstapp/providers/user_provider.dart';
+import 'package:firstapp/services/LocalNotifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';

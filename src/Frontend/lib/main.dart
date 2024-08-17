@@ -61,6 +61,7 @@ import 'package:firstapp/pages/application_event.dart';
 import 'package:firstapp/pages/calendar_page.dart';
 import 'package:firstapp/pages/detailed_event_page.dart';
 import 'package:firstapp/pages/editProfile_page.dart';
+import 'package:firstapp/pages/explore_page.dart';
 
 import 'package:firstapp/pages/home_page.dart';
 import 'package:firstapp/pages/notifications.dart';
@@ -76,6 +77,7 @@ import 'package:firstapp/providers/events_providers.dart';
 import 'package:firstapp/providers/notification_providers.dart';
 import 'package:firstapp/providers/user_provider.dart';
 import 'package:firstapp/screens/SearchScreen.dart';
+import 'package:firstapp/services/LocalNotifications.dart';
 import 'package:firstapp/services/api.dart';
 import 'package:firstapp/widgets/event_card.dart';
 import 'package:firstapp/widgets/theme_manager.dart';
@@ -86,7 +88,10 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 late SupabaseClient supabaseClient;
 void main() async{
+  //Initialisations
   var api = Api();
+  WidgetsFlutterBinding.ensureInitialized();
+  await LocalNotifications.init();
   await Supabase.initialize(
     url: 'https://mehgbhiirnmypfgnkaud.supabase.co',
     anonKey:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1laGdiaGlpcm5teXBmZ25rYXVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjI5NDMyMzYsImV4cCI6MjAzODUxOTIzNn0.g_oLlSZE3AH_nBntVe_hBPdthFDQHZqn0wxzS23kyrc'
@@ -143,6 +148,7 @@ class MyApp extends StatelessWidget {
           '/notifications': (context)=> const Notifications (),
           '/generaluserapplications': (context)=> const TabGeneral(),
           '/userManual': (context)=> const UserManualWebView(),
+          '/navigation' : (context) => NavigationPage(),
         },
         debugShowCheckedModeBanner: false,
       ),

@@ -11,114 +11,15 @@ import 'package:firstapp/services/PlacesService.dart';
 import 'package:location/location.dart' as LocationController;
 
 class NavigationPage extends StatefulWidget {
+  final String? initSearchQuery;
+
+  NavigationPage(
+    {String? this.initSearchQuery}
+  );
+
   @override
   _NavigationPageState createState() => _NavigationPageState();
 }
-
-// class _NavigationPageState extends State<NavigationPage> {
-//   late MapBoxNavigation _directions;
-//   late MapBoxOptions _options;
-//   late MapBoxNavigationViewController _controller;
-
-//   String _instruction = "";
-//   bool _arrived = false;
-//   bool _routeBuilt = false;
-//   bool _isNavigating = false;
-//   double _distanceRemaining = 0.0;
-//   double _durationRemaining = 0.0;
-//   bool _isMultipleStop = false;
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     _directions = MapBoxNavigation();
-//     _options = MapBoxOptions(
-//       initialLatitude: 37.7749,
-//       initialLongitude: -122.4194,
-//       zoom: 15.0,
-//       tilt: 0.0,
-//       bearing: 0.0,
-//       enableRefresh: false,
-//       alternatives: true,
-//       voiceInstructionsEnabled: true,
-//       bannerInstructionsEnabled: true,
-//       longPressDestinationEnabled: true,
-//       mode: MapBoxNavigationMode.driving,
-//       simulateRoute: false,
-//       language: "en",
-//       units: VoiceUnits.metric,
-//     );
-
-//     MapBoxNavigation.instance.registerRouteEventListener(_onRouteEvent);
-//   }
-
-//   Future<void> _onRouteEvent(e) async {
-//     _distanceRemaining = await _directions.getDistanceRemaining() as double;
-//     _durationRemaining = await _directions.getDurationRemaining() as double;
-
-//     switch (e.eventType) {
-//       case MapBoxEvent.progress_change:
-//         var progressEvent = e.data as RouteProgressEvent;
-//         _arrived = progressEvent.arrived as bool;
-//         if (progressEvent.currentStepInstruction != null)
-//           _instruction = progressEvent.currentStepInstruction as String;
-//         break;
-//       case MapBoxEvent.route_building:
-//       case MapBoxEvent.route_built:
-//         _routeBuilt = true;
-//         break;
-//       case MapBoxEvent.route_build_failed:
-//         _routeBuilt = false;
-//         break;
-//       case MapBoxEvent.navigation_running:
-//         _isNavigating = true;
-//         break;
-//       case MapBoxEvent.on_arrival:
-//         _arrived = true;
-//         if (!_isMultipleStop) {
-//           await Future.delayed(Duration(seconds: 3));
-//           await _directions.finishNavigation();
-//         } else {}
-//         break;
-//       case MapBoxEvent.navigation_finished:
-//       case MapBoxEvent.navigation_cancelled:
-//         _routeBuilt = false;
-//         _isNavigating = false;
-//         break;
-//       default:
-//         break;
-//     }
-//     setState(() {});
-//   }
-
-//   Future<void> startNavigation() async {
-//     var wayPoints = <WayPoint>[];
-//     wayPoints.add(WayPoint(name: "start", latitude: 37.7749, longitude: -122.4194));
-//     wayPoints.add(WayPoint(name: "end", latitude: 37.7849, longitude: -122.4094));
-
-//     await _directions.startNavigation(
-//       wayPoints: wayPoints,
-//       options: _options,
-//     );
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(title: Text("Navigation")),
-//       body: Container(
-//                 color: Colors.grey,
-//                 child: MapBoxNavigationView(
-//                     options: _options,
-//                     onRouteEvent: _onRouteEvent,
-//                     onCreated:
-//                         (MapBoxNavigationViewController controller) async {
-//                       _controller = controller;
-//                     }),
-//               ),
-//     );
-//   }
-// }
 
 class _NavigationPageState extends State<NavigationPage> {
   
@@ -157,6 +58,9 @@ class _NavigationPageState extends State<NavigationPage> {
         await _getLocationUpdates();
         print("Current LOCATION: $_currentLocation");
       });
+    
+    if(widget.initSearchQuery != null)
+      _searchPlaces(widget.initSearchQuery!);
   }
 
   @override
