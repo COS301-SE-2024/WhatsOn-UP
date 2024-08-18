@@ -64,6 +64,7 @@ import 'package:firstapp/pages/editProfile_page.dart';
 import 'package:firstapp/pages/explore_page.dart';
 
 import 'package:firstapp/pages/home_page.dart';
+import 'package:firstapp/pages/manageEvents.dart';
 import 'package:firstapp/pages/notifications.dart';
 import 'package:firstapp/pages/host_application.dart';
 import 'package:firstapp/pages/profilePage.dart';
@@ -94,7 +95,7 @@ void main() async{
   await LocalNotifications.init();
   await Supabase.initialize(
     url: 'https://mehgbhiirnmypfgnkaud.supabase.co',
-    anonKey:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1laGdiaGlpcm5teXBmZ25rYXVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjI5NDMyMzYsImV4cCI6MjAzODUxOTIzNn0.g_oLlSZE3AH_nBntVe_hBPdthFDQHZqn0wxzS23kyrc'
+    anonKey:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1laGdiaGlpcm5teXBmZ25rYXVkIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcyMjk0MzIzNiwiZXhwIjoyMDM4NTE5MjM2fQ.OhtxIKQbTj9aQF3nlRx3K9I9NGtkKQCAzhUqg4WPCH8'
   );
   // runApp(ChangeNotifierProvider<ThemeNotifier>(
   //   create: (_) => new ThemeNotifier(),
@@ -149,6 +150,7 @@ class MyApp extends StatelessWidget {
           '/generaluserapplications': (context)=> const TabGeneral(),
           '/userManual': (context)=> const UserManualWebView(),
           '/navigation' : (context) => NavigationPage(),
+          '/manageEvents': (context) => ManageEvents(supabaseClient: supabaseClient),
         },
         debugShowCheckedModeBanner: false,
       ),

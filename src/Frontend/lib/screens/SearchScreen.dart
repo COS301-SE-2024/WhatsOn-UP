@@ -254,7 +254,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   if (index >= _searchResults.length) {
                     return Container();
                   }
-                  return EventCard(event: _searchResults[index]);
+                  return EventCard(event: _searchResults[index],showBookmarkButton: false);
                 },
               ),
             ),

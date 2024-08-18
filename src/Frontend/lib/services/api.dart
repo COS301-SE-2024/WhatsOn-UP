@@ -759,7 +759,43 @@ Future<List<AppNotification>> getAllNotification(
       throw Exception(e.toString());
     }
   }
+Future<Map<String, dynamic>> broadcastEvent(String eventId, String message, String userId)async {
 
+    final String url='http://${globals.domain}:8080/api/events/broadcast?eventId=$eventId&message=$message';
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $userId',
+    };
+
+    try {
+      var response = await http.put(Uri.parse(url), headers: headers);
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        throw Exception('Failed to BROADCAST EVENT');
+      }
+    } catch (e) {
+      return {'error': e.toString()};
+    }
+
+}
+  Future<Map<String, dynamic>> broadcast( String message)async {
+
+    final String url='http://${globals.domain}:8080/api/admin/broadcast?message=$message';
+
+    try {
+      var response = await http.put(Uri.parse(url));
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        throw Exception('Failed to BROADCAST');
+      }
+    } catch (e) {
+      return {'error': e.toString()};
+    }
+
+  }
   Future<void> _uploadProofImage(
       String applicationId, Uint8List imageBytes, String userId) async {
     final String _uploadUrl =
