@@ -16,7 +16,8 @@ export class AppService {
     const { data, error } = await this.supabase
       .from('notifications')
       .select('notification_id, message, event_id, user_id, sent_at, seen_at, notification_types(name), events(description, is_private, title, venues(name, buildings(location, name, access_type)), max_attendees, start_date_time, end_date_time)')
-      .eq('user_id', user_id);
+      .eq('user_id', user_id)
+      .order("sent_at", {ascending: false});
 
     if (error) {
       console.error('Error fetching notifications:', error);
