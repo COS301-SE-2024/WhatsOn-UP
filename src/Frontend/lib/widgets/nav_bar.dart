@@ -358,7 +358,6 @@ class NavBar extends StatelessWidget {
           case 2:
             showDialog(
               context: context,
-              barrierColor: Colors.transparent,
               builder: (BuildContext context) {
                 return Broadcast();
               },

@@ -74,7 +74,7 @@ class Broadcast extends StatelessWidget {
     Api api = Api();
 
     try {
-      final response = await api.broadcast( messageController.text);
+      final response = await api.broadcast( messageController.text, userP.userId);
       if (response['status'] == 'success') {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Broadcast sent successfully"), backgroundColor: Colors.green),
