@@ -115,15 +115,15 @@ class _HomePageState extends State<HomePage> {
         return  ManageEvents(supabaseClient: Supabase.instance.client);
 
       case 6:
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          showDialog(
-            context: context,
-            barrierColor: Colors.transparent,
-            builder: (BuildContext context) {
-              return Broadcast();
-            },
-          );
-        });
+        // WidgetsBinding.instance.addPostFrameCallback((_) {
+        //   showDialog(
+        //     context: context,
+        //     barrierColor: Colors.transparent,
+        //     builder: (BuildContext context) {
+        //       return Broadcast();
+        //     },
+        //   );
+        // });
         return _buildHomePage();
       default:
         return _buildHomePage();
