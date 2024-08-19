@@ -58,6 +58,11 @@ class AdminController {
         return adminService.getAllApplications(status)
     }
 
+    @PutMapping("/broadcast")
+    fun broadcastMessage(@RequestParam message: String): ResponseEntity<ResponseDto> {
+        return adminService.broadcastMessage(message)
+    }
+
 
 
 }
