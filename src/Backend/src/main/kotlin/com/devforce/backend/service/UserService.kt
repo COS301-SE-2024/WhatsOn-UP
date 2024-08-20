@@ -265,7 +265,7 @@ class UserService {
         hostApplicationsRepo.save(hostApplication)
 
         if (studentEmail != null){
-            val origin = "http://localhost:8080/api/user/verify_application?veriCode=$veriCode"
+            val origin = "https://api-237rzrxg6a-uc.a.run.app/api/user/verify_application?veriCode=$veriCode"
 
             val email = SimpleMailMessage().apply {
                 setTo(studentEmail)
