@@ -204,12 +204,13 @@ class _ManageEventsState extends State<ManageEvents> {
                   onTap: () => _navigateToAttendeesEvent(context),
                 ),
                 _buildDivider(),
-                if (userP.role == Admin) _buildDivider(),
+                if (userP.role == Admin) ... [
                 _buildProfileOption(
                   text: 'General user Host Applications',
                   onTap: () => _navigateToGeneralEventApplications(context),
                 ),
                 _buildDivider(),
+                ],
               ],
             ),
     );
