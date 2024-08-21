@@ -14,7 +14,7 @@ class PreferenceDto {
 }
 
 export class InitPreferencesDto {
-  @IsArray()
+//   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => PreferenceDto)
   preferences: PreferenceDto[];
