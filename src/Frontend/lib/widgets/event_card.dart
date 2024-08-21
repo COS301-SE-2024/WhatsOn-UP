@@ -400,9 +400,7 @@ class _EventCardState extends State<EventCard> {
     EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
     userProvider userP = Provider.of<userProvider>(context, listen: false);
     String userRole = userP.role;
-    widget.showBookmarkButton = userRole == "GUEST"
-        ? false
-        : true; // if user is a guest, don't show bookmark button
+    widget.showBookmarkButton = widget.showBookmarkButton && userRole != "GUEST";
 
     final theme = Theme.of(context);
     final cardColour = theme.colorScheme.surface;
