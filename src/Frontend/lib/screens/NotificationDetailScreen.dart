@@ -82,13 +82,15 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
     }
   }
 
+  String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
+
   @override
   Widget build(BuildContext context) {
     String formattedDateSentAt = formatDateTime(widget.notification.sentAt);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.notification.notificationTypes),
+        title: Text(capitalize(widget.notification.notificationTypes)),
       ),
       body: isLoading
           ? Center(
