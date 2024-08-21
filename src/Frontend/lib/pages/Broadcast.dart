@@ -1,16 +1,16 @@
+
 import 'package:firstapp/providers/user_provider.dart';
 import 'package:firstapp/services/api.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-
+import 'package:emoji_selector/emoji_selector.dart';
 
 class Broadcast extends StatelessWidget {
-
   Broadcast();
 
   final TextEditingController messageController = TextEditingController();
+  EmojiData? selectedEmoji;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,6 @@ class Broadcast extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             TextField(
-
               controller: messageController,
               minLines: 1,
               maxLines: 20,
@@ -38,6 +37,10 @@ class Broadcast extends StatelessWidget {
               decoration: InputDecoration(
                 labelText: 'Write your announcement here..',
                 border: OutlineInputBorder(),
+                suffixIcon: IconButton(
+                  icon: Icon(Icons.emoji_emotions),
+                  onPressed: () => _showEmojiPicker(context),
+                ),
               ),
             ),
             const SizedBox(height: 20),
@@ -68,13 +71,31 @@ class Broadcast extends StatelessWidget {
     );
   }
 
+  void _showEmojiPicker(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return SingleChildScrollView(
+          child: EmojiSelector(
+            onSelected: (emoji) {
+              messageController.text += emoji.char;
+              Navigator.pop(context);
+            },
+            columns: 11,
+            padding: const EdgeInsets.all(10),
+          ),
+        );
+      },
+    );
+  }
+
   Future<void> _sendEventBroadcast(BuildContext context) async {
     userProvider userP = Provider.of<userProvider>(context, listen: false);
 
     Api api = Api();
 
     try {
-      final response = await api.broadcast( messageController.text, userP.userId);
+      final response = await api.broadcast(messageController.text, userP.userId);
       if (response['status'] == 'success') {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Broadcast sent successfully"), backgroundColor: Colors.green),

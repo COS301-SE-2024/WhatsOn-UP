@@ -67,95 +67,7 @@ class _ManageEventsState extends State<ManageEvents> {
           size: 50.0,
         ),
       )
-      // :Padding(
-      //   padding: const EdgeInsets.all(16.0),
-      //   child: Column(
-      //     mainAxisAlignment: MainAxisAlignment.start,
-      //     crossAxisAlignment: CrossAxisAlignment.center,
-      //     children: [
-      //
-      //       SizedBox(height: 100.0),
-      //       Expanded(
-      //         child: GridView.builder(
-      //           shrinkWrap: true,
-      //           physics: NeverScrollableScrollPhysics(),
-      //           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-      //             crossAxisCount: 2,
-      //             crossAxisSpacing: 16.0,
-      //             mainAxisSpacing: 16.0,
-      //             childAspectRatio: 1.0,
-      //           ),
-      //           itemCount: options.length,
-      //           itemBuilder: (context, index) {
-      //             final option = options[index];
-      //             final IconData icon = option['icon'] as IconData;
-      //             final isSelected = _selectedOption == option['text'];
-      //             return MouseRegion(
-      //                 onEnter: (_) {
-      //                   setState(() {
-      //                     _hoveredIndex = index;
-      //                   });
-      //                 },
-      //                 onExit: (_) {
-      //                   setState(() {
-      //                     _hoveredIndex = null;
-      //                   });
-      //                 },
-      //             child: GestureDetector(
-      //               onTap: () {
-      //                 setState(() {
-      //                   _selectedOption = option['text'];
-      //                 });
-      //                 _navigateToRoute(option['route']!, context);
-      //               },
-      //               child: Container(
-      //                 padding: EdgeInsets.all(16.0),
-      //                 decoration: BoxDecoration(
-      //             color: _hoveredIndex == index || isSelected
-      //             ? Color.fromARGB(255, 149, 137, 74)
-      //                 : Colors.transparent,
-      //                   borderRadius: BorderRadius.circular(12),
-      //             border: Border.all(
-      //             color: _hoveredIndex == index || isSelected
-      //             ? Colors.transparent
-      //                 : Color.fromARGB(255, 149, 137, 74),
-      //             width: 2.0,
-      //             ),
-      //                 ),
-      //                 child: Column(
-      //                   mainAxisAlignment: MainAxisAlignment.center,
-      //                   children: [
-      //                     Icon(
-      //                       icon,
-      //                       size: 50.0,
-      //             color: _hoveredIndex == index || isSelected
-      //             ? Colors.white
-      //                 : Colors.black,
-      //                     ),
-      //                     SizedBox(height: 8.0),
-      //                     Text(
-      //                       option['text'],
-      //                       textAlign: TextAlign.center,
-      //                       style: TextStyle(
-      //                         fontWeight: FontWeight.bold,
-      //             color: _hoveredIndex == index || isSelected
-      //             ? Colors.white
-      //                 : Colors.black,
-      //
-      //                       ),
-      //                     ),
-      //                   ],
-      //                 ),
-      //               ),
-      //             )
-      //             );
-      //
-      //           },
-      //         ),
-      //       ),
-      //     ],
-      //   ),
-      // ),
+
       :Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -190,13 +102,13 @@ class _ManageEventsState extends State<ManageEvents> {
                       padding: EdgeInsets.all(16.0),
                       decoration: BoxDecoration(
                         color: isSelected
-                            ? Color.fromARGB(255, 149, 137, 74) // Gold when selected
-                            : Colors.transparent, // Transparent when not selected
+                            ? Color.fromARGB(255, 149, 137, 74)
+                            : Colors.transparent,
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
                           color: isSelected
                               ? Colors.transparent
-                              : Color.fromARGB(255, 149, 137, 74), // Gold border when not selected
+                              : Color.fromARGB(255, 149, 137, 74),
                           width: 2.0,
                         ),
                       ),
@@ -206,7 +118,7 @@ class _ManageEventsState extends State<ManageEvents> {
                           Icon(
                             icon,
                             size: 50.0,
-                            color: isSelected ? Colors.white : Colors.black, // White when selected, black otherwise
+                            color: isSelected ? Colors.white : Colors.black,
                           ),
                           SizedBox(height: 8.0),
                           Text(
@@ -214,7 +126,7 @@ class _ManageEventsState extends State<ManageEvents> {
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              color: isSelected ? Colors.white : Colors.black, // White when selected, black otherwise
+                              color: isSelected ? Colors.white : Colors.black,
                             ),
                           ),
                         ],
