@@ -10,7 +10,7 @@ export class UserPreferencesController {
   @Post('init')
   async initPreferences(
     @GetUserId() userId: string,
-    @Body() preferences: { categoryId: string, preferenceValue: number }[]
+    @Body() initPreferencesDto: InitPreferencesDto
   ) {
     if (!userId) {
       throw new UnauthorizedException({
@@ -21,7 +21,7 @@ export class UserPreferencesController {
     }
     console.log('Token: ', userId);
     
-    return this.userPreferencesService.initPreferences(userId, preferences);
+    return this.userPreferencesService.initPreferences(userId, initPreferencesDto);
   }
 
 }

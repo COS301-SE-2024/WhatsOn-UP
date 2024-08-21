@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { createClient } from '@supabase/supabase-js';
+import { InitPreferencesDto } from './dto/init-preferences.dto';
 
 @Injectable()
 export class UserPreferencesService {
@@ -9,9 +10,9 @@ export class UserPreferencesService {
     );
 
     //initialise user preferences with initial values
-    async initPreferences(userId: string, preferences: { categoryId: string, preferenceValue: number }[]): Promise<any> {
+    async initPreferences(userId: string, prefs: InitPreferencesDto): Promise<any> {
 
-        if (!Array.isArray(preferences)) {
+        if (!Array.isArray(prefs.preferences)) {
             
             throw new HttpException(
                 {
@@ -24,7 +25,7 @@ export class UserPreferencesService {
           }
         
 
-        const insertData = preferences.map(pref => ({
+        const insertData = prefs.preferences.map(pref => ({
           user_id: userId,
           category_id: pref.categoryId,
           survey_preference_value: pref.preferenceValue,
@@ -40,7 +41,7 @@ export class UserPreferencesService {
             console.log(error);
             switch (error.code) {
                 case '23503' : 
-                    errorMsg += " Invalid userId or categoryId supplied"
+                    errorMsg += " Invalid userId or categoryId supplied";
                     break;
                 case '23505' : {
                     //extract and return category id
@@ -48,9 +49,12 @@ export class UserPreferencesService {
                     const match = regex.exec(error.details);
                     const categoryId =  match ? match[2] : "";
 
-                    errorMsg += ` Category ${categoryId} already has initial value for this user`
+                    errorMsg += ` Category ${categoryId} already has initial value for this user`;
                     break;
                 }
+                case '22P02' : 
+                    errorMsg += ` ${error.message}`;
+                    break;
             }
             throw new HttpException(
                 {
@@ -68,28 +72,4 @@ export class UserPreferencesService {
             timestamp: new Date().toISOString(),
         };
       }
-
-//   //update user preferences
-//   async updatePreferences(userId: string): Promise<any> {
-//     const { data, error } = await this.supabase
-//       .from('user_preferences')
-//       .upsert({ user_id: userId});
-
-//     if (error) {
-//       throw new Error(error.message);
-//     }
-//     return data;
-//   }
-
-//   async getPreferences(userId: string): Promise<any> {
-//     const { data, error } = await this.supabase
-//       .from('user_preferences')
-//       .select('*')
-//       .eq('user_id', userId);
-
-//     if (error) {
-//       throw new Error(error.message);
-//     }
-//     return data;
-//   }
 }
