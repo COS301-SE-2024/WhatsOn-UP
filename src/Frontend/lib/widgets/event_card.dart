@@ -4,6 +4,39 @@ import 'package:firstapp/pages/detailed_event_page.dart';
 import 'package:provider/provider.dart';
 import '../providers/user_provider.dart';
 
+
+class Category {
+  final String id;
+  final String name;
+  bool isSelected;
+
+  Category({
+    required this.id,
+    required this.name,
+    this.isSelected = false,
+  });
+
+  factory Category.fromJson(String json) {
+    final parts = json.split(',');
+    if (parts.length != 2) {
+      throw FormatException('Invalid category format');
+    }
+    return Category(
+      id: parts[0],
+      name: parts[1],
+    );
+  }
+
+  String toJson() {
+    return '$id,$name';
+  }
+}
+
+
+
+
+
+
 class Role {
   final int id;
   final String name;

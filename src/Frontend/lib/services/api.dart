@@ -922,4 +922,72 @@ Future<List<AppNotification>> getAllNotification(
       throw Exception(e.toString());
     }
   }
+
+
+
+
+
+
+  Future<List<Category>> getCategories({required String userId}) async {
+    String notifyUserUrl = 'http://${globals.domain}:8080/api/events/categories';
+
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $userId',
+    };
+
+    try {
+      var response = await http.get(Uri.parse(notifyUserUrl), headers: headers);
+
+      if (response.statusCode == 200) {
+        print('Response body: ${response.body}');
+        final List<dynamic> jsonResponse = jsonDecode(response.body)['data'];
+
+        return  jsonResponse.map((json) => Category.fromJson(json as String)).toList();
+
+      } else {
+        throw Exception('Failed to load categories');
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
 }
+
+// class ApiResponse {
+//   final String status;
+//   final int timestamp;
+//   final List<Category> data;
+//
+//   ApiResponse({
+//     required this.status,
+//     required this.timestamp,
+//     required this.data,
+//   });
+//
+//   factory ApiResponse.fromJson(Map<String, dynamic> json) {
+//     List<Category> categories = (json['data'] as List<dynamic>)
+//         .map((item) => Category.fromJson(item as String))
+//         .toList();
+//
+//     return ApiResponse(
+//       status: json['status'] ?? '',
+//       timestamp: json['timestamp'] ?? 0,
+//       data: categories,
+//     );
+//   }
+//
+//   Map<String, dynamic> toJson() {
+//     return {
+//       'status': status,
+//       'timestamp': timestamp,
+//       'data': data.map((category) => category.toJson()).toList(),
+//     };
+//   }
+// }
+
+
+
+

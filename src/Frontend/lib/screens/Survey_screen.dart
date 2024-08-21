@@ -90,8 +90,12 @@
 //   }
 // }
 import 'dart:convert';
+import 'package:firstapp/providers/user_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../pages/home_page.dart';
+import '../services/api.dart';
+import '../widgets/event_card.dart';
 
 class SurveyScreen extends StatefulWidget {
   @override
@@ -99,15 +103,35 @@ class SurveyScreen extends StatefulWidget {
 }
 
 class _SurveyScreenState extends State<SurveyScreen> {
-  final List<Category> categories = [
-    Category(name: 'Health'),
-    Category(name: 'Fitness'),
-    Category(name: 'Lifestyle'),
-    Category(name: 'Diet'),
-    Category(name: 'Wellness'),
-    Category(name: 'Technology'),
-    // Add more categories as needed
-  ];
+  List<Category> categories = [];  // Initialize as an empty list
+
+  @override
+  void initState() {
+    super.initState();
+    fetchCategories();  // Fetch categories when the screen initializes
+  }
+  Future<void> fetchCategories() async {
+    userProvider userP = Provider.of<userProvider>(context, listen: false);
+    Api api = Api();
+    try {
+      final List<Category> fetchedCategories = await api.getCategories(userId: userP.userId);
+
+      setState(() {
+        categories = fetchedCategories;
+      });
+    } catch (e) {
+      print('Failed to fetch categories: $e');
+    }
+  }
+  // final List<Category> categories = [
+  //   Category(name: 'Health'),
+  //   Category(name: 'Fitness'),
+  //   Category(name: 'Lifestyle'),
+  //   Category(name: 'Diet'),
+  //   Category(name: 'Wellness'),
+  //   Category(name: 'Technology'),
+  //   // Add more categories as needed
+  // ];
 
   @override
   Widget build(BuildContext context) {
@@ -208,20 +232,8 @@ class _SurveyScreenState extends State<SurveyScreen> {
       MaterialPageRoute(builder: (context) => HomePage()),
     );
 
-    // Save the JSON string to a file or upload it to a server
+
   }
 }
 
-class Category {
-  final String name;
-  bool isSelected;
 
-  Category({required this.name, this.isSelected = false});
-
-  Map<String, dynamic> toJson() {
-    return {
-      'name': name,
-      'isSelected': isSelected,
-    };
-  }
-}
