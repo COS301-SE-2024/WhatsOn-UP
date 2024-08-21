@@ -179,6 +179,7 @@ import 'package:firstapp/services/api.dart';
 import '../providers/events_providers.dart';
 import '../providers/notification_providers.dart';
 import '../providers/user_provider.dart';
+import '../screens/Survey_screen.dart';
 import '../services/socket_client.dart';
 import '../services/globals.dart' as globals;
 
@@ -411,6 +412,7 @@ class _SupabaseLoginState extends State<SupabaseLogin> {
           TextButton(
             onPressed: () async {
               try {
+
                 await _login(isGuest: true);
 
                 Navigator.pushReplacement(
@@ -498,9 +500,13 @@ class _SupabaseLoginState extends State<SupabaseLogin> {
               isGuest: false,
             );
 
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(builder: (context) => HomePage()),
+            // );
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => HomePage()),
+              MaterialPageRoute(builder: (context) => SurveyScreen()),
             );
           }
         } catch (e) {
