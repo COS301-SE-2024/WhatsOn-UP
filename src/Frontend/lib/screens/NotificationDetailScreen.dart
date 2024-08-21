@@ -126,12 +126,12 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
                       ),
                     ),
                   ),
-                  Text(
-                    'Seen At: ${widget.notification.seenAt ?? 'Not seen yet'}',
-                    style:
-                        TextStyle(fontSize: 12.0, fontStyle: FontStyle.italic),
-                    textAlign: TextAlign.end,
-                  ),
+                  // Text(
+                  //   'Seen At: ${widget.notification.seenAt ?? 'Not seen yet'}',
+                  //   style:
+                  //       TextStyle(fontSize: 12.0, fontStyle: FontStyle.italic),
+                  //   textAlign: TextAlign.end,
+                  // ),
                   if (widget.notification.notificationTypes == 'invite') ...[
                     SizedBox(height: 20.0),
                     Row(
