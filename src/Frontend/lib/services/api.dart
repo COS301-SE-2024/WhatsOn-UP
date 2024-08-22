@@ -953,40 +953,34 @@ Future<List<AppNotification>> getAllNotification(
       throw Exception(e.toString());
     }
   }
+  Future<Map<String, dynamic>> postRecommendationData(
+      {required String userId,
+        required Map<String, dynamic> data,}) async {
+        String notifyUserUrl =
+        'http://${globals.domain}:8086/preferences/init';
+
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $userId',
+    };
+    try {
+      var response =
+          await http.post(Uri.parse(notifyUserUrl), headers: headers,body: jsonEncode(data));
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        print(jsonDecode(response.body));
+        throw Exception(jsonDecode(response.body));
+      }
+    } catch (e) {
+      print('Exception caught in postRecommendationData: $e');
+      throw Exception('Exception caught in postRecommendationData: $e');
+    }
+  }
 
 }
-
-// class ApiResponse {
-//   final String status;
-//   final int timestamp;
-//   final List<Category> data;
-//
-//   ApiResponse({
-//     required this.status,
-//     required this.timestamp,
-//     required this.data,
-//   });
-//
-//   factory ApiResponse.fromJson(Map<String, dynamic> json) {
-//     List<Category> categories = (json['data'] as List<dynamic>)
-//         .map((item) => Category.fromJson(item as String))
-//         .toList();
-//
-//     return ApiResponse(
-//       status: json['status'] ?? '',
-//       timestamp: json['timestamp'] ?? 0,
-//       data: categories,
-//     );
-//   }
-//
-//   Map<String, dynamic> toJson() {
-//     return {
-//       'status': status,
-//       'timestamp': timestamp,
-//       'data': data.map((category) => category.toJson()).toList(),
-//     };
-//   }
-// }
 
 
 

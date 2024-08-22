@@ -5,10 +5,8 @@ import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../main.dart';
 import 'package:firstapp/services/api.dart';
-
-import 'package:firstapp/pages/home_page.dart';
-
 import '../providers/notification_providers.dart';
+import '../screens/SurveyChooseCat_screen.dart';
 import '../services/socket_client.dart';
 import '../services/globals.dart' as globals;
 
@@ -202,7 +200,7 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
         userP.profileImage = profileImage;
         notificationProvider _notificationProvider =
         Provider.of<notificationProvider>(context, listen: false);
-        // _notificationProvider.apiInstance(api);
+
         _notificationProvider.refreshNotifications(userP.userId);
         SocketService('http://${globals.domain}:8082',_notificationProvider, userP.userId, context);
         userP.Generalusers(userP.userId);
@@ -210,7 +208,7 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
 
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const HomePage()),
+          MaterialPageRoute(builder: (context) => SurveyScreen()),
         );
       }
     });

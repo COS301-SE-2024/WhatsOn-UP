@@ -9,11 +9,14 @@ class Category {
   final String id;
   final String name;
   bool isSelected;
-
+  String rating;
+  String faculty;
   Category({
     required this.id,
     required this.name,
     this.isSelected = false,
+    this.rating='0',
+    this.faculty = '',
   });
 
   factory Category.fromJson(String json) {
@@ -27,9 +30,12 @@ class Category {
     );
   }
 
-  String toJson() {
-    return '$id,$name';
-  }
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'name': name,
+    'rating': rating,
+    'faculty': faculty,
+  };
 }
 
 
