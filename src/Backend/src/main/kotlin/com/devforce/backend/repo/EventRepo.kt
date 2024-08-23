@@ -70,7 +70,7 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
                 "WHERE (a.userId = :userId " +
                 "OR h.userId = :userId) "
     )
-    fun getRspvdEvents(@Param("userId") userId: UUID): List<EventModel>
+    fun getRsvpdEvents(@Param("userId") userId: UUID): List<EventModel>
 
     @Query(
         "SELECT e FROM EventModel e " +

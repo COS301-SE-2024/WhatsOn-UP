@@ -16,7 +16,7 @@ Authorization: Bearer <your-token>
 #### 1. Get RSVP Events
 **Description:** Retrieve the RSVP events for the user.
 
-- **Endpoint:** `GET /get_rspv_events`
+- **Endpoint:** `GET /get_rsvp_events`
 - **Headers:** 
   - `Authorization: Bearer <token>`
 - **Response:** 
@@ -162,7 +162,7 @@ Authorization: Bearer <your-token>
 #### 5. RSVP Event for User
 **Description:** RSVP an event for the user.
 
-- **Endpoint:** `PUT /rspv_event/{eventId}`
+- **Endpoint:** `PUT /rsvp_event/{eventId}`
 - **Headers:** 
   - `Authorization: Bearer <token>`
   - `Content-Type: application/json`
@@ -196,7 +196,7 @@ Authorization: Bearer <your-token>
 #### 7. Delete RSVP Event
 **Description:** Delete an RSVP event for the user.
 
-- **Endpoint:** `DELETE /delete_rspv_event/{eventId}`
+- **Endpoint:** `DELETE /delete_rsvp_event/{eventId}`
 - **Headers:** 
   - `Authorization: Bearer <token>`
   - `Content-Type: application/json`
