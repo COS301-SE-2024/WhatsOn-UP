@@ -32,7 +32,7 @@ class _StudentdetailSurveyState extends State<StudentdetailSurvey> {
     'Gordon Institute of Business Science (GIBS)',
   ];
   late List<Category> categories;
-
+  String? _errorMessage;
   @override
   void initState() {
     super.initState();
@@ -53,7 +53,7 @@ class _StudentdetailSurveyState extends State<StudentdetailSurvey> {
         );
       }).toList();
     } catch (e) {
-      // Handle parsing errors
+
       print('Error parsing categories: $e');
       categories = [];
     }
@@ -103,6 +103,7 @@ class _StudentdetailSurveyState extends State<StudentdetailSurvey> {
                           items: faculties.map((String faculty) {
                             return DropdownMenuItem<String>(
                               value: faculty,
+                              key: Key(faculty),
                               child: Text(faculty),
                             );
                           }).toList(),
@@ -127,6 +128,14 @@ class _StudentdetailSurveyState extends State<StudentdetailSurvey> {
                     ),
                   ),
                 ),
+                if (_errorMessage != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20.0),
+                    child: Text(
+                      _errorMessage!,
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  ),
               ],
             ),
           ),
@@ -159,7 +168,7 @@ class _StudentdetailSurveyState extends State<StudentdetailSurvey> {
       }).where((item) => item != null).toList()
     };
 
-
+    print('Transformed Data: $transformedData');
 
 
     try{
@@ -180,9 +189,14 @@ class _StudentdetailSurveyState extends State<StudentdetailSurvey> {
           ),
         );
       } else {
-        print('Unexpected response: ${response}');
+        setState(() {
+          _errorMessage = 'Unexpected response: ${response['status']}';
+        });
       }
     } catch (e) {
+      setState(() {
+        _errorMessage = 'An error occurred while submitting your data. Please try again later.';
+      });
       print('Error transforming data: $e');
     }
   }

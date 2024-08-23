@@ -971,12 +971,13 @@ Future<List<AppNotification>> getAllNotification(
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
       } else {
-        print(jsonDecode(response.body));
-        throw Exception(jsonDecode(response.body));
+        final errorResponse = jsonDecode(response.body);
+        print('Error response: $errorResponse');
+        throw Exception('Failed to post data. Status code: ${response.statusCode}');
       }
     } catch (e) {
       print('Exception caught in postRecommendationData: $e');
-      throw Exception('Exception caught in postRecommendationData: $e');
+      throw Exception('An error occurred while posting recommendation data: $e');
     }
   }
 

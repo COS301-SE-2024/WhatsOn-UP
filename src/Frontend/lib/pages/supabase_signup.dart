@@ -6,7 +6,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../main.dart';
 import 'package:firstapp/services/api.dart';
 import '../providers/notification_providers.dart';
-import '../screens/SurveyChooseCat_screen.dart';
+import '../surveys/SurveyChooseCat_screen.dart';
 import '../services/socket_client.dart';
 import '../services/globals.dart' as globals;
 

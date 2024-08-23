@@ -5,7 +5,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
-import 'package:firstapp/screens/SurveyChooseCat_screen.dart';
+import 'package:firstapp/surveys/SurveyChooseCat_screen.dart';
 import 'package:firstapp/providers/user_provider.dart';
 import 'package:firstapp/services/api.dart';
 import 'package:firstapp/widgets/event_card.dart';

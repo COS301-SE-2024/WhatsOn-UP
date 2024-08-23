@@ -57,26 +57,13 @@ void main() {
     late MockuserProvider mockUserProvider;
     late MockApi mockApi;
     late MockSupabase mockSupabase;
-    late MockSupabaseClient mockSupabaseClient;
 
-    // // Mock supabase objects
-    // late MockSupabaseAuth mockSupabaseAuth;
-    // late MockSession mockSession;
-    // late MockSupabaseUser mockSupabaseUser;
 
     setUpAll(() {
-      // mockSupabaseClient = MockSupabaseClient();
-      // mockSupabaseAuth = MockSupabaseAuth();
-      // mockSession = MockSession();
-      // mockSupabaseUser = MockSupabaseUser();
-       mockSupabase = MockSupabase();
-      // mock behavior
-      // when(mockSupabaseClient.auth).thenReturn(mockSupabaseAuth);
-      // when(mockSupabaseAuth.currentSession).thenReturn(mockSession);
-      // when(mockSupabaseAuth.currentUser).thenReturn(mockSupabaseUser);
 
+       mockSupabase = MockSupabase();
       final mockSupabaseClient = MockSupabaseClient();
-      final mockAuth = MockGoTrueClient(); // Create a mock for the auth object
+      final mockAuth = MockGoTrueClient();
 
       when(mockSupabase.client).thenReturn(mockSupabaseClient);
       when(mockSupabaseClient.auth).thenReturn(mockAuth);
@@ -89,12 +76,7 @@ void main() {
         createdAt: "now"
       ));
 
-      // when(mockAuth.currentSession).thenReturn(MockSession());
-      // when(mockAuth.currentUser).thenReturn(MockSupabaseUser());
-  
 
-        // when(mockSupabase.client).thenReturn(MockSupabaseClient());
-        // when(mockSupabase.client.auth).thenReturn(SupabaseAuthUI.GoTrueClient());
     });
 
     setUp(() {
@@ -270,8 +252,8 @@ void main() {
         ),
       );
 
-      // Check if dividers are visible
-      expect(find.byType(Divider), findsNWidgets(6)); // 5 dividers in the list + one before the General user Host Applications
+
+      expect(find.byType(Divider), findsNWidgets(6));
     });
     testWidgets('Renders ManageEvents correctly for ADMIN role', (WidgetTester tester) async {
       when(mockUserProvider.role).thenReturn('ADMIN');
@@ -287,8 +269,6 @@ void main() {
           ),
         ),
       );
-
-      // Assert
       expect(find.text('Manage Events'), findsOneWidget);
       expect(find.text('All Events'), findsOneWidget);
       expect(find.text('Past Events'), findsOneWidget);
@@ -312,11 +292,10 @@ void main() {
         ),
       );
 
-      // Check if the 'Past Events' button does not cause any issues
+
       await tester.tap(find.text('Past Events'));
       await tester.pumpAndSettle();
-      // No new widget should appear, as 'Past Events' button has no navigation
-      // expect(find.byType(ManageEvents), findsOneWidget);
+
     });
 
 

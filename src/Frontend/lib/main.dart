@@ -77,7 +77,7 @@ import 'package:firstapp/providers/events_providers.dart';
 import 'package:firstapp/providers/notification_providers.dart';
 import 'package:firstapp/providers/user_provider.dart';
 import 'package:firstapp/screens/SearchScreen.dart';
-import 'package:firstapp/screens/SurveyRateCat_screen.dart';
+import 'package:firstapp/surveys/SurveyRateCat_screen.dart';
 import 'package:firstapp/services/LocalNotifications.dart';
 import 'package:firstapp/services/api.dart';
 import 'package:firstapp/widgets/event_card.dart';

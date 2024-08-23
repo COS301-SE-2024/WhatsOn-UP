@@ -5,7 +5,7 @@ import 'package:firstapp/widgets/event_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail_image_network/mocktail_image_network.dart';
-import 'package:firstapp/screens/ThankYou_Survey.dart';
+import 'package:firstapp/surveys/ThankYou_Survey.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
 

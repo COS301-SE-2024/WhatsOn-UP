@@ -36,6 +36,10 @@ class Category {
     'rating': rating,
     'faculty': faculty,
   };
+  @override
+  String toString() {
+    return 'Category(id: $id, name: $name, isSelected: $isSelected, rating: $rating, faculty: $faculty)';
+  }
 }
 
 
@@ -88,7 +92,7 @@ class Attendee {
   }
   @override
   String toString() {
-    return 'Attendee(id: $userId, name: $fullName, role: $role,profileImage: $profileImage)'; // Include all properties
+    return 'Attendee(id: $userId, name: $fullName, role: $role, profileImage: $profileImage)';
   }
 }
 
@@ -353,11 +357,7 @@ class Event {
   });
 
   factory Event.fromJson(Map<String, dynamic> json) {
-    /*print("Printing Event fromJson...");
-    print("title");
-    print(json['title']);
-    print("Invities ");
-    print(json['invitees']);*/
+
     var eventVat;
     eventVat = Event(
       nameOfEvent: json['title']?.toString() ?? '',
