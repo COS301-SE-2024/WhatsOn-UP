@@ -16,6 +16,7 @@ class SurveyScreen extends StatefulWidget {
 class _SurveyScreenState extends State<SurveyScreen> {
   List<Category> categories = [];
   bool _isLoading = false;
+  String _errorMessage = '';
   @override
   void initState() {
     super.initState();
@@ -25,7 +26,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
   Future<void> fetchCategories() async {
     setLoading(true);
     userProvider userP = Provider.of<userProvider>(context, listen: false);
-    Api api = Api();
+    final Api api = Provider.of<Api>(context, listen: false);
     try {
       final List<Category> fetchedCategories =
           await api.getCategories(userId: userP.userId);
@@ -33,7 +34,9 @@ class _SurveyScreenState extends State<SurveyScreen> {
         categories = fetchedCategories;
       });
     } catch (e) {
-      print('Failed to fetch categories: $e');
+      setState(() {
+        _errorMessage = 'Failed to load categories';
+      });
     } finally {
       setLoading(false);
     }
@@ -55,6 +58,8 @@ class _SurveyScreenState extends State<SurveyScreen> {
                 size: 50.0,
               ),
             )
+          :_errorMessage.isNotEmpty
+          ? Center(child: Text(_errorMessage))
           : Column(
               children: [
                 const Padding(
