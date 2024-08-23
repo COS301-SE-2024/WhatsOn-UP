@@ -1,9 +1,10 @@
+import 'package:firstapp/surveys/studentdetail_survey.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:firstapp/surveys/surveyratecat_screen.dart';
-import 'package:firstapp/surveys/studentdetail_survey.dart';
+import 'package:firstapp/surveys/surveyRateCat_screen.dart';
+
 
 void main() {
   group('SurveyratecatScreen Tests', () {
