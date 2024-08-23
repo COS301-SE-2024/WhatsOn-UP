@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:firstapp/surveys/surveyRateCat_screen.dart';
+import 'package:firstapp/surveys/SurveyRateCat_screen.dart';
 
 
 void main() {
