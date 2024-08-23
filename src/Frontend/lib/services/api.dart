@@ -140,7 +140,7 @@ class Api {
 
   Future<List<dynamic>> getRSVPEvents(String userId) async {
     try {
-      final String _rsvpEventsURL = 'http://${globals.domain}:8080/api/user/get_rspv_events';
+      final String _rsvpEventsURL = 'http://${globals.domain}:8080/api/user/get_rsvp_events';
       var headers = {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
@@ -290,7 +290,7 @@ class Api {
 */
   Future<Map<String, dynamic>> rsvpEvent(String eventId, String UserId) async {
     final String _rsvpEventUrl =
-        'http://${globals.domain}:8080/api/user/rspv_event/$eventId';
+        'http://${globals.domain}:8080/api/user/rsvp_event/$eventId';
 
     var headers = {
       'Content-Type': 'application/json',
@@ -424,7 +424,7 @@ Future<List<AppNotification>> getAllNotification(
   Future<Map<String, dynamic>> DeletersvpEvent(
       String eventId, String UserId) async {
     final String _rsvpEventUrl =
-        'http://${globals.domain}:8080/api/user/delete_rspv_event/$eventId';
+        'http://${globals.domain}:8080/api/user/delete_rsvp_event/$eventId';
 
     var headers = {
       'Content-Type': 'application/json',

@@ -358,7 +358,7 @@ paths:
         '403':
           description: Forbidden
 
-  /api/user/rspv_event/{eventID}:
+  /api/user/rsvp_event/{eventID}:
     put:
       summary: RSVP to an event
       operationId: rsvpEvent
@@ -385,7 +385,7 @@ paths:
         '403':
           description: Forbidden
 
-  /api/user/get_rspv_events:
+  /api/user/get_rsvp_events:
     get:
       summary: Get all RSVP events
       operationId: getRSVPEvents
@@ -406,7 +406,7 @@ paths:
         '403':
           description: Forbidden
   
-  /api/user/delete_rspv_event/{eventID}:
+  /api/user/delete_rsvp_event/{eventID}:
     delete:
       summary: Delete an RSVP event
       operationId: deleteRSVPEvent
