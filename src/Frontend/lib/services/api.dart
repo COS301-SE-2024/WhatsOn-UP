@@ -742,6 +742,8 @@ Future<List<AppNotification>> getAllNotification(
     try {
       var response = await http.put(uri, headers: headers);
 
+      // print("HOST ERROR: " + jsonDecode(response.body).toString());
+
       if (response.statusCode == 200) {
         var responseData = jsonDecode(response.body);
 
@@ -753,12 +755,17 @@ Future<List<AppNotification>> getAllNotification(
 
         return responseData;
       } else {
-        throw Exception(jsonDecode(response.body));
+        var errorData = jsonDecode(response.body);
+        if (errorData['status'] == 'error' && errorData['data'] == 'User has already applied') {
+          throw Exception('already_applied');
+        } else {
+          throw Exception(errorData);
+        }
       }
     } catch (e) {
       throw Exception(e.toString());
     }
-  }
+}
 
   Future<void> _uploadProofImage(
       String applicationId, Uint8List imageBytes, String userId) async {
