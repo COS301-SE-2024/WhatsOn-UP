@@ -140,7 +140,7 @@ class Api {
 
   Future<List<dynamic>> getRSVPEvents(String userId) async {
     try {
-      final String _rsvpEventsURL = 'http://${globals.domain}:8080/api/user/get_rspv_events';
+      final String _rsvpEventsURL = 'http://${globals.domain}:8080/api/user/get_rsvp_events';
       var headers = {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
@@ -290,7 +290,7 @@ class Api {
 */
   Future<Map<String, dynamic>> rsvpEvent(String eventId, String UserId) async {
     final String _rsvpEventUrl =
-        'http://${globals.domain}:8080/api/user/rspv_event/$eventId';
+        'http://${globals.domain}:8080/api/user/rsvp_event/$eventId';
 
     var headers = {
       'Content-Type': 'application/json',
@@ -424,7 +424,7 @@ Future<List<AppNotification>> getAllNotification(
   Future<Map<String, dynamic>> DeletersvpEvent(
       String eventId, String UserId) async {
     final String _rsvpEventUrl =
-        'http://${globals.domain}:8080/api/user/delete_rspv_event/$eventId';
+        'http://${globals.domain}:8080/api/user/delete_rsvp_event/$eventId';
 
     var headers = {
       'Content-Type': 'application/json',
@@ -962,4 +962,67 @@ Future<Map<String, dynamic>> broadcastEvent(String eventId, String message, Stri
       throw Exception(e.toString());
     }
   }
+
+
+
+
+
+
+  Future<List<Category>> getCategories({required String userId}) async {
+    String notifyUserUrl = 'http://${globals.domain}:8080/api/events/categories';
+
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $userId',
+    };
+
+    try {
+      var response = await http.get(Uri.parse(notifyUserUrl), headers: headers);
+
+      if (response.statusCode == 200) {
+        print('Response body: ${response.body}');
+        final List<dynamic> jsonResponse = jsonDecode(response.body)['data'];
+
+        return  jsonResponse.map((json) => Category.fromJson(json as String)).toList();
+
+      } else {
+        throw Exception('Failed to load categories');
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+  Future<Map<String, dynamic>> postRecommendationData(
+      {required String userId,
+        required Map<String, dynamic> data,}) async {
+        String notifyUserUrl =
+        'http://${globals.domain}:8086/preferences/init';
+
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $userId',
+    };
+    try {
+      var response =
+          await http.post(Uri.parse(notifyUserUrl), headers: headers,body: jsonEncode(data));
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        final errorResponse = jsonDecode(response.body);
+        print('Error response: $errorResponse');
+        throw Exception('Failed to post data. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Exception caught in postRecommendationData: $e');
+      throw Exception('An error occurred while posting recommendation data: $e');
+    }
+  }
+
 }
+
+
+
+

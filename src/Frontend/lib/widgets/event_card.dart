@@ -7,6 +7,49 @@ import '../pages/Event_Attendance.dart';
 import '../providers/user_provider.dart';
 import '../services/api.dart';
 
+
+class Category {
+  final String id;
+  final String name;
+  bool isSelected;
+  String rating;
+  String faculty;
+  Category({
+    required this.id,
+    required this.name,
+    this.isSelected = false,
+    this.rating='0',
+    this.faculty = '',
+  });
+
+  factory Category.fromJson(String json) {
+    final parts = json.split(',');
+    if (parts.length != 2) {
+      throw FormatException('Invalid category format');
+    }
+    return Category(
+      id: parts[0],
+      name: parts[1],
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'name': name,
+    'rating': rating,
+    'faculty': faculty,
+  };
+  @override
+  String toString() {
+    return 'Category(id: $id, name: $name, isSelected: $isSelected, rating: $rating, faculty: $faculty)';
+  }
+}
+
+
+
+
+
+
 class Role {
   final int id;
   final String name;
@@ -52,7 +95,7 @@ class Attendee {
   }
   @override
   String toString() {
-    return 'Attendee(id: $userId, name: $fullName, role: $role,profileImage: $profileImage)'; // Include all properties
+    return 'Attendee(id: $userId, name: $fullName, role: $role, profileImage: $profileImage)';
   }
 }
 

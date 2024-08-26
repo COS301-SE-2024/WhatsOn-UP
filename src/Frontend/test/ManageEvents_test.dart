@@ -25,6 +25,7 @@ void main() {
     late MockuserProvider mockUserProvider;
     late MockApi mockApi;
 
+    late MockSupabase mockSupabase;
 
 
 
@@ -35,6 +36,9 @@ void main() {
         url: 'https://mehgbhiirnmypfgnkaud.supabase.co',
         anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1laGdiaGlpcm5teXBmZ25rYXVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjI5NDMyMzYsImV4cCI6MjAzODUxOTIzNn0.g_oLlSZE3AH_nBntVe_hBPdthFDQHZqn0wxzS23kyrc',
       );
+    setUpAll(() {
+
+       mockSupabase = MockSupabase();
       final mockSupabaseClient = MockSupabaseClient();
       final mockAuth = MockGoTrueClient();
 
@@ -51,7 +55,12 @@ void main() {
               createdAt: "now"
           ));
 
+      // when(mockAuth.currentSession).thenReturn(MockSession());
+      // when(mockAuth.currentUser).thenReturn(MockSupabaseUser());
+  
 
+        // when(mockSupabase.client).thenReturn(MockSupabaseClient());
+        // when(mockSupabase.client.auth).thenReturn(SupabaseAuthUI.GoTrueClient());
     });
 
     setUp(() {
@@ -250,6 +259,8 @@ void main() {
       expect(find.byIcon(Icons.history), findsOneWidget);
       expect(find.byIcon(Icons.add), findsOneWidget);
       expect(find.byIcon(Icons.group), findsOneWidget);
+
+      expect(find.byType(Divider), findsNWidgets(6));
     });
     testWidgets('Tapping on Past Events navigates to Pastevents page', (WidgetTester tester) async {
       when(mockUserProvider.role).thenReturn('ADMIN');
@@ -290,6 +301,8 @@ void main() {
 
       await tester.tap(find.text('Past Events'));
       await tester.pumpAndSettle();
+
+    });
 
       expect(find.byType(Pastevents), findsOneWidget);
     });

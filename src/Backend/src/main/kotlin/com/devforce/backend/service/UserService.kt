@@ -99,7 +99,7 @@ class UserService {
     
 
     // To do: Implement function to RSVP to an event for the current user
-    fun rspvEvent(id: UUID): ResponseEntity<ResponseDto> {
+    fun rsvpEvent(id: UUID): ResponseEntity<ResponseDto> {
         val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
 
         val optionalEvent = eventRepo.findById(id)
@@ -129,10 +129,10 @@ class UserService {
     }
 
     // To do: Implement function to get all RSVP'd events for the current user
-    fun getRspvEvents(): ResponseEntity<ResponseDto> {
+    fun getRsvpEvents(): ResponseEntity<ResponseDto> {
         val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
 
-        val events = eventRepo.getRspvdEvents(user.userId)
+        val events = eventRepo.getRsvpdEvents(user.userId)
         val eventsDto = events.map { event -> EventDto(event, false, null) }
 
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto)
@@ -140,7 +140,7 @@ class UserService {
     }
 
     // To do: Implement function to delete an RSVP'd event for the current user
-    fun deleteRspvEvent(id: UUID
+    fun deleteRsvpEvent(id: UUID
     ): ResponseEntity<ResponseDto> {
         val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
         val optionalEvent = eventRepo.findById(id)
