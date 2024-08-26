@@ -62,7 +62,7 @@ class _SplashPageState extends State<SplashPage> {
 
     EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
     final user = supabase.auth.currentUser;
-    // eventP.fetchfortheFirstTimeRsvp(user!.id);
+
 
     Api api = Api();
 

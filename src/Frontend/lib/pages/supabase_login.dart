@@ -172,10 +172,7 @@ import '../main.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:firstapp/pages/google_signin.dart';
 import 'package:firstapp/pages/home_page.dart';
-import 'dart:convert';
-import 'dart:typed_data';
 import 'package:firstapp/services/api.dart';
-
 import '../providers/events_providers.dart';
 import '../providers/notification_providers.dart';
 import '../providers/user_provider.dart';
@@ -198,24 +195,11 @@ class _SupabaseLoginState extends State<SupabaseLogin> {
   late Size mediaSize;
   bool _obscurePassword = true;
 
-  // void initState() {
-  //   super.initState();
-  //   _authSubscription = supabase.auth.onAuthStateChange.listen((event) {
-  //
-  //
-  //   });
-  //
-  //
-  //
-  // }
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
-    // if (_authSubscription != null) {
-    //   _authSubscription.cancel();
-    // }
 
     super.dispose();
   }
@@ -349,14 +333,7 @@ class _SupabaseLoginState extends State<SupabaseLogin> {
                 ));
               }
             },
-            // style: TextButton.styleFrom(
-            //   foregroundColor: Colors.black, padding: const EdgeInsets.symmetric(vertical: 10.0),
-            //   shape: RoundedRectangleBorder(
-            //     borderRadius: BorderRadius.circular(20.0),
-            //     side: BorderSide(color: Colors.black),
-            //   ), // Text color
-            //   backgroundColor: Colors.transparent,
-            // ),
+
             child: const Text('Login'),
           ),
           const SizedBox(height: 10),
@@ -369,14 +346,7 @@ class _SupabaseLoginState extends State<SupabaseLogin> {
                       builder: (context) => const SupabaseSignup()),
                 );
               },
-              // style: TextButton.styleFrom(
-              //   foregroundColor: Colors.black, padding: const EdgeInsets.symmetric(vertical: 10.0),
-              //   shape: RoundedRectangleBorder(
-              //     borderRadius: BorderRadius.circular(20.0),
-              //     side: BorderSide(color: Colors.black),
-              //   ), // Text color
-              //   backgroundColor: Colors.transparent,
-              // ),
+
               child: Text('Sign Up')),
           const SizedBox(height: 10),
           TextButton(
@@ -462,8 +432,6 @@ class _SupabaseLoginState extends State<SupabaseLogin> {
           print('JWT Token: ${session.accessToken}');
         }
 
-        // eventP.fetchfortheFirstTimeRsvp(user!.id);
-
         Api api = Api();
         try {
           final response = await api.getUser(user.id);
@@ -483,10 +451,11 @@ class _SupabaseLoginState extends State<SupabaseLogin> {
             userP.role = role;
             userP.profileImage = profileImage;
             notificationProvider _notificationProvider =
-            Provider.of<notificationProvider>(context, listen: false);
-            // _notificationProvider.apiInstance(api);
+                Provider.of<notificationProvider>(context, listen: false);
+
             _notificationProvider.refreshNotifications(userP.userId);
-            SocketService('http://${globals.domain}:8082',_notificationProvider, userP.userId, context);
+            SocketService('http://${globals.domain}:8082',
+                _notificationProvider, userP.userId, context);
             userP.Generalusers(userP.userId);
 
             userP.setUserData(

@@ -102,19 +102,9 @@ class _FakeSupabaseClient_5 extends _i1.SmartFake
         );
 }
 
-class _FakeGoTrueClient_6 extends _i1.SmartFake implements _i6.GoTrueClient {
-  _FakeGoTrueClient_6(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
-}
-
-class _FakeFunctionsClient_7 extends _i1.SmartFake
+class _FakeFunctionsClient_6 extends _i1.SmartFake
     implements _i6.FunctionsClient {
-  _FakeFunctionsClient_7(
+  _FakeFunctionsClient_6(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -123,9 +113,9 @@ class _FakeFunctionsClient_7 extends _i1.SmartFake
         );
 }
 
-class _FakeSupabaseStorageClient_8 extends _i1.SmartFake
+class _FakeSupabaseStorageClient_7 extends _i1.SmartFake
     implements _i6.SupabaseStorageClient {
-  _FakeSupabaseStorageClient_8(
+  _FakeSupabaseStorageClient_7(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -134,9 +124,9 @@ class _FakeSupabaseStorageClient_8 extends _i1.SmartFake
         );
 }
 
-class _FakeRealtimeClient_9 extends _i1.SmartFake
+class _FakeRealtimeClient_8 extends _i1.SmartFake
     implements _i6.RealtimeClient {
-  _FakeRealtimeClient_9(
+  _FakeRealtimeClient_8(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -145,9 +135,19 @@ class _FakeRealtimeClient_9 extends _i1.SmartFake
         );
 }
 
-class _FakePostgrestClient_10 extends _i1.SmartFake
+class _FakePostgrestClient_9 extends _i1.SmartFake
     implements _i6.PostgrestClient {
-  _FakePostgrestClient_10(
+  _FakePostgrestClient_9(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakeGoTrueClient_10 extends _i1.SmartFake implements _i6.GoTrueClient {
+  _FakeGoTrueClient_10(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -1351,6 +1351,35 @@ class MockApi extends _i1.Mock implements _i2.Api {
         returnValue:
             _i8.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
       ) as _i8.Future<Map<String, dynamic>>);
+
+  @override
+  _i8.Future<List<_i9.Category>> getCategories({required String? userId}) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getCategories,
+          [],
+          {#userId: userId},
+        ),
+        returnValue: _i8.Future<List<_i9.Category>>.value(<_i9.Category>[]),
+      ) as _i8.Future<List<_i9.Category>>);
+
+  @override
+  _i8.Future<Map<String, dynamic>> postRecommendationData({
+    required String? userId,
+    required Map<String, dynamic>? data,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #postRecommendationData,
+          [],
+          {
+            #userId: userId,
+            #data: data,
+          },
+        ),
+        returnValue:
+            _i8.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
+      ) as _i8.Future<Map<String, dynamic>>);
 }
 
 /// A class which mocks [ImagePicker].
@@ -1777,27 +1806,9 @@ class MockSupabaseClient extends _i1.Mock implements _i6.SupabaseClient {
   }
 
   @override
-  _i6.GoTrueClient get auth => (super.noSuchMethod(
-        Invocation.getter(#auth),
-        returnValue: _FakeGoTrueClient_6(
-          this,
-          Invocation.getter(#auth),
-        ),
-      ) as _i6.GoTrueClient);
-
-  @override
-  set auth(_i6.GoTrueClient? _auth) => super.noSuchMethod(
-        Invocation.setter(
-          #auth,
-          _auth,
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
   _i6.FunctionsClient get functions => (super.noSuchMethod(
         Invocation.getter(#functions),
-        returnValue: _FakeFunctionsClient_7(
+        returnValue: _FakeFunctionsClient_6(
           this,
           Invocation.getter(#functions),
         ),
@@ -1815,7 +1826,7 @@ class MockSupabaseClient extends _i1.Mock implements _i6.SupabaseClient {
   @override
   _i6.SupabaseStorageClient get storage => (super.noSuchMethod(
         Invocation.getter(#storage),
-        returnValue: _FakeSupabaseStorageClient_8(
+        returnValue: _FakeSupabaseStorageClient_7(
           this,
           Invocation.getter(#storage),
         ),
@@ -1833,7 +1844,7 @@ class MockSupabaseClient extends _i1.Mock implements _i6.SupabaseClient {
   @override
   _i6.RealtimeClient get realtime => (super.noSuchMethod(
         Invocation.getter(#realtime),
-        returnValue: _FakeRealtimeClient_9(
+        returnValue: _FakeRealtimeClient_8(
           this,
           Invocation.getter(#realtime),
         ),
@@ -1851,7 +1862,7 @@ class MockSupabaseClient extends _i1.Mock implements _i6.SupabaseClient {
   @override
   _i6.PostgrestClient get rest => (super.noSuchMethod(
         Invocation.getter(#rest),
-        returnValue: _FakePostgrestClient_10(
+        returnValue: _FakePostgrestClient_9(
           this,
           Invocation.getter(#rest),
         ),
@@ -1880,6 +1891,15 @@ class MockSupabaseClient extends _i1.Mock implements _i6.SupabaseClient {
         ),
         returnValueForMissingStub: null,
       );
+
+  @override
+  _i6.GoTrueClient get auth => (super.noSuchMethod(
+        Invocation.getter(#auth),
+        returnValue: _FakeGoTrueClient_10(
+          this,
+          Invocation.getter(#auth),
+        ),
+      ) as _i6.GoTrueClient);
 
   @override
   _i6.SupabaseQueryBuilder from(String? table) => (super.noSuchMethod(

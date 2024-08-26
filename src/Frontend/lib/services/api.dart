@@ -922,4 +922,67 @@ Future<List<AppNotification>> getAllNotification(
       throw Exception(e.toString());
     }
   }
+
+
+
+
+
+
+  Future<List<Category>> getCategories({required String userId}) async {
+    String notifyUserUrl = 'http://${globals.domain}:8080/api/events/categories';
+
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $userId',
+    };
+
+    try {
+      var response = await http.get(Uri.parse(notifyUserUrl), headers: headers);
+
+      if (response.statusCode == 200) {
+        print('Response body: ${response.body}');
+        final List<dynamic> jsonResponse = jsonDecode(response.body)['data'];
+
+        return  jsonResponse.map((json) => Category.fromJson(json as String)).toList();
+
+      } else {
+        throw Exception('Failed to load categories');
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+  Future<Map<String, dynamic>> postRecommendationData(
+      {required String userId,
+        required Map<String, dynamic> data,}) async {
+        String notifyUserUrl =
+        'http://${globals.domain}:8086/preferences/init';
+
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $userId',
+    };
+    try {
+      var response =
+          await http.post(Uri.parse(notifyUserUrl), headers: headers,body: jsonEncode(data));
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        final errorResponse = jsonDecode(response.body);
+        print('Error response: $errorResponse');
+        throw Exception('Failed to post data. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Exception caught in postRecommendationData: $e');
+      throw Exception('An error occurred while posting recommendation data: $e');
+    }
+  }
+
 }
+
+
+
+
