@@ -1,16 +1,20 @@
 
+import 'package:emoji_selector/emoji_selector.dart';
 import 'package:firstapp/providers/user_provider.dart';
 import 'package:firstapp/services/api.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
-import 'package:emoji_selector/emoji_selector.dart';
-
-class Broadcast extends StatelessWidget {
+class Broadcast extends StatefulWidget {
   Broadcast();
 
+  @override
+  _BroadcastState createState() => _BroadcastState();
+}
+
+class _BroadcastState extends State<Broadcast> {
   final TextEditingController messageController = TextEditingController();
-  EmojiData? selectedEmoji;
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +51,12 @@ class Broadcast extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                ElevatedButton(
+                isLoading
+                    ? SpinKitPianoWave(
+            color: const Color.fromARGB(255, 149, 137, 74),
+        size: 50.0,
+      )
+                    : ElevatedButton(
                   onPressed: () => _sendEventBroadcast(context),
                   child: Text('Submit'),
                   style: ElevatedButton.styleFrom(
@@ -78,7 +87,9 @@ class Broadcast extends StatelessWidget {
         return SingleChildScrollView(
           child: EmojiSelector(
             onSelected: (emoji) {
-              messageController.text += emoji.char;
+              setState(() {
+                messageController.text += emoji.char;
+              });
               Navigator.pop(context);
             },
             columns: 11,
@@ -90,9 +101,12 @@ class Broadcast extends StatelessWidget {
   }
 
   Future<void> _sendEventBroadcast(BuildContext context) async {
-    userProvider userP = Provider.of<userProvider>(context, listen: false);
+    setState(() {
+      isLoading = true;
+    });
 
-    Api api = Api();
+    userProvider userP = Provider.of<userProvider>(context, listen: false);
+    Api api = Provider.of<Api>(context, listen: false);
 
     try {
       final response = await api.broadcast(messageController.text, userP.userId);
@@ -100,14 +114,16 @@ class Broadcast extends StatelessWidget {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Broadcast sent successfully"), backgroundColor: Colors.green),
         );
-
         Navigator.of(context).pop();
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("An error occurred: $e"), backgroundColor: Colors.red),
       );
-      print('Error sending broadcast: $e');
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 }
