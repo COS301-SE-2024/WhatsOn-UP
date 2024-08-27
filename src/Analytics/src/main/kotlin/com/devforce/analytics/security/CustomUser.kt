@@ -1,6 +1,6 @@
-package com.devforce.backend.security
+package com.devforce.analytics.security
 
-import com.devforce.backend.model.UserModel
+import com.devforce.analytics.model.UserModel
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.User
 import java.util.UUID

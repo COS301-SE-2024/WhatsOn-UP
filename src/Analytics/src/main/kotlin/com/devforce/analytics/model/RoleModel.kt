@@ -1,4 +1,4 @@
-package com.devforce.backend.model
+package com.devforce.analytics.model
 
 import jakarta.persistence.*
 

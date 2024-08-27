@@ -1,4 +1,4 @@
-package com.devforce.backend.model
+package com.devforce.analytics.model
 
 import jakarta.persistence.*
 import lombok.AllArgsConstructor
@@ -91,6 +91,21 @@ class PastEventModel {
     }
 
 
+    @OneToMany(mappedBy = "event", cascade = [CascadeType.ALL])
+    var feedback: Set<FeedbackModel> = HashSet()
 
 
 }
+
+//@Data
+//@Builder
+//@Entity
+//@Table(name = "all_events")
+//@NoArgsConstructor
+//@AllArgsConstructor
+//class EventModelAll {
+//    @Id
+//    @Column(name = "event_id", columnDefinition = "UUID")
+//    var eventId: UUID? = null
+//}
+

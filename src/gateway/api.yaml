@@ -139,27 +139,6 @@ paths:
         '403':
           description: Forbidden
 
-  /api/events/get_passed_events:
-    get:
-      summary: Get all passed events
-      operationId: getPassedEvents
-      x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
-        path_translation: APPEND_PATH_TO_ADDRESS
-        disable_auth: true
-        deadline: 60.0
-      responses:
-        '200':
-          description: Successful
-        '400':
-          description: Bad request
-        '500':
-          description: Internal server error
-        '401':
-          description: Unauthorized
-        '403':
-          description: Forbidden
-
   /api/events/search:
     get:
       summary: Search for events

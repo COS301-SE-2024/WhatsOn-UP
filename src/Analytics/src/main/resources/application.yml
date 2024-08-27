@@ -34,5 +34,5 @@ spring:
      org.hibernate.type.descriptor.sql.BasicBinder: TRACE
 #
 #
-#server:
-#  port: 8080
+server:
+  port: 8084

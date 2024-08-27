@@ -1,6 +1,6 @@
-package com.devforce.backend.repo
+package com.devforce.analytics.repo
 
-import com.devforce.backend.model.UserModel
+import com.devforce.analytics.model.UserModel
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import java.util.*

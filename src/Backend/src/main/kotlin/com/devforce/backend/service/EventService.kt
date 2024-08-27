@@ -6,7 +6,6 @@ import com.devforce.backend.model.EventModel
 import com.devforce.backend.model.VenueModel
 import com.devforce.backend.repo.BroadcastRepo
 import com.devforce.backend.repo.EventRepo
-import com.devforce.backend.repo.PassedEventsRepo
 import com.devforce.backend.repo.VenueRepo
 import com.devforce.backend.security.CustomUser
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -33,9 +32,6 @@ class EventService {
 
     @Autowired
     lateinit var venueRepo: VenueRepo
-
-    @Autowired
-    lateinit var passedEventsRepo: PassedEventsRepo
 
     @Autowired
     lateinit var broadcastRepo: BroadcastRepo
@@ -101,16 +97,6 @@ class EventService {
             }
         }
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto)
-        )
-    }
-
-    fun getPassedEvents(): ResponseEntity<ResponseDto> {
-        // Implementation goes here
-        val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
-
-        val events = passedEventsRepo.findPassedEvents(user.userId)
-
-        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), events)
         )
     }
 

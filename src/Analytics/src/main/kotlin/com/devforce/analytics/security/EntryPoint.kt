@@ -1,4 +1,4 @@
-package com.devforce.backend.security
+package com.devforce.analytics.security
 
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse

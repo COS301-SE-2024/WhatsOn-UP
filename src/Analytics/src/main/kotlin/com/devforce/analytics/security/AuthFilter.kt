@@ -1,4 +1,4 @@
-package com.devforce.backend.security
+package com.devforce.analytics.security
 
 import jakarta.servlet.FilterChain
 import jakarta.servlet.ServletException
@@ -19,16 +19,6 @@ class AuthFilter: OncePerRequestFilter() {
     @Autowired
     private lateinit var customUserDetailsService: CustomUserDetailsService
 
-    private val ENDPOINTS: List<String> = mutableListOf(
-        "/api/events/get_all",
-        "/api/events/filter",
-        "/api/events/search",
-        "/api/events/categories",
-        "/api/events/filterEvents",
-        "/api/events/get_locations",
-        "/api/user/verify_application",
-    )
-
 
 
     @Throws(ServletException::class, IOException::class)
@@ -37,32 +27,22 @@ class AuthFilter: OncePerRequestFilter() {
         response: HttpServletResponse,
         filterChain: FilterChain
     ) {
-        // Ignore authentication for specific URL pattern
-        val requestURI = request.requestURI
+
         val id = getBearer(request)
-        val match = ENDPOINTS.stream().anyMatch { suffix: String? ->
-            requestURI.endsWith(
-                suffix!!
-            )
-        }
-        if (match && id == null) {
-            filterChain.doFilter(request, response)
-            return
-        }
-        if (id != null) {
-            try {
-                val userDetails: CustomUser = customUserDetailsService.loadUserByUsername(id)
-                val authenticationToken = UsernamePasswordAuthenticationToken(userDetails, null, userDetails.authorities)
-                authenticationToken.details = WebAuthenticationDetailsSource().buildDetails(request)
-                SecurityContextHolder.getContext().authentication = authenticationToken
-            } catch (e: Exception) {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid user ID")
-                return
-            }
-        } else {
+        if (id == null) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid user ID")
             return
         }
+        try {
+            val userDetails: CustomUser = customUserDetailsService.loadUserByUsername(id)
+            val authenticationToken = UsernamePasswordAuthenticationToken(userDetails, null, userDetails.authorities)
+            authenticationToken.details = WebAuthenticationDetailsSource().buildDetails(request)
+            SecurityContextHolder.getContext().authentication = authenticationToken
+        } catch (e: Exception) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid user ID")
+            return
+        }
+
         filterChain.doFilter(request, response)
     }
 

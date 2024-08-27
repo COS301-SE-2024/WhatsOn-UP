@@ -1,8 +1,9 @@
-package com.devforce.backend.config
+package com.devforce.analytics.config
 
-import com.devforce.backend.security.CustomUserDetailsService
-import com.devforce.backend.security.AuthFilter
-import com.devforce.backend.security.EntryPoint
+
+import com.devforce.analytics.security.AuthFilter
+import com.devforce.analytics.security.CustomUserDetailsService
+import com.devforce.analytics.security.EntryPoint
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

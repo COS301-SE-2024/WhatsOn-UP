@@ -2,6 +2,7 @@ package com.devforce.backend.repo
 
 import com.devforce.backend.dto.FilterByDto
 import com.devforce.backend.model.EventModel
+import com.devforce.backend.model.EventModelAll
 import jakarta.transaction.Transactional
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
@@ -158,6 +159,9 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
     @Procedure(procedureName = "delete_event")
     fun deleteEvent(eventId: UUID)
 
+}
+
+interface EventRepoAll: JpaRepository<EventModelAll, UUID>{
 }
 
 

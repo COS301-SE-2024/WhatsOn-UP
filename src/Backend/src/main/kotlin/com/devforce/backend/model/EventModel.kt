@@ -95,3 +95,15 @@ class EventModel {
 
 
 }
+
+@Data
+@Builder
+@Entity
+@Table(name = "all_events")
+@NoArgsConstructor
+@AllArgsConstructor
+class EventModelAll {
+    @Id
+    @Column(name = "event_id", columnDefinition = "UUID")
+    var eventId: UUID? = null
+}
