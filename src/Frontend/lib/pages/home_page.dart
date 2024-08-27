@@ -42,9 +42,9 @@ class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
 
   // @override
-  // void initState() {
+  // Future<void> initState() async {
   //   super.initState();
-  //   futureEvents = api.getAllEvents();
+  //   await fetchEvents();
   // }
 
   void _onItemTapped(int index) {
@@ -53,15 +53,17 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  Future<List<List<Event>>> fetchEvents() async {
+    EventProvider eventP = Provider.of<EventProvider>(context);
+    final eventsHome = await eventP.eventsHome;
+    final eventsSaved = await eventP.eventsSaved;
+    return [eventsHome, eventsSaved];
+  }
+
   @override
   Widget build(BuildContext context) {
     userProvider userP = Provider.of<userProvider>(context);
 
-
-
-
-
-    print("user role: ${userP.role}");
     const String HOST = 'HOST';
     const String ADMIN = 'ADMIN';
     return Scaffold(
@@ -138,8 +140,8 @@ class _HomePageState extends State<HomePage> {
     final borderColour = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
     final textColour = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
     // futureEvents=eventP.eventsHome;
-    return FutureBuilder<List<Event>>(
-      future: eventP.eventsHome,
+    return FutureBuilder<List<List<Event>>>(
+      future: fetchEvents(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: SpinKitPianoWave(
@@ -149,10 +151,10 @@ class _HomePageState extends State<HomePage> {
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (snapshot.hasData) {
-          final events = snapshot.data!;
+          final eventsHome = snapshot.data![0];
+          final savedEvents = snapshot.data![1];
 
-          // Add check to ensure events list is not empty
-          if (events.isEmpty) {
+          if (eventsHome.isEmpty && savedEvents.isEmpty) {
             return const Center(child: Text('No events found.'));
           }
 
@@ -289,14 +291,14 @@ class _HomePageState extends State<HomePage> {
                     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 1,
                     ),
-                    itemCount: events.length,
+                    itemCount: eventsHome.length,
                     itemBuilder: (context, index) {
                       // Ensure index is within bounds
-                      if (index >= events.length) {
+                      if (index >= eventsHome.length) {
                         return Container(); // or handle error gracefully
                       }
 
-                      EventCard card = EventCard(event: events[index], showBookmarkButton: true);
+                      EventCard card = EventCard(event: eventsHome[index], showBookmarkButton: true);
 
                       return card;
                     },
@@ -366,13 +368,13 @@ class _HomePageState extends State<HomePage> {
                     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 1,
                     ),
-                    itemCount: events.length,
+                    itemCount: savedEvents.length,
                     itemBuilder: (context, index) {
                       // Ensure index is within bounds
-                      if (index >= events.length) {
+                      if (index >= savedEvents.length) {
                         return Container(); // or handle error gracefully
                       }
-                      return EventCard(event: events[index],showBookmarkButton: true);
+                      return EventCard(event: savedEvents[index],showBookmarkButton: true, saved: true);
                     },
                   ),
                 ),

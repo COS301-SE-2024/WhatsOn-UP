@@ -426,9 +426,10 @@ class Event {
 class EventCard extends StatefulWidget {
   final Event event;
   bool showBookmarkButton;
+  bool saved;
   String broadcast;
 
-  EventCard({Key? key, required this.event, required this.showBookmarkButton ,this.broadcast=''})
+  EventCard({Key? key, required this.event, required this.showBookmarkButton ,this.broadcast='',this.saved=false})
       : super(key: key);
 
   @override
@@ -439,6 +440,50 @@ class _EventCardState extends State<EventCard> {
   bool isBookmarked = false;
   bool isbroadcast=false;
   bool _isLoading=false;
+
+  // Future<void> _addSaved() async {
+  //
+  //   EventProvider eventProvider =
+  //   Provider.of<EventProvider>(context, listen: false);
+  //
+  //
+  //   try {
+  //     setState(() {
+  //       _isLoading = true;
+  //     });
+  //
+  //     var result = await Api().putSavedEvent(widget.event.id, user!.id);
+  //
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       const SnackBar(content: Text('Successfully RSVP\'d to event!')),
+  //     );
+  //     await eventProvider.refreshRSVPEvents(user!.id);
+  //     await eventProvider.refreshEvents();
+  //     print(
+  //         'amount of attendees after event added to the calendar ${_thisCurrentEvent.attendees.length}');
+  //     setState(() {
+  //       _isLoading = false;
+  //     });
+  //     Navigator.of(context).pushReplacementNamed('/home');
+  //   } catch (e) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(content: Text('Failed to RSVP: ${e.toString()}')),
+  //     );
+  //     setState(() {
+  //       _isLoading = false;
+  //     });
+  //   }
+  // }
+
+
+
+
+
+
+
+
+
+
   @override
   Widget build(BuildContext context) {
     EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
@@ -450,7 +495,9 @@ class _EventCardState extends State<EventCard> {
     widget.showBookmarkButton=widget.broadcast=="EDIT"
     ?false
     :true;
-
+   widget.saved==true
+       ?isBookmarked=true
+       :isBookmarked=false;
    isbroadcast=widget.broadcast=="EDIT"
        ?true
        :false;

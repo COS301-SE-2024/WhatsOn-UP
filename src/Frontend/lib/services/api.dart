@@ -310,7 +310,28 @@ class Api {
       throw Exception(e.toString());
     }
   }
+  Future<Map<String, dynamic>> putSavedEvent(String eventId, String UserId) async {
+    final String _rsvpEventUrl =
+        'http://${globals.domain}:8080/api/user/save_event/$eventId';
 
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $UserId',
+    };
+
+    try {
+      var response = await http.put(Uri.parse(_rsvpEventUrl), headers: headers);
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        throw Exception(jsonDecode(response.body));
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
 Future<List<AppNotification>> getAllNotification(
       {required String userId}) async {
     String notifyUserUrl = 'http://${globals.domain}:8081/notifications/get_all';
