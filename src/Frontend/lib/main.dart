@@ -64,6 +64,7 @@ import 'package:firstapp/pages/editProfile_page.dart';
 import 'package:firstapp/pages/explore_page.dart';
 
 import 'package:firstapp/pages/home_page.dart';
+import 'package:firstapp/pages/manageEvents.dart';
 import 'package:firstapp/pages/notifications.dart';
 import 'package:firstapp/pages/host_application.dart';
 import 'package:firstapp/pages/profilePage.dart';
@@ -151,6 +152,7 @@ class MyApp extends StatelessWidget {
           '/userManual': (context)=> const UserManualWebView(),
           '/navigation' : (context) => NavigationPage(),
           '/surveyRate': (context) => SurveyratecatScreen(jsonCategories: ''),
+          '/manageEvents': (context) => ManageEvents(supabaseClient: supabaseClient),
         },
         debugShowCheckedModeBanner: false,
       ),

@@ -1284,6 +1284,42 @@ class MockApi extends _i1.Mock implements _i2.Api {
       ) as _i8.Future<Map<String, dynamic>>);
 
   @override
+  _i8.Future<Map<String, dynamic>> broadcastEvent(
+    String? eventId,
+    String? message,
+    String? userId,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #broadcastEvent,
+          [
+            eventId,
+            message,
+            userId,
+          ],
+        ),
+        returnValue:
+            _i8.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
+      ) as _i8.Future<Map<String, dynamic>>);
+
+  @override
+  _i8.Future<Map<String, dynamic>> broadcast(
+    String? message,
+    String? userId,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #broadcast,
+          [
+            message,
+            userId,
+          ],
+        ),
+        returnValue:
+            _i8.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
+      ) as _i8.Future<Map<String, dynamic>>);
+
+  @override
   _i8.Future<Map<String, dynamic>> AcceptApplication({
     required String? userId,
     required String? applicationId,

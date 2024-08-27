@@ -2,7 +2,10 @@ import 'package:firstapp/providers/events_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:firstapp/pages/detailed_event_page.dart';
 import 'package:provider/provider.dart';
+import '../pages/BroadcastEvent.dart';
+import '../pages/Event_Attendance.dart';
 import '../providers/user_provider.dart';
+import '../services/api.dart';
 
 
 class Category {
@@ -423,8 +426,9 @@ class Event {
 class EventCard extends StatefulWidget {
   final Event event;
   bool showBookmarkButton;
+  String broadcast;
 
-  EventCard({Key? key, required this.event, this.showBookmarkButton = true})
+  EventCard({Key? key, required this.event, required this.showBookmarkButton ,this.broadcast=''})
       : super(key: key);
 
   @override
@@ -433,7 +437,8 @@ class EventCard extends StatefulWidget {
 
 class _EventCardState extends State<EventCard> {
   bool isBookmarked = false;
-
+  bool isbroadcast=false;
+  bool _isLoading=false;
   @override
   Widget build(BuildContext context) {
     EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
@@ -441,8 +446,14 @@ class _EventCardState extends State<EventCard> {
     String userRole = userP.role;
     widget.showBookmarkButton = userRole == "GUEST"
         ? false
-        : true; // if user is a guest, don't show bookmark button
+        : true;
+    widget.showBookmarkButton=widget.broadcast=="EDIT"
+    ?false
+    :true;
 
+   isbroadcast=widget.broadcast=="EDIT"
+       ?true
+       :false;
     final theme = Theme.of(context);
     final cardColour = theme.colorScheme.surface;
     final textColour = theme.colorScheme.onSurface;
@@ -537,15 +548,83 @@ class _EventCardState extends State<EventCard> {
                             isBookmarked = !isBookmarked;
                             if (isBookmarked == true) {
                               eventP.addEventSaved(widget.event);
-                              //api to add this event
+
                             } else {
                               eventP.removeEventSaved(widget.event);
                             }
                           });
                         },
                       ),
+
                   ],
                 ),
+                const SizedBox(height: 10.0),
+                if(isbroadcast)
+                Row(
+
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+
+                      Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        child: TextButton(
+                          onPressed: () {
+
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    EventAttendance(event:widget.event ),
+                              ),
+                            );
+
+                          },
+                          style: TextButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.people, size: 16),
+                              SizedBox(width: 8),
+                              Text('Attendees: ${widget.event.attendees.length}'),
+                            ],
+                          ),
+                        ),
+
+
+                      ),
+                    const SizedBox(height: 10.0),
+
+                      Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        child: TextButton(
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return BroadcastEventDialog(event: widget.event);
+                              },
+                            );
+
+                          },
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20.0),
+                          ),
+                          child: Text('Broadcast'),
+                        ),
+                      )
+                  ],
+                ),
+
+
               ],
             ),
           ),
@@ -553,4 +632,7 @@ class _EventCardState extends State<EventCard> {
       ),
     );
   }
+
+
+
 }

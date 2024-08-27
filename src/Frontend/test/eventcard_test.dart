@@ -1,7 +1,18 @@
 import 'dart:convert';
 
+import 'package:firstapp/pages/BroadcastEvent.dart';
+import 'package:firstapp/pages/Event_Attendance.dart';
+// import 'package:firstapp/providers/events_providers.dart';
+
+// import 'package:firstapp/providers/user_provider.dart';
 import 'package:firstapp/widgets/event_card.dart';
+
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
+import 'package:provider/provider.dart';
+
+import 'api_test.mocks.dart';
 
 
 void main() {
@@ -182,5 +193,140 @@ void main() {
       expect(host.toJson(), json);
     });
   });
+  // group('Bookmark Button', () {
+  //
+  //   final mockUserProvider = MockuserProvider();
+  //   final mockNotificationProvider = MocknotificationProvider();
+  //   final mockEventProvider = MockEventProvider();
+  //
+  //   testWidgets('Bookmark button visibility and functionality test', (WidgetTester tester) async {
+  //
+  //     when(mockUserProvider.role).thenReturn('ADMIN');
+  //     bool isBookmarked = false;
+  //
+  //
+  //     final mockEvent = Event(
+  //       id: '3',
+  //       nameOfEvent: 'Test Event 3 HOME',
+  //       venue: null,
+  //       description: 'Test Description 3',
+  //       imageUrls: [],
+  //       hosts: [],
+  //       startTime: '2022-01-03T10:00:00.000Z',
+  //       endTime: '2022-01-03T12:00:00.000Z',
+  //       maxAttendees: 200,
+  //       isPrivate: false,
+  //       attendees: [],
+  //       metadata: Metadata(
+  //         mentors: [],
+  //         categories: [],
+  //         sessions: [],
+  //       ),
+  //       invitees: [],
+  //     );
+  //
+  //
+  //
+  //
+  //
+  //     await tester.pumpWidget(MaterialApp(
+  //       home: Scaffold(
+  //         body: EventCard(
+  //           showBookmarkButton: true,
+  //           event: mockEvent,
+  //
+  //
+  //         ),
+  //       ),
+  //     ));
+  //
+  //
+  //     expect(find.byIcon(Icons.bookmark_border), findsOneWidget);
+  //
+  //
+  //     await tester.tap(find.byIcon(Icons.bookmark_border));
+  //     await tester.pump();
+  //
+  //
+  //     expect(isBookmarked, isTrue);
+  //     // verify(eventP.addEventSaved(mockEvent)).called(1);
+  //     //
+  //     //
+  //     // await tester.tap(find.byIcon(Icons.bookmark));
+  //     // await tester.pump();
+  //     //
+  //     //
+  //     // expect(isBookmarked, isFalse);
+  //     // verify(eventP.removeEventSaved(mockEvent)).called(1);
+  //   });
+  // });
+  //
+  // group('Broadcast and Attendance Button', () {
+  //   final mockUserProvider = MockuserProvider();
+  //
+  //   final mockEventProvider = MockEventProvider();
+  //   testWidgets('Broadcast and Attendance button visibility and functionality test', (WidgetTester tester) async {
+  //     when(mockUserProvider.role).thenReturn('ADMIN');
+  //     final mockEvent = Event(
+  //       id: '3',
+  //       nameOfEvent: 'Test Event 3 HOME',
+  //       venue: null,
+  //       description: 'Test Description 3',
+  //       imageUrls: [],
+  //       hosts: [],
+  //       startTime: '2022-01-03T10:00:00.000Z',
+  //       endTime: '2022-01-03T12:00:00.000Z',
+  //       maxAttendees: 200,
+  //       isPrivate: false,
+  //       attendees: [],
+  //       metadata: Metadata(
+  //         mentors: [],
+  //         categories: [],
+  //         sessions: [],
+  //       ),
+  //       invitees: [],
+  //     );;
+  //
+  //
+  //
+  //     await tester.pumpWidget(MaterialApp(
+  //       home: Scaffold(
+  //         body:MultiProvider(
+  //           providers: [
+  //             ChangeNotifierProvider<userProvider>(create: (_) => mockUserProvider),
+  //             ChangeNotifierProvider<EventProvider>(create: (_) => mockEventProvider),
+  //           ],
+  //           child:  EventCard(
+  //               showBookmarkButton:true,
+  //               broadcast:'EDIT',
+  //               event: mockEvent,
+  //             ),
+  //         ),
+  //         // body:  EventCard(
+  //         //   showBookmarkButton:true,
+  //         //   broadcast:'EDIT',
+  //         //   event: mockEvent,
+  //         // ),
+  //       ),
+  //     ));
+  //
+  //
+  //     expect(find.text('Attendees: 0'), findsOneWidget);
+  //
+  //
+  //     await tester.tap(find.text('Attendees: 0'));
+  //     await tester.pumpAndSettle();
+  //     expect(find.byType(EventAttendance), findsOneWidget);
+  //
+  //     expect(find.text('Broadcast'), findsOneWidget);
+  //
+  //
+  //     await tester.tap(find.text('Broadcast'));
+  //     await tester.pumpAndSettle();
+  //     expect(find.byType(BroadcastEventDialog), findsOneWidget);
+  //   });
+  // });
+
+
 
 }
