@@ -27,7 +27,13 @@ class _PasteventsState extends State<Pastevents> {
     super.initState();
     supabaseClient = widget.supabaseClient;
     final user = supabaseClient.auth.currentUser;
-    _pastEvents = widget.eventService.fetchPastEvents(user!.id);
+    if (user != null) {
+      _pastEvents = widget.eventService.fetchPastEvents(user.id);
+    } else {
+
+      _pastEvents = Future.error('User is not authenticated');
+    }
+
   }
 
   @override

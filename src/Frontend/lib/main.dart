@@ -64,6 +64,7 @@ import 'package:firstapp/pages/editProfile_page.dart';
 import 'package:firstapp/pages/explore_page.dart';
 
 import 'package:firstapp/pages/home_page.dart';
+import 'package:firstapp/pages/manageEvents.dart';
 import 'package:firstapp/pages/notifications.dart';
 import 'package:firstapp/pages/host_application.dart';
 import 'package:firstapp/pages/profilePage.dart';
@@ -77,12 +78,13 @@ import 'package:firstapp/providers/events_providers.dart';
 import 'package:firstapp/providers/notification_providers.dart';
 import 'package:firstapp/providers/user_provider.dart';
 import 'package:firstapp/screens/SearchScreen.dart';
+import 'package:firstapp/surveys/SurveyRateCat_screen.dart';
 import 'package:firstapp/services/LocalNotifications.dart';
 import 'package:firstapp/services/api.dart';
 import 'package:firstapp/widgets/event_card.dart';
 import 'package:firstapp/widgets/theme_manager.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
@@ -155,6 +157,8 @@ class MyApp extends StatelessWidget {
           '/generaluserapplications': (context)=> const TabGeneral(),
           '/userManual': (context)=> const UserManualWebView(),
           '/navigation' : (context) => NavigationPage(),
+          '/surveyRate': (context) => SurveyratecatScreen(jsonCategories: ''),
+          '/manageEvents': (context) => ManageEvents(supabaseClient: supabaseClient),
         },
         debugShowCheckedModeBanner: false,
       ),

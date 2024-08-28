@@ -356,8 +356,12 @@ class NavBar extends StatelessWidget {
                 MaterialPageRoute(builder: (context) => ManageEvents(supabaseClient: Supabase.instance.client)));
             break;
           case 2:
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => Broadcast()));
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return Broadcast();
+              },
+            );
             break;
         }
       }

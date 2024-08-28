@@ -70,7 +70,7 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
                 "WHERE (a.userId = :userId " +
                 "OR h.userId = :userId) "
     )
-    fun getRspvdEvents(@Param("userId") userId: UUID): List<EventModel>
+    fun getRsvpdEvents(@Param("userId") userId: UUID): List<EventModel>
 
     @Query(
         "SELECT e FROM EventModel e " +
@@ -103,11 +103,9 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
    // fun findByTitleContainingIgnoreCase(title: String): List<Event>
 
 
-    @Query("""
-        SELECT DISTINCT (metadata::jsonb ->> 'category') 
-        FROM events 
-        WHERE metadata::jsonb ->> 'category' IS NOT NULL
-    """, nativeQuery = true)
+   @Query(value = """
+        SELECT DISTINCT * FROM category
+        """, nativeQuery = true)
     fun findUniqueCategories(): List<String>
 
 

@@ -139,7 +139,7 @@ class UserServiceTest {
 
         `when`(eventRepo.findById(id)).thenReturn(Optional.of(event))
 
-        val response = userServiceWithMocks.rspvEvent(id)
+        val response = userServiceWithMocks.rsvpEvent(id)
 
         assertEquals("success", response.body?.status)
     }
@@ -151,7 +151,7 @@ class UserServiceTest {
 
         `when`(eventRepo.findById(id)).thenReturn(Optional.empty())
 
-        val response = userServiceWithMocks.rspvEvent(id)
+        val response = userServiceWithMocks.rsvpEvent(id)
 
         assertEquals("error", response.body?.status)
     }
@@ -166,9 +166,9 @@ class UserServiceTest {
         }
 
         `when`(userRepo.findById(id)).thenReturn(Optional.of(user))
-        `when`(eventRepo.getRspvdEvents(user.userId)).thenReturn(listOf(event))
+        `when`(eventRepo.getRsvpdEvents(user.userId)).thenReturn(listOf(event))
 
-        val response = userServiceWithMocks.getRspvEvents()
+        val response = userServiceWithMocks.getRsvpEvents()
 
         assertEquals("success", response.body?.status)
     }
@@ -187,7 +187,7 @@ class UserServiceTest {
         `when`(eventRepo.findById(id)).thenReturn(Optional.of(event))
         `when`(eventRepo.save(event)).thenReturn(event)
 
-        val response = userServiceWithMocks.deleteRspvEvent(id)
+        val response = userServiceWithMocks.deleteRsvpEvent(id)
 
         assertEquals("success", response.body?.status)
     }
@@ -199,7 +199,7 @@ class UserServiceTest {
 
         `when`(eventRepo.findById(id)).thenReturn(Optional.empty())
 
-        val response = userServiceWithMocks.deleteRspvEvent(id)
+        val response = userServiceWithMocks.deleteRsvpEvent(id)
 
         assertEquals("error", response.body?.status)
     }

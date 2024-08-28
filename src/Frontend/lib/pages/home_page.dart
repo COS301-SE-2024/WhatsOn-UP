@@ -115,8 +115,16 @@ class _HomePageState extends State<HomePage> {
         return  ManageEvents(supabaseClient: Supabase.instance.client);
 
       case 6:
-        return const Broadcast();
-
+        // WidgetsBinding.instance.addPostFrameCallback((_) {
+        //   showDialog(
+        //     context: context,
+        //     barrierColor: Colors.transparent,
+        //     builder: (BuildContext context) {
+        //       return Broadcast();
+        //     },
+        //   );
+        // });
+        return _buildHomePage();
       default:
         return _buildHomePage();
     }
@@ -288,7 +296,7 @@ class _HomePageState extends State<HomePage> {
                         return Container(); // or handle error gracefully
                       }
 
-                      EventCard card = EventCard(event: events[index]);
+                      EventCard card = EventCard(event: events[index], showBookmarkButton: true);
 
                       return card;
                     },
@@ -364,7 +372,7 @@ class _HomePageState extends State<HomePage> {
                       if (index >= events.length) {
                         return Container(); // or handle error gracefully
                       }
-                      return EventCard(event: events[index]);
+                      return EventCard(event: events[index],showBookmarkButton: true);
                     },
                   ),
                 ),
