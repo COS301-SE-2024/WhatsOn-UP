@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "427279140188",
+    "project_id": "whatsonup-analytics",
+    "storage_bucket": "whatsonup-analytics.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:427279140188:android:603a6f038b2f6d9e9fad99",
+        "android_client_info": {
+          "package_name": "com.example.firstapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBdhMxafI194WhXVd_SGMVKFoV1-mH0hw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
