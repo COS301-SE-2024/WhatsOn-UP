@@ -16,12 +16,4 @@ export class UserPreferencesController {
     return this.userPreferencesService.initPreferences(userId, initPreferencesDto);
   }
 
-  @Put('update')
-  async updatePreferences(
-    @GetUserId() userId: string
-  ){
-    console.log('Token: ', userId);
-    return this.userPreferencesService.updatePreferences(userId)
-  }
-
 }
