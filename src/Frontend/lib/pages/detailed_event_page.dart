@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:firstapp/pages/edit_Event.dart';
 import 'package:firstapp/pages/explore_page.dart';
+import 'package:firstapp/pages/rate_event.dart';
 import 'package:firstapp/providers/events_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -382,7 +383,6 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
                         ),
                       ),
                   ],
-                  const SizedBox(height: 8.0),
                   if (_thisCurrentEvent.attendees
                       .any((attendee) => attendee.userId == userP.userId)) ...[
                     ElevatedButton.icon(
@@ -415,6 +415,28 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
                       ),
                     ),
                   const SizedBox(height: 16.0),
+
+                    // TEMP BUTTON vvv
+                    ElevatedButton.icon(
+                        onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => RateEventPage(
+                              eventId: _thisCurrentEvent.id,
+                              eventName: _thisCurrentEvent.nameOfEvent,
+                              ),
+                          ),
+                        );
+                      },
+                      icon: const Icon(Icons.thumb_up),
+                      label: const Text('RATE'),
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: const Size(double.infinity, 48),
+                      ),
+                    ),
+                    // TEMP BUTTON ^^^
+
                   if (_thisCurrentEvent != null &&
                       (_thisCurrentEvent!.hosts != null &&
                               _thisCurrentEvent!.hosts.isNotEmpty &&
