@@ -8,6 +8,8 @@ import 'package:firstapp/services/api.dart';
 import 'package:firstapp/pages/home_page.dart';
 
 import '../providers/user_provider.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_analytics/observer.dart';
 
 class GoogleSignInPage extends StatefulWidget {
   const GoogleSignInPage({super.key});
@@ -17,6 +19,7 @@ class GoogleSignInPage extends StatefulWidget {
 }
 
 class _GoogleSignInPageState extends State<GoogleSignInPage> {
+  final FirebaseAnalytics _analytics = FirebaseAnalytics.instance;
   final _usernameController = TextEditingController();
   bool _isButtonDisabled = true;
   bool _showValidationMessage = false;
@@ -117,7 +120,12 @@ class _GoogleSignInPageState extends State<GoogleSignInPage> {
     userP.Fullname = fullname;
     userP.email = user!.userMetadata?['email'];
     userP.userId = user.id;
-
+    await _analytics.logEvent(
+      name: 'sign_in',
+      parameters: {
+        'method': 'google sign-in',
+      },
+    );
     Api api = Api();
     api.postChangeUser(fullname, user.id).then((response) {
       if (response['error'] != null) {

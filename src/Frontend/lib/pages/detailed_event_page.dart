@@ -11,6 +11,8 @@ import 'package:socket_io_client/socket_io_client.dart';
 import '../main.dart';
 import '../providers/user_provider.dart';
 import 'package:intl/intl.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_analytics/observer.dart';
 
 class DetailedEventPage extends StatefulWidget {
   final Event event;
@@ -22,6 +24,7 @@ class DetailedEventPage extends StatefulWidget {
 }
 
 class _DetailedEventPageState extends State<DetailedEventPage> {
+  final FirebaseAnalytics _analytics = FirebaseAnalytics.instance;
   int _currentImageIndex = 0;
   final user = supabase.auth.currentUser;
   late Event _thisCurrentEvent;
@@ -31,8 +34,17 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     _fetchEvent();
+    _logEventView();
   }
-
+  Future<void> _logEventView() async {
+    await _analytics.logEvent(
+      name: 'event_view',
+      parameters: {
+        'event_id': widget.event.id,
+        'event_name': widget.event.nameOfEvent,
+      },
+    );
+  }
   Future<void> _fetchEvent() async {
     try {
       EventProvider eventProvider =
@@ -86,18 +98,24 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
         Provider.of<EventProvider>(context, listen: false);
     print('Removing RSVP for event: ${widget.event.id}');
     try {
-      await Api()
-          .DeletersvpEvent(widget.event.id, user!.id)
-          .then((response) {});
+      final response = await Api().DeletersvpEvent(widget.event.id, user!.id);
+      if (response['status'] == 'success') {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Successfully removed RSVP!')),
+        );
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Successfully removed RSVP !')),
-      );
-      await eventProvider.refreshRSVPEvents(user!.id);
-      await eventProvider.refreshEvents();
 
-      Navigator.of(context).pushReplacementNamed('/home');
-    } catch (e) {
+        await eventProvider.refreshRSVPEvents(user!.id);
+        await eventProvider.refreshEvents();
+
+        Navigator.of(context).pushReplacementNamed('/home');
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text('Failed to remove RSVP: ${response['message']}')),
+        );
+      }
+    }catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to remove RSVP: ${e.toString()}')),
       );
@@ -107,6 +125,14 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
   void _viewLocationOnMap() {
     Venue? venue = _thisCurrentEvent.venue;
     String? buildingName = (venue != null && venue.building != null) ? venue.building!.name : null;
+    _analytics.logEvent(
+      name: 'navigate_to_navigation_page',
+      parameters: {
+        'event_id': widget.event.id,
+        'event_name': widget.event.nameOfEvent,
+        'building_name': buildingName ?? 'Unknown',
+      },
+    );
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => NavigationPage(
