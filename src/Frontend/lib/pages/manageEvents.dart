@@ -1,118 +1,4 @@
-// import 'package:flutter/material.dart';
-// import 'package:flutter_spinkit/flutter_spinkit.dart';
-// import 'package:line_awesome_flutter/line_awesome_flutter.dart';
-// import 'package:firstapp/pages/application_event.dart';
-//
-// import 'attendee.dart';
-// import 'package:provider/provider.dart';
-//
-// import '../providers/user_provider.dart';
-// import '../widgets/eventManagement_category.dart';
-//
-// class ManageEvents extends StatelessWidget {
-//   ManageEvents({Key? key}) : super(key: key);
-//
-//   bool _isLoading = false;
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     userProvider userP = Provider.of<userProvider>(context);
-//     return Scaffold(
-//       appBar: AppBar(
-//         leading: IconButton(
-//           onPressed: () {
-//             Navigator.pop(context);
-//           },
-//           icon: const Icon(LineAwesomeIcons.angle_left_solid),
-//         ),
-//         title: Text('Manage Events'),
-//       ),
-//       body: _isLoading
-//           ? Center(
-//         child: SpinKitPianoWave(
-//           color: const Color.fromARGB(255, 149, 137, 74),
-//           size: 50.0,
-//         ),
-//       )
-//           : Column(
-//         children: [
-//           _buildProfileOption(
-//             text: userP.role == 'ADMIN' ? 'All Events' : 'My Events',
-//
-//               onTap: () => _navigateToEventManagementCategory(context),
-//
-//           ),
-//           _buildDivider(),
-//           _buildProfileOption(
-//             text: 'Past Events',
-//             onTap: () {
-//
-//             },
-//           ),
-//           _buildDivider(),
-//           _buildProfileOption(
-//             text: 'Create Event',
-//             onTap: () => _navigateToApplicationEvent(context),
-//
-//           ),
-//
-//           _buildDivider(),
-//           _buildProfileOption(
-//             text: userP.role == 'ADMIN' ? 'Attendees for All Events' : 'My Attendees',
-//             onTap: () => _navigateToAttendeesEvent(context),
-//
-//           ),
-//           _buildDivider(),
-//         ],
-//       ),
-//     );
-//   }
-// }
-// void _navigateToEventManagementCategory(BuildContext context) {
-//   Navigator.push(
-//     context,
-//     MaterialPageRoute(builder: (context) => EventmanagementCategory()),
-//   );
-// }
-// void _navigateToApplicationEvent(BuildContext context) {
-//   Navigator.push(
-//     context,
-//     MaterialPageRoute(builder: (context) => ApplicationEvent()),
-//   );
-// }
-// void _navigateToAttendeesEvent(BuildContext context) {
-//   Navigator.push(
-//     context,
-//     MaterialPageRoute(builder: (context) => Attendee()),
-//   );
-// }
-// Widget _buildProfileOption({
-//
-//   required String text,
-//   Widget? trailing,
-//   required VoidCallback onTap,
-// }) {
-//   return ListTile(
-//
-//     title: Text(text),
-//     trailing: trailing != null
-//         ? SizedBox(
-//       width: 100,
-//       child: trailing,
-//     )
-//         : const Icon(Icons.arrow_forward),
-//     onTap: onTap,
-//   );
-// }
-//
-// Widget _buildDivider() {
-//   return const Divider(
-//     height: 1,
-//     thickness: 1,
-//     indent: 16,
-//     endIndent: 16,
-//   );
-// }
+
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
@@ -142,6 +28,8 @@ class _ManageEventsState extends State<ManageEvents> {
   bool _isLoading = false;
   String Admin = 'ADMIN';
   String Host = 'HOST';
+  String? _selectedOption;
+  var _hoveredIndex;
   void setLoading(bool isLoading) {
     setState(() {
       _isLoading = isLoading;
@@ -150,8 +38,18 @@ class _ManageEventsState extends State<ManageEvents> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final borderColour = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
     userProvider userP = Provider.of<userProvider>(context);
     SupabaseClient supabaseClient = widget.supabaseClient;
+
+    final List<Map<String, dynamic>>  options = [
+      {'text': userP.role == Admin ? 'All Events' : 'My Events', 'route': 'EventManagementCategory', 'icon': Icons.event},
+      {'text': 'Past Events', 'route': 'Pastevents', 'icon': Icons.history},
+      {'text': 'Create Event', 'route': 'ApplicationEvent', 'icon': Icons.add},
+      if (userP.role == Admin) {'text': 'General user Host Applications', 'route': 'GeneralEventApplications', 'icon': Icons.group},
+    ];
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -164,109 +62,120 @@ class _ManageEventsState extends State<ManageEvents> {
       ),
       body: _isLoading
           ? Center(
-              child: SpinKitPianoWave(
-                color: const Color.fromARGB(255, 149, 137, 74),
-                size: 50.0,
-              ),
-            )
-          : Column(
-              children: [
-                _buildProfileOption(
-                  text: userP.role == Admin ? 'All Events' : 'My Events',
-                  onTap: () async =>
-                      await _navigateToEventManagementCategory(context, supabaseClient),
+        child: SpinKitPianoWave(
+          color: const Color.fromARGB(255, 149, 137, 74),
+          size: 50.0,
+        ),
+      )
+
+      :Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(height: 100.0),
+            Expanded(
+              child: GridView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 16.0,
+                  mainAxisSpacing: 16.0,
+                  childAspectRatio: 1.0,
                 ),
-                _buildDivider(),
-                _buildProfileOption(
-                  text: 'Past Events',
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => Pastevents(
-                          eventService: EventService(supabaseClient),
-                          supabaseClient: supabaseClient,
+                itemCount: options.length,
+                itemBuilder: (context, index) {
+                  final option = options[index];
+                  final IconData icon = option['icon'] as IconData;
+                  final isSelected = _selectedOption == option['text'];
+
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _selectedOption = option['text'];
+                      });
+                      _navigateToRoute(option['route']!, context);
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(16.0),
+                      decoration: BoxDecoration(
+                        color: isSelected
+                            ? Color.fromARGB(255, 149, 137, 74)
+                            : Colors.transparent,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: isSelected
+                              ? Colors.transparent
+                              : Color.fromARGB(255, 149, 137, 74),
+                          width: 2.0,
                         ),
                       ),
-                    );
-                    },
-                ),
-                _buildDivider(),
-                _buildProfileOption(
-                  text: 'Create Event',
-                  onTap: () => _navigateToApplicationEvent(context),
-                ),
-                _buildDivider(),
-                _buildProfileOption(
-                  text: userP.role == Admin
-                      ? 'Attendees for All Events'
-                      : 'My Attendees',
-                  onTap: () => _navigateToAttendeesEvent(context),
-                ),
-                _buildDivider(),
-                if (userP.role == Admin) ... [
-                _buildProfileOption(
-                  text: 'General user Host Applications',
-                  onTap: () => _navigateToGeneralEventApplications(context),
-                ),
-                _buildDivider(),
-                ],
-              ],
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            icon,
+                            size: 50.0,
+                            color: isSelected ? Colors.white : Colors.black,
+                          ),
+                          SizedBox(height: 8.0),
+                          Text(
+                            option['text'],
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: isSelected ? Colors.white : Colors.black,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
             ),
+          ],
+        ),
+
+      ),
     );
   }
 
-  Future<void> _navigateToEventManagementCategory(BuildContext context, SupabaseClient supabaseClient) async {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => EventmanagementCategory(supabaseClient: supabaseClient)),
-    );
-  }
-
-  Future<void> _navigateToGeneralEventApplications(BuildContext context) async {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const TabGeneral()),
-    );
-  }
-
-  void _navigateToApplicationEvent(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => ApplicationEvent()),
-    );
-  }
-
-  void _navigateToAttendeesEvent(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => Attendees()),
-    );
-  }
-
-  Widget _buildProfileOption({
-    required String text,
-    Widget? trailing,
-    required VoidCallback onTap,
-  }) {
-    return ListTile(
-      title: Text(text),
-      trailing: trailing != null
-          ? SizedBox(
-              width: 100,
-              child: trailing,
-            )
-          : const Icon(Icons.arrow_forward),
-      onTap: onTap,
-    );
-  }
-
-  Widget _buildDivider() {
-    return const Divider(
-      height: 1,
-      thickness: 1,
-      indent: 16,
-      endIndent: 16,
-    );
+  void _navigateToRoute(String route, BuildContext context) {
+    switch (route) {
+      case 'EventManagementCategory':
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => EventmanagementCategory(supabaseClient: widget.supabaseClient)),
+        );
+        break;
+      case 'Pastevents':
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Pastevents(
+              eventService: EventService(widget.supabaseClient),
+              supabaseClient: widget.supabaseClient,
+            ),
+          ),
+        );
+        break;
+      case 'ApplicationEvent':
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => ApplicationEvent()),
+        );
+        break;
+      case 'GeneralEventApplications':
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const TabGeneral()),
+        );
+        break;
+      default:
+        break;
+    }
   }
 }
