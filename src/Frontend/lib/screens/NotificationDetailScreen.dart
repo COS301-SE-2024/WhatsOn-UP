@@ -84,6 +84,42 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
 
   String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
 
+  void _showDeleteConfirmationDialog() {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text("Delete Notification"),
+        content: const Text(
+          "Are you sure you want to delete this notification?",
+          style: TextStyle(fontSize: 17),
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: const Text(
+              "No",
+              style: TextStyle(fontSize: 17),
+            ),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          TextButton(
+            child: const Text(
+              "Yes",
+              style: TextStyle(fontSize: 17),
+            ),
+            onPressed: () {
+              Navigator.of(context).pop();
+              // Delete notification function here
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
   @override
   Widget build(BuildContext context) {
     String formattedDateSentAt = formatDateTime(widget.notification.sentAt);
@@ -91,6 +127,12 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(capitalize(widget.notification.notificationTypes)),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.delete),
+            onPressed: _showDeleteConfirmationDialog,
+          ),
+        ],
       ),
       body: isLoading
           ? Center(
