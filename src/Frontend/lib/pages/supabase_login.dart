@@ -181,6 +181,9 @@ import '../providers/notification_providers.dart';
 import '../providers/user_provider.dart';
 import '../services/socket_client.dart';
 import '../services/globals.dart' as globals;
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_analytics/observer.dart';
+
 
 class SupabaseLogin extends StatefulWidget {
   const SupabaseLogin({super.key});
@@ -198,6 +201,7 @@ class _SupabaseLoginState extends State<SupabaseLogin> {
   late Size mediaSize;
   bool _obscurePassword = true;
 
+  final FirebaseAnalytics _analytics = FirebaseAnalytics.instance;
   // void initState() {
   //   super.initState();
   //   _authSubscription = supabase.auth.onAuthStateChange.listen((event) {
@@ -331,7 +335,14 @@ class _SupabaseLoginState extends State<SupabaseLogin> {
                 //    password: password,
                 //  } as UserAttributes);
 
+
                 if (mounted) {
+                  await _analytics.logEvent(
+                    name: 'sign_in',
+                    parameters: {
+                      'method': 'in-app sign in',
+                    },
+                  );
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       content:
                           Text("Logged In: ${authResponse.user!.email!}")));
