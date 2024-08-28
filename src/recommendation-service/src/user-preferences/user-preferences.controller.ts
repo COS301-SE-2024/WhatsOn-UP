@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Post, Headers, UnauthorizedException } from '@nestjs/common';
+import { Body, Controller, Param, Post, Headers, UnauthorizedException, Put } from '@nestjs/common';
 import { UserPreferencesService } from './user-preferences.service';
 import { InitPreferencesDto } from './dto/init-preferences.dto';
 import { GetUserId } from '../get-user-id.decorator';
@@ -12,16 +12,16 @@ export class UserPreferencesController {
     @GetUserId() userId: string,
     @Body() initPreferencesDto: InitPreferencesDto
   ) {
-    if (!userId) {
-      throw new UnauthorizedException({
-        status: 'error',
-        message: 'No (or invalid) token provided',
-        timestamp: new Date().toISOString(),
-      });
-    }
     console.log('Token: ', userId);
-    
     return this.userPreferencesService.initPreferences(userId, initPreferencesDto);
+  }
+
+  @Put('update')
+  async updatePreferences(
+    @GetUserId() userId: string
+  ){
+    console.log('Token: ', userId);
+    return this.userPreferencesService.updatePreferences(userId)
   }
 
 }
