@@ -56,7 +56,7 @@ class EventService {
 
         venue.available = false
 
-        val event = EventModel().apply {
+        var event = EventModel().apply {
             this.eventId = UUID.randomUUID()
             this.title = createEventDto.title
             this.description = createEventDto.description
@@ -69,12 +69,19 @@ class EventService {
                 ObjectMapper().writeValueAsString(it)
             } ?: "{}"
             this.isPrivate = createEventDto.isPrivate ?: false
-            this.hosts = setOf(user)
+            this.availableSlots = createEventDto.maxParticipants ?: 1
         }
 
-        eventRepo.save(event)
+        eventRepo.saveAndFlush(event)
 
-        val eventDto = EventDto(event,false, createEventDto.maxParticipants)
+        event = event.eventId?.let { eventRepo.findById(it).get() }!!
+
+        event.hosts.add(user)
+
+        eventRepo.save(event)
+        
+
+        val eventDto = EventDto(event,true)
 
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventDto)
         )
@@ -87,13 +94,13 @@ class EventService {
         var eventsDto: List<EventDto>? = null
          if (user == "anonymousUser") {
             val events = eventRepo.findAllByUser(null)
-            eventsDto = events.map { event -> EventDto(event, false, null) }
+            eventsDto = events.map { event -> EventDto(event, false) }
         }
         else {
             val userModel = (user as CustomUser).userModel
             val events = eventRepo.findAllByUser(userModel.userId)
             eventsDto = events.map {
-                event -> EventDto(event, userModel.userId in event.hosts.map { host -> host.userId }, null)
+                event -> EventDto(event, userModel.userId in event.hosts.map { host -> host.userId })
             }
         }
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto)
@@ -154,7 +161,10 @@ class EventService {
                 updateEventDto.location?.let { venue = v}
                 updateEventDto.startDateTime?.let { startDateTime = it }
                 updateEventDto.endDateTime?.let { endDateTime = it }
-                updateEventDto.maxParticipants?.let { maxAttendees = it }
+                updateEventDto.maxParticipants?.let {
+                    availableSlots += it - maxAttendees
+                    maxAttendees = it
+                }
                 updateEventDto.isPrivate?.let { isPrivate = it }
             }
 
@@ -202,13 +212,13 @@ class EventService {
         var eventsDto: List<EventDto>? = null
         if (user == "anonymousUser") {
             val events = eventRepo.searchEvents(searchString, null)
-            eventsDto = events.map { event -> EventDto(event, false, null) }
+            eventsDto = events.map { event -> EventDto(event, false) }
         }
         else {
             val userModel = (user as CustomUser).userModel
             val events = eventRepo.searchEvents(searchString, userModel.userId)
             eventsDto = events.map {
-                    event -> EventDto(event, userModel.userId in event.hosts.map { host -> host.userId }, null)
+                    event -> EventDto(event, userModel.userId in event.hosts.map { host -> host.userId })
             }
         }
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto)
@@ -260,13 +270,13 @@ class EventService {
         var eventsDto: List<EventDto>? = null
         if (user == "anonymousUser") {
             val events = eventRepo.filterEvents(filterBy, null)
-            eventsDto = events.map { event -> EventDto(event, false, null) }
+            eventsDto = events.map { event -> EventDto(event, false) }
         }
         else {
            val userModel = (user as CustomUser).userModel
            val events = eventRepo.filterEvents(filterBy, userModel.userId)
             eventsDto = events.map {
-                   event -> EventDto(event, userModel.userId in event.hosts.map { host -> host.userId }, null)
+                   event -> EventDto(event, userModel.userId in event.hosts.map { host -> host.userId })
            }
        }
        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto))

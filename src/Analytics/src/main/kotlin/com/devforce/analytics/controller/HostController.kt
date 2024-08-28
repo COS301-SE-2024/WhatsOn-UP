@@ -25,9 +25,9 @@ class HostController {
         return hostService.getAggregateData()
     }
 
-
-
-
-
+    @RequestMapping("/get")
+    fun get(): ResponseEntity<ResponseDto> {
+        return hostService.get()
+    }
 
 }

@@ -34,6 +34,28 @@ class HostService {
         )
     }
 
+
+    fun get(): ResponseEntity<ResponseDto> {
+        val user = SecurityContextHolder.getContext().authentication.principal
+        val userModel = (user as CustomUser).userModel
+        val events = pastEventsRepo.findPastEvents(userModel.userId)
+
+        val eventsDto = events
+            .map { event -> EventDto(event) }
+            .groupBy { eventDto -> eventDto.startDateTime.month }
+            .mapValues { (_, eventDtos) -> eventDtos.sortedBy { it.startDateTime } }
+
+        val (monthlySummaries, overallSummary) = summarizeEvents(eventsDto)
+
+        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf(
+            "overallSummary" to overallSummary,
+            "monthlySummaries" to monthlySummaries,
+            "ActualData" to eventsDto
+        )))
+
+
+    }
+
     fun getAggregateData(): ResponseEntity<ResponseDto> {
         val user = SecurityContextHolder.getContext().authentication.principal
         val userModel = (user as CustomUser).userModel
@@ -46,8 +68,8 @@ class HostService {
         val (monthlySummaries, overallSummary) = summarizeEvents(eventsDto)
 
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf(
-            "monthlySummaries" to monthlySummaries,
-            "overallSummary" to overallSummary
+            "overallSummary" to overallSummary,
+            "monthlySummaries" to monthlySummaries
         )))
     }
 
@@ -55,11 +77,11 @@ class HostService {
         val monthlySummaries = eventsDto.map { (month, eventDtos) ->
             MonthlyEventSummary(
                 month = month,
-                duration = eventDtos.sumOf { it.duration },
+                duration = eventDtos.sumOf { it.duration},
                 averageRating = eventDtos.map { it.averageRating }.average(),
                 medianRating = calculateMedian(eventDtos.map { it.medianRating }),
-                highestRating = eventDtos.maxOf { it.highestRating },
-                lowestRating = eventDtos.minOf { it.lowestRating },
+                highestRating = eventDtos.maxOfOrNull { it.highestRating } ?: 0,
+                lowestRating = eventDtos.minOfOrNull { it.lowestRating } ?: 0,
                 mode = calculateMode(eventDtos.map { it.mode }),
                 skewness = calculateSkewness(eventDtos.map { it.skewness }),
                 outliers = eventDtos.flatMap { it.outliers ?: emptySet() }.toSet(),
@@ -74,11 +96,11 @@ class HostService {
             totalDuration = monthlySummaries.sumOf { it.duration },
             averageRating = monthlySummaries.map { it.averageRating }.average(),
             medianRating = calculateMedian(monthlySummaries.map { it.medianRating }),
-            highestRating = monthlySummaries.maxOf { it.highestRating },
-            lowestRating = monthlySummaries.minOf { it.lowestRating },
+            highestRating = monthlySummaries.maxOfOrNull { it.highestRating } ?: 0,
+            lowestRating = monthlySummaries.minOfOrNull { it.lowestRating } ?: 0,
             mode = calculateMode(monthlySummaries.map { it.mode }),
             skewness = calculateSkewness(monthlySummaries.map { it.skewness }),
-            outliers = monthlySummaries.flatMap { it.outliers ?: emptySet() }.toSet(),
+            outliers = monthlySummaries.flatMap { it.outliers}.toSet(),
             rsvpRatio = monthlySummaries.map { it.rsvpRatio }.average(),
             capacityRatio = monthlySummaries.map { it.capacityRatio }.average(),
             attendanceRatio = monthlySummaries.map { it.attendanceRatio }.average(),
@@ -87,6 +109,7 @@ class HostService {
 
         return Pair(monthlySummaries, overallSummary)
     }
+
 
     fun calculateMedian(values: List<Double>): Double {
         if (values.isEmpty()) return 0.0

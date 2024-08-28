@@ -33,10 +33,8 @@ class UserService {
     lateinit var eventRepo: EventRepo
 
     @Autowired
-    lateinit var eventRepoAll: EventRepoAll
+    lateinit var eventRepoAll: AllEventRepo
 
-    @Autowired
-    lateinit var availableSlotsRepo: AvailableSlotsRepo
 
     @Autowired
     lateinit var hostApplicationsRepo: HostApplicationsRepo
@@ -98,7 +96,7 @@ class UserService {
         val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
 
         val events = eventRepo.getSavedEvents(user.userId)
-        val eventsDto = events.map { event -> EventDto(event, false, null) }
+        val eventsDto = events.map { event -> EventDto(event, false) }
 
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto)
         )
@@ -121,15 +119,12 @@ class UserService {
             return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Event already RSVP'd"))
         }
 
-        val availableSlots = availableSlotsRepo.findByEventId(id)
-
-        if (availableSlots != null) {
-            if (availableSlots.availableSlots <= 0) {
-                return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Event is full"))
-            }
+        if (event.availableSlots <= 0) {
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Event is full"))
         }
 
         event.attendees.add(user)
+        event.availableSlots = event.availableSlots.minus(1)
         eventRepo.save(event)
 
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Event RSVP'd successfully")))
@@ -140,7 +135,7 @@ class UserService {
         val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
 
         val events = eventRepo.getRsvpdEvents(user.userId)
-        val eventsDto = events.map { event -> EventDto(event, false, null) }
+        val eventsDto = events.map { event -> EventDto(event, false) }
 
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto)
         )
@@ -159,6 +154,7 @@ class UserService {
         val event = optionalEvent.get()
         val u = event.attendees.find { it.userId == user.userId }
         if (event.attendees.remove(u)){
+            event.availableSlots = event.availableSlots.plus(1)
             eventRepo.save(event)
             return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Event deleted successfully"))
             )
