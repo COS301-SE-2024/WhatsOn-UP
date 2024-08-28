@@ -232,11 +232,13 @@ class _SearchScreenState extends State<SearchScreen> {
             if (_showSearchTiles)
               GridView.count(
                 shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
+                physics: AlwaysScrollableScrollPhysics(),
                 crossAxisCount: 2,
                 children: _categories.map((category) {
+                  List<String> parts = category.split(',');
+                  String cat = parts.length > 1 ? parts[1] : '';
                   return SearchImageTile(
-                    title: category,
+                    title: cat,
                     imageUrl: 'images/$category.jpg',
                     onTap: (title) => _searchEvents(title),
                   );
