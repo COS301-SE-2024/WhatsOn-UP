@@ -6,6 +6,7 @@ import com.devforce.backend.model.EventModel
 import com.devforce.backend.model.VenueModel
 import com.devforce.backend.repo.BroadcastRepo
 import com.devforce.backend.repo.EventRepo
+import com.devforce.backend.repo.UserRepo
 import com.devforce.backend.repo.VenueRepo
 import com.devforce.backend.security.CustomUser
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -16,8 +17,6 @@ import org.springframework.stereotype.Service
 import java.time.*
 import java.util.*
 import java.time.Instant
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 //FUTURE
 //fun filterEvents(
@@ -29,6 +28,9 @@ class EventService {
 
     @Autowired
     lateinit var eventRepo: EventRepo
+
+    @Autowired
+    lateinit var userRepo: UserRepo
 
     @Autowired
     lateinit var venueRepo: VenueRepo
@@ -56,7 +58,7 @@ class EventService {
 
         venue.available = false
 
-        var event = EventModel().apply {
+        val event = EventModel().apply {
             this.eventId = UUID.randomUUID()
             this.title = createEventDto.title
             this.description = createEventDto.description
@@ -70,13 +72,22 @@ class EventService {
             } ?: "{}"
             this.isPrivate = createEventDto.isPrivate ?: false
             this.availableSlots = createEventDto.maxParticipants ?: 1
+
+            this.hosts = mutableSetOf(user).apply {
+                createEventDto.hosts?.mapNotNull { hostId ->
+                    userRepo.findById(hostId).orElse(null)
+                }?.let { addAll(it) }
+            }
+
+
+
         }
 
-        eventRepo.saveAndFlush(event)
-
-        event.hosts.add(user)
-
         eventRepo.save(event)
+
+//        event.hosts.add(user)
+//
+//        eventRepo.save(event)
         
 
         val eventDto = EventDto(event,true)
@@ -164,12 +175,23 @@ class EventService {
                     maxAttendees = it
                 }
                 updateEventDto.isPrivate?.let { isPrivate = it }
+                updateEventDto.hosts?.let { hostIds ->
+                    hosts.clear()
+                    val newHosts = hostIds.mapNotNull { hostId ->
+                        userRepo.findById(hostId).orElse(null)
+                    }
+                    hosts.add(user)
+                    hosts.addAll(newHosts)
+                }
+
+
             }
 
 
             val updatedEvent = eventRepo.save(existingEvent)
+            val eventDto = EventDto(updatedEvent, true)
 
-            return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), updatedEvent))
+            return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventDto))
         } catch (e: NoSuchElementException) {
             return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "Event not found")))
         } catch (e: Exception) {

@@ -131,7 +131,9 @@ class UserServiceTest {
     fun `!!!RSVP event success!!!`() {
         val id = UUID.randomUUID()
         
-        val event = EventModel()
+        val event = EventModel().apply {
+            availableSlots = 10
+        }
 
         `when`(eventRepo.findById(id)).thenReturn(Optional.of(event))
 

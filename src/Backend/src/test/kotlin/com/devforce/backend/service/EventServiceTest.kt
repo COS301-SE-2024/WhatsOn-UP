@@ -76,7 +76,8 @@ class EventServiceTest {
             location = UUID.randomUUID(),
             maxParticipants = 10,
             metadata = mapOf("key1" to "value1", "key2" to "value2"),
-            isPrivate = false
+            isPrivate = false,
+            null
         )
 
         val venueModel = VenueModel().apply {
@@ -110,7 +111,8 @@ class EventServiceTest {
             location = id,
             maxParticipants = 10,
             metadata = mapOf("key1" to "value1", "key2" to "value2"),
-            isPrivate = true
+            isPrivate = true,
+            null
         )
 
         val event = EventModel().apply {
@@ -150,7 +152,8 @@ class EventServiceTest {
             location = id,
             maxParticipants = 20,
             metadata = mapOf("key1" to "value1", "key2" to "value2"),
-            isPrivate = true
+            isPrivate = true,
+            null
         )
 
         // Mock necessary dependencies and interactions
