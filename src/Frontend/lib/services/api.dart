@@ -1038,6 +1038,8 @@ Future<Map<String, dynamic>> broadcastEvent(String eventId, String message, Stri
       'Authorization': 'Bearer $userID',
     };
 
+    print("CALLING RATE WITH: " + rateEventURL);
+
     try {
       var response = await http.put(Uri.parse(rateEventURL), headers: headers);
 

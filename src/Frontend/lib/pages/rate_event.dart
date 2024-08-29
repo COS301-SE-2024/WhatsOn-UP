@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
+import 'package:firstapp/services/api.dart';
+import '../providers/user_provider.dart';
+import 'package:provider/provider.dart';
 
 class RateEventPage extends StatefulWidget {
   final String eventId;
@@ -14,6 +16,40 @@ class RateEventPage extends StatefulWidget {
 class _RateEventPageState extends State<RateEventPage> {
   int _rating = 0;
   final TextEditingController _feedbackController = TextEditingController();
+  Api api = Api();
+  
+
+  Future<void> _submitRating() async {
+    userProvider userP = Provider.of<userProvider>(context, listen: false);
+  
+    try {
+      final response = await api.rateEvent(
+        widget.eventId,
+        userP.userId,
+        _rating,
+        _feedbackController.text,
+      );
+
+      print('EVENT RATING RESPONSE: $response');
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Thank you! Your rating has been submitted successfully.'),
+        ),
+      );
+      Navigator.of(context).pop();
+      
+    } catch (e) {
+      print('Error submitting rating: $e');
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Failed to submit rating. Please try again.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +64,7 @@ class _RateEventPageState extends State<RateEventPage> {
           children: [
             Text(
               'Please rate the event "${widget.eventName}"',
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
@@ -64,35 +100,11 @@ class _RateEventPageState extends State<RateEventPage> {
             ),
             const SizedBox(height: 28),
             ElevatedButton(
-              child: const Text('Submit Rating'),
-              onPressed: () {
-                print('Event ID: ${widget.eventId}');
-                print('Event Name: ${widget.eventName}');
-                print('Rating: $_rating');
-                print('Feedback: ${_feedbackController.text}');
-
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: const Text('Thank you for taking the time to rate the event!'),
-                      content: Text('Your rating has been submitted.'),
-                      actions: [
-                        TextButton(
-                          child: const Text('OK'),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                      ],
-                    );
-                  },
-                );
-              },
+              onPressed: _submitRating,
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 48),
               ),
+              child: const Text('Submit Rating'),
             ),
           ],
         ),
