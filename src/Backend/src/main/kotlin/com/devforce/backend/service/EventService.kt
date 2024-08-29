@@ -74,8 +74,6 @@ class EventService {
 
         eventRepo.saveAndFlush(event)
 
-        event = event.eventId?.let { eventRepo.findById(it).get() }!!
-
         event.hosts.add(user)
 
         eventRepo.save(event)

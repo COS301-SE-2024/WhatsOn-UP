@@ -1,7 +1,6 @@
 package com.devforce.backend.repo
 
 import com.devforce.backend.dto.FilterByDto
-import com.devforce.backend.model.AllEventModel
 import com.devforce.backend.model.EventModel
 import jakarta.transaction.Transactional
 import org.springframework.data.jpa.repository.JpaRepository
@@ -154,7 +153,5 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
 
 }
 
-interface AllEventRepo: JpaRepository<AllEventModel, UUID>{
-}
 
 

@@ -33,7 +33,7 @@ class UserService {
     lateinit var eventRepo: EventRepo
 
     @Autowired
-    lateinit var eventRepoAll: AllEventRepo
+    lateinit var pastEventRepo: PastEventRepo
 
 
     @Autowired
@@ -352,7 +352,7 @@ class UserService {
     fun rateEvent(eventId: UUID, rating: Int, comment: String?): ResponseEntity<ResponseDto> {
         val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
 
-        val optionalEvent = eventRepoAll.findById(eventId)
+        val optionalEvent = pastEventRepo.findById(eventId)
 
         if (optionalEvent.isEmpty) {
             return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Event not found"))

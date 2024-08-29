@@ -32,7 +32,7 @@ class FeedbackModel {
 
     @ManyToOne
     @JoinColumn(name = "event_id")
-    var event: AllEventModel? = null
+    var event: PastEventModel? = null
 
     @Column(name = "rating")
     var rating: Int? = null

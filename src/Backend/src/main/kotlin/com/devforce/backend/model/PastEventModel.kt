@@ -11,11 +11,10 @@ import java.util.*
 @Data
 @Builder
 @Entity
-@Table(name = "past_events")
 @NoArgsConstructor
 @AllArgsConstructor
-
-class PastEventModel {
+@Table(name = "past_events")
+class PastEventModel{
     @Id
     @Column(name = "event_id", columnDefinition = "UUID")
     var eventId: UUID? = null
@@ -23,9 +22,8 @@ class PastEventModel {
     var title: String = ""
     var description: String = ""
 
-    var metadata: String = "" //changed from  var metadata: String = ""
-
-    var status: String = ""
+    @Column(name = "metadata", columnDefinition = "TEXT")
+    var metadata: String = ""
 
     @ElementCollection
     @CollectionTable(name = "event_media", joinColumns = [JoinColumn(name = "event_id")])
@@ -34,7 +32,6 @@ class PastEventModel {
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private var createdAt: LocalDateTime = LocalDateTime.now()
-
 
     @OneToOne
     @JoinColumn(name = "venue_id")
@@ -53,13 +50,16 @@ class PastEventModel {
     @Column(name = "is_private", nullable = false)
     var isPrivate: Boolean = false
 
+    @Column(name = "occupied_slots")
+    var availableSlots: Int = 0
+
     @ManyToMany
     @JoinTable(
         name = "event_hosts",
         joinColumns = [JoinColumn(name = "event_id")],
         inverseJoinColumns = [JoinColumn(name = "user_id")]
     )
-    var hosts: Set<UserModel> = HashSet()
+    var hosts: MutableSet<UserModel> = HashSet()
 
     @ManyToMany
     @JoinTable(
@@ -92,5 +92,5 @@ class PastEventModel {
 
 
 
-
 }
+
