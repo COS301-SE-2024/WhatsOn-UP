@@ -2,6 +2,7 @@ package com.devforce.backend.service
 
 import com.devforce.backend.dto.EventDto
 import com.devforce.backend.dto.ResponseDto
+import com.devforce.backend.model.FeedbackModel
 import com.devforce.backend.model.HostApplicationsModel
 import com.devforce.backend.repo.*
 import com.devforce.backend.security.CustomUser
@@ -19,6 +20,9 @@ import java.util.*
 class UserService {
 
     @Autowired
+    private lateinit var feedbackRepo: FeedbackRepo
+
+    @Autowired
     private lateinit var roleRepo: RoleRepo
 
     @Autowired
@@ -29,7 +33,8 @@ class UserService {
     lateinit var eventRepo: EventRepo
 
     @Autowired
-    lateinit var availableSlotsRepo: AvailableSlotsRepo
+    lateinit var pastEventRepo: PastEventRepo
+
 
     @Autowired
     lateinit var hostApplicationsRepo: HostApplicationsRepo
@@ -91,7 +96,7 @@ class UserService {
         val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
 
         val events = eventRepo.getSavedEvents(user.userId)
-        val eventsDto = events.map { event -> EventDto(event, false, null) }
+        val eventsDto = events.map { event -> EventDto(event, false) }
 
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto)
         )
@@ -99,7 +104,7 @@ class UserService {
     
 
     // To do: Implement function to RSVP to an event for the current user
-    fun rspvEvent(id: UUID): ResponseEntity<ResponseDto> {
+    fun rsvpEvent(id: UUID): ResponseEntity<ResponseDto> {
         val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
 
         val optionalEvent = eventRepo.findById(id)
@@ -114,33 +119,30 @@ class UserService {
             return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Event already RSVP'd"))
         }
 
-        val availableSlots = availableSlotsRepo.findByEventId(id)
-
-        if (availableSlots != null) {
-            if (availableSlots.availableSlots <= 0) {
-                return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Event is full"))
-            }
+        if (event.availableSlots <= 0) {
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Event is full"))
         }
 
         event.attendees.add(user)
+        event.availableSlots = event.availableSlots.minus(1)
         eventRepo.save(event)
 
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Event RSVP'd successfully")))
     }
 
     // To do: Implement function to get all RSVP'd events for the current user
-    fun getRspvEvents(): ResponseEntity<ResponseDto> {
+    fun getRsvpEvents(): ResponseEntity<ResponseDto> {
         val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
 
-        val events = eventRepo.getRspvdEvents(user.userId)
-        val eventsDto = events.map { event -> EventDto(event, false, null) }
+        val events = eventRepo.getRsvpdEvents(user.userId)
+        val eventsDto = events.map { event -> EventDto(event, false) }
 
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto)
         )
     }
 
     // To do: Implement function to delete an RSVP'd event for the current user
-    fun deleteRspvEvent(id: UUID
+    fun deleteRsvpEvent(id: UUID
     ): ResponseEntity<ResponseDto> {
         val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
         val optionalEvent = eventRepo.findById(id)
@@ -152,6 +154,7 @@ class UserService {
         val event = optionalEvent.get()
         val u = event.attendees.find { it.userId == user.userId }
         if (event.attendees.remove(u)){
+            event.availableSlots = event.availableSlots.plus(1)
             eventRepo.save(event)
             return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Event deleted successfully"))
             )
@@ -346,5 +349,35 @@ class UserService {
         )
     }
 
+    fun rateEvent(eventId: UUID, rating: Int, comment: String?): ResponseEntity<ResponseDto> {
+        val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
+
+        val optionalEvent = pastEventRepo.findById(eventId)
+
+        if (optionalEvent.isEmpty) {
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Event not found"))
+        }
+
+        val event = optionalEvent.get()
+
+        if (rating < 1 || rating > 5) {
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Rating must be between 1 and 5"))
+        }
+
+        if (comment != null && comment.length > 255) {
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Comment must be less than 255 characters"))
+        }
+
+        val feedBack = FeedbackModel().apply {
+            this.user = user
+            this.event = event
+            this.rating = rating
+            this.comment = comment
+        }
+        feedbackRepo.save(feedBack)
+
+        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Event rated successfully"))
+        )
+    }
 
 }

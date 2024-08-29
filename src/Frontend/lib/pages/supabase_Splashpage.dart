@@ -31,7 +31,7 @@ class _SplashPageState extends State<SplashPage> {
     final session = supabase.auth.currentSession;
     if (!mounted) return;
     if (session != null) {
-      // Navigator.of(context).pushReplacementNamed('/home');
+
       await _login();
     } else {
       Navigator.of(context).pushReplacementNamed('/login');
@@ -62,7 +62,7 @@ class _SplashPageState extends State<SplashPage> {
 
     EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
     final user = supabase.auth.currentUser;
-    // eventP.fetchfortheFirstTimeRsvp(user!.id);
+
 
     Api api = Api();
 
@@ -74,8 +74,7 @@ class _SplashPageState extends State<SplashPage> {
         String userEmail = user.userMetadata?['email'];
         String UserId = user.id;
         String role = response['data']['user']['role'] ?? 'Unknown';
-        String profileImage =
-            response['data']['user']['profileImage'] ?? 'Unknown';
+        String profileImage = response['data']['user']['profileImage'] ?? 'Unknown';
 
         userP.userId = user.id;
         userP.Fullname = fullName;
@@ -84,7 +83,6 @@ class _SplashPageState extends State<SplashPage> {
         userP.profileImage = profileImage;
         notificationProvider _notificationProvider =
         Provider.of<notificationProvider>(context, listen: false);
-        // _notificationProvider.apiInstance(api);
         _notificationProvider.refreshNotifications(userP.userId);
         SocketService('http://${globals.domain}:8082',_notificationProvider, userP.userId, context);
         userP.Generalusers(userP.userId);

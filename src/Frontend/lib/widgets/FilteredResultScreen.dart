@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:firstapp/widgets/event_card.dart';
-import 'package:firstapp/widgets/event_card.dart';
 import 'package:firstapp/screens/SearchScreen.dart';
 
 
@@ -55,7 +54,7 @@ class FilteredResultScreen extends StatelessWidget {
             child: ListView.builder(
               itemCount: filteredEvents.length,
               itemBuilder: (context, index) {
-                return EventCard(event: filteredEvents[index]);
+                return EventCard(event: filteredEvents[index], showBookmarkButton: false);
               },
             ),
           ),
