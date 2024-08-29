@@ -104,4 +104,10 @@ class UserController {
         return userService.verifyApplication(veriCode)
     }
 
+    @PutMapping("/rate_event/{id}")
+    @PreAuthorize("isAuthenticated()")
+    fun rateEvent(@PathVariable id: UUID, @RequestParam rating: Int, @RequestParam comment: String?): ResponseEntity<ResponseDto> {
+        return userService.rateEvent(id, rating, comment)
+    }
+
 }

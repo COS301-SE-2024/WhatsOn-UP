@@ -11,11 +11,10 @@ import java.util.*
 @Data
 @Builder
 @Entity
-@Table(name = "events")
 @NoArgsConstructor
 @AllArgsConstructor
-
-class EventModel {
+@Table(name = "events")
+class EventModel{
     @Id
     @Column(name = "event_id", columnDefinition = "UUID")
     var eventId: UUID? = null
@@ -25,10 +24,6 @@ class EventModel {
 
     @Column(name = "metadata", columnDefinition = "TEXT")
     var metadata: String = ""
-
-    @OneToOne
-    @JoinColumn(name = "event_id")
-    var availableSlots: AvailableSlotsModel? = null
 
     @ElementCollection
     @CollectionTable(name = "event_media", joinColumns = [JoinColumn(name = "event_id")])
@@ -55,13 +50,16 @@ class EventModel {
     @Column(name = "is_private", nullable = false)
     var isPrivate: Boolean = false
 
+    @Column(name = "available_slots")
+    var availableSlots: Int = 0
+
     @ManyToMany
     @JoinTable(
         name = "event_hosts",
         joinColumns = [JoinColumn(name = "event_id")],
         inverseJoinColumns = [JoinColumn(name = "user_id")]
     )
-    var hosts: Set<UserModel> = HashSet()
+    var hosts: MutableSet<UserModel> = HashSet()
 
     @ManyToMany
     @JoinTable(
@@ -95,3 +93,4 @@ class EventModel {
 
 
 }
+
