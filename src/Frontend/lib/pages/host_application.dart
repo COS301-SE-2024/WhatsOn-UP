@@ -240,12 +240,6 @@ class _HostApplicationPageState extends State<HostApplicationPage> {
         _isLoading = false;
       });
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text(
-                'Application submitted successfully. Please check your email for a verification link.')),
-      );
-
       Navigator.pop(context);
     }
   }
@@ -262,18 +256,32 @@ class _HostApplicationPageState extends State<HostApplicationPage> {
       );
 
       print('Application submitted successfully: ${result['data']['message']}');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Application submitted successfully. Please check your email for a verification link.'),),
+      );
     } catch (e) {
       print('Failed to submit application: $e');
       setState(() {
         _isLoading = false;
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-              'There was an error submitting your application. Please try again later.'),
-          backgroundColor: Colors.red,
-        ),
-      );
+
+      if (e.toString().contains('already_applied')) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('You have already applied to be a host!'),
+            backgroundColor: Colors.orange,
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+                'There was an error submitting your application. Please try again later.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     }
   }
 }

@@ -10,6 +10,7 @@ import 'package:firstapp/pages/detailed_event_page.dart';
 import 'package:firstapp/widgets/event_card.dart';
 import '../providers/user_provider.dart';
 import '../providers/events_providers.dart';
+import 'package:flutter/gestures.dart';
 
 class CalendarPage extends StatefulWidget {
   const CalendarPage({super.key});
@@ -225,6 +226,183 @@ class _CalendarPageState extends State<CalendarPage>
     }
   }
 
+  // Widget _buildNoEventsMessage(userProvider userP) {
+  //   final noEventsMessage = userP.role == 'GUEST'
+  //       ? 'There are no events occurring this month. Please check back later.'
+  //       : 'You have no RSVP\'d events for this month. Head to the [home page](/home) to find one that interests you.';
+
+  //   return Center(
+  //     child: Padding(
+  //       padding: const EdgeInsets.all(16.0),
+  //       child: Text(
+  //         noEventsMessage,
+  //         style: const TextStyle(fontSize: 18),
+  //         textAlign: TextAlign.center,
+  //       ),
+  //     ),
+  //   );
+  // }
+
+  Widget _buildNoEventsMessage(userProvider userP, BuildContext context) {
+  final Widget noEventsMessage = userP.role == 'GUEST'
+      ? const Text(
+          'There are no events occurring this month. Please check back later.',
+          style: TextStyle(fontSize: 18),
+          textAlign: TextAlign.center,
+        )
+      : RichText(
+          text: TextSpan(
+            text: "You have no RSVP'd events for this month. Head to the ",
+            style: const TextStyle(fontSize: 18, color: Colors.black),
+            children: [
+              TextSpan(
+                text: 'home page',
+                style: const TextStyle(
+                  color: Colors.blue,
+                  decoration: TextDecoration.underline,
+                ),
+                recognizer: TapGestureRecognizer()
+                  ..onTap = () {
+                    Navigator.pushNamed(context, '/home');
+                  },
+              ),
+              const TextSpan(
+                text: ' to find one that interests you.',
+              ),
+            ],
+          ),
+          textAlign: TextAlign.center,
+        );
+
+  return Center(
+    child: Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: noEventsMessage,
+    ),
+  );
+}
+
+Widget _buildEventCard(Map<String, dynamic> event) {
+  return GestureDetector(
+    onTap: () {
+      Event eventObject = Event(
+        nameOfEvent: event['name'],
+        venue: Venue.fromJson(event['venue']),
+        description: event['description'],
+        imageUrls: [event['url']],
+        id: event['id'],
+        hosts: event['hosts'],
+        attendees: event['attendees'],
+        startTime: event['startTime'],
+        endTime: event['endTime'],
+        maxAttendees: event['maxAttendees'],
+        isPrivate: event['isPrivate'],
+        metadata: Metadata.fromJson(event['metadata']),
+      );
+/* venue: event['venue'] != null ? Venue(
+        name: event['venue']['name'] ?? '',
+        boards: event['venue']['boards'] ?? '',
+        ac: event['venue']['ac'] ?? false,
+        wifi: event['venue']['wifi'] ?? false,
+        dataProject: event['venue']['dataProject'] ?? 0,
+        docCam: event['venue']['docCam'] ?? false,
+        mic: event['venue']['mic'] ?? false,
+        windows: event['venue']['windows'] ?? false,
+        capacity: event['venue']['capacity'] ?? 0,
+        available: event['venue']['available'] ?? false,
+        venueId: '', // addded via reccomendations
+      ) : null,*/
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              DetailedEventPage(event: eventObject),
+        ),
+      );
+    },
+    child: Card(
+      margin: const EdgeInsets.symmetric(
+          vertical: 8.0, horizontal: 16.0),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: 120,
+              height: 80,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8.0),
+                image: DecorationImage(
+                  image: NetworkImage(event['url']),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            const SizedBox(width: 16.0),
+            Expanded(
+              child: Column(
+                crossAxisAlignment:
+                    CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    event['name'],
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  ),
+                  const SizedBox(height: 8.0),
+                  Row(
+                    children: [
+                      const Icon(Icons.calendar_today,
+                          size: 16),
+                      const SizedBox(width: 4.0),
+                      Text(event['date']),
+                      const SizedBox(width: 16.0),
+                      const Icon(Icons.access_time,
+                          size: 16),
+                      const SizedBox(width: 4.0),
+                      Text(event['time']),
+                    ],
+                  ),
+                  const SizedBox(height: 8.0),
+                  Row(
+                    children: [
+                      const Icon(Icons.location_on,
+                          size: 16),
+                      const SizedBox(width: 4.0),
+                      Expanded(
+                        child: Text(
+                          event['venue']['name'],
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4.0),
+                  Row(
+                    children: [
+                      const Icon(Icons.people, size: 16),
+                      const SizedBox(width: 4.0),
+                      Text(event['attendees']
+                          .length
+                          .toString()),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
   @override
   Widget build(BuildContext context) {
     final userP = Provider.of<userProvider>(context);
@@ -338,136 +516,24 @@ class _CalendarPageState extends State<CalendarPage>
                     color: Color.fromARGB(255, 149, 137, 74),
                     size: 50.0,
                   ))
-                : ListView.builder(
-                    itemCount: _selectedDay != null
-                        ? _getEventsForDay(_selectedDay!).length
-                        : _getEventsForMonth(_focusedDay).length,
+              : (_selectedDay != null
+                ? ListView.builder(
+                    itemCount: _getEventsForDay(_selectedDay!).length,
                     itemBuilder: (context, index) {
-                      final events = _selectedDay != null
-                          ? _getEventsForDay(_selectedDay!)
-                          : _getEventsForMonth(_focusedDay);
-                      final event = events[index];
-
-                      return GestureDetector(
-                        onTap: () {
-                          Event eventObject = Event(
-                            nameOfEvent: event['name'],
-                            venue: Venue.fromJson(event['venue']),
-                            description: event['description'],
-                            imageUrls: [event['url']],
-                            id: event['id'],
-                            hosts: event['hosts'],
-                            attendees: event['attendees'],
-                            startTime: event['startTime'],
-                            endTime: event['endTime'],
-                            maxAttendees: event['maxAttendees'],
-                            isPrivate: event['isPrivate'],
-                            metadata: Metadata.fromJson(event['metadata']),
-                          );
-/* venue: event['venue'] != null ? Venue(
-                            name: event['venue']['name'] ?? '',
-                            boards: event['venue']['boards'] ?? '',
-                            ac: event['venue']['ac'] ?? false,
-                            wifi: event['venue']['wifi'] ?? false,
-                            dataProject: event['venue']['dataProject'] ?? 0,
-                            docCam: event['venue']['docCam'] ?? false,
-                            mic: event['venue']['mic'] ?? false,
-                            windows: event['venue']['windows'] ?? false,
-                            capacity: event['venue']['capacity'] ?? 0,
-                            available: event['venue']['available'] ?? false,
-                            venueId: '', // addded via reccomendations
-                          ) : null,*/
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  DetailedEventPage(event: eventObject),
-                            ),
-                          );
-                        },
-                        child: Card(
-                          margin: const EdgeInsets.symmetric(
-                              vertical: 8.0, horizontal: 16.0),
-                          child: Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  width: 120,
-                                  height: 80,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    image: DecorationImage(
-                                      image: NetworkImage(event['url']),
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 16.0),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        event['name'],
-                                        style: const TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 1,
-                                      ),
-                                      const SizedBox(height: 8.0),
-                                      Row(
-                                        children: [
-                                          const Icon(Icons.calendar_today,
-                                              size: 16),
-                                          const SizedBox(width: 4.0),
-                                          Text(event['date']),
-                                          const SizedBox(width: 16.0),
-                                          const Icon(Icons.access_time,
-                                              size: 16),
-                                          const SizedBox(width: 4.0),
-                                          Text(event['time']),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 8.0),
-                                      Row(
-                                        children: [
-                                          const Icon(Icons.location_on,
-                                              size: 16),
-                                          const SizedBox(width: 4.0),
-                                          Expanded(
-                                            child: Text(
-                                              event['venue']['name'],
-                                              overflow: TextOverflow.ellipsis,
-                                              maxLines: 1,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 4.0),
-                                      Row(
-                                        children: [
-                                          const Icon(Icons.people, size: 16),
-                                          const SizedBox(width: 4.0),
-                                          Text(event['attendees']
-                                              .length
-                                              .toString()),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      );
+                      final event = _getEventsForDay(_selectedDay!)[index];
+                      return _buildEventCard(event);
                     },
-                  ),
+                  )
+                : _getEventsForMonth(_focusedDay).isEmpty
+                    ? _buildNoEventsMessage(userP, context)
+                    : ListView.builder(
+                        itemCount: _getEventsForMonth(_focusedDay).length,
+                        itemBuilder: (context, index) {
+                          final event = _getEventsForMonth(_focusedDay)[index];
+                          return _buildEventCard(event);
+                        },
+                      )),
+
           ),
         ],
       ),
