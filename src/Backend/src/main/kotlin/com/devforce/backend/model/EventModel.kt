@@ -30,8 +30,19 @@ class EventModel{
     @Column(name = "media_link" , columnDefinition = "TEXT")
     var eventMedia: List<String> = ArrayList()
 
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(name = "created_at", updatable = false)
     private var createdAt: LocalDateTime = LocalDateTime.now()
+
+    @Column(name = "updated_at")
+    private var updatedAt: LocalDateTime = LocalDateTime.now()
+
+    @OneToOne
+    @JoinColumn(name = "created_by")
+    var createdBy: UserModel? = null
+
+    @OneToOne
+    @JoinColumn(name = "updated_by")
+    var updatedBy: UserModel? = null
 
     @OneToOne
     @JoinColumn(name = "venue_id")
@@ -88,7 +99,16 @@ class EventModel{
     @PrePersist
     fun prePersist() {
         createdAt = LocalDateTime.now()
+        updatedAt = LocalDateTime.now()
     }
+
+
+    @PreUpdate
+    fun preUpdate() {
+        updatedAt = LocalDateTime.now()
+    }
+
+
 
 
 
