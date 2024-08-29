@@ -1021,6 +1021,36 @@ Future<Map<String, dynamic>> broadcastEvent(String eventId, String message, Stri
     }
   }
 
+
+  Future<Map<String, dynamic>> rateEvent(String eventId, String userID, int rating, String comment) async {
+    String rateEventURL;
+
+    if (comment == '') {
+      rateEventURL = 'http://${globals.domain}:8080/api/user/rate_event/$eventId?rating=$rating';
+    }
+    else {
+      rateEventURL = 'http://${globals.domain}:8080/api/user/rate_event/$eventId?comment=$comment&rating=$rating';
+    }
+
+    var headers = {
+      'Content-Type': 'application/json', 
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $userID',
+    };
+
+    try {
+      var response = await http.put(Uri.parse(rateEventURL), headers: headers);
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        throw Exception(jsonDecode(response.body));
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
 }
 
 
