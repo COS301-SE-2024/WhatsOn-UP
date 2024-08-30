@@ -436,28 +436,6 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
                       ),
                     ),
                   const SizedBox(height: 16.0),
-
-                    // TEMP BUTTON vvv
-                    ElevatedButton.icon(
-                        onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => RateEventPage(
-                              eventId: _thisCurrentEvent.id,
-                              eventName: _thisCurrentEvent.nameOfEvent,
-                              ),
-                          ),
-                        );
-                      },
-                      icon: const Icon(Icons.thumb_up),
-                      label: const Text('RATE'),
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: const Size(double.infinity, 48),
-                      ),
-                    ),
-                    // TEMP BUTTON ^^^
-
                   if (_thisCurrentEvent != null &&
                       (_thisCurrentEvent!.hosts != null &&
                               _thisCurrentEvent!.hosts.isNotEmpty &&
