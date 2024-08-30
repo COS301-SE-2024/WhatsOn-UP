@@ -444,9 +444,8 @@ class _EventCardState extends State<EventCard> {
     EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
     userProvider userP = Provider.of<userProvider>(context, listen: false);
     String userRole = userP.role;
-    widget.showBookmarkButton = userRole == "GUEST"
-        ? false
-        : true;
+    widget.showBookmarkButton = widget.showBookmarkButton && userRole != "GUEST";
+
     widget.showBookmarkButton=widget.broadcast=="EDIT"
     ?false
     :true;
