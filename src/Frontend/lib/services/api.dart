@@ -742,8 +742,6 @@ Future<List<AppNotification>> getAllNotification(
     try {
       var response = await http.put(uri, headers: headers);
 
-      // print("HOST ERROR: " + jsonDecode(response.body).toString());
-
       if (response.statusCode == 200) {
         var responseData = jsonDecode(response.body);
 
@@ -765,7 +763,7 @@ Future<List<AppNotification>> getAllNotification(
     } catch (e) {
       throw Exception(e.toString());
     }
-}
+  }
 Future<Map<String, dynamic>> broadcastEvent(String eventId, String message, String userId) async {
 
     final String url='http://${globals.domain}:8080/api/events/broadcast?eventId=$eventId&message=$message';
@@ -1056,6 +1054,30 @@ Future<Map<String, dynamic>> broadcastEvent(String eventId, String message, Stri
         throw Exception(jsonDecode(response.body));
       }
     } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  Future<Map<String, dynamic>> deleteEventMedia(String imageName, String userId) async {
+    final String _deleteMediaUrl = 'http://${globals.domain}:8083/media/delete?media_name=$imageName';
+
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $userId',
+    };
+
+    try {
+      var response = await http.delete(Uri.parse(_deleteMediaUrl), headers: headers);
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } 
+      else {
+        throw Exception(jsonDecode(response.body));
+      }
+    } 
+    catch (e) {
       throw Exception(e.toString());
     }
   }
