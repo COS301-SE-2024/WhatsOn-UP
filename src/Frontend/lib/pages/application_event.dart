@@ -64,8 +64,8 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
     'Career & Professional Development'
   ];
 
-  //List<Uint8List> imageBytesList = [];
-  Uint8List? imageBytesList;
+  List<Uint8List> imageBytesList = [];
+  // Uint8List? imageBytesList;
   final _multiSelectKey = GlobalKey<FormFieldState>();
  // List<UserModel> _invitedUsers = [];
   /*Future<void> _openInviteUserPopup() async {
@@ -182,46 +182,87 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
     });
   }
 
-  Future<void> _pickImage() async {
-    try {
-      final ImagePicker _picker = ImagePicker();
-      XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+  // Future<void> _pickImage() async {
+  //   try {
+  //     final ImagePicker _picker = ImagePicker();
+  //     XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
 
-      if (pickedFile != null) {
-        Uint8List imageBytes = await pickedFile.readAsBytes();
-        setState(() {
-          imageBytesList = imageBytes;
-          _imageName = pickedFile.name;
-        });
-      }
-    } catch (e) {
-      print('Error picking image: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Failed to pick image. Please try again.'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    }
-  }
+  //     if (pickedFile != null) {
+  //       Uint8List imageBytes = await pickedFile.readAsBytes();
+  //       setState(() {
+  //         imageBytesList = imageBytes;
+  //         _imageName = pickedFile.name;
+  //       });
+  //     }
+  //   } catch (e) {
+  //     print('Error picking image: $e');
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(
+  //         content: Text('Failed to pick image. Please try again.'),
+  //         backgroundColor: Colors.red,
+  //       ),
+  //     );
+  //   }
+  // }
 
-  Widget _buildImagePicker() {
+  // Widget _buildImagePicker() {
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: [
+  //       ElevatedButton.icon(
+  //         onPressed: _pickImage,
+  //         // icon: Icon(Icons.add_a_photo),
+  //         icon: const Icon(Icons.upload_file),
+  //         label: const Text('Choose Image'),
+  //         style: ElevatedButton.styleFrom(
+  //           padding: const EdgeInsets.symmetric(vertical: 12),
+  //         ),
+  //       ),
+  //       if (_imageName != null)
+  //         Padding(
+  //           padding: const EdgeInsets.only(top: 10),
+  //           child: Text('Selected image: $_imageName'),
+  //         ),
+  //     ],
+  //   );
+  // }
+
+  Widget _buildImagePicker2() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        ElevatedButton.icon(
-          onPressed: _pickImage,
-          // icon: Icon(Icons.add_a_photo),
-          icon: const Icon(Icons.upload_file),
-          label: const Text('Choose Image'),
+        const Text('Upload Images:'),
+        const SizedBox(height: 10),
+        ElevatedButton(
+          onPressed: () async {
+            final List<XFile> pickedFiles = await _picker.pickMultiImage();
+            setState(() {
+              selectedImages = pickedFiles;
+            });
+
+            for (XFile image in selectedImages!) {
+              final Uint8List imageBytes = await image.readAsBytes();
+              imageBytesList.add(imageBytes);
+            }
+                    },
           style: ElevatedButton.styleFrom(
-            padding: const EdgeInsets.symmetric(vertical: 12),
+            foregroundColor: Colors.black, backgroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+              side: const BorderSide(color: Colors.grey, width: 1),
+            ),
+            padding: const EdgeInsets.symmetric(
+                horizontal: 16.0, vertical: 7.0),
           ),
+          child: const Text('Select Images'),
         ),
-        if (_imageName != null)
+        if (selectedImages != null)
           Padding(
             padding: const EdgeInsets.only(top: 10),
-            child: Text('Selected image: $_imageName'),
+            child: Wrap(
+              spacing: 10,
+              children: selectedImages!.map((file) => Text(file.name)).toList(),
+            ),
           ),
       ],
     );
@@ -643,7 +684,7 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
 
 
           SizedBox(height: 16.0),
-            _buildImagePicker(),
+            _buildImagePicker2(),
 
               SizedBox(height: 16.0),
               ElevatedButton(
@@ -676,9 +717,18 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                       );
                       //eventP.addEventHome(response['data']);
                       if(imageBytesList!=null){
-
                         try{
-                          Api().eventUploadImage(imageBytesList,userP.userId ,response['data']['id']);
+                          // Api().eventUploadImage(imageBytesList,userP.userId ,response['data']['id']);
+
+                          // print(response['data']['id']);
+
+                          // List<String>? mediaUrls = selectedImages?.map((file) => file.path).toList();
+
+                          for(Uint8List imageBytes in imageBytesList){
+                            Api().eventUploadImage(imageBytes, userP.userId, response['data']['id']);
+                          }
+
+
                           print("image uploaded");
                         //  eventP.refreshEvents();
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -689,8 +739,7 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                             MaterialPageRoute(builder: (context) =>InviteUsers(eventId:response['data']['id'])),
                           );
                       }
-                      catch(e)
-                            {
+                      catch(e) {
                               print('Failed to submit application: $e');
                               setState(() {
                                 _isLoading = false;
@@ -701,9 +750,8 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                                   backgroundColor: Colors.red,
                                 ),
                               );
-                          }
-
-                                            }
+                        }
+                      }
 
 
                     } catch (e) {

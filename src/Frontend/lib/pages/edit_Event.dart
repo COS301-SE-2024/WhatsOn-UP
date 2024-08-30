@@ -26,6 +26,7 @@ class EditEvent extends StatefulWidget {
 class _EditEventState extends State<EditEvent> {
   late Event _thisCurrentEvent;
   bool isLoading = false;
+  List<Uint8List> imageBytesList = [];
 
   @override
   void initState() {
@@ -322,6 +323,12 @@ class _EditEventState extends State<EditEvent> {
                 selectedImages = pickedFiles;
               });
             }
+
+            for (XFile image in selectedImages!) {
+              final Uint8List imageBytes = await image.readAsBytes();
+              imageBytesList.add(imageBytes);
+            }
+
           },
           // style: ElevatedButton.styleFrom(
           //   foregroundColor: Colors.black, backgroundColor: Colors.white,
@@ -348,6 +355,7 @@ class _EditEventState extends State<EditEvent> {
 
   Future<void> _submitForm() async {
     EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
+    userProvider userP = Provider.of<userProvider>(context,listen: false);
     final userSuperbase = supabase.auth.currentUser;
     if (_formKey.currentState!.validate()) {
       setState(() {
@@ -378,12 +386,22 @@ class _EditEventState extends State<EditEvent> {
       List<String>? mediaUrls =
           selectedImages?.map((file) => file.path).toList();
 
+      
+
+
       Event? event = await eventP.getEventById(widget.eventId);
       if (event != null) {
         setState(() {
           _thisCurrentEvent = event;
         });
         Api api = Api();
+
+        print("IMAGE URLS: " + event.imageUrls.toString());
+
+
+        for(Uint8List imageBytes in imageBytesList){
+        Api().eventUploadImage(imageBytes, userP.userId, widget.eventId);
+      }
 
         api
             .updateEvent(
