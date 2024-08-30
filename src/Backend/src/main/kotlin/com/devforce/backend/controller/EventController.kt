@@ -101,12 +101,6 @@ class EventController {
     }
 
 
-    @GetMapping("/get_passed_events")
-    @PreAuthorize("hasAnyRole('HOST', 'ADMIN')")
-    fun getPassedEvents(): ResponseEntity<ResponseDto> {
-        return eventService.getPassedEvents()
-    }
-
     @GetMapping("/get_locations")
     @PreAuthorize("permitAll()")
     fun getLocations(): ResponseEntity<ResponseDto> {
