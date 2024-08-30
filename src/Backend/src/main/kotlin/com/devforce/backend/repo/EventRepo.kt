@@ -24,7 +24,6 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
                 "LEFT JOIN FETCH e.venue v " +
                 "LEFT JOIN FETCH v.building b " +
                 "LEFT JOIN FETCH b.campus c " +
-                "LEFT JOIN FETCH e.availableSlots es " +
                 "WHERE (e.isPrivate = false " +
                 "OR :userId IS NULL " +
                 "OR a.userId = :userId " +
@@ -48,7 +47,6 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
                 "LEFT JOIN FETCH e.venue v " +
                 "LEFT JOIN FETCH v.building b " +
                 "LEFT JOIN FETCH b.campus c " +
-                "LEFT JOIN FETCH e.availableSlots es " +
                 "WHERE se.userId = :userId "
     )
     fun getSavedEvents(@Param("userId") userId: UUID): List<EventModel>
@@ -66,7 +64,6 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
                 "LEFT JOIN FETCH e.venue v " +
                 "LEFT JOIN FETCH v.building b " +
                 "LEFT JOIN FETCH b.campus c " +
-                "LEFT JOIN FETCH e.availableSlots es " +
                 "WHERE (a.userId = :userId " +
                 "OR h.userId = :userId) "
     )
@@ -84,7 +81,6 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
                 "LEFT JOIN FETCH e.venue v " +
                 "LEFT JOIN FETCH v.building b " +
                 "LEFT JOIN FETCH b.campus c " +
-                "LEFT JOIN FETCH e.availableSlots es " +
                 "WHERE (e.isPrivate = false " +
                 "OR :userId IS NULL " +
                 "OR a.userId = :userId " +
@@ -92,10 +88,8 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
                 "OR h.userId = :userId) "+
                 "AND e.title ILIKE %:searchString% " +
                 "OR e.description ILIKE %:searchString% " +
-                "OR e.metadata ILIKE %:searchString% " +
                 "ORDER BY (CASE WHEN e.title ILIKE %:searchString% THEN 3 ELSE 0 END + " +
-                "CASE WHEN e.description ILIKE %:searchString% THEN 2 ELSE 0 END + " +
-                "CASE WHEN e.metadata ILIKE %:searchString% THEN 1 ELSE 0 END) DESC"
+                "CASE WHEN e.description ILIKE %:searchString% THEN 2 ELSE 0 END) DESC"
     )
     fun searchEvents(@Param("searchString") searchString: String, @Param("userId") userId: UUID?): List<EventModel>
 
@@ -124,7 +118,6 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
                 "LEFT JOIN FETCH e.venue v " +
                 "LEFT JOIN FETCH v.building b " +
                 "LEFT JOIN FETCH b.campus c " +
-                "LEFT JOIN FETCH e.availableSlots es " +
                 "WHERE (e.isPrivate = false " +
                 "OR :userId IS NULL " +
                 "OR a.userId = :userId " +
@@ -159,5 +152,6 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
     fun deleteEvent(eventId: UUID)
 
 }
+
 
 

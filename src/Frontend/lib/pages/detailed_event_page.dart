@@ -98,27 +98,32 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
         Provider.of<EventProvider>(context, listen: false);
     print('Removing RSVP for event: ${widget.event.id}');
     try {
-      final response = await Api().DeletersvpEvent(widget.event.id, user!.id);
-      if (response['status'] == 'success') {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Successfully removed RSVP!')),
-        );
+      setState(() {
+        _isLoading = true;
+      });
 
+      await Api()
+          .DeletersvpEvent(widget.event.id, user!.id)
+          .then((response) {});
 
-        await eventProvider.refreshRSVPEvents(user!.id);
-        await eventProvider.refreshEvents();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Successfully removed your RSVP from the event!')),
+      );
+      await eventProvider.refreshRSVPEvents(user!.id);
+      await eventProvider.refreshEvents();
 
-        Navigator.of(context).pushReplacementNamed('/home');
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content: Text('Failed to remove RSVP: ${response['message']}')),
-        );
-      }
-    }catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+
+      Navigator.of(context).pushReplacementNamed('/home');
+    } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to remove RSVP: ${e.toString()}')),
       );
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -411,14 +416,24 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
                   const SizedBox(height: 8.0),
                   if (_thisCurrentEvent.attendees
                       .any((attendee) => attendee.userId == userP.userId)) ...[
-                    ElevatedButton.icon(
-                      onPressed: _removeFromCalendar,
-                      icon: const Icon(Icons.calendar_today),
-                      label: const Text('Remove from my Calendar'),
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: const Size(double.infinity, 48),
-                      ),
-                    ),
+                    ElevatedButton(
+                          onPressed: _isLoading ? null : () => _removeFromCalendar(),
+                          style: ElevatedButton.styleFrom(
+                            minimumSize: const Size(double.infinity, 48),
+                          ),
+                          child: _isLoading
+                              ? const CircularProgressIndicator(
+                                  color: Colors.white,
+                                )
+                              : const Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(Icons.calendar_today),
+                                    SizedBox(width: 8),
+                                    Text('Remove from my Calendar'),
+                                  ],
+                                ),
+                        ),
                   ],
                   const SizedBox(height: 8.0),
                   ElevatedButton.icon(
