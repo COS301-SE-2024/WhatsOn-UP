@@ -119,6 +119,7 @@ class _NotificationsState extends State<Notifications> {
                 );
               } else {
                 final notifications = snapshot.data!;
+                print("NOTIFICAITONS: " + notifications.toString());
                 final invites = notifications
                     .where((n) => n.notificationTypes == 'invite')
                     .toList();
