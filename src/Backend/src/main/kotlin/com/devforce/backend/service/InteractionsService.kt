@@ -6,6 +6,7 @@ import com.devforce.backend.repo.EventRepo
 import com.devforce.backend.repo.InviteeRepo
 import com.devforce.backend.repo.UserRepo
 import com.devforce.backend.security.CustomUser
+import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.context.SecurityContextHolder
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
+@Transactional
 class InteractionsService {
 
     @Autowired
