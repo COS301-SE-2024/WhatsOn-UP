@@ -396,8 +396,20 @@ class _EditEventState extends State<EditEvent> {
         });
         Api api = Api();
 
-        print("IMAGE URLS: " + event.imageUrls.toString());
+        List<String>? eventMedia = event.imageUrls;
+        if (imageBytesList.isNotEmpty) {
+          if (eventMedia != null) {
+            for (var url in eventMedia) {
+              String imageName = url.split('/').last;
 
+              api.deleteEventMedia(imageName, userP.userId).then((result) {
+                // print('Deleted $imageName: $result');
+              }).catchError((error) {
+                print('Error deleting $imageName: $error');
+              });
+            }
+          }
+        }
 
         for(Uint8List imageBytes in imageBytesList){
         Api().eventUploadImage(imageBytes, userP.userId, widget.eventId);
