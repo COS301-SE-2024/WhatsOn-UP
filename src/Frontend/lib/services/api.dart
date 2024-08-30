@@ -12,6 +12,8 @@ import '../widgets/notification_card.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
 import 'package:firstapp/screens/InviteUsers.dart';
+import 'package:path/path.dart' as path;
+
 
 
 class Api {
@@ -664,34 +666,27 @@ Future<List<AppNotification>> getAllNotification(
       throw Exception('Failed to upload proof image');
     }
   }*/
-  Future<Map<String, dynamic>> eventUploadImage(Uint8List? imageBytes, String userid, String EventId) async {
-    String generateFilename(String EventId) {
+  Future<Map<String, dynamic>> eventUploadImage(Uint8List mediaBytes, String userId, String eventId, String originalFilename) async {
+    String generateFilename(String eventId, String originalFilename) {
       final timestamp = DateTime.now().millisecondsSinceEpoch;
-      return 'event_image_${EventId}_$timestamp.png';
+      final extension = path.extension(originalFilename);
+      return 'event_media_${eventId}_$timestamp$extension';
     }
-    final uri = Uri.parse('http://${globals.domain}:8083/media/upload?event_id=$EventId');
+
+    final uri = Uri.parse('http://${globals.domain}:8083/media/upload?event_id=$eventId');
 
     final request = http.MultipartRequest('POST', uri);
-    request.headers['Authorization'] = 'Bearer $userid';
-    request.files.add(
-        http.MultipartFile.fromBytes(
-          'file',
-          imageBytes as List<int>,
-          filename: generateFilename(EventId),
-        ),
-      );
-
-   /* final request = http.MultipartRequest('POST', uri);
-    request.headers['Authorization']= 'Bearer $userid';
-
-    final filename = generateFilename(EventId);
+    request.headers['Authorization'] = 'Bearer $userId';
+    
+    final filename = generateFilename(eventId, originalFilename);
+    
     request.files.add(
       http.MultipartFile.fromBytes(
         'file',
-        imageBytes,
+        mediaBytes,
         filename: filename,
       ),
-    );*/
+    );
 
     try {
       final response = await request.send();
@@ -699,7 +694,6 @@ Future<List<AppNotification>> getAllNotification(
         final responseBody = await response.stream.bytesToString();
         print(jsonDecode(responseBody));
         return jsonDecode(responseBody);
-       // return jsonDecode(response.stream.toString());
       } else {
         throw Exception('Upload failed with status: ${response.statusCode}');
       }

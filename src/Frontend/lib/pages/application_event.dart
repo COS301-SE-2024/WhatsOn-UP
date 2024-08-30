@@ -725,7 +725,7 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                           // List<String>? mediaUrls = selectedImages?.map((file) => file.path).toList();
 
                           for(Uint8List imageBytes in imageBytesList){
-                            Api().eventUploadImage(imageBytes, userP.userId, response['data']['id']);
+                            Api().eventUploadImage(imageBytes, userP.userId, response['data']['id'], "test.png");
                           }
 
 
