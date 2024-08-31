@@ -1053,7 +1053,7 @@ Future<Map<String, dynamic>> broadcastEvent(String eventId, String message, Stri
   }
 
   Future<Map<String, dynamic>> deleteEventMedia(String imageName, String userId) async {
-    final String _deleteMediaUrl = 'http://${globals.domain}:8083/media/delete?media_name=$imageName';
+    final String deleteMediaUrl = 'http://${globals.domain}:8083/media/delete?media_name=$imageName';
 
     var headers = {
       'Content-Type': 'application/json',
@@ -1062,7 +1062,7 @@ Future<Map<String, dynamic>> broadcastEvent(String eventId, String message, Stri
     };
 
     try {
-      var response = await http.delete(Uri.parse(_deleteMediaUrl), headers: headers);
+      var response = await http.delete(Uri.parse(deleteMediaUrl), headers: headers);
 
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
@@ -1075,6 +1075,31 @@ Future<Map<String, dynamic>> broadcastEvent(String eventId, String message, Stri
       throw Exception(e.toString());
     }
   }
+
+  Future<Map<String, dynamic>> deleteNotification(String notificationId, String userId) async {
+    final String deleteNotificationUrl = 'http://${globals.domain}:8081/notifications/delete/$notificationId';
+
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $userId',
+    };
+
+    try {
+      var response = await http.delete(Uri.parse(deleteNotificationUrl), headers: headers);
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } 
+      else {
+        throw Exception(jsonDecode(response.body));
+      }
+    } 
+    catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
 
 }
 
