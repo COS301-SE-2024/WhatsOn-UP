@@ -10,7 +10,7 @@ class AppNotification {
   final String notificationId;
   String? seenAt;
   final String notificationTypes;
-  String referencedEvent;
+  String? referencedEvent;
 
   AppNotification({
     required this.message,
@@ -19,7 +19,7 @@ class AppNotification {
     required this.sentAt,
     required this.notificationId,
     required this.notificationTypes,
-    required this.referencedEvent,
+    this.referencedEvent,
     this.seenAt,
     this.eventInvite,
   });
