@@ -1,34 +1,15 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { UserRecommendationsService } from './user-recommendations.service';
-import { CreateUserRecommendationDto } from './dto/create-user-recommendation.dto';
-import { UpdateUserRecommendationDto } from './dto/update-user-recommendation.dto';
+import { EventDto } from './dto/event.dto';
+import { GetUserId } from 'src/get-user-id.decorator';
 
-@Controller('user-recommendations')
+@Controller('events')
 export class UserRecommendationsController {
-  constructor(private readonly userRecommendationsService: UserRecommendationsService) {}
+  constructor(private readonly recommendationService: UserRecommendationsService) {}
 
-  @Post()
-  create(@Body() createUserRecommendationDto: CreateUserRecommendationDto) {
-    return this.userRecommendationsService.create(createUserRecommendationDto);
-  }
-
-  @Get()
-  findAll() {
-    return this.userRecommendationsService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userRecommendationsService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserRecommendationDto: UpdateUserRecommendationDto) {
-    return this.userRecommendationsService.update(+id, updateUserRecommendationDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userRecommendationsService.remove(+id);
+  @Get('recommended_events')
+  async findAll(@GetUserId() userId: string): Promise<EventDto[]> {
+    return await this.recommendationService.getRecommendedEvents(userId);
   }
 }
+

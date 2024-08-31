@@ -1,13 +1,15 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { createClient } from '@supabase/supabase-js';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { InitPreferencesDto } from './dto/init-preferences.dto';
+import { SUPABASE_CLIENT} from 'src/supabase-provider/supabase-provider';
 
 @Injectable()
 export class UserPreferencesService {
-  private supabase = createClient(
-        'https://mehgbhiirnmypfgnkaud.supabase.co',
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1laGdiaGlpcm5teXBmZ25rYXVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjQwODA0NzAsImV4cCI6MjAzOTY1NjQ3MH0.HvqoJdWdJrDefkJVjx1Y2aUsp33syv0nu4jwfGY4om0'
-    );
+
+  constructor(
+    @Inject(SUPABASE_CLIENT)
+    private readonly supabase: SupabaseClient
+  ) {}
 
   //initialise user preferences with initial values
   async initPreferences(userId: string, prefs: InitPreferencesDto): Promise<any> {
