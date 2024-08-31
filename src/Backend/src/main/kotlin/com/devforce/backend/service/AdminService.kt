@@ -5,6 +5,7 @@ import com.devforce.backend.model.ApplicationStatusModel
 import com.devforce.backend.model.BroadcastModel
 import com.devforce.backend.repo.*
 import com.devforce.backend.security.CustomUser
+import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.context.SecurityContextHolder
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
+@Transactional
 class AdminService {
 
     @Autowired

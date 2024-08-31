@@ -11,11 +11,10 @@ import java.util.*
 @Data
 @Builder
 @Entity
-@Table(name = "past_events")
 @NoArgsConstructor
 @AllArgsConstructor
-
-class PastEventModel {
+@Table(name = "past_events")
+class PastEventModel{
     @Id
     @Column(name = "event_id", columnDefinition = "UUID")
     var eventId: UUID? = null
@@ -23,18 +22,16 @@ class PastEventModel {
     var title: String = ""
     var description: String = ""
 
-    var metadata: String = "" //changed from  var metadata: String = ""
-
-    var status: String = ""
+    @Column(name = "metadata", columnDefinition = "TEXT")
+    var metadata: String = ""
 
     @ElementCollection
     @CollectionTable(name = "event_media", joinColumns = [JoinColumn(name = "event_id")])
     @Column(name = "media_link" , columnDefinition = "TEXT")
     var eventMedia: List<String> = ArrayList()
 
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private var createdAt: LocalDateTime = LocalDateTime.now()
-
+    @Column(name = "deleted_at", nullable = false, updatable = false)
+    private var deletedAt: LocalDateTime = LocalDateTime.now()
 
     @OneToOne
     @JoinColumn(name = "venue_id")
@@ -53,13 +50,21 @@ class PastEventModel {
     @Column(name = "is_private", nullable = false)
     var isPrivate: Boolean = false
 
+    @Column(name = "occupied_slots")
+    var availableSlots: Int = 0
+
+    @OneToMany(mappedBy = "event_id")
+    var feedback: MutableList<FeedbackModel> = ArrayList()
+
+    var status: String = ""
+
     @ManyToMany
     @JoinTable(
         name = "event_hosts",
         joinColumns = [JoinColumn(name = "event_id")],
         inverseJoinColumns = [JoinColumn(name = "user_id")]
     )
-    var hosts: Set<UserModel> = HashSet()
+    var hosts: MutableSet<UserModel> = HashSet()
 
     @ManyToMany
     @JoinTable(
@@ -87,25 +92,10 @@ class PastEventModel {
 
     @PrePersist
     fun prePersist() {
-        createdAt = LocalDateTime.now()
+        deletedAt = LocalDateTime.now()
     }
 
 
-    @OneToMany(mappedBy = "event", cascade = [CascadeType.ALL])
-    var feedback: Set<FeedbackModel> = HashSet()
-
 
 }
-
-//@Data
-//@Builder
-//@Entity
-//@Table(name = "all_events")
-//@NoArgsConstructor
-//@AllArgsConstructor
-//class EventModelAll {
-//    @Id
-//    @Column(name = "event_id", columnDefinition = "UUID")
-//    var eventId: UUID? = null
-//}
 

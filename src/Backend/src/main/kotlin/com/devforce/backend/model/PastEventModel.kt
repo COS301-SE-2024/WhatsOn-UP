@@ -30,8 +30,8 @@ class PastEventModel{
     @Column(name = "media_link" , columnDefinition = "TEXT")
     var eventMedia: List<String> = ArrayList()
 
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private var createdAt: LocalDateTime = LocalDateTime.now()
+    @Column(name = "deleted_at", nullable = false, updatable = false)
+    private var deletedAt: LocalDateTime = LocalDateTime.now()
 
     @OneToOne
     @JoinColumn(name = "venue_id")
@@ -87,7 +87,7 @@ class PastEventModel{
 
     @PrePersist
     fun prePersist() {
-        createdAt = LocalDateTime.now()
+        deletedAt = LocalDateTime.now()
     }
 
 

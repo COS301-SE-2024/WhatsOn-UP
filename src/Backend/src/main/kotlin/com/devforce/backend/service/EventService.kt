@@ -10,6 +10,7 @@ import com.devforce.backend.repo.UserRepo
 import com.devforce.backend.repo.VenueRepo
 import com.devforce.backend.security.CustomUser
 import com.fasterxml.jackson.databind.ObjectMapper
+import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.context.SecurityContextHolder
@@ -21,6 +22,7 @@ import java.time.Instant
 //FUTURE
 //fun filterEvents(
 @Service
+@Transactional
 class EventService {
 
     @Autowired
@@ -79,15 +81,14 @@ class EventService {
                 }?.let { addAll(it) }
             }
 
+            this.updatedBy = user
+            this.createdBy = user
+
 
 
         }
 
         eventRepo.save(event)
-
-//        event.hosts.add(user)
-//
-//        eventRepo.save(event)
         
 
         val eventDto = EventDto(event,true)
@@ -174,6 +175,7 @@ class EventService {
                     availableSlots += it - maxAttendees
                     maxAttendees = it
                 }
+                updateEventDto.metadata?.let { ObjectMapper().writeValueAsString(it) } ?: "{}"
                 updateEventDto.isPrivate?.let { isPrivate = it }
                 updateEventDto.hosts?.let { hostIds ->
                     hosts.clear()
@@ -183,6 +185,8 @@ class EventService {
                     hosts.add(user)
                     hosts.addAll(newHosts)
                 }
+
+                updatedBy = user
 
 
             }
@@ -201,7 +205,6 @@ class EventService {
     }}
 
 
-    // To do: Implement function to delete an event
     fun deleteEvent(id: UUID): ResponseEntity<ResponseDto> {
         val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
 
@@ -216,6 +219,8 @@ class EventService {
             )
         }
 
+        event.get().updatedBy = user
+        eventRepo.save(event.get())
         eventRepo.deleteEvent(id)
 
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Event deleted successfully"))

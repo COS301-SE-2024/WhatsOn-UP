@@ -6,6 +6,7 @@ import com.devforce.backend.model.FeedbackModel
 import com.devforce.backend.model.HostApplicationsModel
 import com.devforce.backend.repo.*
 import com.devforce.backend.security.CustomUser
+import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.mail.MailSender
@@ -17,6 +18,7 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 
 @Service
+@Transactional
 class UserService {
 
     @Autowired
