@@ -1,7 +1,10 @@
 import 'package:firstapp/pages/rate_event.dart';
+import 'package:firstapp/providers/notification_providers.dart';
+import 'package:firstapp/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_bubble/chat_bubble.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:provider/provider.dart';
 
 import '../services/api.dart';
 import '../utils.dart';
@@ -148,7 +151,8 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
             ),
             onPressed: () {
               Navigator.of(context).pop();
-              // Delete notification function here
+              _deleteNotification();
+              Navigator.of(context).pop();
             },
           ),
         ],
@@ -156,6 +160,24 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
     },
   );
 }
+
+ Future<void> _deleteNotification() async {
+    userProvider userP = Provider.of<userProvider>(context, listen: false);
+    notificationProvider _notificationProvider = Provider.of<notificationProvider>(context, listen: false);
+
+    Api api = Api();
+    try {
+      await api.deleteNotification(widget.notification.notificationId, userP.userId);
+      print("Notification deleted");    
+      _notificationProvider.removeNotification(widget.notification.notificationId);
+      await _notificationProvider.refreshNotifications(userP.userId);
+      Navigator.of(context).pop();
+    } 
+    catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("An error occurred while deleting the notification")));
+      print("Error deleting notification: $e");
+    } 
+  }
 
   @override
   Widget build(BuildContext context) {
