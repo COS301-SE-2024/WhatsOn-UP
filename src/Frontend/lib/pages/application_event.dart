@@ -227,46 +227,52 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
   //   );
   // }
 
-  Widget _buildImagePicker2() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text('Upload Images:'),
-        const SizedBox(height: 10),
-        ElevatedButton(
-          onPressed: () async {
-            final List<XFile> pickedFiles = await _picker.pickMultiImage();
-            setState(() {
-              selectedImages = pickedFiles;
-            });
-
-            for (XFile image in selectedImages!) {
-              final Uint8List imageBytes = await image.readAsBytes();
-              imageBytesList.add(imageBytes);
-            }
-                    },
-          style: ElevatedButton.styleFrom(
-            foregroundColor: Colors.black, backgroundColor: Colors.white,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-              side: const BorderSide(color: Colors.grey, width: 1),
-            ),
-            padding: const EdgeInsets.symmetric(
-                horizontal: 16.0, vertical: 7.0),
+  List<Map<String, dynamic>> selectedMedia = [];
+    Widget _buildImagePicker2() {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('Upload Images and Videos:'),
+          const SizedBox(height: 10),
+          ElevatedButton(
+            onPressed: () async {
+              final List<XFile>? pickedFiles = await _picker.pickMultipleMedia();
+              if (pickedFiles != null) {
+                setState(() {
+                  selectedMedia.clear();
+                  for (XFile file in pickedFiles) {
+                    selectedMedia.add({
+                      'file': file,
+                      'name': file.name,
+                    });
+                  }
+                });
+              }
+            },
+            child: const Text('Select Images and Videos'),
           ),
-          child: const Text('Select Images'),
-        ),
-        if (selectedImages != null)
-          Padding(
-            padding: const EdgeInsets.only(top: 10),
-            child: Wrap(
-              spacing: 10,
-              children: selectedImages!.map((file) => Text(file.name)).toList(),
+          if (selectedMedia.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: Wrap(
+                spacing: 10,
+                children: selectedMedia.map((media) {
+                  final isVideo = media['name'].toLowerCase().endsWith('.mp4') ||
+                      media['name'].toLowerCase().endsWith('.mov');
+                  return Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(isVideo ? Icons.video_library : Icons.image),
+                      const SizedBox(width: 5),
+                      Text(media['name']),
+                    ],
+                  );
+                }).toList(),
+              ),
             ),
-          ),
-      ],
-    );
-  }
+        ],
+      );
+    }
 
        /* SizedBox(height: 10.0),
         selectedImages != null && selectedImages!.isNotEmpty
@@ -702,7 +708,7 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                       Map<String, String> metadata = {
                         'category': _selectedCategory!,
                       };
-                      //List<String>? mediaUrls = selectedImages?.map((file) => file.path).toList();
+
                       Map<String, dynamic> response = await Api().createEvent(
                         title: _eventNameController.text,
                         description: _eventDescriptionController.text,
@@ -715,17 +721,19 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                         userId: userId,
 
                       );
-                      //eventP.addEventHome(response['data']);
+                      Api api = Api();
+
                       if(imageBytesList!=null){
                         try{
-                          // Api().eventUploadImage(imageBytesList,userP.userId ,response['data']['id']);
+                          // for(Uint8List imageBytes in imageBytesList){
+                          //   Api().eventUploadImage(imageBytes, userP.userId, response['data']['id'], "test.png");
+                          // }
 
-                          // print(response['data']['id']);
-
-                          // List<String>? mediaUrls = selectedImages?.map((file) => file.path).toList();
-
-                          for(Uint8List imageBytes in imageBytesList){
-                            Api().eventUploadImage(imageBytes, userP.userId, response['data']['id'], "test.png");
+                          for (var media in selectedMedia) {
+                            XFile file = media['file'];
+                            String originalFilename = media['name'];
+                            Uint8List mediaBytes = await file.readAsBytes();
+                            await api.eventUploadImage(mediaBytes, userP.userId, response['data']['id'], originalFilename);
                           }
 
 

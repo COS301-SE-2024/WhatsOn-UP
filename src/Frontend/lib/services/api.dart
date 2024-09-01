@@ -1028,7 +1028,7 @@ Future<Map<String, dynamic>> broadcastEvent(String eventId, String message, Stri
       rateEventURL = 'http://${globals.domain}:8080/api/user/rate_event/$eventId?rating=$rating';
     }
     else {
-      rateEventURL = 'http://${globals.domain}:8080/api/user/rate_event/$eventId?comment=$comment&rating=$rating';
+      rateEventURL = 'http://${globals.domain}:8080/api/user/rate_event/$eventId?comment=${Uri.encodeComponent(comment)}&rating=$rating';
     }
 
     var headers = {
