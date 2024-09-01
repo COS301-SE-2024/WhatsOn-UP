@@ -96,11 +96,13 @@ class EventControllerIntegrationTest {
             metadata = mapOf("category" to "Tech")
         )
 
+        val bearerToken = System.getenv("BEREAR_TOKEN")
+
         val resultActions = mockMvc.perform(
             MockMvcRequestBuilders.post("$baseUri/create")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(createEventDto))
-                .header(HttpHeaders.AUTHORIZATION, "Bearer 69ae72bc-8e2b-4400-b608-29f048d4f8c7")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer $bearerToken")
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
 
@@ -169,11 +171,12 @@ class EventControllerIntegrationTest {
             metadata = null
         )
 
+        val bearerToken = System.getenv("BEREAR_TOKEN")
         val resultActions = mockMvc.perform(
             MockMvcRequestBuilders.post("$baseUri/create")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(createEventDto))
-                .header(HttpHeaders.AUTHORIZATION, "Bearer 69ae72bc-8e2b-4400-b608-29f048d4f8c7")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer $bearerToken")
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
 
@@ -249,11 +252,12 @@ class EventControllerIntegrationTest {
         }
 
         // Perform the POST request with query parameters
+        val bearerToken = System.getenv("BEREAR_TOKEN")
         val resultActions = mockMvc.perform(
             MockMvcRequestBuilders.get("$baseUri/search")
                 .contentType(MediaType.APPLICATION_JSON)
                 .params(params)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer 69ae72bc-8e2b-4400-b608-29f048d4f8c7")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer $bearerToken")
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
 
@@ -319,10 +323,11 @@ class EventControllerIntegrationTest {
     @Test
     fun `test get all events as host`(){
         // Perform the POST request with query parameters
+        val bearerToken = System.getenv("BEREAR_TOKEN")
         val resultActions = mockMvc.perform(
             MockMvcRequestBuilders.get("$baseUri/get_all")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer 69ae72bc-8e2b-4400-b608-29f048d4f8c7")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer $bearerToken")
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
 
@@ -404,11 +409,13 @@ class EventControllerIntegrationTest {
             metadata = mapOf("category" to "Tech")
         )
 
+        val bearerToken = System.getenv("BEREAR_TOKEN")
+
         val resultActions = mockMvc.perform(
             MockMvcRequestBuilders.put("$baseUri/update/${randomId}")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updateEventDto))
-                .header(HttpHeaders.AUTHORIZATION, "Bearer 69ae72bc-8e2b-4400-b608-29f048d4f8c7")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer $bearerToken")
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
 
@@ -480,11 +487,13 @@ class EventControllerIntegrationTest {
             metadata = null
         )
 
+        val bearerToken = System.getenv("BEREAR_TOKEN")
+
         val resultActions = mockMvc.perform(
             MockMvcRequestBuilders.put("$baseUri/update/${randomId}")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updateEventDto))
-                .header(HttpHeaders.AUTHORIZATION, "Bearer 69ae72bc-8e2b-4400-b608-29f048d4f8c7")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer $bearerToken")
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
 
