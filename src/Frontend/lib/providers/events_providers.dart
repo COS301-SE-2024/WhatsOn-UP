@@ -16,7 +16,7 @@ class EventProvider with ChangeNotifier {
 
   EventProvider({required this.api}) {
     _eventsHome = _fetchEventsHome();
-
+    _eventsSaved = Future.value([]);
 
   }
   Future<void> refreshEvents() async {
@@ -125,6 +125,7 @@ Future<List<Event>> _fetchEventsRsvp(String userId) async {
 
   Future<List<Event>> get eventsSaved async {
     try {
+
       return await _eventsSaved;
     } catch (e) {
       throw Exception('Failed to fetch saved events: $e');
@@ -182,15 +183,17 @@ Future<List<Event>> _fetchEventsRsvp(String userId) async {
 
 
 
-  void addEventSaved(Event event) {
+  void addEventSaved(Event event,String userId) {
     _eventsSaved.then((events) {
+      api.putSavedEvent(event.id,userId);
       events.add(event);
       notifyListeners();
     });
   }
 
-  void removeEventSaved(Event event) {
+  void removeEventSaved(Event event,String userId) {
     _eventsSaved.then((events) {
+      api.DeleteSavedEvent(event.id,userId);
       events.remove(event);
       notifyListeners();
     });

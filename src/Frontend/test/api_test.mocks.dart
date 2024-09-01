@@ -322,10 +322,10 @@ class MockEventProvider extends _i1.Mock implements _i7.EventProvider {
       ) as _i8.Future<List<_i9.Event>>);
 
   @override
-  List<_i9.Event> get eventsSaved => (super.noSuchMethod(
+  _i8.Future<List<_i9.Event>> get eventsSaved => (super.noSuchMethod(
         Invocation.getter(#eventsSaved),
-        returnValue: <_i9.Event>[],
-      ) as List<_i9.Event>);
+        returnValue: _i8.Future<List<_i9.Event>>.value(<_i9.Event>[]),
+      ) as _i8.Future<List<_i9.Event>>);
 
   @override
   bool get hasListeners => (super.noSuchMethod(
@@ -347,6 +347,16 @@ class MockEventProvider extends _i1.Mock implements _i7.EventProvider {
   _i8.Future<void> refreshRSVPEvents(String? userId) => (super.noSuchMethod(
         Invocation.method(
           #refreshRSVPEvents,
+          [userId],
+        ),
+        returnValue: _i8.Future<void>.value(),
+        returnValueForMissingStub: _i8.Future<void>.value(),
+      ) as _i8.Future<void>);
+
+  @override
+  _i8.Future<void> refreshSavedEvents(String? userId) => (super.noSuchMethod(
+        Invocation.method(
+          #refreshSavedEvents,
           [userId],
         ),
         returnValue: _i8.Future<void>.value(),
@@ -420,19 +430,33 @@ class MockEventProvider extends _i1.Mock implements _i7.EventProvider {
       );
 
   @override
-  void addEventSaved(_i9.Event? event) => super.noSuchMethod(
+  void addEventSaved(
+    _i9.Event? event,
+    String? userId,
+  ) =>
+      super.noSuchMethod(
         Invocation.method(
           #addEventSaved,
-          [event],
+          [
+            event,
+            userId,
+          ],
         ),
         returnValueForMissingStub: null,
       );
 
   @override
-  void removeEventSaved(_i9.Event? event) => super.noSuchMethod(
+  void removeEventSaved(
+    _i9.Event? event,
+    String? userId,
+  ) =>
+      super.noSuchMethod(
         Invocation.method(
           #removeEventSaved,
-          [event],
+          [
+            event,
+            userId,
+          ],
         ),
         returnValueForMissingStub: null,
       );
@@ -956,6 +980,16 @@ class MockApi extends _i1.Mock implements _i2.Api {
       ) as _i8.Future<List<_i9.Event>>);
 
   @override
+  _i8.Future<List<_i9.Event>> RecommendedEvents(String? userId) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #RecommendedEvents,
+          [userId],
+        ),
+        returnValue: _i8.Future<List<_i9.Event>>.value(<_i9.Event>[]),
+      ) as _i8.Future<List<_i9.Event>>);
+
+  @override
   _i8.Future<List<dynamic>> getRSVPEvents(String? userId) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -1039,6 +1073,40 @@ class MockApi extends _i1.Mock implements _i2.Api {
       (super.noSuchMethod(
         Invocation.method(
           #rsvpEvent,
+          [
+            eventId,
+            UserId,
+          ],
+        ),
+        returnValue:
+            _i8.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
+      ) as _i8.Future<Map<String, dynamic>>);
+
+  @override
+  _i8.Future<Map<String, dynamic>> putSavedEvent(
+    String? eventId,
+    String? UserId,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #putSavedEvent,
+          [
+            eventId,
+            UserId,
+          ],
+        ),
+        returnValue:
+            _i8.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
+      ) as _i8.Future<Map<String, dynamic>>);
+
+  @override
+  _i8.Future<Map<String, dynamic>> DeleteSavedEvent(
+    String? eventId,
+    String? UserId,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #DeleteSavedEvent,
           [
             eventId,
             UserId,

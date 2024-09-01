@@ -117,15 +117,9 @@ class _HomePageState extends State<HomePage> {
         return  ManageEvents(supabaseClient: Supabase.instance.client);
 
       case 6:
-        // WidgetsBinding.instance.addPostFrameCallback((_) {
-        //   showDialog(
-        //     context: context,
-        //     barrierColor: Colors.transparent,
-        //     builder: (BuildContext context) {
-        //       return Broadcast();
-        //     },
-        //   );
-        // });
+        userProvider userP = Provider.of<userProvider>(context, listen: false);
+        EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
+        eventP.refreshSavedEvents(userP.userId);
         return _buildHomePage();
       default:
         return _buildHomePage();
@@ -134,12 +128,9 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildHomePage() {
     userProvider userP = Provider.of<userProvider>(context);
-    EventProvider eventP = Provider.of<EventProvider>(context);
-
     final theme = Theme.of(context);
     final borderColour = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
     final textColour = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
-    // futureEvents=eventP.eventsHome;
     return FutureBuilder<List<List<Event>>>(
       future: fetchEvents(),
       builder: (context, snapshot) {
@@ -238,7 +229,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                             child: TextButton.icon(
                               onPressed: () {
-                                // Navigate to SearchScreen when Search button is pressed
+
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -293,9 +284,9 @@ class _HomePageState extends State<HomePage> {
                     ),
                     itemCount: eventsHome.length,
                     itemBuilder: (context, index) {
-                      // Ensure index is within bounds
+
                       if (index >= eventsHome.length) {
-                        return Container(); // or handle error gracefully
+                        return Container();
                       }
 
                       EventCard card = EventCard(event: eventsHome[index], showBookmarkButton: true);
@@ -330,33 +321,17 @@ class _HomePageState extends State<HomePage> {
                   )
                 ],
                 if (userP.role != "GUEST") ... [
-                 Padding(
-                  padding: const EdgeInsets.all(16.0),
+                 const Padding(
+                  padding: EdgeInsets.all(16.0),
                   child: Row(
                     children: [
-                      const Text(
+                      Text(
                         'Saved Events',
                         style: TextStyle(
                             fontSize: 18.0, fontWeight: FontWeight.bold),
                       ),
-                      const Spacer(),
-                      // TextButton(
-                      //   onPressed: () {
-                      //     Navigator.push(
-                      //       context,
-                      //       MaterialPageRoute(
-                      //         builder: (context) => AllsavedEvents(),
-                      //       ),
-                      //     );
-                      //   },
-                      //   child: const Text(
-                      //     'See more',
-                      //     style: TextStyle(
-                      //       fontSize: 16.0,
-                      //       fontWeight: FontWeight.bold,
-                      //     ),
-                      //   ),
-                      // ),
+                      Spacer(),
+
                     ],
                   ),
                 ),
@@ -370,9 +345,8 @@ class _HomePageState extends State<HomePage> {
                     ),
                     itemCount: savedEvents.length,
                     itemBuilder: (context, index) {
-                      // Ensure index is within bounds
                       if (index >= savedEvents.length) {
-                        return Container(); // or handle error gracefully
+                        return Container();
                       }
                       return EventCard(event: savedEvents[index],showBookmarkButton: true, saved: true);
                     },

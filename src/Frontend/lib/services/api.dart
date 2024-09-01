@@ -137,7 +137,34 @@ class Api {
       rethrow;
     }
   }
+  Future<List<Event>> RecommendedEvents(String userId) async {
+    final URL = 'http://${globals.domain}:8086/events/recommended_events';
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $userId',
+    };
 
+    try {
+      var response = await http.get(
+        Uri.parse(URL),
+        headers: headers,
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> decodedJson = json.decode(response.body);
+        final List<dynamic> eventsJson = decodedJson['data'];
+
+        final List<Event> events =
+        eventsJson.map((jsonEvent) => Event.fromJson(jsonEvent)).toList();
+        return events;
+      } else {
+        throw Exception('Failed to load recommended events');
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
   Future<List<dynamic>> getRSVPEvents(String userId) async {
     try {
       final String _rsvpEventsURL = 'http://${globals.domain}:8080/api/user/get_rsvp_events';
@@ -322,6 +349,28 @@ class Api {
 
     try {
       var response = await http.put(Uri.parse(_rsvpEventUrl), headers: headers);
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        throw Exception(jsonDecode(response.body));
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+  Future<Map<String, dynamic>> DeleteSavedEvent(String eventId, String UserId) async {
+    final String _rsvpEventUrl =
+        'http://${globals.domain}:8080/api/user/delete_saved_event/$eventId';
+
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $UserId',
+    };
+
+    try {
+      var response = await http.delete(Uri.parse(_rsvpEventUrl), headers: headers);
 
       if (response.statusCode == 200) {
         return jsonDecode(response.body);

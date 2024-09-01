@@ -593,10 +593,10 @@ class _EventCardState extends State<EventCard> {
                           setState(() {
                             isBookmarked = !isBookmarked;
                             if (isBookmarked == true) {
-                              eventP.addEventSaved(widget.event);
+                              eventP.addEventSaved(widget.event,userP.userId);
 
                             } else {
-                              eventP.removeEventSaved(widget.event);
+                              eventP.removeEventSaved(widget.event,userP.userId);
                             }
                           });
                         },
