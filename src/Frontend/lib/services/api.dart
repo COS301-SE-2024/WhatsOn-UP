@@ -763,6 +763,8 @@ Future<List<AppNotification>> getAllNotification(
     try {
       var response = await http.put(uri, headers: headers);
 
+      // print("HOST ERROR: " + jsonDecode(response.body).toString());
+
       if (response.statusCode == 200) {
         var responseData = jsonDecode(response.body);
 
@@ -774,12 +776,17 @@ Future<List<AppNotification>> getAllNotification(
 
         return responseData;
       } else {
-        throw Exception(jsonDecode(response.body));
+        var errorData = jsonDecode(response.body);
+        if (errorData['status'] == 'error' && errorData['data'] == 'User has already applied') {
+          throw Exception('already_applied');
+        } else {
+          throw Exception(errorData);
+        }
       }
     } catch (e) {
       throw Exception(e.toString());
     }
-  }
+}
 Future<Map<String, dynamic>> broadcastEvent(String eventId, String message, String userId) async {
 
     final String url='http://${globals.domain}:8080/api/events/broadcast?eventId=$eventId&message=$message';
