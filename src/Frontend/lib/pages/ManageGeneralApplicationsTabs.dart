@@ -76,7 +76,7 @@ class UserList extends StatelessWidget {
                 margin:
                     const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey, width: 1.0),
+                  border: Border.all(color: Colors.white, width: 1.0),
                   borderRadius: BorderRadius.circular(8.0),
                 ),
                 child: Material(
