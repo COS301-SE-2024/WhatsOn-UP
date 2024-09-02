@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../main.dart';
 import 'package:firstapp/services/api.dart';
+import '../providers/events_providers.dart';
 import '../providers/notification_providers.dart';
 import '../surveys/SurveyChooseCat_screen.dart';
 import '../services/socket_client.dart';
@@ -181,7 +182,7 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
     String fullname = _fullnameController.text;
     print('Username: $fullname');
     userProvider userP = Provider.of<userProvider>(context, listen: false);
-    EventProvider eventP= Provider.of<EventProvider>(context, listen: false);
+    EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
     Api api = Api();
     api.postUsername(fullname, user!.id).then((response) {
       if (response['error'] != null) {
@@ -201,6 +202,7 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
         userP.role = role;
         userP.profileImage = profileImage;
         eventP.refreshRecommendations(userP.userId);
+        eventP.refreshSavedEvents(userP.userId);
         notificationProvider _notificationProvider =
         Provider.of<notificationProvider>(context, listen: false);
 

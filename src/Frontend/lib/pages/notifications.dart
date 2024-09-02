@@ -9,7 +9,7 @@ import '../screens/NotificationDetailScreen.dart';
 import '../widgets/notification_card.dart';
 
 class Notifications extends StatefulWidget {
-  const Notifications({super.key});
+  const Notifications({Key? key}) : super(key: key);
 
   @override
   _NotificationsState createState() => _NotificationsState();
@@ -19,17 +19,32 @@ class _NotificationsState extends State<Notifications> {
   bool _isLoading = false;
 
   @override
+  void initState() {
+    super.initState();
+    _refreshNotifications();
+  }
+
+  Future<void> _refreshNotifications() async {
+    setState(() {
+      _isLoading = true;
+    });
+    final userP = Provider.of<userProvider>(context, listen: false);
+    final notifProvider = Provider.of<notificationProvider>(context, listen: false);
+    await notifProvider.refreshNotifications(userP.userId);
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     userProvider userP = Provider.of<userProvider>(context, listen: false);
     String userRole = userP.role;
 
-    notificationProvider notif =
-        Provider.of<notificationProvider>(context, listen: true);
-
-    return ChangeNotifierProvider<notificationProvider>(
-      create: (context) => notif,
-      child: Scaffold(
-        body: Column(
+    return Scaffold(
+      body: RefreshIndicator(
+        onRefresh: _refreshNotifications,
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Padding(
@@ -43,7 +58,7 @@ class _NotificationsState extends State<Notifications> {
               ),
             ),
             Expanded(
-              child: userRole == "GUEST" ? _buildGuestView() : _buildNotificationsView(notif),
+              child: userRole == "GUEST" ? _buildGuestView() : _buildNotificationsView(),
             ),
           ],
         ),
@@ -91,77 +106,67 @@ class _NotificationsState extends State<Notifications> {
     );
   }
 
-  Widget _buildNotificationsView(notificationProvider notif) {
-    return _isLoading
-        ? const Center(
+
+  Widget _buildNotificationsView() {
+    return Consumer<notificationProvider>(
+      builder: (context, notif, child) {
+        if (_isLoading) {
+          return const Center(
             child: SpinKitPianoWave(
               color: Color.fromARGB(255, 149, 137, 74),
               size: 50.0,
             ),
-          )
-        : FutureBuilder<List<AppNotification>>(
-            future: notif.notifications,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(
-                  child: SpinKitPianoWave(
-                    color: Color.fromARGB(255, 149, 137, 74),
-                    size: 50.0,
-                  ),
-                );
-              } else if (snapshot.hasError) {
-                return Center(
-                  child: Text('Error: ${snapshot.error}'),
-                );
-              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                return Center(
-                  child: Text('No notifications available'),
-                );
-              } else {
-                final notifications = snapshot.data!;
-                final invites = notifications
-                    .where((n) => n.notificationTypes == 'invite')
-                    .toList();
-                final broadcasts = notifications
-                    .where((n) => n.notificationTypes == 'broadcast')
-                    .toList();
-                final reminders = notifications
-                    .where((n) => n.notificationTypes == 'reminder')
-                    .toList();
-                final recommendations = notifications
-                    .where((n) => n.notificationTypes == 'recommendation')
-                    .toList();
-                final applications = notifications
-                    .where((n) => n.notificationTypes == 'application')
-                    .toList();
-
-                return ListView(
-                  children: [
-                    if (invites.isNotEmpty) ...[
-                      SizedBox(height: 20.0),
-                      _buildCategory('INVITES', invites)
-                    ],
-                    if (broadcasts.isNotEmpty) ...[
-                      SizedBox(height: 20.0),
-                      _buildCategory('BROADCASTS', broadcasts)
-                    ],
-                    if (reminders.isNotEmpty) ...[
-                      SizedBox(height: 20.0),
-                      _buildCategory('REMINDERS', reminders)
-                    ],
-                    if (recommendations.isNotEmpty) ...[
-                      SizedBox(height: 20.0),
-                      _buildCategory('RECOMMENDATIONS', recommendations)
-                    ],
-                    if (applications.isNotEmpty) ...[
-                      SizedBox(height: 20.0),
-                      _buildCategory('APPLICATIONS', applications)
-                    ]
-                  ],
-                );
-              }
-            },
           );
+        } else if (notif.notifications.isEmpty) {
+          return Center(
+            child: Text('No notifications available'),
+          );
+        } else {
+          final notifications = notif.notifications;
+          
+          final invites = notifications
+              .where((n) => n.notificationTypes == 'invite')
+              .toList();
+          final broadcasts = notifications
+              .where((n) => n.notificationTypes == 'broadcast')
+              .toList();
+          final reminders = notifications
+              .where((n) => n.notificationTypes == 'reminder')
+              .toList();
+          final recommendations = notifications
+              .where((n) => n.notificationTypes == 'recommendation')
+              .toList();
+          final applications = notifications
+              .where((n) => n.notificationTypes == 'application')
+              .toList();
+
+          return ListView(
+            children: [
+              if (invites.isNotEmpty) ...[
+                SizedBox(height: 20.0),
+                _buildCategory('INVITES', invites)
+              ],
+              if (broadcasts.isNotEmpty) ...[
+                SizedBox(height: 20.0),
+                _buildCategory('BROADCASTS', broadcasts)
+              ],
+              if (reminders.isNotEmpty) ...[
+                SizedBox(height: 20.0),
+                _buildCategory('REMINDERS', reminders)
+              ],
+              if (recommendations.isNotEmpty) ...[
+                SizedBox(height: 20.0),
+                _buildCategory('RECOMMENDATIONS', recommendations)
+              ],
+              if (applications.isNotEmpty) ...[
+                SizedBox(height: 20.0),
+                _buildCategory('APPLICATIONS', applications)
+              ]
+            ],
+          );
+        }
+      },
+    );
   }
 
   Widget _buildCategory(String title, List<AppNotification> notifications) {

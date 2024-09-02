@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:firstapp/pages/edit_Event.dart';
 import 'package:firstapp/pages/explore_page.dart';
+import 'package:firstapp/pages/rate_event.dart';
 import 'package:firstapp/providers/events_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -11,6 +12,8 @@ import 'package:socket_io_client/socket_io_client.dart';
 import '../main.dart';
 import '../providers/user_provider.dart';
 import 'package:intl/intl.dart';
+import 'package:video_player/video_player.dart';
+import 'package:chewie/chewie.dart';
 
 class DetailedEventPage extends StatefulWidget {
   final Event event;
@@ -27,6 +30,60 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
   final user = supabase.auth.currentUser;
   late Event _thisCurrentEvent;
   bool _isLoading = false;
+  List<Widget> _mediaWidgets = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeMediaWidgets();
+  }
+
+  void _initializeMediaWidgets() {
+    _mediaWidgets = widget.event.imageUrls?.map((url) {
+      if (_isVideoUrl(url)) {
+        return _buildVideoPlayer(url);
+      } else {
+        return _buildImageWidget(url);
+      }
+    }).toList() ?? [];
+  }
+
+  bool _isVideoUrl(String url) {
+    return url.toLowerCase().endsWith('.mp4') || url.toLowerCase().endsWith('.mov');
+  }
+
+  Widget _buildImageWidget(String url) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(16.0),
+      child: Image.network(
+        url,
+        fit: BoxFit.cover,
+        width: double.infinity,
+      ),
+    );
+  }
+
+  Widget _buildVideoPlayer(String url) {
+    VideoPlayerController videoPlayerController = VideoPlayerController.network(url);
+    ChewieController chewieController = ChewieController(
+      videoPlayerController: videoPlayerController,
+      autoPlay: false,
+      looping: false,
+      aspectRatio: 16 / 9,
+      errorBuilder: (context, errorMessage) {
+        return Center(
+          child: Text(
+            errorMessage,
+            style: TextStyle(color: Colors.white),
+          ),
+        );
+      },
+    );
+
+    return Chewie(
+      controller: chewieController,
+    );
+  }
 
   @override
   void didChangeDependencies() {
@@ -240,36 +297,20 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
                   });
                 },
               ),
-              items: widget.event.imageUrls?.map((url) {
-                return Builder(
-                  builder: (BuildContext context) {
-                    return ClipRRect(
-                      borderRadius: BorderRadius.circular(16.0),
-                      child: Image.network(
-                        url,
-                        fit: BoxFit.cover,
-                        width: double.infinity,
-                      ),
-                    );
-                  },
-                );
-              }).toList(),
+              items: _mediaWidgets,
             ),
             Row(
-              // Dots indicator for carousel
               mainAxisAlignment: MainAxisAlignment.center,
-              children: widget.event.imageUrls!.asMap().entries.map((entry) {
+              children: _mediaWidgets.asMap().entries.map((entry) {
                 int index = entry.key;
                 return Container(
                   width: 8.0,
                   height: 8.0,
-                  margin: const EdgeInsets.symmetric(
-                      vertical: 10.0, horizontal: 2.0),
+                  margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
                   decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: _currentImageIndex == index
-                          ? activeDotColour
-                          : dotColour),
+                    shape: BoxShape.circle,
+                    color: _currentImageIndex == index ? Colors.black : Colors.grey,
+                  ),
                 );
               }).toList(),
             ),
@@ -287,28 +328,6 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
                     ),
                   ),
                   const SizedBox(height: 8.0),
-                  // Row(
-                  //   children: [
-                  //     const Icon(Icons.calendar_today),
-                  //     const SizedBox(width: 8.0),
-                  //     Column(
-                  //       crossAxisAlignment: CrossAxisAlignment.start,
-                  //       children: [
-                  //         Text(
-                  //           'Start: ${_thisCurrentEvent.startTime}',
-                  //           style: const TextStyle(fontSize: 16.0),
-                  //         ),
-                  //         const SizedBox(height: 4.0),
-                  //         Text(
-                  //           'End: ${_thisCurrentEvent.endTime}',
-                  //           style: const TextStyle(fontSize: 16.0),
-                  //         ),
-
-                  //       ],
-                  //     ),
-                  //   ],
-                  // ),
-
                   Row(
                     children: [
                       const Icon(Icons.calendar_today),
@@ -402,7 +421,6 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
                         ),
                       ),
                   ],
-                  const SizedBox(height: 8.0),
                   if (_thisCurrentEvent.attendees
                       .any((attendee) => attendee.userId == userP.userId)) ...[
                     ElevatedButton(
@@ -456,9 +474,6 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
                       icon: const Icon(Icons.edit),
                       label: const Text('Edit Event'),
                       style: ElevatedButton.styleFrom(
-                        // foregroundColor: Colors.black,
-                        // backgroundColor: Colors.white,
-                        // side: const BorderSide(color: Colors.black),
                         minimumSize: const Size(double.infinity, 48),
                       ),
                     ),
@@ -468,8 +483,6 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
                       icon: const Icon(Icons.delete),
                       label: const Text('Remove Event'),
                       style: ElevatedButton.styleFrom(
-                        // foregroundColor: Colors.black,
-                        // backgroundColor: Colors.white,
                         side: const BorderSide(color: Colors.red),
                         minimumSize: const Size(double.infinity, 48),
                       ),
@@ -482,5 +495,15 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    for (var widget in _mediaWidgets) {
+      if (widget is Chewie) {
+        widget.controller.dispose();
+      }
+    }
+    super.dispose();
   }
 }

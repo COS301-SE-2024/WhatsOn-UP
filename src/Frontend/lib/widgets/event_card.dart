@@ -426,19 +426,81 @@ class Event {
 class EventCard extends StatefulWidget {
   final Event event;
   bool showBookmarkButton;
+  bool saved;
   String broadcast;
 
-  EventCard({Key? key, required this.event, required this.showBookmarkButton ,this.broadcast=''})
+  EventCard({Key? key, required this.event, required this.showBookmarkButton ,this.broadcast='',this.saved=false})
       : super(key: key);
 
   @override
   _EventCardState createState() => _EventCardState();
 }
 
+String getValidImageUrl(List<String>? imageUrls) {
+  const List<String> validExtensions = ['jpeg', 'jpg', 'png'];
+  const String defaultUrl = 'https://images.pexels.com/photos/1190297/pexels-photo-1190297.jpeg'; // only videos in the array
+
+  if (imageUrls == null || imageUrls.isEmpty) {
+    return defaultUrl;
+  }
+
+  for (String url in imageUrls) {
+    final extension = url.split('.').last.toLowerCase();
+    if (validExtensions.contains(extension)) {
+      return url;
+    }
+  }
+  return defaultUrl;
+}
+
 class _EventCardState extends State<EventCard> {
   bool isBookmarked = false;
   bool isbroadcast=false;
   bool _isLoading=false;
+
+  // Future<void> _addSaved() async {
+  //
+  //   EventProvider eventProvider =
+  //   Provider.of<EventProvider>(context, listen: false);
+  //
+  //
+  //   try {
+  //     setState(() {
+  //       _isLoading = true;
+  //     });
+  //
+  //     var result = await Api().putSavedEvent(widget.event.id, user!.id);
+  //
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       const SnackBar(content: Text('Successfully RSVP\'d to event!')),
+  //     );
+  //     await eventProvider.refreshRSVPEvents(user!.id);
+  //     await eventProvider.refreshEvents();
+  //     print(
+  //         'amount of attendees after event added to the calendar ${_thisCurrentEvent.attendees.length}');
+  //     setState(() {
+  //       _isLoading = false;
+  //     });
+  //     Navigator.of(context).pushReplacementNamed('/home');
+  //   } catch (e) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(content: Text('Failed to RSVP: ${e.toString()}')),
+  //     );
+  //     setState(() {
+  //       _isLoading = false;
+  //     });
+  //   }
+  // }
+
+
+
+
+
+
+
+
+
+
   @override
   Widget build(BuildContext context) {
     EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
@@ -449,7 +511,9 @@ class _EventCardState extends State<EventCard> {
     widget.showBookmarkButton=widget.broadcast=="EDIT"
     ?false
     :true;
-
+   widget.saved==true
+       ?isBookmarked=true
+       :isBookmarked=false;
    isbroadcast=widget.broadcast=="EDIT"
        ?true
        :false;
@@ -494,19 +558,12 @@ class _EventCardState extends State<EventCard> {
                 Container(
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(16.0),
-                    child: widget.event.imageUrls!.isNotEmpty
-                        ? Image.network(
-                            widget.event.imageUrls![0],
-                            height: 120.0,
-                            width: double.infinity,
-                            fit: BoxFit.cover,
-                          )
-                        : Image.asset(
-                            'assets/images/user.png',
-                            height: 120.0,
-                            width: double.infinity,
-                            fit: BoxFit.cover,
-                          ),
+                    child: Image.network(
+                      getValidImageUrl(widget.event.imageUrls),
+                      height: 120.0,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
                 Text(
@@ -546,10 +603,10 @@ class _EventCardState extends State<EventCard> {
                           setState(() {
                             isBookmarked = !isBookmarked;
                             if (isBookmarked == true) {
-                              eventP.addEventSaved(widget.event);
+                              eventP.addEventSaved(widget.event,userP.userId);
 
                             } else {
-                              eventP.removeEventSaved(widget.event);
+                              eventP.removeEventSaved(widget.event,userP.userId);
                             }
                           });
                         },

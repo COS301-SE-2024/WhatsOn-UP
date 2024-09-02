@@ -36,9 +36,7 @@ void main() {
       AppNotification(notificationTypes: 'recommendation', message: 'Recommendation message', eventId: '', userId: '', sentAt: '', notificationId: ''),
     ];
 
-    when(mockNotificationProvider.notifications).thenAnswer(
-          (_) async => notifications,
-    );
+    when(mockNotificationProvider.notifications).thenReturn(notifications);
 
     await tester.pumpWidget(
       MultiProvider(
@@ -76,3 +74,4 @@ void main() {
     expect(find.byType(NotificationDetailScreen), findsOneWidget);
   });
 }
+

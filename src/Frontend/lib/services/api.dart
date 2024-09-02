@@ -12,6 +12,8 @@ import '../widgets/notification_card.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
 import 'package:firstapp/screens/InviteUsers.dart';
+import 'package:path/path.dart' as path;
+
 
 
 class Api {
@@ -344,7 +346,50 @@ class Api {
       throw Exception(e.toString());
     }
   }
+  Future<Map<String, dynamic>> putSavedEvent(String eventId, String UserId) async {
+    final String _rsvpEventUrl =
+        'http://${globals.domain}:8080/api/user/save_event/$eventId';
 
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $UserId',
+    };
+
+    try {
+      var response = await http.put(Uri.parse(_rsvpEventUrl), headers: headers);
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        throw Exception(jsonDecode(response.body));
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+  Future<Map<String, dynamic>> DeleteSavedEvent(String eventId, String UserId) async {
+    final String _rsvpEventUrl =
+        'http://${globals.domain}:8080/api/user/delete_saved_event/$eventId';
+
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $UserId',
+    };
+
+    try {
+      var response = await http.delete(Uri.parse(_rsvpEventUrl), headers: headers);
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        throw Exception(jsonDecode(response.body));
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
 Future<List<AppNotification>> getAllNotification(
       {required String userId}) async {
     String notifyUserUrl = 'http://${globals.domain}:8081/notifications/get_all';
@@ -698,34 +743,27 @@ Future<List<AppNotification>> getAllNotification(
       throw Exception('Failed to upload proof image');
     }
   }*/
-  Future<Map<String, dynamic>> eventUploadImage(Uint8List? imageBytes, String userid, String EventId) async {
-    String generateFilename(String EventId) {
+  Future<Map<String, dynamic>> eventUploadImage(Uint8List mediaBytes, String userId, String eventId, String originalFilename) async {
+    String generateFilename(String eventId, String originalFilename) {
       final timestamp = DateTime.now().millisecondsSinceEpoch;
-      return 'event_image_${EventId}_$timestamp.png';
+      final extension = path.extension(originalFilename);
+      return 'event_media_${eventId}_$timestamp$extension';
     }
-    final uri = Uri.parse('http://${globals.domain}:8083/media/upload?event_id=$EventId');
+
+    final uri = Uri.parse('http://${globals.domain}:8083/media/upload?event_id=$eventId');
 
     final request = http.MultipartRequest('POST', uri);
-    request.headers['Authorization'] = 'Bearer $userid';
-    request.files.add(
-        http.MultipartFile.fromBytes(
-          'file',
-          imageBytes as List<int>,
-          filename: generateFilename(EventId),
-        ),
-      );
-
-   /* final request = http.MultipartRequest('POST', uri);
-    request.headers['Authorization']= 'Bearer $userid';
-
-    final filename = generateFilename(EventId);
+    request.headers['Authorization'] = 'Bearer $userId';
+    
+    final filename = generateFilename(eventId, originalFilename);
+    
     request.files.add(
       http.MultipartFile.fromBytes(
         'file',
-        imageBytes,
+        mediaBytes,
         filename: filename,
       ),
-    );*/
+    );
 
     try {
       final response = await request.send();
@@ -733,7 +771,6 @@ Future<List<AppNotification>> getAllNotification(
         final responseBody = await response.stream.bytesToString();
         print(jsonDecode(responseBody));
         return jsonDecode(responseBody);
-       // return jsonDecode(response.stream.toString());
       } else {
         throw Exception('Upload failed with status: ${response.statusCode}');
       }
@@ -776,8 +813,6 @@ Future<List<AppNotification>> getAllNotification(
     try {
       var response = await http.put(uri, headers: headers);
 
-      // print("HOST ERROR: " + jsonDecode(response.body).toString());
-
       if (response.statusCode == 200) {
         var responseData = jsonDecode(response.body);
 
@@ -799,7 +834,7 @@ Future<List<AppNotification>> getAllNotification(
     } catch (e) {
       throw Exception(e.toString());
     }
-}
+  }
 Future<Map<String, dynamic>> broadcastEvent(String eventId, String message, String userId) async {
 
     final String url='http://${globals.domain}:8080/api/events/broadcast?eventId=$eventId&message=$message';
@@ -1061,6 +1096,87 @@ Future<Map<String, dynamic>> broadcastEvent(String eventId, String message, Stri
       throw Exception('An error occurred while posting recommendation data: $e');
     }
   }
+
+
+  Future<Map<String, dynamic>> rateEvent(String eventId, String userID, int rating, String comment) async {
+    String rateEventURL;
+
+    if (comment == '') {
+      rateEventURL = 'http://${globals.domain}:8080/api/user/rate_event/$eventId?rating=$rating';
+    }
+    else {
+      rateEventURL = 'http://${globals.domain}:8080/api/user/rate_event/$eventId?comment=${Uri.encodeComponent(comment)}&rating=$rating';
+    }
+
+    var headers = {
+      'Content-Type': 'application/json', 
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $userID',
+    };
+
+    print("CALLING RATE WITH: " + rateEventURL);
+
+    try {
+      var response = await http.put(Uri.parse(rateEventURL), headers: headers);
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        throw Exception(jsonDecode(response.body));
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  Future<Map<String, dynamic>> deleteEventMedia(String imageName, String userId) async {
+    final String deleteMediaUrl = 'http://${globals.domain}:8083/media/delete?media_name=$imageName';
+
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $userId',
+    };
+
+    try {
+      var response = await http.delete(Uri.parse(deleteMediaUrl), headers: headers);
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } 
+      else {
+        throw Exception(jsonDecode(response.body));
+      }
+    } 
+    catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  Future<Map<String, dynamic>> deleteNotification(String notificationId, String userId) async {
+    final String deleteNotificationUrl = 'http://${globals.domain}:8081/notifications/delete/$notificationId';
+
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $userId',
+    };
+
+    try {
+      var response = await http.delete(Uri.parse(deleteNotificationUrl), headers: headers);
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } 
+      else {
+        throw Exception(jsonDecode(response.body));
+      }
+    } 
+    catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
 
 }
 

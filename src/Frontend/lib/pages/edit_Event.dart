@@ -26,6 +26,7 @@ class EditEvent extends StatefulWidget {
 class _EditEventState extends State<EditEvent> {
   late Event _thisCurrentEvent;
   bool isLoading = false;
+  List<Uint8List> imageBytesList = [];
 
   @override
   void initState() {
@@ -166,15 +167,6 @@ class _EditEventState extends State<EditEvent> {
                     onPressed: () {
                       showSubmitDialog(context);
                     },
-                    // style: ElevatedButton.styleFrom(
-                    //   foregroundColor: Colors.black,
-                    //   backgroundColor: Colors.white,
-                    //   shape: RoundedRectangleBorder(
-                    //     borderRadius: BorderRadius.circular(20),
-                    //     side: BorderSide(color: Colors.grey, width: 1),
-                    //   ),
-                    //   padding: EdgeInsets.symmetric(vertical: 16),
-                    // ),
                     child: const Text('Submit Changes'),
                   ),
                 ),
@@ -308,38 +300,47 @@ class _EditEventState extends State<EditEvent> {
     );
   }
 
+  List<Map<String, dynamic>> selectedMedia = [];
   Widget _buildImagePicker() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Upload Images:'),
+        const Text('Upload Images and Videos:'),
         const SizedBox(height: 10),
         ElevatedButton(
           onPressed: () async {
-            final List<XFile>? pickedFiles = await _picker.pickMultiImage();
+            final List<XFile>? pickedFiles = await _picker.pickMultipleMedia();
             if (pickedFiles != null) {
               setState(() {
-                selectedImages = pickedFiles;
+                selectedMedia.clear();
+                for (XFile file in pickedFiles) {
+                  selectedMedia.add({
+                    'file': file,
+                    'name': file.name,
+                  });
+                }
               });
             }
           },
-          // style: ElevatedButton.styleFrom(
-          //   foregroundColor: Colors.black, backgroundColor: Colors.white,
-          //   shape: RoundedRectangleBorder(
-          //     borderRadius: BorderRadius.circular(20),
-          //     side: BorderSide(color: Colors.grey, width: 1),
-          //   ),
-          //   padding: const EdgeInsets.symmetric(
-          //       horizontal: 16.0, vertical: 7.0),
-          // ),
-          child: const Text('Select Images'),
+          child: const Text('Select Images and Videos'),
         ),
-        if (selectedImages != null)
+        if (selectedMedia.isNotEmpty)
           Padding(
             padding: const EdgeInsets.only(top: 10),
             child: Wrap(
               spacing: 10,
-              children: selectedImages!.map((file) => Text(file.name)).toList(),
+              children: selectedMedia.map((media) {
+                final isVideo = media['name'].toLowerCase().endsWith('.mp4') ||
+                    media['name'].toLowerCase().endsWith('.mov');
+                return Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(isVideo ? Icons.video_library : Icons.image),
+                    const SizedBox(width: 5),
+                    Text(media['name']),
+                  ],
+                );
+              }).toList(),
             ),
           ),
       ],
@@ -348,6 +349,7 @@ class _EditEventState extends State<EditEvent> {
 
   Future<void> _submitForm() async {
     EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
+    userProvider userP = Provider.of<userProvider>(context,listen: false);
     final userSuperbase = supabase.auth.currentUser;
     if (_formKey.currentState!.validate()) {
       setState(() {
@@ -378,12 +380,37 @@ class _EditEventState extends State<EditEvent> {
       List<String>? mediaUrls =
           selectedImages?.map((file) => file.path).toList();
 
+      
+
+
       Event? event = await eventP.getEventById(widget.eventId);
       if (event != null) {
         setState(() {
           _thisCurrentEvent = event;
         });
         Api api = Api();
+
+        List<String>? eventMedia = event.imageUrls;
+        if (selectedMedia.isNotEmpty) {
+          if (eventMedia != null) {
+            for (var url in eventMedia) {
+              String imageName = url.split('/').last;
+
+              api.deleteEventMedia(imageName, userP.userId).then((result) {
+                print('Deleted $imageName: $result');
+              }).catchError((error) {
+                print('Error deleting $imageName: $error');
+              });
+            }
+          }
+        }
+
+        for (var media in selectedMedia) {
+          XFile file = media['file'];
+          String originalFilename = media['name'];
+          Uint8List mediaBytes = await file.readAsBytes();
+          await api.eventUploadImage(mediaBytes, userP.userId, widget.eventId, originalFilename);
+        }
 
         api
             .updateEvent(

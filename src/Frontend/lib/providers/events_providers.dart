@@ -11,18 +11,13 @@ class EventProvider with ChangeNotifier {
 
   late Future<List<Event>> _eventsHome;
   late Future<List<Event>> _eventsRsvp;
-  //late Future<List<Event>> _eventsSaved;
-  // List<Event> _eventsRsvp = [];
-  List<Event> _eventsSaved = [];
+
+  late Future<List<Event>> _eventsSaved;
   late Future<List<Event>> _eventRecommedations;
-  // EventProvider() {
-  //   _eventsHome = _fetchEventsHome();
-  //
-  //   // _eventsSaved = _fetchEventsSaved();
-  // }
   EventProvider({required this.api}) {
     _eventsHome = _fetchEventsHome();
-    print("EventProvider:  $_eventsHome");
+    _eventsSaved = Future.value([]);
+
   }
   Future<void> refreshEvents() async {
     try {
@@ -56,7 +51,14 @@ Future<void> refreshRecommendations(String userId) async {
       throw Exception('Failed to fetch home events: $e');
     }
   }
-Future<List<Event>> _fetchRecommendations(String userId) async {
+Future<void> refreshSavedEvents(String userId) async {
+    try {
+      _eventsSaved = _fetchEventsSaved(userId);
+      notifyListeners();
+    } catch (e) {
+      throw Exception('Failed to refresh events: $e');
+    }
+  }Future<List<Event>> _fetchRecommendations(String userId) async {
     try {
       return await api.RecommendedEvents(userId);
     } catch (e) {
@@ -72,59 +74,6 @@ Future<List<Event>> _fetchRecommendations(String userId) async {
     }
   }
 
-  // Future<List<Event>> _fetchEventsRsvp(String userId) async {
-
-  //   try {
-  //     final response= await api.getRSVPEvents(userId);
-  //     List<Event> events = (response as List)
-  //         .map((eventData) => Event.fromJson(eventData))
-  //         .toList();
-
-  //     return events;
-  //   } catch (e) {
-  //     throw Exception('Failed to fetch home events: $e');
-  //   }
-  // }
-
-  // Future<List<dynamic>>_fetchEventsRsvp(String userId) async {
-  //   final user = supabase.auth.currentUser;
-  //   try {
-  //     return await api.getRSVPEvents(userId);
-  //   } catch (e) {
-  //     throw Exception('Failed to fetch home events: $e');
-  //   }
-  // }
-
-
-
-//   Future<List<Event>> _fetchEventsRsvp(String userId) async {
-//     if (userId == "guest") { // If id received is "guest", user is a guest
-//       final response = await api.getAllEventsGuest();
-//       List<Event> events = (response as List)
-//           .map((eventData) => Event.fromJson(eventData))
-//           .toList();
-
-//       print("RESPONSE IN GUEST VIEW EVENTS: $response");
-//       List<Map<String, dynamic>> eventMaps = events.map((event) => event.toJson()).toList();
-//       List<Event> events2 = eventMaps.map((map) => Event.fromJson(map)).toList();
-
-//       print("GUEST VIEW EVENTS: $events2");
-//       return events2;
-//     }
-//   try {
-//     // return await api.getRSVPEvents(userId!);
-//     print("USER ID IN RSVPEVENTS CALL: $userId");
-//     final response= await api.getRSVPEvents(userId);
-//       List<Event> events = (response as List)
-//           .map((eventData) => Event.fromJson(eventData))
-//           .toList();
-
-//       print("RSVP EVENTS FOR SIGNED IN USERS: $events");
-//       return events;
-//   } catch (e) {
-//     throw Exception('Failed to fetch RSVP events: $e');
-//   }
-// }
 
 Future<List<Event>> _fetchEventsRsvp(String userId) async {
   try {
@@ -140,12 +89,7 @@ Future<List<Event>> _fetchEventsRsvp(String userId) async {
         .map((eventData) => Event.fromJson(eventData as Map<String, dynamic>))
         .toList();
 
-    // if (userId == "guest") {
-    //   print("GUEST VIEW EVENTS: $events");
-    // }
-    // else {
-    //   print("RSVP EVENTS FOR SIGNED IN USERS: $events");
-    // }
+
 
     return events;
   }
@@ -159,6 +103,22 @@ Future<List<Event>> _fetchEventsRsvp(String userId) async {
   void fetchfortheFirstTimeRsvp(String userId) {
     _eventsRsvp = _fetchEventsRsvp(userId);
   }
+
+
+
+  Future<List<Event>> _fetchEventsSaved(String userId) async {
+    try {
+      List<dynamic> responseData;
+      responseData=await api.getAllSavedEvents(userId);
+      List<Event> events = responseData
+          .map((eventData) => Event.fromJson(eventData as Map<String, dynamic>))
+          .toList();
+      return events;
+    } catch (e) {
+      throw Exception('Failed to fetch saved events: $e');
+    }
+  }
+
 
   Future<List<Event>> get recommendations async {
     try {
@@ -183,29 +143,18 @@ Future<List<Event>> _fetchEventsRsvp(String userId) async {
     }
   }
 
-  // Future<List<Event>> get eventsSaved async {
-  //   try {
-  //     return await _eventsSaved; // Return the awaited _eventsHome future
-  //   } catch (e) {
-  //     throw Exception('Failed to fetch saved events: $e');
-  //   }
-  // }
+  Future<List<Event>> get eventsSaved async {
+    try {
 
-  // List<Event> get eventsRsvp => _eventsRsvp;
-  List<Event> get eventsSaved => _eventsSaved;
+      return await _eventsSaved;
+    } catch (e) {
+      throw Exception('Failed to fetch saved events: $e');
+    }
+  }
 
-  // void addEventHome(Event event) {
-  //   _eventsHome.then((events) {
-  //     events.add(event);
-  //     notifyListeners();
-  //   });
-  // }
+
   Future<void> addEventHome(Map<String, dynamic> eventData) async {
-    // Event event = Event.fromJson(eventData);
-    // _eventsHome.then((events) {
-    //   events.add(event);
-    //   notifyListeners();
-    // });
+
     Event event = Event.fromJson(eventData);
     List<Event> events = await _eventsHome;
     events.add(event);
@@ -252,23 +201,22 @@ Future<List<Event>> _fetchEventsRsvp(String userId) async {
     });
   }
 
-  // void addEventRsvp(Event event) {
-  //   _eventsRsvp.add(event);
-  //   notifyListeners();
-  // }
 
-  // void removeEventRsvp(Event event) {
-  //   _eventsRsvp.remove(event);
-  //   notifyListeners();
-  // }
 
-  void addEventSaved(Event event) {
-    _eventsSaved.add(event);
-    notifyListeners();
+  void addEventSaved(Event event,String userId) {
+    _eventsSaved.then((events) {
+      api.putSavedEvent(event.id,userId);
+      events.add(event);
+      notifyListeners();
+    });
   }
 
-  void removeEventSaved(Event event) {
-    _eventsSaved.remove(event);
+  void removeEventSaved(Event event,String userId) {
+    _eventsSaved.then((events) {
+      api.DeleteSavedEvent(event.id,userId);
+      events.remove(event);
+      notifyListeners();
+    });
     notifyListeners();
   }
 
@@ -326,7 +274,7 @@ Future<List<Event>> _fetchEventsRsvp(String userId) async {
     }
   }
 
-//modified here - check here
+
   Future<void> EditEventLocation(String id, String Location) async {
     try {
       List<Event> events = await _eventsHome;
@@ -405,34 +353,6 @@ Future<List<Event>> _fetchEventsRsvp(String userId) async {
       throw Exception('Failed to fetch host events: $e');
     }
   }
-  // void EditEventDateandTime(String id, String startDate) async {
-  //   try {
-  //     List<Event> events = await _eventsHome;
-  //     Event? event = events.firstWhere((event) => event.id == id);
-  //     event. = startDate ;
-  //   } catch (e) {
-  //     throw Exception('Failed to get event by ID: $e');
-  //   }
-  // }
+
 }
 
-// void addEventSaved(Event event) {
-//   _eventsHome.then((events) {
-//     events.add(event);
-//     notifyListeners();
-//   });
-// }
-//
-// void addEventsSaved(List<Event> events) {
-//   _eventsHome.then((existingEvents) {
-//     existingEvents.addAll(events);
-//     notifyListeners();
-//   });
-// }
-//
-// void removeEventSaved(Event event) {
-//   _eventsHome.then((events) {
-//     events.remove(event);
-//     notifyListeners();
-//   });
-// }
