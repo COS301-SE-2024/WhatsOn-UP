@@ -1,0 +1,40 @@
+swagger: '2.0'
+info:
+  title: WhatsOn-Up
+  description: API Gateway for WhatsOn-Up
+  version: 1.0.0  
+host: fdjslfkskdf9-2bee-415edsfjkldsfklskjlfs9e34.apigateway.whatsonup.cloud.goog
+schemes:
+  - https
+paths:
+  /service1-endpoint:  # Change this to your first API endpoint path
+    get:
+      summary: Summary for service 1 endpoint  # Change this to a summary of the first endpoint
+      operationId: getService1Endpoint  # Change this to a unique identifier for the first operation
+      responses:
+        '200':
+          description: Successful response
+      x-google-backend:
+        address: https://api-237rzrxg6a-uc.a.run.app/service1-endpoint  # Change this to the URL of the Cloud Run service for the first endpoint
+
+  /service2-endpoint:  # Change this to your second API endpoint path
+    get:
+      summary: Summary for service 2 endpoint  # Change this to a summary of the second endpoint
+      operationId: getService2Endpoint  # Change this to a unique identifier for the second operation
+      responses:
+        '200':
+          description: Successful response
+      x-google-backend:
+        address: https://api-12345abcde-uc.a.run.app/service2-endpoint  # Change this to the URL of the Cloud Run service for the second endpoint
+
+  # Add more endpoints as needed
+  /another-service-endpoint:  # Example of another API endpoint path
+    get:
+      summary: Summary for another service endpoint  # Change this to a summary of another endpoint
+      operationId: getAnotherServiceEndpoint  # Change this to a unique identifier for another operation
+      responses:
+        '200':
+          description: Successful response
+      x-google-backend:
+        address: https://api-abcdefg-uc.a.run.app/another-service-endpoint  # Change this to the URL of another Cloud Run service
+

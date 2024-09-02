@@ -139,6 +139,16 @@ class MockApi extends _i1.Mock implements _i3.Api {
       ) as _i5.Future<List<_i6.Event>>);
 
   @override
+  _i5.Future<List<_i6.Event>> RecommendedEvents(String? userId) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #RecommendedEvents,
+          [userId],
+        ),
+        returnValue: _i5.Future<List<_i6.Event>>.value(<_i6.Event>[]),
+      ) as _i5.Future<List<_i6.Event>>);
+
+  @override
   _i5.Future<List<dynamic>> getRSVPEvents(String? userId) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -222,6 +232,40 @@ class MockApi extends _i1.Mock implements _i3.Api {
       (super.noSuchMethod(
         Invocation.method(
           #rsvpEvent,
+          [
+            eventId,
+            UserId,
+          ],
+        ),
+        returnValue:
+            _i5.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
+      ) as _i5.Future<Map<String, dynamic>>);
+
+  @override
+  _i5.Future<Map<String, dynamic>> putSavedEvent(
+    String? eventId,
+    String? UserId,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #putSavedEvent,
+          [
+            eventId,
+            UserId,
+          ],
+        ),
+        returnValue:
+            _i5.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
+      ) as _i5.Future<Map<String, dynamic>>);
+
+  @override
+  _i5.Future<Map<String, dynamic>> DeleteSavedEvent(
+    String? eventId,
+    String? UserId,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #DeleteSavedEvent,
           [
             eventId,
             UserId,
@@ -423,19 +467,17 @@ class MockApi extends _i1.Mock implements _i3.Api {
 
   @override
   _i5.Future<Map<String, dynamic>> eventUploadImage(
-    _i8.Uint8List? mediaBytes,
-    String? userId,
-    String? eventId,
-    String? originalFilename,
+    _i8.Uint8List? imageBytes,
+    String? userid,
+    String? EventId,
   ) =>
       (super.noSuchMethod(
         Invocation.method(
           #eventUploadImage,
           [
-            mediaBytes,
-            userId,
-            eventId,
-            originalFilename,
+            imageBytes,
+            userid,
+            EventId,
           ],
         ),
         returnValue:
@@ -597,61 +639,6 @@ class MockApi extends _i1.Mock implements _i3.Api {
             #userId: userId,
             #data: data,
           },
-        ),
-        returnValue:
-            _i5.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
-      ) as _i5.Future<Map<String, dynamic>>);
-
-  @override
-  _i5.Future<Map<String, dynamic>> rateEvent(
-    String? eventId,
-    String? userID,
-    int? rating,
-    String? comment,
-  ) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #rateEvent,
-          [
-            eventId,
-            userID,
-            rating,
-            comment,
-          ],
-        ),
-        returnValue:
-            _i5.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
-      ) as _i5.Future<Map<String, dynamic>>);
-
-  @override
-  _i5.Future<Map<String, dynamic>> deleteEventMedia(
-    String? imageName,
-    String? userId,
-  ) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #deleteEventMedia,
-          [
-            imageName,
-            userId,
-          ],
-        ),
-        returnValue:
-            _i5.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
-      ) as _i5.Future<Map<String, dynamic>>);
-
-  @override
-  _i5.Future<Map<String, dynamic>> deleteNotification(
-    String? notificationId,
-    String? userId,
-  ) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #deleteNotification,
-          [
-            notificationId,
-            userId,
-          ],
         ),
         returnValue:
             _i5.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
