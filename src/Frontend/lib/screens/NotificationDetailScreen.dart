@@ -1,6 +1,10 @@
+import 'package:firstapp/pages/rate_event.dart';
+import 'package:firstapp/providers/notification_providers.dart';
+import 'package:firstapp/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_bubble/chat_bubble.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:provider/provider.dart';
 
 import '../services/api.dart';
 import '../utils.dart';
@@ -82,6 +86,42 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
     }
   }
 
+  String? _extractEventName(String message) {
+    final RegExp regex = RegExp(r'"([^"]*)"');
+    final match = regex.firstMatch(message);
+    return match?.group(1);
+  }
+
+  bool _showRateEventButton() {
+    return widget.notification.notificationTypes == 'broadcast' &&
+        widget.notification.message.startsWith(
+            '🎉 We hope you had a fantastic time at') &&
+        widget.notification.message.contains(
+            'Please take a moment to rate the event and share your feedback.');
+  }
+
+  void _navigateToRateEvent() {
+    final eventId = widget.notification.referencedEvent;
+    final eventName = _extractEventName(widget.notification.message);
+    
+    if (eventId != null && eventName != null) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => RateEventPage(
+            eventId: eventId,
+            eventName: eventName,
+            ),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Unable to rate event. Missing information.")),
+      );
+    }
+  }
+
+
   String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
 
   void _showDeleteConfirmationDialog() {
@@ -111,7 +151,8 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
             ),
             onPressed: () {
               Navigator.of(context).pop();
-              // Delete notification function here
+              _deleteNotification();
+              Navigator.of(context).pop();
             },
           ),
         ],
@@ -119,6 +160,24 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
     },
   );
 }
+
+ Future<void> _deleteNotification() async {
+    userProvider userP = Provider.of<userProvider>(context, listen: false);
+    notificationProvider _notificationProvider = Provider.of<notificationProvider>(context, listen: false);
+
+    Api api = Api();
+    try {
+      await api.deleteNotification(widget.notification.notificationId, userP.userId);
+      print("Notification deleted");    
+      _notificationProvider.removeNotification(widget.notification.notificationId);
+      await _notificationProvider.refreshNotifications(userP.userId);
+      Navigator.of(context).pop();
+    } 
+    catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("An error occurred while deleting the notification")));
+      print("Error deleting notification: $e");
+    } 
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -168,26 +227,23 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
                       ),
                     ),
                   ),
-                  // Text(
-                  //   'Seen At: ${widget.notification.seenAt ?? 'Not seen yet'}',
-                  //   style:
-                  //       TextStyle(fontSize: 12.0, fontStyle: FontStyle.italic),
-                  //   textAlign: TextAlign.end,
-                  // ),
+                  if (_showRateEventButton()) ...[
+                    SizedBox(height: 20.0),
+                    Center(
+                      child: ElevatedButton(
+                        onPressed: _navigateToRateEvent,
+                        child: Text('Rate Event'),
+                        style: ElevatedButton.styleFrom(
+                          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                        ),
+                      ),
+                    ),
+                  ],
                   if (widget.notification.notificationTypes == 'invite') ...[
                     SizedBox(height: 20.0),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        // TextButton(
-                        //   onPressed: _Decline,
-                        //   style: TextButton.styleFrom(
-                        //     foregroundColor: Colors.red,
-                        //     side: BorderSide(color: Colors.black),
-                        //     padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 20.0),
-                        //   ),
-                        //   child: Text('Decline'),
-                        // ),
                         if (widget.notification.eventInvite == null ||
                             widget.notification.eventInvite == false)
                           TextButton(

@@ -436,6 +436,23 @@ class EventCard extends StatefulWidget {
   _EventCardState createState() => _EventCardState();
 }
 
+String getValidImageUrl(List<String>? imageUrls) {
+  const List<String> validExtensions = ['jpeg', 'jpg', 'png'];
+  const String defaultUrl = 'https://images.pexels.com/photos/1190297/pexels-photo-1190297.jpeg'; // only videos in the array
+
+  if (imageUrls == null || imageUrls.isEmpty) {
+    return defaultUrl;
+  }
+
+  for (String url in imageUrls) {
+    final extension = url.split('.').last.toLowerCase();
+    if (validExtensions.contains(extension)) {
+      return url;
+    }
+  }
+  return defaultUrl;
+}
+
 class _EventCardState extends State<EventCard> {
   bool isBookmarked = false;
   bool isbroadcast=false;
@@ -541,19 +558,12 @@ class _EventCardState extends State<EventCard> {
                 Container(
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(16.0),
-                    child: widget.event.imageUrls!.isNotEmpty
-                        ? Image.network(
-                            widget.event.imageUrls![0],
-                            height: 120.0,
-                            width: double.infinity,
-                            fit: BoxFit.cover,
-                          )
-                        : Image.asset(
-                            'assets/images/user.png',
-                            height: 120.0,
-                            width: double.infinity,
-                            fit: BoxFit.cover,
-                          ),
+                    child: Image.network(
+                      getValidImageUrl(widget.event.imageUrls),
+                      height: 120.0,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
                 Text(
