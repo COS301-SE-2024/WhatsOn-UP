@@ -40,11 +40,9 @@ void main() {
   testWidgets('User can select a rating', (WidgetTester tester) async {
     await tester.pumpWidget(createWidgetUnderTest('1', 'Sample Event'));
 
-    // Tap the third star
     await tester.tap(find.byIcon(Icons.star_border).at(2));
     await tester.pump();
 
-    // Check that the first three stars are now filled
     expect(find.byIcon(Icons.star), findsNWidgets(3));
     expect(find.byIcon(Icons.star_border), findsNWidgets(2));
   });
