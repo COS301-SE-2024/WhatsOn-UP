@@ -467,17 +467,19 @@ class MockApi extends _i1.Mock implements _i3.Api {
 
   @override
   _i5.Future<Map<String, dynamic>> eventUploadImage(
-    _i8.Uint8List? imageBytes,
-    String? userid,
-    String? EventId,
+    _i8.Uint8List? mediaBytes,
+    String? userId,
+    String? eventId,
+    String? originalFilename,
   ) =>
       (super.noSuchMethod(
         Invocation.method(
           #eventUploadImage,
           [
-            imageBytes,
-            userid,
-            EventId,
+            mediaBytes,
+            userId,
+            eventId,
+            originalFilename,
           ],
         ),
         returnValue:
@@ -639,6 +641,61 @@ class MockApi extends _i1.Mock implements _i3.Api {
             #userId: userId,
             #data: data,
           },
+        ),
+        returnValue:
+            _i5.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
+      ) as _i5.Future<Map<String, dynamic>>);
+
+  @override
+  _i5.Future<Map<String, dynamic>> rateEvent(
+    String? eventId,
+    String? userID,
+    int? rating,
+    String? comment,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #rateEvent,
+          [
+            eventId,
+            userID,
+            rating,
+            comment,
+          ],
+        ),
+        returnValue:
+            _i5.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
+      ) as _i5.Future<Map<String, dynamic>>);
+
+  @override
+  _i5.Future<Map<String, dynamic>> deleteEventMedia(
+    String? imageName,
+    String? userId,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #deleteEventMedia,
+          [
+            imageName,
+            userId,
+          ],
+        ),
+        returnValue:
+            _i5.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
+      ) as _i5.Future<Map<String, dynamic>>);
+
+  @override
+  _i5.Future<Map<String, dynamic>> deleteNotification(
+    String? notificationId,
+    String? userId,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #deleteNotification,
+          [
+            notificationId,
+            userId,
+          ],
         ),
         returnValue:
             _i5.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
