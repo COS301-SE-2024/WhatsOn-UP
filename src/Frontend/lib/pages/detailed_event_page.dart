@@ -14,8 +14,9 @@ import 'package:intl/intl.dart';
 
 class DetailedEventPage extends StatefulWidget {
   final Event event;
+String recommendations;
 
-  const DetailedEventPage({super.key, required this.event});
+   DetailedEventPage({super.key, required this.event,  this.recommendations=''});
 
   @override
   _DetailedEventPageState createState() => _DetailedEventPageState();
@@ -35,12 +36,20 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
 
   Future<void> _fetchEvent() async {
     try {
+      Event? event;
       EventProvider eventProvider =
           Provider.of<EventProvider>(context, listen: false);
-      Event? event = await eventProvider.getEventById(widget.event.id);
+      if(widget.recommendations=='recommendations'){
+        _thisCurrentEvent = widget.event;
+        event =await eventProvider.getEventByIdR(widget.event.id);
+      }else{
+        _thisCurrentEvent = widget.event;
+         event = await eventProvider.getEventById(widget.event.id);
+      }
+
       if (event != null) {
         setState(() {
-          _thisCurrentEvent = event;
+          _thisCurrentEvent = event!;
         });
       } else {
         print('Event with ID ${widget.event.id} not found.');

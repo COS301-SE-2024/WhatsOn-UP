@@ -1,3 +1,4 @@
+import 'package:firstapp/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
@@ -29,7 +30,9 @@ class _AllhomeEventsState extends State<AllhomeEvents> {
   void getEvents() async {
     api = Api();
     try {
-      events = await api.getAllEvents();
+      userProvider user = Provider.of<userProvider>(context, listen: false);
+      EventProvider eventProvider = Provider.of<EventProvider>(context, listen: false);
+      events =await eventProvider.recommendations ;
     } catch (error) {
       setState(() {
         hasError = true;
@@ -45,7 +48,7 @@ class _AllhomeEventsState extends State<AllhomeEvents> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('All Events'),
+        title: const Text('Recommended Events'),
       ),
       body: isLoading
           ? Center(
@@ -64,7 +67,7 @@ class _AllhomeEventsState extends State<AllhomeEvents> {
               : ListView.builder(
                   itemCount: events.length,
                   itemBuilder: (context, index) {
-                    return EventCardH(event: events[index]);
+                    return EventCard(event: events[index], showBookmarkButton: true,);
                   },
                 ),
     );
@@ -87,7 +90,7 @@ class EventCardH extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => DetailedEventPage(event: event),
+            builder: (context) => DetailedEventPage(event: event,recommendations:'recommendations'),
           ),
         );
       },
@@ -119,7 +122,7 @@ class EventCardH extends StatelessWidget {
                 Container(
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(16.0),
-                    child: event.imageUrls!.isNotEmpty
+                    child: event.imageUrls != null && event.imageUrls!.isNotEmpty
                         ? Image.network(
                             event.imageUrls![0],
                             height: 120.0,
@@ -135,7 +138,7 @@ class EventCardH extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  event.nameOfEvent,
+                  event.nameOfEvent ?? 'No Event Name',
                   style: TextStyle(
                     fontSize: 17.0,
                     fontWeight: FontWeight.bold,
@@ -153,7 +156,7 @@ class EventCardH extends StatelessWidget {
                     ),
                     Expanded(
                       child: Text(
-                        event.venue!.name,
+                        event.venue?.name ?? 'No Venue Name',
                         style: TextStyle(
                           fontSize: 14.0,
                           color: textColour,
