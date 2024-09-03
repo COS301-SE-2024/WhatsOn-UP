@@ -8,32 +8,26 @@ import com.devforce.backend.model.*
 import com.devforce.backend.repo.BuildingRepo
 import com.devforce.backend.repo.EventRepo
 import com.devforce.backend.repo.VenueRepo
-import com.devforce.backend.security.CustomUser
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
-import org.springframework.transaction.annotation.Transactional
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
-import org.junit.jupiter.api.BeforeEach
-import org.mockito.MockitoAnnotations
-import org.springframework.http.HttpHeaders
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
-import org.springframework.security.core.authority.SimpleGrantedAuthority
-import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.util.MultiValueMap
-
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
-import java.util.UUID
+import java.util.*
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -59,6 +53,10 @@ class EventControllerIntegrationTest {
 
     @Autowired
     private lateinit var eventRepo: EventRepo
+
+
+    @Value("\${bearer-token}")
+    private val bearerToken: String? = null
 
 
     @Test
@@ -96,7 +94,6 @@ class EventControllerIntegrationTest {
             metadata = mapOf("category" to "Tech")
         )
 
-        val bearerToken = System.getenv("BEARER_TOKEN")
 
         val resultActions = mockMvc.perform(
             MockMvcRequestBuilders.post("$baseUri/create")
@@ -171,7 +168,6 @@ class EventControllerIntegrationTest {
             metadata = null
         )
 
-        val bearerToken = System.getenv("BEARER_TOKEN")
         val resultActions = mockMvc.perform(
             MockMvcRequestBuilders.post("$baseUri/create")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -252,7 +248,6 @@ class EventControllerIntegrationTest {
         }
 
         // Perform the POST request with query parameters
-        val bearerToken = System.getenv("BEARER_TOKEN")
         val resultActions = mockMvc.perform(
             MockMvcRequestBuilders.get("$baseUri/search")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -323,7 +318,6 @@ class EventControllerIntegrationTest {
     @Test
     fun `test get all events as host`(){
         // Perform the POST request with query parameters
-        val bearerToken = System.getenv("BEARER_TOKEN")
         val resultActions = mockMvc.perform(
             MockMvcRequestBuilders.get("$baseUri/get_all")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -409,8 +403,6 @@ class EventControllerIntegrationTest {
             metadata = mapOf("category" to "Tech")
         )
 
-        val bearerToken = System.getenv("BEARER_TOKEN")
-
         val resultActions = mockMvc.perform(
             MockMvcRequestBuilders.put("$baseUri/update/${randomId}")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -487,7 +479,6 @@ class EventControllerIntegrationTest {
             metadata = null
         )
 
-        val bearerToken = System.getenv("BEARER_TOKEN")
 
         val resultActions = mockMvc.perform(
             MockMvcRequestBuilders.put("$baseUri/update/${randomId}")
