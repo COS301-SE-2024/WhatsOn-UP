@@ -68,6 +68,8 @@ jobs:
 
     - name: Run Backend tests with Gradle
       working-directory: ./src/Backend
+      env: 
+        BEREAR_TOKEN: ${{ secrets.BEREAR_TOKEN }}
       run: ./gradlew clean test codeCoverageReport
 
     - name: Convert Jacoco report to lcov
