@@ -96,7 +96,7 @@ class EventControllerIntegrationTest {
             metadata = mapOf("category" to "Tech")
         )
 
-        val bearerToken = System.getenv("BEREAR_TOKEN")
+        val bearerToken = System.getenv("BEARER_TOKEN")
 
         val resultActions = mockMvc.perform(
             MockMvcRequestBuilders.post("$baseUri/create")
@@ -171,7 +171,7 @@ class EventControllerIntegrationTest {
             metadata = null
         )
 
-        val bearerToken = System.getenv("BEREAR_TOKEN")
+        val bearerToken = System.getenv("BEARER_TOKEN")
         val resultActions = mockMvc.perform(
             MockMvcRequestBuilders.post("$baseUri/create")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -252,7 +252,7 @@ class EventControllerIntegrationTest {
         }
 
         // Perform the POST request with query parameters
-        val bearerToken = System.getenv("BEREAR_TOKEN")
+        val bearerToken = System.getenv("BEARER_TOKEN")
         val resultActions = mockMvc.perform(
             MockMvcRequestBuilders.get("$baseUri/search")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -323,7 +323,7 @@ class EventControllerIntegrationTest {
     @Test
     fun `test get all events as host`(){
         // Perform the POST request with query parameters
-        val bearerToken = System.getenv("BEREAR_TOKEN")
+        val bearerToken = System.getenv("BEARER_TOKEN")
         val resultActions = mockMvc.perform(
             MockMvcRequestBuilders.get("$baseUri/get_all")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -409,7 +409,7 @@ class EventControllerIntegrationTest {
             metadata = mapOf("category" to "Tech")
         )
 
-        val bearerToken = System.getenv("BEREAR_TOKEN")
+        val bearerToken = System.getenv("BEARER_TOKEN")
 
         val resultActions = mockMvc.perform(
             MockMvcRequestBuilders.put("$baseUri/update/${randomId}")
@@ -487,7 +487,7 @@ class EventControllerIntegrationTest {
             metadata = null
         )
 
-        val bearerToken = System.getenv("BEREAR_TOKEN")
+        val bearerToken = System.getenv("BEARER_TOKEN")
 
         val resultActions = mockMvc.perform(
             MockMvcRequestBuilders.put("$baseUri/update/${randomId}")
