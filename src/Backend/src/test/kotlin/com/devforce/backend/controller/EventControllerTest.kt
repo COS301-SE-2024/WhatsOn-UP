@@ -102,7 +102,7 @@ class EventControllerIntegrationTest {
             MockMvcRequestBuilders.post("$baseUri/create")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(createEventDto))
-                .header(HttpHeaders.AUTHORIZATION, "Bearer $bearerToken")
+                .header(HttpHeaders.AUTHORIZATION, bearerToken)
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
 
@@ -176,7 +176,7 @@ class EventControllerIntegrationTest {
             MockMvcRequestBuilders.post("$baseUri/create")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(createEventDto))
-                .header(HttpHeaders.AUTHORIZATION, "Bearer $bearerToken")
+                .header(HttpHeaders.AUTHORIZATION, bearerToken)
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
 
@@ -257,7 +257,7 @@ class EventControllerIntegrationTest {
             MockMvcRequestBuilders.get("$baseUri/search")
                 .contentType(MediaType.APPLICATION_JSON)
                 .params(params)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer $bearerToken")
+                .header(HttpHeaders.AUTHORIZATION, bearerToken)
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
 
@@ -327,7 +327,7 @@ class EventControllerIntegrationTest {
         val resultActions = mockMvc.perform(
             MockMvcRequestBuilders.get("$baseUri/get_all")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer $bearerToken")
+                .header(HttpHeaders.AUTHORIZATION, bearerToken)
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
 
@@ -415,7 +415,7 @@ class EventControllerIntegrationTest {
             MockMvcRequestBuilders.put("$baseUri/update/${randomId}")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updateEventDto))
-                .header(HttpHeaders.AUTHORIZATION, "Bearer $bearerToken")
+                .header(HttpHeaders.AUTHORIZATION, bearerToken)
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
 
@@ -493,7 +493,7 @@ class EventControllerIntegrationTest {
             MockMvcRequestBuilders.put("$baseUri/update/${randomId}")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updateEventDto))
-                .header(HttpHeaders.AUTHORIZATION, "Bearer $bearerToken")
+                .header(HttpHeaders.AUTHORIZATION, bearerToken)
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
 
