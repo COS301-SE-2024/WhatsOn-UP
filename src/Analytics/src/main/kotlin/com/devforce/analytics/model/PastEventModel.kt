@@ -51,12 +51,14 @@ class PastEventModel{
     var isPrivate: Boolean = false
 
     @Column(name = "occupied_slots")
-    var availableSlots: Int = 0
+    var occupiedSlots: Int = 0
 
-    @OneToMany(mappedBy = "event_id")
-    var feedback: MutableList<FeedbackModel> = ArrayList()
 
     var status: String = ""
+
+
+    @OneToMany(mappedBy = "event", cascade = [CascadeType.ALL])
+    var feedback: Set<FeedbackModel> = HashSet()
 
     @ManyToMany
     @JoinTable(
