@@ -1,10 +1,12 @@
 import 'dart:convert';
+import 'package:firstapp/schemas/recommendation_schemas.dart';
 import 'package:http/http.dart' as http;
 // import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:firstapp/widgets/event_card.dart';
 import 'package:firstapp/main.dart';
+import 'package:json_schema/json_schema.dart';
 import 'globals.dart' as globals;
 import '../pages/editProfile_page.dart';
 import '../providers/user_provider.dart';
@@ -155,6 +157,19 @@ class Api {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> decodedJson = json.decode(response.body);
+
+        //validate json schema
+        final schema = JsonSchema.create(RECOMMENDED_EVENTS_SCHEMA);
+        final validationResult = schema.validate(decodedJson);
+
+        if (validationResult.isValid) {
+          print('getRecommendedEvents JSON is valid');
+        } else {
+          print('getRecommendedEvents JSON is invalid. Errors:');
+          for (var error in validationResult.errors) {
+            print(error);
+          }
+        }
         final List<dynamic> eventsJson = decodedJson['data']['message'];
 
         // final List<Event> events =
