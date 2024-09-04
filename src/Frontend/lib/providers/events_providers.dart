@@ -60,7 +60,7 @@ Future<void> refreshSavedEvents(String userId) async {
     }
   }Future<List<Event>> _fetchRecommendations(String userId) async {
     try {
-      return await api.RecommendedEvents(userId);
+      return await api.getRecommendedEvents(userId);
     } catch (e) {
       throw Exception('Failed to fetch home events: $e');
     }

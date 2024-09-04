@@ -139,7 +139,7 @@ class Api {
       rethrow;
     }
   }
-  Future<List<Event>> RecommendedEvents(String userId) async {
+  Future<List<Event>> getRecommendedEvents(String userId) async {
     final URL = 'http://${globals.domain}:8086/events/recommended_events';
     var headers = {
       'Content-Type': 'application/json',
