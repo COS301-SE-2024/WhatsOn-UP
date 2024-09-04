@@ -95,11 +95,10 @@ Future<List<Event>> _fetchEventsRsvp(String userId) async {
 
   Future<List<Event>> _fetchEventsSaved(String userId) async {
     try {
-      List<dynamic> responseData;
-      responseData=await api.getAllSavedEvents(userId);
-      List<Event> events = responseData
-          .map((eventData) => Event.fromJson(eventData as Map<String, dynamic>))
-          .toList();
+
+       var responseData=await api.getAllSavedEvents(userId);
+      List<Event> events = responseData;
+
       return events;
     } catch (e) {
       throw Exception('Failed to fetch saved events: $e');
