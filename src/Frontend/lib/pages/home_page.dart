@@ -385,12 +385,10 @@ import 'package:firstapp/pages/explore_page.dart';
 import 'package:firstapp/pages/settings_page.dart';
 import 'package:firstapp/widgets/nav_bar.dart';
 import 'package:flutter/cupertino.dart';
-
 import 'package:firstapp/pages/profilePage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-
 import '../providers/events_providers.dart';
 import '../providers/notification_providers.dart';
 import '../providers/user_provider.dart';
@@ -400,7 +398,6 @@ import 'package:firstapp/services/api.dart';
 import 'package:firstapp/pages/Broadcast.dart';
 import 'package:firstapp/pages/manageEvents.dart';
 import 'package:firstapp/pages/application_event.dart';
-
 import '../services/socket_client.dart';
 import 'allHome_events.dart';
 import 'notifications.dart';
@@ -550,7 +547,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
             Flexible(
               child: Text(
                 'Welcome, ${userP.Fullname}',
-                style: const TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+                style: const TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold, color: Colors.white),
                 overflow: TextOverflow.ellipsis,
                 maxLines: 1,
               ),
@@ -560,6 +557,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       ),
     );
   }
+
 
   Widget _buildExploreTab() {
     return FutureBuilder<List<List<Event>>>(
