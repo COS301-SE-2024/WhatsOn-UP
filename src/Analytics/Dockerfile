@@ -1,5 +1,4 @@
-FROM devforce123/backend-service:api
-
+FROM devforce123/backend-services:analytics
 
 WORKDIR /home/ubuntu
 

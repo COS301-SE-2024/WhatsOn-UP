@@ -1,6 +1,5 @@
 FROM devforce123/backend-services:api
 
-
 WORKDIR /home/ubuntu
 
 RUN rm -rf /home/ubuntu/*
