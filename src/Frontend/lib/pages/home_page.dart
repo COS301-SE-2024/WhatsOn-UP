@@ -615,6 +615,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                     scrollDirection: Axis.horizontal,
                     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 1,
+                      mainAxisSpacing: 8.0,
                     ),
                     itemCount: eventsHome.length,
                     itemBuilder: (context, index) {
@@ -682,9 +683,16 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
           }
 
           return ListView.builder(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
             itemCount: savedEvents.length,
             itemBuilder: (context, index) {
-              return EventCard(event: savedEvents[index], showBookmarkButton: true, saved: true);
+              if (index >= savedEvents.length) {
+                return Container();
+              }
+              return Container(
+                margin: const EdgeInsets.only(bottom: 14.0),
+                child: EventCard(event: savedEvents[index], showBookmarkButton: true, saved: true),
+              );
             },
           );
         } else {
