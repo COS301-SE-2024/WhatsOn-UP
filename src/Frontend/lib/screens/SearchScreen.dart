@@ -20,7 +20,7 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   final EventService _eventService = EventService(Supabase.instance.client);
   List<Event> _searchResults = [];
-  List<String> _categories = [];
+  List<Category> _categories = [];
   List<String> _searchHistory = [];
   bool _isLoading = false;
   bool _showSearchTiles = true;
@@ -235,10 +235,10 @@ class _SearchScreenState extends State<SearchScreen> {
                 physics: AlwaysScrollableScrollPhysics(),
                 crossAxisCount: 2,
                 children: _categories.map((category) {
-                  List<String> parts = category.split(',');
-                  String cat = parts.length > 1 ? parts[1] : '';
+                  // List<String> parts = category.split(',');
+                  // String cat = parts.length > 1 ? parts[1] : '';
                   return SearchImageTile(
-                    title: cat,
+                    title: category.name,
                     imageUrl: 'images/$category.jpg',
                     onTap: (title) => _searchEvents(title),
                   );

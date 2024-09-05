@@ -121,8 +121,7 @@ void main() async{
         ChangeNotifierProvider(create: (context) => EventProvider(api: api)),
         ChangeNotifierProvider(create: (context) => userProvider()),
         ChangeNotifierProvider(create: (context) => ThemeNotifier()),
-        ChangeNotifierProvider(
-            create: (context) => notificationProvider()),
+        ChangeNotifierProvider(create: (context) => notificationProvider()),
       ],
       child: MyApp(),
     ),

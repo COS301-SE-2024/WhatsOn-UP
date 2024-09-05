@@ -446,7 +446,7 @@ class _SupabaseLoginState extends State<SupabaseLogin> {
     } else {
       final user = supabase.auth.currentUser;
 
-      //changes by Khanya - check if user is logged and return session data
+
       if (user != null) {
         final session = supabase.auth.currentSession;
         if (session != null) {
@@ -473,7 +473,7 @@ class _SupabaseLoginState extends State<SupabaseLogin> {
             userP.profileImage = profileImage;
             notificationProvider _notificationProvider =
                 Provider.of<notificationProvider>(context, listen: false);
-
+             eventP.refreshSavedEvents(userP.userId);
             _notificationProvider.refreshNotifications(userP.userId);
             SocketService('http://${globals.domain}:8082',
                 _notificationProvider, userP.userId, context);

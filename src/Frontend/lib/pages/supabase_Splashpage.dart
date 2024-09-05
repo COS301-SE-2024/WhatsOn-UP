@@ -81,6 +81,7 @@ class _SplashPageState extends State<SplashPage> {
         userP.email = userEmail;
         userP.role = role;
         userP.profileImage = profileImage;
+        eventP.refreshSavedEvents(userP.userId);
         notificationProvider _notificationProvider =
         Provider.of<notificationProvider>(context, listen: false);
         _notificationProvider.refreshNotifications(userP.userId);

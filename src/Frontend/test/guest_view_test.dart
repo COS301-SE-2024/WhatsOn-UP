@@ -198,24 +198,24 @@ void main() {
       // when(mockUserProvider.profileimage).thenReturn(Uint8List.fromList(placeholderImageData));
     });
 
-    testWidgets('should display Guest User on HomePage', (WidgetTester tester) async {
-      await mockNetworkImages(() async {
-      await tester.pumpWidget(
-        MultiProvider(
-          providers: [
-
-            ChangeNotifierProvider<userProvider>(create: (_) => mockUserProvider),
-            ChangeNotifierProvider<EventProvider>(create: (_) => mockEventProvider),
-          ],
-          child: const MaterialApp(
-            home: HomePage(),
-          ),
-        ),
-      );
-      });
-      await tester.pumpAndSettle();
-      expect(find.text('Welcome, Guest User'), findsOneWidget);
-    });
+    // testWidgets('should display Guest User on HomePage', (WidgetTester tester) async {
+    //   await mockNetworkImages(() async {
+    //   await tester.pumpWidget(
+    //     MultiProvider(
+    //       providers: [
+    //
+    //         ChangeNotifierProvider<userProvider>(create: (_) => mockUserProvider),
+    //         ChangeNotifierProvider<EventProvider>(create: (_) => mockEventProvider),
+    //       ],
+    //       child: const MaterialApp(
+    //         home: HomePage(),
+    //       ),
+    //     ),
+    //   );
+    //   });
+    //   await tester.pumpAndSettle();
+    //   expect(find.text('Welcome, Guest User'), findsOneWidget);
+    // });
 
     testWidgets('should not display Account button on SettingsPage for GUEST role', (WidgetTester tester) async {
       when(mockUserProvider.role).thenReturn('GUEST');

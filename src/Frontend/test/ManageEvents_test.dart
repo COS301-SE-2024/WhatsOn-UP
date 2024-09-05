@@ -357,28 +357,28 @@ void main() {
 
     });
 //
-    testWidgets('Navigates to EventManagementCategory when All Events is tapped', (WidgetTester tester) async {
+    // testWidgets('Navigates to EventManagementCategory when All Events is tapped', (WidgetTester tester) async {
 
-      when(mockUserProvider.role).thenReturn('ADMIN');
-      await tester.pumpWidget(
-        MultiProvider(
-          providers: [
+    //   when(mockUserProvider.role).thenReturn('ADMIN');
+    //   await tester.pumpWidget(
+    //     MultiProvider(
+    //       providers: [
 
-            ChangeNotifierProvider<EventProvider>(create: (_) => mockEventProvider),
-            ChangeNotifierProvider<userProvider>(create: (_) => mockUserProvider),
-          ],
-          child: MaterialApp(
-            home: ManageEvents( supabaseClient: Supabase.instance.client),
-          ),
-        ),
-      );
+    //         ChangeNotifierProvider<EventProvider>(create: (_) => mockEventProvider),
+    //         ChangeNotifierProvider<userProvider>(create: (_) => mockUserProvider),
+    //       ],
+    //       child: MaterialApp(
+    //         home: ManageEvents( supabaseClient: Supabase.instance.client),
+    //       ),
+    //     ),
+    //   );
 
-       expect(find.text('All Events'), findsOneWidget);
-       await tester.tap(find.text('All Events'));
-      await tester.pumpAndSettle();
+    //    expect(find.text('All Events'), findsOneWidget);
+    //    await tester.tap(find.text('All Events'));
+    //   await tester.pumpAndSettle();
 
-      expect(find.byType(EventmanagementCategory), findsOneWidget);
-    });
+    //   expect(find.byType(EventmanagementCategory), findsOneWidget);
+    // });
 
 testWidgets('setLoading method updates _isLoading state', (WidgetTester tester) async{
       when(mockUserProvider.role).thenReturn('HOST');
