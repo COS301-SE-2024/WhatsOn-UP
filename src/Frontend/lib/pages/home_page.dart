@@ -1,3 +1,4 @@
+import 'package:firstapp/pages/allRecommended_events.dart';
 import 'package:firstapp/pages/allSaved_Events.dart';
 import 'package:firstapp/widgets/event_card.dart';
 import 'package:flutter/material.dart';
@@ -298,7 +299,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => AllhomeEvents()),
+                            MaterialPageRoute(builder: (context) => AllrecommendedEvents()),
                           );
                         },
                         child: const Text(
