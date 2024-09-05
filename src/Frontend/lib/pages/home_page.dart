@@ -265,7 +265,7 @@ class _HomePageState extends State<HomePage> {
                         );
                       },
                       child: const Text(
-                        'See more',
+                        'Recommended Events',
                         style: TextStyle(
                           fontSize: 16.0,
                           fontWeight: FontWeight.bold,

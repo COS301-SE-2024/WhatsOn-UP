@@ -298,6 +298,7 @@ Widget _buildEventCard(Map<String, dynamic> event) {
         maxAttendees: event['maxAttendees'],
         isPrivate: event['isPrivate'],
         metadata: Metadata.fromJson(event['metadata']),
+
       );
 /* venue: event['venue'] != null ? Venue(
         name: event['venue']['name'] ?? '',

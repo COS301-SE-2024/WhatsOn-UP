@@ -615,7 +615,7 @@ class _EventCardState extends State<EventCard> {
                   ],
                 ),
                 const SizedBox(height: 10.0),
-                if(isbroadcast)
+                if(isbroadcast && widget.event.attendees.length>0)
                 Row(
 
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,

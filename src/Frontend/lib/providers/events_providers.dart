@@ -13,7 +13,7 @@ class EventProvider with ChangeNotifier {
   late Future<List<Event>> _eventsRsvp;
 
   late Future<List<Event>> _eventsSaved;
-
+  late Future<List<Event>> _eventRecommedations;
   EventProvider({required this.api}) {
     _eventsHome = _fetchEventsHome();
     _eventsSaved = Future.value([]);
@@ -36,7 +36,14 @@ class EventProvider with ChangeNotifier {
       throw Exception('Failed to refresh events: $e');
     }
   }
-
+Future<void> refreshRecommendations(String userId) async {
+    try {
+      _eventRecommedations = _fetchRecommendations(userId);
+      notifyListeners();
+    } catch (e) {
+      throw Exception('Failed to refresh events: $e');
+    }
+  }
   Future<List<Event>> _fetchEventsHome() async {
     try {
       return await api.getAllEvents();
@@ -50,6 +57,12 @@ Future<void> refreshSavedEvents(String userId) async {
       notifyListeners();
     } catch (e) {
       throw Exception('Failed to refresh events: $e');
+    }
+  }Future<List<Event>> _fetchRecommendations(String userId) async {
+    try {
+      return await api.getRecommendedEvents(userId);
+    } catch (e) {
+      throw Exception('Failed to fetch home events: $e');
     }
   }
   Future<List<Event>> _fetchCalendarEventsGuest() async {
@@ -106,6 +119,13 @@ Future<List<Event>> _fetchEventsRsvp(String userId) async {
   }
 
 
+  Future<List<Event>> get recommendations async {
+    try {
+      return await _eventRecommedations;
+    } catch (e) {
+      throw Exception('Failed to fetch home events: $e');
+    }
+  }
   Future<List<Event>> get eventsHome async {
     try {
       return await _eventsHome;
@@ -208,8 +228,25 @@ Future<List<Event>> _fetchEventsRsvp(String userId) async {
       throw Exception('Failed to get event by ID: $e');
     }
   }
-
-
+  Future<Event?> getEventByIdR(String id) async {
+    try {
+      List<Event> events = await _eventRecommedations;
+      Event? event = events.firstWhere((event) => event.id == id);
+      return event;
+    } catch (e) {
+      throw Exception('Failed to get event by ID: $e');
+    }
+  }
+  // void EditEventName(String id, String eventName) async {
+  //   try {
+  //     List<Event> events = await _eventsHome;
+  //     Event? event= events.firstWhere((event) => event.id == id);
+  //      event.nameOfEvent=eventName;
+  //     notifyListeners();
+  //   } catch (e) {
+  //     throw Exception('Failed to get event by ID: $e');
+  //   }
+  // }
   Future<void> EditEventName(String id, String eventName) async {
     try {
       List<Event> events = await _eventsHome;
