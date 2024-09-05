@@ -414,11 +414,23 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   Api api = Api();
   int _selectedIndex = 0;
   late TabController _tabController;
+  final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _clearSearchInput() {
+    _searchController.clear();
+    // FocusScope.of(context).unfocus(); 
   }
 
   void _onItemTapped(int index) {
@@ -586,6 +598,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: TextField(
+                    controller: _searchController,
                     decoration: InputDecoration(
                       hintText: 'Search for events',
                       prefixIcon: Icon(Icons.search),
@@ -600,6 +613,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                           MaterialPageRoute(builder: (context) => SearchScreen(initialQuery: query)),
                         );
                       }
+                      _clearSearchInput();
                     },
                   ),
                 ),
