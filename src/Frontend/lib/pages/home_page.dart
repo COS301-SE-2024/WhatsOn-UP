@@ -284,12 +284,29 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                     },
                   ),
                 ),
-                const SizedBox(height: 20.0),
-                const Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: Text(
-                    'Recommended Events',
-                    style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                const SizedBox(height: 12.0),
+                Padding(
+                  padding: EdgeInsets.all(12.0),
+                  child: Row(
+                    children: [
+                      const Text(
+                        'Recommended Events',
+                        style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                      ),
+                      const Spacer(),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => AllhomeEvents()),
+                          );
+                        },
+                        child: const Text(
+                          'See more',
+                          style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 SizedBox(
