@@ -264,7 +264,13 @@ class _SearchScreenState extends State<SearchScreen> {
                   if (index >= _searchResults.length) {
                     return Container();
                   }
-                  return EventCard(event: _searchResults[index],showBookmarkButton: false);
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 22.0,
+                      vertical: 8.0,
+                    ),
+                      child: EventCard(event: _searchResults[index], showBookmarkButton: true,),
+                  );
                 },
               ),
             ),
