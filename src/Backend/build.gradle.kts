@@ -8,6 +8,7 @@ plugins {
 	kotlin("plugin.spring") version "1.9.24"
 	id("jacoco")
 }
+val springCloudGcpVersion by extra("5.6.0")
 
 group = "com.devforce"
 version = "BACKEND_VERSION"
@@ -31,6 +32,11 @@ dependencies {
 	implementation("org.projectlombok:lombok")
 	implementation("org.springframework.boot:spring-boot-starter-mail")
 	implementation("org.springframework.boot:spring-boot-starter-mail")
+	implementation("com.google.cloud:spring-cloud-gcp-starter-storage")
+	implementation("com.google.cloud:spring-cloud-gcp-starter")
+	implementation ("com.google.cloud:libraries-bom:25.1.0")
+	implementation("com.google.cloud:spring-cloud-gcp-vision")
+	implementation("com.google.cloud:google-cloud-bigquery")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
 	testImplementation("org.springframework.security:spring-security-test")
@@ -85,4 +91,9 @@ tasks {
 
 tasks.named("check") {
 	dependsOn("codeCoverageReport")
+}
+dependencyManagement {
+	imports {
+		mavenBom("com.google.cloud:spring-cloud-gcp-dependencies:$springCloudGcpVersion")
+	}
 }
