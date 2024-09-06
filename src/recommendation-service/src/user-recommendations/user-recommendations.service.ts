@@ -6,6 +6,10 @@ import { EventDto } from './dto/event.dto';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { SUPABASE_CLIENT } from 'src/supabase-provider/supabase-provider';
 
+const API_KEY = ''
+const axios = require('axios');
+// const { computeOffset } = require ('spherical-geometry-js');
+
 @Injectable()
 export class UserRecommendationsService {
   constructor(
@@ -80,6 +84,70 @@ export class UserRecommendationsService {
     };
 
   }
+
+  async updateBuildingLocations() : Promise<void>{
+    let {data: buildings, error} = await this.supabase
+      .from('buildings')
+      .select('name');
+
+    if(error){
+      console.log(error);
+      // throw Error(error.message);
+    }
+
+    console.log(`buildings retrieved from db: \n ${JSON.stringify(buildings, null, 2)}`);
+    let buildingCoordinates: {name: String, coordinates : any}[] = [];
+
+    for(let building of buildings){
+      let location = await this.geocode(building.name);
+      buildingCoordinates.push({
+        name: building.name,
+        coordinates: location
+      })
+    }
+
+    console.table(`coordinates retrieved from api: \n ${buildings}`);
+    
+  }
+
+  async geocode(searchText) {
+    const headers = {
+      'Content-Type': 'application/json',
+      'X-Goog-Api-Key': API_KEY,
+      'X-Goog-FieldMask': 'places.formattedAddress,places.location',
+    };
+
+    console.log(`Getting result for building ${searchText}...`);
+    let body = {
+      "textQuery": `${searchText}`,
+      "locationBias": {
+        "circle": {
+              "center": {
+              "latitude": -25.7545492,
+              "longitude": 28.2314676
+            },
+            "radius": 5000.0
+          }
+        }
+      }
+
+      let response = await axios.post(
+        `https://places.googleapis.com/v1/places:searchText`,
+        body,
+        {
+          headers: headers
+        }
+      );
+
+      if (response.data && response.data.places && response.data.places.length > 0) {
+        let coordinates = response.data.places[0].location;
+        console.log(coordinates);
+        return coordinates;
+      } else {
+        console.log("No places found for this query.");
+        return null; // Or handle this case as needed
+      }
+  } 
 
   private toDto(event: EventEntity): EventDto {
     return {
