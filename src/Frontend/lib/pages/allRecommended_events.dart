@@ -8,14 +8,14 @@ import '../providers/events_providers.dart';
 import '../services/api.dart';
 import '../widgets/event_card.dart';
 
-class AllhomeEvents extends StatefulWidget {
-  AllhomeEvents({Key? key}) : super(key: key);
+class AllrecommendedEvents extends StatefulWidget {
+  AllrecommendedEvents({Key? key}) : super(key: key);
 
   @override
-  _AllhomeEventsState createState() => _AllhomeEventsState();
+  _AllrecommendedEventsState createState() => _AllrecommendedEventsState();
 }
 
-class _AllhomeEventsState extends State<AllhomeEvents> {
+class _AllrecommendedEventsState extends State<AllrecommendedEvents> {
   late List<Event> events = [];
   late Api api;
   bool isLoading = true;
@@ -32,7 +32,7 @@ class _AllhomeEventsState extends State<AllhomeEvents> {
     try {
       userProvider user = Provider.of<userProvider>(context, listen: false);
       EventProvider eventProvider = Provider.of<EventProvider>(context, listen: false);
-      events =await eventProvider.eventsHome;
+      events =await eventProvider.recommendations ;
     } catch (error) {
       setState(() {
         hasError = true;
@@ -48,7 +48,7 @@ class _AllhomeEventsState extends State<AllhomeEvents> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('All Events'),
+        title: const Text('Recommended Events'),
       ),
       body: isLoading
           ? Center(

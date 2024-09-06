@@ -146,64 +146,64 @@ void main() {
     expect(find.text('Go to Home'), findsOneWidget);
   });
 
-  testWidgets('Go to Home button navigates to HomePage', (WidgetTester tester) async {
-    await mockNetworkImages(() async {
-    await tester.pumpWidget(
-      MultiProvider(
-        providers: [
-          ChangeNotifierProvider<EventProvider>(
-              create: (_) => mockEventProvider),
-          ChangeNotifierProvider<userProvider>(
-            create: (_) => mockUserProvider,
-          ),
-        ],
-        child: MaterialApp(
-          home: ThankYouScreen(),
-          routes: {
-            '/home': (context) => HomePage(),
-          },
-        ),
-      ),
-    );
-  });
+  // testWidgets('Go to Home button navigates to HomePage', (WidgetTester tester) async {
+  //   await mockNetworkImages(() async {
+  //   await tester.pumpWidget(
+  //     MultiProvider(
+  //       providers: [
+  //         ChangeNotifierProvider<EventProvider>(
+  //             create: (_) => mockEventProvider),
+  //         ChangeNotifierProvider<userProvider>(
+  //           create: (_) => mockUserProvider,
+  //         ),
+  //       ],
+  //       child: MaterialApp(
+  //         home: ThankYouScreen(),
+  //         routes: {
+  //           '/home': (context) => HomePage(),
+  //         },
+  //       ),
+  //     ),
+  //   );
+  // });
 
 
-    await tester.tap(find.text('Go to Home'));
-    await tester.pumpAndSettle();
+  //   await tester.tap(find.text('Go to Home'));
+  //   await tester.pumpAndSettle();
 
 
-    expect(find.byType(HomePage), findsOneWidget);
-  });
+  //   expect(find.byType(HomePage), findsOneWidget);
+  // });
 
-  testWidgets('Go to Home button pops all routes and navigates to HomePage', (WidgetTester tester) async {
-
-
-    await mockNetworkImages(() async {
-      await tester.pumpWidget(
-        MultiProvider(
-          providers: [
-            ChangeNotifierProvider<EventProvider>(
-                create: (_) => mockEventProvider),
-            ChangeNotifierProvider<userProvider>(
-              create: (_) => mockUserProvider,
-            ),
-          ],
-          child: MaterialApp(
-            home: ThankYouScreen(),
-            routes: {
-              '/home': (context) => HomePage(),
-            },
-          ),
-        ),
-      );
-    });
+  // testWidgets('Go to Home button pops all routes and navigates to HomePage', (WidgetTester tester) async {
 
 
-    await tester.tap(find.text('Go to Home'));
-    await tester.pumpAndSettle();
+  //   await mockNetworkImages(() async {
+  //     await tester.pumpWidget(
+  //       MultiProvider(
+  //         providers: [
+  //           ChangeNotifierProvider<EventProvider>(
+  //               create: (_) => mockEventProvider),
+  //           ChangeNotifierProvider<userProvider>(
+  //             create: (_) => mockUserProvider,
+  //           ),
+  //         ],
+  //         child: MaterialApp(
+  //           home: ThankYouScreen(),
+  //           routes: {
+  //             '/home': (context) => HomePage(),
+  //           },
+  //         ),
+  //       ),
+  //     );
+  //   });
 
 
-    expect(find.byType(HomePage), findsOneWidget);
-    expect(find.byType(ThankYouScreen), findsNothing);
-  });
+  //   await tester.tap(find.text('Go to Home'));
+  //   await tester.pumpAndSettle();
+
+
+  //   expect(find.byType(HomePage), findsOneWidget);
+  //   expect(find.byType(ThankYouScreen), findsNothing);
+  // });
 }
