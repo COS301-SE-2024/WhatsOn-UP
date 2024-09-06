@@ -176,7 +176,9 @@ class _CalendarPageState extends State<CalendarPage>
                 'available': event.venue?.available ?? false,
               }
             : null,
-        'url': 'https://picsum.photos/200',
+        'url': event.imageUrls != null && event.imageUrls!.isNotEmpty
+            ? event.imageUrls![0]
+            : 'https://mehgbhiirnmypfgnkaud.supabase.co/storage/v1/object/public/storage/yeml2o6l9d84ff0km39j09w16k.png',
         'maxAttendees': event.maxAttendees ?? 0,
         'description': event.description ?? '',
         'id': event.id,

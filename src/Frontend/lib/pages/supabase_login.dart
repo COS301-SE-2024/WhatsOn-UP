@@ -430,6 +430,7 @@ class _SupabaseLoginState extends State<SupabaseLogin> {
         final session = supabase.auth.currentSession;
         if (session != null) {
           print('JWT Token: ${session.accessToken}');
+          userP.JWT = session.accessToken;
         }
 
         Api api = Api();
@@ -450,6 +451,7 @@ class _SupabaseLoginState extends State<SupabaseLogin> {
             userP.email = userEmail;
             userP.role = role;
             userP.profileImage = profileImage;
+
             eventP.refreshRecommendations(userP.userId);
             notificationProvider _notificationProvider =
                 Provider.of<notificationProvider>(context, listen: false);
@@ -476,7 +478,7 @@ class _SupabaseLoginState extends State<SupabaseLogin> {
         } catch (e) {
           print('Error getting user data: $e');
         }
-        print('signup successful');
+
       }
     }
   }

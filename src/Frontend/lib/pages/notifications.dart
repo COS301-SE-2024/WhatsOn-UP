@@ -8,6 +8,247 @@ import 'package:provider/provider.dart';
 import '../screens/NotificationDetailScreen.dart';
 import '../widgets/notification_card.dart';
 
+// class Notifications extends StatefulWidget {
+//   const Notifications({Key? key}) : super(key: key);
+//
+//   @override
+//   _NotificationsState createState() => _NotificationsState();
+// }
+//
+// class _NotificationsState extends State<Notifications> {
+//   bool _isLoading = false;
+//
+//   @override
+//   void initState() {
+//     super.initState();
+//     _refreshNotifications();
+//   }
+//
+//   Future<void> _refreshNotifications() async {
+//     setState(() {
+//       _isLoading = true;
+//     });
+//     final userP = Provider.of<userProvider>(context, listen: false);
+//     final notifProvider = Provider.of<notificationProvider>(context, listen: false);
+//     await notifProvider.refreshNotifications(userP.userId);
+//     setState(() {
+//       _isLoading = false;
+//     });
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     userProvider userP = Provider.of<userProvider>(context, listen: false);
+//     String userRole = userP.role;
+//
+//     return Scaffold(
+//       body: RefreshIndicator(
+//         onRefresh: _refreshNotifications,
+//         child: Column(
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           children: [
+//             const Padding(
+//               padding: EdgeInsets.all(16.0),
+//               child: Text(
+//                 'Notifications',
+//                 style: TextStyle(
+//                   fontSize: 32,
+//                   fontWeight: FontWeight.bold,
+//                 ),
+//               ),
+//             ),
+//             Expanded(
+//               child: userRole == "GUEST" ? _buildGuestView() : _buildNotificationsView(),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+//
+//
+//   Widget _buildGuestView() {
+//     return Center(
+//       child: Padding(
+//         padding: const EdgeInsets.all(20.0),
+//         child: Column(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: [
+//             SizedBox(height: 20),
+//             Text(
+//               "Create an account or sign in to your existing account to receive personalised event recommendations, invites from other users, and stay up to date with important notifications!",
+//               style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+//               textAlign: TextAlign.center,
+//             ),
+//             SizedBox(height: 30),
+//             SizedBox(
+//               width: 200,
+//               child: ElevatedButton(
+//                 onPressed: () {
+//                   Navigator.push(
+//                     context,
+//                     MaterialPageRoute(builder: (context) => const SupabaseSignup()),
+//                   );
+//                 },
+//                 child: const Text('Sign Up', style: TextStyle(fontSize: 18)),
+//               ),
+//             ),
+//             SizedBox(height: 15),
+//             TextButton(
+//               onPressed: () {
+//                 Navigator.pushNamed(context, '/login');
+//               },
+//               child: const Text('Already have an account? Log In', style: TextStyle(fontSize: 16)),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+//
+//
+//   Widget _buildNotificationsView() {
+//     return Consumer<notificationProvider>(
+//       builder: (context, notif, child) {
+//         if (_isLoading) {
+//           return const Center(
+//             child: SpinKitPianoWave(
+//               color: Color.fromARGB(255, 149, 137, 74),
+//               size: 50.0,
+//             ),
+//           );
+//         } else if (notif.notifications.isEmpty) {
+//           return Center(
+//             child: Text('No notifications available'),
+//           );
+//         } else {
+//           final notifications = notif.notifications;
+//
+//           final invites = notifications
+//               .where((n) => n.notificationTypes == 'invite')
+//               .toList();
+//           final broadcasts = notifications
+//               .where((n) => n.notificationTypes == 'broadcast')
+//               .toList();
+//           final reminders = notifications
+//               .where((n) => n.notificationTypes == 'reminder')
+//               .toList();
+//           final recommendations = notifications
+//               .where((n) => n.notificationTypes == 'recommendation')
+//               .toList();
+//           final applications = notifications
+//               .where((n) => n.notificationTypes == 'application')
+//               .toList();
+//
+//           return ListView(
+//             children: [
+//               if (invites.isNotEmpty) ...[
+//                 SizedBox(height: 20.0),
+//                 _buildCategory('INVITES', invites)
+//               ],
+//               if (broadcasts.isNotEmpty) ...[
+//                 SizedBox(height: 20.0),
+//                 _buildCategory('BROADCASTS', broadcasts)
+//               ],
+//               if (reminders.isNotEmpty) ...[
+//                 SizedBox(height: 20.0),
+//                 _buildCategory('REMINDERS', reminders)
+//               ],
+//               if (recommendations.isNotEmpty) ...[
+//                 SizedBox(height: 20.0),
+//                 _buildCategory('RECOMMENDATIONS', recommendations)
+//               ],
+//               if (applications.isNotEmpty) ...[
+//                 SizedBox(height: 20.0),
+//                 _buildCategory('APPLICATIONS', applications)
+//               ]
+//             ],
+//           );
+//         }
+//       },
+//     );
+//   }
+//
+//   Widget _buildCategory(String title, List<AppNotification> notifications) {
+//     String texttitle = '';
+//     return Column(
+//       crossAxisAlignment: CrossAxisAlignment.start,
+//       children: [
+//         Padding(
+//           padding: const EdgeInsets.all(8.0),
+//           child: Text(
+//             title,
+//             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+//           ),
+//         ),
+//         ListView.separated(
+//           shrinkWrap: true,
+//           physics: NeverScrollableScrollPhysics(),
+//           itemCount: notifications.length,
+//           itemBuilder: (context, index) {
+//             final notification = notifications[index];
+//             if (notification.notificationTypes == 'invite') {
+//               texttitle = 'Invite';
+//             } else if (notification.notificationTypes == 'broadcast') {
+//               texttitle = 'Broadcast';
+//             } else if (notification.notificationTypes == 'reminder') {
+//               texttitle = 'Reminder';
+//             } else if (notification.notificationTypes == 'recommendation') {
+//               texttitle = 'Recommendation';
+//             } else if (notification.notificationTypes == 'application') {
+//               texttitle = 'Application';
+//             }
+//
+//             return Container(
+//               margin:
+//                   const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+//               decoration: BoxDecoration(
+//                 border: Border.all(color: Colors.grey, width: 1.0),
+//                 borderRadius:
+//                     BorderRadius.circular(8.0), // Optional: rounded corners
+//               ),
+//               child: ListTile(
+//                 title: Text(texttitle),
+//                 subtitle: Text(notification.message),
+//                 onTap: () {
+//                   notification.markAsSeen();
+//                   Navigator.push(
+//                     context,
+//                     MaterialPageRoute(
+//                       builder: (context) =>
+//                           NotificationDetailScreen(notification: notification),
+//                     ),
+//                   ).then((_) {});
+//                 },
+//               ),
+//             );
+//           },
+//           separatorBuilder: (context, index) => _buildDividerA(),
+//         ),
+//       ],
+//     );
+//   }
+//
+//   Widget _buildDivider() {
+//     return const Divider(
+//       height: 1,
+//       thickness: 2,
+//       indent: 0,
+//       endIndent: 2,
+//     );
+//   }
+//
+//   Widget _buildDividerA() {
+//     return const Divider(
+//       height: 1,
+//       thickness: 1,
+//       indent: 16,
+//       endIndent: 16,
+//     );
+//   }
+// }
+
+
 class Notifications extends StatefulWidget {
   const Notifications({Key? key}) : super(key: key);
 
@@ -15,22 +256,39 @@ class Notifications extends StatefulWidget {
   _NotificationsState createState() => _NotificationsState();
 }
 
-class _NotificationsState extends State<Notifications> {
+class _NotificationsState extends State<Notifications> with TickerProviderStateMixin {
+  late TabController _tabController;
   bool _isLoading = false;
-
+  String currentTab = "Unseen";
   @override
   void initState() {
     super.initState();
+    _tabController = TabController(length: 3, vsync: this);
+    _tabController.addListener(_handleTabSelection);
     _refreshNotifications();
   }
+  void _handleTabSelection() {
+    setState(() {
+      if (_tabController.index == 0) {
+        currentTab = "Unseen";
+      } else if (_tabController.index == 1) {
+        currentTab = "Seen";
+      } else {
+        final userP = Provider.of<userProvider>(context, listen: false);
+        if (userP.role == "ADMIN") {
+          currentTab = "Applications";
+        } else {
+          currentTab = "Invitations";
+        }
 
+      }
+    });
+  }
   Future<void> _refreshNotifications() async {
     setState(() {
       _isLoading = true;
     });
-    final userP = Provider.of<userProvider>(context, listen: false);
-    final notifProvider = Provider.of<notificationProvider>(context, listen: false);
-    await notifProvider.refreshNotifications(userP.userId);
+
     setState(() {
       _isLoading = false;
     });
@@ -39,8 +297,6 @@ class _NotificationsState extends State<Notifications> {
   @override
   Widget build(BuildContext context) {
     userProvider userP = Provider.of<userProvider>(context, listen: false);
-    String userRole = userP.role;
-
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: _refreshNotifications,
@@ -57,65 +313,55 @@ class _NotificationsState extends State<Notifications> {
                 ),
               ),
             ),
+            TabBar(
+              controller: _tabController,
+              labelColor: Colors.red,
+              unselectedLabelColor: Colors.black,
+              indicatorColor: Colors.red,
+              labelPadding: EdgeInsets.symmetric(horizontal: 20),
+              tabs: [
+                const Tab(
+                  text: "Unseen",
+                ),
+                const Tab(
+                  text: "Seen",
+                ),
+                if (userP.role == "ADMIN")
+                  const Tab(
+                    text: "Applications",
+                  )
+                else
+                  const Tab(
+                    text: "Invitations",
+                  ),
+              ],
+            ),
             Expanded(
-              child: userRole == "GUEST" ? _buildGuestView() : _buildNotificationsView(),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  if (userP.role == "ADMIN")
+                    _buildNotificationsAdminView(currentTab)
+                  else
+                    _buildNotificationsView(currentTab),
 
-
-  Widget _buildGuestView() {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(height: 20),
-            Text(
-              "Create an account or sign in to your existing account to receive personalised event recommendations, invites from other users, and stay up to date with important notifications!",
-              style: TextStyle(fontSize: 16, color: Colors.grey[600]),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 30),
-            SizedBox(
-              width: 200,
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const SupabaseSignup()),
-                  );
-                },
-                child: const Text('Sign Up', style: TextStyle(fontSize: 18)),
+                  Center(child: Text("Seen notifications will appear here.")),
+                  Center(child: Text("Invitations notifications will appear here.")),
+                ],
               ),
             ),
-            SizedBox(height: 15),
-            TextButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/login');
-              },
-              child: const Text('Already have an account? Log In', style: TextStyle(fontSize: 16)),
-            ),
           ],
         ),
       ),
     );
   }
 
-
-  Widget _buildNotificationsView() {
+  Widget _buildNotificationsView(String tab) {
     return Consumer<notificationProvider>(
       builder: (context, notif, child) {
         if (_isLoading) {
           return const Center(
-            child: SpinKitPianoWave(
-              color: Color.fromARGB(255, 149, 137, 74),
-              size: 50.0,
-            ),
+            child: CircularProgressIndicator(),
           );
         } else if (notif.notifications.isEmpty) {
           return Center(
@@ -123,54 +369,202 @@ class _NotificationsState extends State<Notifications> {
           );
         } else {
           final notifications = notif.notifications;
-          
-          final invites = notifications
-              .where((n) => n.notificationTypes == 'invite')
-              .toList();
+          if(tab == "Unseen"){
+
           final broadcasts = notifications
-              .where((n) => n.notificationTypes == 'broadcast')
+              .where((n) => n.notificationTypes == 'broadcast'&& n.seenAt == null || n.sentAt.isEmpty)
               .toList();
           final reminders = notifications
-              .where((n) => n.notificationTypes == 'reminder')
+              .where((n) => n.notificationTypes == 'reminder'&& n.seenAt == null || n.sentAt.isEmpty)
               .toList();
           final recommendations = notifications
-              .where((n) => n.notificationTypes == 'recommendation')
+              .where((n) => n.notificationTypes == 'recommendation'&& n.seenAt == null || n.sentAt.isEmpty)
               .toList();
           final applications = notifications
-              .where((n) => n.notificationTypes == 'application')
+              .where((n) => n.notificationTypes == 'application'&& n.seenAt == null || n.sentAt.isEmpty)
               .toList();
-
           return ListView(
             children: [
-              if (invites.isNotEmpty) ...[
-                SizedBox(height: 20.0),
-                _buildCategory('INVITES', invites)
-              ],
               if (broadcasts.isNotEmpty) ...[
                 SizedBox(height: 20.0),
-                _buildCategory('BROADCASTS', broadcasts)
-              ],
-              if (reminders.isNotEmpty) ...[
-                SizedBox(height: 20.0),
-                _buildCategory('REMINDERS', reminders)
+                _buildCategory('BROADCASTS', broadcasts),
               ],
               if (recommendations.isNotEmpty) ...[
                 SizedBox(height: 20.0),
-                _buildCategory('RECOMMENDATIONS', recommendations)
+                _buildCategory('RECOMMENDATIONS', recommendations),
               ],
-              if (applications.isNotEmpty) ...[
+              if ( reminders.isNotEmpty) ...[
                 SizedBox(height: 20.0),
-                _buildCategory('APPLICATIONS', applications)
-              ]
+                _buildCategory('REMINDERS',  reminders),
+              ],
+              if ( applications.isNotEmpty) ...[
+                SizedBox(height: 20.0),
+                _buildCategory('APPLICATIONS',  applications),
+              ],
             ],
           );
+        }else if(tab == "Seen"){
+            final broadcasts = notifications
+                .where((n) => n.notificationTypes == 'broadcast' && n.seenAt != null || n.sentAt.isNotEmpty)
+                .toList();
+            final reminders = notifications
+                .where((n) => n.notificationTypes == 'reminder' && n.seenAt != null || n.sentAt.isNotEmpty)
+                .toList();
+            final recommendations = notifications
+                .where((n) => n.notificationTypes == 'recommendation' && n.seenAt != null || n.sentAt.isNotEmpty)
+                .toList();
+
+              final applications = notifications
+                  .where((n) => n.notificationTypes == 'application' && n.seenAt != null || n.sentAt.isNotEmpty)
+                  .toList();
+
+
+            return ListView(
+              children: [
+                if (broadcasts.isNotEmpty) ...[
+                  SizedBox(height: 20.0),
+                  _buildCategory('BROADCASTS', broadcasts),
+                ],
+                if (recommendations.isNotEmpty) ...[
+                  SizedBox(height: 20.0),
+                  _buildCategory('RECOMMENDATIONS', recommendations),
+                ],
+                if ( reminders.isNotEmpty) ...[
+                  SizedBox(height: 20.0),
+                  _buildCategory('REMINDERS',  reminders),
+                ],
+                if ( applications.isNotEmpty) ...[
+                  SizedBox(height: 20.0),
+                  _buildCategory('APPLICATIONS',  applications),
+                ],
+              ],
+            );
+          }
+
+        else {
+            final invites = notifications
+                .where((n) => n.notificationTypes == 'invite'&& n.seenAt == null || n.sentAt.isEmpty)
+                .toList();
+            return ListView(
+              children: [
+                if (invites.isNotEmpty) ...[
+                  SizedBox(height: 20.0),
+                  _buildCategory('INVITES', invites),
+                ],
+              ],
+            );
+          }
+
         }
       },
     );
   }
+  Widget _buildNotificationsAdminView(String tab) {
+    return Consumer<notificationProvider>(
+      builder: (context, notif, child) {
+        if (_isLoading) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (notif.notifications.isEmpty) {
+          return Center(
+            child: Text('No notifications available'),
+          );
+        } else {
+          final notifications = notif.notifications;
+          if(tab == "Unseen"){
 
+            final broadcasts = notifications
+                .where((n) => n.notificationTypes == 'broadcast'&& n.seenAt == null || n.sentAt.isEmpty)
+                .toList();
+            final reminders = notifications
+                .where((n) => n.notificationTypes == 'reminder'&& n.seenAt == null || n.sentAt.isEmpty)
+                .toList();
+            final recommendations = notifications
+                .where((n) => n.notificationTypes == 'recommendation'&& n.seenAt == null || n.sentAt.isEmpty)
+                .toList();
+            final invites = notifications
+                .where((n) => n.notificationTypes == 'invites'&& n.seenAt == null || n.sentAt.isEmpty)
+                .toList();
+            return ListView(
+              children: [
+                if (broadcasts.isNotEmpty) ...[
+                  SizedBox(height: 20.0),
+                  _buildCategory('BROADCASTS', broadcasts),
+                ],
+                if (recommendations.isNotEmpty) ...[
+                  SizedBox(height: 20.0),
+                  _buildCategory('RECOMMENDATIONS', recommendations),
+                ],
+                if ( reminders.isNotEmpty) ...[
+                  SizedBox(height: 20.0),
+                  _buildCategory('REMINDERS',  reminders),
+                ],
+                if ( invites.isNotEmpty) ...[
+                  SizedBox(height: 20.0),
+                  _buildCategory('INVITATIONS',  invites),
+                ],
+              ],
+            );
+          }else if(tab == "Seen"){
+            final broadcasts = notifications
+                .where((n) => n.notificationTypes == 'broadcast' && n.seenAt != null || n.sentAt.isNotEmpty)
+                .toList();
+            final reminders = notifications
+                .where((n) => n.notificationTypes == 'reminder' && n.seenAt != null || n.sentAt.isNotEmpty)
+                .toList();
+            final recommendations = notifications
+                .where((n) => n.notificationTypes == 'recommendation' && n.seenAt != null || n.sentAt.isNotEmpty)
+                .toList();
+
+            final invites = notifications
+                .where((n) => n.notificationTypes == 'invites'&& n.seenAt == null || n.sentAt.isEmpty)
+                .toList();
+
+
+            return ListView(
+              children: [
+                if (broadcasts.isNotEmpty) ...[
+                  SizedBox(height: 20.0),
+                  _buildCategory('BROADCASTS', broadcasts),
+                ],
+                if (recommendations.isNotEmpty) ...[
+                  SizedBox(height: 20.0),
+                  _buildCategory('RECOMMENDATIONS', recommendations),
+                ],
+                if ( reminders.isNotEmpty) ...[
+                  SizedBox(height: 20.0),
+                  _buildCategory('REMINDERS',  reminders),
+                ],
+                if ( invites.isNotEmpty) ...[
+                  SizedBox(height: 20.0),
+                  _buildCategory('INVITATIONS',  invites),
+                ],
+              ],
+            );
+          }
+          else {
+            final applications = notifications
+                .where((n) => n.notificationTypes == 'application'&& n.seenAt == null || n.sentAt.isEmpty)
+                .toList();
+            return ListView(
+              children: [
+                if (applications.isNotEmpty) ...[
+                  SizedBox(height: 20.0),
+                  _buildCategory('APPLICATIONS', applications),
+                ],
+              ],
+            );
+          }
+
+
+        }
+      },
+    );
+  }
   Widget _buildCategory(String title, List<AppNotification> notifications) {
     String texttitle = '';
+    notificationProvider notif = Provider.of<notificationProvider>(context, listen: false);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -199,51 +593,35 @@ class _NotificationsState extends State<Notifications> {
               texttitle = 'Application';
             }
 
-            return Container(
-              margin:
-                  const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey, width: 1.0),
-                borderRadius:
-                    BorderRadius.circular(8.0), // Optional: rounded corners
-              ),
-              child: ListTile(
-                title: Text(texttitle),
-                subtitle: Text(notification.message),
-                onTap: () {
-                  notification.markAsSeen();
+
+
+            return ListTile(
+
+              leading: CircleAvatar(child: Icon(Icons.notifications)),
+              title: Text(texttitle),
+              subtitle: Text(notification.message),
+              onTap: () {
+                final userProvider userP = Provider.of<userProvider>(context, listen: false);
+
+                if (notification.notificationId != null && userP.JWT != null) {
+                  notification.markAsSeen(notification.notificationId, userP.JWT);
+
+                  notif.refreshNotifications(userP.userId);
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>
-                          NotificationDetailScreen(notification: notification),
+                      builder: (context) => NotificationDetailScreen(notification: notification),
                     ),
                   ).then((_) {});
-                },
-              ),
+                } else {
+                  print("Unexpected null value in Notification ID or JWT");
+                }
+              },
             );
           },
-          separatorBuilder: (context, index) => _buildDividerA(),
+          separatorBuilder: (context, index) => Divider(color: Colors.transparent,),
         ),
       ],
-    );
-  }
-
-  Widget _buildDivider() {
-    return const Divider(
-      height: 1,
-      thickness: 2,
-      indent: 0,
-      endIndent: 2,
-    );
-  }
-
-  Widget _buildDividerA() {
-    return const Divider(
-      height: 1,
-      thickness: 1,
-      indent: 16,
-      endIndent: 16,
     );
   }
 }

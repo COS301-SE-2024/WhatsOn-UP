@@ -13,6 +13,7 @@ class userProvider extends ChangeNotifier {
   String _Role = '';
   String _userId = '';
   String? profileimage;
+  String? _JWT;
   bool _isGuest = false;
   late Future<List<User>> _generaluserTohost;
   String get Fullname => _Fullname;
@@ -22,6 +23,7 @@ class userProvider extends ChangeNotifier {
   String get role => _Role;
   String get userId => _userId;
   bool get isGuest => _isGuest;
+  String? get JWT => _JWT;
   Future<GeneralApplications>? _generalApplications;
   Future<GeneralApplications>? get generalApplications => _generalApplications;
 
@@ -62,6 +64,10 @@ class userProvider extends ChangeNotifier {
 
   set isGuest(bool value) {
     _isGuest = value;
+    notifyListeners();
+  }
+  set JWT(String? value) {
+    _JWT = value;
     notifyListeners();
   }
 
