@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:firstapp/providers/events_providers.dart';
 import 'package:firstapp/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -53,6 +54,7 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
     return Container(
       color: const Color.fromARGB(255, 149, 137, 74),
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: Colors.transparent,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
@@ -200,6 +202,7 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
         userP.email = userEmail;
         userP.role = role;
         userP.profileImage = profileImage;
+        eventP.refreshRecommendations(userP.userId);
         eventP.refreshSavedEvents(userP.userId);
         notificationProvider _notificationProvider =
         Provider.of<notificationProvider>(context, listen: false);

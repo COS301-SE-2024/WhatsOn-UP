@@ -1,10 +1,12 @@
 import 'dart:convert';
+import 'package:firstapp/schemas/recommendation_schemas.dart';
 import 'package:http/http.dart' as http;
 // import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:firstapp/widgets/event_card.dart';
 import 'package:firstapp/main.dart';
+import 'package:json_schema/json_schema.dart';
 import 'globals.dart' as globals;
 import '../pages/editProfile_page.dart';
 import '../providers/user_provider.dart';
@@ -139,7 +141,7 @@ class Api {
       rethrow;
     }
   }
-  Future<List<Event>> RecommendedEvents(String userId) async {
+  Future<List<Event>> getRecommendedEvents(String userId) async {
     final URL = 'http://${globals.domain}:8086/events/recommended_events';
     var headers = {
       'Content-Type': 'application/json',
@@ -155,10 +157,30 @@ class Api {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> decodedJson = json.decode(response.body);
-        final List<dynamic> eventsJson = decodedJson['data'];
 
-        final List<Event> events =
-        eventsJson.map((jsonEvent) => Event.fromJson(jsonEvent)).toList();
+        //validate json schema
+        final schema = JsonSchema.create(RECOMMENDED_EVENTS_SCHEMA);
+        final validationResult = schema.validate(decodedJson);
+
+        if (validationResult.isValid) {
+          print('getRecommendedEvents JSON is valid');
+        } else {
+          print('getRecommendedEvents JSON is invalid. Errors:');
+          for (var error in validationResult.errors) {
+            print(error);
+          }
+        }
+        final List<dynamic> eventsJson = decodedJson['data']['message'];
+
+        // final List<Event> events =
+        // eventsJson.map((jsonEvent) => Event.fromJson(jsonEvent)).toList();
+        final List<Event> events = eventsJson.map((jsonEvent) {
+          // Extract the event part of the JSON
+          final eventJson = jsonEvent['event'];
+          // final rating = jsonEvent['rating'];
+          return Event.fromJson(eventJson);
+        }).toList();
+        print('Recommended events: $events');
         return events;
       } else {
         throw Exception('Failed to load recommended events');
