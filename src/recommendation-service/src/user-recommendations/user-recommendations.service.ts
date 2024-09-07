@@ -85,6 +85,8 @@ export class UserRecommendationsService {
 
   }
 
+  // updates LatLng of each building
+  // shouldn't need to be called often -- only as buildings are inserted into the db
   async updateBuildingLocations() : Promise<void>{
     let {data: buildings, error} = await this.supabase
       .from('buildings')
@@ -96,7 +98,13 @@ export class UserRecommendationsService {
     }
 
     console.log(`buildings retrieved from db: \n ${JSON.stringify(buildings, null, 2)}`);
-    let buildingCoordinates: {name: String, coordinates : any}[] = [];
+    let buildingCoordinates: {
+      name: String,
+      coordinates : {
+        latitude : String,
+        longitude : String
+      }
+    }[] = [];
 
     for(let building of buildings){
       let location = await this.geocode(building.name);
@@ -106,8 +114,20 @@ export class UserRecommendationsService {
       })
     }
 
-    console.table(`coordinates retrieved from api: \n ${buildings}`);
-    
+    // update coordinate values in database 
+    for(let b of buildingCoordinates){
+
+      let latLngString =  
+       (b.coordinates != null) 
+        ? `${b.coordinates.latitude},${b.coordinates.longitude}`
+        : b.coordinates;
+
+      await this.supabase
+        .from('buildings')
+        .update({location: latLngString})
+        .eq('name',b.name)
+     
+    }    
   }
 
   async geocode(searchText) {
@@ -145,7 +165,7 @@ export class UserRecommendationsService {
         return coordinates;
       } else {
         console.log("No places found for this query.");
-        return null; // Or handle this case as needed
+        return null;
       }
   } 
 
