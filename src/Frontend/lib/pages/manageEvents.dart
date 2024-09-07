@@ -52,12 +52,6 @@ class _ManageEventsState extends State<ManageEvents> {
 
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(LineAwesomeIcons.angle_left_solid),
-        ),
         title: Text('Manage Events'),
       ),
       body: _isLoading
