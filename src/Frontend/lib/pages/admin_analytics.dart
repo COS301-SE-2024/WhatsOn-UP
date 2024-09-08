@@ -1,3 +1,4 @@
+import 'package:firstapp/pages/detailed_host_analytics.dart';
 import 'package:firstapp/providers/user_provider.dart';
 import 'package:firstapp/services/api.dart';
 import 'package:flutter/material.dart';
@@ -16,8 +17,8 @@ class _AdminAnalyticsPageState extends State<AdminAnalyticsPage> with SingleTick
     late TabController _tabController;
     Api api = Api();
     List<MonthlySummary> monthlySummaries = [];
-    List<String> names = [];
-    List<String> filteredNames = [];
+    List<Map<String, dynamic>> userData = [];
+    List<Map<String, dynamic>> filteredUserData = [];
     TextEditingController searchController = TextEditingController();
 
 
@@ -48,13 +49,11 @@ class _AdminAnalyticsPageState extends State<AdminAnalyticsPage> with SingleTick
       final response = await api.getAllHostsAnalytics(userP.userId);
 
       setState(() {
-        names = (response['data'] as List)
-            .map((item) => item.keys.first.toString())
-            .toList();
-        filteredNames = names;
+        userData = List<Map<String, dynamic>>.from(response['data']);
+        filteredUserData = userData;
 
-        print("NAMES: $names");
-        print("FILTERED NAMES: $filteredNames");
+        print("USER DATA: $userData");
+        print("FILTERED USER DATA: $filteredUserData");
 
         isNamesLoading = false;
       });
@@ -66,6 +65,14 @@ class _AdminAnalyticsPageState extends State<AdminAnalyticsPage> with SingleTick
       });
     }
 
+  }
+
+  void filterSearchResults(String query) {
+    setState(() {
+      filteredUserData = userData
+        .where((user) => user.keys.first.toLowerCase().contains(query.toLowerCase()))
+        .toList();
+    });
   }
 
 
@@ -161,9 +168,43 @@ class _AdminAnalyticsPageState extends State<AdminAnalyticsPage> with SingleTick
       );
     }
     
-    return  Center(
-        child: Text(filteredNames[0]),
-      );
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: TextField(
+            controller: searchController,
+            onChanged: filterSearchResults,
+            decoration: InputDecoration(
+              labelText: 'Search',
+              suffixIcon: Icon(Icons.search),
+            ),
+          ),
+        ),
+        Expanded(
+          child: ListView.builder(
+            itemCount: filteredUserData.length,
+            itemBuilder: (context, index) {
+              String name = filteredUserData[index].keys.first;
+              return ListTile(
+                title: Text(name),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AnalyticsDetailPage(
+                        name: name,
+                        userData: filteredUserData[index][name],
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
+          ),
+        ),
+      ],
+    );
   }
 }
 
