@@ -15,8 +15,8 @@ class _AdminAnalyticsPageState extends State<AdminAnalyticsPage> with SingleTick
     late TabController _tabController;
     Api api = Api();
     List<MonthlySummary> monthlySummaries = [];
-    
 
+    
     Future<void> _getAllEventsAnalytics() async {
     userProvider userP = Provider.of<userProvider>(context, listen: false);
     try {
@@ -29,7 +29,8 @@ class _AdminAnalyticsPageState extends State<AdminAnalyticsPage> with SingleTick
         monthlySummaries = summaries;
         isLoading = false;
       });
-    } catch (e) {
+    } 
+    catch (e) {
       print('Error getting events analytics: $e');
       setState(() {
         isLoading = false;
@@ -160,8 +161,6 @@ class MonthlySummary {
     required this.skewness,
     // required this.outliers,
   });
-  
-
 }
 
 List<MonthlySummary> parseMonthlySummaries(dynamic data) {
@@ -310,7 +309,6 @@ class RSVPChart extends StatelessWidget {
   }
 }
 
-// Fifth chart - Duration over Time
 class DurationChart extends StatelessWidget {
   final List<MonthlySummary> monthlySummaries;
 
@@ -377,7 +375,6 @@ class RatingDistributionChart extends StatelessWidget {
   }
 }
 
-// Seventh chart - Skewness over Time
 class SkewnessChart extends StatelessWidget {
   final List<MonthlySummary> monthlySummaries;
 
