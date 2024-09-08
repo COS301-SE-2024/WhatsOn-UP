@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/analytics/host")
-@PreAuthorize("hasAnyRole('HOST')")
+@PreAuthorize("hasAnyRole('HOST', 'ADMIN')")
 class HostController {
     @Autowired
     private lateinit var hostService: HostService

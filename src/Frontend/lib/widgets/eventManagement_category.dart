@@ -145,6 +145,7 @@ class _EventmanagementCategoryState extends State<EventmanagementCategory> {
                         child: EventCard(
                           event: events[index],
                           showBookmarkButton: false,
+                          broadcast:'EDIT',
                         ),
                       );
                     },

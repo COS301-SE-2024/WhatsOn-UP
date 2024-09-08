@@ -219,7 +219,7 @@ class _HostSearchScreenState extends State<HostSearchScreen> {
               child: ListView.builder(
                 itemCount: _searchResults.length,
                 itemBuilder: (context, index) {
-                  return EventCard(event: _searchResults[index]);
+                  return EventCard(event: _searchResults[index],showBookmarkButton: false);
                 },
               ),
             ),

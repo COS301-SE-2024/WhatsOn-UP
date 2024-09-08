@@ -1,40 +1,27 @@
+import 'dart:async';
 import 'dart:convert';
-
-import 'package:firstapp/providers/user_provider.dart';
-import 'package:firstapp/widgets/notification_card.dart';
 import 'package:flutter/material.dart';
-
 import '../services/api.dart';
+import '../widgets/notification_card.dart';
 
 class notificationProvider extends ChangeNotifier {
   late Api api = Api();
-  userProvider userP = userProvider();
-  late Future<List<AppNotification>> _Notifications;
-  Future<List<AppNotification>> get notifications => _Notifications;
+  late List<AppNotification> _notifications = [];
+  List<AppNotification> get notifications => _notifications;
 
-
-
-
-
-  Future<List<AppNotification>> _fetchNotifications(String userId) async {
+  Future<void> fetchNotifications(String userId) async {
     try {
-      List<AppNotification> response =
-          await api.getAllNotification(userId: userId);
-
-      return response;
+      List<AppNotification> response = await api.getAllNotification(userId: userId);
+      _notifications = response;
+      notifyListeners();
     } catch (e) {
       print(e);
-      throw Exception('Failed to fetch notifications providers: $e');
+      throw Exception('Failed to fetch notifications: $e');
     }
   }
 
   Future<void> refreshNotifications(String userId) async {
-    try {
-      _Notifications = _fetchNotifications(userId);
-      notifyListeners();
-    } catch (e) {
-      throw Exception('Failed to refresh notifications: $e');
-    }
+    await fetchNotifications(userId);
   }
 
   void addNotification(var eventData) {
@@ -45,15 +32,16 @@ class notificationProvider extends ChangeNotifier {
       } else {
         eventJson = eventData;
       }
-      AppNotification newNotification =
-          AppNotification.fromJson(eventJson['data']);
-
-
-      _Notifications.then((value) => value.add(newNotification));
-
+      AppNotification newNotification = AppNotification.fromJson(eventJson['data']);
+      _notifications.add(newNotification);
       notifyListeners();
     } catch (e) {
       throw Exception('Failed to add notification: $e');
     }
+  }
+
+  void removeNotification(String notificationId) {
+    _notifications.removeWhere((notification) => notification.notificationId == notificationId);
+    notifyListeners();
   }
 }

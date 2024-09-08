@@ -5,9 +5,11 @@ import com.devforce.analytics.dto.MonthlyEventSummary
 import com.devforce.analytics.dto.OverallEventSummary
 import com.devforce.analytics.repo.PastEventsRepo
 import com.devforce.analytics.repo.UserRepo
+import com.devforce.analytics.security.CustomUser
 import com.devforce.backend.dto.ResponseDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 import java.time.Month
 import java.util.UUID
@@ -153,7 +155,6 @@ class AdminService {
         val hosts = userRepo.findAllUsers()
         val details: List<Map<String, Map<String, Any>>> = hosts.map { host ->
             val events = pastEventsRepo.findPastEvents(host.userId)
-            
             val eventsDto = events
                 .map { event -> EventDto(event) }
                 .groupBy { eventDto -> eventDto.startDateTime.month }

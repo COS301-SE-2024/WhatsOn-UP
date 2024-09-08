@@ -2,7 +2,53 @@ import 'package:firstapp/providers/events_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:firstapp/pages/detailed_event_page.dart';
 import 'package:provider/provider.dart';
+import '../pages/BroadcastEvent.dart';
+import '../pages/Event_Attendance.dart';
 import '../providers/user_provider.dart';
+import '../services/api.dart';
+
+
+class Category {
+  final String id;
+  final String name;
+  bool isSelected;
+  String rating;
+  String faculty;
+  Category({
+    required this.id,
+    required this.name,
+    this.isSelected = false,
+    this.rating='0',
+    this.faculty = '',
+  });
+
+  factory Category.fromJson(String json) {
+    final parts = json.split(',');
+    if (parts.length != 2) {
+      throw FormatException('Invalid category format');
+    }
+    return Category(
+      id: parts[0],
+      name: parts[1],
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'name': name,
+    'rating': rating,
+    'faculty': faculty,
+  };
+  @override
+  String toString() {
+    return 'Category(id: $id, name: $name, isSelected: $isSelected, rating: $rating, faculty: $faculty)';
+  }
+}
+
+
+
+
+
 
 class Role {
   final int id;
@@ -49,7 +95,7 @@ class Attendee {
   }
   @override
   String toString() {
-    return 'Attendee(id: $userId, name: $fullName, role: $role,profileImage: $profileImage)'; // Include all properties
+    return 'Attendee(id: $userId, name: $fullName, role: $role, profileImage: $profileImage)';
   }
 }
 
@@ -314,11 +360,7 @@ class Event {
   });
 
   factory Event.fromJson(Map<String, dynamic> json) {
-    /*print("Printing Event fromJson...");
-    print("title");
-    print(json['title']);
-    print("Invities ");
-    print(json['invitees']);*/
+
     var eventVat;
     eventVat = Event(
       nameOfEvent: json['title']?.toString() ?? '',
@@ -384,26 +426,97 @@ class Event {
 class EventCard extends StatefulWidget {
   final Event event;
   bool showBookmarkButton;
+  bool saved;
+  String broadcast;
 
-  EventCard({Key? key, required this.event, this.showBookmarkButton = true})
+  EventCard({Key? key, required this.event, required this.showBookmarkButton ,this.broadcast='',this.saved=false})
       : super(key: key);
 
   @override
   _EventCardState createState() => _EventCardState();
 }
 
+String getValidImageUrl(List<String>? imageUrls) {
+  const List<String> validExtensions = ['jpeg', 'jpg', 'png'];
+  const String defaultUrl = 'https://images.pexels.com/photos/1190297/pexels-photo-1190297.jpeg'; // only videos in the array
+
+  if (imageUrls == null || imageUrls.isEmpty) {
+    return defaultUrl;
+  }
+
+  for (String url in imageUrls) {
+    final extension = url.split('.').last.toLowerCase();
+    if (validExtensions.contains(extension)) {
+      return url;
+    }
+  }
+  return defaultUrl;
+}
+
 class _EventCardState extends State<EventCard> {
   bool isBookmarked = false;
+  bool isbroadcast=false;
+  bool _isLoading=false;
+
+  // Future<void> _addSaved() async {
+  //
+  //   EventProvider eventProvider =
+  //   Provider.of<EventProvider>(context, listen: false);
+  //
+  //
+  //   try {
+  //     setState(() {
+  //       _isLoading = true;
+  //     });
+  //
+  //     var result = await Api().putSavedEvent(widget.event.id, user!.id);
+  //
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       const SnackBar(content: Text('Successfully RSVP\'d to event!')),
+  //     );
+  //     await eventProvider.refreshRSVPEvents(user!.id);
+  //     await eventProvider.refreshEvents();
+  //     print(
+  //         'amount of attendees after event added to the calendar ${_thisCurrentEvent.attendees.length}');
+  //     setState(() {
+  //       _isLoading = false;
+  //     });
+  //     Navigator.of(context).pushReplacementNamed('/home');
+  //   } catch (e) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(content: Text('Failed to RSVP: ${e.toString()}')),
+  //     );
+  //     setState(() {
+  //       _isLoading = false;
+  //     });
+  //   }
+  // }
+
+
+
+
+
+
+
+
+
 
   @override
   Widget build(BuildContext context) {
     EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
     userProvider userP = Provider.of<userProvider>(context, listen: false);
     String userRole = userP.role;
-    widget.showBookmarkButton = userRole == "GUEST"
-        ? false
-        : true; // if user is a guest, don't show bookmark button
+    widget.showBookmarkButton = widget.showBookmarkButton && userRole != "GUEST";
 
+    widget.showBookmarkButton=widget.broadcast=="EDIT"
+    ?false
+    :true;
+   widget.saved==true
+       ?isBookmarked=true
+       :isBookmarked=false;
+   isbroadcast=widget.broadcast=="EDIT"
+       ?true
+       :false;
     final theme = Theme.of(context);
     final cardColour = theme.colorScheme.surface;
     final textColour = theme.colorScheme.onSurface;
@@ -445,19 +558,12 @@ class _EventCardState extends State<EventCard> {
                 Container(
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(16.0),
-                    child: widget.event.imageUrls!.isNotEmpty
-                        ? Image.network(
-                            widget.event.imageUrls![0],
-                            height: 120.0,
-                            width: double.infinity,
-                            fit: BoxFit.cover,
-                          )
-                        : Image.asset(
-                            'assets/images/user.png',
-                            height: 120.0,
-                            width: double.infinity,
-                            fit: BoxFit.cover,
-                          ),
+                    child: Image.network(
+                      getValidImageUrl(widget.event.imageUrls),
+                      height: 120.0,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
                 Text(
@@ -497,16 +603,84 @@ class _EventCardState extends State<EventCard> {
                           setState(() {
                             isBookmarked = !isBookmarked;
                             if (isBookmarked == true) {
-                              eventP.addEventSaved(widget.event);
-                              //api to add this event
+                              eventP.addEventSaved(widget.event,userP.userId);
+
                             } else {
-                              eventP.removeEventSaved(widget.event);
+                              eventP.removeEventSaved(widget.event,userP.userId);
                             }
                           });
                         },
                       ),
+
                   ],
                 ),
+                const SizedBox(height: 10.0),
+                if(isbroadcast && widget.event.attendees.length>0)
+                Row(
+
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+
+                      Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        child: TextButton(
+                          onPressed: () {
+
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    EventAttendance(event:widget.event ),
+                              ),
+                            );
+
+                          },
+                          style: TextButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.people, size: 16),
+                              SizedBox(width: 8),
+                              Text('Attendees: ${widget.event.attendees.length}'),
+                            ],
+                          ),
+                        ),
+
+
+                      ),
+                    const SizedBox(height: 10.0),
+
+                      Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        child: TextButton(
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return BroadcastEventDialog(event: widget.event);
+                              },
+                            );
+
+                          },
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20.0),
+                          ),
+                          child: Text('Broadcast'),
+                        ),
+                      )
+                  ],
+                ),
+
+
               ],
             ),
           ),
@@ -514,4 +688,7 @@ class _EventCardState extends State<EventCard> {
       ),
     );
   }
+
+
+
 }

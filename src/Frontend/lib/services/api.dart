@@ -1,10 +1,12 @@
 import 'dart:convert';
+import 'package:firstapp/schemas/recommendation_schemas.dart';
 import 'package:http/http.dart' as http;
 // import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:firstapp/widgets/event_card.dart';
 import 'package:firstapp/main.dart';
+import 'package:json_schema/json_schema.dart';
 import 'globals.dart' as globals;
 import '../pages/editProfile_page.dart';
 import '../providers/user_provider.dart';
@@ -12,6 +14,8 @@ import '../widgets/notification_card.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
 import 'package:firstapp/screens/InviteUsers.dart';
+import 'package:path/path.dart' as path;
+
 
 
 class Api {
@@ -137,7 +141,54 @@ class Api {
       rethrow;
     }
   }
+  Future<List<Event>> getRecommendedEvents(String userId) async {
+    final URL = 'http://${globals.domain}:8086/events/recommended_events';
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $userId',
+    };
 
+    try {
+      var response = await http.get(
+        Uri.parse(URL),
+        headers: headers,
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> decodedJson = json.decode(response.body);
+
+        //validate json schema
+        final schema = JsonSchema.create(RECOMMENDED_EVENTS_SCHEMA);
+        final validationResult = schema.validate(decodedJson);
+
+        if (validationResult.isValid) {
+          print('getRecommendedEvents JSON is valid');
+        } else {
+          print('getRecommendedEvents JSON is invalid. Errors:');
+          for (var error in validationResult.errors) {
+            print(error);
+          }
+        }
+        final List<dynamic> eventsJson = decodedJson['data']['message'];
+
+        // final List<Event> events =
+        // eventsJson.map((jsonEvent) => Event.fromJson(jsonEvent)).toList();
+        final List<Event> events = eventsJson.map((jsonEvent) {
+          // Extract the event part of the JSON
+          final eventJson = jsonEvent['event'];
+          // final rating = jsonEvent['rating'];
+          return Event.fromJson(eventJson);
+        }).toList();
+        print('Recommended events: $events');
+        return events;
+      } else {
+        throw Exception('Failed to load recommended events');
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
   Future<List<dynamic>> getRSVPEvents(String userId) async {
     try {
       final String _rsvpEventsURL = 'http://${globals.domain}:8080/api/user/get_rsvp_events';
@@ -310,7 +361,50 @@ class Api {
       throw Exception(e.toString());
     }
   }
+  Future<Map<String, dynamic>> putSavedEvent(String eventId, String UserId) async {
+    final String _rsvpEventUrl =
+        'http://${globals.domain}:8080/api/user/save_event/$eventId';
 
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $UserId',
+    };
+
+    try {
+      var response = await http.put(Uri.parse(_rsvpEventUrl), headers: headers);
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        throw Exception(jsonDecode(response.body));
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+  Future<Map<String, dynamic>> DeleteSavedEvent(String eventId, String UserId) async {
+    final String _rsvpEventUrl =
+        'http://${globals.domain}:8080/api/user/delete_saved_event/$eventId';
+
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $UserId',
+    };
+
+    try {
+      var response = await http.delete(Uri.parse(_rsvpEventUrl), headers: headers);
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        throw Exception(jsonDecode(response.body));
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
 Future<List<AppNotification>> getAllNotification(
       {required String userId}) async {
     String notifyUserUrl = 'http://${globals.domain}:8081/notifications/get_all';
@@ -664,34 +758,27 @@ Future<List<AppNotification>> getAllNotification(
       throw Exception('Failed to upload proof image');
     }
   }*/
-  Future<Map<String, dynamic>> eventUploadImage(Uint8List? imageBytes, String userid, String EventId) async {
-    String generateFilename(String EventId) {
+  Future<Map<String, dynamic>> eventUploadImage(Uint8List mediaBytes, String userId, String eventId, String originalFilename) async {
+    String generateFilename(String eventId, String originalFilename) {
       final timestamp = DateTime.now().millisecondsSinceEpoch;
-      return 'event_image_${EventId}_$timestamp.png';
+      final extension = path.extension(originalFilename);
+      return 'event_media_${eventId}_$timestamp$extension';
     }
-    final uri = Uri.parse('http://${globals.domain}:8083/media/upload?event_id=$EventId');
+
+    final uri = Uri.parse('http://${globals.domain}:8083/media/upload?event_id=$eventId');
 
     final request = http.MultipartRequest('POST', uri);
-    request.headers['Authorization'] = 'Bearer $userid';
-    request.files.add(
-        http.MultipartFile.fromBytes(
-          'file',
-          imageBytes as List<int>,
-          filename: generateFilename(EventId),
-        ),
-      );
-
-   /* final request = http.MultipartRequest('POST', uri);
-    request.headers['Authorization']= 'Bearer $userid';
-
-    final filename = generateFilename(EventId);
+    request.headers['Authorization'] = 'Bearer $userId';
+    
+    final filename = generateFilename(eventId, originalFilename);
+    
     request.files.add(
       http.MultipartFile.fromBytes(
         'file',
-        imageBytes,
+        mediaBytes,
         filename: filename,
       ),
-    );*/
+    );
 
     try {
       final response = await request.send();
@@ -699,7 +786,6 @@ Future<List<AppNotification>> getAllNotification(
         final responseBody = await response.stream.bytesToString();
         print(jsonDecode(responseBody));
         return jsonDecode(responseBody);
-       // return jsonDecode(response.stream.toString());
       } else {
         throw Exception('Upload failed with status: ${response.statusCode}');
       }
@@ -753,13 +839,58 @@ Future<List<AppNotification>> getAllNotification(
 
         return responseData;
       } else {
-        throw Exception(jsonDecode(response.body));
+        var errorData = jsonDecode(response.body);
+        if (errorData['status'] == 'error' && errorData['data'] == 'User has already applied') {
+          throw Exception('already_applied');
+        } else {
+          throw Exception(errorData);
+        }
       }
     } catch (e) {
       throw Exception(e.toString());
     }
   }
+Future<Map<String, dynamic>> broadcastEvent(String eventId, String message, String userId) async {
 
+    final String url='http://${globals.domain}:8080/api/events/broadcast?eventId=$eventId&message=$message';
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $userId',
+    };
+
+    try {
+      var response = await http.put(Uri.parse(url), headers: headers);
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        throw Exception('Failed to BROADCAST EVENT');
+      }
+    } catch (e) {
+      return {'error': e.toString()};
+    }
+
+}
+  Future<Map<String, dynamic>> broadcast(String message, String userId ) async {
+
+    final String url='http://${globals.domain}:8080/api/admin/broadcast?message=$message';
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $userId',
+    };
+    try {
+      var response = await http.put(Uri.parse(url), headers: headers);
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        throw Exception('Failed to BROADCAST');
+      }
+    } catch (e) {
+      return {'error': e.toString()};
+    }
+
+  }
   Future<void> _uploadProofImage(
       String applicationId, Uint8List imageBytes, String userId) async {
     final String _uploadUrl =
@@ -922,4 +1053,148 @@ Future<List<AppNotification>> getAllNotification(
       throw Exception(e.toString());
     }
   }
+
+
+
+
+
+
+  Future<List<Category>> getCategories({required String userId}) async {
+    String notifyUserUrl = 'http://${globals.domain}:8080/api/events/categories';
+
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $userId',
+    };
+
+    try {
+      var response = await http.get(Uri.parse(notifyUserUrl), headers: headers);
+
+      if (response.statusCode == 200) {
+        print('Response body: ${response.body}');
+        final List<dynamic> jsonResponse = jsonDecode(response.body)['data'];
+
+        return  jsonResponse.map((json) => Category.fromJson(json as String)).toList();
+
+      } else {
+        throw Exception('Failed to load categories');
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+  Future<Map<String, dynamic>> postRecommendationData(
+      {required String userId,
+        required Map<String, dynamic> data,}) async {
+        String notifyUserUrl =
+        'http://${globals.domain}:8086/preferences/init';
+
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $userId',
+    };
+    try {
+      var response =
+          await http.post(Uri.parse(notifyUserUrl), headers: headers,body: jsonEncode(data));
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        final errorResponse = jsonDecode(response.body);
+        print('Error response: $errorResponse');
+        throw Exception('Failed to post data. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Exception caught in postRecommendationData: $e');
+      throw Exception('An error occurred while posting recommendation data: $e');
+    }
+  }
+
+
+  Future<Map<String, dynamic>> rateEvent(String eventId, String userID, int rating, String comment) async {
+    String rateEventURL;
+
+    if (comment == '') {
+      rateEventURL = 'http://${globals.domain}:8080/api/user/rate_event/$eventId?rating=$rating';
+    }
+    else {
+      rateEventURL = 'http://${globals.domain}:8080/api/user/rate_event/$eventId?comment=${Uri.encodeComponent(comment)}&rating=$rating';
+    }
+
+    var headers = {
+      'Content-Type': 'application/json', 
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $userID',
+    };
+
+    print("CALLING RATE WITH: " + rateEventURL);
+
+    try {
+      var response = await http.put(Uri.parse(rateEventURL), headers: headers);
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        throw Exception(jsonDecode(response.body));
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  Future<Map<String, dynamic>> deleteEventMedia(String imageName, String userId) async {
+    final String deleteMediaUrl = 'http://${globals.domain}:8083/media/delete?media_name=$imageName';
+
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $userId',
+    };
+
+    try {
+      var response = await http.delete(Uri.parse(deleteMediaUrl), headers: headers);
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } 
+      else {
+        throw Exception(jsonDecode(response.body));
+      }
+    } 
+    catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  Future<Map<String, dynamic>> deleteNotification(String notificationId, String userId) async {
+    final String deleteNotificationUrl = 'http://${globals.domain}:8081/notifications/delete/$notificationId';
+
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $userId',
+    };
+
+    try {
+      var response = await http.delete(Uri.parse(deleteNotificationUrl), headers: headers);
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } 
+      else {
+        throw Exception(jsonDecode(response.body));
+      }
+    } 
+    catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+
 }
+
+
+
+

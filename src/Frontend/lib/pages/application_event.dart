@@ -8,7 +8,7 @@ import 'package:firstapp/providers/events_providers.dart';
 import 'package:firstapp/providers/user_provider.dart';
 import 'package:firstapp/services/api.dart';
 import 'package:firstapp/services/EventService.dart';
-import 'package:firstapp/widgets/event_card.dart';
+import 'package:firstapp/widgets/event_card.dart'as CategoryData;
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -35,8 +35,9 @@ class ApplicationEvent extends StatefulWidget {
 }
 
 class _ApplicationEventPageState extends State<ApplicationEvent> {
-  late Future<List<String>> _categoriesFuture;
-  late Future<List<Venue>> _venuesFuture;
+
+  late Future<List<CategoryData.Category>> _categoriesFuture;
+  late Future<List<CategoryData.Venue>> _venuesFuture;
   late TextEditingController _venueController;
   late TextEditingController _eventNameController;
   late TextEditingController _eventDescriptionController;
@@ -45,9 +46,9 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
   late TextEditingController _guestsController;
   bool _isPublic = true;
   int _maxAttendees = 100;
-  Venue? _selectedVenue;
-  List<String> _categories = [];
-  List<Venue> _venues = [];
+  CategoryData.Venue? _selectedVenue;
+  late List<CategoryData.Category> _categories = [];
+  List<CategoryData.Venue> _venues = [];
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = true;
   late TextEditingController _maxAttendeesController;
@@ -55,17 +56,17 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
   bool _tutorialShown = false;
   List<XFile>? selectedImages = [];
   String? _selectedCategory;
-  final List<String> predefinedCategories = [
-    'Clubs & Organizations',
-    'Sports & Fitness',
-    'Academic',
-    'Social',
-    'Cultural',
-    'Career & Professional Development'
-  ];
+  // final List<Str> predefinedCategories = [
+  //   'Clubs & Organizations',
+  //   'Sports & Fitness',
+  //   'Academic',
+  //   'Social',
+  //   'Cultural',
+  //   'Career & Professional Development'
+  // ];
 
-  //List<Uint8List> imageBytesList = [];
-  Uint8List? imageBytesList;
+  List<Uint8List> imageBytesList = [];
+  // Uint8List? imageBytesList;
   final _multiSelectKey = GlobalKey<FormFieldState>();
  // List<UserModel> _invitedUsers = [];
   /*Future<void> _openInviteUserPopup() async {
@@ -96,6 +97,7 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
     super.initState();
     _categoriesFuture =
         EventService(Supabase.instance.client).fetchUniqueCategories();
+
     _venuesFuture = EventService(Supabase.instance.client).getLocations();
 
     _venueController = TextEditingController();
@@ -182,50 +184,97 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
     });
   }
 
-  Future<void> _pickImage() async {
-    try {
-      final ImagePicker _picker = ImagePicker();
-      XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+  // Future<void> _pickImage() async {
+  //   try {
+  //     final ImagePicker _picker = ImagePicker();
+  //     XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
 
-      if (pickedFile != null) {
-        Uint8List imageBytes = await pickedFile.readAsBytes();
-        setState(() {
-          imageBytesList = imageBytes;
-          _imageName = pickedFile.name;
-        });
-      }
-    } catch (e) {
-      print('Error picking image: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Failed to pick image. Please try again.'),
-          backgroundColor: Colors.red,
-        ),
+  //     if (pickedFile != null) {
+  //       Uint8List imageBytes = await pickedFile.readAsBytes();
+  //       setState(() {
+  //         imageBytesList = imageBytes;
+  //         _imageName = pickedFile.name;
+  //       });
+  //     }
+  //   } catch (e) {
+  //     print('Error picking image: $e');
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(
+  //         content: Text('Failed to pick image. Please try again.'),
+  //         backgroundColor: Colors.red,
+  //       ),
+  //     );
+  //   }
+  // }
+
+  // Widget _buildImagePicker() {
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: [
+  //       ElevatedButton.icon(
+  //         onPressed: _pickImage,
+  //         // icon: Icon(Icons.add_a_photo),
+  //         icon: const Icon(Icons.upload_file),
+  //         label: const Text('Choose Image'),
+  //         style: ElevatedButton.styleFrom(
+  //           padding: const EdgeInsets.symmetric(vertical: 12),
+  //         ),
+  //       ),
+  //       if (_imageName != null)
+  //         Padding(
+  //           padding: const EdgeInsets.only(top: 10),
+  //           child: Text('Selected image: $_imageName'),
+  //         ),
+  //     ],
+  //   );
+  // }
+
+  List<Map<String, dynamic>> selectedMedia = [];
+    Widget _buildImagePicker2() {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('Upload Images and Videos:'),
+          const SizedBox(height: 10),
+          ElevatedButton(
+            onPressed: () async {
+              final List<XFile>? pickedFiles = await _picker.pickMultipleMedia();
+              if (pickedFiles != null) {
+                setState(() {
+                  selectedMedia.clear();
+                  for (XFile file in pickedFiles) {
+                    selectedMedia.add({
+                      'file': file,
+                      'name': file.name,
+                    });
+                  }
+                });
+              }
+            },
+            child: const Text('Select Images and Videos'),
+          ),
+          if (selectedMedia.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: Wrap(
+                spacing: 10,
+                children: selectedMedia.map((media) {
+                  final isVideo = media['name'].toLowerCase().endsWith('.mp4') ||
+                      media['name'].toLowerCase().endsWith('.mov');
+                  return Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(isVideo ? Icons.video_library : Icons.image),
+                      const SizedBox(width: 5),
+                      Text(media['name']),
+                    ],
+                  );
+                }).toList(),
+              ),
+            ),
+        ],
       );
     }
-  }
-
-  Widget _buildImagePicker() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        ElevatedButton.icon(
-          onPressed: _pickImage,
-          // icon: Icon(Icons.add_a_photo),
-          icon: const Icon(Icons.upload_file),
-          label: const Text('Choose Image'),
-          style: ElevatedButton.styleFrom(
-            padding: const EdgeInsets.symmetric(vertical: 12),
-          ),
-        ),
-        if (_imageName != null)
-          Padding(
-            padding: const EdgeInsets.only(top: 10),
-            child: Text('Selected image: $_imageName'),
-          ),
-      ],
-    );
-  }
 
        /* SizedBox(height: 10.0),
         selectedImages != null && selectedImages!.isNotEmpty
@@ -416,7 +465,7 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                   size: 50.0,
                 ),
               )
-                  : FutureBuilder<List<Venue>>(
+                  : FutureBuilder<List<CategoryData.Venue>>(
                 future: _venuesFuture,
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
@@ -425,16 +474,16 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                     return Text('No venues available');
                   } else {
                     _venues = snapshot.data!;
-                    return Autocomplete<Venue>(
+                    return Autocomplete<CategoryData.Venue>(
                       optionsBuilder: (TextEditingValue textEditingValue) {
                         if (textEditingValue.text.isEmpty) {
-                          return const Iterable<Venue>.empty();
+                          return const Iterable<CategoryData.Venue>.empty();
                         }
                         return _venues.where((venue) => venue.name
                             .toLowerCase()
                             .contains(textEditingValue.text.toLowerCase()));
                       },
-                      displayStringForOption: (Venue venue) => venue.name,
+                      displayStringForOption: (CategoryData.Venue venue) => venue.name,
                       fieldViewBuilder: (context, controller, focusNode, onEditingComplete) {
                         _venueController = controller;
                         return TextFormField(
@@ -449,7 +498,7 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                           value == null || value.isEmpty ? 'Please select a venue' : null,
                         );
                       },
-                      onSelected: (Venue selectedVenue) {
+                      onSelected: (CategoryData.Venue selectedVenue) {
                         setState(() {
                           _selectedVenue = selectedVenue;
                           _maxAttendees = selectedVenue.capacity;
@@ -572,7 +621,35 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                 ),
               ),
               SizedBox(height: 16.0),
-              FutureBuilder<List<String>>(
+              // FutureBuilder<List<CategoryData.Category>>(
+              //   future: _categoriesFuture,
+              //   builder: (context, snapshot) {
+              //     if (snapshot.hasError) {
+              //       return Text('Error: ${snapshot.error}');
+              //     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              //       return Text('No categories available');
+              //     } else {
+              //       _categories = snapshot.data! ;
+              //       return DropdownButton<String>(
+              //         value: _selectedCategory,
+              //         hint: Text('Select a category'),
+              //         isExpanded: true,
+              //         items: _categories.map((CategoryData.Category category) {
+              //           return DropdownMenuItem<Category>(
+              //             value: category,
+              //             child: Text(category.name),
+              //           );
+              //         }).toList(),
+              //         onChanged: (String? newValue) {
+              //           setState(() {
+              //             _selectedCategory = newValue;
+              //           });
+              //         },
+              //       );
+              //     }
+              //   },
+              // ),
+              FutureBuilder<List<CategoryData.Category>>(
                 future: _categoriesFuture,
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
@@ -580,26 +657,27 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                     return Text('No categories available');
                   } else {
-                    _categories = snapshot.data! + predefinedCategories;
+                    _categories = snapshot.data!;
                     return DropdownButton<String>(
                       value: _selectedCategory,
                       hint: Text('Select a category'),
                       isExpanded: true,
-                      items: _categories.map((String category) {
+                      items: _categories.map((CategoryData.Category category) {
                         return DropdownMenuItem<String>(
-                          value: category,
-                          child: Text(category),
+                          value: category.name,  // Use the category name as the value
+                          child: Text(category.name),
                         );
                       }).toList(),
                       onChanged: (String? newValue) {
                         setState(() {
-                          _selectedCategory = newValue;
+                          _selectedCategory = newValue;  // Update the selected category
                         });
                       },
                     );
                   }
                 },
               ),
+
 
 
               SizedBox(height: 16.0),
@@ -643,7 +721,7 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
 
 
           SizedBox(height: 16.0),
-            _buildImagePicker(),
+            _buildImagePicker2(),
 
               SizedBox(height: 16.0),
               ElevatedButton(
@@ -661,7 +739,7 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                       Map<String, String> metadata = {
                         'category': _selectedCategory!,
                       };
-                      //List<String>? mediaUrls = selectedImages?.map((file) => file.path).toList();
+
                       Map<String, dynamic> response = await Api().createEvent(
                         title: _eventNameController.text,
                         description: _eventDescriptionController.text,
@@ -674,11 +752,22 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                         userId: userId,
 
                       );
-                      //eventP.addEventHome(response['data']);
-                      if(imageBytesList!=null){
+                      Api api = Api();
 
+                      if(imageBytesList!=null){
                         try{
-                          Api().eventUploadImage(imageBytesList,userP.userId ,response['data']['id']);
+                          // for(Uint8List imageBytes in imageBytesList){
+                          //   Api().eventUploadImage(imageBytes, userP.userId, response['data']['id'], "test.png");
+                          // }
+
+                          for (var media in selectedMedia) {
+                            XFile file = media['file'];
+                            String originalFilename = media['name'];
+                            Uint8List mediaBytes = await file.readAsBytes();
+                            await api.eventUploadImage(mediaBytes, userP.userId, response['data']['id'], originalFilename);
+                          }
+
+
                           print("image uploaded");
                         //  eventP.refreshEvents();
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -689,8 +778,7 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                             MaterialPageRoute(builder: (context) =>InviteUsers(eventId:response['data']['id'])),
                           );
                       }
-                      catch(e)
-                            {
+                      catch(e) {
                               print('Failed to submit application: $e');
                               setState(() {
                                 _isLoading = false;
@@ -701,9 +789,8 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                                   backgroundColor: Colors.red,
                                 ),
                               );
-                          }
-
-                                            }
+                        }
+                      }
 
 
                     } catch (e) {

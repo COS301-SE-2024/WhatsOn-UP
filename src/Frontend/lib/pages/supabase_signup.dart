@@ -1,14 +1,14 @@
 import 'dart:async';
+import 'package:firstapp/providers/events_providers.dart';
 import 'package:firstapp/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../main.dart';
 import 'package:firstapp/services/api.dart';
-
-import 'package:firstapp/pages/home_page.dart';
-
+import '../providers/events_providers.dart';
 import '../providers/notification_providers.dart';
+import '../surveys/SurveyChooseCat_screen.dart';
 import '../services/socket_client.dart';
 import '../services/globals.dart' as globals;
 
@@ -54,6 +54,7 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
     return Container(
       color: const Color.fromARGB(255, 149, 137, 74),
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: Colors.transparent,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
@@ -182,6 +183,7 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
     String fullname = _fullnameController.text;
     print('Username: $fullname');
     userProvider userP = Provider.of<userProvider>(context, listen: false);
+    EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
     Api api = Api();
     api.postUsername(fullname, user!.id).then((response) {
       if (response['error'] != null) {
@@ -200,9 +202,11 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
         userP.email = userEmail;
         userP.role = role;
         userP.profileImage = profileImage;
+        eventP.refreshRecommendations(userP.userId);
+        eventP.refreshSavedEvents(userP.userId);
         notificationProvider _notificationProvider =
         Provider.of<notificationProvider>(context, listen: false);
-        // _notificationProvider.apiInstance(api);
+
         _notificationProvider.refreshNotifications(userP.userId);
         SocketService('http://${globals.domain}:8082',_notificationProvider, userP.userId, context);
         userP.Generalusers(userP.userId);
@@ -210,7 +214,7 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
 
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const HomePage()),
+          MaterialPageRoute(builder: (context) => SurveyScreen()),
         );
       }
     });

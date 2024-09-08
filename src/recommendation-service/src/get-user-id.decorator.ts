@@ -1,4 +1,4 @@
-import { createParamDecorator, ExecutionContext } from '@nestjs/common';
+import { createParamDecorator, ExecutionContext, UnauthorizedException } from '@nestjs/common';
 
 //Extracts user id from request
 export const GetUserId = createParamDecorator(
@@ -11,6 +11,10 @@ export const GetUserId = createParamDecorator(
         return parts[1]; // Assumes Bearer token format
       }
     }
-    return null;
+    throw new UnauthorizedException({
+      status: 'error',
+      message: 'No (or invalid) token provided',
+      timestamp: new Date().toISOString(),
+    });
   },
 );
