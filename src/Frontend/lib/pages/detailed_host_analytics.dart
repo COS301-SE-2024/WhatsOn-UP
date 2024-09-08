@@ -27,9 +27,16 @@ class AnalyticsDetailPage extends StatelessWidget {
             if (monthlySummaries.isNotEmpty) ...[
               SizedBox(
                 height: 300,
-                child: AnalyticsChartPage(monthlySummaries: monthlySummaries),
+                child: AnalyticsChartPage(monthlySummaries: monthlySummaries), // Average Rating Over Time
               ),
-
+              SizedBox(
+                height: 300,
+                child: RatingDistributionChart(monthlySummaries: monthlySummaries), // Rating Distribution
+              ),
+              SizedBox(
+                height: 300,
+                child: FeedbackDistributionChart(monthlySummaries: monthlySummaries), // Feedback Distribution
+              ),
             ] else
               Center(child: Text('No monthly data available for $name')),
           ],
@@ -71,6 +78,88 @@ class AnalyticsChartPage extends StatelessWidget {
   }
 }
 
+class RatingDistributionChart extends StatelessWidget {
+  final List<MonthlySummary> monthlySummaries;
+
+  RatingDistributionChart({required this.monthlySummaries});
+
+  @override
+  Widget build(BuildContext context) {
+    return SfCartesianChart(
+      title: ChartTitle(text: 'Rating Distribution'),
+      legend: Legend(isVisible: true),
+      tooltipBehavior: TooltipBehavior(enable: true),
+      primaryXAxis: CategoryAxis(),
+      series: <ColumnSeries>[
+        ColumnSeries<MonthlySummary, String>(
+          dataSource: monthlySummaries,
+          xValueMapper: (MonthlySummary summary, _) => summary.month,
+          yValueMapper: (MonthlySummary summary, _) => summary.lowestRating,
+          name: 'Lowest Rating',
+        ),
+        ColumnSeries<MonthlySummary, String>(
+          dataSource: monthlySummaries,
+          xValueMapper: (MonthlySummary summary, _) => summary.month,
+          yValueMapper: (MonthlySummary summary, _) => summary.averageRating,
+          name: 'Average Rating',
+        ),
+        ColumnSeries<MonthlySummary, String>(
+          dataSource: monthlySummaries,
+          xValueMapper: (MonthlySummary summary, _) => summary.month,
+          yValueMapper: (MonthlySummary summary, _) => summary.highestRating,
+          name: 'Highest Rating',
+        ),
+      ],
+    );
+  }
+}
+
+class FeedbackDistributionChart extends StatelessWidget {
+  final List<MonthlySummary> monthlySummaries;
+
+  FeedbackDistributionChart({required this.monthlySummaries});
+
+  @override
+  Widget build(BuildContext context) {
+    return SfCircularChart(
+      title: ChartTitle(text: 'Feedback Distribution'),
+      legend: Legend(isVisible: true),
+      series: <CircularSeries>[
+        PieSeries<MonthlySummary, String>(
+          dataSource: monthlySummaries,
+          xValueMapper: (MonthlySummary summary, _) => summary.month,
+          yValueMapper: (MonthlySummary summary, _) => summary.feedbackRatio,
+          dataLabelSettings: DataLabelSettings(isVisible: true),
+        ),
+      ],
+    );
+  }
+}
+
+class EventDurationVsRatingChart extends StatelessWidget {
+  final List<MonthlySummary> monthlySummaries;
+
+  EventDurationVsRatingChart({required this.monthlySummaries});
+
+  @override
+  Widget build(BuildContext context) {
+    return SfCartesianChart(
+      title: ChartTitle(text: 'Event Duration vs Average Rating'),
+      legend: Legend(isVisible: true),
+      tooltipBehavior: TooltipBehavior(enable: true),
+      primaryXAxis: NumericAxis(title: AxisTitle(text: 'Duration (hours)')),
+      primaryYAxis: NumericAxis(title: AxisTitle(text: 'Average Rating')),
+      series: <ScatterSeries>[
+        ScatterSeries<MonthlySummary, double>(
+          dataSource: monthlySummaries,
+          xValueMapper: (MonthlySummary summary, _) => summary.duration,
+          yValueMapper: (MonthlySummary summary, _) => summary.averageRating,
+          name: 'Events',
+        ),
+      ],
+    );
+  }
+}
 
 class MonthlySummary {
   final String month;
@@ -101,18 +190,23 @@ class MonthlySummary {
 
   factory MonthlySummary.fromJson(Map<String, dynamic> json) {
     return MonthlySummary(
-      month: json['month'],
-      averageRating: json['averageRating'].toDouble(),
-      capacityRatio: json['capacityRatio'].toDouble(),
-      attendanceRatio: json['attendanceRatio'].toDouble(),
-      feedbackRatio: json['feedbackRatio'].toDouble(),
-      rsvpRatio: json['rsvpRatio'].toDouble(),
-      duration: json['duration'].toDouble(),
-      highestRating: json['highestRating'].toDouble(),
-      medianRating: json['medianRating'].toDouble(),
-      lowestRating: json['lowestRating'].toDouble(),
-      skewness: json['skewness'].toDouble(),
+      month: json['month'] ?? 'Unknown',
+      averageRating: _roundNum(json['averageRating']?.toDouble() ?? 0.0),
+      capacityRatio: _roundNum(json['capacityRatio']?.toDouble() ?? 0.0),
+      attendanceRatio: _roundNum(json['attendanceRatio']?.toDouble() ?? 0.0),
+      feedbackRatio: _roundNum(json['feedbackRatio']?.toDouble() ?? 0.0),
+      rsvpRatio: _roundNum(json['rsvpRatio']?.toDouble() ?? 0.0),
+      duration: _roundNum(json['duration']?.toDouble() ?? 0.0),
+      highestRating: _roundNum(json['highestRating']?.toDouble() ?? 0.0),
+      medianRating: _roundNum(json['medianRating']?.toDouble() ?? 0.0),
+      lowestRating: _roundNum(json['lowestRating']?.toDouble() ?? 0.0),
+      skewness: _roundNum(json['skewness']?.toDouble() ?? 0.0),
     );
+  }
+
+
+  static double _roundNum(double value) {
+    return double.parse(value.toStringAsFixed(2));
   }
 }
 

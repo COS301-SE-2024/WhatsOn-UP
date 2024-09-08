@@ -26,7 +26,7 @@ class _AdminAnalyticsPageState extends State<AdminAnalyticsPage> with SingleTick
     userProvider userP = Provider.of<userProvider>(context, listen: false);
     try {
       final response = await api.getAllEventsAnalytics(userP.userId);
-      print('EVENTS ANALYTICS RESPONSE: $response');
+      // print('EVENTS ANALYTICS RESPONSE: $response');
 
       List<MonthlySummary> summaries = parseMonthlySummaries(response['data']);
 
@@ -48,12 +48,14 @@ class _AdminAnalyticsPageState extends State<AdminAnalyticsPage> with SingleTick
     try {
       final response = await api.getAllHostsAnalytics(userP.userId);
 
+      // print("HOST DATA: $response");
+
       setState(() {
         userData = List<Map<String, dynamic>>.from(response['data']);
         filteredUserData = userData;
 
-        print("USER DATA: $userData");
-        print("FILTERED USER DATA: $filteredUserData");
+        // print("USER DATA: $userData");
+        // print("FILTERED USER DATA: $filteredUserData");
 
         isNamesLoading = false;
       });
@@ -176,7 +178,7 @@ class _AdminAnalyticsPageState extends State<AdminAnalyticsPage> with SingleTick
             controller: searchController,
             onChanged: filterSearchResults,
             decoration: InputDecoration(
-              labelText: 'Search',
+              labelText: 'Search for a host',
               suffixIcon: Icon(Icons.search),
             ),
           ),
@@ -186,6 +188,7 @@ class _AdminAnalyticsPageState extends State<AdminAnalyticsPage> with SingleTick
             itemCount: filteredUserData.length,
             itemBuilder: (context, index) {
               String name = filteredUserData[index].keys.first;
+              print("USER DATA: " + filteredUserData[index][name].toString());
               return ListTile(
                 title: Text(name),
                 onTap: () {
@@ -222,8 +225,6 @@ class MonthlySummary {
   final double medianRating;
   final double lowestRating;
   final double skewness;
-  // final int outliers;
-
 
   MonthlySummary({
     required this.month,
@@ -237,7 +238,6 @@ class MonthlySummary {
     required this.medianRating,
     required this.lowestRating,
     required this.skewness,
-    // required this.outliers,
   });
 }
 
@@ -245,22 +245,34 @@ List<MonthlySummary> parseMonthlySummaries(dynamic data) {
   List<MonthlySummary> summaries = [];
   for (var summary in data['monthlySummaries']) {
     summaries.add(MonthlySummary(
-      month: summary['month'],
-      averageRating: summary['averageRating'].toDouble(),
-      capacityRatio: summary['capacityRatio'].toDouble(),
-      attendanceRatio: summary['attendanceRatio'].toDouble(),
-      feedbackRatio: summary['feedbackRatio'].toDouble(),
-      rsvpRatio: summary['rsvpRatio'].toDouble(),
-      duration: summary['duration'].toDouble(),
-      highestRating: summary['highestRating'].toDouble(),
-      medianRating: summary['medianRating'].toDouble(),
-      lowestRating: summary['lowestRating'].toDouble(),
-      skewness: summary['skewness'].toDouble(),
-      // outliers: summary['outliers'],
+      month: summary['month'] ?? 'Unknown',
+      averageRating: _roundNum((summary['averageRating'] ?? 0).toDouble()),
+      capacityRatio: _roundNum((summary['capacityRatio'] ?? 0).toDouble()),
+      attendanceRatio: _roundNum((summary['attendanceRatio'] ?? 0).toDouble()),
+      feedbackRatio: _roundNum(
+        summary['feedbackRatio'] == "NaN" || summary['feedbackRatio'] == null
+          ? 0.0
+          : (double.tryParse(summary['feedbackRatio'].toString()) ?? 0.0),
+      ),
+      rsvpRatio: _roundNum(
+        summary['rsvpRatio'] == "NaN" || summary['rsvpRatio'] == null
+          ? 0.0
+          : (double.tryParse(summary['rsvpRatio'].toString()) ?? 0.0),
+      ),
+      duration: _roundNum((summary['duration'] ?? 0).toDouble()),
+      highestRating: _roundNum((summary['highestRating'] ?? 0).toDouble()),
+      medianRating: _roundNum((summary['medianRating'] ?? 0).toDouble()),
+      lowestRating: _roundNum((summary['lowestRating'] ?? 0).toDouble()),
+      skewness: _roundNum((summary['skewness'] ?? 0).toDouble()),
     ));
   }
   return summaries;
 }
+
+double _roundNum(double value) {
+  return double.parse(value.toStringAsFixed(2));
+}
+
 
 
 class AnalyticsChartPage extends StatelessWidget {
@@ -466,8 +478,8 @@ class SkewnessChart extends StatelessWidget {
       tooltipBehavior: TooltipBehavior(enable: true),
       primaryXAxis: CategoryAxis(),
       primaryYAxis: NumericAxis(
-        minimum: -1,
-        maximum: 1,
+        minimum: -2,
+        maximum: 2,
         interval: 0.5,
         title: AxisTitle(text: 'Skewness'),
       ),
@@ -484,28 +496,3 @@ class SkewnessChart extends StatelessWidget {
     );
   }
 }
-
-// class OutliersChart extends StatelessWidget {
-//   final List<MonthlySummary> monthlySummaries;
-
-//   OutliersChart({required this.monthlySummaries});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return SfCartesianChart(
-//       title: ChartTitle(text: 'Outliers Count Over Time'),
-//       legend: Legend(isVisible: true),
-//       tooltipBehavior: TooltipBehavior(enable: true),
-//       primaryXAxis: CategoryAxis(),
-//       series: <ColumnSeries<MonthlySummary, String>>[
-//         ColumnSeries<MonthlySummary, String>(
-//           name: 'Outliers Count',
-//           dataSource: monthlySummaries,
-//           xValueMapper: (MonthlySummary summary, _) => summary.month,
-//           yValueMapper: (MonthlySummary summary, _) => summary.outliers.toDouble(),
-//           dataLabelSettings: DataLabelSettings(isVisible: true),
-//         ),
-//       ],
-//     );
-//   }
-// }
