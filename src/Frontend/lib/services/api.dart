@@ -1192,6 +1192,30 @@ Future<Map<String, dynamic>> broadcastEvent(String eventId, String message, Stri
     }
   }
 
+  Future<Map<String, dynamic>> getAllEventsAnalytics(String userId) async {
+    final String getAllAnalyticsURL = 'http://${globals.domain}:8084/analytics/admin/get_all_events';
+
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $userId',
+    };
+
+    try {
+      var response = await http.get(Uri.parse(getAllAnalyticsURL), headers: headers);
+
+      if (response.statusCode == 200) {
+        // print("ANALYTICS: " + jsonDecode(response.body));
+        return jsonDecode(response.body);
+      } 
+      else {
+        throw Exception(jsonDecode(response.body));
+      }
+    } 
+    catch (e) {
+      throw Exception(e.toString());
+    }
+  }
 
 }
 
