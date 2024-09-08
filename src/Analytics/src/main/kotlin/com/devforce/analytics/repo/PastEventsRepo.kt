@@ -30,7 +30,7 @@ interface PastEventsRepo: JpaRepository<PastEventModel, UUID> {
                 "LEFT JOIN FETCH fu.role fur " +
                 "LEFT JOIN FETCH e.analytics an " +
                 "LEFT JOIN FETCH an.outliers o " +
-                "WHERE h.userId = :userId "
+                "WHERE :userId IS NULL OR h.userId = :userId "
     )
     fun findPastEvents(@Param("userId") userId: UUID?): List<PastEventModel>
 
