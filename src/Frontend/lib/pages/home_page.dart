@@ -1,8 +1,6 @@
 import 'package:firstapp/pages/allRecommended_events.dart';
-import 'package:firstapp/pages/allSaved_Events.dart';
 import 'package:firstapp/widgets/event_card.dart';
 import 'package:flutter/material.dart';
-import 'package:firstapp/pages/rsvp_events_page.dart';
 import 'package:firstapp/pages/calendar_page.dart';
 import 'package:firstapp/pages/explore_page.dart';
 import 'package:firstapp/pages/settings_page.dart';
@@ -13,15 +11,11 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../providers/events_providers.dart';
-import '../providers/notification_providers.dart';
 import '../providers/user_provider.dart';
-import '../screens/FilterScreen.dart';
 import '../screens/SearchScreen.dart';
 import 'package:firstapp/services/api.dart';
-import 'package:firstapp/pages/Broadcast.dart';
 import 'package:firstapp/pages/manageEvents.dart';
 import 'package:firstapp/pages/application_event.dart';
-import '../services/socket_client.dart';
 import 'allHome_events.dart';
 import 'notifications.dart';
 
@@ -33,7 +27,8 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
+class _HomePageState extends State<HomePage>
+    with SingleTickerProviderStateMixin {
   Api api = Api();
   int _selectedIndex = 0;
   late TabController _tabController;
@@ -53,7 +48,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
 
   void _clearSearchInput() {
     _searchController.clear();
-    // FocusScope.of(context).unfocus(); 
+    // FocusScope.of(context).unfocus();
   }
 
   void _onItemTapped(int index) {
@@ -83,24 +78,26 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         onItemTapped: _onItemTapped,
         userRole: userP.role,
       ),
-      floatingActionButton: (userP.role == 'HOST' || userP.role == 'ADMIN') && _selectedIndex != 3
-          ? Padding(
-              padding: const EdgeInsets.only(right: 15, bottom: 70),
-              child: Align(
-                alignment: Alignment.bottomRight,
-                child: FloatingActionButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => ApplicationEvent()),
-                    );
-                  },
-                  child: const Icon(Icons.add),
-                  backgroundColor: Theme.of(context).primaryColor,
-                ),
-              ),
-            )
-          : null,
+      floatingActionButton:
+          (userP.role == 'HOST' || userP.role == 'ADMIN') && _selectedIndex != 3
+              ? Padding(
+                  padding: const EdgeInsets.only(right: 15, bottom: 70),
+                  child: Align(
+                    alignment: Alignment.bottomRight,
+                    child: FloatingActionButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ApplicationEvent()),
+                        );
+                      },
+                      child: const Icon(Icons.add),
+                      backgroundColor: Theme.of(context).primaryColor,
+                    ),
+                  ),
+                )
+              : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
@@ -173,9 +170,11 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                 );
               },
               child: CircleAvatar(
-                backgroundImage: userP.profileImage != null && userP.profileImage!.isNotEmpty
-                    ? NetworkImage(userP.profileImage!)
-                    : const AssetImage('assets/images/user.png') as ImageProvider,
+                backgroundImage:
+                    userP.profileImage != null && userP.profileImage!.isNotEmpty
+                        ? NetworkImage(userP.profileImage!)
+                        : const AssetImage('assets/images/user.png')
+                            as ImageProvider,
                 radius: 27.0,
               ),
             ),
@@ -183,7 +182,10 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
             Flexible(
               child: Text(
                 'Welcome, ${userP.Fullname}',
-                style: const TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold, color: Colors.white),
+                style: const TextStyle(
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
                 overflow: TextOverflow.ellipsis,
                 maxLines: 1,
               ),
@@ -193,7 +195,6 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       ),
     );
   }
-
 
   Widget _buildExploreTab() {
     return FutureBuilder<List<List<Event>>>(
@@ -211,7 +212,6 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         } else if (snapshot.hasData) {
           final eventsHome = snapshot.data![0];
           final eventsRecommended = snapshot.data![2];
-
 
           if (eventsHome.isEmpty) {
             return const Center(child: Text('No events found.'));
@@ -236,7 +236,9 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                       if (query.isNotEmpty) {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => SearchScreen(initialQuery: query)),
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  SearchScreen(initialQuery: query)),
                         );
                       }
                       _clearSearchInput();
@@ -249,19 +251,22 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                     children: [
                       const Text(
                         'All Events',
-                        style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 18.0, fontWeight: FontWeight.bold),
                       ),
                       const Spacer(),
                       TextButton(
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => AllhomeEvents()),
+                            MaterialPageRoute(
+                                builder: (context) => AllhomeEvents()),
                           );
                         },
                         child: const Text(
                           'See more',
-                          style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              fontSize: 16.0, fontWeight: FontWeight.bold),
                         ),
                       ),
                     ],
@@ -271,7 +276,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                   height: 250.0,
                   child: GridView.builder(
                     scrollDirection: Axis.horizontal,
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 1,
                       mainAxisSpacing: 8.0,
                     ),
@@ -280,8 +286,9 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                       if (index >= eventsHome.length) {
                         return Container();
                       }
-                      
-                      return EventCard(event: eventsHome[index], showBookmarkButton: true);
+
+                      return EventCard(
+                          event: eventsHome[index], showBookmarkButton: true);
                     },
                   ),
                 ),
@@ -292,19 +299,22 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                     children: [
                       const Text(
                         'Recommended Events',
-                        style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 18.0, fontWeight: FontWeight.bold),
                       ),
                       const Spacer(),
                       TextButton(
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => AllrecommendedEvents()),
+                            MaterialPageRoute(
+                                builder: (context) => AllrecommendedEvents()),
                           );
                         },
                         child: const Text(
                           'See more',
-                          style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              fontSize: 16.0, fontWeight: FontWeight.bold),
                         ),
                       ),
                     ],
@@ -314,7 +324,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                   height: 250.0,
                   child: GridView.builder(
                     scrollDirection: Axis.horizontal,
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 1,
                       mainAxisSpacing: 8.0,
                     ),
@@ -323,8 +334,10 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                       if (index >= eventsRecommended.length) {
                         return Container();
                       }
-                      
-                      return EventCard(event: eventsRecommended[index], showBookmarkButton: true);
+
+                      return EventCard(
+                          event: eventsRecommended[index],
+                          showBookmarkButton: true);
                     },
                   ),
                 ),
@@ -367,7 +380,10 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
               }
               return Container(
                 margin: const EdgeInsets.only(bottom: 14.0),
-                child: EventCard(event: savedEvents[index], showBookmarkButton: true, saved: true),
+                child: EventCard(
+                    event: savedEvents[index],
+                    showBookmarkButton: true,
+                    saved: true),
               );
             },
           );
