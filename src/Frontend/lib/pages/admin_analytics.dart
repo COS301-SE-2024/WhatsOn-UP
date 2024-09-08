@@ -12,11 +12,15 @@ class AdminAnalyticsPage extends StatefulWidget {
 
 class _AdminAnalyticsPageState extends State<AdminAnalyticsPage> with SingleTickerProviderStateMixin {
     bool isLoading = true;
+    bool isNamesLoading = true;
     late TabController _tabController;
     Api api = Api();
     List<MonthlySummary> monthlySummaries = [];
+    List<String> names = [];
+    List<String> filteredNames = [];
+    TextEditingController searchController = TextEditingController();
 
-    
+
     Future<void> _getAllEventsAnalytics() async {
     userProvider userP = Provider.of<userProvider>(context, listen: false);
     try {
@@ -38,12 +42,39 @@ class _AdminAnalyticsPageState extends State<AdminAnalyticsPage> with SingleTick
     }
   }
 
+  Future<void> _fetchHostData() async {
+    userProvider userP = Provider.of<userProvider>(context, listen: false);
+    try {
+      final response = await api.getAllHostsAnalytics(userP.userId);
+
+      setState(() {
+        names = (response['data'] as List)
+            .map((item) => item.keys.first.toString())
+            .toList();
+        filteredNames = names;
+
+        print("NAMES: $names");
+        print("FILTERED NAMES: $filteredNames");
+
+        isNamesLoading = false;
+      });
+    }
+    catch (e) {
+      print('Error getting host analytics: $e');
+      setState(() {
+        isNamesLoading = false;
+      });
+    }
+
+  }
+
 
    @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
     _getAllEventsAnalytics();
+    _fetchHostData();
   }
 
   @override
@@ -60,7 +91,7 @@ class _AdminAnalyticsPageState extends State<AdminAnalyticsPage> with SingleTick
             indicatorPadding: const EdgeInsets.only(bottom: 12),
             tabs: const [
               Tab(text: 'All Events'),
-              Tab(text: 'Tab 2'),
+              Tab(text: 'Host Data'),
             ],
           ),
         ),
@@ -68,7 +99,7 @@ class _AdminAnalyticsPageState extends State<AdminAnalyticsPage> with SingleTick
         controller: _tabController,
         children: [
           _buildAllEventsTab(),
-          _buildTab2(),
+          _buildHostData(),
         ],
       ),
     );
@@ -123,9 +154,15 @@ class _AdminAnalyticsPageState extends State<AdminAnalyticsPage> with SingleTick
     );   
   }
 
-  Widget _buildTab2() {
-    return  const Center(
-        child: Text('COkmng soon'),
+  Widget _buildHostData() {
+    if (isNamesLoading) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+    
+    return  Center(
+        child: Text(filteredNames[0]),
       );
   }
 }
