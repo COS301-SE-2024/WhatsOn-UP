@@ -6,16 +6,13 @@ import com.devforce.analytics.model.VenueModel
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.Month
-import kotlin.math.abs
-import kotlin.math.pow
-import kotlin.math.sqrt
 
 data class EventDto(
     val id: String,
     val title: String,
     val description: String,
     val metadata: String?,
-    val eventMedia: List<String>,
+    val eventMedia: Set<String>,
     val location: VenueModel?,
     val startDateTime: LocalDateTime,
     val endDateTime: LocalDateTime,

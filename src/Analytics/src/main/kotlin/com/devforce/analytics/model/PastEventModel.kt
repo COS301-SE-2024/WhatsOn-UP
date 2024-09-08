@@ -28,7 +28,7 @@ class PastEventModel{
     @ElementCollection
     @CollectionTable(name = "event_media", joinColumns = [JoinColumn(name = "event_id")])
     @Column(name = "media_link" , columnDefinition = "TEXT")
-    var eventMedia: List<String> = ArrayList()
+    var eventMedia: Set<String> = HashSet()
 
     @Column(name = "deleted_at", nullable = false, updatable = false)
     private var deletedAt: LocalDateTime = LocalDateTime.now()
