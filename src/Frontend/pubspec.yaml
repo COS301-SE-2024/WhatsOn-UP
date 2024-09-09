@@ -36,6 +36,7 @@ dependencies:
   http: ^1.2.1
   numberpicker: ^2.1.2
   syncfusion_flutter_charts: ^26.2.13
+  bubble_tab_indicator: ^0.1.6
   flutter_secure_storage: ^4.2.0
   editable_image: ^2.0.0
   image_picker: ^1.1.2
