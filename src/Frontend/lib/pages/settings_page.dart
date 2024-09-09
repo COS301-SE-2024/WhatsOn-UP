@@ -6,6 +6,7 @@ import 'dart:typed_data';
 import 'package:url_launcher/url_launcher.dart';
 import '../providers/user_provider.dart';
 import 'notifications.dart';
+import 'package:firstapp/pages/AnalyticsPage.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({
@@ -97,6 +98,21 @@ class _SettingsPageState extends State<SettingsPage> {
 
     if (userRole != "GUEST") {
       // Only display account option if user is not a guest
+      options.add(_buildDivider());
+      options.add(
+        _buildSettingsOption(
+          icon: Icons.analytics,
+          text: 'Analytics',
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => AnalyticsPage(),
+              ),
+            );
+          },
+        ),
+      );
       options.add(_buildDivider());
       options.add(
         _buildSettingsOption(
