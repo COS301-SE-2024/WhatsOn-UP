@@ -1,9 +1,13 @@
 
 
 
+import 'dart:convert';
+
+import 'package:firstapp/surveys/ThankYou_Survey.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:firstapp/surveys/studentdetail_survey.dart';
+import 'package:mocktail_image_network/mocktail_image_network.dart';
 import 'package:provider/provider.dart';
 import 'package:firstapp/providers/user_provider.dart';
 import 'package:firstapp/services/api.dart';
@@ -116,12 +120,12 @@ void main() {
     //         .text(
     //         'Faculty of Engineering, Built Environment and Information Technology')
     //         .first);
-    //     await tester.pump();
+    //
     //
     //
     //     await tester.tap(find.text('Submit'));
-    //     await tester.pumpAndSettle();
     //
+    //     await tester.pumpAndSettle();
     //
     //
     //
