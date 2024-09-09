@@ -26,7 +26,7 @@ import 'package:firstapp/pages/application_event.dart';
 import '../services/socket_client.dart';
 import 'allHome_events.dart';
 import 'notifications.dart';
-
+import 'package:firstapp/pages/AnalyticsPage.dart';
 class HomePage extends StatefulWidget {
   const HomePage({
     Key? key,
@@ -120,6 +120,11 @@ class _HomePageState extends State<HomePage> {
         userProvider userP = Provider.of<userProvider>(context, listen: false);
         EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
         eventP.refreshSavedEvents(userP.userId);
+        return _buildHomePage();
+      case 7:
+        if (userP.role == 'HOST' || userP.role == 'ADMIN') {
+          return AnalyticsPage();
+        }
         return _buildHomePage();
       default:
         return _buildHomePage();

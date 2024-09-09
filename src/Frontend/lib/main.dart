@@ -91,6 +91,8 @@ import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
+import 'package:firstapp/pages/AnalyticsPage.dart';
+
 late SupabaseClient supabaseClient;
 void main() async{
   //Initialisations
@@ -158,6 +160,7 @@ class MyApp extends StatelessWidget {
           '/navigation' : (context) => NavigationPage(),
           '/surveyRate': (context) => SurveyratecatScreen(jsonCategories: ''),
           '/manageEvents': (context) => ManageEvents(supabaseClient: supabaseClient),
+          '/analyticsPage': (context) => AnalyticsPage(),
         },
         debugShowCheckedModeBanner: false,
       ),
