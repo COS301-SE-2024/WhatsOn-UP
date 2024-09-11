@@ -133,6 +133,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         children: [
                           _buildProfileOption(
                             text: 'Notifications',
+                            icon: Icons.notifications,
                             onTap: () {
                               Navigator.push(
                                 context,
@@ -143,7 +144,8 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                           _buildDivider(),
                           _buildProfileOption(
-                            text: 'Security',
+                            text: 'Reset Password',
+                            icon: Icons.password,
                             onTap: () {
                               Navigator.of(context).pushNamed('/resetPassword');
                             },
@@ -152,6 +154,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           if (userRole != "ADMIN" && userRole != "HOST") ...[
                             _buildProfileOption(
                               text: 'Host Application',
+                              icon: Icons.assignment,
                               onTap: () {
                                 Navigator.of(context)
                                     .pushNamed('/hostApplication');
@@ -161,6 +164,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           ],
                           _buildProfileOption(
                             text: 'Logout',
+                            icon: Icons.logout,
                             onTap: () {
                               final session = supabase.auth.currentSession;
                               if (session != null) {
@@ -188,6 +192,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         children: [
                           _buildProfileOption(
                             text: 'Limited Guest Features',
+                            icon: Icons.info,
                             onTap: () {
                               showDialog(
                                 context: context,
@@ -238,8 +243,10 @@ class _ProfilePageState extends State<ProfilePage> {
     required String text,
     Widget? trailing,
     required VoidCallback onTap,
+    IconData? icon,
   }) {
     return ListTile(
+      leading: icon != null ? Icon(icon) : null,
       title: Text(text),
       trailing: trailing != null
           ? SizedBox(
