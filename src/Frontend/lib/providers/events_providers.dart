@@ -17,8 +17,8 @@ class EventProvider with ChangeNotifier {
   EventProvider({required this.api}) {
     _eventsHome = _fetchEventsHome();
     _eventsSaved = Future.value([]);
-
   }
+
   Future<void> refreshEvents() async {
     try {
       _eventsHome = _fetchEventsHome();
@@ -58,13 +58,16 @@ Future<void> refreshSavedEvents(String userId) async {
     } catch (e) {
       throw Exception('Failed to refresh events: $e');
     }
-  }Future<List<Event>> _fetchRecommendations(String userId) async {
+  }
+  
+  Future<List<Event>> _fetchRecommendations(String userId) async {
     try {
       return await api.getRecommendedEvents(userId);
     } catch (e) {
       throw Exception('Failed to fetch home events: $e');
     }
   }
+
   Future<List<Event>> _fetchCalendarEventsGuest() async {
     try {
       // return await api.getAllEventsGuest();
