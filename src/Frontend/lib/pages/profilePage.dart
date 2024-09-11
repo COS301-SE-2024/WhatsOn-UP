@@ -131,6 +131,20 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                       child: Column(
                         children: [
+                          if (userRole == "ADMIN" || userRole == "HOST") ... [
+                            _buildProfileOption(
+                              text: 'My Event Analytics',
+                              icon: Icons.bar_chart,
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const Notifications()),
+                                );
+                              },
+                            ),
+                            _buildDivider(),
+                          ],
                           _buildProfileOption(
                             text: 'Notifications',
                             icon: Icons.notifications,
