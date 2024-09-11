@@ -417,12 +417,14 @@ class Api {
   Future<List<AppNotification>> getAllNotification(
       {required String userId}) async {
     String notifyUserUrl =
-        'http://${globals.domain}:8081/notifications/get_all';
+        'https://whatson-up-d7h4ai6p.wm.gateway.dev/notifications/get_all';
+
+    print('ACCESS TOKEN ${supabase.auth.currentSession?.accessToken}');
 
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Authorization': 'Bearer $userId',
+      'Authorization': 'Bearer ${supabase.auth.currentSession?.accessToken}',
     };
 
     try {
