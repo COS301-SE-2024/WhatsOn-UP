@@ -15,11 +15,12 @@ class EventAnalyticsTab extends StatelessWidget {
     final response = await http.get(
       Uri.parse('$baseUrl?query=SELECT%20*%20FROM%20`whatsonup-analytics.analytics_455402105.$viewName`'),
     );
+    print(response);
 
     if (response.statusCode == 200) {
       return List<Map<String, dynamic>>.from(json.decode(response.body));
     } else {
-      throw Exception('Failed to load event data');
+      throw Exception('Failed to load event data: ${response.statusCode}');
     }
   }
 
