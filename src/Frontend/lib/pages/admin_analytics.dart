@@ -7,6 +7,8 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 
 class AdminAnalyticsPage extends StatefulWidget {
+  const AdminAnalyticsPage({super.key});
+
   @override
   _AdminAnalyticsPageState createState() => _AdminAnalyticsPageState();
 }
@@ -177,7 +179,7 @@ class _AdminAnalyticsPageState extends State<AdminAnalyticsPage> with SingleTick
           child: TextField(
             controller: searchController,
             onChanged: filterSearchResults,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               labelText: 'Search for a host',
               suffixIcon: Icon(Icons.search),
             ),
@@ -188,7 +190,7 @@ class _AdminAnalyticsPageState extends State<AdminAnalyticsPage> with SingleTick
             itemCount: filteredUserData.length,
             itemBuilder: (context, index) {
               String name = filteredUserData[index].keys.first;
-              print("USER DATA: " + filteredUserData[index][name].toString());
+              // print("USER DATA: " + filteredUserData[index][name].toString());
               return ListTile(
                 title: Text(name),
                 onTap: () {
@@ -278,7 +280,7 @@ double _roundNum(double value) {
 class AnalyticsChartPage extends StatelessWidget {
   final List<MonthlySummary> monthlySummaries;
 
-  AnalyticsChartPage({required this.monthlySummaries});
+  const AnalyticsChartPage({super.key, required this.monthlySummaries});
 
   @override
   Widget build(BuildContext context) {
@@ -311,7 +313,7 @@ class AnalyticsChartPage extends StatelessWidget {
 class CapacityAttendanceChart extends StatelessWidget {
   final List<MonthlySummary> monthlySummaries;
 
-  CapacityAttendanceChart({required this.monthlySummaries});
+  const CapacityAttendanceChart({super.key, required this.monthlySummaries});
 
   @override
   Widget build(BuildContext context) {
@@ -343,7 +345,7 @@ class CapacityAttendanceChart extends StatelessWidget {
 class FeedbackChart extends StatelessWidget {
   final List<MonthlySummary> monthlySummaries;
 
-  FeedbackChart({required this.monthlySummaries});
+  const FeedbackChart({super.key, required this.monthlySummaries});
 
   @override
   Widget build(BuildContext context) {
@@ -376,23 +378,23 @@ class FeedbackChart extends StatelessWidget {
 class RSVPChart extends StatelessWidget {
   final List<MonthlySummary> monthlySummaries;
 
-  RSVPChart({required this.monthlySummaries});
+  const RSVPChart({super.key, required this.monthlySummaries});
 
   @override
   Widget build(BuildContext context) {
     return SfCartesianChart(
-      title: ChartTitle(text: 'RSVP Ratio Over Time'),
-      legend: Legend(isVisible: true),
+      title: const ChartTitle(text: 'RSVP Ratio Over Time'),
+      legend: const Legend(isVisible: true),
       tooltipBehavior: TooltipBehavior(enable: true),
-      primaryXAxis: CategoryAxis(),
+      primaryXAxis: const CategoryAxis(),
       series: <LineSeries<MonthlySummary, String>>[
         LineSeries<MonthlySummary, String>(
           name: 'RSVP Ratio',
           dataSource: monthlySummaries,
           xValueMapper: (MonthlySummary summary, _) => summary.month,
           yValueMapper: (MonthlySummary summary, _) => summary.rsvpRatio,
-          markerSettings: MarkerSettings(isVisible: true),
-          dataLabelSettings: DataLabelSettings(isVisible: true),
+          markerSettings: const MarkerSettings(isVisible: true),
+          dataLabelSettings: const DataLabelSettings(isVisible: true),
         ),
       ],
     );
@@ -402,23 +404,23 @@ class RSVPChart extends StatelessWidget {
 class DurationChart extends StatelessWidget {
   final List<MonthlySummary> monthlySummaries;
 
-  DurationChart({required this.monthlySummaries});
+  const DurationChart({super.key, required this.monthlySummaries});
 
   @override
   Widget build(BuildContext context) {
     return SfCartesianChart(
-      title: ChartTitle(text: 'Event Duration Over Time'),
-      legend: Legend(isVisible: true),
+      title: const ChartTitle(text: 'Event Duration Over Time'),
+      legend: const Legend(isVisible: true),
       tooltipBehavior: TooltipBehavior(enable: true),
-      primaryXAxis: CategoryAxis(),
+      primaryXAxis: const CategoryAxis(),
       series: <LineSeries<MonthlySummary, String>>[
         LineSeries<MonthlySummary, String>(
           name: 'Duration',
           dataSource: monthlySummaries,
           xValueMapper: (MonthlySummary summary, _) => summary.month,
           yValueMapper: (MonthlySummary summary, _) => summary.duration,
-          markerSettings: MarkerSettings(isVisible: true),
-          dataLabelSettings: DataLabelSettings(isVisible: true),
+          markerSettings: const MarkerSettings(isVisible: true),
+          dataLabelSettings: const DataLabelSettings(isVisible: true),
         ),
       ],
     );
@@ -429,36 +431,36 @@ class DurationChart extends StatelessWidget {
 class RatingDistributionChart extends StatelessWidget {
   final List<MonthlySummary> monthlySummaries;
 
-  RatingDistributionChart({required this.monthlySummaries});
+  const RatingDistributionChart({super.key, required this.monthlySummaries});
 
   @override
   Widget build(BuildContext context) {
     return SfCartesianChart(
-      title: ChartTitle(text: 'Rating Distribution'),
-      legend: Legend(isVisible: true),
+      title: const ChartTitle(text: 'Rating Distribution'),
+      legend: const Legend(isVisible: true),
       tooltipBehavior: TooltipBehavior(enable: true),
-      primaryXAxis: CategoryAxis(),
+      primaryXAxis: const CategoryAxis(),
       series: <CartesianSeries>[
         ColumnSeries<MonthlySummary, String>(
           name: 'Highest Rating',
           dataSource: monthlySummaries,
           xValueMapper: (MonthlySummary summary, _) => summary.month,
           yValueMapper: (MonthlySummary summary, _) => summary.highestRating,
-          dataLabelSettings: DataLabelSettings(isVisible: true),
+          dataLabelSettings: const DataLabelSettings(isVisible: true),
         ),
         ColumnSeries<MonthlySummary, String>(
           name: 'Median Rating',
           dataSource: monthlySummaries,
           xValueMapper: (MonthlySummary summary, _) => summary.month,
           yValueMapper: (MonthlySummary summary, _) => summary.medianRating,
-          dataLabelSettings: DataLabelSettings(isVisible: true),
+          dataLabelSettings: const DataLabelSettings(isVisible: true),
         ),
         ColumnSeries<MonthlySummary, String>(
           name: 'Lowest Rating',
           dataSource: monthlySummaries,
           xValueMapper: (MonthlySummary summary, _) => summary.month,
           yValueMapper: (MonthlySummary summary, _) => summary.lowestRating,
-          dataLabelSettings: DataLabelSettings(isVisible: true),
+          dataLabelSettings: const DataLabelSettings(isVisible: true),
         ),
       ],
     );
@@ -468,16 +470,16 @@ class RatingDistributionChart extends StatelessWidget {
 class SkewnessChart extends StatelessWidget {
   final List<MonthlySummary> monthlySummaries;
 
-  SkewnessChart({required this.monthlySummaries});
+  const SkewnessChart({super.key, required this.monthlySummaries});
 
   @override
   Widget build(BuildContext context) {
     return SfCartesianChart(
-      title: ChartTitle(text: 'Skewness Over Time'),
-      legend: Legend(isVisible: true),
+      title: const ChartTitle(text: 'Skewness Over Time'),
+      legend: const Legend(isVisible: true),
       tooltipBehavior: TooltipBehavior(enable: true),
-      primaryXAxis: CategoryAxis(),
-      primaryYAxis: NumericAxis(
+      primaryXAxis: const CategoryAxis(),
+      primaryYAxis: const NumericAxis(
         minimum: -2,
         maximum: 2,
         interval: 0.5,
@@ -489,8 +491,8 @@ class SkewnessChart extends StatelessWidget {
           dataSource: monthlySummaries,
           xValueMapper: (MonthlySummary summary, _) => summary.month,
           yValueMapper: (MonthlySummary summary, _) => summary.skewness,
-          markerSettings: MarkerSettings(isVisible: true),
-          dataLabelSettings: DataLabelSettings(isVisible: true),
+          markerSettings: const MarkerSettings(isVisible: true),
+          dataLabelSettings: const DataLabelSettings(isVisible: true),
         ),
       ],
     );
