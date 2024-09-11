@@ -417,7 +417,7 @@ class Api {
   Future<List<AppNotification>> getAllNotification(
       {required String userId}) async {
     String notifyUserUrl =
-        'https://whatson-up-d7h4ai6p.wm.gateway.dev/notifications/get_all';
+        'https://${globals.gatewayDomain}/notifications/get_all';
 
     print('ACCESS TOKEN ${supabase.auth.currentSession?.accessToken}');
 
@@ -1235,10 +1235,11 @@ class Api {
       'Authorization': 'Bearer $JWT',
     };
     try {
-       var response =  await http.put(Uri.parse(url), headers: headers);
+       var response =  await http.post(Uri.parse(url), headers: headers);
       if (response.statusCode == 200) {
         print('Marked as seen');
       } else {
+        print('jayuutee $JWT: \n ${response.body}');
         throw Exception('Failed to mark as seen');
       }
     } catch (e) {
