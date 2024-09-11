@@ -33,10 +33,15 @@ class AnalyticsPage extends StatelessWidget {
     }
   }
 
-  String extractNumber(String fieldValue) {
+ /* String extractNumber(String fieldValue) {
     final RegExp regex = RegExp(r'value=(\d+)');
     final match = regex.firstMatch(fieldValue);
     return match != null ? match.group(1) ?? '0' : '0';
+  }*/
+  String extractValue(String fieldValue) {
+    final RegExp regex = RegExp(r'value=(.+?)(?:\}|$)');
+    final match = regex.firstMatch(fieldValue);
+    return match != null ? match.group(1) ?? '' : '';
   }
   @override
   Widget build(BuildContext context) {
@@ -47,9 +52,9 @@ class AnalyticsPage extends StatelessWidget {
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
          children: [
-    // First Row: Two Cards
-          Row(
+           Row(
           children: [
     // Help Menu Accesses
     Expanded(
@@ -63,7 +68,7 @@ class AnalyticsPage extends StatelessWidget {
     } else
     {
     final helpMenuCount = snapshot.data?.isNotEmpty == true
-    ? extractNumber(snapshot.data![0]['help_menu_access_count'])
+    ? extractValue(snapshot.data![0]['help_menu_access_count'])
         : '0';
     return StatsCard(
     title: 'Help Menu Accesses',
@@ -86,7 +91,7 @@ class AnalyticsPage extends StatelessWidget {
     return Center(child: Text('Error: ${snapshot.error}'));
     } else {
     final activeUsers = snapshot.data?.isNotEmpty == true
-    ? extractNumber(snapshot.data![0]['active_users'])
+    ? extractValue(snapshot.data![0]['active_users'])
         : '0';
 
     return StatsCard(
@@ -100,7 +105,7 @@ class AnalyticsPage extends StatelessWidget {
         ),
     ],
       ),
-         // SizedBox(height: 16),
+         SizedBox(height: 16),
       //new vs returning users
         Row(
           children: [
@@ -118,7 +123,7 @@ class AnalyticsPage extends StatelessWidget {
 
                  for (var data in snapshot.data!) {
                    final eventName = data['event_name'] as String;
-                   final userCount = extractNumber(data['user_count'].toString());
+                   final userCount = extractValue(data['user_count'].toString());
 
                    if (eventName.contains('first_open')) {
                      newUserCount = userCount;
@@ -154,6 +159,7 @@ class AnalyticsPage extends StatelessWidget {
         ),
       SizedBox(height: 16),
     // User Location
+
            FutureBuilder<List<Map<String, dynamic>>>(
              future: fetchEventData('user_location_view'),
              builder: (context, snapshot) {
@@ -167,24 +173,28 @@ class AnalyticsPage extends StatelessWidget {
                  final List<Map<String, dynamic>> data = snapshot.data!;
 
                  // Transform the response data to match the expected format
-                 final List<PieSeries<Map<String, dynamic>, String>> pieSeries = [
-                   PieSeries<Map<String, dynamic>, String>(
-                     dataSource: data,
-                     xValueMapper: (data, _) => data['city']?.replaceAll('FieldValue{attribute=PRIMITIVE, value=', '').replaceAll('}', '') ?? 'Unknown City',
-                     yValueMapper: (data, _) => int.tryParse(data['user_count']?.replaceAll('FieldValue{attribute=PRIMITIVE, value=', '').replaceAll('}', '') ?? '0') ?? 0,
-                     dataLabelSettings: DataLabelSettings(isVisible: true),
+                 return Container(
+                   height: 300, // Adjusted height for better display
+                   padding: const EdgeInsets.all(16.0),
+                   child: SfCircularChart(
+                     title: ChartTitle(text: 'User Locations by City'),
+                     legend: Legend(isVisible: true),
+                     series: <PieSeries<Map<String, dynamic>, String>>[
+                       PieSeries<Map<String, dynamic>, String>(
+                         dataSource: data,
+                         xValueMapper: (data, _) => data['city']?.replaceAll('FieldValue{attribute=PRIMITIVE, value=', '').replaceAll('}', '') ?? 'Unknown City',
+                         yValueMapper: (data, _) => int.tryParse(data['user_count']?.replaceAll('FieldValue{attribute=PRIMITIVE, value=', '').replaceAll('}', '') ?? '0') ?? 0,
+                         dataLabelSettings: DataLabelSettings(isVisible: true),
+                       ),
+                     ],
                    ),
-                 ];
-
-                 return SfCircularChart(
-                   title: ChartTitle(text: 'User Locations by City'),
-                   legend: Legend(isVisible: true),
-                   series: pieSeries,
                  );
                }
              },
            ),
+           SizedBox(height: 16),
            // Detailed Event Clicks
+
            FutureBuilder<List<Map<String, dynamic>>>(
              future: fetchEventData('detailed_event_clicks_view'),
              builder: (context, snapshot) {
@@ -196,8 +206,13 @@ class AnalyticsPage extends StatelessWidget {
                  final data = snapshot.data ?? [];
                  return Container(
                    height: 400,
-                   padding: const EdgeInsets.all(16.0),
-                   child: SfCartesianChart(
+                   padding: const EdgeInsets.symmetric(vertical: 16.0),
+               child: Align(
+               alignment: Alignment.topLeft, // Align chart to the start
+               child: SizedBox(
+                      width: MediaQuery.of(context).size.width, // Take full width
+                      child:SfCartesianChart(
+                        title: ChartTitle(text: 'Detailed Event Clicks'),
                      primaryXAxis: CategoryAxis(
                        labelRotation: 45,
                        labelAlignment: LabelAlignment.start,
@@ -208,11 +223,72 @@ class AnalyticsPage extends StatelessWidget {
                      series: <CartesianSeries>[
                        BarSeries<Map<String, dynamic>, String>(
                          dataSource: data,
-                         xValueMapper: (data, _) => data['event_name'].toString(),
-                         yValueMapper: (data, _) => int.tryParse(extractNumber(data['click_count'].toString())) ?? 0,
+                         xValueMapper: (data, _) => extractValue(data['event_name'].toString()),
+                         yValueMapper: (data, _) => int.tryParse(extractValue(data['click_count'].toString())) ?? 0,
                          name: 'Click Count',
                          dataLabelSettings: DataLabelSettings(isVisible: true),
                          color: Colors.blue,
+                       ),
+                     ],
+                     tooltipBehavior: TooltipBehavior(enable: true),
+                   ),
+                    ),
+               ),
+                 );
+               }
+             },
+           ),
+           SizedBox(height: 16),
+           FutureBuilder<List<Map<String, dynamic>>>(
+             future: fetchEventData('event_cancellations_view'),
+             builder: (context, snapshot) {
+               if (snapshot.connectionState == ConnectionState.waiting) {
+                 return Center(child: CircularProgressIndicator());
+               } else if (snapshot.hasError) {
+                 return Center(child: Text('Error: ${snapshot.error}'));
+               } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                 // Show an annotation in the chart itself if there is no data
+                 return Container(
+                   height: 400,
+                   child: SfCartesianChart(
+                     primaryXAxis: CategoryAxis(),
+                     primaryYAxis: NumericAxis(),
+                     annotations: <CartesianChartAnnotation>[
+                       CartesianChartAnnotation(
+                         widget:Container(
+                     child: const Text(
+                           'No event cancellation data available',
+                           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: pantone201),
+                         ),
+),                       coordinateUnit: CoordinateUnit.logicalPixel,
+                         x: 200,
+                         y: 200,
+                       ),
+                     ],
+                   ),
+                 );
+               } else {
+                 final data = snapshot.data ?? [];
+                 return Container(
+                   height: 400,
+                   padding: const EdgeInsets.symmetric(vertical: 16.0),
+                   child: SfCartesianChart(
+                     title: ChartTitle(text: 'Event Cancellations'),
+                     primaryXAxis: CategoryAxis(
+                       labelRotation: 45,
+                       labelAlignment: LabelAlignment.start,
+                     ),
+                     primaryYAxis: NumericAxis(
+                       labelFormat: '{value}',
+                     ),
+                     series: <CartesianSeries>[
+                       BarSeries<Map<String, dynamic>, String>(
+                         dataSource: data,
+                         xValueMapper: (data, _) => extractValue(data['event_name'].toString()),
+                         yValueMapper: (data, _) => int.tryParse(extractValue(data['cancellations'].toString())) ?? 0,
+                         name: 'Event Cancellations',
+                         dataLabelSettings: DataLabelSettings(isVisible: true),
+                         color: pantone377, // Use red color to symbolize cancellations
                        ),
                      ],
                      tooltipBehavior: TooltipBehavior(enable: true),
@@ -221,30 +297,9 @@ class AnalyticsPage extends StatelessWidget {
                }
              },
            ),
-    FutureBuilder<List<Map<String, dynamic>>>(
-    future: fetchEventData('event_cancellations_view'),
-    builder: (context, snapshot) {
-    if (snapshot.connectionState == ConnectionState.waiting) {
-    return CircularProgressIndicator();
-    } else if (snapshot.hasError) {
-    return Text('Error: ${snapshot.error}');
-    } else {
-    return SfCartesianChart(
-    primaryXAxis: CategoryAxis(),
-    series: <CartesianSeries>[
-    ColumnSeries<Map<String, dynamic>, String>(
-    dataSource: snapshot.data!,
-    xValueMapper: (data, _) => data['event_name'] as String,
-    yValueMapper: (data, _) => int.tryParse(data['cancellations'].toString()) ?? 0,
-    name: 'Event Cancellations',
-    dataLabelSettings: DataLabelSettings(isVisible: true),
-    ),
-    ],
-    );
-    }
-    },
-    ),
-    FutureBuilder<List<Map<String, dynamic>>>(
+
+
+           FutureBuilder<List<Map<String, dynamic>>>(
     future: fetchEventData('average_session_time_view'),
     builder: (context, snapshot) {
     if (snapshot.connectionState == ConnectionState.waiting) {
@@ -252,18 +307,26 @@ class AnalyticsPage extends StatelessWidget {
     } else if (snapshot.hasError) {
     return Center(child: Text('Error: ${snapshot.error}'));
     } else {
-    return SfCartesianChart(
-    primaryXAxis: CategoryAxis(),
+      return Container(
+          height: 300, // Adjusted height for better display
+          padding: const EdgeInsets.all(16.0),
+      child:  SfCartesianChart(
+      primaryXAxis: CategoryAxis(),
+      primaryYAxis: NumericAxis(
+      labelFormat: '{value}',
+      ),
     series: <CartesianSeries>[
-    LineSeries<Map<String, dynamic>, String>(
-    dataSource: snapshot.data!,
-    xValueMapper: (data, _) => 'Average Session Time',
-    yValueMapper: (data, _) => double.tryParse(data['avg_session_time'].toString() ) ?? 0.0,
-    name: 'Session Time',
-    dataLabelSettings: DataLabelSettings(isVisible: true),
-    ),
-    ],
-    );
+      ColumnSeries<Map<String, dynamic>, String>(
+      dataSource: snapshot.data ?? [],
+      xValueMapper: (data, _) => data['event_name'].toString(),
+      yValueMapper: (data, _) => int.tryParse(extractValue(data['cancellation_count'].toString())) ?? 0,
+      name: 'Cancellations',
+      color: Colors.red,
+      ),
+      ],
+      tooltipBehavior: TooltipBehavior(enable: true),
+      ),
+      );
     }
     },
     ),
