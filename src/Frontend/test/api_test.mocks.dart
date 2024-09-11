@@ -300,12 +300,6 @@ class MockEventProvider extends _i1.Mock implements _i7.EventProvider {
       );
 
   @override
-  _i8.Future<List<_i9.Event>> get recommendations => (super.noSuchMethod(
-        Invocation.getter(#recommendations),
-        returnValue: _i8.Future<List<_i9.Event>>.value(<_i9.Event>[]),
-      ) as _i8.Future<List<_i9.Event>>);
-
-  @override
   _i8.Future<List<_i9.Event>> get eventsHome => (super.noSuchMethod(
         Invocation.getter(#eventsHome),
         returnValue: _i8.Future<List<_i9.Event>>.value(<_i9.Event>[]),
@@ -343,17 +337,6 @@ class MockEventProvider extends _i1.Mock implements _i7.EventProvider {
   _i8.Future<void> refreshRSVPEvents(String? userId) => (super.noSuchMethod(
         Invocation.method(
           #refreshRSVPEvents,
-          [userId],
-        ),
-        returnValue: _i8.Future<void>.value(),
-        returnValueForMissingStub: _i8.Future<void>.value(),
-      ) as _i8.Future<void>);
-
-  @override
-  _i8.Future<void> refreshRecommendations(String? userId) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #refreshRecommendations,
           [userId],
         ),
         returnValue: _i8.Future<void>.value(),
@@ -472,15 +455,6 @@ class MockEventProvider extends _i1.Mock implements _i7.EventProvider {
   _i8.Future<_i9.Event?> getEventById(String? id) => (super.noSuchMethod(
         Invocation.method(
           #getEventById,
-          [id],
-        ),
-        returnValue: _i8.Future<_i9.Event?>.value(),
-      ) as _i8.Future<_i9.Event?>);
-
-  @override
-  _i8.Future<_i9.Event?> getEventByIdR(String? id) => (super.noSuchMethod(
-        Invocation.method(
-          #getEventByIdR,
           [id],
         ),
         returnValue: _i8.Future<_i9.Event?>.value(),
@@ -996,10 +970,10 @@ class MockApi extends _i1.Mock implements _i2.Api {
       ) as _i8.Future<List<_i9.Event>>);
 
   @override
-  _i8.Future<List<_i9.Event>> getRecommendedEvents(String? userId) =>
+  _i8.Future<List<_i9.Event>> RecommendedEvents(String? userId) =>
       (super.noSuchMethod(
         Invocation.method(
-          #getRecommendedEvents,
+          #RecommendedEvents,
           [userId],
         ),
         returnValue: _i8.Future<List<_i9.Event>>.value(<_i9.Event>[]),

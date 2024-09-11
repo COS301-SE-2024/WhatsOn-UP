@@ -10,9 +10,8 @@ import 'package:firstapp/screens/FilterScreen.dart'; // Import the FilterScreen
 
 class SearchScreen extends StatefulWidget {
   final bool showSearchHistoryOnStart;
-  final String? initialQuery;
 
-  SearchScreen({this.showSearchHistoryOnStart = false, this.initialQuery});
+  SearchScreen({this.showSearchHistoryOnStart = false});
 
   @override
   _SearchScreenState createState() => _SearchScreenState();
@@ -20,7 +19,6 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   final EventService _eventService = EventService(Supabase.instance.client);
-  final TextEditingController _searchController = TextEditingController();
   List<Event> _searchResults = [];
   List<Category> _categories = [];
   List<String> _searchHistory = [];
@@ -35,11 +33,6 @@ class _SearchScreenState extends State<SearchScreen> {
     super.initState();
     _fetchCategories();
     _loadSearchHistory();
-    
-    if (widget.initialQuery != null && widget.initialQuery!.isNotEmpty) {
-      _searchController.text = widget.initialQuery!;
-      _searchEvents(widget.initialQuery!);
-    }
 
     if (widget.showSearchHistoryOnStart) {
       _showSearchHistory = true;
@@ -189,7 +182,6 @@ class _SearchScreenState extends State<SearchScreen> {
                   SizedBox(width: 8.0),
                   Expanded(
                     child: TextField(
-                      controller: _searchController,
                       decoration: InputDecoration(
                         hintText: "Search for events",
                         border: InputBorder.none,
@@ -264,13 +256,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   if (index >= _searchResults.length) {
                     return Container();
                   }
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 22.0,
-                      vertical: 8.0,
-                    ),
-                      child: EventCard(event: _searchResults[index], showBookmarkButton: true,),
-                  );
+                  return EventCard(event: _searchResults[index],showBookmarkButton: false);
                 },
               ),
             ),

@@ -32,7 +32,7 @@ class _AllhomeEventsState extends State<AllhomeEvents> {
     try {
       userProvider user = Provider.of<userProvider>(context, listen: false);
       EventProvider eventProvider = Provider.of<EventProvider>(context, listen: false);
-      events =await eventProvider.eventsHome;
+      events =await eventProvider.recommendations ;
     } catch (error) {
       setState(() {
         hasError = true;
@@ -48,7 +48,7 @@ class _AllhomeEventsState extends State<AllhomeEvents> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('All Events'),
+        title: const Text('Recommended Events'),
       ),
       body: isLoading
           ? Center(
@@ -67,13 +67,7 @@ class _AllhomeEventsState extends State<AllhomeEvents> {
               : ListView.builder(
                   itemCount: events.length,
                   itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(
-                      horizontal: 22.0,
-                      vertical: 8.0,
-                    ),
-                      child: EventCard(event: events[index], showBookmarkButton: true,),
-                    );
+                    return EventCard(event: events[index], showBookmarkButton: true,);
                   },
                 ),
     );
