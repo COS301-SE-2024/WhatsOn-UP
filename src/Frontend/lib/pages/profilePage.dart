@@ -1,3 +1,4 @@
+import 'package:firstapp/pages/host_analytics.dart';
 import 'package:firstapp/pages/supabase_login.dart';
 import 'package:firstapp/pages/supabase_signup.dart';
 import 'package:flutter/material.dart';
@@ -139,7 +140,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => const Notifications()),
+                                      builder: (context) => HostAnalyticsPage()),
                                 );
                               },
                             ),
