@@ -40,23 +40,27 @@ class _NotificationsState extends State<Notifications> {
   Widget build(BuildContext context) {
     userProvider userP = Provider.of<userProvider>(context, listen: false);
     String userRole = userP.role;
+    final theme = Theme.of(context);
+    final textColour = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
 
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+              'Notifications',
+              style: TextStyle(
+                fontSize: 32,
+                fontWeight: FontWeight.bold,
+                color: textColour,
+              ),
+          ),
+          backgroundColor: Colors.transparent,
+          automaticallyImplyLeading: false,
+      ),
       body: RefreshIndicator(
         onRefresh: _refreshNotifications,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Text(
-                'Notifications',
-                style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
             Expanded(
               child: userRole == "GUEST" ? _buildGuestView() : _buildNotificationsView(),
             ),
