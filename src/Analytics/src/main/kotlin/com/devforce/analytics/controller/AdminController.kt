@@ -50,4 +50,9 @@ class AdminController {
         return adminService.getAllAggregateData()
     }
 
+    @RequestMapping("/get_popular_events")
+    fun getPopularEvents(): ResponseEntity<ResponseDto> {
+        return adminService.getPopularEvents()
+    }
+
 }
