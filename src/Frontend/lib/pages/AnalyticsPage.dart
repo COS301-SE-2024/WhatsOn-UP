@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:firstapp/widgets/stats_card.dart';
-
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 //Pantone Colors
 const Color pantone159 = Color(0xFFF67F46); // humanities
 const Color pantone2718 = Color(0xFF2671AF); //health science
@@ -300,65 +300,118 @@ class AnalyticsPage extends StatelessWidget {
 
 
            FutureBuilder<List<Map<String, dynamic>>>(
-    future: fetchEventData('average_session_time_view'),
-    builder: (context, snapshot) {
-    if (snapshot.connectionState == ConnectionState.waiting) {
-    return Center(child: CircularProgressIndicator());
-    } else if (snapshot.hasError) {
-    return Center(child: Text('Error: ${snapshot.error}'));
-    } else {
-      return Container(
-          height: 300, // Adjusted height for better display
-          padding: const EdgeInsets.all(16.0),
-      child:  SfCartesianChart(
-      primaryXAxis: CategoryAxis(),
-      primaryYAxis: NumericAxis(
-      labelFormat: '{value}',
-      ),
-    series: <CartesianSeries>[
-      ColumnSeries<Map<String, dynamic>, String>(
-      dataSource: snapshot.data ?? [],
-      xValueMapper: (data, _) => data['event_name'].toString(),
-      yValueMapper: (data, _) => int.tryParse(extractValue(data['cancellation_count'].toString())) ?? 0,
-      name: 'Cancellations',
-      color: Colors.red,
-      ),
-      ],
-      tooltipBehavior: TooltipBehavior(enable: true),
-      ),
-      );
-    }
-    },
-    ),
-    // Sign-in Counts
-    FutureBuilder<List<Map<String, dynamic>>>(
-    future: fetchEventData('sign_in_counts_view'),
-    builder: (context, snapshot) {
-    if (snapshot.connectionState == ConnectionState.waiting) {
-    return CircularProgressIndicator();
-    } else if (snapshot.hasError) {
-    return Text('Error: ${snapshot.error}');
-    } else {
-    return SfCartesianChart(
-    primaryXAxis: CategoryAxis(),
-    series: <CartesianSeries>[
-    ColumnSeries<Map<String, dynamic>, String>(
-    dataSource: snapshot.data!,
-    xValueMapper: (data, _) => 'Sign-ins',
-    yValueMapper: (data, _) => int.tryParse(data['sign_ins'].toString()) ?? 0,
-    name: 'Sign-ins',
-    dataLabelSettings: DataLabelSettings(isVisible: true),
-    ),
-    ],
-    );
-    }
-    },
-    ),
+             future: fetchEventData('average_session_time_view'),
+             builder: (context, snapshot) {
+               if (snapshot.connectionState == ConnectionState.waiting) {
+                 return Center(child: CircularProgressIndicator());
+               } else if (snapshot.hasError) {
+                 return Center(child: Text('Error: ${snapshot.error}'));
+               } else {
+                 final List<Map<String, dynamic>> data = snapshot.data!;
 
-      ],
-        )
-    )
-    );
+                 // Transform the data for the chart
+                 final chartData = data.asMap().entries.map((entry) {
+                   final index = entry.key;
+                   final item = entry.value;
+                   final sessionDurationMinutes = double.tryParse(extractValue(item['session_duration_minutes'].toString())) ?? 0.0;
+                   return {'index': index, 'session_duration_minutes': sessionDurationMinutes};
+                 }).toList();
 
+                 return Container(
+                   height: 500, // Increased height for better display
+                   padding: const EdgeInsets.all(16.0),
+                   child: SfCartesianChart(
+                     title: ChartTitle(
+                       text: 'Average Session Time (Minutes)',
+                       textStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                     ),
+                     primaryXAxis: NumericAxis(
+                       title: AxisTitle(
+                         text: 'Users',
+                         textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                       ),
+                       labelFormat: '{value}', // Show numeric index
+                     ),
+                     primaryYAxis: NumericAxis(
+                       title: AxisTitle(
+                         text: 'Session Duration (Minutes)',
+                         textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                       ),
+                       labelFormat: '{value}',
+                     ),
+                     tooltipBehavior: TooltipBehavior(enable: true),
+                     series: <CartesianSeries>[
+                       LineSeries<Map<String, dynamic>, int>(
+                         dataSource: chartData,
+                         xValueMapper: (data, _) => data['index'],
+                         yValueMapper: (data, _) => data['session_duration_minutes'],
+                         dataLabelSettings: DataLabelSettings(isVisible: true),
+                         name: 'Session Duration',
+                         markerSettings: MarkerSettings(isVisible: true), // Optional: Show markers on the line
+                       ),
+                     ],
+                   ),
+                 );
+               }
+             },
+           ),
+
+           // Sign-in Counts
+           FutureBuilder<List<Map<String, dynamic>>>(
+             future: fetchEventData('sign_in_counts_view'),
+             builder: (context, snapshot) {
+               if (snapshot.connectionState == ConnectionState.waiting) {
+                 return Center(child: CircularProgressIndicator());
+               } else if (snapshot.hasError) {
+                 return Center(child: Text('Error: ${snapshot.error}'));
+               } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                 return Center(child: Text('No data available'));
+               } else {
+                 final data = snapshot.data!;
+                 final signInCounts = {
+                   'In-App Sign-Ins': 0,
+                   'Google Sign-Ins': 0,
+                 };
+
+                 for (var item in data) {
+                   final method = extractValue(item['method'].toString());
+                   final signInCount = int.tryParse(extractValue(item['sign_in_count'].toString())) ?? 0;
+
+                   if (method.contains('in-app sign in')) {
+                     signInCounts['In-App Sign-Ins'] = signInCount;
+                   } else if (method.contains('google sign-in')) {
+                     signInCounts['Google Sign-Ins'] = signInCount;
+                   }
+                 }
+
+                 return Container(
+                   height: 300,
+                   padding: const EdgeInsets.all(16.0),
+                   child: SfCartesianChart(
+                     title: ChartTitle(text: 'Sign-In Counts Comparison'),
+                     primaryXAxis: CategoryAxis(),
+                     primaryYAxis: NumericAxis(
+                       labelFormat: '{value}',
+                     ),
+                     series: <CartesianSeries>[
+                       BarSeries<Map<String, dynamic>, String>(
+                         dataSource: signInCounts.entries.map((e) => {'sign_in_type': e.key, 'count': e.value}).toList(),
+                         xValueMapper: (data, _) => data['sign_in_type'],
+                         yValueMapper: (data, _) => data['count'],
+                         color: pantone377,
+                         name: 'Sign-In Count',
+                         dataLabelSettings: DataLabelSettings(isVisible: true),
+                       ),
+                     ],
+                     tooltipBehavior: TooltipBehavior(enable: true),
+                   ),
+                 );
+               }
+             },
+           ),
+         ],
+        ),
+      ),
+    );
   }
 }
