@@ -38,7 +38,27 @@ class AnalyticsDetailPage extends StatelessWidget {
                 child: FeedbackDistributionChart(monthlySummaries: monthlySummaries), // Feedback Distribution
               ),
             ] else
-              Center(child: Text('No monthly data available for $name')),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.6,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.info_outline, size: 64, color: Color.fromARGB(255, 119, 119, 119),),
+                    SizedBox(height: 16),
+                    Center(
+                      child: Text(
+                        'No monthly data available for $name',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: const Color.fromARGB(255, 119, 119, 119),
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
           ],
         ),
       ),

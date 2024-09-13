@@ -21,8 +21,8 @@ class _HostAnalyticsPageState extends State<HostAnalyticsPage> {
     // print ("USER ID: ${userP.userId}");
 
     try {
-      // final response = await api.getAllEventsAnalytics(userP.userId);
-      final response = await api.getHostEventAnalytics("69ae72bc-8e2b-4400-b608-29f048d4f8c7");
+      final response = await api.getAllEventsAnalytics(userP.userId);
+      // final response = await api.getHostEventAnalytics("69ae72bc-8e2b-4400-b608-29f048d4f8c7");
       
       // print('EVENTS ANALYTICS RESPONSE: $response');
 
@@ -60,12 +60,32 @@ class _HostAnalyticsPageState extends State<HostAnalyticsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('My Analytics'),
+        title: const Text('My Analytics'),
       ),
       body: isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : events.isEmpty
-              ? Center(child: Text('No events found'))
+              ? SizedBox(
+                height: MediaQuery.of(context).size.height * 0.6,
+                child: const Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.info_outline, size: 64, color: Color.fromARGB(255, 119, 119, 119),),
+                    SizedBox(height: 16),
+                    Center(
+                      child: Text(
+                        'No Events found!',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromARGB(255, 119, 119, 119),
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ],
+                ),
+              )
               : EventAnalyticsDashboard(events: events),
     );
   }
@@ -90,15 +110,15 @@ class EventAnalyticsDashboard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               child: Text(
                 DateFormat('MMMM yyyy').format(DateTime(DateTime.now().year, month)),
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ),
             ListView.builder(
               shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               itemCount: monthEvents.length,
               itemBuilder: (context, index) => EventCard(event: monthEvents[index]),
             ),
@@ -130,7 +150,7 @@ class EventCard extends StatelessWidget {
   Widget build(BuildContext context) {
     // print("Event: $event");
     return Card(
-      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: ListTile(
         title: Text(event.title),
         subtitle: Text(DateFormat('dd MMM yyyy, HH:mm').format(event.startDateTime)),
@@ -138,7 +158,7 @@ class EventCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            Text('${event.attendees.length}/${event.maxAttendees}'),
+            Text('Attendees: ${event.attendees.length}/${event.maxAttendees}'),
             Text('Rating: ${event.averageRating.toStringAsFixed(1)}'),
           ],
         ),
@@ -161,16 +181,16 @@ class EventDetailsPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text(event.title)),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(event.description),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text('Date: ${DateFormat('dd MMM yyyy, HH:mm').format(event.startDateTime)}'),
             Text('Attendees: ${event.attendees.length}/${event.maxAttendees}'),
             Text('Average Rating: ${event.averageRating.toStringAsFixed(1)}'),
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
             // Text('Feedback Distribution', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             // SizedBox(height: 8),
             SizedBox(
@@ -178,10 +198,10 @@ class EventDetailsPage extends StatelessWidget {
               child: SfCartesianChart(
                 title: const ChartTitle(text: 'Feedback Distribution'),
                 tooltipBehavior: TooltipBehavior(enable: true),
-                primaryXAxis: CategoryAxis(
+                primaryXAxis: const CategoryAxis(
                   title: AxisTitle(text: 'Rating'),
                 ),
-                primaryYAxis: NumericAxis(
+                primaryYAxis: const NumericAxis(
                   minimum: 0,
                   // maximum: event.attendees.length.toDouble(),
                   interval: 1,
@@ -199,14 +219,14 @@ class EventDetailsPage extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(height: 24),
-            Text('Event Statistics', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            SizedBox(height: 8),
+            const SizedBox(height: 24),
+            const Text('Event Statistics', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 8),
             Text('Median Rating: ${event.medianRating}'),
             Text('Highest Rating: ${event.highestRating}'),
             Text('Lowest Rating: ${event.lowestRating}'),
-            Text('Mode: ${event.mode}'),
-            Text('Skewness: ${event.skewness.toStringAsFixed(2)}'),
+            // Text('Mode: ${event.mode}'),
+            // Text('Skewness: ${event.skewness.toStringAsFixed(2)}'),
             Text('RSVP Ratio: ${event.rsvpRatio.toStringAsFixed(2)}%'),
             Text('Capacity Ratio: ${event.capacityRatio.toStringAsFixed(2)}%'),
             Text('Attendance Ratio: ${event.attendanceRatio.toStringAsFixed(2)}%'),
