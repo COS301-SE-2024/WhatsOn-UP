@@ -213,7 +213,7 @@ class Api {
 
   Future<Map<String, dynamic>> postChangeUser(String name, String userId) async {
 
-    var userChangeUrl = Uri.parse('http://${globals.domain}:8080/api/user/update_profile');
+    var userChangeUrl = Uri.parse('http://${globals.domain}:8080/api/user/update_profile?fullName=$name');
 
 
     var headers = {
