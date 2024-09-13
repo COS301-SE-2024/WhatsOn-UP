@@ -171,12 +171,22 @@ class EventDetailsPage extends StatelessWidget {
             Text('Attendees: ${event.attendees.length}/${event.maxAttendees}'),
             Text('Average Rating: ${event.averageRating.toStringAsFixed(1)}'),
             SizedBox(height: 24),
-            Text('Feedback Distribution', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            SizedBox(height: 8),
+            // Text('Feedback Distribution', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            // SizedBox(height: 8),
             SizedBox(
-              height: 200,
+              height: 300,
               child: SfCartesianChart(
-                primaryXAxis: CategoryAxis(),
+                title: const ChartTitle(text: 'Feedback Distribution'),
+                tooltipBehavior: TooltipBehavior(enable: true),
+                primaryXAxis: CategoryAxis(
+                  title: AxisTitle(text: 'Rating'),
+                ),
+                primaryYAxis: NumericAxis(
+                  minimum: 0,
+                  // maximum: event.attendees.length.toDouble(),
+                  interval: 1,
+                  title: AxisTitle(text: 'Feedback Count'),
+                ),
                 series: <ColumnSeries>[
                   ColumnSeries<Map<String, dynamic>, String>(
                     dataSource: [1, 2, 3, 4, 5].map((rating) => {
