@@ -227,16 +227,18 @@ class _CalendarPageState extends State<CalendarPage>
   }
 
   Widget _buildNoEventsMessage(userProvider userP, BuildContext context) {
+  final theme = Theme.of(context);
+  final textColour = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
   final Widget noEventsMessage = userP.role == 'GUEST'
-      ? const Text(
+      ? Text(
           'There are no events occurring this month. Please check back later.',
-          style: TextStyle(fontSize: 18),
+          style: TextStyle(fontSize: 18, color: textColour),
           textAlign: TextAlign.center,
         )
       : RichText(
           text: TextSpan(
             text: "You have no RSVP'd events for this month. Head to the ",
-            style: const TextStyle(fontSize: 18),
+            style: TextStyle(fontSize: 18, color: textColour),
             children: [
               TextSpan(
                 text: 'home page',
