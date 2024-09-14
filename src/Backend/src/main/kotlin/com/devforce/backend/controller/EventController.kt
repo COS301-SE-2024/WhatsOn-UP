@@ -1,21 +1,14 @@
 package com.devforce.backend.controller
 
 import com.devforce.backend.dto.*
-import com.devforce.backend.model.EventModel
+import com.devforce.backend.security.CustomUser
 import com.devforce.backend.service.EventService
-import com.devforce.backend.service.UserService
-import jakarta.annotation.security.RolesAllowed
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.format.annotation.DateTimeFormat
-import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
 import java.util.UUID
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeParseException
 
 //FUTURE
 //  fun filterEvents(
@@ -119,5 +112,17 @@ class EventController {
         return eventService.getAllAttendanceByEventId(eventId)
 
     }
+
+    @PutMapping("/update-attendance")
+    @PreAuthorize("hasRole('ADMIN')")
+    fun updateAttendanceStatus(@RequestBody request: AttendanceUpdateDto): ResponseEntity<ResponseDto> {
+        return eventService.updateAttendanceStatus(
+                request.eventId,
+                request.userId,
+                request.attended
+            )
+
+    }
+
 
 }
