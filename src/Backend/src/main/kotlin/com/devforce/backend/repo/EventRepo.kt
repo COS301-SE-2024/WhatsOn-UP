@@ -151,6 +151,11 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
     @Procedure(procedureName = "delete_event")
     fun deleteEvent(eventId: UUID)
 
+
+    @Query("SELECT ea.user_id, ea.attended FROM event_attendees ea WHERE ea.event_id = :eventId", nativeQuery = true)
+    fun findAttendanceByEventId(@Param("eventId") eventId: UUID): List<Map<String, Any>>
+
+
 }
 
 

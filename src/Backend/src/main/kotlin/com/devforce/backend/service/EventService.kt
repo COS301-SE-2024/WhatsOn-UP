@@ -40,6 +40,8 @@ class EventService {
     @Autowired
     lateinit var broadcastRepo: BroadcastRepo
 
+
+
     fun createEvent(createEventDto: CreateEventDto): ResponseEntity<ResponseDto> {
         val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
 
@@ -310,6 +312,20 @@ class EventService {
     fun getLocations(): ResponseEntity<ResponseDto> {
         val locations = venueRepo.findAll()
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), locations))
+    }
+
+    fun getAllAttendanceByEventId(eventId: UUID): ResponseEntity<ResponseDto> {
+        val attendanceRecords = eventRepo.findAttendanceByEventId(eventId)
+
+        return if (attendanceRecords.isNotEmpty()) {
+            ResponseEntity.ok(
+                ResponseDto("success", System.currentTimeMillis(), attendanceRecords)
+            )
+        } else {
+            ResponseEntity.ok(
+                ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "No attendance records found for the event"))
+            )
+        }
     }
 
 }
