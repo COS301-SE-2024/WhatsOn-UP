@@ -11,7 +11,9 @@ import 'package:firstapp/widgets/event_card.dart';
 
 class EventService {
   final SupabaseClient supabase;
+
   EventService(this.supabase);
+
   static final String baseUrl = 'http://${globals.domain}:8080';
 
   Future<String?> _getJwtToken() async {
@@ -20,12 +22,11 @@ class EventService {
     print(session?.accessToken);
     return session?.accessToken;
   }
-  Future<List<Event>> fetchPastEvents(String userId) async {
 
+  Future<List<Event>> fetchPastEvents(String userId) async {
     final uri = Uri.parse('$baseUrl/api/events/get_passed_events');
 
     try {
-
       // final jwtToken = await _getJwtToken();
 
       //if (jwtToken == null) {
@@ -45,11 +46,9 @@ class EventService {
       };
 
 
-
       final response = await http.get(uri, headers: headers);
 
       if (response.statusCode == 200) {
-
         final Map<String, dynamic> decodedJson = json.decode(response.body);
 
         final List<dynamic> eventsJson = decodedJson['data'];
@@ -59,24 +58,16 @@ class EventService {
             Event.fromJson(jsonEvent)).toList();
 
         return events;
-
       } else if (response.statusCode == 401) {
-
         throw Exception('Unauthorized request');
-
       } else {
-
         throw Exception('Failed to load past events');
-
       }
-
     } catch (e) {
-
       throw Exception('Failed to connect to the server: $e');
-
     }
-
   }
+
   Future<List<Category>> fetchUniqueCategories() async {
     final uri = Uri.parse('$baseUrl/api/events/categories');
 
@@ -102,7 +93,8 @@ class EventService {
           return [];
         }
 
-        return   jsonResponse.map((json) => Category.fromJson(json as String)).toList();;
+        return jsonResponse.map((json) => Category.fromJson(json as String))
+            .toList();;
       } else if (response.statusCode == 401) {
         print('Unauthorized request');
         throw Exception('Unauthorized request');
@@ -140,7 +132,7 @@ class EventService {
         final Map<String, dynamic> decodedJson = json.decode(response.body);
         final List<dynamic> eventsJson = decodedJson['data'];
         final List<Event> events =
-            eventsJson.map((jsonEvent) => Event.fromJson(jsonEvent)).toList();
+        eventsJson.map((jsonEvent) => Event.fromJson(jsonEvent)).toList();
         return events;
       } else if (response.statusCode == 401) {
         throw Exception('Unauthorized request');
@@ -207,15 +199,34 @@ class EventService {
   }
 
   Future<List<Venue>> getLocations() async {
-    final response = await http.get(Uri.parse('$baseUrl/api/events/get_locations'));
+    final response = await http.get(
+        Uri.parse('$baseUrl/api/events/get_locations'));
     if (response.statusCode == 200) {
       final responseData = json.decode(response.body);
       print('Response body: ${response.body}');
 
       final data = responseData['data'] as List<dynamic>;
-      return data.map((item) => Venue.fromJson(item as Map<String, dynamic>)).toList();
+      return data.map((item) => Venue.fromJson(item as Map<String, dynamic>))
+          .toList();
     } else {
       throw Exception('Failed to load locations');
+    }
+  }
+
+  Future<List<dynamic>> fetchAttendanceData(String eventId, String userId) async {
+    final url = '$baseUrl/api/events/$eventId/attendance';
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer $userId',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final jsonResponse = jsonDecode(response.body);
+      return jsonResponse['data'];
+    } else {
+      throw Exception('Failed to fetch attendance data');
     }
   }
 }
