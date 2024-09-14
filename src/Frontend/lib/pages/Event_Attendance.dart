@@ -8,6 +8,7 @@ import 'dart:io';
 import 'package:csv/csv.dart';
 import 'package:path_provider/path_provider.dart';
 import '../services/EventService.dart';
+import 'package:file_picker/file_picker.dart';
 
 class EventAttendance extends StatefulWidget {
   Event event;
@@ -92,6 +93,76 @@ class _EventAttendanceState extends State<EventAttendance> {
         duration: Duration(seconds: 3),
       ),
     );
+  }
+  Future<void> importFromCSV() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['csv'],
+    );
+
+    if (result != null) {
+      final bytes = result.files.single.bytes;
+      final csvString = utf8.decode(bytes!);
+      final csvData = CsvToListConverter().convert(csvString);
+
+      if (csvData.isNotEmpty) {
+        // Skipping header row
+        for (var i = 1; i < csvData.length; i++) {
+          final row = csvData[i];
+          final fullName = row[0] as String;
+          final attendanceStatus = row[1] as String;
+
+          // Find the attendee and update their status
+          final attendee = widget.event.attendees
+              .firstWhere(
+                (attendee) => attendee.fullName == fullName,
+            orElse: () => Attendee(userId: '', fullName: '', profileImage: '', role: Role(id: 0, name: ''))
+          );
+
+          if (attendee != null) {
+            bool? status = attendanceStatus == 'Present'
+                ? true
+                : attendanceStatus == 'Absent' ? false : null;
+
+            setState(() {
+              attendanceStatuses[attendee.userId] = status;
+            });
+
+            // Optionally, send updated statuses to the backend
+            try {
+              await eventService.updateAttendanceStatus(
+                widget.event.id,
+                attendee.userId,
+                status,
+              );
+            } catch (e) {
+              // Handle errors, maybe show a snackbar
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Failed to update attendance for $fullName'),
+                  duration: Duration(seconds: 3),
+                ),
+              );
+            }
+          } else {
+            // Handle case where no attendee is found
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('No attendee found with the name $fullName'),
+                duration: Duration(seconds: 3),
+              ),
+            );
+          }
+        }
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('CSV file imported successfully'),
+            duration: Duration(seconds: 3),
+          ),
+        );
+      }
+    }
   }
 
 
@@ -178,13 +249,23 @@ class _EventAttendanceState extends State<EventAttendance> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+      FloatingActionButton(
         onPressed: exportToCSV,
         child: Icon(Icons.download),
         tooltip: 'Export to CSV',
       ),
 
-
+      SizedBox(width: 16),
+      FloatingActionButton(
+        onPressed: importFromCSV,
+        child: Icon(Icons.upload),
+        tooltip: 'Import from CSV',
+      ),
+      ],
+    ),
     );
   }
 }
