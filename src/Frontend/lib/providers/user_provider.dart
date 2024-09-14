@@ -80,6 +80,7 @@ class userProvider extends ChangeNotifier {
     String? profileImage,
     required bool isGuest,
   }) {
+
     _userId = userId;
     _Fullname = fullName;
     _Email = email;
@@ -101,23 +102,40 @@ class userProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  // void clearUser() {
+  //   _userId = '';
+  //   _Fullname = '';
+  //   _Email = '';
+  //   _Password = '';
+  //   _Role = '';
+  //   profileImage = null;
+  //   _isGuest = false;
+  //   notifyListeners();
+  // }
   void clearUser() {
-    _userId = '';
-    _Fullname = '';
-    _Email = '';
-    _Password = '';
-    _Role = '';
-    profileImage = null;
-    _isGuest = false;
-    notifyListeners();
+    bool hasChanges = false;
+
+    if (_userId.isNotEmpty || _Fullname.isNotEmpty || _Email.isNotEmpty || _Password.isNotEmpty || _Role.isNotEmpty || profileimage != null || _isGuest) {
+      _userId = '';
+      _Fullname = '';
+      _Email = '';
+      _Password = '';
+      _Role = '';
+      profileimage = null;
+      _isGuest = false;
+      hasChanges = true;
+    }
+
+    if (hasChanges) {
+      notifyListeners();
+    }
   }
 
   Future<void> Generalusers(String userId) async {
     try {
       _fetchGeneralusers(userId);
-      notifyListeners();
     } catch (e) {
-      throw Exception('Failed to refresh events: $e');
+      throw Exception('Error occurred while fetching general users: $e');
     }
   }
 
