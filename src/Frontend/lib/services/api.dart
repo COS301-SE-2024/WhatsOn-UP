@@ -64,7 +64,6 @@ class Api {
     }
   }
 
-  // Method to retrieve user details using stored JWT token
   Future<Map<String, dynamic>> getUserDetails() async {
     try {
       final String _userUrl = 'http://${globals.domain}:8080/api/auth/get_user';

@@ -27,7 +27,7 @@ void main() {
     when(mockUserProvider.role).thenReturn("GENERAL");
     when(mockUserProvider.profileImage).thenReturn('https://via.placeholder.com/150');
     final notifications = [
-      AppNotification(notificationTypes: 'invite', message: 'You have an invite', eventId: '', userId: '', sentAt: '', notificationId: ''),
+      AppNotification(notificationTypes: 'invites', message: 'You have an invite', eventId: '', userId: '', sentAt: '', notificationId: ''),
 
     ];
 
@@ -70,7 +70,8 @@ void main() {
     when(mockUserProvider.role).thenReturn("ADMIN");
     when(mockUserProvider.profileImage).thenReturn('https://via.placeholder.com/150');
     final notifications = [
-      AppNotification(notificationTypes: 'invite', message: 'You have an invite', eventId: '', userId: '', sentAt: '67986508805', notificationId: ''),
+      AppNotification(notificationTypes: 'recommendation', message: 'You have an invite', eventId: '', userId: '', sentAt: DateTime.now().toString(), notificationId: '', seenAt: DateTime.now().toString()),
+      AppNotification(notificationTypes: 'application', message: 'You have an invite', eventId: '', userId: '', sentAt: DateTime.now().toString(), notificationId: '', seenAt: null),
 
     ];
 
@@ -89,18 +90,21 @@ void main() {
 
 
     await tester.tap(find.text('Seen'));
-    await tester.pump();
+    await tester.pumpAndSettle();
     expect(find.text('Seen'), findsOneWidget);
-
+    expect(find.text('You have an invite'), findsOneWidget);
+    expect(find.text('Recommendation'),findsOneWidget);
 
     await tester.tap(find.text('Unseen'));
     await tester.pump();
     expect(find.text('Unseen'), findsOneWidget);
 
 
+
     await tester.tap(find.text('Applications'));
     await tester.pump();
     expect(find.text('Applications'), findsOneWidget);
+    expect(find.text('You have an invite'), findsOneWidget);
 
   });
 
