@@ -112,4 +112,12 @@ class EventController {
     fun broadcastMessage(@RequestParam eventId: UUID, @RequestParam message: String): ResponseEntity<ResponseDto> {
         return eventService.broadcastMessage(message, eventId)
     }
+
+
+    @GetMapping("/{eventId}/attendance")
+    fun getAllAttendanceByEventId(@PathVariable eventId: UUID): ResponseEntity<ResponseDto> {
+        return eventService.getAllAttendanceByEventId(eventId)
+
+    }
+
 }
