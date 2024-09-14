@@ -229,4 +229,24 @@ class EventService {
       throw Exception('Failed to fetch attendance data');
     }
   }
+
+  Future<void> updateAttendanceStatus(String eventId, String userId, bool? attended) async {
+    final url = '$baseUrl/api/event/update-attendance';
+    final response = await http.put(
+      Uri.parse('$url'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $userId',
+      },
+      body: jsonEncode({
+        'event_id': eventId,
+        'user_id': userId,
+        'attended': attended,
+      }),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to update attendance status');
+    }
+  }
 }
