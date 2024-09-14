@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
+import org.springframework.web.bind.annotation.RequestBody
 import java.time.*
 import java.util.*
 import java.time.Instant
@@ -327,5 +328,20 @@ class EventService {
             )
         }
     }
+
+    @Transactional
+    fun updateAttendanceStatus(eventId: UUID, userId: UUID, attended: Boolean?): ResponseEntity<ResponseDto> {
+        return try {
+            val updatedRows = eventRepo.updateAttendanceStatus(eventId, userId, attended)
+            if (updatedRows != 0) {
+                ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Attendance status updated successfully")))
+            } else {
+                ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "No rows updated. Check if the event or user exists.")))
+            }
+        } catch (e: Exception) {
+            ResponseEntity.status(500).body(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to e.message)))
+        }
+    }
+
 
 }
