@@ -25,6 +25,13 @@ class _NotificationsState extends State<Notifications> with TickerProviderStateM
     _tabController.addListener(_handleTabSelection);
     _refreshNotifications();
   }
+
+  @override
+  void dispose() {
+
+    _tabController.dispose();
+    super.dispose();
+  }
   void _handleTabSelection() {
     setState(() {
       if (_tabController.index == 0) {
