@@ -365,8 +365,9 @@ class _HomePageState extends State<HomePage>
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (snapshot.hasData) {
-          final savedEvents = snapshot.data![1];
+          var savedEvents = snapshot.data![0];
 
+          //savedEvents.where((n) => n.saved !=null).toList();
           if (savedEvents.isEmpty) {
             return const Center(child: Text('No saved events found.'));
           }
@@ -383,7 +384,7 @@ class _HomePageState extends State<HomePage>
                 child: EventCard(
                     event: savedEvents[index],
                     showBookmarkButton: true,
-                    saved: true),
+                    ),
               );
             },
           );

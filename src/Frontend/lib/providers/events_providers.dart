@@ -208,7 +208,6 @@ Future<List<Event>> _fetchEventsRsvp(String userId) async {
   void addEventSaved(Event event,String userId) {
     _eventsSaved.then((events) {
       api.putSavedEvent(event.id,userId);
-      events.add(event);
       notifyListeners();
     });
   }
@@ -216,10 +215,8 @@ Future<List<Event>> _fetchEventsRsvp(String userId) async {
   void removeEventSaved(Event event,String userId) {
     _eventsSaved.then((events) {
       api.DeleteSavedEvent(event.id,userId);
-      events.remove(event);
       notifyListeners();
     });
-    notifyListeners();
   }
 
   Future<Event?> getEventById(String id) async {

@@ -426,10 +426,9 @@ class Event {
 class EventCard extends StatefulWidget {
   final Event event;
   bool showBookmarkButton;
-  bool saved;
   String broadcast;
 
-  EventCard({Key? key, required this.event, required this.showBookmarkButton ,this.broadcast='',this.saved=false})
+  EventCard({Key? key, required this.event, required this.showBookmarkButton ,this.broadcast=''})
       : super(key: key);
 
   @override
@@ -511,9 +510,6 @@ class _EventCardState extends State<EventCard> {
     widget.showBookmarkButton=widget.broadcast=="EDIT"
     ?false
     :true;
-   widget.saved==true
-       ?isBookmarked=true
-       :isBookmarked=false;
    isbroadcast=widget.broadcast=="EDIT"
        ?true
        :false;
@@ -596,17 +592,28 @@ class _EventCardState extends State<EventCard> {
                       IconButton(
                         icon: Icon(
                           isBookmarked ? Icons.bookmark : Icons.bookmark_border,
+                          // widget.event.saved? Icons.bookmark : Icons.bookmark_border,
                           size: 20.0,
                           color: isBookmarked ? Colors.black : textColour,
+                           // color: widget.event.saved? Colors.black : textColour,
                         ),
                         onPressed: () {
                           setState(() {
                             isBookmarked = !isBookmarked;
+                            // widget.event.saved=!widget.event.saved;
+                          //   if(widget.event.saved==true){
+                          //     eventP.addEventSaved(widget.event,userP.userId);
+                          //     eventP.refreshEvents();
+                          //   }else{  eventP.removeEventSaved(widget.event,userP.userId);
+                          //   eventP.refreshEvents();}
+                          // });
                             if (isBookmarked == true) {
                               eventP.addEventSaved(widget.event,userP.userId);
+                              eventP.refreshEvents();
 
                             } else {
                               eventP.removeEventSaved(widget.event,userP.userId);
+                              eventP.refreshEvents();
                             }
                           });
                         },
