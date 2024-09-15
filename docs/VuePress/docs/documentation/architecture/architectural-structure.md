@@ -1,0 +1,2 @@
+## Architectural structure
+
