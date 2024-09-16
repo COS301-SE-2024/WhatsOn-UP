@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:firstapp/schemas/recommendation_schemas.dart';
 import 'package:http/http.dart' as http;
 // import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:convert';
@@ -18,6 +17,10 @@ import 'package:flutter/services.dart';
 import 'package:firstapp/screens/InviteUsers.dart';
 import 'package:path/path.dart' as path;
 import '../main.dart';
+
+//schemas
+import 'package:firstapp/schemas/recommendation_schemas.dart';
+import 'package:firstapp/schemas/user_schemas.dart';
 class Api {
   static final Api _instance = Api._internal();
   factory Api() => _instance;
@@ -66,7 +69,8 @@ class Api {
 
   Future<Map<String, dynamic>> getUserDetails() async {
     try {
-      final String _userUrl = 'http://${globals.domain}:8080/api/auth/get_user';
+      
+      final String _userUrl = 'http://${globals.gatewayDomain}:8080/api/auth/get_user';
       var headers = {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
@@ -76,7 +80,15 @@ class Api {
       var response = await http.get(Uri.parse(_userUrl), headers: headers);
 
       if (response.statusCode == 200) {
-        return jsonDecode(response.body);
+        final schema = JsonSchema.create(GET_USER_SCHEMA);
+        final validationResult = schema.validate(json);
+
+        if (validationResult.isValid) {
+          return jsonDecode(response.body);
+        } else {
+          print('getUserDetails JSON is invalid');
+          throw Exception(validationResult.errors);
+        }
       } else {
         throw Exception(jsonDecode(response.body));
       }
