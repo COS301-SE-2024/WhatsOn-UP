@@ -34,8 +34,7 @@ logging:
    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
 
 
-bearer-token: ${BEARER_TOKEN}
-#
+
 #
 #server:
 #  port: 8080

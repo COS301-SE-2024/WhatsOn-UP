@@ -144,4 +144,18 @@ class HostService {
             (n / ((n - 1) * (n - 2))) * values.sumOf { ((it - mean) / stdDev).pow(3) }
         }
     }
+
+    fun getPopularEvents(): ResponseEntity<ResponseDto> {
+        val user = SecurityContextHolder.getContext().authentication.principal
+        val userModel = (user as CustomUser).userModel
+        val events = pastEventsRepo.findPastEvents(userModel.userId)
+
+        val popularEvents = events
+            .map { event -> EventDto(event) }
+            .sortedByDescending { it.attendanceRatio }
+            .take(5)
+
+        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), popularEvents)
+        )
+    }
 }

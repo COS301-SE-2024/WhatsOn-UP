@@ -205,4 +205,15 @@ class AdminService {
             "monthlySummaries" to monthlySummaries
         )))
     }
+
+    fun getPopularEvents(): ResponseEntity<ResponseDto> {
+        val events = pastEventsRepo.findPastEvents(null)
+        val popularEvents = events
+            .map { event -> EventDto(event) }
+            .sortedByDescending { it.attendanceRatio }
+            .take(5)
+
+        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), popularEvents)
+        )
+    }
 }
