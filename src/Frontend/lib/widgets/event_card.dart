@@ -6,6 +6,7 @@ import '../pages/BroadcastEvent.dart';
 import '../pages/Event_Attendance.dart';
 import '../providers/user_provider.dart';
 import '../services/api.dart';
+import '../services/globals.dart' as globals;
 
 
 class Category {
@@ -374,7 +375,7 @@ class Event {
           ? List<String>.from(
               json['eventMedia'].map((media) => media?.toString() ?? ''))
           : [
-        'https://mehgbhiirnmypfgnkaud.supabase.co/storage/v1/object/public/storage/yeml2o6l9d84ff0km39j09w16k.png'
+              globals.defaultEventURL
             ],
       description: json['description']?.toString() ?? '',
       id: json['id']?.toString() ?? '',
@@ -438,7 +439,7 @@ class EventCard extends StatefulWidget {
 
 String getValidImageUrl(List<String>? imageUrls) {
   const List<String> validExtensions = ['jpeg', 'jpg', 'png'];
-  const String defaultUrl = 'https://mehgbhiirnmypfgnkaud.supabase.co/storage/v1/object/public/storage/yeml2o6l9d84ff0km39j09w16k.png';
+  const String defaultUrl = globals.defaultEventURL;
 
   if (imageUrls == null || imageUrls.isEmpty) {
     return defaultUrl;
