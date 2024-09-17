@@ -71,6 +71,17 @@ class _AdminAnalyticsPageState extends State<AdminAnalyticsPage> with SingleTick
 
   }
 
+  Future<void> _fetchPopularEvents() async {
+    userProvider userP = Provider.of<userProvider>(context, listen: false);
+    try {
+      final response = await api.getAllPopularEvents(userP.userId);
+      print('POPULAR EVENTS RESPONSE: $response');
+    } 
+    catch (e) {
+      print('Error getting popular events: $e');
+    }
+  }
+
   void filterSearchResults(String query) {
     setState(() {
       filteredUserData = userData
@@ -86,6 +97,7 @@ class _AdminAnalyticsPageState extends State<AdminAnalyticsPage> with SingleTick
     _tabController = TabController(length: 2, vsync: this);
     _getAllEventsAnalytics();
     _fetchHostData();
+    _fetchPopularEvents();
   }
 
   @override
