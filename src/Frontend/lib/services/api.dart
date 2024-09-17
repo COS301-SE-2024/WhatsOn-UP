@@ -1291,6 +1291,30 @@ Future<Map<String, dynamic>> broadcastEvent(String eventId, String message, Stri
   }
 }
 
+Future<Map<String, dynamic>> getHostPopularEvents(String userId) async {
+  final String getHostPopularEventsURL = 'http://${globals.domain}:8084/analytics/host/get_popular_events';
+
+  var headers = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    'Authorization': 'Bearer $userId',
+  };
+
+  try {
+    var response = await http.get(Uri.parse(getHostPopularEventsURL), headers: headers);
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } 
+    else {
+      throw Exception(jsonDecode(response.body));
+    }
+  } 
+  catch (e) {
+    throw Exception(e.toString());
+  }
+}
+
 
 
 
