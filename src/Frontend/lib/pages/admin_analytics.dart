@@ -2,6 +2,7 @@ import 'package:firstapp/pages/detailed_host_analytics.dart';
 import 'package:firstapp/providers/user_provider.dart';
 import 'package:firstapp/services/api.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:syncfusion_flutter_charts/sparkcharts.dart';
@@ -585,25 +586,8 @@ class _PopularEventsWidgetState extends State<PopularEventsWidget> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => AnalyticsDetailPage(
-                        name: event['title'],
-                        userData: {
-                          'monthlySummaries': [
-                            {
-                              'month': event['startDateTime'].split('T')[0],
-                              'averageRating': event['averageRating'],
-                              'capacityRatio': event['capacityRatio'],
-                              'attendanceRatio': event['attendanceRatio'],
-                              'feedbackRatio': event['feedbackRatio'],
-                              'rsvpRatio': event['rsvpRatio'],
-                              'duration': event['duration'],
-                              'highestRating': event['highestRating'],
-                              'medianRating': event['medianRating'],
-                              'lowestRating': event['lowestRating'],
-                              'skewness': event['skewness'],
-                            }
-                          ]
-                        },
+                      builder: (context) => EventDetailsPage(
+                        event: Event.fromJson(event),
                       ),
                     ),
                   );
@@ -675,6 +659,139 @@ class _PopularEventsWidgetState extends State<PopularEventsWidget> {
           ),
         ),
       ],
+    );
+  }
+}
+
+class EventDetailsPage extends StatelessWidget {
+  final Event event;
+
+  EventDetailsPage({required this.event});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text(event.title)),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(event.description),
+            const SizedBox(height: 16),
+            Text('Host: ${event.hosts[0]['fullName']}'),
+            Text('Date: ${DateFormat('dd MMM yyyy, HH:mm').format(event.startDateTime)}'),
+            Text('Attendees: ${event.attendees.length}/${event.maxAttendees}'),
+            Text('Average Rating: ${event.averageRating.toStringAsFixed(1)}'),
+            const SizedBox(height: 24),
+            // Text('Feedback Distribution', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            // SizedBox(height: 8),
+            SizedBox(
+              height: 300,
+              child: SfCartesianChart(
+                title: const ChartTitle(text: 'Feedback Distribution'),
+                tooltipBehavior: TooltipBehavior(enable: true),
+                primaryXAxis: const CategoryAxis(
+                  title: AxisTitle(text: 'Rating'),
+                ),
+                primaryYAxis: const NumericAxis(
+                  minimum: 0,
+                  // maximum: event.attendees.length.toDouble(),
+                  interval: 1,
+                  title: AxisTitle(text: 'Feedback Count'),
+                ),
+                series: <ColumnSeries>[
+                  ColumnSeries<Map<String, dynamic>, String>(
+                    dataSource: [1, 2, 3, 4, 5].map((rating) => {
+                      'rating': rating.toString(),
+                      'count': event.feedback.where((f) => f['rating'] == rating).length,
+                    }).toList(),
+                    xValueMapper: (data, _) => data['rating'],
+                    yValueMapper: (data, _) => data['count'],
+                  )
+                ],
+              ),
+            ),
+            const SizedBox(height: 24),
+            const Text('Event Statistics', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 8),
+            Text('Median Rating: ${event.medianRating}'),
+            Text('Highest Rating: ${event.highestRating}'),
+            Text('Lowest Rating: ${event.lowestRating}'),
+            // Text('Mode: ${event.mode}'),
+            // Text('Skewness: ${event.skewness.toStringAsFixed(2)}'),
+            Text('RSVP Ratio: ${event.rsvpRatio.toStringAsFixed(2)}%'),
+            Text('Capacity Ratio: ${event.capacityRatio.toStringAsFixed(2)}%'),
+            Text('Attendance Ratio: ${event.attendanceRatio.toStringAsFixed(2)}%'),
+            Text('Feedback Ratio: ${event.feedbackRatio.toStringAsFixed(2)}%'),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class Event {
+  final String id;
+  final String title;
+  final String description;
+  final DateTime startDateTime;
+  final int maxAttendees;
+  final List<dynamic> attendees;
+  final double averageRating;
+  final double medianRating;
+  final int highestRating;
+  final int lowestRating;
+  final int mode;
+  final double skewness;
+  final double rsvpRatio;
+  final double capacityRatio;
+  final double attendanceRatio;
+  final double feedbackRatio;
+  final List<dynamic> feedback;
+  final List<dynamic> hosts;
+
+  Event({
+    required this.id,
+    required this.title,
+    required this.description,
+    required this.startDateTime,
+    required this.maxAttendees,
+    required this.attendees,
+    required this.averageRating,
+    required this.medianRating,
+    required this.highestRating,
+    required this.lowestRating,
+    required this.mode,
+    required this.skewness,
+    required this.rsvpRatio,
+    required this.capacityRatio,
+    required this.attendanceRatio,
+    required this.feedbackRatio,
+    required this.feedback,
+    required this.hosts,
+  });
+
+  factory Event.fromJson(Map<String, dynamic> json) {
+    return Event(
+      id: json['id'] ?? '',
+      title: (json['title'] ?? 'Unknown'),
+      description: (json['description'] ?? 'Unknown'),
+      startDateTime: DateTime.parse(json['startDateTime'] ?? ''),
+      maxAttendees: (json['maxAttendees'] ?? 0),
+      attendees: (json['attendees'] ?? []),
+      averageRating: _roundNum((json['averageRating'] ?? 0.0).toDouble()),
+      medianRating: _roundNum((json['medianRating'] ?? 0.0).toDouble()),
+      highestRating: (json['highestRating'] ?? 0),
+      lowestRating: (json['lowestRating'] ?? 0),
+      mode: (json['mode'] ?? 0),
+      skewness: _roundNum((json['skewness'] ?? 0.0).toDouble()),
+      rsvpRatio: _roundNum((json['rsvpRatio'] ?? 0.0).toDouble()),
+      capacityRatio: _roundNum((json['capacityRatio'] ?? 0.0).toDouble()),
+      attendanceRatio: _roundNum((json['attendanceRatio'] ?? 0.0).toDouble()),
+      feedbackRatio: _roundNum((json['feedbackRatio'] ?? 0.0).toDouble()),
+      feedback: (json['feedback'] ?? []),
+      hosts: (json['hosts'] ?? []),
     );
   }
 }
