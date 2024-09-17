@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class UserManualWebView extends StatefulWidget {
   const UserManualWebView({Key? key}) : super(key: key);
@@ -20,6 +21,11 @@ class _UserManualWebViewState extends State<UserManualWebView> {
   @override
   void initState() {
     super.initState();
+
+    final user = Supabase.instance.client.auth.currentUser;
+    final userId = user?.id;
+
+
     controller.setNavigationDelegate(
       NavigationDelegate(
         onPageStarted: (url) async {
@@ -27,6 +33,7 @@ class _UserManualWebViewState extends State<UserManualWebView> {
          name: 'user_manual_opened',
             parameters: {
               'url': url,
+              'user_id': userId.toString(),
             },
       );
     },
@@ -51,7 +58,10 @@ class _UserManualWebViewState extends State<UserManualWebView> {
           WebViewWidget(controller: controller),
           if (_isLoading)
             Center(
-              child: CircularProgressIndicator(),
+              child: SpinKitPianoWave(
+                color: Color.fromARGB(255, 149, 137, 74),
+                size: 50.0,
+              ),
             ),
         ],
       ),
