@@ -12,7 +12,7 @@ class FilteredResultScreen extends StatelessWidget {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => const SearchScreen(showSearchHistoryOnStart: true),
+        builder: (context) =>  SearchScreen(showSearchHistoryOnStart: true),
       ),
     );
   }

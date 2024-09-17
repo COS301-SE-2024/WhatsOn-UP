@@ -67,7 +67,7 @@ class _PasteventsState extends State<Pastevents> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const SearchScreen(),
+                              builder: (context) =>  SearchScreen(),
                             ),
                           );
                         },
