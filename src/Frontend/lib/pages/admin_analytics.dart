@@ -143,7 +143,24 @@ class _AdminAnalyticsPageState extends State<AdminAnalyticsPage> with SingleTick
 
     if (monthlySummaries.isEmpty) {
       return const Center(
-        child: Text('No analytics data available.'),
+        child: const Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.info_outline, size: 64, color: Color.fromARGB(255, 119, 119, 119),),
+            SizedBox(height: 16),
+            Center(
+              child: Text(
+                'No analytics data available.',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Color.fromARGB(255, 119, 119, 119),
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ],
+        ),
       );
     }
 
