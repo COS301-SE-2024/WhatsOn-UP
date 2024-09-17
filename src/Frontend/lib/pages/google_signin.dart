@@ -183,7 +183,8 @@ class _GoogleSignInPageState extends State<GoogleSignInPage> {
     supabase.auth.onAuthStateChange.listen((data) {
       final event = data.event;
       if (event == AuthChangeEvent.signedIn) {
-        _Googlelogin();
+        print('User signed in!');
+        // _Googlelogin();
       }
     });
   }
@@ -258,7 +259,13 @@ class _GoogleSignInPageState extends State<GoogleSignInPage> {
                     ? null
                     : () async {
                   if (!kIsWeb && Platform.isAndroid) {
-                    await _nativeGoogleSignIn();
+                    // await _nativeGoogleSignIn();
+                    try{
+                      await supabase.auth.signInWithOAuth(OAuthProvider.google);
+                    }
+                    catch(error){
+                      print('ERROR SIGNING IN WITH GOOGLE ${error}');
+                    }
                   } else {
                     await supabase.auth.signInWithOAuth(OAuthProvider.google);
                   }
