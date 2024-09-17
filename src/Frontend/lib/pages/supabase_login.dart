@@ -454,7 +454,7 @@ class _SupabaseLoginState extends State<SupabaseLogin> {
             eventP.refreshRecommendations(userP.userId);
             notificationProvider _notificationProvider =
                 Provider.of<notificationProvider>(context, listen: false);
-             eventP.refreshSavedEvents(userP.userId);
+             eventP.refreshSavedEvents(userP.JWT);
             _notificationProvider.refreshNotifications(userP.userId);
             SocketService('http://${globals.domain}:8082',
                 _notificationProvider, userP.userId, context);

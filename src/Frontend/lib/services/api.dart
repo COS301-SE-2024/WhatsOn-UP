@@ -36,7 +36,7 @@ class Api {
     final session = supabase.auth.currentSession;
     if (session != null) {
       print('JWT Token: ${session.accessToken}');
-     JWT =session.accessToken;
+     JWT = session.accessToken;
     }
   }
 
@@ -70,7 +70,7 @@ class Api {
   Future<Map<String, dynamic>> getUserDetails() async {
     try {
       
-      final String _userUrl = 'http://${globals.gatewayDomain}:8080/api/auth/get_user';
+      final String _userUrl = 'https://${globals.gatewayDomain}:8080/api/auth/get_user';
       var headers = {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
@@ -98,11 +98,17 @@ class Api {
   }
 
   Future<List<Event>> getAllEvents() async {
-    final _rsvpEventsURL = 'http://${globals.domain}:8080/api/events/get_all';
+    final _rsvpEventsURL = 'https://${globals.gatewayDomain}/api/events/get_all';
+
+    var headers = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      };
 
     try {
       var response = await http.get(
         Uri.parse(_rsvpEventsURL),
+        headers: headers
       );
 
       if (response.statusCode == 200) {
@@ -122,13 +128,13 @@ class Api {
     }
   }
 
-  Future<List<Event>> getAllSavedEvents(String userId) async {
+  Future<List<Event>> getAllSavedEvents(String JWT) async {
     final _savedEventsURL =
-        'http://${globals.domain}:8080/api/user/get_saved_events';
+        'https://${globals.gatewayDomain}/api/user/get_saved_events';
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Authorization': 'Bearer $userId',
+      'Authorization': 'Bearer $JWT',
     };
 
     try {
@@ -619,7 +625,6 @@ class Api {
   Future<Map<String, dynamic>> getUser(String JWT) async {
     final String _userUrl = 'https://${globals.gatewayDomain}/api/user/get_user';
 
-    //   // Define the headers and body for login request
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',

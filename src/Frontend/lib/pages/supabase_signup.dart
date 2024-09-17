@@ -203,7 +203,7 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
         userP.role = role;
         userP.profileImage = profileImage;
         eventP.refreshRecommendations(userP.userId);
-        eventP.refreshSavedEvents(userP.userId);
+        eventP.refreshSavedEvents(userP.JWT);
         notificationProvider _notificationProvider =
         Provider.of<notificationProvider>(context, listen: false);
 
