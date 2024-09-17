@@ -2,6 +2,8 @@ import 'package:firstapp/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:firstapp/pages/detailed_event_page.dart';
+import 'package:provider/provider.dart';
+import '../providers/events_providers.dart';
 import '../services/api.dart';
 import '../widgets/event_card.dart';
 

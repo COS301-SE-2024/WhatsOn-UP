@@ -168,7 +168,7 @@ class _ManageEventsState extends State<ManageEvents> {
       case 'ApplicationEvent':
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const ApplicationEvent()),
+          MaterialPageRoute(builder: (context) =>  ApplicationEvent()),
         );
       case 'GeneralEventApplications':
         Navigator.push(
