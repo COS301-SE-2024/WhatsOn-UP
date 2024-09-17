@@ -30,4 +30,9 @@ class HostController {
         return hostService.get()
     }
 
+    @RequestMapping("/get_popular_events")
+    fun getPopularEvents(): ResponseEntity<ResponseDto> {
+        return hostService.getPopularEvents()
+    }
+
 }

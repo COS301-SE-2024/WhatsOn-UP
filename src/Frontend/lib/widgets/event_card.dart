@@ -374,7 +374,7 @@ class Event {
           ? List<String>.from(
               json['eventMedia'].map((media) => media?.toString() ?? ''))
           : [
-              'https://images.pexels.com/photos/1190297/pexels-photo-1190297.jpeg'
+        'https://mehgbhiirnmypfgnkaud.supabase.co/storage/v1/object/public/storage/yeml2o6l9d84ff0km39j09w16k.png'
             ],
       description: json['description']?.toString() ?? '',
       id: json['id']?.toString() ?? '',
@@ -437,7 +437,7 @@ class EventCard extends StatefulWidget {
 
 String getValidImageUrl(List<String>? imageUrls) {
   const List<String> validExtensions = ['jpeg', 'jpg', 'png'];
-  const String defaultUrl = 'https://images.pexels.com/photos/1190297/pexels-photo-1190297.jpeg'; // only videos in the array
+  const String defaultUrl = 'https://mehgbhiirnmypfgnkaud.supabase.co/storage/v1/object/public/storage/yeml2o6l9d84ff0km39j09w16k.png';
 
   if (imageUrls == null || imageUrls.isEmpty) {
     return defaultUrl;
