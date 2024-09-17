@@ -1289,9 +1289,8 @@ Future<Map<String, dynamic>> broadcastEvent(String eventId, String message, Stri
       throw Exception(e.toString());
     }
   }
-}
 
-Future<Map<String, dynamic>> getHostPopularEvents(String userId) async {
+  Future<Map<String, dynamic>> getHostPopularEvents(String userId) async {
   final String getHostPopularEventsURL = 'http://${globals.domain}:8084/analytics/host/get_popular_events';
 
   var headers = {
@@ -1314,6 +1313,12 @@ Future<Map<String, dynamic>> getHostPopularEvents(String userId) async {
     throw Exception(e.toString());
   }
 }
+
+
+
+}
+
+
 
 
 

@@ -14,6 +14,7 @@ class _HostAnalyticsPageState extends State<HostAnalyticsPage> {
   Api api = Api();
   bool isLoading = true;
   List<Event> events = [];
+  List<Map<String, dynamic>> popularEvents = [];
 
   Future<void> _getAllEventsAnalytics() async {
     userProvider userP = Provider.of<userProvider>(context, listen: false);
@@ -50,10 +51,30 @@ class _HostAnalyticsPageState extends State<HostAnalyticsPage> {
     }
   }
 
+  Future<void> _getPopularEvents() async {
+    userProvider userP = Provider.of<userProvider>(context, listen: false);
+
+    try {
+      // final response = await api.getHostPopularEvents(userP.userId);
+      final response = await api.getHostPopularEvents("69ae72bc-8e2b-4400-b608-29f048d4f8c7");
+      // print('POPULAR EVENTS RESPONSE: $response');
+
+      setState(() {
+        popularEvents = List<Map<String, dynamic>>.from(response['data']);
+
+        //  print("Popular events: $popularEvents");
+      });
+    } 
+    catch (e) {
+      print('Error getting popular events: $e');
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     _getAllEventsAnalytics();
+    _getPopularEvents();
   }
 
   @override
@@ -86,45 +107,60 @@ class _HostAnalyticsPageState extends State<HostAnalyticsPage> {
                   ],
                 ),
               )
-              : EventAnalyticsDashboard(events: events),
+              : EventAnalyticsDashboard(events: events, popularEvents: popularEvents),
     );
   }
 }
 
 class EventAnalyticsDashboard extends StatelessWidget {
   final List<Event> events;
+  final List<Map<String, dynamic>> popularEvents;
 
-  EventAnalyticsDashboard({required this.events});
+  EventAnalyticsDashboard({required this.events, required this.popularEvents});
 
   @override
   Widget build(BuildContext context) {
     final sortedEvents = groupEventsByMonth(events);
+    return ListView(
+      children: [
+        PopularEventsWidget(popularEvents: popularEvents),
+        SizedBox(height: 24,),
+        const Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Text(
+            'All My Events',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+        ),
+        ListView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: sortedEvents.length,
+          itemBuilder: (context, index) {
+            final month = sortedEvents.keys.elementAt(index);
+            final monthEvents = sortedEvents[month]!;
 
-    return ListView.builder(
-      itemCount: sortedEvents.length,
-      itemBuilder: (context, index) {
-        final month = sortedEvents.keys.elementAt(index);
-        final monthEvents = sortedEvents[month]!;
-
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Text(
-                DateFormat('MMMM yyyy').format(DateTime(DateTime.now().year, month)),
-                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-            ),
-            ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: monthEvents.length,
-              itemBuilder: (context, index) => EventCard(event: monthEvents[index]),
-            ),
-          ],
-        );
-      },
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(
+                    DateFormat('MMMM yyyy').format(DateTime(DateTime.now().year, month)),
+                    style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: monthEvents.length,
+                  itemBuilder: (context, index) => EventCard(event: monthEvents[index]),
+                ),
+              ],
+            );
+          },
+        ),
+      ],
     );
   }
 
@@ -152,7 +188,7 @@ class EventCard extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: ListTile(
-        title: Text(event.title),
+        title: Text(event.title, style: const TextStyle(fontWeight: FontWeight.bold)),
         subtitle: Text(DateFormat('dd MMM yyyy, HH:mm').format(event.startDateTime)),
         trailing: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -303,3 +339,38 @@ class Event {
 double _roundNum(double value) {
   return double.parse(value.toStringAsFixed(2));
 }
+class PopularEventsWidget extends StatefulWidget {
+  final List<Map<String, dynamic>> popularEvents;
+
+  const PopularEventsWidget({Key? key, required this.popularEvents}) : super(key: key);
+
+  @override
+  _PopularEventsWidgetState createState() => _PopularEventsWidgetState();
+}
+
+class _PopularEventsWidgetState extends State<PopularEventsWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Text(
+            'My Popular Events',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+        ),
+        SingleChildScrollView(
+          child: Column(
+            children: widget.popularEvents.map((eventMap) {
+              final event = Event.fromJson(eventMap);
+              return EventCard(event: event);
+            }).toList(),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
