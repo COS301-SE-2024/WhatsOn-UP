@@ -24,6 +24,7 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
                 "LEFT JOIN FETCH e.venue v " +
                 "LEFT JOIN FETCH v.building b " +
                 "LEFT JOIN FETCH b.campus c " +
+                "LEFT JOIN FETCH e.savedEvents se " +
                 "WHERE (e.isPrivate = false " +
                 "OR :userId IS NULL " +
                 "OR a.userId = :userId " +
@@ -31,7 +32,6 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
                 "OR h.userId = :userId)"
     )
     fun findAllByUser(@Param("userId") userId: UUID?): List<EventModel>
-
 
 
     @Query(

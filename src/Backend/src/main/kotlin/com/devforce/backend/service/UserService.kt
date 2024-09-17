@@ -98,7 +98,7 @@ class UserService {
         val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
 
         val events = eventRepo.getSavedEvents(user.userId)
-        val eventsDto = events.map { event -> EventDto(event, false) }
+        val eventsDto = events.map { event -> EventDto(event, false, true) }
 
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto)
         )
@@ -137,7 +137,7 @@ class UserService {
         val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
 
         val events = eventRepo.getRsvpdEvents(user.userId)
-        val eventsDto = events.map { event -> EventDto(event, false) }
+        val eventsDto = events.map { event -> EventDto(event, false, user.userId in event.savedEvents.map { savedEvent -> savedEvent.userId }) }
 
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto)
         )
