@@ -22,6 +22,7 @@ class _AdminAnalyticsPageState extends State<AdminAnalyticsPage> with SingleTick
     List<Map<String, dynamic>> userData = [];
     List<Map<String, dynamic>> filteredUserData = [];
     TextEditingController searchController = TextEditingController();
+    List<Map<String, dynamic>> popularEvents = [];
 
 
     Future<void> _getAllEventsAnalytics() async {
@@ -75,7 +76,11 @@ class _AdminAnalyticsPageState extends State<AdminAnalyticsPage> with SingleTick
     userProvider userP = Provider.of<userProvider>(context, listen: false);
     try {
       final response = await api.getAllPopularEvents(userP.userId);
-      print('POPULAR EVENTS RESPONSE: $response');
+      // print('POPULAR EVENTS RESPONSE: $response');
+
+      setState(() {
+        popularEvents = List<Map<String, dynamic>>.from(response['data']);
+      });
     } 
     catch (e) {
       print('Error getting popular events: $e');
@@ -144,6 +149,7 @@ class _AdminAnalyticsPageState extends State<AdminAnalyticsPage> with SingleTick
     return SingleChildScrollView(
       child: Column(
         children: [
+          PopularEventsWidget(popularEvents: popularEvents), // Popular Events
           SizedBox(
             height: 300,
             child: AnalyticsChartPage(monthlySummaries: monthlySummaries), // Average Rating Over Time
@@ -505,6 +511,72 @@ class SkewnessChart extends StatelessWidget {
           yValueMapper: (MonthlySummary summary, _) => summary.skewness,
           markerSettings: const MarkerSettings(isVisible: true),
           dataLabelSettings: const DataLabelSettings(isVisible: true),
+        ),
+      ],
+    );
+  }
+}
+
+
+class PopularEventsWidget extends StatelessWidget {
+  final List<Map<String, dynamic>> popularEvents;
+
+  const PopularEventsWidget({Key? key, required this.popularEvents}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Text(
+            'Popular Events',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+        ),
+        SizedBox(
+          height: 150,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: popularEvents.length > 5 ? 5 : popularEvents.length,
+            itemBuilder: (context, index) {
+              final event = popularEvents[index];
+              return Card(
+                margin: const EdgeInsets.symmetric(horizontal: 8),
+                child: Container(
+                  width: 200,
+                  padding: const EdgeInsets.all(8),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        event['title'],
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        'Date: ${event['startDateTime'].split('T')[0]}',
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        'Attendees: ${event['attendees'].length}/${event['maxAttendees']}',
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        'Avg. Rating: ${event['averageRating'].toStringAsFixed(1)}',
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
         ),
       ],
     );
