@@ -430,7 +430,7 @@ class _SupabaseLoginState extends State<SupabaseLogin> {
         final session = supabase.auth.currentSession;
         if (session != null) {
           print('JWT Token: ${session.accessToken}');
-          userP.JWT = session.accessToken;
+          userP.setSession(session);
         }
 
         Api api = Api();

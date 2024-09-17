@@ -29,10 +29,9 @@ class _SplashPageState extends State<SplashPage> {
   Future<void> _redirect() async {
     await Future.delayed(Duration(seconds: 2));
     userProvider userP = Provider.of<userProvider>(context, listen: false);
-    final session = supabase.auth.currentSession;
+    final session = userP.session;
     if (!mounted) return;
     if (session != null) {
-      userP.JWT = session.accessToken;
       await _login();
     } else {
       Navigator.of(context).pushReplacementNamed('/login');

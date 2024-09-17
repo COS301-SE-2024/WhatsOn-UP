@@ -1,4 +1,6 @@
+import 'package:firstapp/exceptions/session_not_set_exception.dart';
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' as Supabase;
 
 import '../pages/editProfile_page.dart';
 import '../services/api.dart';
@@ -13,7 +15,7 @@ class userProvider extends ChangeNotifier {
   String _Role = '';
   String _userId = '';
   String? profileimage;
-  String? _JWT;
+  Supabase.Session? _session;
   bool _isGuest = false;
   late Future<List<User>> _generaluserTohost;
   String get Fullname => _Fullname;
@@ -23,9 +25,20 @@ class userProvider extends ChangeNotifier {
   String get role => _Role;
   String get userId => _userId;
   bool get isGuest => _isGuest;
-  String? get JWT => _JWT;
   Future<GeneralApplications>? _generalApplications;
   Future<GeneralApplications>? get generalApplications => _generalApplications;
+
+  Supabase.Session? get session {
+    if (_session == null) {
+      throw SessionNotSetException('Session has not been initialized yet.');
+    }
+    return _session;
+  }
+
+  void setSession(Supabase.Session session) {
+    _session = session;
+    notifyListeners();
+  }
 
   set generalapplications(Future<GeneralApplications>? value) {
     _generalApplications = value;
@@ -64,10 +77,6 @@ class userProvider extends ChangeNotifier {
 
   set isGuest(bool value) {
     _isGuest = value;
-    notifyListeners();
-  }
-  set JWT(String? value) {
-    _JWT = value;
     notifyListeners();
   }
 
