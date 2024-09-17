@@ -28,10 +28,10 @@ class _SplashPageState extends State<SplashPage> {
 
   Future<void> _redirect() async {
     await Future.delayed(Duration(seconds: 2));
-    userProvider userP = Provider.of<userProvider>(context, listen: false);
-    final session = userP.session;
+    final session = supabase.auth.currentSession;
     if (!mounted) return;
     if (session != null) {
+
       await _login();
     } else {
       Navigator.of(context).pushReplacementNamed('/login');
@@ -66,6 +66,7 @@ class _SplashPageState extends State<SplashPage> {
 
     Api api = Api();
 
+    ;
     api.getUser(user!.id).then((response) {
       if (response['error'] != null) {
         print('An error occurred: ${response['error']}');

@@ -616,20 +616,20 @@ class Api {
     }
   }
 
-  Future<Map<String, dynamic>> getUser(String userid) async {
-    final String _userUrl = 'http://${globals.domain}:8080/api/user/get_user';
+  Future<Map<String, dynamic>> getUser(String JWT) async {
+    final String _userUrl = 'https://${globals.gatewayDomain}/api/user/get_user';
 
-    //
     //   // Define the headers and body for login request
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Authorization': 'Bearer $userid',
+      'Authorization': 'Bearer $JWT',
     };
 
     try {
       var response = await http.get(Uri.parse(_userUrl), headers: headers);
       if (response.statusCode == 200) {
+        print(response.body);
         return jsonDecode(response.body);
       } else {
         throw Exception('Failed to get user details');

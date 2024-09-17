@@ -113,7 +113,21 @@ void main() async{
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => EventProvider(api: api)),
-        ChangeNotifierProvider(create: (context) => userProvider()),
+        ChangeNotifierProvider(create: (context) {
+          var supabase = Supabase.instance.client;
+          var userProv = userProvider();
+
+          supabase.auth.onAuthStateChange.listen((event) async {
+          var session = supabase.auth.currentSession;
+            if (session != null) {
+              userProv.JWT = session.accessToken; 
+              print('JWT Token refreshed: ${session.accessToken}');
+            } else {
+              print('Session expired or user signed out.');
+            }
+          });
+          return userProv;
+        }),
         ChangeNotifierProvider(create: (context) => ThemeNotifier()),
         ChangeNotifierProvider(create: (context) => notificationProvider()),
       ],

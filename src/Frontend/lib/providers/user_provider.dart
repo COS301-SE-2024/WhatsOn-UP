@@ -14,10 +14,11 @@ class userProvider extends ChangeNotifier {
   String _Password = '';
   String _Role = '';
   String _userId = '';
+  String? _JWT;
   String? profileimage;
-  Supabase.Session? _session;
   bool _isGuest = false;
   late Future<List<User>> _generaluserTohost;
+  String? get JWT => _JWT;
   String get Fullname => _Fullname;
   String get email => _Email;
   String get password => _Password;
@@ -28,15 +29,8 @@ class userProvider extends ChangeNotifier {
   Future<GeneralApplications>? _generalApplications;
   Future<GeneralApplications>? get generalApplications => _generalApplications;
 
-  Supabase.Session? get session {
-    if (_session == null) {
-      throw SessionNotSetException('Session has not been initialized yet.');
-    }
-    return _session;
-  }
-
-  void setSession(Supabase.Session session) {
-    _session = session;
+   set JWT(String? value) {
+    _JWT = value;
     notifyListeners();
   }
 
