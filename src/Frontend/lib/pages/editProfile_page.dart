@@ -269,6 +269,7 @@ class _EditprofilePageState extends State<EditprofilePage> {
 
           print('User profile updated successfully');
           showChangedDialog();
+
         }
       }).catchError((error) {
         print('Failed to update user profile: $error');
