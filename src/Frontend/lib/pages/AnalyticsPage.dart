@@ -8,13 +8,19 @@ import 'dart:convert';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:firstapp/widgets/stats_card.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import '../services/globals.dart' as globals;
+
 //Pantone Colors
 const Color pantone159 = Color(0xFFF67F46); // humanities
 const Color pantone2718 = Color(0xFF2671AF); //health science
 const Color pantone201 = Color(0xFF9F1A35); // law
 const Color pantone377 = Color(0xFF7C9F2D); //NAS
 class AnalyticsPage extends StatelessWidget {
-  final String baseUrl = 'http://localhost:8080/query';
+  final String baseUrl = 'http://${globals.domain}:8080/query';
+
+
+//  static final String baseUrl = 'http://${globals.domain}:8080';
+
 
   Future<List<Map<String, dynamic>>> fetchEventData(String viewName) async {
     final encodedViewName = Uri.encodeComponent(viewName);
