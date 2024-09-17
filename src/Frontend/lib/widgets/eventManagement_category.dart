@@ -12,7 +12,7 @@ import 'event_card.dart';
 
 class EventmanagementCategory extends StatefulWidget {
   final SupabaseClient supabaseClient;
-  EventmanagementCategory({Key? key, required this.supabaseClient,}) : super(key: key);
+  const EventmanagementCategory({super.key, required this.supabaseClient,});
 
   @override
   _EventmanagementCategoryState createState() =>
@@ -54,7 +54,7 @@ class _EventmanagementCategoryState extends State<EventmanagementCategory> {
     final user = supabaseClient.auth.currentUser;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Edit Events'),
+        title: const Text('Edit Events'),
       ),
       body: _errorOccurred
           ? Center(child: Text(_errorMessage))
@@ -87,7 +87,7 @@ class _EventmanagementCategoryState extends State<EventmanagementCategory> {
                       ),
                     ),
                   ),
-                  SizedBox(width: 35.0),
+                  const SizedBox(width: 35.0),
                   SizedBox(
                     width: MediaQuery.of(context).size.width * 0.27,
                     child: Container(
@@ -100,7 +100,7 @@ class _EventmanagementCategoryState extends State<EventmanagementCategory> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => FilterScreen(),
+                              builder: (context) => const FilterScreen(),
                             ),
                           );
                         },
@@ -118,16 +118,16 @@ class _EventmanagementCategoryState extends State<EventmanagementCategory> {
               future: _eventsHome,
               builder: (context, AsyncSnapshot<List<Event>> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
+                  return const Center(
                     child: SpinKitPianoWave(
                       color: Color.fromARGB(255, 149, 137, 74),
                       size: 50.0,
                     ),
                   );
                 } else if (snapshot.hasError) {
-                  return Center(child: Text('Error loading events'));
+                  return const Center(child: Text('Error loading events'));
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return Center(child: Text('No events available'));
+                  return const Center(child: Text('No events available'));
                 } else {
                   userProvider userP = Provider.of<userProvider>(context, listen: false);
                   List<Event> events = snapshot.data!;
@@ -135,7 +135,7 @@ class _EventmanagementCategoryState extends State<EventmanagementCategory> {
                     events = events.where((event) => event.hosts.contains(userP.Fullname)).toList();
                   }
                   if (events.isEmpty) {
-                    return Center(child: Text('No upcoming or current events found.'));
+                    return const Center(child: Text('No upcoming or current events found.'));
                   }
                   return ListView.builder(
                     itemCount: events.length,

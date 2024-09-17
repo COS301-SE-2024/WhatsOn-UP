@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firstapp/pages/detailed_event_page.dart';
-import '../pages/detailed_event_page.dart';
 import '../providers/events_providers.dart';
 import 'event_card.dart';
 
 class EventCardM extends StatefulWidget {
   final Event event;
 
-  EventCardM({Key? key, required this.event}) : super(key: key);
+  const EventCardM({super.key, required this.event});
 
   @override
   _EventCardMState createState() => _EventCardMState();

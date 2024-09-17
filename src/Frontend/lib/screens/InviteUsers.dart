@@ -9,16 +9,16 @@ import '../providers/user_provider.dart';
 class InviteUsers extends StatefulWidget {
   final String eventId;
 
-  const InviteUsers({Key? key, required this.eventId}) : super(key: key);
+  const InviteUsers({super.key, required this.eventId});
 
   @override
   _InviteUsersWidgetState createState() => _InviteUsersWidgetState();
 }
 
 class _InviteUsersWidgetState extends State<InviteUsers> {
-  TextEditingController _searchController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
   List<UserModel> _foundUsers = [];
-  List<UserModel> _invitedUsers = [];
+  final List<UserModel> _invitedUsers = [];
   bool _isSearching = false;
   bool _isSendingInvites = false;
 
@@ -65,11 +65,11 @@ class _InviteUsersWidgetState extends State<InviteUsers> {
     });
 
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Invitations sent successfully!')),
+      const SnackBar(content: Text('Invitations sent successfully!')),
     );
 
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) =>HomePage()),
+      MaterialPageRoute(builder: (context) =>const HomePage()),
     );
   }
     catch (e) {
@@ -107,7 +107,7 @@ class _InviteUsersWidgetState extends State<InviteUsers> {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: Text('OK'),
+              child: const Text('OK'),
             ),
           ],
         );
@@ -118,7 +118,7 @@ class _InviteUsersWidgetState extends State<InviteUsers> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Invite Users'),
+        title: const Text('Invite Users'),
       ),
       body: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -127,21 +127,21 @@ class _InviteUsersWidgetState extends State<InviteUsers> {
           controller: _searchController,
           decoration: InputDecoration(
             labelText: 'Search users to invite',
-            prefixIcon: Icon(Icons.search),
+            prefixIcon: const Icon(Icons.search),
             suffixIcon: _isSendingInvites
-                ? SpinKitPianoWave(
+                ? const SpinKitPianoWave(
               color: Color.fromARGB(255, 149, 137, 74),
               size: 50.0,
             )
                 : IconButton(
-              icon: Icon(Icons.send),
+              icon: const Icon(Icons.send),
               onPressed: _invitedUsers.isEmpty ? null : _sendInvites,
             ),
           ),
         ),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         if (_isSearching)
-          Center(child: SpinKitPianoWave(color: Color.fromARGB(255, 149, 137, 74), size: 50.0))
+          const Center(child: SpinKitPianoWave(color: Color.fromARGB(255, 149, 137, 74), size: 50.0))
         else if (_foundUsers.isNotEmpty)
           Expanded(
             child: ListView.builder(
@@ -154,7 +154,7 @@ class _InviteUsersWidgetState extends State<InviteUsers> {
                   ),
                   title: Text(user.fullName),
                   trailing: IconButton(
-                    icon: Icon(Icons.add),
+                    icon: const Icon(Icons.add),
                     onPressed: () => _addUserToInvite(user),
                   ),
                 );
@@ -166,7 +166,7 @@ class _InviteUsersWidgetState extends State<InviteUsers> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('Invited Users: (${_invitedUsers.length}):'),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               ListView.builder(
                 shrinkWrap: true, // Important to avoid overflow in Column
                 itemCount: _invitedUsers.length,
@@ -178,7 +178,7 @@ class _InviteUsersWidgetState extends State<InviteUsers> {
                     ),
                     title: Text(user.fullName),
                     trailing: IconButton(
-                      icon: Icon(Icons.delete , color: Colors.red),
+                      icon: const Icon(Icons.delete , color: Colors.red),
                       onPressed: () => _removeUserFromInvite(user),
                     ),
                   );

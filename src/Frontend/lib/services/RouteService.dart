@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:firstapp/models/Route.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class RouteService{
   static const String _baseUrl =
@@ -21,7 +20,7 @@ class RouteService{
       queryParameters: {
         'origin': '${origin.latitude},${origin.longitude}',
         'destination': '${destination.latitude},${destination.longitude}',
-        'key': '$key',
+        'key': key,
         'mode': 'walking' //should be distance dependant
       },
     );

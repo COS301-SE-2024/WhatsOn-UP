@@ -6,7 +6,6 @@ import 'package:emoji_selector/emoji_selector.dart';
 import 'package:firstapp/pages/Broadcast.dart';
 import 'package:firstapp/providers/user_provider.dart';
 import 'package:firstapp/services/api.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -31,7 +30,7 @@ void main() {
     create: (_) => mockUserProvider),
           Provider<Api>(create: (_) => mockApi),
         ],
-      child: MaterialApp(
+      child: const MaterialApp(
         home: Scaffold(
           body: Broadcast(),
         ),
@@ -40,7 +39,7 @@ void main() {
   }
   testWidgets('SpinKitPianoWave renders correctly', (WidgetTester tester) async {
     await tester.pumpWidget(
-      MaterialApp(
+      const MaterialApp(
         home: Scaffold(
           body: SpinKitPianoWave(
             color: Colors.blue,

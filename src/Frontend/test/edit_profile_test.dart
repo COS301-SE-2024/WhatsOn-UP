@@ -116,7 +116,7 @@ void main() {
     Widget createWidgetUnderTest() {
       return ChangeNotifierProvider<userProvider>(
         create: (_) => mockUserProvider,
-        child:  MaterialApp(
+        child:  const MaterialApp(
           home: EditprofilePage(),
         ),
       );

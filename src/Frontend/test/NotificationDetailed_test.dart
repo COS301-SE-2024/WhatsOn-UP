@@ -63,7 +63,7 @@ void main() {
         MaterialApp(
           home: NotificationDetailScreen(notification: reminderNotification),
           routes: {
-            '/calendar': (context) => Scaffold(body: Text('Calendar')),
+            '/calendar': (context) => const Scaffold(body: Text('Calendar')),
           },
         ),
       );

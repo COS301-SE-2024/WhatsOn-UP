@@ -2,14 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'dart:convert';
-import 'dart:typed_data';
 import 'package:firstapp/services/api.dart';
 import 'package:firstapp/pages/home_page.dart';
 
 import '../providers/user_provider.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_analytics/observer.dart';
 
 class GoogleSignInPage extends StatefulWidget {
   const GoogleSignInPage({super.key});
@@ -136,7 +133,7 @@ class _GoogleSignInPageState extends State<GoogleSignInPage> {
         userP.profileImage = user.userMetadata?['avatar_url'];
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => HomePage()),
+          MaterialPageRoute(builder: (context) => const HomePage()),
         );
       }
     });

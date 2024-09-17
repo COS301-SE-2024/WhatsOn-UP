@@ -6,13 +6,13 @@ import 'package:firstapp/screens/SearchScreen.dart';
 class FilteredResultScreen extends StatelessWidget {
   final List<Event> filteredEvents;
 
-  FilteredResultScreen({required this.filteredEvents});
+  const FilteredResultScreen({super.key, required this.filteredEvents});
 
   void _openSearchScreen(BuildContext context) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => SearchScreen(showSearchHistoryOnStart: true),
+        builder: (context) => const SearchScreen(showSearchHistoryOnStart: true),
       ),
     );
   }
@@ -21,7 +21,7 @@ class FilteredResultScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Filtered Results'),
+        title: const Text('Filtered Results'),
       ),
       body: Column(
         children: [
@@ -30,12 +30,12 @@ class FilteredResultScreen extends StatelessWidget {
             child: GestureDetector(
               onTap: () => _openSearchScreen(context),
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 8.0),
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 decoration: BoxDecoration(
                   color: Colors.grey[200],
                   borderRadius: BorderRadius.circular(50),
                 ),
-                child: Row(
+                child: const Row(
                   children: [
                     Icon(Icons.search),
                     SizedBox(width: 8.0),
@@ -49,7 +49,7 @@ class FilteredResultScreen extends StatelessWidget {
             ),
           ),
           filteredEvents.isEmpty
-              ? Center(child: Text('No events found'))
+              ? const Center(child: Text('No events found'))
               : Expanded(
             child: ListView.builder(
               itemCount: filteredEvents.length,

@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 class Broadcast extends StatefulWidget {
-  Broadcast();
+  const Broadcast({super.key});
 
   @override
   _BroadcastState createState() => _BroadcastState();
@@ -23,7 +23,7 @@ class _BroadcastState extends State<Broadcast> {
         borderRadius: BorderRadius.circular(15.0),
       ),
       child: Padding(
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -37,12 +37,12 @@ class _BroadcastState extends State<Broadcast> {
               controller: messageController,
               minLines: 1,
               maxLines: 20,
-              style: TextStyle(fontSize: 20),
+              style: const TextStyle(fontSize: 20),
               decoration: InputDecoration(
                 labelText: 'Write your announcement here..',
-                border: OutlineInputBorder(),
+                border: const OutlineInputBorder(),
                 suffixIcon: IconButton(
-                  icon: Icon(Icons.emoji_emotions),
+                  icon: const Icon(Icons.emoji_emotions),
                   onPressed: () => _showEmojiPicker(context),
                 ),
               ),
@@ -52,25 +52,25 @@ class _BroadcastState extends State<Broadcast> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 isLoading
-                    ? SpinKitPianoWave(
-            color: const Color.fromARGB(255, 149, 137, 74),
+                    ? const SpinKitPianoWave(
+            color: Color.fromARGB(255, 149, 137, 74),
         size: 50.0,
       )
                     : ElevatedButton(
                   onPressed: () => _sendEventBroadcast(context),
-                  child: Text('Submit'),
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
                   ),
+                  child: const Text('Submit'),
                 ),
                 ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: const Text('Cancel'),
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
                   ),
+                  child: const Text('Cancel'),
                 ),
               ],
             ),
@@ -112,7 +112,7 @@ class _BroadcastState extends State<Broadcast> {
       final response = await api.broadcast(messageController.text, userP.userId);
       if (response['status'] == 'success') {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Broadcast sent successfully"), backgroundColor: Colors.green),
+          const SnackBar(content: Text("Broadcast sent successfully"), backgroundColor: Colors.green),
         );
         Navigator.of(context).pop();
       }

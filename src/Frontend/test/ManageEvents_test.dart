@@ -15,7 +15,6 @@ import 'package:firstapp/providers/user_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_auth_ui/supabase_auth_ui.dart' as SupabaseAuthUI;
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
-import 'package:supabase_flutter/supabase_flutter.dart' as SupabaseFlutter;
 import 'api_test.mocks.dart';
 
 

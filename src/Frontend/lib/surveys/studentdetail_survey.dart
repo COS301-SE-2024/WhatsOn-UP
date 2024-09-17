@@ -88,7 +88,7 @@ class _StudentdetailSurveyState extends State<StudentdetailSurvey> {
                     ),
                   ],
                 ),
-                SizedBox(height: 60.0),
+                const SizedBox(height: 60.0),
                 if (isStudent)
                   Padding(
                     padding: const EdgeInsets.only(top: 20.0),
@@ -120,12 +120,12 @@ class _StudentdetailSurveyState extends State<StudentdetailSurvey> {
                 Center(
                   child: ElevatedButton(
                     onPressed: _saveSelectedCategories,
-                    child: const Text('Submit'),
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 40, vertical: 15),
                       textStyle: const TextStyle(fontSize: 16),
                     ),
+                    child: const Text('Submit'),
                   ),
                 ),
                 if (_errorMessage != null)
@@ -133,7 +133,7 @@ class _StudentdetailSurveyState extends State<StudentdetailSurvey> {
                     padding: const EdgeInsets.only(top: 20.0),
                     child: Text(
                       _errorMessage!,
-                      style: TextStyle(color: Colors.red),
+                      style: const TextStyle(color: Colors.red),
                     ),
                   ),
               ],
@@ -184,7 +184,7 @@ class _StudentdetailSurveyState extends State<StudentdetailSurvey> {
           context,
           PageTransition(
             type: PageTransitionType.rightToLeft,
-            child: ThankYouScreen(),
+            child: const ThankYouScreen(),
             isIos: true,
           ),
         );

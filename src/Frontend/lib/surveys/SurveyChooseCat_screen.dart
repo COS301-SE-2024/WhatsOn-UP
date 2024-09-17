@@ -9,6 +9,8 @@ import 'package:page_transition/page_transition.dart';
 import 'SurveyRateCat_screen.dart';
 
 class SurveyScreen extends StatefulWidget {
+  const SurveyScreen({super.key});
+
   @override
   _SurveyScreenState createState() => _SurveyScreenState();
 }
@@ -107,11 +109,11 @@ class _SurveyScreenState extends State<SurveyScreen> {
                         child: Container(
                           decoration: BoxDecoration(
                             color: category.isSelected
-                                ? Color.fromARGB(255, 149, 137, 74)
+                                ? const Color.fromARGB(255, 149, 137, 74)
                                 : Colors.white,
                             borderRadius: BorderRadius.circular(10.0),
                             border: Border.all(
-                              color: Color.fromARGB(255, 149, 137, 74),
+                              color: const Color.fromARGB(255, 149, 137, 74),
                               width: 2.0,
                             ),
                           ),
@@ -135,12 +137,12 @@ class _SurveyScreenState extends State<SurveyScreen> {
                   padding: const EdgeInsets.all(16.0),
                   child: ElevatedButton(
                     onPressed: _saveSelectedCategories,
-                    child: const Text('next'),
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 40, vertical: 15),
                       textStyle: const TextStyle(fontSize: 16),
                     ),
+                    child: const Text('next'),
                   ),
                 ),
               ],

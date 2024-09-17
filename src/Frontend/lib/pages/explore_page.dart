@@ -13,8 +13,8 @@ import 'package:location/location.dart' as LocationController;
 class NavigationPage extends StatefulWidget {
   final String? initSearchQuery;
 
-  NavigationPage(
-    {String? this.initSearchQuery}
+  const NavigationPage(
+    {super.key, this.initSearchQuery}
   );
 
   @override
@@ -59,8 +59,9 @@ class _NavigationPageState extends State<NavigationPage> {
         print("Current LOCATION: $_currentLocation");
       });
     
-    if(widget.initSearchQuery != null)
+    if(widget.initSearchQuery != null) {
       _searchPlaces(widget.initSearchQuery!);
+    }
   }
 
   @override
@@ -151,24 +152,24 @@ class _NavigationPageState extends State<NavigationPage> {
     );
   }
 
-  void _setDestination(LatLng _position) {
+  void _setDestination(LatLng position) {
     setState(() {
         _destination = Marker(
           markerId: const MarkerId("destination"),
           icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
-          position: _position
+          position: position
         );
       });
   }
 
-  Future<void> _updateRoute(LatLng _destinationLocation) async {
-    _setDestination(_destinationLocation);
+  Future<void> _updateRoute(LatLng destinationLocation) async {
+    _setDestination(destinationLocation);
     
-    final updatedRoute = await RouteService().getRoute(origin: _currentLocation!, destination: _destinationLocation);
+    final updatedRoute = await RouteService().getRoute(origin: _currentLocation!, destination: destinationLocation);
     setState(() {
       _route = updatedRoute;
     });
-    print('\n ${updatedRoute}');
+    print('\n $updatedRoute');
   }
 
   Future<void>_getLocationUpdates() async {
@@ -195,7 +196,7 @@ class _NavigationPageState extends State<NavigationPage> {
           if(_currentDestination != null && _route != null){
             await _updateRoute(_currentDestination!);
             print("CALLED");
-          };
+          }
         setState((){
           _currentLocation = LatLng(currentLocation.latitude!, currentLocation.longitude!);
           if (!locationFound) {

@@ -125,7 +125,7 @@ void main() async{
         ChangeNotifierProvider(create: (context) => ThemeNotifier()),
         ChangeNotifierProvider(create: (context) => notificationProvider()),
       ],
-      child: MyApp(),
+      child: const MyApp(),
     ),
   );
 }
@@ -133,6 +133,8 @@ void main() async{
 final supabase = Supabase.instance.client;
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Consumer<ThemeNotifier>(
@@ -143,22 +145,22 @@ class MyApp extends StatelessWidget {
           '/': (context) => const SplashPage(),
           '/login': (context) => const SupabaseLogin(),
           '/account': (context) => const SupabaseAccountpage(),
-          '/profile': (context) => ProfilePage(),
-          '/editProfile': (context) => EditprofilePage(),
+          '/profile': (context) => const ProfilePage(),
+          '/editProfile': (context) => const EditprofilePage(),
           '/home': (context) => const HomePage(),
           // '/rsvp': (context)=> const RSVPEventsPage(),
           '/settings': (context)=> const SettingsPage(),
-          '/search': (context)=>  SearchScreen(),
+          '/search': (context)=>  const SearchScreen(),
           '/resetPassword': (context)=> const ResetPasswordPage(),
-          '/hostApplication': (context)=> HostApplicationPage(),
+          '/hostApplication': (context)=> const HostApplicationPage(),
           '/detailed_event': (context) => DetailedEventPage(event: ModalRoute.of(context)!.settings.arguments as Event),
-          '/application_event': (context) => ApplicationEvent(),
+          '/application_event': (context) => const ApplicationEvent(),
           '/calendar': (context)=> const CalendarPage(),
           '/notifications': (context)=> const Notifications (),
           '/generaluserapplications': (context)=> const TabGeneral(),
           '/userManual': (context)=> const UserManualWebView(),
-          '/navigation' : (context) => NavigationPage(),
-          '/surveyRate': (context) => SurveyratecatScreen(jsonCategories: ''),
+          '/navigation' : (context) => const NavigationPage(),
+          '/surveyRate': (context) => const SurveyratecatScreen(jsonCategories: ''),
           '/manageEvents': (context) => ManageEvents(supabaseClient: supabaseClient),
           '/analyticsPage': (context) => AnalyticsPage(),
         },

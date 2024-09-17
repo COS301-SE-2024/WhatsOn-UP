@@ -13,7 +13,7 @@ import '../widgets/notification_card.dart';
 class NotificationDetailScreen extends StatefulWidget {
   final AppNotification notification;
 
-  NotificationDetailScreen({required this.notification});
+  const NotificationDetailScreen({super.key, required this.notification});
 
   @override
   _NotificationDetailScreenState createState() =>
@@ -47,7 +47,7 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
       String errorMessage = e.toString();
       if (errorMessage.contains("Invite already accepted")) {
         ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("This invite has been already accepted")));
+            const SnackBar(content: Text("This invite has been already accepted")));
       } else {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text("An error occurred: $e")));
@@ -71,7 +71,7 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
 
       if (response['status'] == 'error') {
       } else {
-        SnackBar(content: Text("Application Acknowledged"));
+        const SnackBar(content: Text("Application Acknowledged"));
       }
     } catch (e) {
 
@@ -188,13 +188,13 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
         title: Text(capitalize(widget.notification.notificationTypes)),
         actions: [
           IconButton(
-            icon: Icon(Icons.delete),
+            icon: const Icon(Icons.delete),
             onPressed: _showDeleteConfirmationDialog,
           ),
         ],
       ),
       body: isLoading
-          ? Center(
+          ? const Center(
               child: SpinKitPianoWave(
                 color: Color.fromARGB(255, 149, 137, 74),
                 size: 50.0,
@@ -205,25 +205,25 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 150.0),
+                  const SizedBox(height: 150.0),
                   Text(
                     'Sent At: $formattedDateSentAt',
                     style:
-                        TextStyle(fontSize: 12.0, fontStyle: FontStyle.italic),
+                        const TextStyle(fontSize: 12.0, fontStyle: FontStyle.italic),
                     textAlign: TextAlign.end,
                   ),
                   ChatBubble(
                     clipper:
                         ChatBubbleClipper3(type: BubbleType.receiverBubble),
                     backGroundColor: Colors.blueAccent,
-                    margin: EdgeInsets.all(20),
+                    margin: const EdgeInsets.all(20),
                     child: Container(
                       constraints: BoxConstraints(
                         maxWidth: MediaQuery.of(context).size.width * 0.7,
                       ),
                       child: Text(
                         widget.notification.message,
-                        style: TextStyle(color: Colors.white, fontSize: 18.0),
+                        style: const TextStyle(color: Colors.white, fontSize: 18.0),
                       ),
                     ),
                   ),
@@ -240,7 +240,7 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
                     ),
                   ],
                   if (widget.notification.notificationTypes == 'invite') ...[
-                    SizedBox(height: 20.0),
+                    const SizedBox(height: 20.0),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
@@ -250,43 +250,43 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
                             onPressed: _Accept,
                             style: TextButton.styleFrom(
                               foregroundColor: Colors.greenAccent,
-                              side: BorderSide(color: Colors.black),
-                              padding: EdgeInsets.symmetric(
+                              side: const BorderSide(color: Colors.black),
+                              padding: const EdgeInsets.symmetric(
                                   vertical: 12.0, horizontal: 20.0),
                             ),
-                            child: Text('Accept'),
+                            child: const Text('Accept'),
                           ),
                         if (widget.notification.eventInvite == true)
                           TextButton(
                             onPressed: () {
-                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                                   content: Text(
                                       "This invite has been already accepted")));
                             },
                             style: TextButton.styleFrom(
                               foregroundColor: Colors.greenAccent,
-                              side: BorderSide(color: Colors.black),
-                              padding: EdgeInsets.symmetric(
+                              side: const BorderSide(color: Colors.black),
+                              padding: const EdgeInsets.symmetric(
                                   vertical: 12.0, horizontal: 20.0),
                             ),
-                            child: Text('Accepted'),
+                            child: const Text('Accepted'),
                           ),
                       ],
                     ),
                   ],
                   if (widget.notification.notificationTypes == 'reminder') ...[
-                    SizedBox(height: 20.0),
+                    const SizedBox(height: 20.0),
                     TextButton(
                       onPressed: () {
                         Navigator.pushNamed(context, '/calendar');
                       },
                       style: TextButton.styleFrom(
                         foregroundColor: Colors.blueAccent,
-                        side: BorderSide(color: Colors.black),
+                        side: const BorderSide(color: Colors.black),
                       ),
-                      child: Text('Go to Calendar'),
+                      child: const Text('Go to Calendar'),
                     ),
-                    SizedBox(height: 20.0),
+                    const SizedBox(height: 20.0),
                   ],
                   if (widget.notification.notificationTypes ==
                       'application') ...[
@@ -294,8 +294,8 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
                       onPressed: _Acknowledge,
                       style: TextButton.styleFrom(
                         foregroundColor: Colors.black,
-                        side: BorderSide(color: Colors.black),
-                        padding: EdgeInsets.symmetric(
+                        side: const BorderSide(color: Colors.black),
+                        padding: const EdgeInsets.symmetric(
                             vertical: 12.0, horizontal: 20.0),
                       ),
                       child: const Text('Acknowledge'),

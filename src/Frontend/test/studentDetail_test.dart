@@ -7,7 +7,6 @@ import 'package:firstapp/surveys/studentdetail_survey.dart';
 import 'package:provider/provider.dart';
 import 'package:firstapp/providers/user_provider.dart';
 import 'package:firstapp/services/api.dart';
-import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
 import 'api_test.mocks.dart';
 
@@ -35,7 +34,7 @@ void main() {
       await tester.pumpWidget(
         ChangeNotifierProvider<userProvider>.value(
           value: mockUserProvider,
-          child: MaterialApp(
+          child: const MaterialApp(
             home: StudentdetailSurvey(jsonCategories: jsonCategories),
           ),
         ),
@@ -52,7 +51,7 @@ void main() {
       await tester.pumpWidget(
         ChangeNotifierProvider<userProvider>.value(
           value: mockUserProvider,
-          child: MaterialApp(
+          child: const MaterialApp(
             home: StudentdetailSurvey(jsonCategories: jsonCategories),
           ),
         ),
@@ -71,7 +70,7 @@ void main() {
       await tester.tap(find.text('Select a faculty'));
       await tester.tap(find.text('Select a faculty'), warnIfMissed: false);
       await tester.pumpAndSettle();
-      final facultyOption = find.byKey(Key('Faculty of Education'));
+      final facultyOption = find.byKey(const Key('Faculty of Education'));
       await tester.tap(facultyOption);
 
       expect(find.text('Faculty of Education'), findsOneWidget);

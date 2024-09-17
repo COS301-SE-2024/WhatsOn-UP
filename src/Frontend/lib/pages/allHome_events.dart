@@ -1,15 +1,12 @@
 import 'package:firstapp/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:provider/provider.dart';
 import 'package:firstapp/pages/detailed_event_page.dart';
-import '../pages/detailed_event_page.dart';
-import '../providers/events_providers.dart';
 import '../services/api.dart';
 import '../widgets/event_card.dart';
 
 class AllhomeEvents extends StatefulWidget {
-  AllhomeEvents({Key? key}) : super(key: key);
+  const AllhomeEvents({super.key});
 
   @override
   _AllhomeEventsState createState() => _AllhomeEventsState();
@@ -51,14 +48,14 @@ class _AllhomeEventsState extends State<AllhomeEvents> {
         title: const Text('Recommended Events'),
       ),
       body: isLoading
-          ? Center(
+          ? const Center(
               child: SpinKitPianoWave(
                 color: Color.fromARGB(255, 149, 137, 74),
                 size: 50.0,
               ),
             )
           : hasError
-              ? Center(
+              ? const Center(
                   child: Text(
                     'Failed to load events. Please try again later.',
                     style: TextStyle(color: Colors.red),
@@ -77,7 +74,7 @@ class _AllhomeEventsState extends State<AllhomeEvents> {
 class EventCardH extends StatelessWidget {
   final Event event;
 
-  const EventCardH({Key? key, required this.event}) : super(key: key);
+  const EventCardH({super.key, required this.event});
 
   @override
   Widget build(BuildContext context) {

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firstapp/widgets/theme_manager.dart';
 import 'package:firstapp/pages/profilePage.dart';
-import 'dart:typed_data';
 import 'package:url_launcher/url_launcher.dart';
 import '../providers/user_provider.dart';
 import 'notifications.dart';
@@ -10,9 +9,9 @@ import 'package:firstapp/pages/AnalyticsPage.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({
-    Key? key,
+    super.key,
     // required this.profileImageUrl,
-  }) : super(key: key);
+  });
 
   @override
   _SettingsPageState createState() => _SettingsPageState();
@@ -68,7 +67,7 @@ class _SettingsPageState extends State<SettingsPage> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => ProfilePage(),
+              builder: (context) => const ProfilePage(),
             ),
           );
         },
@@ -142,10 +141,11 @@ class _SettingsPageState extends State<SettingsPage> {
         icon: Icons.info,
         text: 'Help',
         onTap: () {
-          if(Theme.of(context).platform == TargetPlatform.iOS || Theme.of(context).platform == TargetPlatform.android)
-          Navigator.of(context).pushNamed('/userManual');
-        else
-          _launchURL();
+          if(Theme.of(context).platform == TargetPlatform.iOS || Theme.of(context).platform == TargetPlatform.android) {
+            Navigator.of(context).pushNamed('/userManual');
+          } else {
+            _launchURL();
+          }
         },
       ),
     );

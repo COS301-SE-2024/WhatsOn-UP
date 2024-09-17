@@ -1,15 +1,9 @@
-import 'package:emoji_selector/emoji_selector.dart';
 import 'package:firstapp/pages/Broadcast.dart';
 import 'package:firstapp/pages/BroadcastEvent.dart';
 import 'package:firstapp/widgets/event_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
-import 'package:firstapp/services/api.dart';
-import 'package:firstapp/providers/user_provider.dart';
-import 'package:provider/provider.dart';
 
-import 'api_test.mocks.dart';
 
 void main() {
 

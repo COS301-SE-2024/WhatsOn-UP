@@ -1,25 +1,18 @@
-import 'dart:convert';
 
-import 'package:firstapp/pages/BroadcastEvent.dart';
-import 'package:firstapp/pages/Event_Attendance.dart';
 // import 'package:firstapp/providers/events_providers.dart';
 
 // import 'package:firstapp/providers/user_provider.dart';
 import 'package:firstapp/widgets/event_card.dart';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
-import 'package:provider/provider.dart';
 
-import 'api_test.mocks.dart';
 
 
 void main() {
   group('Category', () {
     test('fromJson and toJson should work correctly', () {
 
-      final json = '1,Technology';
+      const json = '1,Technology';
 
 
       final category = Category.fromJson(json);

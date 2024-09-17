@@ -108,21 +108,21 @@ class _SurveyratecatScreenState extends State<SurveyratecatScreen> {
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: const Text('Previous'),
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 40, vertical: 15),
                     textStyle: const TextStyle(fontSize: 16),
                   ),
+                  child: const Text('Previous'),
                 ),
                 ElevatedButton(
                   onPressed: _saveSelectedCategories,
-                  child: const Text('Next'),
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 40, vertical: 15),
                     textStyle: const TextStyle(fontSize: 16),
                   ),
+                  child: const Text('Next'),
                 ),
               ],
             ),

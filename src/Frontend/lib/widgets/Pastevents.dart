@@ -12,7 +12,7 @@ class Pastevents extends StatefulWidget {
   final EventService eventService;
   final SupabaseClient supabaseClient;
 
-  Pastevents({Key? key, required this.eventService, required this.supabaseClient}) : super(key: key);
+  const Pastevents({super.key, required this.eventService, required this.supabaseClient});
 
   @override
   _PasteventsState createState() => _PasteventsState();
@@ -44,11 +44,11 @@ class _PasteventsState extends State<Pastevents> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Past Events'),
+        title: const Text('Past Events'),
       ),
       body: Column(
         children: [
-          SizedBox(width: 35.0),
+          const SizedBox(width: 35.0),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: Center(
@@ -67,7 +67,7 @@ class _PasteventsState extends State<Pastevents> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => SearchScreen(),
+                              builder: (context) => const SearchScreen(),
                             ),
                           );
                         },
@@ -76,7 +76,7 @@ class _PasteventsState extends State<Pastevents> {
                       ),
                     ),
                   ),
-                  SizedBox(width: 35.0),
+                  const SizedBox(width: 35.0),
                   SizedBox(
                     width: MediaQuery.of(context).size.width * 0.27,
                     child: Container(
@@ -89,7 +89,7 @@ class _PasteventsState extends State<Pastevents> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => FilterScreen(),
+                              builder: (context) => const FilterScreen(),
                             ),
                           );
                         },
@@ -102,22 +102,22 @@ class _PasteventsState extends State<Pastevents> {
               ),
             ),
           ),
-          SizedBox(width: 35.0),
+          const SizedBox(width: 35.0),
           Expanded(
             child: FutureBuilder<List<Event>>(
               future: _pastEvents,
               builder: (context, AsyncSnapshot<List<Event>> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
+                  return const Center(
                     child: SpinKitPianoWave(
                       color: Color.fromARGB(255, 149, 137, 74),
                       size: 50.0,
                     ),
                   );
                 } else if (snapshot.hasError) {
-                  return Center(child: Text('Error loading events'));
+                  return const Center(child: Text('Error loading events'));
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return Center(child: Text('No events available'));
+                  return const Center(child: Text('No events available'));
                 } else {
                   List<Event> events = snapshot.data!;
                   DateTime now = DateTime.now();

@@ -2,9 +2,6 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:firstapp/models/Location.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:firstapp/models/Route.dart';
 
 class PlacesService{
   static const String _baseUrl =
@@ -25,14 +22,14 @@ class PlacesService{
   {
     print("KEEEYYYY: $key");
     //find place in given location
-    final _headers = {
+    final headers = {
       'Content-Type': 'application/json',
-      'X-Goog-Api-Key': '$key',
+      'X-Goog-Api-Key': key,
       'X-Goog-FieldMask': 'places.displayName,places.name,places.id,places.formattedAddress,places.location,places.photos,places.types'
     };
 
-    final _body = {
-    'textQuery': '$query',
+    final body = {
+    'textQuery': query,
     'locationBias': {
       'circle': {
           'center': { //Hatfield campus coordinates
@@ -46,8 +43,8 @@ class PlacesService{
 
     final response = await _dio.post(
       _baseUrl,
-      options: Options(headers: _headers),
-      data: jsonEncode(_body)
+      options: Options(headers: headers),
+      data: jsonEncode(body)
     );
 
     print(response);

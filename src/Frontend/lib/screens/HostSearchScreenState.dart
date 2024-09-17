@@ -1,18 +1,14 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:firstapp/providers/events_providers.dart';
 import 'package:firstapp/widgets/event_card.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 import 'FilterScreen.dart';
 import 'package:firstapp/services/api.dart';  // Import the API file
 
 class HostSearchScreen extends StatefulWidget {
   final String hostId;
 
-  HostSearchScreen({required this.hostId});
+  const HostSearchScreen({super.key, required this.hostId});
 
   @override
   _HostSearchScreenState createState() => _HostSearchScreenState();
@@ -48,9 +44,10 @@ class _HostSearchScreenState extends State<HostSearchScreen> {
         if (event.hosts is List<Map<String, dynamic>>) {
           return (event.hosts as List<Map<String, dynamic>>)
               .any((host) => host['userId'] == widget.hostId);
-        } else if (event.hosts is List<String>) {
-          return (event.hosts as List<String>).contains(widget.hostId);
+        } else {
+          return (event.hosts).contains(widget.hostId);
         }
+      
         return false;
       }).toList();
 
@@ -119,7 +116,7 @@ class _HostSearchScreenState extends State<HostSearchScreen> {
   void _openFilterDialog() async {
     final result = await showDialog<List<Event>>(
       context: context,
-      builder: (context) => FilterScreen(),
+      builder: (context) => const FilterScreen(),
     );
 
     if (result != null) {
@@ -134,11 +131,11 @@ class _HostSearchScreenState extends State<HostSearchScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Host Events'),
+        title: const Text('Host Events'),
         actions: [
           if (_searchResults.isNotEmpty)
             IconButton(
-              icon: Icon(Icons.close),
+              icon: const Icon(Icons.close),
               onPressed: _clearSearchResults,
             ),
         ],
@@ -149,22 +146,22 @@ class _HostSearchScreenState extends State<HostSearchScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              margin: EdgeInsets.only(top: 16.0, bottom: 16.0),
-              padding: EdgeInsets.all(8.0),
+              margin: const EdgeInsets.only(top: 16.0, bottom: 16.0),
+              padding: const EdgeInsets.all(8.0),
               height: 40,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(
+                borderRadius: const BorderRadius.all(
                   Radius.circular(50),
                 ),
                 color: Colors.grey[200], // Light grey for better visibility
               ),
               child: Row(
                 children: [
-                  Icon(Icons.search), // Search icon color
-                  SizedBox(width: 8.0),
+                  const Icon(Icons.search), // Search icon color
+                  const SizedBox(width: 8.0),
                   Expanded(
                     child: TextField(
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         hintText: "Search for events",
                         border: InputBorder.none,
                       ),
@@ -178,7 +175,7 @@ class _HostSearchScreenState extends State<HostSearchScreen> {
                     ),
                   ),
                   IconButton(
-                    icon: Icon(Icons.filter_list),
+                    icon: const Icon(Icons.filter_list),
                     color: Colors.black,
                     onPressed: _openFilterDialog,
                   ),
@@ -193,28 +190,28 @@ class _HostSearchScreenState extends State<HostSearchScreen> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Search History'),
+                        const Text('Search History'),
                         ..._searchHistory.map((history) {
                           return ListTile(
                             title: Text(history),
                             trailing: IconButton(
-                              icon: Icon(Icons.clear),
+                              icon: const Icon(Icons.clear),
                               onPressed: () => _removeSearchQuery(history),
                             ),
                             onTap: () {
                               _searchEvents(history);
                             },
                           );
-                        }).toList(),
+                        }),
                       ],
                     ),
                 ],
               ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             _isLoading
-                ? Center(child: CircularProgressIndicator())
+                ? const Center(child: CircularProgressIndicator())
                 : _hasSearched && _searchResults.isEmpty
-                ? Center(child: Text('No events found for this host.'))
+                ? const Center(child: Text('No events found for this host.'))
                 : Expanded(
               child: ListView.builder(
                 itemCount: _searchResults.length,

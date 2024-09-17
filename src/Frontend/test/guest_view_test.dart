@@ -9,8 +9,6 @@ import 'package:firstapp/pages/home_page.dart';
 import 'package:firstapp/pages/settings_page.dart';
 import 'package:firstapp/pages/profilePage.dart';
 import 'api_test.mocks.dart';
-import 'package:image/image.dart' as img;
-import 'dart:typed_data';
 import 'package:firstapp/providers/events_providers.dart';
 import 'package:mocktail_image_network/mocktail_image_network.dart';
 void main() {
@@ -249,7 +247,7 @@ void main() {
         MaterialApp(
           home: ChangeNotifierProvider<userProvider>.value(
             value: mockUserProvider,
-            child: ProfilePage(),
+            child: const ProfilePage(),
           ),
         ),
       );

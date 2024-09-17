@@ -5,13 +5,13 @@ import 'package:firstapp/widgets/SearchImageTile.dart';
 class SearchTile extends StatelessWidget {
   final Function(String) onFilterSelected;
 
-  SearchTile({required this.onFilterSelected});
+  SearchTile({super.key, required this.onFilterSelected});
   String technologyTitle = "Tech";
   @override
   Widget build(BuildContext context) {
     return GridView.count(
       shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
       crossAxisCount: 2,
       children: [
         SearchImageTile(

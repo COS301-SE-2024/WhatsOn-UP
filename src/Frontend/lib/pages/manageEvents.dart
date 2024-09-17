@@ -4,7 +4,6 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:firstapp/pages/application_event.dart';
 import 'ManageGeneralApplicationsTabs.dart';
-import 'attendee.dart';
 import 'package:provider/provider.dart';
 import '../providers/user_provider.dart';
 import '../widgets/eventManagement_category.dart';
@@ -15,10 +14,10 @@ import '../widgets/Pastevents.dart';
 class ManageEvents extends StatefulWidget {
   final SupabaseClient supabaseClient;
 
-  ManageEvents({
-    Key? key,
+  const ManageEvents({
+    super.key,
     required this.supabaseClient,
-  }) : super(key: key);
+  });
 
   @override
   _ManageEventsState createState() => _ManageEventsState();
@@ -58,12 +57,12 @@ class _ManageEventsState extends State<ManageEvents> {
           },
           icon: const Icon(LineAwesomeIcons.angle_left_solid),
         ),
-        title: Text('Manage Events'),
+        title: const Text('Manage Events'),
       ),
       body: _isLoading
-          ? Center(
+          ? const Center(
         child: SpinKitPianoWave(
-          color: const Color.fromARGB(255, 149, 137, 74),
+          color: Color.fromARGB(255, 149, 137, 74),
           size: 50.0,
         ),
       )
@@ -74,12 +73,12 @@ class _ManageEventsState extends State<ManageEvents> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(height: 100.0),
+            const SizedBox(height: 100.0),
             Expanded(
               child: GridView.builder(
                 shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   crossAxisSpacing: 16.0,
                   mainAxisSpacing: 16.0,
@@ -99,16 +98,16 @@ class _ManageEventsState extends State<ManageEvents> {
                       _navigateToRoute(option['route']!, context);
                     },
                     child: Container(
-                      padding: EdgeInsets.all(16.0),
+                      padding: const EdgeInsets.all(16.0),
                       decoration: BoxDecoration(
                         color: isSelected
-                            ? Color.fromARGB(255, 149, 137, 74)
+                            ? const Color.fromARGB(255, 149, 137, 74)
                             : Colors.transparent,
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
                           color: isSelected
                               ? Colors.transparent
-                              : Color.fromARGB(255, 149, 137, 74),
+                              : const Color.fromARGB(255, 149, 137, 74),
                           width: 2.0,
                         ),
                       ),
@@ -120,7 +119,7 @@ class _ManageEventsState extends State<ManageEvents> {
                             size: 50.0,
                             color: isSelected ? Colors.white : Colors.black,
                           ),
-                          SizedBox(height: 8.0),
+                          const SizedBox(height: 8.0),
                           Text(
                             option['text'],
                             textAlign: TextAlign.center,
@@ -150,7 +149,6 @@ class _ManageEventsState extends State<ManageEvents> {
           context,
           MaterialPageRoute(builder: (context) => EventmanagementCategory(supabaseClient: widget.supabaseClient)),
         );
-        break;
       case 'Pastevents':
         Navigator.push(
           context,
@@ -161,19 +159,16 @@ class _ManageEventsState extends State<ManageEvents> {
             ),
           ),
         );
-        break;
       case 'ApplicationEvent':
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => ApplicationEvent()),
+          MaterialPageRoute(builder: (context) => const ApplicationEvent()),
         );
-        break;
       case 'GeneralEventApplications':
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => const TabGeneral()),
         );
-        break;
       default:
         break;
     }

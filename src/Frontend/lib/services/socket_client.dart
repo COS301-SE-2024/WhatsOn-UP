@@ -2,17 +2,11 @@ import 'package:firstapp/pages/home_page.dart';
 import 'package:firstapp/providers/notification_providers.dart';
 import 'package:firstapp/schemas/notification_schemas.dart';
 import 'package:firstapp/services/LocalNotifications.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:json_schema/json_schema.dart';
-import 'package:provider/provider.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
-import '../pages/notifications.dart';
-import '../providers/notification_providers.dart';
 
-import 'api.dart';
 
 class SocketService {
   late IO.Socket socket;
@@ -65,7 +59,7 @@ class SocketService {
   void navigateToHomePage(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => HomePage()),
+      MaterialPageRoute(builder: (context) => const HomePage()),
     );
   }
   void sendMessage(String event, dynamic message) {

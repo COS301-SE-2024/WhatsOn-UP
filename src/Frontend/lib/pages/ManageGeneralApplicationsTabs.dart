@@ -60,7 +60,7 @@ class UserList extends StatelessWidget {
             child: Text('An error occurred: ${snapshot.error}'),
           );
         } else if (!snapshot.hasData) {
-          return Center(
+          return const Center(
             child: Text('No users found'),
           );
         } else {
@@ -82,8 +82,7 @@ class UserList extends StatelessWidget {
                 child: Material(
                   child: ListTile(
                     leading: CircleAvatar(
-                      backgroundImage: user.user.profileImage.isNotEmpty &&
-                              user.user.profileImage != null
+                      backgroundImage: user.user.profileImage.isNotEmpty
                           ? NetworkImage(user.user.profileImage)
                           : const AssetImage('assets/images/user.png')
                               as ImageProvider,
@@ -131,7 +130,7 @@ class _ApplicantState extends State<Applicant> {
     return Scaffold(
       appBar: AppBar(title: Text(widget.user.user.fullName ?? "Unknown")),
       body: _isLoading
-          ? Center(
+          ? const Center(
               child: SpinKitPianoWave(
                 color: Color.fromARGB(255, 149, 137, 74),
                 size: 50.0,
@@ -148,12 +147,12 @@ class _ApplicantState extends State<Applicant> {
                         NetworkImage(widget.user.user.profileImage),
                   ),
                 ),
-                SizedBox(height: 20.0),
+                const SizedBox(height: 20.0),
                 Text(
                   widget.user.user.fullName ?? "Unknown",
-                  style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
                 ),
-                SizedBox(height: 20.0),
+                const SizedBox(height: 20.0),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Container(
@@ -166,7 +165,7 @@ class _ApplicantState extends State<Applicant> {
                           color: Colors.grey.withOpacity(0.3),
                           spreadRadius: 2,
                           blurRadius: 5,
-                          offset: Offset(0, 3),
+                          offset: const Offset(0, 3),
                         ),
                       ],
                     ),
@@ -180,7 +179,7 @@ class _ApplicantState extends State<Applicant> {
                           ),
                         );
                       },
-                      child: Text(
+                      child: const Text(
                         'Click here to view the application details',
                         textAlign: TextAlign.center,
                         style: TextStyle(
@@ -200,19 +199,19 @@ class _ApplicantState extends State<Applicant> {
                 //     style: TextStyle(fontSize: 18.0),
                 //   ),
                 // ),
-                SizedBox(height: 10.0),
+                const SizedBox(height: 10.0),
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Text(
                     'Status: ${widget.user.status.name}',
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 18.0),
+                    style: const TextStyle(fontSize: 18.0),
                   ),
                 ),
-                SizedBox(height: 10.0),
+                const SizedBox(height: 10.0),
                  if (widget.user.status.name == 'PENDING')
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
+                  const Padding(
+                    padding: EdgeInsets.all(16.0),
                     child: Text(
                       'This person is yet to be verified.',
                       textAlign: TextAlign.center,
@@ -237,7 +236,7 @@ class _ApplicantState extends State<Applicant> {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 20.0), // Adjust padding if needed
                           ),
-                          child: Text('Demote'),
+                          child: const Text('Demote'),
                         ),
                       ],
                     ),
@@ -256,7 +255,7 @@ class _ApplicantState extends State<Applicant> {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 20.0), // Adjust padding if needed
                           ),
-                          child: Text('Reject'),
+                          child: const Text('Reject'),
                         ),
                         ElevatedButton(
                           onPressed: () {
@@ -266,7 +265,7 @@ class _ApplicantState extends State<Applicant> {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 20.0), // Adjust padding if needed
                           ),
-                          child: Text('Accept'),
+                          child: const Text('Accept'),
                         ),
                       ],
                     ),
@@ -286,7 +285,7 @@ class _ApplicantState extends State<Applicant> {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 20.0),
                           ),
-                          child: Text('Reject'),
+                          child: const Text('Reject'),
                         ),
                         ElevatedButton(
                           onPressed: () {
@@ -296,7 +295,7 @@ class _ApplicantState extends State<Applicant> {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 20.0),
                           ),
-                          child: Text('Accept'),
+                          child: const Text('Accept'),
                         ),
                       ],
                     ),
@@ -316,7 +315,7 @@ class _ApplicantState extends State<Applicant> {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 20.0),
                           ),
-                          child: Text('Reject'),
+                          child: const Text('Reject'),
                         ),
                         ElevatedButton(
                           onPressed: () {
@@ -326,7 +325,7 @@ class _ApplicantState extends State<Applicant> {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 20.0),
                           ),
-                          child: Text('Accept'),
+                          child: const Text('Accept'),
                         ),
                       ],
                     ),

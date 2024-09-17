@@ -273,11 +273,11 @@ class NavBar extends StatelessWidget {
   final String userRole;
 
   const NavBar({
-    Key? key,
+    super.key,
     required this.selectedIndex,
     required this.onItemTapped,
     required this.userRole,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -292,7 +292,7 @@ class NavBar extends StatelessWidget {
       const BottomNavigationBarItem(
           icon: Icon(Icons.explore), label: 'Explore'),
       if (isAdminOrHost)
-        BottomNavigationBarItem(
+        const BottomNavigationBarItem(
           icon: Icon(Icons.more_vert),
           label: 'More',
         )
@@ -331,15 +331,15 @@ class NavBar extends StatelessWidget {
       position: RelativeRect.fromLTRB(
           screenSize.width - 200, screenSize.height - 230, 0, 0),
       items: [
-        PopupMenuItem<int>(
+        const PopupMenuItem<int>(
             value: 0,
             child: ListTile(
                 leading: Icon(Icons.settings), title: Text('Settings'))),
-        PopupMenuItem<int>(
+        const PopupMenuItem<int>(
             value: 1,
             child: ListTile(
                 leading: Icon(Icons.event), title: Text('Manage Events'))),
-        PopupMenuItem<int>(
+        const PopupMenuItem<int>(
             value: 2,
             child: ListTile(
                 leading: Icon(Icons.broadcast_on_home),
@@ -350,19 +350,16 @@ class NavBar extends StatelessWidget {
         switch (result) {
           case 0:
             onItemTapped(4);
-            break;
           case 1:
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => ManageEvents(supabaseClient: Supabase.instance.client)));
-            break;
           case 2:
             showDialog(
               context: context,
               builder: (BuildContext context) {
-                return Broadcast();
+                return const Broadcast();
               },
             );
-            break;
         }
       }
     });

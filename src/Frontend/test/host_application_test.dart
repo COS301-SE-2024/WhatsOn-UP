@@ -25,7 +25,7 @@ void main() {
       return MaterialApp(
           home: ChangeNotifierProvider<userProvider>.value(
             value: mockUserProvider,
-            child: HostApplicationPage(),
+            child: const HostApplicationPage(),
           ),
         ); 
     }

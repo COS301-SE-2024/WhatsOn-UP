@@ -141,7 +141,7 @@ class EventCard extends StatefulWidget {
   final Event event;
   final Function(String, String) removeEvent;
 
-  EventCard({required this.event, required this.removeEvent});
+  const EventCard({super.key, required this.event, required this.removeEvent});
 
   @override
   _EventCardState createState() => _EventCardState();
@@ -213,7 +213,7 @@ class _EventCardState extends State<EventCard> {
                     backgroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
-                      side: BorderSide(color: Colors.grey, width: 1),
+                      side: const BorderSide(color: Colors.grey, width: 1),
                     ),
                     padding: const EdgeInsets.symmetric(
                         horizontal: 16.0, vertical: 5.0),

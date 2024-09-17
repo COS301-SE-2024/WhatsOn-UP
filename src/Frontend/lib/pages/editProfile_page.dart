@@ -11,7 +11,7 @@ import '../services/api.dart';
 import '../providers/user_provider.dart';
 
 class EditprofilePage extends StatefulWidget {
-  EditprofilePage({Key? key}) : super(key: key);
+  const EditprofilePage({super.key});
 
   @override
   _EditprofilePageState createState() => _EditprofilePageState();
@@ -48,7 +48,7 @@ class _EditprofilePageState extends State<EditprofilePage> {
           userP.notifyListeners();
 
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Image updated successfully')),
+            const SnackBar(content: Text('Image updated successfully')),
           );
         } else {
           print('Upload failed: $response');
@@ -103,7 +103,7 @@ class _EditprofilePageState extends State<EditprofilePage> {
               },
               icon: const Icon(LineAwesomeIcons.angle_left_solid),
             ),
-            title: Text('Edit Profile'),
+            title: const Text('Edit Profile'),
           ),
           body: _isLoading
               ? const Center(
@@ -126,7 +126,7 @@ class _EditprofilePageState extends State<EditprofilePage> {
                           width: double.infinity,
                           child: ElevatedButton(
                             onPressed: _editUser,
-                            child: Text('Save'),
+                            child: const Text('Save'),
                           ),
                         ),
                         const SizedBox(height: 30),
@@ -137,11 +137,11 @@ class _EditprofilePageState extends State<EditprofilePage> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => ProfilePage(),
+                                  builder: (context) => const ProfilePage(),
                                 ),
                               );
                             },
-                            child: Text('Cancel'),
+                            child: const Text('Cancel'),
                           ),
                         ),
                       ],
@@ -170,7 +170,7 @@ class _EditprofilePageState extends State<EditprofilePage> {
                     : (userP.profileImage != null &&
                                 userP.profileImage!.isNotEmpty
                             ? NetworkImage(userP.profileImage!)
-                            : AssetImage('assets/default_profile_image.png'))
+                            : const AssetImage('assets/default_profile_image.png'))
                         as ImageProvider,
               ),
             ),
@@ -178,12 +178,12 @@ class _EditprofilePageState extends State<EditprofilePage> {
           Positioned(
             bottom: 0,
             right: 0,
-            child: Container(
+            child: SizedBox(
               height: 40,
               width: 40,
               child: IconButton(
                 onPressed: () => pickImage(ImageSource.gallery),
-                icon: Icon(Icons.add_a_photo),
+                icon: const Icon(Icons.add_a_photo),
               ),
             ),
           ),
@@ -216,7 +216,7 @@ class _EditprofilePageState extends State<EditprofilePage> {
           labelText: labelText,
           floatingLabelBehavior: FloatingLabelBehavior.always,
           hintText: labelText,
-          hintStyle: TextStyle(
+          hintStyle: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
             color: Colors.grey,
@@ -284,17 +284,17 @@ class _EditprofilePageState extends State<EditprofilePage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Success!'),
-          content: Text('Profile successfully updated.'),
+          title: const Text('Success!'),
+          content: const Text('Profile successfully updated.'),
           actions: <Widget>[
             TextButton(
-              child: Text('OK'),
+              child: const Text('OK'),
               onPressed: () {
                 Navigator.pop(context);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => HomePage(),
+                    builder: (context) => const HomePage(),
                   ),
                 );
               },

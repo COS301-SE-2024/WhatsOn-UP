@@ -7,7 +7,7 @@ import '../widgets/event_card.dart';
 import 'Event_Attendance.dart';
 
 class Attendees extends StatefulWidget {
-  Attendees({super.key});
+  const Attendees({super.key});
 
   @override
   State<Attendees> createState() => _AttendeesState();
@@ -36,7 +36,7 @@ class _AttendeesState extends State<Attendees> {
 
     return Scaffold(
         appBar: AppBar(
-          title: Text('Attendees'),
+          title: const Text('Attendees'),
         ),
         body: FutureBuilder<List<Event>>(
           future: _eventsRsvp,
@@ -73,15 +73,15 @@ class _AttendeesState extends State<Attendees> {
                     child: Container(
                       height: 50,
                       color: Colors.grey[200],
-                      padding: EdgeInsets.symmetric(horizontal: 16.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('${events[index].nameOfEvent}'),
+                          Text(events[index].nameOfEvent),
                           Row(
                             children: [
-                              Icon(Icons.people, size: 16),
-                              SizedBox(width: 4),
+                              const Icon(Icons.people, size: 16),
+                              const SizedBox(width: 4),
                               Text(events[index].attendees.length.toString())
                             ],
                           ),

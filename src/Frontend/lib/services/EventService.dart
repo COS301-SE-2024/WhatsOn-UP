@@ -1,18 +1,16 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'dart:typed_data';
 import 'package:firstapp/widgets/event_card.dart';
 //import 'api.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'globals.dart' as globals;
 
 import 'package:intl/intl.dart';
-import 'package:firstapp/widgets/event_card.dart';
 
 class EventService {
   final SupabaseClient supabase;
   EventService(this.supabase);
-  static final String baseUrl = 'http://${globals.domain}:8080';
+  static const String baseUrl = 'http://${globals.domain}:8080';
 
   Future<String?> _getJwtToken() async {
     final session = supabase.auth.currentSession;
@@ -183,8 +181,9 @@ class EventService {
       DateTime endDateTime = DateTime.parse(endDate);
       queryParameters['endDateTime'] = formatter.format(endDateTime);
     }
-    if (maxCapacity != null)
+    if (maxCapacity != null) {
       queryParameters['maxAttendees'] = maxCapacity.toString();
+    }
     queryParameters['isPrivate'] = isPrivate.toString();
 
     Uri uri = Uri.parse('$baseUrl/api/events/filter').replace(

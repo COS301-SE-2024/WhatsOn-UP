@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-import 'package:firstapp/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
@@ -8,6 +7,8 @@ import '../providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
 class HostApplicationPage extends StatefulWidget {
+  const HostApplicationPage({super.key});
+
   @override
   _HostApplicationPageState createState() => _HostApplicationPageState();
 }
@@ -23,11 +24,11 @@ class _HostApplicationPageState extends State<HostApplicationPage> {
   String? _imageName;
   bool _isLoading = false;
 
-  List<String> _durationOptions = ['1 week', '1 month', 'Permanent'];
+  final List<String> _durationOptions = ['1 week', '1 month', 'Permanent'];
 
   Future<void> _pickImage() async {
-    final ImagePicker _picker = ImagePicker();
-    XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    final ImagePicker picker = ImagePicker();
+    XFile? pickedFile = await picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       Uint8List image = await pickedFile.readAsBytes();
       setState(() {
@@ -78,7 +79,7 @@ class _HostApplicationPageState extends State<HostApplicationPage> {
                         },
                       ),
                       Text(_isStudent ? 'Yes' : 'No',
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontSize: 16, fontWeight: FontWeight.bold)),
                     ],
                   ),

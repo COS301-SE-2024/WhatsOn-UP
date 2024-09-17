@@ -4,13 +4,13 @@ import 'package:flutter_html/flutter_html.dart';
 class DirectionsModalSheet extends StatelessWidget {
   final List<String> directions;
 
-  DirectionsModalSheet({required this.directions});
+  const DirectionsModalSheet({super.key, required this.directions});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(16.0),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
@@ -22,7 +22,7 @@ class DirectionsModalSheet extends StatelessWidget {
             ),
           ),
 
-          SizedBox(height: 16.0),
+          const SizedBox(height: 16.0),
           
           Expanded(
             child: ListView(
@@ -37,9 +37,9 @@ class DirectionsModalSheet extends StatelessWidget {
             ),
           ),
           
-          SizedBox(height: 16.0),
+          const SizedBox(height: 16.0),
           ElevatedButton(
-            child: Text('Close'),
+            child: const Text('Close'),
             onPressed: () => Navigator.pop(context),
           ),
         ],

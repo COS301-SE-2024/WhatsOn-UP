@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../pages/home_page.dart';
 
 class ThankYouScreen extends StatelessWidget {
-  const ThankYouScreen({Key? key}) : super(key: key);
+  const ThankYouScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -53,15 +53,15 @@ class ThankYouScreen extends StatelessWidget {
                   Navigator.popUntil(context, (route) => route.isFirst);
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => HomePage()),
+                    MaterialPageRoute(builder: (context) => const HomePage()),
                   );
                 },
-                child: const Text('Go to Home'),
                 style: ElevatedButton.styleFrom(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                   textStyle: const TextStyle(fontSize: 16),
                 ),
+                child: const Text('Go to Home'),
               ),
             ],
           ),

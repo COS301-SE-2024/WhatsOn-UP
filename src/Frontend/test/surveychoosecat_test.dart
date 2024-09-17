@@ -53,7 +53,7 @@ void main() {
             create: (_) => mockApi,
           ),
         ],
-        child: MaterialApp(
+        child: const MaterialApp(
           home: SurveyScreen(),
         ),
       ),
@@ -76,7 +76,7 @@ void main() {
             create: (_) => mockApi,
           ),
         ],
-        child: MaterialApp(
+        child: const MaterialApp(
           home: SurveyScreen(),
         ),
       ),
@@ -101,7 +101,7 @@ void main() {
             create: (_) => mockApi,
           ),
         ],
-        child: MaterialApp(
+        child: const MaterialApp(
           home: SurveyScreen(),
         ),
       ),

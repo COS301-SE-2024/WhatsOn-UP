@@ -89,7 +89,7 @@ class _ForgotPassState extends State<ForgotPass> {
       width: mediaSize.width,
       height: mediaSize.height * 0.6,
       padding: const EdgeInsets.all(16.0),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(30.0),
@@ -128,7 +128,7 @@ class _ForgotPassState extends State<ForgotPass> {
                   redirectTo: 'io.supabase.flutterquickstart://login-callback/',
                 );
                 if (mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                       content: Text(
                           "A link to reset your password has been sent to your inbox.")));
                 }
@@ -139,7 +139,7 @@ class _ForgotPassState extends State<ForgotPass> {
                 ));
               } catch (error) {
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text('An error occurred, please try again'),
+                  content: const Text('An error occurred, please try again'),
                   backgroundColor: Theme.of(context).colorScheme.error,
                 ));
               }

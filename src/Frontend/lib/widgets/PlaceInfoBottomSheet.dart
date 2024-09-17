@@ -1,33 +1,31 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firstapp/models/Location.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
-import 'package:firstapp/pages/explore_page.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class PlaceInformationModalSheet extends StatelessWidget {
   final Location location;
   final startTripCallback startTrip;
 
-  PlaceInformationModalSheet({required this.location, required this.startTrip});
+  const PlaceInformationModalSheet({super.key, required this.location, required this.startTrip});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(16.0),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
            Text(
             location.displayName,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 24.0,
               fontWeight: FontWeight.bold,
             ),
           ),
 
-          SizedBox(height: 16.0),
+          const SizedBox(height: 16.0),
 
           //Image(s)
           
@@ -36,7 +34,7 @@ class PlaceInformationModalSheet extends StatelessWidget {
               ListView(
               children: [
                 Center(
-                  child: Container(
+                  child: SizedBox(
                     width: MediaQuery.of(context).size.width, // Full width of the screen
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(16.0), // Adjust radius as needed
@@ -46,12 +44,12 @@ class PlaceInformationModalSheet extends StatelessWidget {
                           enlargeCenterPage: true,
                           enableInfiniteScroll: (location.imageUrls.length >= 3) ? true : false,
                           autoPlay: true,
-                          autoPlayAnimationDuration: Duration(seconds: 2)
+                          autoPlayAnimationDuration: const Duration(seconds: 2)
                         ),
                         items: location.imageUrls.map((imageUrl) {
                           return Builder(
                             builder: (BuildContext context) {
-                              return Container(
+                              return SizedBox(
                                 width: MediaQuery.of(context).size.width,
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(16.0),
@@ -82,7 +80,7 @@ class PlaceInformationModalSheet extends StatelessWidget {
                   ),
                 ),
 
-                SizedBox(height: 16.0),
+                const SizedBox(height: 16.0),
 
                 //Additional information
                 Container(
@@ -96,7 +94,7 @@ class PlaceInformationModalSheet extends StatelessWidget {
                           color: Colors.black.withOpacity(0.1),
                           spreadRadius: 2,
                           blurRadius: 4,
-                          offset: Offset(0, 2), // changes position of shadow
+                          offset: const Offset(0, 2), // changes position of shadow
                         ),
                       ],
                     ),
@@ -124,7 +122,7 @@ class PlaceInformationModalSheet extends StatelessWidget {
                   ),
                 
                 
-                SizedBox(height: 16.0),
+                const SizedBox(height: 16.0),
 
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,

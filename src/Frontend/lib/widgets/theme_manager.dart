@@ -54,7 +54,7 @@ class ThemeNotifier with ChangeNotifier {
     ),
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(
-        foregroundColor: Color.fromARGB(255, 13, 71, 161),
+        foregroundColor: const Color.fromARGB(255, 13, 71, 161),
       ),
     ),
   );
@@ -92,12 +92,12 @@ class ThemeNotifier with ChangeNotifier {
           borderRadius: BorderRadius.circular(20),
           // side: BorderSide(color: const Color.fromARGB(255, 255, 255, 255), width: 1),
         ),
-        padding: EdgeInsets.symmetric(vertical: 16),
+        padding: const EdgeInsets.symmetric(vertical: 16),
       ),
     ),
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(
-        foregroundColor: Color.fromARGB(255, 60, 128, 230),
+        foregroundColor: const Color.fromARGB(255, 60, 128, 230),
       ),
     ),
   );

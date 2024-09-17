@@ -163,7 +163,7 @@ void main() {
               MaterialApp(
                 home: ChangeNotifierProvider<userProvider>.value(
                   value: mockUserProvider,
-                  child:  ProfilePage(),
+                  child:  const ProfilePage(),
                 ),
               ),
             );
@@ -187,7 +187,7 @@ void main() {
               MaterialApp(
                 home: ChangeNotifierProvider<userProvider>.value(
                   value: mockUserProvider,
-                  child:  ProfilePage(),
+                  child:  const ProfilePage(),
                 ),
               ),
             );
@@ -216,9 +216,9 @@ void main() {
                     ],
 
                     child: MaterialApp(
-                      home:  ProfilePage(),
+                      home:  const ProfilePage(),
                       routes: {
-                        '/editProfile': (context) =>  EditprofilePage(),
+                        '/editProfile': (context) =>  const EditprofilePage(),
                       },
                     ),
                   )),
@@ -239,7 +239,7 @@ void main() {
               MaterialApp(
                 home: ChangeNotifierProvider<userProvider>.value(
                   value: mockUserProvider,
-                  child:  ProfilePage(),
+                  child:  const ProfilePage(),
                 ),
                 routes: {
                   '/resetPassword': (context) => const ResetPasswordPage(),

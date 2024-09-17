@@ -121,7 +121,7 @@ import '../widgets/event_card.dart';
 
 class BroadcastEventDialog extends StatefulWidget {
   final Event event;
-  BroadcastEventDialog({required this.event});
+  const BroadcastEventDialog({super.key, required this.event});
 
   @override
   _BroadcastEventDialogState createState() => _BroadcastEventDialogState();
@@ -138,7 +138,7 @@ class _BroadcastEventDialogState extends State<BroadcastEventDialog> {
         borderRadius: BorderRadius.circular(15.0),
       ),
       child: Padding(
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -152,20 +152,20 @@ class _BroadcastEventDialogState extends State<BroadcastEventDialog> {
               controller: messageController,
               minLines: 1,
               maxLines: 20,
-              style: TextStyle(fontSize: 20),
+              style: const TextStyle(fontSize: 20),
               decoration: InputDecoration(
                 labelText: 'Write your announcement here',
-                border: OutlineInputBorder(),
+                border: const OutlineInputBorder(),
                 suffixIcon: IconButton(
-                  icon: Icon(Icons.emoji_emotions),
+                  icon: const Icon(Icons.emoji_emotions),
                   onPressed: () => _showEmojiPicker(context),
                 ),
               ),
             ),
             const SizedBox(height: 20),
             if (_isLoading)
-              Center(child:  SpinKitPianoWave(
-                color: const Color.fromARGB(255, 149, 137, 74),
+              const Center(child:  SpinKitPianoWave(
+                color: Color.fromARGB(255, 149, 137, 74),
                 size: 50.0,
               )),
             if (!_isLoading)
@@ -174,19 +174,19 @@ class _BroadcastEventDialogState extends State<BroadcastEventDialog> {
                 children: [
                   ElevatedButton(
                     onPressed: () => _sendEventBroadcast(context),
-                    child: Text('Submit'),
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     ),
+                    child: const Text('Submit'),
                   ),
                   ElevatedButton(
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    child: const Text('Cancel'),
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     ),
+                    child: const Text('Cancel'),
                   ),
                 ],
               ),
@@ -226,7 +226,7 @@ class _BroadcastEventDialogState extends State<BroadcastEventDialog> {
       final response = await api.broadcastEvent(widget.event.id, messageController.text, userP.userId);
       if (response['status'] == 'success') {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Broadcast sent successfully"), backgroundColor: Colors.green),
+          const SnackBar(content: Text("Broadcast sent successfully"), backgroundColor: Colors.green),
         );
         Navigator.of(context).pop();
       }

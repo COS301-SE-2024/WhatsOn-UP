@@ -3,9 +3,10 @@ import 'package:firstapp/services/EventService.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:firstapp/widgets/event_card.dart';
 import 'package:firstapp/widgets/FilteredResultScreen.dart';
-import 'package:intl/intl.dart';
 
 class FilterScreen extends StatefulWidget {
+  const FilterScreen({super.key});
+
   @override
   _FilterScreenState createState() => _FilterScreenState();
 }
@@ -26,7 +27,7 @@ class _FilterScreenState extends State<FilterScreen> with SingleTickerProviderSt
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(vsync: this, duration: Duration(milliseconds: 500));
+    _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 500));
 
     _scaleAnimation = Tween<double>(begin: 1.0, end: 1.2).animate(
       CurvedAnimation(parent: _controller, curve: Curves.elasticInOut),
@@ -45,7 +46,7 @@ class _FilterScreenState extends State<FilterScreen> with SingleTickerProviderSt
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Event Filter'),
+        title: const Text('Event Filter'),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -59,19 +60,19 @@ class _FilterScreenState extends State<FilterScreen> with SingleTickerProviderSt
                     selectedDateRange = value;
                   });
                 }),
-                SizedBox(height: 16.0),
+                const SizedBox(height: 16.0),
                 _buildFilterSection("Capacity Range", ["0 - 50", "50 - 100", "100 - 200", "200 - 300", "300 - 400", "400 - 500"], (value) {
                   setState(() {
                     selectedCapacityRange = value;
                   });
                 }),
-                SizedBox(height: 16.0),
+                const SizedBox(height: 16.0),
                 _buildFilterSection("Event Type", ["Private", "Public"], (value) {
                   setState(() {
                     selectedEventType = value;
                   });
                 }),
-                SizedBox(height: 20.0),
+                const SizedBox(height: 20.0),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
                   child: Row(
@@ -82,24 +83,24 @@ class _FilterScreenState extends State<FilterScreen> with SingleTickerProviderSt
                           style: ElevatedButton.styleFrom(
                             backgroundColor: goldishBrown, // Background color
                           ),
+                          onPressed: isSelectionMade ? _clearSelection : null,
                           child: Text(
                             "Clear Selection",
                             style: whiteTextTheme,
                           ),
-                          onPressed: isSelectionMade ? _clearSelection : null,
                         ),
                       ),
-                      SizedBox(width: 16.0), // Add spacing between buttons
+                      const SizedBox(width: 16.0), // Add spacing between buttons
                       Expanded(
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: goldishBrown, // Background color
                           ),
+                          onPressed: isSelectionMade ? _filterEvents : null,
                           child: Text(
                             "Filter Events",
                             style: whiteTextTheme,
                           ),
-                          onPressed: isSelectionMade ? _filterEvents : null,
                         ),
                       ),
                     ],
@@ -118,11 +119,11 @@ class _FilterScreenState extends State<FilterScreen> with SingleTickerProviderSt
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(title, style: Theme.of(context).textTheme.titleMedium),
-        SizedBox(height: 8.0),
+        const SizedBox(height: 8.0),
         GridView.builder(
           shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 3,
             crossAxisSpacing: 10.0,
             mainAxisSpacing: 10.0,
@@ -146,7 +147,7 @@ class _FilterScreenState extends State<FilterScreen> with SingleTickerProviderSt
                 });
               },
               child: AnimatedContainer(
-                duration: Duration(milliseconds: 300),
+                duration: const Duration(milliseconds: 300),
                 curve: Curves.easeInOut,
                 decoration: BoxDecoration(
                   color: isSelected ? _colorAnimation.value : Colors.white,
@@ -155,15 +156,15 @@ class _FilterScreenState extends State<FilterScreen> with SingleTickerProviderSt
                   ),
                   borderRadius: BorderRadius.circular(30.0),
                 ),
-                padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                 child: Center(
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       isSelected
-                          ? Icon(Icons.check_circle, color: Colors.white, size: 20.0)
-                          : SizedBox.shrink(),
-                      SizedBox(width: 8.0),
+                          ? const Icon(Icons.check_circle, color: Colors.white, size: 20.0)
+                          : const SizedBox.shrink(),
+                      const SizedBox(width: 8.0),
                       Flexible(
                         child: Text(
                           option,
@@ -197,15 +198,12 @@ class _FilterScreenState extends State<FilterScreen> with SingleTickerProviderSt
       case "Today":
         startDate = now.toIso8601String();
         endDate = now.toIso8601String();
-        break;
       case "Last week":
-        startDate = now.subtract(Duration(days: 7)).toIso8601String();
+        startDate = now.subtract(const Duration(days: 7)).toIso8601String();
         endDate = now.toIso8601String();
-        break;
       case "Next week":
         startDate = now.toIso8601String();
-        endDate = now.add(Duration(days: 7)).toIso8601String();
-        break;
+        endDate = now.add(const Duration(days: 7)).toIso8601String();
       default:
       // Handle other cases
     }
@@ -215,22 +213,16 @@ class _FilterScreenState extends State<FilterScreen> with SingleTickerProviderSt
     switch (selectedCapacityRange) {
       case "0 - 50":
         maxCapacity = 50;
-        break;
       case "50 - 100":
         maxCapacity = 100;
-        break;
       case "100 - 200":
         maxCapacity = 200;
-        break;
       case "200 - 300":
         maxCapacity = 300;
-        break;
       case "300 - 400":
         maxCapacity = 400;
-        break;
       case "400 - 500":
         maxCapacity = 500;
-        break;
       default:
       // Handle other cases
     }

@@ -1,11 +1,9 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
-import 'package:firstapp/services/api.dart';
 import 'package:firstapp/pages/detailed_event_page.dart';
 import 'package:firstapp/widgets/event_card.dart';
 import '../providers/user_provider.dart';
@@ -145,7 +143,7 @@ class _CalendarPageState extends State<CalendarPage>
       List<Event> events) {
     Map<DateTime, List<Map<String, dynamic>>> groupedEvents = {};
 
-    events.forEach((event) {
+    for (var event in events) {
       DateTime date = DateTime.parse(
           event.startTime); // Assuming startTime is a DateTime string
       DateTime eventDay = DateTime(date.year, date.month, date.day);
@@ -180,13 +178,13 @@ class _CalendarPageState extends State<CalendarPage>
         'maxAttendees': event.maxAttendees ?? 0,
         'description': event.description ?? '',
         'id': event.id,
-        'hosts': event.hosts != null ? List<String>.from(event.hosts!) : [],
+        'hosts': event.hosts != null ? List<String>.from(event.hosts) : [],
         'attendees': event.attendees != null
-            ? List<Attendee>.from(event.attendees!)
+            ? List<Attendee>.from(event.attendees)
             : [],
         'metadata': event.metadata.toJson(),
       });
-    });
+    }
 
     return groupedEvents;
   }
@@ -477,6 +475,7 @@ Widget _buildEventCard(Map<String, dynamic> event) {
                     ),
                   );
                 }
+                return null;
               },
             ),
             headerStyle: const HeaderStyle(

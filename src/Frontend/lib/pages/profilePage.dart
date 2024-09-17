@@ -9,7 +9,7 @@ import '../providers/user_provider.dart';
 import 'notifications.dart';
 
 class ProfilePage extends StatefulWidget {
-  ProfilePage({Key? key}) : super(key: key);
+  const ProfilePage({super.key});
 
   @override
   _ProfilePageState createState() => _ProfilePageState();
@@ -80,7 +80,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         onPressed: () => Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => EditprofilePage()),
+                              builder: (context) => const EditprofilePage()),
                         ),
                         child: const Text('Edit Profile',
                             style: TextStyle(fontSize: 16)),
@@ -88,11 +88,11 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   ] else ...[
                     const SizedBox(height: 20),
-                    Text(
+                    const Text(
                       "Create an account to access more features!",
                       style: TextStyle(
                           fontSize: 16,
-                          color: const Color.fromARGB(255, 151, 151, 151)),
+                          color: Color.fromARGB(255, 151, 151, 151)),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 20),

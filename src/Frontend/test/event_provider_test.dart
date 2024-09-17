@@ -297,14 +297,14 @@ void main() {
       var originalName = eventToUpdate.nameOfEvent;
       var newName = 'Updated Event Name';
 
-      await  eventProvider.EditEventName(eventToUpdate.id!, newName);
+      await  eventProvider.EditEventName(eventToUpdate.id, newName);
 
 
       var updatedEvent = (await eventProvider.eventsHome).firstWhere((e) => e.id == eventToUpdate.id);
       expect(updatedEvent.nameOfEvent, newName);
 
 
-      await eventProvider.EditEventName(eventToUpdate.id!, originalName);
+      await eventProvider.EditEventName(eventToUpdate.id, originalName);
     });
 
 
@@ -314,12 +314,12 @@ void main() {
       var originalDescription = eventToUpdate.description;
       var newDescription = 'Updated Event Description';
 
-       eventProvider.EditEventDescription(eventToUpdate.id!, newDescription);
+       eventProvider.EditEventDescription(eventToUpdate.id, newDescription);
 
       var updatedEvent = (await eventProvider.eventsHome).firstWhere((e) => e.id == eventToUpdate.id);
       expect(updatedEvent.description, newDescription);
 
-       eventProvider.EditEventDescription(eventToUpdate.id!, originalDescription);
+       eventProvider.EditEventDescription(eventToUpdate.id, originalDescription);
     });
 
     test('Edit event location in eventsHome', () async {
@@ -343,12 +343,12 @@ void main() {
       var originalMaxParticipants = eventToUpdate.maxAttendees;
       var newMaxParticipants = 200;
 
-      await eventProvider.EditEventMaxParticipants(eventToUpdate.id!, newMaxParticipants);
+      await eventProvider.EditEventMaxParticipants(eventToUpdate.id, newMaxParticipants);
 
       var updatedEvent = (await eventProvider.eventsHome).firstWhere((e) => e.id == eventToUpdate.id);
       expect(updatedEvent.maxAttendees, newMaxParticipants);
 
-      await eventProvider.EditEventMaxParticipants(eventToUpdate.id!, originalMaxParticipants);
+      await eventProvider.EditEventMaxParticipants(eventToUpdate.id, originalMaxParticipants);
     });
 
 

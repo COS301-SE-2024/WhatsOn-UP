@@ -158,9 +158,9 @@ void main() {
           ),
         ],
         child: MaterialApp(
-          home: ThankYouScreen(),
+          home: const ThankYouScreen(),
           routes: {
-            '/home': (context) => HomePage(),
+            '/home': (context) => const HomePage(),
           },
         ),
       ),
@@ -189,9 +189,9 @@ void main() {
             ),
           ],
           child: MaterialApp(
-            home: ThankYouScreen(),
+            home: const ThankYouScreen(),
             routes: {
-              '/home': (context) => HomePage(),
+              '/home': (context) => const HomePage(),
             },
           ),
         ),

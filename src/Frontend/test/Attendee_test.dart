@@ -195,7 +195,7 @@ void main() {
               ChangeNotifierProvider<EventProvider>(create: (_) => mockEventProvider),
               ChangeNotifierProvider<userProvider>(create: (_) => mockUserProvider),
             ],
-            child: Attendees(),
+            child: const Attendees(),
           ),
         ),
       );
@@ -225,7 +225,7 @@ void main() {
               ChangeNotifierProvider<EventProvider>(create: (_) => mockEventProvider),
               ChangeNotifierProvider<userProvider>(create: (_) => mockUserProvider),
             ],
-            child: Attendees(),
+            child: const Attendees(),
           ),
         ),
       );
