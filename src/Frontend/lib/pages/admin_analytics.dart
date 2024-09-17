@@ -518,10 +518,48 @@ class SkewnessChart extends StatelessWidget {
 }
 
 
-class PopularEventsWidget extends StatelessWidget {
+class PopularEventsWidget extends StatefulWidget {
   final List<Map<String, dynamic>> popularEvents;
 
   const PopularEventsWidget({Key? key, required this.popularEvents}) : super(key: key);
+
+  @override
+  _PopularEventsWidgetState createState() => _PopularEventsWidgetState();
+}
+
+class _PopularEventsWidgetState extends State<PopularEventsWidget> {
+  final ScrollController _scrollController = ScrollController();
+  bool _showArrow = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (_scrollController.offset >= _scrollController.position.maxScrollExtent &&
+        !_scrollController.position.outOfRange) {
+      if (_showArrow) {
+        setState(() {
+          _showArrow = false;
+        });
+      }
+    } else {
+      if (!_showArrow) {
+        setState(() {
+          _showArrow = true;
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -536,46 +574,104 @@ class PopularEventsWidget extends StatelessWidget {
           ),
         ),
         SizedBox(
-          height: 150,
+          height: 200,
           child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: popularEvents.length > 5 ? 5 : popularEvents.length,
+            controller: _scrollController,
+            itemCount: widget.popularEvents.length,
             itemBuilder: (context, index) {
-              final event = popularEvents[index];
-              return Card(
-                margin: const EdgeInsets.symmetric(horizontal: 8),
-                child: Container(
-                  width: 200,
-                  padding: const EdgeInsets.all(8),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        event['title'],
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
+              final event = widget.popularEvents[index];
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AnalyticsDetailPage(
+                        name: event['title'],
+                        userData: {
+                          'monthlySummaries': [
+                            {
+                              'month': event['startDateTime'].split('T')[0],
+                              'averageRating': event['averageRating'],
+                              'capacityRatio': event['capacityRatio'],
+                              'attendanceRatio': event['attendanceRatio'],
+                              'feedbackRatio': event['feedbackRatio'],
+                              'rsvpRatio': event['rsvpRatio'],
+                              'duration': event['duration'],
+                              'highestRating': event['highestRating'],
+                              'medianRating': event['medianRating'],
+                              'lowestRating': event['lowestRating'],
+                              'skewness': event['skewness'],
+                            }
+                          ]
+                        },
                       ),
-                      const SizedBox(height: 4),
-                      Text(
-                        'Date: ${event['startDateTime'].split('T')[0]}',
-                        style: const TextStyle(fontSize: 12),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        'Attendees: ${event['attendees'].length}/${event['maxAttendees']}',
-                        style: const TextStyle(fontSize: 12),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        'Avg. Rating: ${event['averageRating'].toStringAsFixed(1)}',
-                        style: const TextStyle(fontSize: 12),
-                      ),
-                    ],
+                    ),
+                  );
+                },
+                child: Card(
+                  margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          event['title'],
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 4),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                'Host: ${event['hosts'][0]['fullName']}',
+                                style: const TextStyle(fontSize: 12),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            Text(
+                              'Date: ${event['startDateTime'].split('T')[0]}',
+                              style: const TextStyle(fontSize: 12),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 4),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Attendees: ${event['attendees'].length}/${event['maxAttendees']}',
+                              style: const TextStyle(fontSize: 12),
+                            ),
+                            Text(
+                              'Avg. Rating: ${event['averageRating'].toStringAsFixed(1)}',
+                              style: const TextStyle(fontSize: 12),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               );
             },
+          ),
+        ),
+        SizedBox(
+          height: 24,
+          child: Center(
+            child: AnimatedOpacity(
+              opacity: _showArrow ? 1.0 : 0.0,
+              duration: const Duration(milliseconds: 200),
+              child: Icon(
+                Icons.keyboard_arrow_down,
+                size: 24,
+                color: Colors.grey[600],
+              ),
+            ),
           ),
         ),
       ],
