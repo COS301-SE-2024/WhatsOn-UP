@@ -39,6 +39,9 @@ class _UserManualWebViewState extends State<UserManualWebView> {
       );
     },
         onPageFinished: (url) {
+          print("logged the user manual");
+          print("user id below");
+          print(userId.toString());
           setState(() {
             _isLoading = false;
           });
