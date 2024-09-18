@@ -28,9 +28,9 @@ class EventProvider with ChangeNotifier {
     }
   }
 
-  Future<void> refreshRSVPEvents(String userId) async {
+  Future<void> refreshRSVPEvents(String userId, String JWT) async {
     try {
-      _eventsRsvp = _fetchEventsRsvp(userId);
+      _eventsRsvp = _fetchEventsRsvp(userId, JWT);
       notifyListeners();
     } catch (e) {
       throw Exception('Failed to refresh events: $e');
@@ -51,9 +51,9 @@ Future<void> refreshRecommendations(String userId) async {
       throw Exception('Failed to fetch home events: $e');
     }
   }
-Future<void> refreshSavedEvents(String userId) async {
+Future<void> refreshSavedEvents(String? JWT) async {
     try {
-      _eventsSaved = _fetchEventsSaved(userId);
+      _eventsSaved = _fetchEventsSaved(JWT);
       notifyListeners();
     } catch (e) {
       throw Exception('Failed to refresh events: $e');
@@ -78,14 +78,14 @@ Future<void> refreshSavedEvents(String userId) async {
   }
 
 
-Future<List<Event>> _fetchEventsRsvp(String userId) async {
+Future<List<Event>> _fetchEventsRsvp(String userId, String JWT) async {
   try {
     List<dynamic> responseData;
     if (userId == "guest") {
       responseData = await api.getAllEventsGuest();
     }
     else {
-      responseData = await api.getRSVPEvents(userId);
+      responseData = await api.getRSVPEvents(JWT);
     }
 
     List<Event> events = responseData
@@ -103,16 +103,18 @@ Future<List<Event>> _fetchEventsRsvp(String userId) async {
 }
 
 
-  void fetchfortheFirstTimeRsvp(String userId) {
-    _eventsRsvp = _fetchEventsRsvp(userId);
+  void fetchfortheFirstTimeRsvp(String userId, String JWT) {
+    _eventsRsvp = _fetchEventsRsvp(userId, JWT);
   }
 
 
 
-  Future<List<Event>> _fetchEventsSaved(String userId) async {
+  Future<List<Event>> _fetchEventsSaved(String? JWT) async {
     try {
-
-       var responseData=await api.getAllSavedEvents(userId);
+      if(JWT == null){
+        throw Exception('JWT null for _fetchEventsSaved method');
+      }
+      var responseData=await api.getAllSavedEvents(JWT);
       List<Event> events = responseData;
 
       return events;

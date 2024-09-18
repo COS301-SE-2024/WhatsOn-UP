@@ -430,12 +430,11 @@ class _SupabaseLoginState extends State<SupabaseLogin> {
         final session = supabase.auth.currentSession;
         if (session != null) {
           print('JWT Token: ${session.accessToken}');
-          userP.JWT = session.accessToken;
         }
 
         Api api = Api();
         try {
-          final response = await api.getUser(user.id);
+          final response = await api.getUser(userP.JWT!);
           if (response['error'] != null) {
             print('An error occurred: ${response['error']}');
           } else {
@@ -455,7 +454,7 @@ class _SupabaseLoginState extends State<SupabaseLogin> {
             eventP.refreshRecommendations(userP.userId);
             notificationProvider _notificationProvider =
                 Provider.of<notificationProvider>(context, listen: false);
-             eventP.refreshSavedEvents(userP.userId);
+             eventP.refreshSavedEvents(userP.JWT);
             _notificationProvider.refreshNotifications(userP.userId);
             SocketService('http://${globals.domain}:8082',
                 _notificationProvider, userP.userId, context);
