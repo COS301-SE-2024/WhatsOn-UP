@@ -367,7 +367,7 @@ class _NotificationsState extends State<Notifications> with TickerProviderStateM
               onTap: () {
                 final userProvider userP = Provider.of<userProvider>(context, listen: false);
 
-                if (notification.notificationId != null && userP.JWT != null) {
+                if (notification.notificationId != null) {
                   if(notification.sentAt.isEmpty){
                     notification.markAsSeen(notification.notificationId, userP.JWT);
                     notif.refreshNotifications(userP.userId);

@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:firstapp/schemas/recommendation_schemas.dart';
 import 'package:http/http.dart' as http;
 // import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:convert';
@@ -18,6 +17,10 @@ import 'package:flutter/services.dart';
 import 'package:firstapp/screens/InviteUsers.dart';
 import 'package:path/path.dart' as path;
 import '../main.dart';
+
+//schemas
+import 'package:firstapp/schemas/recommendation_schemas.dart';
+import 'package:firstapp/schemas/user_schemas.dart';
 class Api {
   static final Api _instance = Api._internal();
   factory Api() => _instance;
@@ -33,7 +36,7 @@ class Api {
     final session = supabase.auth.currentSession;
     if (session != null) {
       print('JWT Token: ${session.accessToken}');
-     JWT =session.accessToken;
+     JWT = session.accessToken;
     }
   }
 
@@ -66,7 +69,8 @@ class Api {
 
   Future<Map<String, dynamic>> getUserDetails() async {
     try {
-      final String _userUrl = 'http://${globals.domain}:8080/api/auth/get_user';
+      
+      final String _userUrl = 'https://${globals.gatewayDomain}:8080/api/auth/get_user';
       var headers = {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
@@ -76,7 +80,15 @@ class Api {
       var response = await http.get(Uri.parse(_userUrl), headers: headers);
 
       if (response.statusCode == 200) {
-        return jsonDecode(response.body);
+        final schema = JsonSchema.create(GET_USER_SCHEMA);
+        final validationResult = schema.validate(json);
+
+        if (validationResult.isValid) {
+          return jsonDecode(response.body);
+        } else {
+          print('getUserDetails JSON is invalid');
+          throw Exception(validationResult.errors);
+        }
       } else {
         throw Exception(jsonDecode(response.body));
       }
@@ -86,11 +98,17 @@ class Api {
   }
 
   Future<List<Event>> getAllEvents() async {
-    final _rsvpEventsURL = 'http://${globals.domain}:8080/api/events/get_all';
+    final _rsvpEventsURL = 'https://${globals.gatewayDomain}/api/events/get_all';
+
+    var headers = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      };
 
     try {
       var response = await http.get(
         Uri.parse(_rsvpEventsURL),
+        headers: headers
       );
 
       if (response.statusCode == 200) {
@@ -110,13 +128,13 @@ class Api {
     }
   }
 
-  Future<List<Event>> getAllSavedEvents(String userId) async {
+  Future<List<Event>> getAllSavedEvents(String JWT) async {
     final _savedEventsURL =
-        'http://${globals.domain}:8080/api/user/get_saved_events';
+        'https://${globals.gatewayDomain}/api/user/get_saved_events';
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Authorization': 'Bearer $userId',
+      'Authorization': 'Bearer $JWT',
     };
 
     try {
@@ -189,14 +207,14 @@ class Api {
     }
   }
 
-  Future<List<dynamic>> getRSVPEvents(String userId) async {
+  Future<List<dynamic>> getRSVPEvents(String JWT) async {
     try {
       final String _rsvpEventsURL =
-          'http://${globals.domain}:8080/api/user/get_rsvp_events';
+          'https://${globals.gatewayDomain}:8080/api/user/get_rsvp_events';
       var headers = {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        'Authorization': 'Bearer $userId',
+        'Authorization': 'Bearer $JWT',
       };
 
       var response =
@@ -213,14 +231,14 @@ class Api {
   }
 
   Future<Map<String, dynamic>> postChangeUser(
-      String name, String userId) async {
+      String name, String JWT) async {
     var userChangeUrl =
-        Uri.parse('http://${globals.domain}:8080/api/user/update_profile');
+        Uri.parse('https://${globals.gatewayDomain}:8080/api/user/update_profile');
 
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Authorization': 'Bearer $userId',
+      'Authorization': 'Bearer $JWT',
     };
 
     try {
@@ -236,14 +254,15 @@ class Api {
     }
   }
 
+  // Function not referenced
   Future<Map<String, dynamic>> updatePassword(
-      String password, String userId) async {
+      String password, String JWT) async {
     var Url =
-        Uri.parse('http://${globals.domain}:8080/api/auth/reset_password');
+        Uri.parse('https://${globals.gatewayDomain}:8080/api/auth/reset_password');
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Authorization': 'Bearer $jwtKey',
+      'Authorization': 'Bearer $JWT',
     };
     var body = jsonEncode({
       'password': password,
@@ -277,7 +296,7 @@ class Api {
     //List<String> imageUrls,
   }) async {
     final String _createEventUrl =
-        'http://${globals.domain}:8080/api/events/create';
+        'https://${globals.gatewayDomain}:8080/api/events/create';
 
     var headers = {
       'Content-Type': 'application/json',
@@ -304,15 +323,6 @@ class Api {
         var responseData = jsonDecode(response.body);
         print(responseData['data']);
         String eventId = responseData['data']['id'];
-        // for (String imagePath in imageUrls) {
-        // Uint8List imageBytes = await _loadImageAsBytes(imagePath);
-        //  var uploadResult = await eventUploadImage(imageBytes, userId, eventId);
-        // if (uploadResult.containsKey('error')) {
-        //   throw Exception('Image upload failed: ${uploadResult['error']}');
-
-        // }
-
-        //print("image uploaded");
         return responseData;
       } else {
         throw Exception(jsonDecode(response.body));
@@ -604,20 +614,19 @@ class Api {
     }
   }
 
-  Future<Map<String, dynamic>> getUser(String userid) async {
-    final String _userUrl = 'http://${globals.domain}:8080/api/user/get_user';
+  Future<Map<String, dynamic>> getUser(String JWT) async {
+    final String _userUrl = 'https://${globals.gatewayDomain}/api/user/get_user';
 
-    //
-    //   // Define the headers and body for login request
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Authorization': 'Bearer $userid',
+      'Authorization': 'Bearer $JWT',
     };
 
     try {
       var response = await http.get(Uri.parse(_userUrl), headers: headers);
       if (response.statusCode == 200) {
+        print(response.body);
         return jsonDecode(response.body);
       } else {
         throw Exception('Failed to get user details');
