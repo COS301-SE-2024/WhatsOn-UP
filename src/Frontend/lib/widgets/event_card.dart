@@ -6,6 +6,7 @@ import '../pages/BroadcastEvent.dart';
 import '../pages/Event_Attendance.dart';
 import '../providers/user_provider.dart';
 import '../services/api.dart';
+import '../services/globals.dart' as globals;
 
 
 class Category {
@@ -374,7 +375,7 @@ class Event {
           ? List<String>.from(
               json['eventMedia'].map((media) => media?.toString() ?? ''))
           : [
-              'https://images.pexels.com/photos/1190297/pexels-photo-1190297.jpeg'
+              globals.defaultEventURL
             ],
       description: json['description']?.toString() ?? '',
       id: json['id']?.toString() ?? '',
@@ -438,7 +439,7 @@ class EventCard extends StatefulWidget {
 
 String getValidImageUrl(List<String>? imageUrls) {
   const List<String> validExtensions = ['jpeg', 'jpg', 'png'];
-  const String defaultUrl = 'https://images.pexels.com/photos/1190297/pexels-photo-1190297.jpeg'; // only videos in the array
+  const String defaultUrl = globals.defaultEventURL;
 
   if (imageUrls == null || imageUrls.isEmpty) {
     return defaultUrl;

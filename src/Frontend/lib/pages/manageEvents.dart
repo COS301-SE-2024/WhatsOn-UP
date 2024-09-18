@@ -40,6 +40,7 @@ class _ManageEventsState extends State<ManageEvents> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final borderColour = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
+    final textColour = theme.colorScheme.onSurface;
     userProvider userP = Provider.of<userProvider>(context);
     SupabaseClient supabaseClient = widget.supabaseClient;
 
@@ -112,7 +113,7 @@ class _ManageEventsState extends State<ManageEvents> {
                           Icon(
                             icon,
                             size: 50.0,
-                            color: isSelected ? Colors.white : Colors.black,
+                            color: textColour,
                           ),
                           SizedBox(height: 8.0),
                           Text(
@@ -120,9 +121,14 @@ class _ManageEventsState extends State<ManageEvents> {
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              color: isSelected ? Colors.white : Colors.black,
+                              color: textColour,
                             ),
                           ),
+
+
+
+
+
                         ],
                       ),
                     ),
