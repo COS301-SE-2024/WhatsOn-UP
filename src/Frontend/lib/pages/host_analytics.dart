@@ -85,7 +85,7 @@ class _HostAnalyticsPageState extends State<HostAnalyticsPage> {
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
-          : events.isEmpty
+          : events.isEmpty && popularEvents.isEmpty
               ? SizedBox(
                 height: MediaQuery.of(context).size.height * 0.6,
                 child: const Column(
