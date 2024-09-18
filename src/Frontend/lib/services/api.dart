@@ -231,14 +231,14 @@ class Api {
   }
 
   Future<Map<String, dynamic>> postChangeUser(
-      String name, String userId) async {
+      String name, String JWT) async {
     var userChangeUrl =
-        Uri.parse('http://${globals.domain}:8080/api/user/update_profile');
+        Uri.parse('https://${globals.gatewayDomain}:8080/api/user/update_profile');
 
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Authorization': 'Bearer $userId',
+      'Authorization': 'Bearer $JWT',
     };
 
     try {

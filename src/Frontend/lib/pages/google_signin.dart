@@ -289,7 +289,7 @@ class _GoogleSignInPageState extends State<GoogleSignInPage> {
 
     final api = Api();
     try {
-      final response = await api.postChangeUser(fullname, user.id);
+      final response = await api.postChangeUser(fullname, userP.JWT);
       if (response['error'] != null) {
         print('An error occurred: ${response['error']}');
       } else {
