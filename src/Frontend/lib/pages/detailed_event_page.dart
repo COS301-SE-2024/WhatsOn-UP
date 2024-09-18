@@ -131,6 +131,10 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
   Future<void> _addToCalendar() async {
     EventProvider eventProvider =
         Provider.of<EventProvider>(context, listen: false);
+
+    userProvider userP =
+        Provider.of<userProvider>(context,listen: false);
+
     try {
       setState(() {
         _isLoading = true;
@@ -141,7 +145,7 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Successfully RSVP\'d to event!')),
       );
-      await eventProvider.refreshRSVPEvents(user!.id);
+      await eventProvider.refreshRSVPEvents(user!.id, userP.JWT);
       await eventProvider.refreshEvents();
       print(
           'amount of attendees after event added to the calendar ${_thisCurrentEvent.attendees.length}');
@@ -162,6 +166,10 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
   Future<void> _removeFromCalendar() async {
     EventProvider eventProvider =
         Provider.of<EventProvider>(context, listen: false);
+
+    userProvider userP =
+        Provider.of<userProvider>(context,listen: false);
+
     print('Removing RSVP for event: ${widget.event.id}');
     try {
       setState(() {
@@ -175,7 +183,7 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Successfully removed your RSVP from the event!')),
       );
-      await eventProvider.refreshRSVPEvents(user!.id);
+      await eventProvider.refreshRSVPEvents(user!.id, userP.JWT);
       await eventProvider.refreshEvents();
 
       setState(() {
@@ -219,6 +227,10 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
   Future<void> _editEvent() async {
     EventProvider eventProvider =
         Provider.of<EventProvider>(context, listen: false);
+
+    userProvider userP =
+        Provider.of<userProvider>(context,listen: false);
+        
     if (widget.event.id != null && widget.event.id is String) {
       print('Navigating to EditEvent with eventId: ${widget.event.id}');
       final resultEdit = await Navigator.push(
@@ -228,7 +240,7 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
       );
       if (resultEdit == true) {
         await eventProvider.refreshEvents();
-        await eventProvider.refreshRSVPEvents(user!.id);
+        await eventProvider.refreshRSVPEvents(user!.id, userP.JWT);
         Navigator.of(context).pushReplacementNamed('/home');
       }
     } else {

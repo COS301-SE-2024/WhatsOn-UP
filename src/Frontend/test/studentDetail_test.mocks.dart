@@ -93,6 +93,15 @@ class MockApi extends _i1.Mock implements _i3.Api {
       );
 
   @override
+  set JWT(dynamic _JWT) => super.noSuchMethod(
+        Invocation.setter(
+          #JWT,
+          _JWT,
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
   _i5.Future<Map<String, dynamic>> loginUser(
     String? email,
     String? password,
@@ -129,31 +138,30 @@ class MockApi extends _i1.Mock implements _i3.Api {
       ) as _i5.Future<List<_i6.Event>>);
 
   @override
-  _i5.Future<List<_i6.Event>> getAllSavedEvents(String? userId) =>
+  _i5.Future<List<_i6.Event>> getAllSavedEvents(String? JWT) =>
       (super.noSuchMethod(
         Invocation.method(
           #getAllSavedEvents,
-          [userId],
+          [JWT],
         ),
         returnValue: _i5.Future<List<_i6.Event>>.value(<_i6.Event>[]),
       ) as _i5.Future<List<_i6.Event>>);
 
   @override
-  _i5.Future<List<_i6.Event>> RecommendedEvents(String? userId) =>
+  _i5.Future<List<_i6.Event>> getRecommendedEvents(String? userId) =>
       (super.noSuchMethod(
         Invocation.method(
-          #RecommendedEvents,
+          #getRecommendedEvents,
           [userId],
         ),
         returnValue: _i5.Future<List<_i6.Event>>.value(<_i6.Event>[]),
       ) as _i5.Future<List<_i6.Event>>);
 
   @override
-  _i5.Future<List<dynamic>> getRSVPEvents(String? userId) =>
-      (super.noSuchMethod(
+  _i5.Future<List<dynamic>> getRSVPEvents(String? JWT) => (super.noSuchMethod(
         Invocation.method(
           #getRSVPEvents,
-          [userId],
+          [JWT],
         ),
         returnValue: _i5.Future<List<dynamic>>.value(<dynamic>[]),
       ) as _i5.Future<List<dynamic>>);
@@ -393,11 +401,10 @@ class MockApi extends _i1.Mock implements _i3.Api {
       ) as _i5.Future<Map<String, dynamic>>);
 
   @override
-  _i5.Future<Map<String, dynamic>> getUser(String? userid) =>
-      (super.noSuchMethod(
+  _i5.Future<Map<String, dynamic>> getUser(String? JWT) => (super.noSuchMethod(
         Invocation.method(
           #getUser,
-          [userid],
+          [JWT],
         ),
         returnValue:
             _i5.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
@@ -700,6 +707,23 @@ class MockApi extends _i1.Mock implements _i3.Api {
         returnValue:
             _i5.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
       ) as _i5.Future<Map<String, dynamic>>);
+
+  @override
+  _i5.Future<void> markSeen(
+    String? eventID,
+    String? JWT,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #markSeen,
+          [
+            eventID,
+            JWT,
+          ],
+        ),
+        returnValue: _i5.Future<void>.value(),
+        returnValueForMissingStub: _i5.Future<void>.value(),
+      ) as _i5.Future<void>);
 }
 
 /// A class which mocks [userProvider].
@@ -787,6 +811,24 @@ class MockuserProvider extends _i1.Mock implements _i2.userProvider {
         Invocation.getter(#isGuest),
         returnValue: false,
       ) as bool);
+
+  @override
+  String get JWT => (super.noSuchMethod(
+        Invocation.getter(#JWT),
+        returnValue: _i4.dummyValue<String>(
+          this,
+          Invocation.getter(#JWT),
+        ),
+      ) as String);
+
+  @override
+  set JWT(String? value) => super.noSuchMethod(
+        Invocation.setter(
+          #JWT,
+          value,
+        ),
+        returnValueForMissingStub: null,
+      );
 
   @override
   set generalapplications(_i5.Future<_i2.GeneralApplications>? value) =>

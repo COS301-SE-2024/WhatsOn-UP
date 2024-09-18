@@ -28,11 +28,10 @@ class _SplashPageState extends State<SplashPage> {
 
   Future<void> _redirect() async {
     await Future.delayed(Duration(seconds: 2));
-    userProvider userP = Provider.of<userProvider>(context, listen: false);
     final session = supabase.auth.currentSession;
     if (!mounted) return;
     if (session != null) {
-      userP.JWT = session.accessToken;
+
       await _login();
     } else {
       Navigator.of(context).pushReplacementNamed('/login');
@@ -67,6 +66,7 @@ class _SplashPageState extends State<SplashPage> {
 
     Api api = Api();
 
+    ;
     api.getUser(user!.id).then((response) {
       if (response['error'] != null) {
         print('An error occurred: ${response['error']}');
@@ -83,7 +83,7 @@ class _SplashPageState extends State<SplashPage> {
         userP.role = role;
         userP.profileImage = profileImage;
         eventP.refreshRecommendations(userP.userId);
-        eventP.refreshSavedEvents(userP.userId);
+        eventP.refreshSavedEvents(userP.JWT);
         notificationProvider _notificationProvider =
         Provider.of<notificationProvider>(context, listen: false);
         _notificationProvider.refreshNotifications(userP.userId);
