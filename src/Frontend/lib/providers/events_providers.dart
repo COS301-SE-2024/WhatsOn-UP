@@ -17,6 +17,8 @@ class EventProvider with ChangeNotifier {
   EventProvider({required this.api}) {
     _eventsHome = _fetchEventsHome();
     _eventsSaved = Future.value([]);
+    _eventsRsvp = Future.value([]);
+
   }
 
   Future<void> refreshEvents() async {
