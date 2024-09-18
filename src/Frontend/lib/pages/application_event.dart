@@ -52,6 +52,7 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
   late List<CategoryData.Category> _categories = [];
   List<CategoryData.Venue> _venues = [];
   final _formKey = GlobalKey<FormState>();
+  final _formKeyAI = GlobalKey<FormState>();
   bool _isLoading = true;
   late TextEditingController _maxAttendeesController;
   late TutorialCoachMark tutorialCoachMark;
@@ -315,42 +316,57 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                 builder: (BuildContext context) {
                   return AlertDialog(
                     title: const Text('Enter Event Details'),
-                    content: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Text(
-                          'Fill in the event name and a short description of the event. Our system will suggest an enhanced description, recommended venues, time and date, and categories based on the information you provide.',
-                          style: TextStyle(color: Colors.grey, fontSize: 14),
-                        ),
-
-                        TextField(
-                          controller: _eventNameControllerAI,
-                          decoration: InputDecoration(hintText: 'Event Name'),
-                        ),
-                        const SizedBox(height: 10),
-                        TextField(
-                          controller: _eventDescriptionControllerAI,
-                          decoration: InputDecoration(hintText: 'Event Description'),
-                        ),
-                      ],
+                    content: Form(
+                      key: _formKeyAI,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Text(
+                            'Fill in the event name and a short description of the event. Our system will suggest an enhanced description, recommended venues, time and date, and categories based on the information you provide.',
+                            style: TextStyle(color: Colors.grey, fontSize: 14),
+                          ),
+                          const SizedBox(height: 20),
+                          TextFormField(
+                            controller: _eventNameControllerAI,
+                            decoration: InputDecoration(hintText: 'Event Name'),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Event Name is required';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 10),
+                          TextFormField(
+                            controller: _eventDescriptionControllerAI,
+                            decoration: InputDecoration(hintText: 'Event Description'),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Event Description is required';
+                              }
+                              return null;
+                            },
+                          ),
+                        ],
+                      ),
                     ),
                     actions: [
                       TextButton(
                         child: const Text('Cancel'),
                         onPressed: () {
                           Navigator.of(context).pop();
-                          _eventNameControllerAI.clear();
-                          _eventDescriptionControllerAI.clear();     
                         },
                       ),
                       TextButton(
                         child: const Text('Submit'),
                         onPressed: () {
-                          String eventName = _eventNameControllerAI.text;
-                          String eventDescription = _eventDescriptionControllerAI.text;
+                          if (_formKeyAI.currentState?.validate() == true) {
+                            String eventName = _eventNameControllerAI.text;
+                            String eventDescription = _eventDescriptionControllerAI.text;
 
-                          Navigator.of(context).pop();
-                          // function here
+                            Navigator.of(context).pop();
+                            // function here
+                          }
                         },
                       ),
                     ],

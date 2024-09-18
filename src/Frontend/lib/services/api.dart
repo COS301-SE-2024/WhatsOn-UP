@@ -1377,6 +1377,30 @@ class Api {
     }
   }
 
+  Future<Map<String, dynamic>> getAutofillData(String userId, String eventName, String eventDescription) async {
+  final String getAutofillDataURL = 'http://${globals.domain}:8084/analytics/host/generate_autofill?description=$eventDescription&title=$eventName';
+
+  var headers = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    'Authorization': 'Bearer $userId',
+  };
+
+  try {
+    var response = await http.get(Uri.parse(getAutofillDataURL), headers: headers);
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } 
+    else {
+      throw Exception(jsonDecode(response.body));
+    }
+  } 
+  catch (e) {
+    throw Exception(e.toString());
+  }
+}
+
 
 
 }

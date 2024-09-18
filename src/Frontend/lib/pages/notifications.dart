@@ -1,4 +1,5 @@
 
+import 'package:firstapp/pages/supabase_signup.dart';
 import 'package:firstapp/providers/notification_providers.dart';
 import 'package:firstapp/providers/user_provider.dart';
 import 'package:flutter/material.dart';
@@ -66,6 +67,25 @@ class _NotificationsState extends State<Notifications> with TickerProviderStateM
     final theme = Theme.of(context);
     final textColour = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
 
+    if (userRole == "GUEST") {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(
+            'Notifications',
+            style: TextStyle(
+              fontSize: 32,
+              fontWeight: FontWeight.bold,
+              color: textColour,
+            ),
+          ),
+          backgroundColor: Colors.transparent,
+          automaticallyImplyLeading: false,
+        ),
+        body: _buildGuestView(),
+      );
+    }
+
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -84,20 +104,10 @@ class _NotificationsState extends State<Notifications> with TickerProviderStateM
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Text(
-                'Notifications',
-                style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
             TabBar(
               controller: _tabController,
               labelColor: Colors.red,
-              unselectedLabelColor: Colors.black,
+              // unselectedLabelColor: Colors.black,
               indicatorColor: Colors.red,
               labelPadding: EdgeInsets.symmetric(horizontal: 20),
               tabs: [
@@ -135,6 +145,46 @@ class _NotificationsState extends State<Notifications> with TickerProviderStateM
       ),
     );
   }
+
+  Widget _buildGuestView() {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(height: 20),
+            Text(
+              "Create an account or sign in to your existing account to receive personalised event recommendations, invites from other users, and stay up to date with important notifications!",
+              style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 30),
+            SizedBox(
+              width: 200,
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const SupabaseSignup()),
+                  );
+                },
+                child: const Text('Sign Up', style: TextStyle(fontSize: 18)),
+              ),
+            ),
+            SizedBox(height: 15),
+            TextButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/login');
+              },
+              child: const Text('Already have an account? Log In', style: TextStyle(fontSize: 16)),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
 
   Widget _buildNotificationsView(String tab) {
     return Consumer<notificationProvider>(
