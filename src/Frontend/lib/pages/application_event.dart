@@ -68,30 +68,7 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
   List<Uint8List> imageBytesList = [];
   // Uint8List? imageBytesList;
   final _multiSelectKey = GlobalKey<FormFieldState>();
- // List<UserModel> _invitedUsers = [];
-  /*Future<void> _openInviteUserPopup() async {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          child: InviteUsersWidget(eventId: 'your_event_id_here'),
-        );
-      },
-    );
-  }
 
-  void _addUserToInvite(UserModel user) {
-    setState(() {
-      _invitedUsers.add(user);
-    });
-  }
-
-  void _removeUserFromInvite(UserModel user) {
-    setState(() {
-      _invitedUsers.remove(user);
-    });
-  }*/
   @override
   void initState() {
     super.initState();
@@ -104,7 +81,7 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
     _eventNameController = TextEditingController();
     _eventDescriptionController = TextEditingController();
     _startDateTime = DateTime.now();
-    _endDateTime = DateTime.now().add(Duration(hours: 1));
+    _endDateTime = DateTime.now().add(const Duration(hours: 1));
     _guestsController = TextEditingController();
     Future.wait([_categoriesFuture, _venuesFuture]).whenComplete(() {
       setState(() {
@@ -135,38 +112,7 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
     super.dispose();
   }
 
-  /*void _showGuestPopup() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("Add Guests"),
-          content: TextField(
-            controller: _guestsController,
-            decoration: InputDecoration(
-              hintText: "Enter guest name",
-              border: OutlineInputBorder(),
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text("Cancel"),
-            ),
-            TextButton(
-              onPressed: () {
-                // Handle adding guest logic here
-                Navigator.of(context).pop();
-              },
-              child: Text("Add"),
-            ),
-          ],
-        );
-      },
-    );
-  }*/
+
   void _updateMaxAttendeesFromTextField(String value) {
     final int? newValue = int.tryParse(value);
     if (_selectedVenue != null && newValue != null && newValue >= 1 &&
@@ -183,51 +129,6 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
       _maxAttendeesController.text = _maxAttendees.toString();
     });
   }
-
-  // Future<void> _pickImage() async {
-  //   try {
-  //     final ImagePicker _picker = ImagePicker();
-  //     XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-
-  //     if (pickedFile != null) {
-  //       Uint8List imageBytes = await pickedFile.readAsBytes();
-  //       setState(() {
-  //         imageBytesList = imageBytes;
-  //         _imageName = pickedFile.name;
-  //       });
-  //     }
-  //   } catch (e) {
-  //     print('Error picking image: $e');
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(
-  //         content: Text('Failed to pick image. Please try again.'),
-  //         backgroundColor: Colors.red,
-  //       ),
-  //     );
-  //   }
-  // }
-
-  // Widget _buildImagePicker() {
-  //   return Column(
-  //     crossAxisAlignment: CrossAxisAlignment.start,
-  //     children: [
-  //       ElevatedButton.icon(
-  //         onPressed: _pickImage,
-  //         // icon: Icon(Icons.add_a_photo),
-  //         icon: const Icon(Icons.upload_file),
-  //         label: const Text('Choose Image'),
-  //         style: ElevatedButton.styleFrom(
-  //           padding: const EdgeInsets.symmetric(vertical: 12),
-  //         ),
-  //       ),
-  //       if (_imageName != null)
-  //         Padding(
-  //           padding: const EdgeInsets.only(top: 10),
-  //           child: Text('Selected image: $_imageName'),
-  //         ),
-  //     ],
-  //   );
-  // }
 
   List<Map<String, dynamic>> selectedMedia = [];
     Widget _buildImagePicker2() {
@@ -276,43 +177,10 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
       );
     }
 
-       /* SizedBox(height: 10.0),
-        selectedImages != null && selectedImages!.isNotEmpty
-            ? Wrap(
-          spacing: 10.0,
-          runSpacing: 10.0,
-          children: selectedImages!.map((image) {
-            return FutureBuilder<Uint8List>(
-              future: image.readAsBytes(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  if (snapshot.hasData) {
-                    return Image.memory(
-                      snapshot.data!,
-                      width: 100,
-                      height: 100,
-                      fit: BoxFit.cover,
-                    );
-                  } else {
-                    return Text('Error loading image');
-                  }
-                } else {
-                  return CircularProgressIndicator();
-                }
-              },
-            );
-          }).toList(),
-        )
-            : Text('No images selected'),
-      ],
-    );
-  }
-*/
-
   Widget _buildNumberPickerWithTextField() {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey),
         borderRadius: BorderRadius.circular(5.0),
@@ -338,7 +206,7 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
             child: TextField(
               controller: _maxAttendeesController,
               keyboardType: TextInputType.number,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: 'Type value',
                 border: OutlineInputBorder(),
                 contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
@@ -359,7 +227,7 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
         contents: [
           TargetContent(
             align: ContentAlign.top,
-            child: Column(
+            child: const Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
@@ -383,7 +251,7 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
         contents: [
           TargetContent(
             align: ContentAlign.bottom,
-            child: Column(
+            child: const Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
@@ -429,37 +297,37 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
     EventProvider eventP=Provider.of<EventProvider>(context,listen: false);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Create Event'),
+        title: const Text('Create Event'),
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
           child: ListView(
             children: <Widget>[
-              Text(
+              const Text(
                 'Event Details',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
               TextFormField(
                 controller: _eventNameController,
-                decoration: InputDecoration(labelText: 'Event Name',   border: OutlineInputBorder(),),
+                decoration: const InputDecoration(labelText: 'Event Name',   border: OutlineInputBorder(),),
                 validator: (value) => value == null || value.isEmpty ? 'Please enter event name' : null,
 
               ),
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
               TextFormField(
                 controller: _eventDescriptionController,
-                decoration: InputDecoration(labelText: 'Description',   border: OutlineInputBorder(),),
+                decoration: const InputDecoration(labelText: 'Description',   border: OutlineInputBorder(),),
                 validator: (value) => value == null || value.isEmpty ? 'Please enter event description' : null,
               ),
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
               _isLoading
-                  ? Center(
+                  ? const Center(
                 child: SpinKitPianoWave(
                   color: Color.fromARGB(255, 149, 137, 74),
                   size: 50.0,
@@ -471,7 +339,7 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                   if (snapshot.hasError) {
                     return Text('Error: ${snapshot.error}');
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return Text('No venues available');
+                    return const Text('No venues available');
                   } else {
                     _venues = snapshot.data!;
                     return Autocomplete<CategoryData.Venue>(
@@ -490,7 +358,7 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                           controller: controller,
                           focusNode: focusNode,
                           onEditingComplete: onEditingComplete,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             labelText: 'Venue',
                             border: OutlineInputBorder(),
                           ),
@@ -513,25 +381,25 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                   }
                 },
               ),
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
               Visibility(
                 visible: _venues.isNotEmpty && _selectedVenue != null,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    const Text(
                       'Max Attendees',
                       style: TextStyle( fontSize: 16),
                     ),
-                    SizedBox(height: 8.0),
+                    const SizedBox(height: 8.0),
                     _buildNumberPickerWithTextField(),
                   ],
                 ),
               ),
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
               TextFormField(
                 readOnly: true,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Start Date and Time',
                   prefixIcon: Icon(Icons.calendar_today),
                 ),
@@ -540,7 +408,7 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                     context: context,
                     initialDate: _startDateTime,
                     firstDate: DateTime.now(),
-                    lastDate: DateTime.now().add(Duration(days: 365)),
+                    lastDate: DateTime.now().add(const Duration(days: 365)),
                   );
 
                   if (selectedDate != null) {
@@ -574,10 +442,10 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                       TimeOfDay.fromDateTime(_startDateTime).format(context),
                 ),
               ),
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
               TextFormField(
                 readOnly: true,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'End Date and Time',
                   prefixIcon: Icon(Icons.calendar_today),
                 ),
@@ -586,7 +454,7 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                     context: context,
                     initialDate: _endDateTime,
                     firstDate: DateTime.now(),
-                    lastDate: DateTime.now().add(Duration(days: 365)),
+                    lastDate: DateTime.now().add(const Duration(days: 365)),
                   );
 
                   if (selectedDate != null) {
@@ -620,47 +488,19 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                       TimeOfDay.fromDateTime(_endDateTime).format(context),
                 ),
               ),
-              SizedBox(height: 16.0),
-              // FutureBuilder<List<CategoryData.Category>>(
-              //   future: _categoriesFuture,
-              //   builder: (context, snapshot) {
-              //     if (snapshot.hasError) {
-              //       return Text('Error: ${snapshot.error}');
-              //     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-              //       return Text('No categories available');
-              //     } else {
-              //       _categories = snapshot.data! ;
-              //       return DropdownButton<String>(
-              //         value: _selectedCategory,
-              //         hint: Text('Select a category'),
-              //         isExpanded: true,
-              //         items: _categories.map((CategoryData.Category category) {
-              //           return DropdownMenuItem<Category>(
-              //             value: category,
-              //             child: Text(category.name),
-              //           );
-              //         }).toList(),
-              //         onChanged: (String? newValue) {
-              //           setState(() {
-              //             _selectedCategory = newValue;
-              //           });
-              //         },
-              //       );
-              //     }
-              //   },
-              // ),
+              const SizedBox(height: 16.0),
               FutureBuilder<List<CategoryData.Category>>(
                 future: _categoriesFuture,
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
                     return Text('Error: ${snapshot.error}');
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return Text('No categories available');
+                    return const Text('No categories available');
                   } else {
                     _categories = snapshot.data!;
                     return DropdownButton<String>(
                       value: _selectedCategory,
-                      hint: Text('Select a category'),
+                      hint: const Text('Select a category'),
                       isExpanded: true,
                       items: _categories.map((CategoryData.Category category) {
                         return DropdownMenuItem<String>(
@@ -680,11 +520,11 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
 
 
 
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Event Visibility'),
+                  const Text('Event Visibility'),
                   const SizedBox(height: 10),
                   Row(
                     children: [
@@ -720,10 +560,10 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
 
 
 
-          SizedBox(height: 16.0),
+          const SizedBox(height: 16.0),
             _buildImagePicker2(),
 
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
               ElevatedButton(
                 onPressed: _isLoading
                     ? null
@@ -771,7 +611,7 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                           print("image uploaded");
                         //  eventP.refreshEvents();
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Event created successfully!')),
+                            const SnackBar(content: Text('Event created successfully!')),
                           );
 
                           Navigator.of(context).pushReplacement(
@@ -811,11 +651,11 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                   }
                 },
                 child: _isLoading
-                    ? SpinKitCircle(
+                    ? const SpinKitCircle(
                   color: Colors.white,
                   size: 24.0,
                 )
-                    : Text('Create Event'),
+                    : const Text('Create Event'),
               ),
             ],
           ),
