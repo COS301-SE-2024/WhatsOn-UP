@@ -801,7 +801,7 @@ void main() {
     when(mockUserProvider.userId).thenReturn('1');
     when(mockUserProvider.role).thenReturn("ADMIN");
     when(mockUserProvider.profileImage).thenReturn('https://via.placeholder.com/150');
-    when(mockUserProvider.JWT).thenReturn(null);
+    when(mockUserProvider.JWT).thenReturn('JWT');
     final notifications = [
       AppNotification(notificationTypes: 'invite', message: 'You have an invite', eventId: '', userId: '', sentAt: DateTime.now().toString(), notificationId: '', seenAt: DateTime.now().toString(),),
       AppNotification(notificationTypes: 'broadcast', message: 'New broadcast message', eventId: '', userId: '', sentAt: DateTime.now().toString(), notificationId: '', seenAt: DateTime.now().toString()),

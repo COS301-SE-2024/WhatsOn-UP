@@ -207,14 +207,14 @@ class Api {
     }
   }
 
-  Future<List<dynamic>> getRSVPEvents(String userId) async {
+  Future<List<dynamic>> getRSVPEvents(String JWT) async {
     try {
       final String _rsvpEventsURL =
-          'http://${globals.domain}:8080/api/user/get_rsvp_events';
+          'https://${globals.gatewayDomain}:8080/api/user/get_rsvp_events';
       var headers = {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        'Authorization': 'Bearer $userId',
+        'Authorization': 'Bearer $JWT',
       };
 
       var response =

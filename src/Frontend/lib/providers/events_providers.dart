@@ -28,9 +28,9 @@ class EventProvider with ChangeNotifier {
     }
   }
 
-  Future<void> refreshRSVPEvents(String userId) async {
+  Future<void> refreshRSVPEvents(String userId, String JWT) async {
     try {
-      _eventsRsvp = _fetchEventsRsvp(userId);
+      _eventsRsvp = _fetchEventsRsvp(userId, JWT);
       notifyListeners();
     } catch (e) {
       throw Exception('Failed to refresh events: $e');
@@ -78,14 +78,14 @@ Future<void> refreshSavedEvents(String? JWT) async {
   }
 
 
-Future<List<Event>> _fetchEventsRsvp(String userId) async {
+Future<List<Event>> _fetchEventsRsvp(String userId, String? JWT) async {
   try {
     List<dynamic> responseData;
     if (userId == "guest") {
       responseData = await api.getAllEventsGuest();
     }
     else {
-      responseData = await api.getRSVPEvents(userId);
+      responseData = await api.getRSVPEvents(JWT!);
     }
 
     List<Event> events = responseData
@@ -103,8 +103,8 @@ Future<List<Event>> _fetchEventsRsvp(String userId) async {
 }
 
 
-  void fetchfortheFirstTimeRsvp(String userId) {
-    _eventsRsvp = _fetchEventsRsvp(userId);
+  void fetchfortheFirstTimeRsvp(String userId, String JWT) {
+    _eventsRsvp = _fetchEventsRsvp(userId, JWT);
   }
 
 

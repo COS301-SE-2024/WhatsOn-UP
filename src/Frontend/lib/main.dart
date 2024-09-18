@@ -118,12 +118,12 @@ void main() async{
           var userProv = userProvider();
 
           supabase.auth.onAuthStateChange.listen((event) async {
-          var session = supabase.auth.currentSession;
+          Session? session = supabase.auth.currentSession;
             if (session != null) {
               userProv.JWT = session.accessToken; 
               print('JWT Token refreshed: ${session.accessToken}');
             } else {
-              print('Session expired or user signed out.');
+              print('Session expired or user not signed in.');
             }
           });
           return userProv;
