@@ -254,14 +254,15 @@ class Api {
     }
   }
 
+  // Function not referenced
   Future<Map<String, dynamic>> updatePassword(
-      String password, String userId) async {
+      String password, String JWT) async {
     var Url =
-        Uri.parse('http://${globals.domain}:8080/api/auth/reset_password');
+        Uri.parse('https://${globals.gatewayDomain}:8080/api/auth/reset_password');
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Authorization': 'Bearer $jwtKey',
+      'Authorization': 'Bearer $JWT',
     };
     var body = jsonEncode({
       'password': password,
