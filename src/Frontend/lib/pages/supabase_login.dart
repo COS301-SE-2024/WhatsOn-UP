@@ -458,7 +458,7 @@ class _SupabaseLoginState extends State<SupabaseLogin> {
             _notificationProvider.refreshNotifications(userP.userId);
             SocketService('http://${globals.domain}:8082',
                 _notificationProvider, userP.userId, context);
-            userP.Generalusers(userP.userId);
+            userP.Generalusers(userP.JWT);
 
             userP.setUserData(
               userId: user.id,

@@ -88,7 +88,7 @@ class _SplashPageState extends State<SplashPage> {
         Provider.of<notificationProvider>(context, listen: false);
         _notificationProvider.refreshNotifications(userP.userId);
         SocketService('http://${globals.domain}:8082',_notificationProvider, userP.userId, context);
-        userP.Generalusers(userP.userId);
+        userP.Generalusers(userP.JWT); 
 
 
         userP.profileimage = profileImage;

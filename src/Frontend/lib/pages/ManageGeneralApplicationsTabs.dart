@@ -371,7 +371,7 @@ class _ApplicantState extends State<Applicant> {
       );
     }
 
-    userP.Generalusers(userId);
+    userP.Generalusers(userP.JWT);
     Navigator.of(context).pushReplacementNamed('/home');
   }
 }

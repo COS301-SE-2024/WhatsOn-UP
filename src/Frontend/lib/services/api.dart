@@ -210,7 +210,7 @@ class Api {
   Future<List<dynamic>> getRSVPEvents(String JWT) async {
     try {
       final String _rsvpEventsURL =
-          'https://${globals.gatewayDomain}:8080/api/user/get_rsvp_events';
+          'https://${globals.gatewayDomain}/api/user/get_rsvp_events';
       var headers = {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
@@ -458,7 +458,7 @@ class Api {
   Future<Map<String, dynamic>> AcceptInvite(
       {String? userId, String? notificationId}) async {
     String notifyUserUrl =
-        'http://${globals.gatewayDomain}:8080/api/interactions/accept_invite/$notificationId';
+        'http://${globals.domain}:8080/api/interactions/accept_invite/$notificationId';
 
     var headers = {
       'Content-Type': 'application/json',
@@ -510,13 +510,13 @@ class Api {
     }
   }
 
-  Future<GeneralApplications> getGeneralusersToHost(String userid) async {
+  Future<GeneralApplications> getGeneralusersToHost(String JWT) async {
     String notifyUserUrl =
-        'http://${globals.domain}:8080/api/admin/all_applications';
+        'https://${globals.gatewayDomain}/api/admin/all_applications';
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Authorization': 'Bearer $userid',
+      'Authorization': 'Bearer $JWT',
     };
 
     try {
@@ -537,14 +537,14 @@ class Api {
   }
 
   Future<Map<String, dynamic>> DeletersvpEvent(
-      String eventId, String UserId) async {
+      String eventId, String JWT) async {
     final String _rsvpEventUrl =
-        'http://${globals.domain}:8080/api/user/delete_rsvp_event/$eventId';
+        'https://${globals.gatewayDomain}/api/user/delete_rsvp_event/$eventId';
 
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Authorization': 'Bearer $UserId',
+      'Authorization': 'Bearer $JWT',
     };
 
     try {

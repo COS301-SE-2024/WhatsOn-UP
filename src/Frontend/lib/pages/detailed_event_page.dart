@@ -165,7 +165,7 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
       });
 
       await Api()
-          .DeletersvpEvent(widget.event.id, user!.id)
+          .DeletersvpEvent(widget.event.id, userP.JWT)
           .then((response) {});
 
       ScaffoldMessenger.of(context).showSnackBar(
