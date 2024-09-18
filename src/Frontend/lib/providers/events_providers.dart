@@ -78,14 +78,14 @@ Future<void> refreshSavedEvents(String? JWT) async {
   }
 
 
-Future<List<Event>> _fetchEventsRsvp(String userId, String? JWT) async {
+Future<List<Event>> _fetchEventsRsvp(String userId, String JWT) async {
   try {
     List<dynamic> responseData;
     if (userId == "guest") {
       responseData = await api.getAllEventsGuest();
     }
     else {
-      responseData = await api.getRSVPEvents(JWT!);
+      responseData = await api.getRSVPEvents(JWT);
     }
 
     List<Event> events = responseData

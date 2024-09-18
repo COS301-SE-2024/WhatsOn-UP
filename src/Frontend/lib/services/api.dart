@@ -296,7 +296,7 @@ class Api {
     //List<String> imageUrls,
   }) async {
     final String _createEventUrl =
-        'http://${globals.domain}:8080/api/events/create';
+        'https://${globals.gatewayDomain}:8080/api/events/create';
 
     var headers = {
       'Content-Type': 'application/json',
@@ -323,15 +323,6 @@ class Api {
         var responseData = jsonDecode(response.body);
         print(responseData['data']);
         String eventId = responseData['data']['id'];
-        // for (String imagePath in imageUrls) {
-        // Uint8List imageBytes = await _loadImageAsBytes(imagePath);
-        //  var uploadResult = await eventUploadImage(imageBytes, userId, eventId);
-        // if (uploadResult.containsKey('error')) {
-        //   throw Exception('Image upload failed: ${uploadResult['error']}');
-
-        // }
-
-        //print("image uploaded");
         return responseData;
       } else {
         throw Exception(jsonDecode(response.body));
