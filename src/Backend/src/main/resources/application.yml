@@ -35,7 +35,6 @@ logging:
 
 bearer-token: ${BEARER_TOKEN}
 
-bearer-token: ${BEARER_TOKEN}
 SECRET: ${SECRET}
 
 #
