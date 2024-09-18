@@ -137,6 +137,7 @@ class _CalendarPageState extends State<CalendarPage>
                 categories: [],
                 sessions: [],
               ),
+        'saved': event['saved'] ?? false,
       };
     }).toList();
   }
@@ -187,6 +188,7 @@ class _CalendarPageState extends State<CalendarPage>
             ? List<Attendee>.from(event.attendees!)
             : [],
         'metadata': event.metadata.toJson(),
+        'saved': event.saved ?? false,
       });
     });
 
@@ -300,6 +302,7 @@ Widget _buildEventCard(Map<String, dynamic> event) {
         maxAttendees: event['maxAttendees'],
         isPrivate: event['isPrivate'],
         metadata: Metadata.fromJson(event['metadata']),
+        saved: event['saved'],
 
       );
 /* venue: event['venue'] != null ? Venue(
