@@ -26,6 +26,8 @@ import 'package:firstapp/widgets/theme_manager.dart';
 //import 'package:firstapp/screens/InviteUsers.dart';
 import '../providers/user_provider.dart';
 import '../screens/InviteUsers.dart';
+import 'package:cupertino_icons/cupertino_icons.dart';
+
 
 class ApplicationEvent extends StatefulWidget {
 //  const ApplicationEvent({super.key});
@@ -56,6 +58,8 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
   bool _tutorialShown = false;
   List<XFile>? selectedImages = [];
   String? _selectedCategory;
+  late TextEditingController _eventNameControllerAI;
+  late TextEditingController _eventDescriptionControllerAI;
   // final List<Str> predefinedCategories = [
   //   'Clubs & Organizations',
   //   'Sports & Fitness',
@@ -80,6 +84,8 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
     _venueController = TextEditingController();
     _eventNameController = TextEditingController();
     _eventDescriptionController = TextEditingController();
+    _eventNameControllerAI = TextEditingController();
+    _eventDescriptionControllerAI = TextEditingController();
     _startDateTime = DateTime.now();
     _endDateTime = DateTime.now().add(const Duration(hours: 1));
     _guestsController = TextEditingController();
@@ -109,6 +115,8 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
     _eventDescriptionController.dispose();
     _maxAttendeesController.dispose();
     _guestsController.dispose();
+    _eventNameControllerAI.dispose();
+    _eventDescriptionControllerAI.dispose();
     super.dispose();
   }
 
@@ -298,6 +306,60 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Create Event'),
+        actions: [
+          IconButton(
+            icon: const Icon(CupertinoIcons.sparkles),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text('Enter Event Details'),
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Text(
+                          'Fill in the event name and a short description of the event. Our system will suggest an enhanced description, recommended venues, time and date, and categories based on the information you provide.',
+                          style: TextStyle(color: Colors.grey, fontSize: 14),
+                        ),
+
+                        TextField(
+                          controller: _eventNameControllerAI,
+                          decoration: InputDecoration(hintText: 'Event Name'),
+                        ),
+                        const SizedBox(height: 10),
+                        TextField(
+                          controller: _eventDescriptionControllerAI,
+                          decoration: InputDecoration(hintText: 'Event Description'),
+                        ),
+                      ],
+                    ),
+                    actions: [
+                      TextButton(
+                        child: const Text('Cancel'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          _eventNameControllerAI.clear();
+                          _eventDescriptionControllerAI.clear();     
+                        },
+                      ),
+                      TextButton(
+                        child: const Text('Submit'),
+                        onPressed: () {
+                          String eventName = _eventNameControllerAI.text;
+                          String eventDescription = _eventDescriptionControllerAI.text;
+
+                          Navigator.of(context).pop();
+                          // function here
+                        },
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -576,6 +638,7 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                     try {
 
                       String userId = userP.userId;
+                      print("USER ID IS $userId");
                       Map<String, String> metadata = {
                         'category': _selectedCategory!,
                       };
