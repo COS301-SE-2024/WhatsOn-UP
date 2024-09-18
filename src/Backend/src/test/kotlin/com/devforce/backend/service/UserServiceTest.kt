@@ -32,6 +32,7 @@ class UserServiceTest {
     private lateinit var userServiceWithMocks: UserService
 
     var userid = UUID.randomUUID()
+
     var user = UserModel().apply {
         userId= userid
     }
