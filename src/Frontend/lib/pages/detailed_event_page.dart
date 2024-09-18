@@ -128,7 +128,7 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
         _isLoading = true;
       });
 
-      var result = await Api().rsvpEvent(widget.event.id, user!.id);
+      var result = await Api().rsvpEvent(widget.event.id, userP.JWT);
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Successfully RSVP\'d to event!')),

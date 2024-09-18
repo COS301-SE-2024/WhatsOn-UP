@@ -207,17 +207,17 @@ Future<List<Event>> _fetchEventsRsvp(String userId, String JWT) async {
 
 
 
-  void addEventSaved(Event event,String userId) {
+  void addEventSaved(Event event,String JWT) {
     _eventsSaved.then((events) {
-      api.putSavedEvent(event.id,userId);
+      api.putSavedEvent(event.id,JWT);
       events.add(event);
       notifyListeners();
     });
   }
 
-  void removeEventSaved(Event event,String userId) {
+  void removeEventSaved(Event event,String JWT) {
     _eventsSaved.then((events) {
-      api.DeleteSavedEvent(event.id,userId);
+      api.DeleteSavedEvent(event.id,JWT);
       events.remove(event);
       notifyListeners();
     });

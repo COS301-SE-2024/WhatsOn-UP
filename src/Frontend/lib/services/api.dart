@@ -351,14 +351,14 @@ class Api {
   }
 
 */
-  Future<Map<String, dynamic>> rsvpEvent(String eventId, String UserId) async {
+  Future<Map<String, dynamic>> rsvpEvent(String eventId, String JWT) async {
     final String _rsvpEventUrl =
-        'http://${globals.domain}:8080/api/user/rsvp_event/$eventId';
+        'https://${globals.gatewayDomain}/api/user/rsvp_event/$eventId';
 
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Authorization': 'Bearer $UserId',
+      'Authorization': 'Bearer $JWT',
     };
 
     try {
@@ -375,14 +375,14 @@ class Api {
   }
 
   Future<Map<String, dynamic>> putSavedEvent(
-      String eventId, String UserId) async {
+      String eventId, String JWT) async {
     final String _rsvpEventUrl =
-        'http://${globals.domain}:8080/api/user/save_event/$eventId';
+        'https://${globals.gatewayDomain}/api/user/save_event/$eventId';
 
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Authorization': 'Bearer $UserId',
+      'Authorization': 'Bearer $JWT',
     };
 
     try {
@@ -399,14 +399,14 @@ class Api {
   }
 
   Future<Map<String, dynamic>> DeleteSavedEvent(
-      String eventId, String UserId) async {
+      String eventId, String JWT) async {
     final String _rsvpEventUrl =
-        'http://${globals.domain}:8080/api/user/delete_saved_event/$eventId';
+        'https://${globals.gatewayDomain}/api/user/delete_saved_event/$eventId';
 
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Authorization': 'Bearer $UserId',
+      'Authorization': 'Bearer $JWT',
     };
 
     try {
@@ -458,7 +458,7 @@ class Api {
   Future<Map<String, dynamic>> AcceptInvite(
       {String? userId, String? notificationId}) async {
     String notifyUserUrl =
-        'http://${globals.domain}:8080/api/interactions/accept_invite/$notificationId';
+        'http://${globals.gatewayDomain}:8080/api/interactions/accept_invite/$notificationId';
 
     var headers = {
       'Content-Type': 'application/json',
