@@ -80,6 +80,10 @@ dependencies:
   video_player: ^2.9.1
   csv: ^6.0.0
   path_provider: ^2.1.4
+  permission_handler: ^11.3.1
+  android_intent_plus: ^5.1.0
+  excel: ^4.0.6
+  spreadsheet_decoder: ^2.3.0
 dio: ^5.5.0+1
 page_transition: "^2.1.0"
 flutter_pannable_rating_bar: ^2.7.2+1

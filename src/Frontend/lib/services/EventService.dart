@@ -231,6 +231,10 @@ class EventService {
   }
 
   Future<void> updateAttendanceStatus(String eventId, String userId, bool? attended) async {
+   print("DETAILSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
+   print(eventId);
+   print(userId);
+   print(attended);
     final url = '$baseUrl/api/event/update-attendance';
     final response = await http.put(
       Uri.parse('$url'),
