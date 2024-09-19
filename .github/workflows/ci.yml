@@ -20,7 +20,7 @@ jobs:
       DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_TOKEN }}
       GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
-      BEREAR_TOKEN: ${{ secrets.BEARER_TOKEN }}
+      BEARER_TOKEN: ${{ secrets.BEARER_TOKEN }}
 
     steps:
     - name: Checkout repository
