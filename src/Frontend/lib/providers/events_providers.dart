@@ -36,9 +36,9 @@ class EventProvider with ChangeNotifier {
       throw Exception('Failed to refresh events: $e');
     }
   }
-Future<void> refreshRecommendations(String userId) async {
+Future<void> refreshRecommendations(String JWT) async {
     try {
-      _eventRecommedations = _fetchRecommendations(userId);
+      _eventRecommedations = _fetchRecommendations(JWT);
       notifyListeners();
     } catch (e) {
       throw Exception('Failed to refresh events: $e');
@@ -60,9 +60,9 @@ Future<void> refreshSavedEvents(String? JWT) async {
     }
   }
   
-  Future<List<Event>> _fetchRecommendations(String userId) async {
+  Future<List<Event>> _fetchRecommendations(String JWT) async {
     try {
-      return await api.getRecommendedEvents(userId);
+      return await api.getRecommendedEvents(JWT);
     } catch (e) {
       throw Exception('Failed to fetch home events: $e');
     }
