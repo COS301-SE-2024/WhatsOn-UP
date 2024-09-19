@@ -38,7 +38,7 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ), invitees: [],
+          ), invitees: [], saved: false,
         ),
         Event(
           id: '2',
@@ -57,7 +57,7 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ), invitees: [],
+          ), invitees: [], saved: false,
         ),
       ]);
       when(mockUserProvider.Fullname).thenReturn('User Name');
@@ -80,7 +80,7 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ), invitees: [],
+          ), invitees: [], saved: false,
         ),
         Event(
           id: '2',
@@ -99,7 +99,7 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ), invitees: [],
+          ), invitees: [], saved: false,
         ),
         Event(
           id: '3',
@@ -118,7 +118,7 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ), invitees: [],
+          ), invitees: [], saved: false,
         ),
       ]);
 
@@ -140,7 +140,7 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ), invitees: [],
+          ), invitees: [], saved: false,
         ),
         Event(
           id: '2',
@@ -159,7 +159,7 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ), invitees: [],
+          ), invitees: [], saved: false,
         ),
         Event(
           id: '3',
@@ -178,7 +178,7 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ), invitees: [],
+          ), invitees: [], saved: false,
         ),
       ]);
     });
