@@ -28,12 +28,15 @@ class _SplashPageState extends State<SplashPage> {
 
   Future<void> _redirect() async {
     await Future.delayed(Duration(seconds: 2));
+    userProvider userP = Provider.of<userProvider>(context, listen: false);
     final session = supabase.auth.currentSession;
     if (!mounted) return;
     if (session != null) {
-
+      userP.JWT=session?.accessToken;
       await _login();
     } else {
+
+      userP.JWT=session?.accessToken;
       Navigator.of(context).pushReplacementNamed('/login');
     }
   }
@@ -67,13 +70,13 @@ class _SplashPageState extends State<SplashPage> {
     Api api = Api();
 
     ;
-    api.getUser(user!.id).then((response) {
+    api.getUser(userP.JWT).then((response) {
       if (response['error'] != null) {
         print('An error occurred: ${response['error']}');
       } else {
         String fullName = response['data']['user']['fullName'] ?? 'Unknown';
-        String userEmail = user.userMetadata?['email'];
-        String UserId = user.id;
+        String userEmail = user?.userMetadata!['email'];
+        String UserId = user!.id;
         String role = response['data']['user']['role'] ?? 'Unknown';
         String profileImage = response['data']['user']['profileImage'] ?? 'Unknown';
 

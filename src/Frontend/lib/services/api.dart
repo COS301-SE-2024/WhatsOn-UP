@@ -617,6 +617,7 @@ class Api {
   Future<Map<String, dynamic>> getUser(String JWT) async {
     final String _userUrl = 'https://${globals.gatewayDomain}/api/user/get_user';
 
+
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -1244,7 +1245,9 @@ class Api {
     };
     try {
        var response =  await http.post(Uri.parse(url), headers: headers);
-      if (response.statusCode == 200) {
+       print('Response status: ${response.statusCode}');
+       print('Response body: ${response.body}');
+      if (response.statusCode == 201) {
         print('Marked as seen');
       } else {
         print('jayuutee $JWT: \n ${response.body}');
