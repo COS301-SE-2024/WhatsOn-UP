@@ -158,12 +158,12 @@ class Api {
     }
   }
 
-  Future<List<Event>> getRecommendedEvents(String JWT) async {
+  Future<List<Event>> getRecommendedEvents(String userId) async {
     final URL = 'http://${globals.domain}:8086/events/recommended_events';
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Authorization': 'Bearer $JWT',
+      'Authorization': 'Bearer $userId',
     };
 
     try {
@@ -616,7 +616,6 @@ class Api {
 
   Future<Map<String, dynamic>> getUser(String JWT) async {
     final String _userUrl = 'https://${globals.gatewayDomain}/api/user/get_user';
-
 
     var headers = {
       'Content-Type': 'application/json',
@@ -1123,7 +1122,7 @@ class Api {
   }
 
   Future<Map<String, dynamic>> postRecommendationData({
-    required String JWT,
+    required String userId,
     required Map<String, dynamic> data,
   }) async {
     String notifyUserUrl = 'http://${globals.domain}:8086/preferences/init';
@@ -1131,7 +1130,7 @@ class Api {
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Authorization': 'Bearer $JWT',
+      'Authorization': 'Bearer $userId',
     };
     try {
       var response = await http.post(Uri.parse(notifyUserUrl),
@@ -1245,9 +1244,7 @@ class Api {
     };
     try {
        var response =  await http.post(Uri.parse(url), headers: headers);
-       print('Response status: ${response.statusCode}');
-       print('Response body: ${response.body}');
-      if (response.statusCode == 201) {
+      if (response.statusCode == 200) {
         print('Marked as seen');
       } else {
         print('jayuutee $JWT: \n ${response.body}');

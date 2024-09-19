@@ -175,7 +175,7 @@ class _StudentdetailSurveyState extends State<StudentdetailSurvey> {
       userProvider userP = Provider.of<userProvider>(context, listen: false);
       Api api=Api();
     final response=await api.postRecommendationData(
-        JWT: userP.JWT,
+        userId: userP.userId,
         data: transformedData,
       );
 

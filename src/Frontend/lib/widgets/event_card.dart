@@ -1,7 +1,6 @@
 import 'package:firstapp/providers/events_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:firstapp/pages/detailed_event_page.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import '../pages/BroadcastEvent.dart';
 import '../pages/Event_Attendance.dart';
@@ -345,7 +344,6 @@ class Event {
   final List<Attendee> attendees;
   final Metadata metadata;
   final List<Attendee>? invitees;
-  bool saved;
   Event({
     required this.nameOfEvent,
     this.venue,
@@ -360,7 +358,6 @@ class Event {
     required this.attendees,
     required this.metadata,
     this.invitees,
-    required this.saved,
   });
 
   factory Event.fromJson(Map<String, dynamic> json) {
@@ -404,7 +401,6 @@ class Event {
               ? List<Attendee>.from(
                   json['invitees'].map((invitee) => Attendee.fromJson(invitee)))
               : [],
-      saved: json['saved'] ?? false,
     );
     return eventVat;
   }
@@ -424,7 +420,6 @@ class Event {
       'attendees': attendees.map((attendee) => attendee.toJson()).toList(),
       'metadata': metadata.toJson(),
       'invitees': invitees?.map((invitee) => invitee.toJson()).toList(),
-      'saved': saved,
     };
   }
 }
@@ -432,10 +427,10 @@ class Event {
 class EventCard extends StatefulWidget {
   final Event event;
   bool showBookmarkButton;
+  bool saved;
   String broadcast;
-  bool recommendations;
 
-  EventCard({Key? key, required this.event, required this.showBookmarkButton ,this.broadcast='',this.recommendations=false})
+  EventCard({Key? key, required this.event, required this.showBookmarkButton ,this.broadcast='',this.saved=false})
       : super(key: key);
 
   @override
@@ -498,50 +493,7 @@ class _EventCardState extends State<EventCard> {
   //   }
   // }
 
-  // Future<void> _fetchEvent(bool recommendations, bool saved, Event event) async {
-  //   try {
-  //     Event? eventM;
-  //     EventProvider eventProvider =
-  //     Provider.of<EventProvider>(context, listen: false);
-  //     if(recommendations==true){
-  //       eventM = await eventProvider.getEventById(event.id);
-  //
-  //       eventM?.saved=saved;
-  //     }else{
-  //
-  //       eventM =await eventProvider.getEventByIdR(event.id);
-  //       eventM?.saved=saved;
-  //     }
-  //
-  //   } catch (e) {
-  //     print('Error fetching event: $e');
-  //   }
-  // }
-  Future<void> _fetchEvent(bool recommendations, bool saved, Event event) async {
-    try {
-      setState(() {
-        _isLoading = true;
-      });
 
-      Event? eventM;
-      EventProvider eventProvider = Provider.of<EventProvider>(context, listen: false);
-
-      if (recommendations) {
-        eventM = await eventProvider.getEventById(event.id);
-        eventM?.saved = saved;
-      } else {
-        eventM = await eventProvider.getEventByIdR(event.id);
-        eventM?.saved = saved;
-      }
-
-    } catch (e) {
-      print('Error fetching event: $e');
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
-    }
-  }
 
 
 
@@ -560,6 +512,9 @@ class _EventCardState extends State<EventCard> {
     widget.showBookmarkButton=widget.broadcast=="EDIT"
     ?false
     :true;
+   widget.saved==true
+       ?isBookmarked=true
+       :isBookmarked=false;
    isbroadcast=widget.broadcast=="EDIT"
        ?true
        :false;
@@ -641,37 +596,20 @@ class _EventCardState extends State<EventCard> {
                     if (widget.showBookmarkButton)
                       IconButton(
                         icon: Icon(
-                          // isBookmarked ? Icons.bookmark : Icons.bookmark_border,
-                          widget.event.saved? Icons.bookmark : Icons.bookmark_border,
+                          isBookmarked ? Icons.bookmark : Icons.bookmark_border,
                           size: 20.0,
-                          // color: isBookmarked ? Colors.black : textColour,
-                           color: widget.event.saved? Colors.black : textColour,
+                          color: isBookmarked ? Colors.black : textColour,
                         ),
                         onPressed: () {
                           setState(() {
-                            // isBookmarked = !isBookmarked;
-                            widget.event.saved=!widget.event.saved;
-                            if(widget.event.saved==true){
-                              widget.event.saved=true;
-                              _fetchEvent(widget.recommendations,widget.event.saved,widget.event);
-                              eventP.refreshEvents();
-                              eventP.refreshRecommendations(userP.userId);
-                            }else{
-                               widget.event.saved=false;
-                               _fetchEvent(widget.recommendations,widget.event.saved, widget.event);
-                            eventP.refreshEvents();
-                            eventP.refreshRecommendations(userP.userId);
+                            isBookmarked = !isBookmarked;
+                            if (isBookmarked == true) {
+                              eventP.addEventSaved(widget.event,userP.userId);
+
+                            } else {
+                              eventP.removeEventSaved(widget.event,userP.userId);
                             }
                           });
-                            // if (isBookmarked == true) {
-                            //   eventP.addEventSaved(widget.event,userP.userId);
-                            //   eventP.refreshEvents();
-                            //
-                            // } else {
-                            //   eventP.removeEventSaved(widget.event,userP.userId);
-                            //   eventP.refreshEvents();
-                            // }
-                          // });
                         },
                       ),
 
@@ -743,21 +681,13 @@ class _EventCardState extends State<EventCard> {
                   ],
                 ),
 
-                if (_isLoading)
-                  Center(
-                    child: SpinKitPianoWave(
-    color: Color.fromARGB(255, 149, 137, 74),
-    size: 50.0,
-    ),
-                  ),
+
               ],
             ),
           ),
         ),
       ),
     );
-
-
   }
 
 

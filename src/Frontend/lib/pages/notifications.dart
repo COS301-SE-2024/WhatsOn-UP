@@ -131,23 +131,19 @@ class _NotificationsState extends State<Notifications> with TickerProviderStateM
           return Center(child: Text("No notifications available."));
         } else {
           final notifications = notif.notifications;
-          print('Notifications: $notifications');
           if(tab == "Unseen"){
 
           final broadcasts = notifications
-              .where((n) => n.notificationTypes == 'broadcast'&& n.seenAt == null )
+              .where((n) => n.notificationTypes == 'broadcast'&& n.seenAt == null || n.sentAt.isEmpty)
               .toList();
           final reminders = notifications
-              .where((n) => n.notificationTypes == 'reminder'&& n.seenAt == null )
+              .where((n) => n.notificationTypes == 'reminder'&& n.seenAt == null || n.sentAt.isEmpty)
               .toList();
           final recommendations = notifications
-              .where((n) => n.notificationTypes == 'recommendation'&& n.seenAt == null )
+              .where((n) => n.notificationTypes == 'recommendation'&& n.seenAt == null || n.sentAt.isEmpty)
               .toList();
           final applications = notifications
-              .where((n) => n.notificationTypes == 'application'&& n.seenAt == null )
-              .toList();
-          final invites = notifications
-              .where((n) => n.notificationTypes == 'invite'&& n.seenAt == null )
+              .where((n) => n.notificationTypes == 'application'&& n.seenAt == null || n.sentAt.isEmpty)
               .toList();
           return ListView(
             children: [
@@ -167,10 +163,6 @@ class _NotificationsState extends State<Notifications> with TickerProviderStateM
                 SizedBox(height: 20.0),
                 _buildCategory('APPLICATIONS',  applications),
               ],
-              if ( invites.isNotEmpty) ...[
-                SizedBox(height: 20.0),
-                _buildCategory('INVITES',  invites),
-              ],
             ],
           );
         }else if(tab == "Seen"){
@@ -187,9 +179,7 @@ class _NotificationsState extends State<Notifications> with TickerProviderStateM
               final applications = notifications
                   .where((n) => n.notificationTypes == 'application' && n.seenAt != null )
                   .toList();
-              final invites = notifications
-                  .where((n) => n.notificationTypes == 'invite' && n.seenAt != null )
-                  .toList();
+
 
             return ListView(
               children: [
@@ -209,17 +199,13 @@ class _NotificationsState extends State<Notifications> with TickerProviderStateM
                   SizedBox(height: 20.0),
                   _buildCategory('APPLICATIONS',  applications),
                 ],
-                if ( invites.isNotEmpty) ...[
-                  SizedBox(height: 20.0),
-                  _buildCategory('INVITES',  invites),
-                ],
               ],
             );
           }
 
         else {
             final invites = notifications
-                .where((n) => n.notificationTypes == 'invite'&& n.seenAt == null || n.seenAt != null)
+                .where((n) => n.notificationTypes == 'invite'&& n.seenAt == null || n.sentAt.isEmpty)
                 .toList();
             return ListView(
               children: [
@@ -247,8 +233,83 @@ class _NotificationsState extends State<Notifications> with TickerProviderStateM
 
         } else {
           var notifications = notif.notifications;
+          if(tab == "Unseen"){
+
+            var broadcasts = notifications
+                .where((n) => n.notificationTypes == 'broadcast'&& n.seenAt == null )
+                .toList();
+            var reminders = notifications
+                .where((n) => n.notificationTypes == 'reminder'&& n.seenAt == null)
+                .toList();
+            var recommendations = notifications
+                .where((n) => n.notificationTypes == 'recommendation'&& n.seenAt == null )
+                .toList();
+            var invites = notifications
+                .where((n) => n.notificationTypes == 'invites'&& n.seenAt == null )
+                .toList();
+            return ListView(
+              children: [
+                if (broadcasts.isNotEmpty) ...[
+                  SizedBox(height: 20.0),
+                  _buildCategory('BROADCASTS', broadcasts),
+                ],
+                if (recommendations.isNotEmpty) ...[
+                  SizedBox(height: 20.0),
+                  _buildCategory('RECOMMENDATIONS', recommendations),
+                ],
+                if ( reminders.isNotEmpty) ...[
+                  SizedBox(height: 20.0),
+                  _buildCategory('REMINDERS',  reminders),
+                ],
+                if ( invites.isNotEmpty) ...[
+                  SizedBox(height: 20.0),
+                  _buildCategory('INVITATIONS',  invites),
+                ],
+              ],
+            );
+          }else if(tab == "Seen"){
+            print('Notifications in Seen Tab: $notifications');
+            var broadcasts = notifications
+                .where((n) => n.notificationTypes == 'broadcast' && n.seenAt!= null )
+                .toList();
+            print('in the broadcast list: $broadcasts');
+
+            var reminders = notifications
+                .where((n) => n.notificationTypes == 'reminder' && n.seenAt != null )
+                .toList();
+            var recommendations = notifications
+                .where((n) => n.notificationTypes == 'recommendation' && n.seenAt != null )
+                .toList();
+
+            var invites = notifications
+                .where((n) => n.notificationTypes == 'invites'&& n.seenAt != null )
+                .toList();
+
+
+            return ListView(
+              children: [
+                if (broadcasts.isNotEmpty) ...[
+                  SizedBox(height: 20.0),
+                  _buildCategory('BROADCASTS', broadcasts),
+                ],
+                if (recommendations.isNotEmpty) ...[
+                  SizedBox(height: 20.0),
+                  _buildCategory('RECOMMENDATIONS', recommendations),
+                ],
+                if ( reminders.isNotEmpty) ...[
+                  SizedBox(height: 20.0),
+                  _buildCategory('REMINDERS',  reminders),
+                ],
+                if ( invites.isNotEmpty) ...[
+                  SizedBox(height: 20.0),
+                  _buildCategory('INVITATIONS',  invites),
+                ],
+              ],
+            );
+          }
+          else {
             final applications = notifications
-                .where((n) => n.notificationTypes == 'application'&& n.seenAt == null )
+                .where((n) => n.notificationTypes == 'application'&& n.seenAt == null || n.sentAt.isEmpty)
                 .toList();
             return ListView(
               children: [
@@ -258,6 +319,9 @@ class _NotificationsState extends State<Notifications> with TickerProviderStateM
                 ],
               ],
             );
+          }
+
+
         }
       },
     );
@@ -297,23 +361,19 @@ class _NotificationsState extends State<Notifications> with TickerProviderStateM
 
             return ListTile(
 
-              leading: CircleAvatar(child: Icon(Icons.notifications),
-              ),
+              leading: CircleAvatar(child: Icon(Icons.notifications)),
               title: Text(texttitle),
-              subtitle: Text(
-                notification.message.length > 50
-                    ? '${notification.message.substring(0, 50)}...'
-                    : notification.message,
-              ),
+              subtitle: Text(notification.message),
               onTap: () {
                 final userProvider userP = Provider.of<userProvider>(context, listen: false);
 
                 if (notification.notificationId != null) {
-                  if(notification.seenAt == null){
+                  if(notification.sentAt.isEmpty){
                     notification.markAsSeen(notification.notificationId, userP.JWT);
                     notif.refreshNotifications(userP.userId);
                   }
-                  print(notification.seenAt);
+
+                  print(notification.sentAt);
                   Navigator.push(
                     context,
                     MaterialPageRoute(

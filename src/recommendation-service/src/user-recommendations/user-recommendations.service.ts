@@ -5,8 +5,6 @@ import { EventEntity } from './entities/event.entity';
 import { EventDto } from './dto/event.dto';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { SUPABASE_CLIENT } from 'src/supabase-provider/supabase-provider';
-import { UnauthorizedException } from '@nestjs/common';
-import * as jwt from 'jsonwebtoken';
 
 const API_KEY = ''
 const axios = require('axios');
@@ -41,107 +39,52 @@ export class UserRecommendationsService {
 
     const preferenceMap = new Map<string, { interaction: number, survey: number }>();
     preferenceValues.forEach((pref) => {
-      preferenceMap.set(pref.category, {
-        interaction: pref.interaction_preference_value,
-        survey: pref.survey_preference_value
-      });
+    preferenceMap.set(pref.category, {
+      interaction: pref.interaction_preference_value,
+      survey: pref.survey_preference_value
+    });
     });
 
     // Calculate predicted ratings
-    let predictedRatings: {
-        event: String,
-        fitness: number 
-    }[] = events.map(event => {
-      const category = event.category;
-      const preferences = preferenceMap.get(category);
+    const predictedRatings = events.map(event => {
+    const category = event.category;
+    const preferences = preferenceMap.get(category);
 
-      if (!preferences) {
-        console.warn(`No preferences found for category: ${category}`);
-        return {
-          event,
-          rating: 0, // Default rating if no preferences are found
-        };
-      }
-
-      const interactionPreferenceValue = preferences.interaction || 0;
-      const surveyPreferenceValue = preferences.survey || 0;
-
-      const binaryDigit = 1; // always 1
-      const rating = (interactionPreferenceValue * surveyPreferenceValue) * binaryDigit; //fitness 
-
-      console.log(`Event: ${event}, Category: ${category}, Rating: ${rating}`);
-
+    if (!preferences) {
+      console.warn(`No preferences found for category: ${category}`);
       return {
         event,
-        rating,
+        rating: 0, // Default rating if no preferences are found
       };
+    }
+
+    const interactionPreferenceValue = preferences.interaction || 0;
+    const surveyPreferenceValue = preferences.survey || 0;
+
+    const binaryDigit = 1; // always 1
+    const rating = (interactionPreferenceValue + surveyPreferenceValue) * binaryDigit;
+
+    console.log(`Event: ${event}, Category: ${category}, Rating: ${rating}`);
+
+    return {
+      event,
+      rating,
+    };
     });
 
     // Sort predicted ratings in descending order
-    predictedRatings.sort((event1, event2) => event2.fitness - event1.fitness);
+    predictedRatings.sort((event1, event2) => event2.rating - event1.rating);
 
     console.log('Predicted Ratings:', predictedRatings);
 
     return {
     status: 'success',
-    data: { message: this.selection(predictedRatings) },
+    data: { message: predictedRatings },
     timestamp: new Date().toISOString(),
     };
 
   }
 
-  selection(events: {
-    event: String,
-    fitness: number 
-  }[])
-  {
-    return events;
-  }
-
-  // function uniqueRouletteWheelSelection(predictedRatings, numSelections) {
-  //   let selectedEvents = [];
-  
-  //   // Check if numSelections exceeds the available events
-  //   if (numSelections > predictedRatings.length) {
-  //     console.warn('Requested more selections than available events. Returning all events.');
-  //     numSelections = predictedRatings.length; // Adjust to select all available events
-  //   }
-  
-  //   for (let i = 0; i < numSelections; i++) {
-  //     // Calculate total fitness for current ratings
-  //     const totalFitness = predictedRatings.reduce((sum, { fitness }) => sum + fitness, 0);
-  
-  //     if (totalFitness === 0) {
-  //       console.warn('All fitness values are zero, returning random event.');
-  //       const randomEvent = predictedRatings[Math.floor(Math.random() * predictedRatings.length)].event;
-  //       selectedEvents.push(randomEvent);
-  //       break;
-  //     }
-  
-  //     // Generate a random number between 0 and totalFitness
-  //     const randomValue = Math.random() * totalFitness;
-  
-  //     let runningSum = 0;
-  //     for (let j = 0; j < predictedRatings.length; j++) {
-  //       const { event, fitness } = predictedRatings[j];
-  //       runningSum += fitness;
-  
-  //       if (runningSum >= randomValue) {
-  //         selectedEvents.push(event);  // Select the event
-  
-  //         // Remove the selected event to prevent it from being selected again
-  //         predictedRatings.splice(j, 1);
-  //         break;
-  //       }
-  //     }
-  //   }
-  
-  //   return selectedEvents;
-  // }
-  
-
-  // updates LatLng of each building
-  // shouldn't need to be called often -- only as buildings are inserted into the db
   async updateBuildingLocations() : Promise<void>{
     let {data: buildings, error} = await this.supabase
       .from('buildings')
@@ -153,13 +96,7 @@ export class UserRecommendationsService {
     }
 
     console.log(`buildings retrieved from db: \n ${JSON.stringify(buildings, null, 2)}`);
-    let buildingCoordinates: {
-      name: String,
-      coordinates : {
-        latitude : String,
-        longitude : String
-      }
-    }[] = [];
+    let buildingCoordinates: {name: String, coordinates : any}[] = [];
 
     for(let building of buildings){
       let location = await this.geocode(building.name);
@@ -169,20 +106,8 @@ export class UserRecommendationsService {
       })
     }
 
-    // update coordinate values in database 
-    for(let b of buildingCoordinates){
-
-      let latLngString =  
-       (b.coordinates != null) 
-        ? `${b.coordinates.latitude},${b.coordinates.longitude}`
-        : b.coordinates;
-
-      await this.supabase
-        .from('buildings')
-        .update({location: latLngString})
-        .eq('name',b.name)
-     
-    }    
+    console.table(`coordinates retrieved from api: \n ${buildings}`);
+    
   }
 
   async geocode(searchText) {
@@ -220,7 +145,7 @@ export class UserRecommendationsService {
         return coordinates;
       } else {
         console.log("No places found for this query.");
-        return null;
+        return null; // Or handle this case as needed
       }
   } 
 

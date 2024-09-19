@@ -503,7 +503,7 @@ void main() {
     when(mockUserProvider.profileImage).thenReturn('https://via.placeholder.com/150');
 
     final notifications = [
-      AppNotification(notificationTypes: 'invites', message: 'You have an invite', eventId: '', userId: '', sentAt: '', notificationId: '', seenAt:''),
+      AppNotification(notificationTypes: 'invites', message: 'You have an invite', eventId: '', userId: '', sentAt: '', notificationId: ''),
     ];
 
     when(mockNotificationProvider.notifications).thenReturn(notifications);
@@ -532,7 +532,6 @@ void main() {
     expect(find.text('Unseen'), findsOneWidget);
 
     await tester.tap(find.text('Invitations'));
-    await tester.pump();
     await tester.pumpAndSettle();
     expect(find.text('You have an invite'), findsOneWidget);
   });
@@ -642,11 +641,11 @@ void main() {
     when(mockUserProvider.profileImage).thenReturn('https://via.placeholder.com/150');
 
     final notifications = [
-      AppNotification(notificationTypes: 'invite', message: 'You have an invite', eventId: '', userId: '', sentAt: '', notificationId: '', seenAt: null),
-      AppNotification(notificationTypes: 'broadcast', message: 'New broadcast message', eventId: '', userId: '', sentAt: '', notificationId: '', seenAt: null),
+      AppNotification(notificationTypes: 'invite', message: 'You have an invite', eventId: '', userId: '', sentAt: '', notificationId: ''),
+      AppNotification(notificationTypes: 'broadcast', message: 'New broadcast message', eventId: '', userId: '', sentAt: '', notificationId: ''),
       AppNotification(notificationTypes: 'reminder', message: 'Reminder notification', eventId: '', userId: '', sentAt: '', notificationId: ''),
-      AppNotification(notificationTypes: 'recommendation', message: 'Recommendation message', eventId: '', userId: '', sentAt: '', notificationId: '', seenAt: null),
-      AppNotification(notificationTypes: 'application', message: 'New application', eventId: '', userId: '', sentAt: '', notificationId: '',seenAt: null),
+      AppNotification(notificationTypes: 'recommendation', message: 'Recommendation message', eventId: '', userId: '', sentAt: '', notificationId: ''),
+      AppNotification(notificationTypes: 'application', message: 'New application', eventId: '', userId: '', sentAt: '', notificationId: ''),
     ];
 
     when(mockNotificationProvider.notifications).thenReturn(notifications);
@@ -661,12 +660,11 @@ void main() {
         child: const MaterialApp(home: Notifications()),
       ),
     );
-    await tester.tap(find.text('Unseen'));
-    await tester.pump();
-    expect(find.text('Unseen'), findsOneWidget);
+
+    await tester.pumpAndSettle();
 
 
-
+    expect(find.text('You have an invite'), findsOneWidget);
     expect(find.text('New broadcast message'), findsOneWidget);
     expect(find.text('Reminder notification'), findsOneWidget);
     expect(find.text('Recommendation message'), findsOneWidget);

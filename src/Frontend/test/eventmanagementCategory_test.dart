@@ -53,7 +53,7 @@ void main() {
             categories: [],
             sessions: [],
           ),
-          invitees: [], saved: false,
+          invitees: [],
         ),
         Event(
           id: '2',
@@ -73,7 +73,7 @@ void main() {
             categories: [],
             sessions: [],
           ),
-          invitees: [], saved: false,
+          invitees: [],
         ),
       ]);
       when(mockEventProvider.eventsHome).thenAnswer((_) async =>
@@ -96,7 +96,7 @@ void main() {
             categories: [],
             sessions: [],
           ),
-          invitees: [], saved: false,
+          invitees: [],
         ),
         Event(
           id: '2',
@@ -116,7 +116,7 @@ void main() {
             categories: [],
             sessions: [],
           ),
-          invitees: [], saved: false,
+          invitees: [],
         ),
         Event(
           id: '3',
@@ -136,7 +136,7 @@ void main() {
             categories: [],
             sessions: [],
           ),
-          invitees: [], saved: false,
+          invitees: [],
         ),
       ]);
       when(mockEventProvider.eventsRsvp).thenAnswer((_) async =>
@@ -159,7 +159,7 @@ void main() {
             categories: [],
             sessions: [],
           ),
-          invitees: [], saved: false,
+          invitees: [],
         ),
         Event(
           id: '2',
@@ -179,7 +179,7 @@ void main() {
             categories: [],
             sessions: [],
           ),
-          invitees: [], saved: false,
+          invitees: [],
         ),
         Event(
           id: '3',
@@ -199,7 +199,7 @@ void main() {
             categories: [],
             sessions: [],
           ),
-          invitees: [], saved: false,
+          invitees: [],
         ),
       ]);
     });

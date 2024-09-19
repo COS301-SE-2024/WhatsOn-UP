@@ -36,7 +36,7 @@ void main() {
           mentors: [],
           categories: [],
           sessions: [],
-        ), invitees: [], saved: true,
+        ), invitees: [],
       ),
       Event(
         id: '2',
@@ -54,7 +54,7 @@ void main() {
           mentors: [],
           categories: [],
           sessions: [],
-        ), invitees: [], saved: true,
+        ), invitees: [],
       ),
     ]);
     when(mockEventProvider.eventsHome).thenAnswer((_) async =>
@@ -77,7 +77,7 @@ void main() {
           categories: [],
           sessions: [],
         ),
-        invitees: [], saved: true,
+        invitees: [],
       ),
       Event(
         id: '2',
@@ -97,7 +97,7 @@ void main() {
           categories: [],
           sessions: [],
         ),
-        invitees: [], saved: true,
+        invitees: [],
       ),
       Event(
         id: '3',
@@ -117,130 +117,10 @@ void main() {
           categories: [],
           sessions: [],
         ),
-        invitees: [], saved: false,
+        invitees: [],
       ),
     ]);
-    when(mockEventProvider.eventsSaved).thenAnswer((_) async =>
-    [
-      Event(
-        id: '1',
-        nameOfEvent: 'Test Event 1 RSVP',
-        venue: null,
-        description: 'Test Description 1',
-        imageUrls: [],
-        hosts: [],
-        startTime: '2022-01-01T10:00:00.000Z',
-        endTime: '2022-01-01T12:00:00.000Z',
-        maxAttendees: 100,
-        isPrivate: true,
-        attendees: [],
-        metadata: Metadata(
-          mentors: [],
-          categories: [],
-          sessions: [],
-        ),
-        invitees: [], saved: false,
-      ),
-      Event(
-        id: '2',
-        nameOfEvent: 'Test Event 2 RSVP',
-        venue: null,
-        description: 'Test Description 2',
-        imageUrls: [],
-        hosts: [],
-        startTime: '2022-01-02T10:00:00.000Z',
-        endTime: '2022-01-02T12:00:00.000Z',
-        maxAttendees: 150,
-        isPrivate: false,
-        attendees: [],
-        metadata: Metadata(
-          mentors: [],
-          categories: [],
-          sessions: [],
-        ),
-        invitees: [], 
-        saved: true,
-      ),
-      Event(
-        id: '3',
-        nameOfEvent: 'Test Event 3 RSVP',
-        venue: null,
-        description: 'Test Description 3',
-        imageUrls: [],
-        hosts: [],
-        startTime: '2022-01-03T10:00:00.000Z',
-        endTime: '2022-01-03T12:00:00.000Z',
-        maxAttendees: 200,
-        isPrivate: false,
-        attendees: [],
-        metadata: Metadata(
-          mentors: [],
-          categories: [],
-          sessions: [],
-        ),
-        invitees: [], saved: true,
-      ),
-    ]);
-    when(mockEventProvider.recommendations).thenAnswer((_) async =>
-    [
-      Event(
-        id: '1',
-        nameOfEvent: 'Test Event 1 RSVP',
-        venue: null,
-        description: 'Test Description 1',
-        imageUrls: [],
-        hosts: [],
-        startTime: '2022-01-01T10:00:00.000Z',
-        endTime: '2022-01-01T12:00:00.000Z',
-        maxAttendees: 100,
-        isPrivate: true,
-        attendees: [],
-        metadata: Metadata(
-          mentors: [],
-          categories: [],
-          sessions: [],
-        ),
-        invitees: [], saved: false,
-      ),
-      Event(
-        id: '2',
-        nameOfEvent: 'Test Event 2 RSVP',
-        venue: null,
-        description: 'Test Description 2',
-        imageUrls: [],
-        hosts: [],
-        startTime: '2022-01-02T10:00:00.000Z',
-        endTime: '2022-01-02T12:00:00.000Z',
-        maxAttendees: 150,
-        isPrivate: false,
-        attendees: [],
-        metadata: Metadata(
-          mentors: [],
-          categories: [],
-          sessions: [],
-        ),
-        invitees: [], saved: true,
-      ),
-      Event(
-        id: '3',
-        nameOfEvent: 'Test Event 3 RSVP',
-        venue: null,
-        description: 'Test Description 3',
-        imageUrls: [],
-        hosts: [],
-        startTime: '2022-01-03T10:00:00.000Z',
-        endTime: '2022-01-03T12:00:00.000Z',
-        maxAttendees: 200,
-        isPrivate: false,
-        attendees: [],
-        metadata: Metadata(
-          mentors: [],
-          categories: [],
-          sessions: [],
-        ),
-        invitees: [], saved: false,
-      ),
-    ]);
+
 
     String mockImageUrl = '';
     when(mockUserProvider.profileImage)
@@ -251,6 +131,7 @@ void main() {
     when(mockUserProvider.password).thenReturn('password123');
   });
   testWidgets('ThankYouScreen displays all elements correctly', (WidgetTester tester) async {
+    // Arrange
     await tester.pumpWidget(
       const MaterialApp(
         home: ThankYouScreen(),
@@ -277,13 +158,47 @@ void main() {
           ),
         ],
         child: MaterialApp(
-          home: ThankYouScreen(),
+          home: const ThankYouScreen(),
           routes: {
-            '/home': (context) => HomePage(),
+            '/home': (context) => const HomePage(),
           },
         ),
       ),
     );
+  });
+
+
+    await tester.tap(find.text('Go to Home'));
+    await tester.pumpAndSettle();
+
+
+    expect(find.byType(HomePage), findsOneWidget);
+  });
+
+  testWidgets('Go to Home button pops all routes and navigates to HomePage', (WidgetTester tester) async {
+
+
+    await mockNetworkImages(() async {
+      await tester.pumpWidget(
+        MultiProvider(
+          providers: [
+            ChangeNotifierProvider<EventProvider>(
+                create: (_) => mockEventProvider),
+            ChangeNotifierProvider<userProvider>(
+              create: (_) => mockUserProvider,
+            ),
+          ],
+          child: MaterialApp(
+            home: const ThankYouScreen(),
+            routes: {
+              '/home': (context) => const HomePage(),
+            },
+          ),
+        ),
+      );
+    });
+
+
     await tester.tap(find.text('Go to Home'));
     await tester.pumpAndSettle();
 
@@ -291,9 +206,4 @@ void main() {
     expect(find.byType(HomePage), findsOneWidget);
     expect(find.byType(ThankYouScreen), findsNothing);
   });
-
-
-
-  });
-
 }

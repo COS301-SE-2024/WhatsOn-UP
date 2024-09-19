@@ -35,7 +35,7 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ), invitees: [], saved: false,
+          ), invitees: [],
         ),
         Event(
           id: '2',
@@ -57,7 +57,7 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ), invitees: [], saved: false,
+          ), invitees: [],
         ),
       ]);
 
@@ -82,7 +82,7 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ), invitees: [], saved: false,
+          ), invitees: [],
         ),
         Event(
           id: '2',
@@ -104,7 +104,7 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ), invitees: [], saved: false,
+          ), invitees: [],
         ),
       ]);
       when(mockApi.putSavedEvent(any, any)).thenAnswer((_) async => Future.value());
@@ -148,7 +148,7 @@ void main() {
             categories: [],
             sessions: [],
           ),
-          invitees: [], saved: false,
+          invitees: [],
         ),
         Event(
           id: '2',
@@ -186,7 +186,7 @@ void main() {
             categories: [],
             sessions: [],
           ),
-          invitees: [], saved: false,
+          invitees: [],
         ),
       ]);
 
@@ -275,7 +275,7 @@ void main() {
            categories: [],
            sessions: [],
          ),
-        invitees: [], saved: false,
+        invitees: [],
       );
 
        await eventProvider.addEventHome(eventToAdd.toJson());
