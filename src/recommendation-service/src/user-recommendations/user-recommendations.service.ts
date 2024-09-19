@@ -5,6 +5,8 @@ import { EventEntity } from './entities/event.entity';
 import { EventDto } from './dto/event.dto';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { SUPABASE_CLIENT } from 'src/supabase-provider/supabase-provider';
+import { UnauthorizedException } from '@nestjs/common';
+import * as jwt from 'jsonwebtoken';
 
 const API_KEY = ''
 const axios = require('axios');
@@ -91,8 +93,9 @@ export class UserRecommendationsService {
   selection(events: {
     event: String,
     fitness: number 
-  }[]){
-    //return the subset of events
+  }[])
+  {
+    return events;
   }
 
   // function uniqueRouletteWheelSelection(predictedRatings, numSelections) {
