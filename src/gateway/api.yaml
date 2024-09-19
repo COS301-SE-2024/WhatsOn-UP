@@ -1269,6 +1269,61 @@ paths:
         '403':
           description: Forbidden
 
+  /analytics/host/generate_autofill:
+    get:
+      summary: Generate autofill data
+      operationId: generateAutofillData
+      parameters:
+        - name: description
+          in: query
+          description: The description of the autofill data
+          required: true
+          type: string
+        - name: title
+          in: query
+          description: The title of the autofill data
+          required: true
+          type: string
+      x-google-backend:
+        address: https://analytics-1035006743185.us-central1.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        disable_auth: true
+        deadline: 60.0
+      responses:
+        '200':
+          description: Successful
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+
+
+  /analytics/host/get_popular_events:
+    get:
+      summary: Get popular events
+      operationId: getPopularEvents
+      x-google-backend:
+        address: https://analytics-1035006743185.us-central1.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        disable_auth: true
+        deadline: 60.0
+      responses:
+        '200':
+          description: Successful
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
 
   
 

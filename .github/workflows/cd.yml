@@ -44,26 +44,7 @@ jobs:
           gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
           gcloud config set project <YOUR_PROJECT_ID>
 
-      - name: Build and deploy API service
-        working-directory: ./src/Backend
+      - name: Build and Push Docker Images
+        working-directory: ./scripts
         run: |
-          docker build -t devforce123/backend-services:api .
-          docker tag devforce123/backend-services:api us-east1-docker.pkg.dev/whatsonup/backend-services/api:latest
-          docker push us-east1-docker.pkg.dev/whatsonup/backend-services/api:latest
-          docker push devforce123/backend-services:api
-
-      - name: Build and deploy storage service
-        working-directory: ./src/storage-service
-        run: |
-          docker build -t devforce123/backend-services:storage .
-          docker tag devforce123/backend-services:storage us-east1-docker.pkg.dev/whatsonup/backend-services/storage:latest
-          docker push us-east1-docker.pkg.dev/whatsonup/backend-services/storage:latest
-          docker push devforce123/backend-services:storage
-
-      - name: Build and deploy notifications service
-        working-directory: ./src/notifications-service
-        run: |
-          docker build -t devforce123/backend-services:notifications .
-          docker tag devforce123/backend-services:notifications us-east1-docker.pkg.dev/whatsonup/backend-services/notifications:latest
-          docker push us-east1-docker.pkg.dev/whatsonup/backend-services/notifications:latest
-          docker push devforce123/backend-services:notifications
+          ./deploy.sh
