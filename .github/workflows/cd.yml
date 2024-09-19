@@ -38,14 +38,15 @@ jobs:
         with:
           version: 'latest'
 
-      - name: Authenticate to Google Cloud
-        env:
-          GCP_SERVICE_ACCOUNT_KEY: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
+      - name: Set up Google Cloud authentication
         run: |
           echo "${GCP_SERVICE_ACCOUNT_KEY}" > ${HOME}/gcloud-service-key.json
           cat ${HOME}/gcloud-service-key.json
           gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
           gcloud config set project whatsonup
+        shell: /usr/bin/bash -e
+        env:
+          GCP_SERVICE_ACCOUNT_KEY: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
 
       - name: Build and Push Docker Images
         working-directory: ./scripts
