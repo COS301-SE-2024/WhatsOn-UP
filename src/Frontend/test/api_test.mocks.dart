@@ -357,11 +357,10 @@ class MockEventProvider extends _i1.Mock implements _i7.EventProvider {
       ) as _i8.Future<void>);
 
   @override
-  _i8.Future<void> refreshRecommendations(String? userId) =>
-      (super.noSuchMethod(
+  _i8.Future<void> refreshRecommendations(String? JWT) => (super.noSuchMethod(
         Invocation.method(
           #refreshRecommendations,
-          [userId],
+          [JWT],
         ),
         returnValue: _i8.Future<void>.value(),
         returnValueForMissingStub: _i8.Future<void>.value(),
@@ -1037,11 +1036,11 @@ class MockApi extends _i1.Mock implements _i2.Api {
       ) as _i8.Future<List<_i9.Event>>);
 
   @override
-  _i8.Future<List<_i9.Event>> getRecommendedEvents(String? userId) =>
+  _i8.Future<List<_i9.Event>> getRecommendedEvents(String? JWT) =>
       (super.noSuchMethod(
         Invocation.method(
           #getRecommendedEvents,
-          [userId],
+          [JWT],
         ),
         returnValue: _i8.Future<List<_i9.Event>>.value(<_i9.Event>[]),
       ) as _i8.Future<List<_i9.Event>>);
@@ -1058,14 +1057,14 @@ class MockApi extends _i1.Mock implements _i2.Api {
   @override
   _i8.Future<Map<String, dynamic>> postChangeUser(
     String? name,
-    String? userId,
+    String? JWT,
   ) =>
       (super.noSuchMethod(
         Invocation.method(
           #postChangeUser,
           [
             name,
-            userId,
+            JWT,
           ],
         ),
         returnValue:
@@ -1075,14 +1074,14 @@ class MockApi extends _i1.Mock implements _i2.Api {
   @override
   _i8.Future<Map<String, dynamic>> updatePassword(
     String? password,
-    String? userId,
+    String? JWT,
   ) =>
       (super.noSuchMethod(
         Invocation.method(
           #updatePassword,
           [
             password,
-            userId,
+            JWT,
           ],
         ),
         returnValue:
@@ -1526,7 +1525,7 @@ class MockApi extends _i1.Mock implements _i2.Api {
 
   @override
   _i8.Future<Map<String, dynamic>> postRecommendationData({
-    required String? userId,
+    required String? JWT,
     required Map<String, dynamic>? data,
   }) =>
       (super.noSuchMethod(
@@ -1534,7 +1533,7 @@ class MockApi extends _i1.Mock implements _i2.Api {
           #postRecommendationData,
           [],
           {
-            #userId: userId,
+            #JWT: JWT,
             #data: data,
           },
         ),

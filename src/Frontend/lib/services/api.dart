@@ -158,12 +158,12 @@ class Api {
     }
   }
 
-  Future<List<Event>> getRecommendedEvents(String userId) async {
+  Future<List<Event>> getRecommendedEvents(String JWT) async {
     final URL = 'http://${globals.domain}:8086/events/recommended_events';
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Authorization': 'Bearer $userId',
+      'Authorization': 'Bearer $JWT',
     };
 
     try {
@@ -1123,7 +1123,7 @@ class Api {
   }
 
   Future<Map<String, dynamic>> postRecommendationData({
-    required String userId,
+    required String JWT,
     required Map<String, dynamic> data,
   }) async {
     String notifyUserUrl = 'http://${globals.domain}:8086/preferences/init';
@@ -1131,7 +1131,7 @@ class Api {
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Authorization': 'Bearer $userId',
+      'Authorization': 'Bearer $JWT',
     };
     try {
       var response = await http.post(Uri.parse(notifyUserUrl),
