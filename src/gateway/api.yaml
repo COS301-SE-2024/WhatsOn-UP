@@ -1324,6 +1324,55 @@ paths:
         '403':
           description: Forbidden
 
+  /events/recommended_events:
+    get:
+      summary: Get recommended events
+      operationId: getRecommendedEvents
+      x-google-backend:
+        address: https://recommendations-1035006743185.us-central1.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        disable_auth: true
+        deadline: 60.0
+      responses:
+        '200':
+          description: Successful
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+  /preferences/init:
+    post:
+      summary: Initialize preferences
+      operationId: initPreferences
+      parameters:
+        - name: body
+          in: body
+          description: The preferences data to initialize
+          required: true
+          schema:
+            type: object
+      x-google-backend:
+        address: https://recommendations-1035006743185.us-central1.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        disable_auth: true
+        deadline: 60.0
+      responses:
+        '200':
+          description: Successful
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
 
   
 
