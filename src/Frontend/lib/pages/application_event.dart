@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:provider/provider.dart';
 import 'package:firstapp/providers/events_providers.dart';
@@ -45,6 +46,8 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
   late TextEditingController _eventDescriptionController;
   late DateTime _startDateTime;
   late DateTime _endDateTime;
+  late TextEditingController _startDateTimeController;
+  late TextEditingController _endDateTimeController;
   late TextEditingController _guestsController;
   bool _isPublic = true;
   int _maxAttendees = 100;
@@ -61,6 +64,9 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
   String? _selectedCategory;
   late TextEditingController _eventNameControllerAI;
   late TextEditingController _eventDescriptionControllerAI;
+  List<dynamic> autoFillData = [];
+  List<AutofillOption> autoFillOptions = [];
+
   // final List<Str> predefinedCategories = [
   //   'Clubs & Organizations',
   //   'Sports & Fitness',
@@ -87,6 +93,8 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
     _eventDescriptionController = TextEditingController();
     _eventNameControllerAI = TextEditingController();
     _eventDescriptionControllerAI = TextEditingController();
+    _startDateTimeController = TextEditingController();
+    _endDateTimeController = TextEditingController();
     _startDateTime = DateTime.now();
     _endDateTime = DateTime.now().add(const Duration(hours: 1));
     _guestsController = TextEditingController();
@@ -98,6 +106,9 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
     //R _selectedCategory = predefinedCategories.isNotEmpty ? predefinedCategories[0] : null;
     _maxAttendeesController =
         TextEditingController(text: _maxAttendees.toString());
+
+    _updateDateTimeControllers();
+
   }
 
   late Color myColor;
@@ -118,6 +129,8 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
     _guestsController.dispose();
     _eventNameControllerAI.dispose();
     _eventDescriptionControllerAI.dispose();
+    _startDateTimeController.dispose();
+    _endDateTimeController.dispose();
     super.dispose();
   }
 
@@ -294,8 +307,68 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
     )..show(context: context);
   }
 
-  //final GlobalKey _numberPickerKey = GlobalKey();
-  //final GlobalKey _textFieldKey = GlobalKey();
+  String _formatDateTime(DateTime dateTime) {
+  return "${dateTime.toLocal()}".split(' ')[0] + ' ' + 
+         "${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}";
+}
+
+  void _updateDateTimeControllers() {
+    _startDateTimeController.text = _formatDateTime(_startDateTime);
+    _endDateTimeController.text = _formatDateTime(_endDateTime);
+  }
+
+  Future<void> getAutofillData(eventName, eventDescription) async {
+    userProvider userP = Provider.of<userProvider>(context, listen: false);
+
+    try {
+      final response = await Api().getAutofillData(userP.userId, eventName, eventDescription);
+
+      if (response['data'] != null) {
+        setState(() {
+          // autoFillData = response['data'];
+          autoFillOptions = (response['data'] as List)
+              .map((item) => AutofillOption.fromJson(item))
+              .toList();
+        });
+
+        _showAutofillOptions();
+      }
+    }
+    catch (e) {
+      print('Failed to get autofill data: $e');
+    }
+  }
+
+  void _showAutofillOptions() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return AutofillOptionsWidget(
+          options: autoFillOptions,
+          onSelect: (AutofillOption selectedOption) {
+            setState(() {
+              _eventNameController.text = _eventNameControllerAI.text;
+              _eventDescriptionController.text = selectedOption.description;
+              _startDateTime = selectedOption.startDateTime;
+              _endDateTime = selectedOption.endDateTime;
+              _updateDateTimeControllers();
+              _selectedCategory = selectedOption.category;
+              
+              // Find the venue in _venues list and set it as _selectedVenue
+              // _selectedVenue = _venues.firstWhere(
+              //   (venue) => venue.id == selectedOption.venue.venueId,
+              //   orElse: () => null,
+              // );
+              if (_selectedVenue != null) {
+                _venueController.text = _selectedVenue!.name;
+              }
+            });
+          },
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -304,7 +377,7 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
     mediaSize = MediaQuery.of(context).size;
     userProvider userP = Provider.of<userProvider>(context,listen: false);
     EventProvider eventP=Provider.of<EventProvider>(context,listen: false);
-    return Scaffold(
+        return Scaffold(
       appBar: AppBar(
         title: const Text('Create Event'),
         actions: [
@@ -359,13 +432,13 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                       ),
                       TextButton(
                         child: const Text('Submit'),
-                        onPressed: () {
+                        onPressed: () async {
                           if (_formKeyAI.currentState?.validate() == true) {
                             String eventName = _eventNameControllerAI.text;
                             String eventDescription = _eventDescriptionControllerAI.text;
-
                             Navigator.of(context).pop();
-                            // function here
+
+                            await getAutofillData(eventName, eventDescription);
                           }
                         },
                       ),
@@ -476,6 +549,7 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
               ),
               const SizedBox(height: 16.0),
               TextFormField(
+                controller: _startDateTimeController,
                 readOnly: true,
                 decoration: const InputDecoration(
                   labelText: 'Start Date and Time',
@@ -504,6 +578,7 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                           selectedTime.hour,
                           selectedTime.minute,
                         );
+                        _updateDateTimeControllers();
                       });
                     }
                   }
@@ -514,14 +589,10 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                   }
                   return null;
                 },
-                controller: TextEditingController(
-                  text: "${_startDateTime.toLocal()}".split(' ')[0] +
-                      ' ' +
-                      TimeOfDay.fromDateTime(_startDateTime).format(context),
-                ),
               ),
               const SizedBox(height: 16.0),
               TextFormField(
+                controller: _endDateTimeController,
                 readOnly: true,
                 decoration: const InputDecoration(
                   labelText: 'End Date and Time',
@@ -550,6 +621,7 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                           selectedTime.hour,
                           selectedTime.minute,
                         );
+                        _updateDateTimeControllers();
                       });
                     }
                   }
@@ -560,11 +632,6 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                   }
                   return null;
                 },
-                controller: TextEditingController(
-                  text: "${_endDateTime.toLocal()}".split(' ')[0] +
-                      ' ' +
-                      TimeOfDay.fromDateTime(_endDateTime).format(context),
-                ),
               ),
               const SizedBox(height: 16.0),
               FutureBuilder<List<CategoryData.Category>>(
@@ -654,7 +721,6 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                     try {
 
                       String userId = userP.userId;
-                      print("USER ID IS $userId");
                       Map<String, String> metadata = {
                         'category': _selectedCategory!,
                       };
@@ -741,5 +807,176 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
         ),
       ),
     );
+  }
+}
+
+
+class AutofillOption {
+  final String description;
+  final String category;
+  final Venue venue;
+  final DateTime startDateTime;
+  final DateTime endDateTime;
+
+  AutofillOption({
+    required this.description,
+    required this.category,
+    required this.venue,
+    required this.startDateTime,
+    required this.endDateTime,
+  });
+
+  factory AutofillOption.fromJson(Map<String, dynamic> json) {
+    return AutofillOption(
+      description: json['description'],
+      category: json['category'],
+      venue: Venue.fromJson(json['venue']),
+      startDateTime: DateTime.parse(json['date']['startDateTime']),
+      endDateTime: DateTime.parse(json['date']['endDateTime']),
+    );
+  }
+}
+
+class Venue {
+  final String venueId;
+  final String venueName;
+
+  Venue({required this.venueId, required this.venueName});
+
+  factory Venue.fromJson(Map<String, dynamic> json) {
+    return Venue(
+      venueId: json['venueId'],
+      venueName: json['venueName'],
+    );
+  }
+}
+
+
+class AutofillOptionsWidget extends StatefulWidget {
+  final List<AutofillOption> options;
+  final Function(AutofillOption) onSelect;
+
+  const AutofillOptionsWidget({
+    Key? key,
+    required this.options,
+    required this.onSelect,
+  }) : super(key: key);
+
+  @override
+  _AutofillOptionsWidgetState createState() => _AutofillOptionsWidgetState();
+}
+
+class _AutofillOptionsWidgetState extends State<AutofillOptionsWidget> {
+  AutofillOption? selectedOption;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.8,
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(
+              'Choose an Autofill Option',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: widget.options.length,
+              itemBuilder: (context, index) {
+                final option = widget.options[index];
+                final isSelected = option == selectedOption;
+                return Card(
+                  margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  elevation: isSelected ? 8 : 1,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    side: BorderSide(
+                      color: isSelected ? Theme.of(context).primaryColor : Colors.transparent,
+                      width: 2,
+                    ),
+                  ),
+                  child: InkWell(
+                    onTap: () {
+                      setState(() {
+                        selectedOption = option;
+                      });
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            option.category,
+                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            option.venue.venueName,
+                            style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            _formatDateTime(option.startDateTime, option.endDateTime),
+                            style: TextStyle(fontSize: 16, color: Colors.blue),
+                          ),
+                          SizedBox(height: 12),
+                          Text(
+                            option.description,
+                            style: TextStyle(fontSize: 14),
+                            maxLines: 3,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          if (isSelected) ...[
+                            SizedBox(height: 12),
+                            Text(
+                              'Tap the comfirm selection button to choose this option',
+                              style: TextStyle(
+                                color: Theme.of(context).primaryColor,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text('Cancel'),
+                ),
+                ElevatedButton(
+                  onPressed: selectedOption != null
+                      ? () {
+                          widget.onSelect(selectedOption!);
+                          Navigator.pop(context);
+                        }
+                      : null,
+                  child: Text('Confirm Selection'),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _formatDateTime(DateTime start, DateTime end) {
+    final DateFormat dateFormat = DateFormat('E, MMM d, y');
+    final DateFormat timeFormat = DateFormat('h:mm a');
+    return '${dateFormat.format(start)} ${timeFormat.format(start)} - ${timeFormat.format(end)}';
   }
 }
