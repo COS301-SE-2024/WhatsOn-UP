@@ -424,7 +424,7 @@ class Api {
   }
 
   Future<List<AppNotification>> getAllNotification(
-      {required String userId}) async {
+      {required String JWT}) async {
     String notifyUserUrl =
         'https://${globals.gatewayDomain}/notifications/get_all';
 
@@ -433,7 +433,7 @@ class Api {
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Authorization': 'Bearer ${supabase.auth.currentSession?.accessToken}',
+      'Authorization': 'Bearer ${JWT}',
     };
 
     try {

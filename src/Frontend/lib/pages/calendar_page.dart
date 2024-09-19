@@ -74,7 +74,8 @@ class _CalendarPageState extends State<CalendarPage>
       userProvider userP = Provider.of<userProvider>(context, listen: false);
 
       String? userId = userP.role == 'guest' ? null : userP.userId;
-      eventP.fetchfortheFirstTimeRsvp(userId!, 'guest_user'); //userP.JWT will not set at this point  
+      String JWT = (userId != null) ? userP.JWT : 'guest_user'; //userP.JWT will not set at this point  
+      eventP.fetchfortheFirstTimeRsvp(userId!, JWT);
 
       List<Event> events = await eventP.eventsRsvp;
       // final parsedEvents = parseEvents(response);

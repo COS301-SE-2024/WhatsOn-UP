@@ -311,7 +311,7 @@ class _NotificationsState extends State<Notifications> with TickerProviderStateM
                 if (notification.notificationId != null) {
                   if(notification.seenAt == null){
                     notification.markAsSeen(notification.notificationId, userP.JWT);
-                    notif.refreshNotifications(userP.userId);
+                    notif.refreshNotifications(userP.JWT);
                   }
                   print(notification.seenAt);
                   Navigator.push(

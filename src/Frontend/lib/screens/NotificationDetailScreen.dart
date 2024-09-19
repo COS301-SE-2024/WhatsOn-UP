@@ -170,7 +170,7 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
       await api.deleteNotification(widget.notification.notificationId, userP.userId);
       print("Notification deleted");    
       _notificationProvider.removeNotification(widget.notification.notificationId);
-      await _notificationProvider.refreshNotifications(userP.userId);
+      await _notificationProvider.refreshNotifications(userP.JWT);
       Navigator.of(context).pop();
     } 
     catch (e) {

@@ -81,6 +81,7 @@ Future<void> refreshSavedEvents(String? JWT) async {
 
 
 Future<List<Event>> _fetchEventsRsvp(String userId, String JWT) async {
+  print("DOUBLEU +$JWT");
   try {
     List<dynamic> responseData;
     if (userId == "guest") {

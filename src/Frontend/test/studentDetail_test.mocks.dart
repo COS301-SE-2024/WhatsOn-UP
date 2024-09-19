@@ -235,14 +235,14 @@ class MockApi extends _i1.Mock implements _i3.Api {
   @override
   _i5.Future<Map<String, dynamic>> rsvpEvent(
     String? eventId,
-    String? UserId,
+    String? JWT,
   ) =>
       (super.noSuchMethod(
         Invocation.method(
           #rsvpEvent,
           [
             eventId,
-            UserId,
+            JWT,
           ],
         ),
         returnValue:
@@ -252,14 +252,14 @@ class MockApi extends _i1.Mock implements _i3.Api {
   @override
   _i5.Future<Map<String, dynamic>> putSavedEvent(
     String? eventId,
-    String? UserId,
+    String? JWT,
   ) =>
       (super.noSuchMethod(
         Invocation.method(
           #putSavedEvent,
           [
             eventId,
-            UserId,
+            JWT,
           ],
         ),
         returnValue:
@@ -269,14 +269,14 @@ class MockApi extends _i1.Mock implements _i3.Api {
   @override
   _i5.Future<Map<String, dynamic>> DeleteSavedEvent(
     String? eventId,
-    String? UserId,
+    String? JWT,
   ) =>
       (super.noSuchMethod(
         Invocation.method(
           #DeleteSavedEvent,
           [
             eventId,
-            UserId,
+            JWT,
           ],
         ),
         returnValue:
@@ -285,12 +285,12 @@ class MockApi extends _i1.Mock implements _i3.Api {
 
   @override
   _i5.Future<List<_i7.AppNotification>> getAllNotification(
-          {required String? userId}) =>
+          {required String? JWT}) =>
       (super.noSuchMethod(
         Invocation.method(
           #getAllNotification,
           [],
-          {#userId: userId},
+          {#JWT: JWT},
         ),
         returnValue: _i5.Future<List<_i7.AppNotification>>.value(
             <_i7.AppNotification>[]),
@@ -333,18 +333,18 @@ class MockApi extends _i1.Mock implements _i3.Api {
       ) as _i5.Future<Map<String, dynamic>>);
 
   @override
-  _i5.Future<_i2.GeneralApplications> getGeneralusersToHost(String? userid) =>
+  _i5.Future<_i2.GeneralApplications> getGeneralusersToHost(String? JWT) =>
       (super.noSuchMethod(
         Invocation.method(
           #getGeneralusersToHost,
-          [userid],
+          [JWT],
         ),
         returnValue: _i5.Future<_i2.GeneralApplications>.value(
             _FakeGeneralApplications_0(
           this,
           Invocation.method(
             #getGeneralusersToHost,
-            [userid],
+            [JWT],
           ),
         )),
       ) as _i5.Future<_i2.GeneralApplications>);
@@ -352,14 +352,14 @@ class MockApi extends _i1.Mock implements _i3.Api {
   @override
   _i5.Future<Map<String, dynamic>> DeletersvpEvent(
     String? eventId,
-    String? UserId,
+    String? JWT,
   ) =>
       (super.noSuchMethod(
         Invocation.method(
           #DeletersvpEvent,
           [
             eventId,
-            UserId,
+            JWT,
           ],
         ),
         returnValue:
@@ -955,10 +955,10 @@ class MockuserProvider extends _i1.Mock implements _i2.userProvider {
       );
 
   @override
-  _i5.Future<void> Generalusers(String? userId) => (super.noSuchMethod(
+  _i5.Future<void> Generalusers(String? JWT) => (super.noSuchMethod(
         Invocation.method(
           #Generalusers,
-          [userId],
+          [JWT],
         ),
         returnValue: _i5.Future<void>.value(),
         returnValueForMissingStub: _i5.Future<void>.value(),
