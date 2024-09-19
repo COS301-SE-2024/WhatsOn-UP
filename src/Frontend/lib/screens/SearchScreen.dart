@@ -10,8 +10,9 @@ import 'package:firstapp/screens/FilterScreen.dart'; // Import the FilterScreen
 
 class SearchScreen extends StatefulWidget {
   final bool showSearchHistoryOnStart;
+  final String? initialQuery;
 
-  SearchScreen({this.showSearchHistoryOnStart = false});
+  SearchScreen({this.showSearchHistoryOnStart = false, this.initialQuery});
 
   @override
   _SearchScreenState createState() => _SearchScreenState();
@@ -19,8 +20,9 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   final EventService _eventService = EventService(Supabase.instance.client);
+  final TextEditingController _searchController = TextEditingController();
   List<Event> _searchResults = [];
-  List<String> _categories = [];
+  List<Category> _categories = [];
   List<String> _searchHistory = [];
   bool _isLoading = false;
   bool _showSearchTiles = true;
@@ -33,6 +35,11 @@ class _SearchScreenState extends State<SearchScreen> {
     super.initState();
     _fetchCategories();
     _loadSearchHistory();
+    
+    if (widget.initialQuery != null && widget.initialQuery!.isNotEmpty) {
+      _searchController.text = widget.initialQuery!;
+      _searchEvents(widget.initialQuery!);
+    }
 
     if (widget.showSearchHistoryOnStart) {
       _showSearchHistory = true;
@@ -182,6 +189,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   SizedBox(width: 8.0),
                   Expanded(
                     child: TextField(
+                      controller: _searchController,
                       decoration: InputDecoration(
                         hintText: "Search for events",
                         border: InputBorder.none,
@@ -235,10 +243,10 @@ class _SearchScreenState extends State<SearchScreen> {
                 physics: AlwaysScrollableScrollPhysics(),
                 crossAxisCount: 2,
                 children: _categories.map((category) {
-                  List<String> parts = category.split(',');
-                  String cat = parts.length > 1 ? parts[1] : '';
+                  // List<String> parts = category.split(',');
+                  // String cat = parts.length > 1 ? parts[1] : '';
                   return SearchImageTile(
-                    title: cat,
+                    title: category.name,
                     imageUrl: 'images/$category.jpg',
                     onTap: (title) => _searchEvents(title),
                   );
@@ -256,7 +264,13 @@ class _SearchScreenState extends State<SearchScreen> {
                   if (index >= _searchResults.length) {
                     return Container();
                   }
-                  return EventCard(event: _searchResults[index],showBookmarkButton: false);
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 22.0,
+                      vertical: 8.0,
+                    ),
+                      child: EventCard(event: _searchResults[index], showBookmarkButton: true,),
+                  );
                 },
               ),
             ),

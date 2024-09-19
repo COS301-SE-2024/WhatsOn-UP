@@ -259,7 +259,7 @@ class _EditprofilePageState extends State<EditprofilePage> {
 
       Api api = Api();
 
-      api.postChangeUser(user.name, user1.id).then((response) {
+      api.postChangeUser(user.name, userp.JWT).then((response) {
         if (response['error'] != null) {
           print('An error occurred: ${response['error']}');
         } else {
@@ -269,6 +269,7 @@ class _EditprofilePageState extends State<EditprofilePage> {
 
           print('User profile updated successfully');
           showChangedDialog();
+
         }
       }).catchError((error) {
         print('Failed to update user profile: $error');

@@ -28,7 +28,7 @@ class PastEventModel{
     @ElementCollection
     @CollectionTable(name = "event_media", joinColumns = [JoinColumn(name = "event_id")])
     @Column(name = "media_link" , columnDefinition = "TEXT")
-    var eventMedia: List<String> = ArrayList()
+    var eventMedia: Set<String> = HashSet()
 
     @Column(name = "deleted_at", nullable = false, updatable = false)
     private var deletedAt: LocalDateTime = LocalDateTime.now()
@@ -36,6 +36,10 @@ class PastEventModel{
     @OneToOne
     @JoinColumn(name = "venue_id")
     var venue: VenueModel? = null
+
+    @OneToOne
+    @JoinColumn(name = "event_id")
+    var analytics: AnalyticsModel? = null
 
 
     @Column(name = "start_date_time", nullable = false)
@@ -51,14 +55,12 @@ class PastEventModel{
     var isPrivate: Boolean = false
 
     @Column(name = "occupied_slots")
-    var occupiedSlots: Int = 0
+    var availableSlots: Int = 0
 
+    @OneToMany(mappedBy = "event")
+    var feedback: MutableList<FeedbackModel> = ArrayList()
 
     var status: String = ""
-
-
-    @OneToMany(mappedBy = "event", cascade = [CascadeType.ALL])
-    var feedback: Set<FeedbackModel> = HashSet()
 
     @ManyToMany
     @JoinTable(

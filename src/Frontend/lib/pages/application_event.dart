@@ -8,7 +8,7 @@ import 'package:firstapp/providers/events_providers.dart';
 import 'package:firstapp/providers/user_provider.dart';
 import 'package:firstapp/services/api.dart';
 import 'package:firstapp/services/EventService.dart';
-import 'package:firstapp/widgets/event_card.dart';
+import 'package:firstapp/widgets/event_card.dart'as CategoryData;
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -35,8 +35,9 @@ class ApplicationEvent extends StatefulWidget {
 }
 
 class _ApplicationEventPageState extends State<ApplicationEvent> {
-  late Future<List<String>> _categoriesFuture;
-  late Future<List<Venue>> _venuesFuture;
+
+  late Future<List<CategoryData.Category>> _categoriesFuture;
+  late Future<List<CategoryData.Venue>> _venuesFuture;
   late TextEditingController _venueController;
   late TextEditingController _eventNameController;
   late TextEditingController _eventDescriptionController;
@@ -45,9 +46,9 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
   late TextEditingController _guestsController;
   bool _isPublic = true;
   int _maxAttendees = 100;
-  Venue? _selectedVenue;
-  List<String> _categories = [];
-  List<Venue> _venues = [];
+  CategoryData.Venue? _selectedVenue;
+  late List<CategoryData.Category> _categories = [];
+  List<CategoryData.Venue> _venues = [];
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = true;
   late TextEditingController _maxAttendeesController;
@@ -55,14 +56,14 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
   bool _tutorialShown = false;
   List<XFile>? selectedImages = [];
   String? _selectedCategory;
-  final List<String> predefinedCategories = [
-    'Clubs & Organizations',
-    'Sports & Fitness',
-    'Academic',
-    'Social',
-    'Cultural',
-    'Career & Professional Development'
-  ];
+  // final List<Str> predefinedCategories = [
+  //   'Clubs & Organizations',
+  //   'Sports & Fitness',
+  //   'Academic',
+  //   'Social',
+  //   'Cultural',
+  //   'Career & Professional Development'
+  // ];
 
   List<Uint8List> imageBytesList = [];
   // Uint8List? imageBytesList;
@@ -96,6 +97,7 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
     super.initState();
     _categoriesFuture =
         EventService(Supabase.instance.client).fetchUniqueCategories();
+
     _venuesFuture = EventService(Supabase.instance.client).getLocations();
 
     _venueController = TextEditingController();
@@ -463,7 +465,7 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                   size: 50.0,
                 ),
               )
-                  : FutureBuilder<List<Venue>>(
+                  : FutureBuilder<List<CategoryData.Venue>>(
                 future: _venuesFuture,
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
@@ -472,16 +474,16 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                     return Text('No venues available');
                   } else {
                     _venues = snapshot.data!;
-                    return Autocomplete<Venue>(
+                    return Autocomplete<CategoryData.Venue>(
                       optionsBuilder: (TextEditingValue textEditingValue) {
                         if (textEditingValue.text.isEmpty) {
-                          return const Iterable<Venue>.empty();
+                          return const Iterable<CategoryData.Venue>.empty();
                         }
                         return _venues.where((venue) => venue.name
                             .toLowerCase()
                             .contains(textEditingValue.text.toLowerCase()));
                       },
-                      displayStringForOption: (Venue venue) => venue.name,
+                      displayStringForOption: (CategoryData.Venue venue) => venue.name,
                       fieldViewBuilder: (context, controller, focusNode, onEditingComplete) {
                         _venueController = controller;
                         return TextFormField(
@@ -496,7 +498,7 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                           value == null || value.isEmpty ? 'Please select a venue' : null,
                         );
                       },
-                      onSelected: (Venue selectedVenue) {
+                      onSelected: (CategoryData.Venue selectedVenue) {
                         setState(() {
                           _selectedVenue = selectedVenue;
                           _maxAttendees = selectedVenue.capacity;
@@ -619,7 +621,35 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                 ),
               ),
               SizedBox(height: 16.0),
-              FutureBuilder<List<String>>(
+              // FutureBuilder<List<CategoryData.Category>>(
+              //   future: _categoriesFuture,
+              //   builder: (context, snapshot) {
+              //     if (snapshot.hasError) {
+              //       return Text('Error: ${snapshot.error}');
+              //     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              //       return Text('No categories available');
+              //     } else {
+              //       _categories = snapshot.data! ;
+              //       return DropdownButton<String>(
+              //         value: _selectedCategory,
+              //         hint: Text('Select a category'),
+              //         isExpanded: true,
+              //         items: _categories.map((CategoryData.Category category) {
+              //           return DropdownMenuItem<Category>(
+              //             value: category,
+              //             child: Text(category.name),
+              //           );
+              //         }).toList(),
+              //         onChanged: (String? newValue) {
+              //           setState(() {
+              //             _selectedCategory = newValue;
+              //           });
+              //         },
+              //       );
+              //     }
+              //   },
+              // ),
+              FutureBuilder<List<CategoryData.Category>>(
                 future: _categoriesFuture,
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
@@ -627,26 +657,27 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                     return Text('No categories available');
                   } else {
-                    _categories = snapshot.data! + predefinedCategories;
+                    _categories = snapshot.data!;
                     return DropdownButton<String>(
                       value: _selectedCategory,
                       hint: Text('Select a category'),
                       isExpanded: true,
-                      items: _categories.map((String category) {
+                      items: _categories.map((CategoryData.Category category) {
                         return DropdownMenuItem<String>(
-                          value: category,
-                          child: Text(category),
+                          value: category.name,  // Use the category name as the value
+                          child: Text(category.name),
                         );
                       }).toList(),
                       onChanged: (String? newValue) {
                         setState(() {
-                          _selectedCategory = newValue;
+                          _selectedCategory = newValue;  // Update the selected category
                         });
                       },
                     );
                   }
                 },
               ),
+
 
 
               SizedBox(height: 16.0),

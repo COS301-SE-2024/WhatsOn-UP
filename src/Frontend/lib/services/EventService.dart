@@ -77,7 +77,7 @@ class EventService {
     }
 
   }
-  Future<List<String>> fetchUniqueCategories() async {
+  Future<List<Category>> fetchUniqueCategories() async {
     final uri = Uri.parse('$baseUrl/api/events/categories');
 
     try {
@@ -95,17 +95,14 @@ class EventService {
       final response = await http.get(uri, headers: headers);
       if (response.statusCode == 200) {
         print("processing..");
-        final Map<String, dynamic> decodedJson = json.decode(response.body);
-        final List<dynamic>? categoriesJson = decodedJson['data'];
+        final List<dynamic> jsonResponse = jsonDecode(response.body)['data'];
 
-        if (categoriesJson == null || categoriesJson.isEmpty) {
+        if (jsonResponse == null || jsonResponse.isEmpty) {
           print('No categories found.');
           return [];
         }
-        final List<String> categories =
-            categoriesJson.map((category) => category.toString()).toList();
-        print('Fetched categories: $categories');
-        return categories;
+
+        return   jsonResponse.map((json) => Category.fromJson(json as String)).toList();;
       } else if (response.statusCode == 401) {
         print('Unauthorized request');
         throw Exception('Unauthorized request');

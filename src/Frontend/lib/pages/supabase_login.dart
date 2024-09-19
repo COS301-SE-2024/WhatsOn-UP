@@ -434,7 +434,7 @@ class _SupabaseLoginState extends State<SupabaseLogin> {
 
         Api api = Api();
         try {
-          final response = await api.getUser(user.id);
+          final response = await api.getUser(userP.JWT!);
           if (response['error'] != null) {
             print('An error occurred: ${response['error']}');
           } else {
@@ -450,9 +450,11 @@ class _SupabaseLoginState extends State<SupabaseLogin> {
             userP.email = userEmail;
             userP.role = role;
             userP.profileImage = profileImage;
+
+            eventP.refreshRecommendations(userP.userId);
             notificationProvider _notificationProvider =
                 Provider.of<notificationProvider>(context, listen: false);
-             eventP.refreshSavedEvents(userP.userId);
+             eventP.refreshSavedEvents(userP.JWT);
             _notificationProvider.refreshNotifications(userP.userId);
             SocketService('http://${globals.domain}:8082',
                 _notificationProvider, userP.userId, context);
@@ -475,7 +477,7 @@ class _SupabaseLoginState extends State<SupabaseLogin> {
         } catch (e) {
           print('Error getting user data: $e');
         }
-        print('signup successful');
+
       }
     }
   }

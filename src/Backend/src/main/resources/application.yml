@@ -36,7 +36,4 @@ logging:
 
 bearer-token: ${BEARER_TOKEN}
 SECRET: ${SECRET}
-#
-#
-#server:
-#  port: 8080
+

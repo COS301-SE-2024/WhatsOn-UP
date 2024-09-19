@@ -54,7 +54,13 @@ class FilteredResultScreen extends StatelessWidget {
             child: ListView.builder(
               itemCount: filteredEvents.length,
               itemBuilder: (context, index) {
-                return EventCard(event: filteredEvents[index], showBookmarkButton: false);
+                return Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 22.0,
+                      vertical: 8.0,
+                    ),
+                      child: EventCard(event: filteredEvents[index], showBookmarkButton: true,),
+                );
               },
             ),
           ),

@@ -11,6 +11,7 @@ import 'package:firstapp/widgets/event_card.dart';
 import '../providers/user_provider.dart';
 import '../providers/events_providers.dart';
 import 'package:flutter/gestures.dart';
+import '../services/globals.dart' as globals;
 
 class CalendarPage extends StatefulWidget {
   const CalendarPage({super.key});
@@ -73,7 +74,7 @@ class _CalendarPageState extends State<CalendarPage>
       userProvider userP = Provider.of<userProvider>(context, listen: false);
 
       String? userId = userP.role == 'guest' ? null : userP.userId;
-      eventP.fetchfortheFirstTimeRsvp(userId!);
+      eventP.fetchfortheFirstTimeRsvp(userId!, 'guest_user'); //userP.JWT will not set at this point  
 
       List<Event> events = await eventP.eventsRsvp;
       // final parsedEvents = parseEvents(response);
@@ -176,7 +177,9 @@ class _CalendarPageState extends State<CalendarPage>
                 'available': event.venue?.available ?? false,
               }
             : null,
-        'url': 'https://picsum.photos/200',
+        'url': event.imageUrls != null && event.imageUrls!.isNotEmpty
+            ? event.imageUrls![0]
+            : globals.defaultEventURL,
         'maxAttendees': event.maxAttendees ?? 0,
         'description': event.description ?? '',
         'id': event.id,
@@ -298,6 +301,7 @@ Widget _buildEventCard(Map<String, dynamic> event) {
         maxAttendees: event['maxAttendees'],
         isPrivate: event['isPrivate'],
         metadata: Metadata.fromJson(event['metadata']),
+
       );
 /* venue: event['venue'] != null ? Venue(
         name: event['venue']['name'] ?? '',

@@ -17,8 +17,9 @@ import 'package:chewie/chewie.dart';
 
 class DetailedEventPage extends StatefulWidget {
   final Event event;
+String recommendations;
 
-  const DetailedEventPage({super.key, required this.event});
+   DetailedEventPage({super.key, required this.event,  this.recommendations=''});
 
   @override
   _DetailedEventPageState createState() => _DetailedEventPageState();
@@ -92,12 +93,20 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
 
   Future<void> _fetchEvent() async {
     try {
+      Event? event;
       EventProvider eventProvider =
           Provider.of<EventProvider>(context, listen: false);
-      Event? event = await eventProvider.getEventById(widget.event.id);
+      if(widget.recommendations=='recommendations'){
+        _thisCurrentEvent = widget.event;
+        event =await eventProvider.getEventByIdR(widget.event.id);
+      }else{
+        _thisCurrentEvent = widget.event;
+         event = await eventProvider.getEventById(widget.event.id);
+      }
+
       if (event != null) {
         setState(() {
-          _thisCurrentEvent = event;
+          _thisCurrentEvent = event!;
         });
       } else {
         print('Event with ID ${widget.event.id} not found.');
@@ -110,6 +119,10 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
   Future<void> _addToCalendar() async {
     EventProvider eventProvider =
         Provider.of<EventProvider>(context, listen: false);
+
+    userProvider userP =
+        Provider.of<userProvider>(context,listen: false);
+
     try {
       setState(() {
         _isLoading = true;
@@ -120,7 +133,7 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Successfully RSVP\'d to event!')),
       );
-      await eventProvider.refreshRSVPEvents(user!.id);
+      await eventProvider.refreshRSVPEvents(user!.id, userP.JWT);
       await eventProvider.refreshEvents();
       print(
           'amount of attendees after event added to the calendar ${_thisCurrentEvent.attendees.length}');
@@ -141,6 +154,10 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
   Future<void> _removeFromCalendar() async {
     EventProvider eventProvider =
         Provider.of<EventProvider>(context, listen: false);
+
+    userProvider userP =
+        Provider.of<userProvider>(context,listen: false);
+
     print('Removing RSVP for event: ${widget.event.id}');
     try {
       setState(() {
@@ -154,7 +171,7 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Successfully removed your RSVP from the event!')),
       );
-      await eventProvider.refreshRSVPEvents(user!.id);
+      await eventProvider.refreshRSVPEvents(user!.id, userP.JWT);
       await eventProvider.refreshEvents();
 
       setState(() {
@@ -190,6 +207,10 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
   Future<void> _editEvent() async {
     EventProvider eventProvider =
         Provider.of<EventProvider>(context, listen: false);
+
+    userProvider userP =
+        Provider.of<userProvider>(context,listen: false);
+        
     if (widget.event.id != null && widget.event.id is String) {
       print('Navigating to EditEvent with eventId: ${widget.event.id}');
       final resultEdit = await Navigator.push(
@@ -199,7 +220,7 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
       );
       if (resultEdit == true) {
         await eventProvider.refreshEvents();
-        await eventProvider.refreshRSVPEvents(user!.id);
+        await eventProvider.refreshRSVPEvents(user!.id, userP.JWT);
         Navigator.of(context).pushReplacementNamed('/home');
       }
     } else {
