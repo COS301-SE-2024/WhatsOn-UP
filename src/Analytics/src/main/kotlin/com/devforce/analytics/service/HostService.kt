@@ -3,7 +3,7 @@ package com.devforce.analytics.service
 import com.devforce.analytics.dto.EventDto
 import com.devforce.analytics.dto.MonthlyEventSummary
 import com.devforce.analytics.dto.OverallEventSummary
-import com.devforce.analytics.repo.PastEventsRepo
+import com.devforce.analytics.repo.*
 import com.devforce.analytics.security.CustomUser
 import com.devforce.backend.dto.ResponseDto
 import org.springframework.beans.factory.annotation.Autowired
@@ -18,6 +18,12 @@ import kotlin.math.sqrt
 class HostService {
     @Autowired
     private lateinit var pastEventsRepo: PastEventsRepo
+
+    @Autowired
+    private lateinit var recommendedDateRepo: RecommendedDateRepoImpl
+
+    @Autowired
+    private lateinit var recommendedVenueRepo: RecommendedVenueRepoImpl
 
     fun getPastEvents(): ResponseEntity<ResponseDto> {
         val user = SecurityContextHolder.getContext().authentication.principal
@@ -143,5 +149,32 @@ class HostService {
         } else {
             (n / ((n - 1) * (n - 2))) * values.sumOf { ((it - mean) / stdDev).pow(3) }
         }
+    }
+
+    fun getPopularEvents(): ResponseEntity<ResponseDto> {
+        val user = SecurityContextHolder.getContext().authentication.principal
+        val userModel = (user as CustomUser).userModel
+        val events = pastEventsRepo.findPastEvents(userModel.userId)
+
+        val popularEvents = events
+            .map { event -> EventDto(event) }
+            .sortedByDescending { it.attendanceRatio }
+            .take(5)
+
+        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), popularEvents)
+        )
+    }
+
+    fun getRecommendations(category: String, title: String): ResponseEntity<ResponseDto> {
+        val user = SecurityContextHolder.getContext().authentication.principal
+        val userModel = (user as CustomUser).userModel
+
+        val venues = recommendedVenueRepo.getPossibleVenues(userModel.userId, title, category)
+        val dates = recommendedDateRepo.getPossibleDates(userModel.userId, title, category)
+
+        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf(
+            "venues" to venues,
+            "dates" to dates
+        )))
     }
 }

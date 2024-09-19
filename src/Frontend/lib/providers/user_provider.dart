@@ -1,4 +1,6 @@
+import 'package:firstapp/exceptions/session_not_set_exception.dart';
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' as Supabase;
 
 import '../pages/editProfile_page.dart';
 import '../services/api.dart';
@@ -12,6 +14,7 @@ class userProvider extends ChangeNotifier {
   String _Password = '';
   String _Role = '';
   String _userId = '';
+  String? _JWT;
   String? profileimage;
   bool _isGuest = false;
   late Future<List<User>> _generaluserTohost;
@@ -24,6 +27,18 @@ class userProvider extends ChangeNotifier {
   bool get isGuest => _isGuest;
   Future<GeneralApplications>? _generalApplications;
   Future<GeneralApplications>? get generalApplications => _generalApplications;
+
+  String get JWT {
+    if(_JWT == null){
+      throw JWTNotSetException();
+    }
+    return _JWT!;
+  }
+
+   set JWT(String? value) {
+    _JWT = value;
+    notifyListeners();
+  }
 
   set generalapplications(Future<GeneralApplications>? value) {
     _generalApplications = value;
@@ -74,6 +89,7 @@ class userProvider extends ChangeNotifier {
     String? profileImage,
     required bool isGuest,
   }) {
+
     _userId = userId;
     _Fullname = fullName;
     _Email = email;
@@ -95,23 +111,40 @@ class userProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  // void clearUser() {
+  //   _userId = '';
+  //   _Fullname = '';
+  //   _Email = '';
+  //   _Password = '';
+  //   _Role = '';
+  //   profileImage = null;
+  //   _isGuest = false;
+  //   notifyListeners();
+  // }
   void clearUser() {
-    _userId = '';
-    _Fullname = '';
-    _Email = '';
-    _Password = '';
-    _Role = '';
-    profileImage = null;
-    _isGuest = false;
-    notifyListeners();
+    bool hasChanges = false;
+
+    if (_userId.isNotEmpty || _Fullname.isNotEmpty || _Email.isNotEmpty || _Password.isNotEmpty || _Role.isNotEmpty || profileimage != null || _isGuest) {
+      _userId = '';
+      _Fullname = '';
+      _Email = '';
+      _Password = '';
+      _Role = '';
+      profileimage = null;
+      _isGuest = false;
+      hasChanges = true;
+    }
+
+    if (hasChanges) {
+      notifyListeners();
+    }
   }
 
   Future<void> Generalusers(String userId) async {
     try {
       _fetchGeneralusers(userId);
-      notifyListeners();
     } catch (e) {
-      throw Exception('Failed to refresh events: $e');
+      throw Exception('Error occurred while fetching general users: $e');
     }
   }
 

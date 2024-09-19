@@ -66,6 +66,7 @@ class _SplashPageState extends State<SplashPage> {
 
     Api api = Api();
 
+    ;
     api.getUser(user!.id).then((response) {
       if (response['error'] != null) {
         print('An error occurred: ${response['error']}');
@@ -82,7 +83,7 @@ class _SplashPageState extends State<SplashPage> {
         userP.role = role;
         userP.profileImage = profileImage;
         eventP.refreshRecommendations(userP.userId);
-        eventP.refreshSavedEvents(userP.userId);
+        eventP.refreshSavedEvents(userP.JWT);
         notificationProvider _notificationProvider =
         Provider.of<notificationProvider>(context, listen: false);
         _notificationProvider.refreshNotifications(userP.userId);

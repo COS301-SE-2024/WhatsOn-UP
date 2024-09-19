@@ -28,7 +28,24 @@ void main() {
     expect(provider.profileImage, null);
     expect(provider.isGuest, false);
   });
+  test('setGuestUser -see if it gets populated', () {
+    final listener = Listener();
+    bool didNotify = false;
+    provider.addListener(() {
+      didNotify = true;
+    });
+    provider.setGuestUser();
 
+
+    expect(provider.userId, 'guest');
+    expect(provider.Fullname, 'Guest User');
+    expect(provider.email, '');
+    expect(provider.password, '');
+    expect(provider.role, 'GUEST');
+    expect(provider.profileImage, null);
+    expect(provider.isGuest, true);
+    expect(didNotify, true);
+  });
   test('setUserData updates user data and notifies listeners', () {
     final listener = Listener();
     bool didNotify = false;
@@ -53,6 +70,40 @@ void main() {
     expect(provider.role, 'USER');
     expect(provider.profileImage, 'https://example.com/image.jpg');
     expect(provider.isGuest, false);
+    expect(didNotify, true);
+  });
+  test('Testing if setting up other parameters work', () {
+    final listener = Listener();
+    bool didNotify = false;
+    provider.addListener(() {
+      didNotify = true;
+    });
+
+    provider.setUserData(
+      userId: '123',
+      fullName: 'John Doe',
+      email: 'john@example.com',
+      password: 'password123',
+      role: 'USER',
+      profileImage: 'https://example.com/image.jpg',
+      isGuest: false,
+    );
+provider.isGuest = true;
+provider.Fullname = 'John Doe1';
+provider.email = 'john@example.com1';
+provider.password = 'password1234';
+provider.role = 'ADMIN';
+provider.profileImage = 'https://example.com/image1.jpg';
+provider.userId = '1234';
+provider.JWT = '1234';
+    expect(provider.userId, '1234');
+    expect(provider.Fullname, 'John Doe1');
+    expect(provider.email, 'john@example.com1');
+    expect(provider.password, 'password1234');
+    expect(provider.role, 'ADMIN');
+    expect(provider.profileImage, 'https://example.com/image1.jpg');
+    expect(provider.isGuest, true);
+    expect(provider.JWT, '1234');
     expect(didNotify, true);
   });
 
@@ -116,6 +167,67 @@ void main() {
     expect(provider.isGuest, false);
     expect(didNotify, true);
   });
+
+
+
+
+  test('clearUser does not notify listeners if data is already cleared', () {
+    // Set initial data
+    provider.setUserData(
+      userId: '123',
+      fullName: 'John Doe',
+      email: 'john@example.com',
+      password: 'password123',
+      role: 'USER',
+      profileImage: 'https://example.com/image.jpg',
+      isGuest: false,
+    );
+
+    bool didNotify = false;
+    provider.addListener(() {
+      didNotify = true;
+    });
+
+
+    provider.clearUser();
+
+
+    expect(didNotify, isTrue);
+
+
+    didNotify = false;
+
+
+    provider.clearUser();
+    expect(didNotify, isFalse);
+  });
+
+  test('fetchGeneralusers updates generalApplications with empty data', () async {
+    final emptyResponse = {
+      'status': 'success',
+      'timestamp': 1234567890,
+      'data': [],
+    };
+
+    final emptyGeneralApplications = GeneralApplications.fromJson(emptyResponse);
+
+    when(mockApi.getGeneralusersToHost(any)).thenAnswer((_) async => emptyGeneralApplications);
+
+    bool didNotify = false;
+    provider.addListener(() {
+      didNotify = true;
+    });
+
+    await provider.Generalusers('user1');
+
+    expect(provider.generalApplications, isA<Future<GeneralApplications>>());
+    final fetchedGeneralApplications = await provider.generalApplications;
+    expect(fetchedGeneralApplications?.data.length, 0);
+    expect(didNotify, true);
+  });
+
+
+
 }
 
 class Listener extends ChangeNotifier {
