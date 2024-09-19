@@ -148,11 +148,11 @@ class MockApi extends _i1.Mock implements _i3.Api {
       ) as _i5.Future<List<_i6.Event>>);
 
   @override
-  _i5.Future<List<_i6.Event>> getRecommendedEvents(String? userId) =>
+  _i5.Future<List<_i6.Event>> getRecommendedEvents(String? JWT) =>
       (super.noSuchMethod(
         Invocation.method(
           #getRecommendedEvents,
-          [userId],
+          [JWT],
         ),
         returnValue: _i5.Future<List<_i6.Event>>.value(<_i6.Event>[]),
       ) as _i5.Future<List<_i6.Event>>);
@@ -169,14 +169,14 @@ class MockApi extends _i1.Mock implements _i3.Api {
   @override
   _i5.Future<Map<String, dynamic>> postChangeUser(
     String? name,
-    String? userId,
+    String? JWT,
   ) =>
       (super.noSuchMethod(
         Invocation.method(
           #postChangeUser,
           [
             name,
-            userId,
+            JWT,
           ],
         ),
         returnValue:
@@ -186,14 +186,14 @@ class MockApi extends _i1.Mock implements _i3.Api {
   @override
   _i5.Future<Map<String, dynamic>> updatePassword(
     String? password,
-    String? userId,
+    String? JWT,
   ) =>
       (super.noSuchMethod(
         Invocation.method(
           #updatePassword,
           [
             password,
-            userId,
+            JWT,
           ],
         ),
         returnValue:
@@ -637,7 +637,7 @@ class MockApi extends _i1.Mock implements _i3.Api {
 
   @override
   _i5.Future<Map<String, dynamic>> postRecommendationData({
-    required String? userId,
+    required String? JWT,
     required Map<String, dynamic>? data,
   }) =>
       (super.noSuchMethod(
@@ -645,7 +645,7 @@ class MockApi extends _i1.Mock implements _i3.Api {
           #postRecommendationData,
           [],
           {
-            #userId: userId,
+            #JWT: JWT,
             #data: data,
           },
         ),
