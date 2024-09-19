@@ -52,11 +52,11 @@ class HostController {
 
     @GetMapping("/generate_autofill")
     fun generateDescription(
-        @Param("category") category: String,
+        @Param("description") description: String,
         @Param("title") title: String
     ): ResponseEntity<ResponseDto> {
         val formattedResponse: MutableMap<String, String> = HashMap()
-        formattedResponse["category"] = category
+        formattedResponse["description"] = description
         formattedResponse["title"] = title
 
         val responseString = formattedResponse.toString()

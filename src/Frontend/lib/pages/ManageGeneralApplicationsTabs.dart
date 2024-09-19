@@ -76,8 +76,6 @@ class UserList extends StatelessWidget {
                 margin:
                     const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.white, width: 1.0),
-                  borderRadius: BorderRadius.circular(8.0),
                 ),
                 child: Material(
                   child: ListTile(
@@ -125,6 +123,44 @@ class Applicant extends StatefulWidget {
 
 class _ApplicantState extends State<Applicant> {
   bool _isLoading = false;
+// Function to return color based on status
+  Color _getStatusColor(String status) {
+    switch (status) {
+      case 'PENDING':
+        return Colors.orange;
+      case 'VERIFIED':
+        return Color.fromARGB(255, 0, 128, 132);
+      case 'ACCEPTED':
+        return Color.fromARGB(255, 0, 150, 243);
+      case 'REJECTED':
+        return Colors.red;
+      case 'DISPUTED':
+        return Colors.purple;
+      case 'ACKNOWLEDGED':
+        return Color.fromARGB(255, 135, 67, 20);
+      default:
+        return Colors.grey; // Default color
+    }
+  }
+
+// Function to return icon based on status
+  IconData _getStatusIcon(String status) {
+    switch (status) {
+      case 'PENDING':
+        return Icons.hourglass_empty;
+      case 'VERIFIED':
+        return Icons.verified;
+        return Icons.thumb_up;
+      case 'REJECTED':
+        return Icons.cancel;
+      case 'DISPUTED':
+        return Icons.warning;
+      case 'ACKNOWLEDGED':
+        return Icons.check_circle_outline;
+      default:
+        return Icons.info;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -180,7 +216,7 @@ class _ApplicantState extends State<Applicant> {
                           ),
                         );
                       },
-                      child: Text(
+                      child: const Text(
                         'Click here to view the application details',
                         textAlign: TextAlign.center,
                         style: TextStyle(
@@ -191,25 +227,35 @@ class _ApplicantState extends State<Applicant> {
                     ),
                   ),
                 ),
-                // SizedBox(height: 10.0),
-                // Padding(
-                //   padding: const EdgeInsets.all(16.0),
-                //   child: Text(
-                //     'Duration: ${widget.user.expiryDateTime}',
-                //     textAlign: TextAlign.center,
-                //     style: TextStyle(fontSize: 18.0),
-                //   ),
-                // ),
-                SizedBox(height: 10.0),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text(
-                    'Status: ${widget.user.status.name}',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 18.0),
+
+                SizedBox(height: 20.0),
+
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: _getStatusColor(widget.user.status.name), // Background color based on status
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        _getStatusIcon(widget.user.status.name), // Icon based on status
+                        color: Colors.white,
+                      ),
+                      SizedBox(width: 8),
+                      Text(
+                        'Status: ${widget.user.status.name}',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                SizedBox(height: 10.0),
+                SizedBox(height: 40.0),
                  if (widget.user.status.name == 'PENDING')
                   Padding(
                     padding: const EdgeInsets.all(16.0),
@@ -235,44 +281,14 @@ class _ApplicantState extends State<Applicant> {
                           },
                           style: ElevatedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 20.0), // Adjust padding if needed
+                                horizontal: 20.0),
                           ),
                           child: Text('Demote'),
                         ),
                       ],
                     ),
                   ),
-                ] else if (widget.user.status.name == 'VERIFIED') ...[
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            _updateApplication(context, 'Reject');
-                          },
-                          style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 20.0), // Adjust padding if needed
-                          ),
-                          child: Text('Reject'),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            _updateApplication(context, 'Accept');
-                          },
-                          style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 20.0), // Adjust padding if needed
-                          ),
-                          child: Text('Accept'),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-                if (widget.user.proofUrl != null && widget.user.status.name == 'PENDING') ...[
+                ] else if (widget.user.status.name == 'VERIFIED' || (widget.user.proofUrl != null && widget.user.status.name == 'PENDING')|| (widget.user.proofUrl != null && widget.user.status.name =='VERIFIED')) ...[
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Row(
@@ -302,36 +318,66 @@ class _ApplicantState extends State<Applicant> {
                     ),
                   ),
                 ],
-                if (widget.user.proofUrl != null && widget.user.status.name =='VERIFIED') ...[
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            _updateApplication(context, 'Reject');
-                          },
-                          style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 20.0),
-                          ),
-                          child: Text('Reject'),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            _updateApplication(context, 'Accept');
-                          },
-                          style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 20.0),
-                          ),
-                          child: Text('Accept'),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+                // if (widget.user.proofUrl != null && widget.user.status.name == 'PENDING') ...[
+                //   Padding(
+                //     padding: const EdgeInsets.all(16.0),
+                //     child: Row(
+                //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                //       children: [
+                //         ElevatedButton(
+                //           onPressed: () {
+                //             _updateApplication(context, 'Reject');
+                //           },
+                //           style: ElevatedButton.styleFrom(
+                //             padding: const EdgeInsets.symmetric(
+                //                 horizontal: 20.0),
+                //           ),
+                //           child: Text('Reject'),
+                //         ),
+                //         ElevatedButton(
+                //           onPressed: () {
+                //             _updateApplication(context, 'Accept');
+                //           },
+                //           style: ElevatedButton.styleFrom(
+                //             padding: const EdgeInsets.symmetric(
+                //                 horizontal: 20.0),
+                //           ),
+                //           child: Text('Accept'),
+                //         ),
+                //       ],
+                //     ),
+                //   ),
+                // ],
+                // if (widget.user.proofUrl != null && widget.user.status.name =='VERIFIED') ...[
+                //   Padding(
+                //     padding: const EdgeInsets.all(16.0),
+                //     child: Row(
+                //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                //       children: [
+                //         ElevatedButton(
+                //           onPressed: () {
+                //             _updateApplication(context, 'Reject');
+                //           },
+                //           style: ElevatedButton.styleFrom(
+                //             padding: const EdgeInsets.symmetric(
+                //                 horizontal: 20.0),
+                //           ),
+                //           child: Text('Reject'),
+                //         ),
+                //         ElevatedButton(
+                //           onPressed: () {
+                //             _updateApplication(context, 'Accept');
+                //           },
+                //           style: ElevatedButton.styleFrom(
+                //             padding: const EdgeInsets.symmetric(
+                //                 horizontal: 20.0),
+                //           ),
+                //           child: Text('Accept'),
+                //         ),
+                //       ],
+                //     ),
+                //   ),
+                // ],
               ],
             ),
     );

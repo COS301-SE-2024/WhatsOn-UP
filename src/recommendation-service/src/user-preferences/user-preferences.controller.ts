@@ -1,7 +1,7 @@
-import { Body, Controller, Param, Post, Headers, UnauthorizedException, Put } from '@nestjs/common';
+import { Body, Controller, Param, Post, Headers, UnauthorizedException, Put, Get } from '@nestjs/common';
 import { UserPreferencesService } from './user-preferences.service';
 import { InitPreferencesDto } from './dto/init-preferences.dto';
-import { GetUserId } from '../get-user-id.decorator';
+import { extractUserIdFromToken, GetAccessToken } from '../auth';
 
 @Controller('preferences')
 export class UserPreferencesController {
@@ -9,10 +9,10 @@ export class UserPreferencesController {
 
   @Post('init')
   async initPreferences(
-    @GetUserId() userId: string,
+    @GetAccessToken() accessToken: string,
     @Body() initPreferencesDto: InitPreferencesDto
   ) {
-    console.log('Token: ', userId);
+    const userId = extractUserIdFromToken(accessToken);
     return this.userPreferencesService.initPreferences(userId, initPreferencesDto);
   }
 
