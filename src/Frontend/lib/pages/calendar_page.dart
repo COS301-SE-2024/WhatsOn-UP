@@ -34,12 +34,7 @@ class _CalendarPageState extends State<CalendarPage>
       _fetchEvents();
     });
   }
-  // @override
-  // void didChangeDependencies() {
-  //   super.didChangeDependencies();
-  //   _fetchRSVPEvents();
-  //
-  // }
+
 
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
@@ -47,26 +42,6 @@ class _CalendarPageState extends State<CalendarPage>
   Map<DateTime, List<Map<String, dynamic>>> _groupedEvents = {};
   bool _isLoading = true;
 
-  // Future<void> _fetchRSVPEvents() async {
-
-  //   try {
-  //     EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
-  //     final response = await eventP.eventsRsvp;
-
-  //     final parsedEvents = parseEvents(response);
-
-  //     setState(() {
-  //       _groupedEvents = _groupEventsByDate(parsedEvents);
-  //       _isLoading = false;
-  //     });
-
-  //   } catch (e) {
-  //     print('RSVP Error: $e');
-  //     setState(() {
-  //       _isLoading = false;
-  //     });
-  //   }
-  // }
 
   Future<void> _fetchEvents() async {
     try {
@@ -288,19 +263,6 @@ Widget _buildEventCard(Map<String, dynamic> event) {
         metadata: Metadata.fromJson(event['metadata']),
 
       );
-/* venue: event['venue'] != null ? Venue(
-        name: event['venue']['name'] ?? '',
-        boards: event['venue']['boards'] ?? '',
-        ac: event['venue']['ac'] ?? false,
-        wifi: event['venue']['wifi'] ?? false,
-        dataProject: event['venue']['dataProject'] ?? 0,
-        docCam: event['venue']['docCam'] ?? false,
-        mic: event['venue']['mic'] ?? false,
-        windows: event['venue']['windows'] ?? false,
-        capacity: event['venue']['capacity'] ?? 0,
-        available: event['venue']['available'] ?? false,
-        venueId: '', // addded via reccomendations
-      ) : null,*/
       Navigator.push(
         context,
         MaterialPageRoute(
