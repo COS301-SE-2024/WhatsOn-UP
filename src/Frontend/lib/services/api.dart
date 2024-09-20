@@ -70,7 +70,7 @@ class Api {
   Future<Map<String, dynamic>> getUserDetails() async {
     try {
       
-      final String _userUrl = 'https://${globals.gatewayDomain}:8080/api/auth/get_user';
+      final String _userUrl = 'https://${globals.gatewayDomain}/api/auth/get_user';
       var headers = {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
@@ -233,7 +233,7 @@ class Api {
   Future<Map<String, dynamic>> postChangeUser(
       String name, String JWT) async {
     var userChangeUrl =
-        Uri.parse('https://${globals.gatewayDomain}:8080/api/user/update_profile?fullName=$name');
+        Uri.parse('https://${globals.gatewayDomain}/api/user/update_profile?fullName=$name');
 
     var headers = {
       'Content-Type': 'application/json',
@@ -258,7 +258,7 @@ class Api {
   Future<Map<String, dynamic>> updatePassword(
       String password, String JWT) async {
     var Url =
-        Uri.parse('https://${globals.gatewayDomain}:8080/api/auth/reset_password');
+        Uri.parse('https://${globals.gatewayDomain}/api/auth/reset_password');
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -292,16 +292,16 @@ class Api {
     Map<String, String>? metadata,
     bool? isPrivate,
     //List<String>? media,
-    required String userId,
+    required String JWT,
     //List<String> imageUrls,
   }) async {
     final String _createEventUrl =
-        'https://${globals.gatewayDomain}:8080/api/events/create';
+        'https://${globals.gatewayDomain}/api/events/create';
 
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Authorization': 'Bearer $userId',
+      'Authorization': 'Bearer $JWT',
     };
     var body = jsonEncode({
       'title': title,
@@ -585,17 +585,17 @@ class Api {
   }
 
   Future<Map<String, dynamic>> postUsername(
-      String username, String userid) async {
+      String username, String JWT) async {
     String encodedUsername = Uri.encodeComponent(username);
     var userChangeUrl = Uri.parse(
-        'http://${globals.domain}:8080/api/user/update_profile?fullName=$encodedUsername');
+        'https://${globals.gatewayDomain}/api/user/update_profile?fullName=$encodedUsername');
 
     print("Username received in postUsername: $username");
     print("Encoded url: $userChangeUrl");
 
     var headers = {
       'Accept': 'application/json',
-      'Authorization': 'Bearer $userid',
+      'Authorization': 'Bearer $JWT',
     };
 
     try {
@@ -1082,14 +1082,14 @@ class Api {
     }
   }
 
-  Future<List<Category>> getCategories({required String userId}) async {
+  Future<List<Category>> getCategories({required String JWT}) async {
     String notifyUserUrl =
-        'http://${globals.domain}:8080/api/events/categories';
+        'https://${globals.gatewayDomain}/api/events/categories';
 
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Authorization': 'Bearer $userId',
+      'Authorization': 'Bearer $JWT',
     };
 
     try {
@@ -1114,7 +1114,7 @@ class Api {
     required String JWT,
     required Map<String, dynamic> data,
   }) async {
-    String notifyUserUrl = 'http://${globals.domain}:8086/preferences/init';
+    String notifyUserUrl = 'https://${globals.gatewayDomain}/preferences/init';
 
     var headers = {
       'Content-Type': 'application/json',
@@ -1149,7 +1149,7 @@ class Api {
           'http://${globals.gatewayDomain}/api/user/rate_event/$eventId?rating=$rating';
     } else {
       rateEventURL =
-          'http://${globals.gatewayDomain}:8080/api/user/rate_event/$eventId?comment=${Uri.encodeComponent(comment)}&rating=$rating';
+          'http://${globals.gatewayDomain}/api/user/rate_event/$eventId?comment=${Uri.encodeComponent(comment)}&rating=$rating';
     }
 
     var headers = {

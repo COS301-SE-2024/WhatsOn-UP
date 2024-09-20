@@ -734,7 +734,7 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                         maxParticipants: _maxAttendees,
                         metadata: metadata,
                         isPrivate: !_isPublic,
-                        userId: userId,
+                        JWT: userP.JWT,
 
                       );
                       Api api = Api();

@@ -185,7 +185,8 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
     userProvider userP = Provider.of<userProvider>(context, listen: false);
     EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
     Api api = Api();
-    api.postUsername(fullname, user!.id).then((response) {
+    user!;
+    api.postUsername(fullname, userP.JWT).then((response) {
       if (response['error'] != null) {
         print('An error occurred: ${response['error']}');
       } else {
