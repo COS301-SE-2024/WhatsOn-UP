@@ -41,7 +41,7 @@ jobs:
       - name: Set up Google Cloud authentication
         run: |
           echo "${GCP_SERVICE_ACCOUNT_KEY}" > ${HOME}/gcloud-service-key.json
-          cat ${HOME}/gcloud-service-key.json
+          cat >${HOME}/gcloud-service-key.json
           ls ${HOME}
           
         env:
