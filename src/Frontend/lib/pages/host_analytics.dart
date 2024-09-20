@@ -22,7 +22,7 @@ class _HostAnalyticsPageState extends State<HostAnalyticsPage> {
     // print ("USER ID: ${userP.userId}");
 
     try {
-      final response = await api.getAllEventsAnalytics(userP.userId);
+      final response = await api.getAllEventsAnalytics(userP.JWT);
       // final response = await api.getHostEventAnalytics("69ae72bc-8e2b-4400-b608-29f048d4f8c7");
       
       // print('EVENTS ANALYTICS RESPONSE: $response');
@@ -55,7 +55,7 @@ class _HostAnalyticsPageState extends State<HostAnalyticsPage> {
     userProvider userP = Provider.of<userProvider>(context, listen: false);
 
     try {
-      final response = await api.getHostPopularEvents(userP.userId);
+      final response = await api.getHostPopularEvents(userP.JWT);
       // final response = await api.getHostPopularEvents("69ae72bc-8e2b-4400-b608-29f048d4f8c7");
       // print('POPULAR EVENTS RESPONSE: $response');
 

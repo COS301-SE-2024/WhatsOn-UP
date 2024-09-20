@@ -1223,13 +1223,13 @@ class Api {
     }
   }
 
-  Future<Map<String, dynamic>> getAllEventsAnalytics(String userId) async {
-    final String getAllAnalyticsURL = 'http://${globals.domain}:8084/analytics/admin/get_all_events';
+  Future<Map<String, dynamic>> getAllEventsAnalytics(String JWT) async {
+    final String getAllAnalyticsURL = 'https://${globals.gatewayDomain}/analytics/admin/get_all_events';
 
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Authorization': 'Bearer $userId',
+      'Authorization': 'Bearer $JWT',
     };
 
     try {
@@ -1247,13 +1247,13 @@ class Api {
     }
   }
 
-  Future<Map<String, dynamic>> getAllHostsAnalytics(String userId) async {
-    final String getAllHostsAnalyticsURL = 'http://${globals.domain}:8084/analytics/admin/get_for_all_hosts';
+  Future<Map<String, dynamic>> getAllHostsAnalytics(String JWT) async {
+    final String getAllHostsAnalyticsURL = 'https://${globals.gatewayDomain}/analytics/admin/get_for_all_hosts';
 
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Authorization': 'Bearer $userId',
+      'Authorization': 'Bearer $JWT',
     };
 
     try {
@@ -1273,7 +1273,7 @@ class Api {
 
 
   Future<Map<String, dynamic>> getHostEventAnalytics(String userId, String JWT) async {
-    final String getHostEventAnalyticsURL = 'http://${globals.gatewayDomain}/analytics/admin/get_past_events_by_host/${userId}';
+    final String getHostEventAnalyticsURL = 'https://${globals.gatewayDomain}/analytics/admin/get_past_events_by_host/${userId}';
 
     var headers = {
       'Content-Type': 'application/json',
@@ -1296,13 +1296,14 @@ class Api {
     }
   }
 
-  Future<Map<String, dynamic>> getAllPopularEvents(String userId) async {
-    final String getAllPopularEventsURL = 'http://${globals.domain}:8084/analytics/admin/get_popular_events';
+  Future<Map<String, dynamic>> getAllPopularEvents(String JWT) async {
+    final String getAllPopularEventsURL = 'https://${globals.gatewayDomain}/analytics/admin/get_popular_events';
 
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Authorization': 'Bearer $userId',
+
+      'Authorization': 'Bearer $JWT',
     };
 
     try {
@@ -1320,13 +1321,13 @@ class Api {
     }
   }
 
-  Future<Map<String, dynamic>> getHostPopularEvents(String userId) async {
-  final String getHostPopularEventsURL = 'http://${globals.domain}:8084/analytics/host/get_popular_events';
+  Future<Map<String, dynamic>> getHostPopularEvents(String JWT) async {
+  final String getHostPopularEventsURL = 'https://${globals.gatewayDomain}/analytics/host/get_popular_events';
 
   var headers = {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
-    'Authorization': 'Bearer $userId',
+    'Authorization': 'Bearer $JWT',
   };
 
   try {

@@ -29,7 +29,7 @@ class _AdminAnalyticsPageState extends State<AdminAnalyticsPage> with SingleTick
     Future<void> _getAllEventsAnalytics() async {
     userProvider userP = Provider.of<userProvider>(context, listen: false);
     try {
-      final response = await api.getAllEventsAnalytics(userP.userId);
+      final response = await api.getAllEventsAnalytics(userP.JWT);
       // print('EVENTS ANALYTICS RESPONSE: $response');
 
       List<MonthlySummary> summaries = parseMonthlySummaries(response['data']);
@@ -50,7 +50,7 @@ class _AdminAnalyticsPageState extends State<AdminAnalyticsPage> with SingleTick
   Future<void> _fetchHostData() async {
     userProvider userP = Provider.of<userProvider>(context, listen: false);
     try {
-      final response = await api.getAllHostsAnalytics(userP.userId);
+      final response = await api.getAllHostsAnalytics(userP.JWT);
 
       // print("HOST DATA: $response");
 
@@ -76,7 +76,7 @@ class _AdminAnalyticsPageState extends State<AdminAnalyticsPage> with SingleTick
   Future<void> _fetchPopularEvents() async {
     userProvider userP = Provider.of<userProvider>(context, listen: false);
     try {
-      final response = await api.getAllPopularEvents(userP.userId);
+      final response = await api.getAllPopularEvents(userP.JWT);
       // print('POPULAR EVENTS RESPONSE: $response');
 
       setState(() {

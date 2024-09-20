@@ -12,7 +12,7 @@ import 'package:firstapp/widgets/event_card.dart';
 class EventService {
   final SupabaseClient supabase;
   EventService(this.supabase);
-  static final String baseUrl = 'http://${globals.domain}:8080';
+  static final String baseUrl = 'https://${globals.gatewayDomain}';
 
   Future<String?> _getJwtToken() async {
     final session = supabase.auth.currentSession;
