@@ -33,7 +33,7 @@ export class UserRecommendationsService {
 
     // Get all events
     const { data: events, error: catErr} = await this.supabase
-    .rpc("get_all_events_with_categories");
+    .rpc("get_all_events_with_categories_uuid", {userid: userID});
 
     if (catErr) {
     throw new Error(`Error fetching all events: ${catErr.message}`);
