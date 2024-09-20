@@ -321,7 +321,7 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
     userProvider userP = Provider.of<userProvider>(context, listen: false);
 
     try {
-      final response = await Api().getAutofillData(userP.userId, eventName, eventDescription);
+      final response = await Api().getAutofillData(userP.JWT, eventName, eventDescription);
 
       if (response['data'] != null) {
         setState(() {
@@ -749,7 +749,7 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                             XFile file = media['file'];
                             String originalFilename = media['name'];
                             Uint8List mediaBytes = await file.readAsBytes();
-                            await api.eventUploadImage(mediaBytes, userP.userId, response['data']['id'], originalFilename);
+                            await api.eventUploadImage(mediaBytes, userP.JWT, response['data']['id'], originalFilename);
                           }
 
 

@@ -171,7 +171,7 @@ userProvider userP = Provider.of<userProvider>(context, listen: false);
 
     Api api = Api();
     try {
-      await api.deleteNotification(widget.notification.notificationId, userP.userId);
+      await api.deleteNotification(widget.notification.notificationId, userP.JWT);
       print("Notification deleted");    
       _notificationProvider.removeNotification(widget.notification.notificationId);
       await _notificationProvider.refreshNotifications(userP.JWT);

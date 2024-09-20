@@ -259,7 +259,7 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
 
     if (confirmDelete ?? false) {
       Api api = Api();
-      api.DeleteEvent(_thisCurrentEvent.id, userP.userId)
+      api.DeleteEvent(_thisCurrentEvent.id, userP.JWT)
           .then((response) async {
         if (response['status'] == 'success') {
           print('Event deleted successfully. Response: $response');

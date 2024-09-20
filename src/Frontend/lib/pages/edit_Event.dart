@@ -409,12 +409,13 @@ class _EditEventState extends State<EditEvent> {
           XFile file = media['file'];
           String originalFilename = media['name'];
           Uint8List mediaBytes = await file.readAsBytes();
-          await api.eventUploadImage(mediaBytes, userP.userId, widget.eventId, originalFilename);
+          await api.eventUploadImage(mediaBytes, userP.JWT, widget.eventId, originalFilename);
         }
+      
 
         api
             .updateEvent(
-          userId: userSuperbase!.id,
+          JWT: userP.JWT,
           eventId: _thisCurrentEvent.id,
           title: eventNameController.text,
           description: eventDescriptionController.text,

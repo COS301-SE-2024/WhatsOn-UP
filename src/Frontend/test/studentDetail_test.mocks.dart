@@ -369,14 +369,14 @@ class MockApi extends _i1.Mock implements _i3.Api {
   @override
   _i5.Future<Map<String, dynamic>> DeleteEvent(
     String? eventId,
-    String? userid,
+    String? JWT,
   ) =>
       (super.noSuchMethod(
         Invocation.method(
           #DeleteEvent,
           [
             eventId,
-            userid,
+            JWT,
           ],
         ),
         returnValue:
@@ -421,7 +421,7 @@ class MockApi extends _i1.Mock implements _i3.Api {
 
   @override
   _i5.Future<Map<String, dynamic>> updateEvent({
-    required String? userId,
+    required String? JWT,
     required String? eventId,
     required String? title,
     required String? description,
@@ -438,7 +438,7 @@ class MockApi extends _i1.Mock implements _i3.Api {
           #updateEvent,
           [],
           {
-            #userId: userId,
+            #JWT: JWT,
             #eventId: eventId,
             #title: title,
             #description: description,
@@ -475,7 +475,7 @@ class MockApi extends _i1.Mock implements _i3.Api {
   @override
   _i5.Future<Map<String, dynamic>> eventUploadImage(
     _i8.Uint8List? mediaBytes,
-    String? userId,
+    String? JWT,
     String? eventId,
     String? originalFilename,
   ) =>
@@ -484,7 +484,7 @@ class MockApi extends _i1.Mock implements _i3.Api {
           #eventUploadImage,
           [
             mediaBytes,
-            userId,
+            JWT,
             eventId,
             originalFilename,
           ],
@@ -523,7 +523,7 @@ class MockApi extends _i1.Mock implements _i3.Api {
   _i5.Future<Map<String, dynamic>> broadcastEvent(
     String? eventId,
     String? message,
-    String? userId,
+    String? JWT,
   ) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -531,7 +531,7 @@ class MockApi extends _i1.Mock implements _i3.Api {
           [
             eventId,
             message,
-            userId,
+            JWT,
           ],
         ),
         returnValue:
@@ -541,14 +541,14 @@ class MockApi extends _i1.Mock implements _i3.Api {
   @override
   _i5.Future<Map<String, dynamic>> broadcast(
     String? message,
-    String? userId,
+    String? JWT,
   ) =>
       (super.noSuchMethod(
         Invocation.method(
           #broadcast,
           [
             message,
-            userId,
+            JWT,
           ],
         ),
         returnValue:
@@ -656,7 +656,7 @@ class MockApi extends _i1.Mock implements _i3.Api {
   @override
   _i5.Future<Map<String, dynamic>> rateEvent(
     String? eventId,
-    String? userID,
+    String? JWT,
     int? rating,
     String? comment,
   ) =>
@@ -665,7 +665,7 @@ class MockApi extends _i1.Mock implements _i3.Api {
           #rateEvent,
           [
             eventId,
-            userID,
+            JWT,
             rating,
             comment,
           ],
@@ -694,14 +694,14 @@ class MockApi extends _i1.Mock implements _i3.Api {
   @override
   _i5.Future<Map<String, dynamic>> deleteNotification(
     String? notificationId,
-    String? userId,
+    String? JWT,
   ) =>
       (super.noSuchMethod(
         Invocation.method(
           #deleteNotification,
           [
             notificationId,
-            userId,
+            JWT,
           ],
         ),
         returnValue:
@@ -731,11 +731,17 @@ class MockApi extends _i1.Mock implements _i3.Api {
       ) as _i5.Future<Map<String, dynamic>>);
 
   @override
-  _i5.Future<Map<String, dynamic>> getHostEventAnalytics(String? userId) =>
+  _i5.Future<Map<String, dynamic>> getHostEventAnalytics(
+    String? userId,
+    String? JWT,
+  ) =>
       (super.noSuchMethod(
         Invocation.method(
           #getHostEventAnalytics,
-          [userId],
+          [
+            userId,
+            JWT,
+          ],
         ),
         returnValue:
             _i5.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
@@ -782,7 +788,7 @@ class MockApi extends _i1.Mock implements _i3.Api {
 
   @override
   _i5.Future<Map<String, dynamic>> getAutofillData(
-    String? userId,
+    String? JWT,
     String? eventName,
     String? eventDescription,
   ) =>
@@ -790,7 +796,7 @@ class MockApi extends _i1.Mock implements _i3.Api {
         Invocation.method(
           #getAutofillData,
           [
-            userId,
+            JWT,
             eventName,
             eventDescription,
           ],
