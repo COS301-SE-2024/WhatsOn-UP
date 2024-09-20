@@ -562,13 +562,13 @@ class Api {
   }
 
   Future<Map<String, dynamic>> DeleteEvent(
-      String eventId, String userid) async {
+      String eventId, String JWT) async {
     var Url =
-        Uri.parse('http://${globals.domain}:8080/api/events/remove/$eventId');
+        Uri.parse('https://${globals.gatewayDomain}/api/events/remove/$eventId');
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Authorization': 'Bearer $userid',
+      'Authorization': 'Bearer $JWT',
     };
 
     try {
@@ -639,7 +639,7 @@ class Api {
 
   Future<List<dynamic>> getAllEventsGuest() async {
     try {
-      final _rsvpEventsURL = 'http://${globals.domain}:8080/api/events/get_all';
+      final _rsvpEventsURL = 'https://${globals.gatewayDomain}/api/events/get_all';
       var headers = {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
@@ -660,7 +660,7 @@ class Api {
   }
 
   Future<Map<String, dynamic>> updateEvent({
-    required String userId,
+    required String JWT,
     required String eventId,
     required String title,
     required String description,
@@ -673,12 +673,12 @@ class Api {
     List<String>? media,
   }) async {
     final String _userUrl =
-        'http://${globals.domain}:8080/api/events/update/$eventId';
+        'https://${globals.gatewayDomain}/api/events/update/$eventId';
 
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Authorization': 'Bearer $userId',
+      'Authorization': 'Bearer $JWT',
     };
     print(location);
     var body = jsonEncode({
@@ -785,7 +785,7 @@ class Api {
     }
   }*/
   Future<Map<String, dynamic>> eventUploadImage(Uint8List mediaBytes,
-      String userId, String eventId, String originalFilename) async {
+      String JWT, String eventId, String originalFilename) async {
     String generateFilename(String eventId, String originalFilename) {
       final timestamp = DateTime.now().millisecondsSinceEpoch;
       final extension = path.extension(originalFilename);
@@ -793,10 +793,10 @@ class Api {
     }
 
     final uri = Uri.parse(
-        'http://${globals.domain}:8083/media/upload?event_id=$eventId');
+        'https://${globals.gatewayDomain}/media/upload?event_id=$eventId');
 
     final request = http.MultipartRequest('POST', uri);
-    request.headers['Authorization'] = 'Bearer $userId';
+    request.headers['Authorization'] = 'Bearer $JWT';
 
     final filename = generateFilename(eventId, originalFilename);
 
@@ -965,12 +965,12 @@ class Api {
   }
 
   static Future<void> inviteUser(
-      String eventId, String userId, String inviteeUserId) async {
+      String eventId, String JWT, String inviteeUserId) async {
     final response = await http.put(
       Uri.parse(
-          'http://${globals.domain}:8080/api/interactions/send_invite?eventId=$eventId&userId=$inviteeUserId'),
+          'https://${globals.gatewayDomain}/api/interactions/send_invite?eventId=$eventId&userId=$inviteeUserId'),
       headers: {
-        'Authorization': 'Bearer $userId', // Adjust for authentication
+        'Authorization': 'Bearer $JWT', // Adjust for authentication
         'Content-Type': 'application/json',
       },
     );
