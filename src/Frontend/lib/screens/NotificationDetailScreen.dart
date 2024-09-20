@@ -14,6 +14,7 @@ class NotificationDetailScreen extends StatefulWidget {
   final AppNotification notification;
 
   NotificationDetailScreen({required this.notification});
+  
 
   @override
   _NotificationDetailScreenState createState() =>
@@ -29,6 +30,8 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
   }
 
   Future<void> _Accept() async {
+  userProvider userP = Provider.of<userProvider>(context, listen: false);
+
     setState(() {
       isLoading = true;
     });
@@ -36,7 +39,7 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
     Api api = Api();
     try {
       var response = await api.AcceptInvite(
-          userId: widget.notification.userId,
+          JWT: userP.JWT,
           notificationId: widget.notification.notificationId);
 
       if (response['status'] == 'error') {

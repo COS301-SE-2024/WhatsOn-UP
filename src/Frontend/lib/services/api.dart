@@ -456,14 +456,14 @@ class Api {
   }
 
   Future<Map<String, dynamic>> AcceptInvite(
-      {String? userId, String? notificationId}) async {
+      {String? JWT, String? notificationId}) async {
     String notifyUserUrl =
-        'http://${globals.domain}:8080/api/interactions/accept_invite/$notificationId';
+        'https://${globals.gatewayDomain}/api/interactions/accept_invite/$notificationId';
 
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Authorization': 'Bearer $userId',
+      'Authorization': 'Bearer $JWT',
     };
 
     try {

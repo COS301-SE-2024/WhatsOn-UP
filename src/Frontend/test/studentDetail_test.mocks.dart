@@ -298,7 +298,7 @@ class MockApi extends _i1.Mock implements _i3.Api {
 
   @override
   _i5.Future<Map<String, dynamic>> AcceptInvite({
-    String? userId,
+    String? JWT,
     String? notificationId,
   }) =>
       (super.noSuchMethod(
@@ -306,7 +306,7 @@ class MockApi extends _i1.Mock implements _i3.Api {
           #AcceptInvite,
           [],
           {
-            #userId: userId,
+            #JWT: JWT,
             #notificationId: notificationId,
           },
         ),
