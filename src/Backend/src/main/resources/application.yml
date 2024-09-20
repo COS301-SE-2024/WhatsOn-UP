@@ -36,4 +36,5 @@ logging:
 
 bearer-token: ${BEARER_TOKEN}
 SECRET: ${SECRET}
+CORS_ORIGINS: ${CORS_ORIGINS}
 

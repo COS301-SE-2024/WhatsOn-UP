@@ -30,10 +30,63 @@ for i in "${!services[@]}"; do
   # Push to Docker Hub
   docker push "${DOCKER_HUB_REPO}:${SERVICE_NAME}"
 
+  # Deploy to Google Cloud Run
+  gcloud run deploy "${SERVICE_NAME}" \
+    --image "${GCR_REPO}/${SERVICE_NAME}:latest" \
+    --region us-central1 \
+    --platform managed \
+    --allow-unauthenticated
+
   # Return to the original directory
   cd - || exit
 
   echo "${SERVICE_NAME} deployment completed."
 done
 
-echo "All services deployed successfully."
+echo "Deploying notifications-live..."
+
+gcloud run deploy notifications-live \
+  --image us-east1-docker.pkg.dev/whatsonup/backend-services/notifications:latest \
+  --region us-central1 \
+  --platform managed \
+  --allow-unauthenticated
+
+echo "notifications-live deployment completed."
+
+echo "All backend services deployed successfully."
+
+# Deploy frontend service
+echo "Deploying frontend service..."
+
+# Navigate to the Frontend directory
+cd "../src/Frontend" || exit
+
+# Build the Flutter web app
+flutter build web
+
+# Copy Dockerfile to Build/web directory
+cp Dockerfile build/web
+
+# Navigate to Build/web directory
+cd build/web || exit
+
+# Build Docker image for frontend
+docker build -t devforce123/frontend-services:latest .
+
+# Tag the image for Google Container Registry (GCR)
+docker tag devforce123/frontend-services:latest us-east1-docker.pkg.dev/whatsonup/backend-services/frontend:latest
+
+# Push to Google Container Registry (GCR)
+docker push us-east1-docker.pkg.dev/whatsonup/backend-services/frontend:latest
+
+# Push to Docker Hub
+docker push devforce123/frontend-services:latest
+
+# Deploy to Google Cloud Run
+gcloud run deploy frontend \
+  --image us-east1-docker.pkg.dev/whatsonup/backend-services/frontend:latest \
+  --region us-central1 \
+  --platform managed \
+  --allow-unauthenticated
+
+echo "Frontend service deployment completed."

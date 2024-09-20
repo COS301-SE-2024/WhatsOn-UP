@@ -46,6 +46,17 @@ class AuthFilter : OncePerRequestFilter() {
         filterChain: FilterChain
     ) {
         val requestURI = request.requestURI
+        response.setHeader("Access-Control-Allow-Origin", "https://frontend-1035006743185.us-central1.run.app")
+        response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+        response.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type")
+        response.setHeader("Access-Control-Allow-Credentials", "true")
+
+        if (request.method.equals("OPTIONS", ignoreCase = true)) {
+            // Respond with a 200 OK and terminate the filter chain
+            response.status = HttpServletResponse.SC_OK
+            return
+        }
+
         val jwt = getBearer(request)
         val match = ENDPOINTS.any { suffix -> requestURI.endsWith(suffix) }
 

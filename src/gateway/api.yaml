@@ -8,6 +8,29 @@ schemes:
 produces:
   - application/json
 paths:
+  /**:
+    options:
+      summary: CORS support
+      description: Enable CORS by returning correct headers
+      operationId: options
+      x-google-backend:
+        address: https://api-237rzrxg6a-uc.a.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        disable_auth: true
+        deadline: 60.0
+      responses:
+        '200':
+          description: Default response for CORS method
+          headers:
+            Access-Control-Allow-Origin:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Max-Age:
+              type: string
+
   /api/events/get_all:
     get:
       summary: Get all events
@@ -1372,6 +1395,10 @@ paths:
           description: Unauthorized
         '403':
           description: Forbidden
+
+
+
+    
 
 
   
