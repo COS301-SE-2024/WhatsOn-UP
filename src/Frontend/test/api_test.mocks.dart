@@ -1411,7 +1411,7 @@ class MockApi extends _i1.Mock implements _i2.Api {
   _i8.Future<Map<String, dynamic>> broadcastEvent(
     String? eventId,
     String? message,
-    String? userId,
+    String? JWT,
   ) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -1419,7 +1419,7 @@ class MockApi extends _i1.Mock implements _i2.Api {
           [
             eventId,
             message,
-            userId,
+            JWT,
           ],
         ),
         returnValue:
@@ -1429,14 +1429,14 @@ class MockApi extends _i1.Mock implements _i2.Api {
   @override
   _i8.Future<Map<String, dynamic>> broadcast(
     String? message,
-    String? userId,
+    String? JWT,
   ) =>
       (super.noSuchMethod(
         Invocation.method(
           #broadcast,
           [
             message,
-            userId,
+            JWT,
           ],
         ),
         returnValue:
@@ -1544,7 +1544,7 @@ class MockApi extends _i1.Mock implements _i2.Api {
   @override
   _i8.Future<Map<String, dynamic>> rateEvent(
     String? eventId,
-    String? userID,
+    String? JWT,
     int? rating,
     String? comment,
   ) =>
@@ -1553,7 +1553,7 @@ class MockApi extends _i1.Mock implements _i2.Api {
           #rateEvent,
           [
             eventId,
-            userID,
+            JWT,
             rating,
             comment,
           ],
@@ -1582,14 +1582,14 @@ class MockApi extends _i1.Mock implements _i2.Api {
   @override
   _i8.Future<Map<String, dynamic>> deleteNotification(
     String? notificationId,
-    String? userId,
+    String? JWT,
   ) =>
       (super.noSuchMethod(
         Invocation.method(
           #deleteNotification,
           [
             notificationId,
-            userId,
+            JWT,
           ],
         ),
         returnValue:
@@ -1619,11 +1619,17 @@ class MockApi extends _i1.Mock implements _i2.Api {
       ) as _i8.Future<Map<String, dynamic>>);
 
   @override
-  _i8.Future<Map<String, dynamic>> getHostEventAnalytics(String? userId) =>
+  _i8.Future<Map<String, dynamic>> getHostEventAnalytics(
+    String? userId,
+    String? JWT,
+  ) =>
       (super.noSuchMethod(
         Invocation.method(
           #getHostEventAnalytics,
-          [userId],
+          [
+            userId,
+            JWT,
+          ],
         ),
         returnValue:
             _i8.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
@@ -1670,7 +1676,7 @@ class MockApi extends _i1.Mock implements _i2.Api {
 
   @override
   _i8.Future<Map<String, dynamic>> getAutofillData(
-    String? userId,
+    String? JWT,
     String? eventName,
     String? eventDescription,
   ) =>
@@ -1678,7 +1684,7 @@ class MockApi extends _i1.Mock implements _i2.Api {
         Invocation.method(
           #getAutofillData,
           [
-            userId,
+            JWT,
             eventName,
             eventDescription,
           ],
