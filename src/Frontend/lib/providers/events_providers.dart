@@ -17,6 +17,8 @@ class EventProvider with ChangeNotifier {
   EventProvider({required this.api}) {
     _eventsHome = _fetchEventsHome();
     _eventsSaved = Future.value([]);
+    _eventsRsvp = Future.value([]);
+
   }
 
   Future<void> refreshEvents() async {
@@ -36,9 +38,9 @@ class EventProvider with ChangeNotifier {
       throw Exception('Failed to refresh events: $e');
     }
   }
-Future<void> refreshRecommendations(String userId) async {
+Future<void> refreshRecommendations(String JWT) async {
     try {
-      _eventRecommedations = _fetchRecommendations(userId);
+      _eventRecommedations = _fetchRecommendations(JWT);
       notifyListeners();
     } catch (e) {
       throw Exception('Failed to refresh events: $e');
@@ -60,9 +62,9 @@ Future<void> refreshSavedEvents(String? JWT) async {
     }
   }
   
-  Future<List<Event>> _fetchRecommendations(String userId) async {
+  Future<List<Event>> _fetchRecommendations(String JWT) async {
     try {
-      return await api.getRecommendedEvents(userId);
+      return await api.getRecommendedEvents(JWT);
     } catch (e) {
       throw Exception('Failed to fetch home events: $e');
     }
@@ -210,7 +212,6 @@ Future<List<Event>> _fetchEventsRsvp(String userId, String JWT) async {
   void addEventSaved(Event event,String userId) {
     _eventsSaved.then((events) {
       api.putSavedEvent(event.id,userId);
-      events.add(event);
       notifyListeners();
     });
   }
@@ -218,10 +219,8 @@ Future<List<Event>> _fetchEventsRsvp(String userId, String JWT) async {
   void removeEventSaved(Event event,String userId) {
     _eventsSaved.then((events) {
       api.DeleteSavedEvent(event.id,userId);
-      events.remove(event);
       notifyListeners();
     });
-    notifyListeners();
   }
 
   Future<Event?> getEventById(String id) async {

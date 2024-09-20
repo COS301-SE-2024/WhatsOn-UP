@@ -1,8 +1,8 @@
 @echo off
 :: Run analytics service
 
-gradle bootrun || (
-    echo gradle bootrun failed for API service
+gradlew bootrun || (
+    echo gradle bootrun failed for Analytics service
     exit /b 1
 )
 
