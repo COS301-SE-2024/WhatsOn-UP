@@ -159,7 +159,7 @@ class Api {
   }
 
   Future<List<Event>> getRecommendedEvents(String JWT) async {
-    final URL = 'http://${globals.domain}:8086/events/recommended_events';
+    final URL = 'https://${globals.gatewayDomain}/events/recommended_events';
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
