@@ -56,7 +56,7 @@ class _InviteUsersWidgetState extends State<InviteUsers> {
     String userId = userP.userId;
 
     for (var user in _invitedUsers) {
-      await Api.inviteUser(widget.eventId, userId, user.userId); // Adjust this function based on your API implementation
+      await Api.inviteUser(widget.eventId, userP.JWT, user.userId); // Adjust this function based on your API implementation
     }
 
     setState(() {

@@ -1257,14 +1257,14 @@ class MockApi extends _i1.Mock implements _i2.Api {
   @override
   _i8.Future<Map<String, dynamic>> DeleteEvent(
     String? eventId,
-    String? userid,
+    String? JWT,
   ) =>
       (super.noSuchMethod(
         Invocation.method(
           #DeleteEvent,
           [
             eventId,
-            userid,
+            JWT,
           ],
         ),
         returnValue:
@@ -1309,7 +1309,7 @@ class MockApi extends _i1.Mock implements _i2.Api {
 
   @override
   _i8.Future<Map<String, dynamic>> updateEvent({
-    required String? userId,
+    required String? JWT,
     required String? eventId,
     required String? title,
     required String? description,
@@ -1326,7 +1326,7 @@ class MockApi extends _i1.Mock implements _i2.Api {
           #updateEvent,
           [],
           {
-            #userId: userId,
+            #JWT: JWT,
             #eventId: eventId,
             #title: title,
             #description: description,
@@ -1363,7 +1363,7 @@ class MockApi extends _i1.Mock implements _i2.Api {
   @override
   _i8.Future<Map<String, dynamic>> eventUploadImage(
     _i13.Uint8List? mediaBytes,
-    String? userId,
+    String? JWT,
     String? eventId,
     String? originalFilename,
   ) =>
@@ -1372,7 +1372,7 @@ class MockApi extends _i1.Mock implements _i2.Api {
           #eventUploadImage,
           [
             mediaBytes,
-            userId,
+            JWT,
             eventId,
             originalFilename,
           ],
@@ -1597,6 +1597,61 @@ class MockApi extends _i1.Mock implements _i2.Api {
       ) as _i8.Future<Map<String, dynamic>>);
 
   @override
+  _i8.Future<Map<String, dynamic>> getAllEventsAnalytics(String? userId) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getAllEventsAnalytics,
+          [userId],
+        ),
+        returnValue:
+            _i8.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
+      ) as _i8.Future<Map<String, dynamic>>);
+
+  @override
+  _i8.Future<Map<String, dynamic>> getAllHostsAnalytics(String? userId) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getAllHostsAnalytics,
+          [userId],
+        ),
+        returnValue:
+            _i8.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
+      ) as _i8.Future<Map<String, dynamic>>);
+
+  @override
+  _i8.Future<Map<String, dynamic>> getHostEventAnalytics(String? userId) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getHostEventAnalytics,
+          [userId],
+        ),
+        returnValue:
+            _i8.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
+      ) as _i8.Future<Map<String, dynamic>>);
+
+  @override
+  _i8.Future<Map<String, dynamic>> getAllPopularEvents(String? userId) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getAllPopularEvents,
+          [userId],
+        ),
+        returnValue:
+            _i8.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
+      ) as _i8.Future<Map<String, dynamic>>);
+
+  @override
+  _i8.Future<Map<String, dynamic>> getHostPopularEvents(String? userId) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getHostPopularEvents,
+          [userId],
+        ),
+        returnValue:
+            _i8.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
+      ) as _i8.Future<Map<String, dynamic>>);
+
+  @override
   _i8.Future<void> markSeen(
     String? eventID,
     String? JWT,
@@ -1612,6 +1667,25 @@ class MockApi extends _i1.Mock implements _i2.Api {
         returnValue: _i8.Future<void>.value(),
         returnValueForMissingStub: _i8.Future<void>.value(),
       ) as _i8.Future<void>);
+
+  @override
+  _i8.Future<Map<String, dynamic>> getAutofillData(
+    String? userId,
+    String? eventName,
+    String? eventDescription,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getAutofillData,
+          [
+            userId,
+            eventName,
+            eventDescription,
+          ],
+        ),
+        returnValue:
+            _i8.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
+      ) as _i8.Future<Map<String, dynamic>>);
 }
 
 /// A class which mocks [ImagePicker].
