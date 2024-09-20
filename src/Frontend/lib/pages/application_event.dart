@@ -321,7 +321,7 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
     userProvider userP = Provider.of<userProvider>(context, listen: false);
 
     try {
-      final response = await Api().getAutofillData(userP.userId, eventName, eventDescription);
+      final response = await Api().getAutofillData(userP.JWT, eventName, eventDescription);
 
       if (response['data'] != null) {
         setState(() {

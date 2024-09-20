@@ -882,13 +882,13 @@ class Api {
   }
 
   Future<Map<String, dynamic>> broadcastEvent(
-      String eventId, String message, String userId) async {
+      String eventId, String message, String JWT) async {
     final String url =
-        'http://${globals.domain}:8080/api/events/broadcast?eventId=$eventId&message=$message';
+        'http://${globals.gatewayDomain}/api/events/broadcast?eventId=$eventId&message=$message';
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Authorization': 'Bearer $userId',
+      'Authorization': 'Bearer $JWT',
     };
 
     try {
@@ -903,13 +903,13 @@ class Api {
     }
   }
 
-  Future<Map<String, dynamic>> broadcast(String message, String userId) async {
+  Future<Map<String, dynamic>> broadcast(String message, String JWT) async {
     final String url =
-        'http://${globals.domain}:8080/api/admin/broadcast?message=$message';
+        'http://${globals.gatewayDomain}/api/admin/broadcast?message=$message';
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Authorization': 'Bearer $userId',
+      'Authorization': 'Bearer $JWT',
     };
     try {
       var response = await http.put(Uri.parse(url), headers: headers);
@@ -944,33 +944,21 @@ class Api {
     }
   }
 
-  static Future<List<UserModel>> getAllUsers(String userId) async {
-    print("User Id below");
-    print(userId);
+  static Future<List<UserModel>> getAllUsers(String JWT) async {
 
-    //var response = await http.put(uri, headers: headers);
-/* final String _userUrl = 'http://$domain:8080/api/auth/get_user';
-      var headers = {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $jwtKey',
-      };
-
-      var response = await http.get(Uri.parse(_userUrl), headers: headers);
-*/
     final String _userUrl =
-        'http://${globals.domain}:8080/api/interactions/get_all_users';
+        'http://${globals.gatewayDomain}/api/interactions/get_all_users';
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Authorization': 'Bearer $userId',
+      'Authorization': 'Bearer $JWT',
     };
     final response = await http.get(Uri.parse(_userUrl), headers: headers);
     if (response.statusCode == 200) {
       List<dynamic> data = json.decode(response.body)['data'];
       return data
           .map((json) => UserModel.fromJson(json))
-          .toList(); // Adjust based on your UserModel structure
+          .toList();
     } else {
       throw Exception('Failed to load users');
     }
@@ -1153,21 +1141,21 @@ class Api {
   }
 
   Future<Map<String, dynamic>> rateEvent(
-      String eventId, String userID, int rating, String comment) async {
+      String eventId, String JWT, int rating, String comment) async {
     String rateEventURL;
 
     if (comment == '') {
       rateEventURL =
-          'http://${globals.domain}:8080/api/user/rate_event/$eventId?rating=$rating';
+          'http://${globals.gatewayDomain}/api/user/rate_event/$eventId?rating=$rating';
     } else {
       rateEventURL =
-          'http://${globals.domain}:8080/api/user/rate_event/$eventId?comment=${Uri.encodeComponent(comment)}&rating=$rating';
+          'http://${globals.gatewayDomain}:8080/api/user/rate_event/$eventId?comment=${Uri.encodeComponent(comment)}&rating=$rating';
     }
 
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Authorization': 'Bearer $userID',
+      'Authorization': 'Bearer $JWT',
     };
 
     print("CALLING RATE WITH: " + rateEventURL);
@@ -1211,14 +1199,14 @@ class Api {
   }
 
   Future<Map<String, dynamic>> deleteNotification(
-      String notificationId, String userId) async {
+      String notificationId, String JWT) async {
     final String deleteNotificationUrl =
-        'http://${globals.domain}:8081/notifications/delete/$notificationId';
+        'http://${globals.gatewayDomain}/notifications/delete/$notificationId';
 
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Authorization': 'Bearer $userId',
+      'Authorization': 'Bearer $JWT',
     };
 
     try {
@@ -1248,7 +1236,6 @@ class Api {
       var response = await http.get(Uri.parse(getAllAnalyticsURL), headers: headers);
 
       if (response.statusCode == 200) {
-        // print("ANALYTICS: " + jsonDecode(response.body));
         return jsonDecode(response.body);
       } 
       else {
@@ -1285,13 +1272,13 @@ class Api {
   }
 
 
-  Future<Map<String, dynamic>> getHostEventAnalytics(String userId) async {
-    final String getHostEventAnalyticsURL = 'http://${globals.domain}:8084/analytics/admin/get_past_events_by_host/${userId}';
+  Future<Map<String, dynamic>> getHostEventAnalytics(String userId, String JWT) async {
+    final String getHostEventAnalyticsURL = 'http://${globals.gatewayDomain}/analytics/admin/get_past_events_by_host/${userId}';
 
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Authorization': 'Bearer $userId',
+      'Authorization': 'Bearer $JWT',
     };
 
     try {
@@ -1358,7 +1345,7 @@ class Api {
 }
 
   Future<void> markSeen(String eventID, String JWT) async {
-    final url = 'https://notifications-1035006743185.us-central1.run.app/notifications/mark_read/$eventID';
+    final url = 'https://${globals.gatewayDomain}/notifications/mark_read/$eventID';
 
     var headers = {
       'Content-Type': 'application/json',
@@ -1380,13 +1367,13 @@ class Api {
     }
   }
 
-  Future<Map<String, dynamic>> getAutofillData(String userId, String eventName, String eventDescription) async {
-  final String getAutofillDataURL = 'http://${globals.domain}:8084/analytics/host/generate_autofill?description=$eventDescription&title=$eventName';
+  Future<Map<String, dynamic>> getAutofillData(String JWT, String eventName, String eventDescription) async {
+  final String getAutofillDataURL = 'http://${globals.gatewayDomain}/analytics/host/generate_autofill?description=$eventDescription&title=$eventName';
 
   var headers = {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
-    'Authorization': 'Bearer $userId',
+    'Authorization': 'Bearer $JWT',
   };
 
   try {

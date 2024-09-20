@@ -36,7 +36,7 @@ class _InviteUsersWidgetState extends State<InviteUsers> {
     });
     userProvider userP = Provider.of<userProvider>(context, listen: false);
     String userId = userP.userId;
-    List<UserModel> users = await Api.getAllUsers(userId);
+    List<UserModel> users = await Api.getAllUsers(userP.JWT);
 
     setState(() {
       _foundUsers = users
