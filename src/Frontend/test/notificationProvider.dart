@@ -25,7 +25,7 @@ void main() {
     ];
 
 
-    when(mockApi.getAllNotification(userId: 'user123')).thenAnswer((_) async => notifications);
+    when(mockApi.getAllNotification(JWT: 'user123')).thenAnswer((_) async => notifications);
 
     await provider.refreshNotifications('user123');
 
@@ -35,7 +35,7 @@ void main() {
 
   test('should handle API failure when fetching notifications', () async {
 
-    when(mockApi.getAllNotification(userId: 'user123')).thenThrow(Exception('Failed to fetch notifications'));
+    when(mockApi.getAllNotification(JWT: 'user123')).thenThrow(Exception('Failed to fetch notifications'));
 
 
     expect(() async => await provider.refreshNotifications('user123'), throwsA(isA<Exception>()));

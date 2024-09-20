@@ -322,20 +322,13 @@ class _SupabaseLoginState extends State<SupabaseLogin> {
                 final authResponse = await supabase.auth
                     .signInWithPassword(password: password, email: email);
 
-                //for reset password workd
-                //  await supabase.auth.resetPasswordForEmail(email,
-                //    redirectTo: 'io.supabase.flutterquickstart://login-callback/',
-                //  );
-
-                //update password
-                //  await supabase.auth.updateUser({
-                //    password: password,
-                //  } as UserAttributes);
-
                 if (mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       content:
                           Text("Logged In: ${authResponse.user!.email!}")));
+
+                  Provider.of<userProvider>(context, listen: false).JWT = 
+                    supabase.auth.currentSession!.accessToken;
                   await _login();
                 }
               } on AuthException catch (error) {
@@ -482,10 +475,10 @@ class _SupabaseLoginState extends State<SupabaseLogin> {
             notificationProvider _notificationProvider =
                 Provider.of<notificationProvider>(context, listen: false);
              eventP.refreshSavedEvents(userP.JWT);
-            _notificationProvider.refreshNotifications(userP.userId);
+            _notificationProvider.refreshNotifications(userP.JWT);
             SocketService('http://${globals.domain}:8082',
                 _notificationProvider, userP.userId, context);
-            userP.Generalusers(userP.userId);
+            userP.Generalusers(userP.JWT);
 
             userP.setUserData(
               userId: user.id,

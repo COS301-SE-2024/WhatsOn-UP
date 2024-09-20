@@ -25,7 +25,7 @@ class _RateEventPageState extends State<RateEventPage> {
     try {
       final response = await api.rateEvent(
         widget.eventId,
-        userP.userId,
+        userP.JWT,
         _rating,
         _feedbackController.text,
       );

@@ -1,6 +1,8 @@
+import 'package:firstapp/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:firstapp/services/EventService.dart';
+import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../screens/FilterScreen.dart';
 import '../screens/SearchScreen.dart';
@@ -27,8 +29,10 @@ class _PasteventsState extends State<Pastevents> {
     super.initState();
     supabaseClient = widget.supabaseClient;
     final user = supabaseClient.auth.currentUser;
+    userProvider userP = Provider.of<userProvider>(context, listen: false);
+
     if (user != null) {
-      _pastEvents = widget.eventService.fetchPastEvents(user.id);
+      _pastEvents = widget.eventService.fetchPastEvents(userP.JWT);
     } else {
 
       _pastEvents = Future.error('User is not authenticated');
