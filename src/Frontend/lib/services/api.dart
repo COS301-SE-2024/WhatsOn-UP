@@ -233,7 +233,7 @@ class Api {
   Future<Map<String, dynamic>> postChangeUser(
       String name, String JWT) async {
     var userChangeUrl =
-        Uri.parse('https://${globals.gatewayDomain}:8080/api/user/update_profile');
+        Uri.parse('https://${globals.gatewayDomain}:8080/api/user/update_profile?fullName=$name');
 
     var headers = {
       'Content-Type': 'application/json',
@@ -1235,6 +1235,128 @@ class Api {
     }
   }
 
+  Future<Map<String, dynamic>> getAllEventsAnalytics(String userId) async {
+    final String getAllAnalyticsURL = 'http://${globals.domain}:8084/analytics/admin/get_all_events';
+
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $userId',
+    };
+
+    try {
+      var response = await http.get(Uri.parse(getAllAnalyticsURL), headers: headers);
+
+      if (response.statusCode == 200) {
+        // print("ANALYTICS: " + jsonDecode(response.body));
+        return jsonDecode(response.body);
+      } 
+      else {
+        throw Exception(jsonDecode(response.body));
+      }
+    } 
+    catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  Future<Map<String, dynamic>> getAllHostsAnalytics(String userId) async {
+    final String getAllHostsAnalyticsURL = 'http://${globals.domain}:8084/analytics/admin/get_for_all_hosts';
+
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $userId',
+    };
+
+    try {
+      var response = await http.get(Uri.parse(getAllHostsAnalyticsURL), headers: headers);
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } 
+      else {
+        throw Exception(jsonDecode(response.body));
+      }
+    } 
+    catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+
+  Future<Map<String, dynamic>> getHostEventAnalytics(String userId) async {
+    final String getHostEventAnalyticsURL = 'http://${globals.domain}:8084/analytics/admin/get_past_events_by_host/${userId}';
+
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $userId',
+    };
+
+    try {
+      var response = await http.get(Uri.parse(getHostEventAnalyticsURL), headers: headers);
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } 
+      else {
+        throw Exception(jsonDecode(response.body));
+      }
+    } 
+    catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  Future<Map<String, dynamic>> getAllPopularEvents(String userId) async {
+    final String getAllPopularEventsURL = 'http://${globals.domain}:8084/analytics/admin/get_popular_events';
+
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $userId',
+    };
+
+    try {
+      var response = await http.get(Uri.parse(getAllPopularEventsURL), headers: headers);
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } 
+      else {
+        throw Exception(jsonDecode(response.body));
+      }
+    } 
+    catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  Future<Map<String, dynamic>> getHostPopularEvents(String userId) async {
+  final String getHostPopularEventsURL = 'http://${globals.domain}:8084/analytics/host/get_popular_events';
+
+  var headers = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    'Authorization': 'Bearer $userId',
+  };
+
+  try {
+    var response = await http.get(Uri.parse(getHostPopularEventsURL), headers: headers);
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } 
+    else {
+      throw Exception(jsonDecode(response.body));
+    }
+  } 
+  catch (e) {
+    throw Exception(e.toString());
+  }
+}
+
   Future<void> markSeen(String eventID, String JWT) async {
     final url = 'https://notifications-1035006743185.us-central1.run.app/notifications/mark_read/$eventID';
 
@@ -1257,4 +1379,37 @@ class Api {
       throw Exception(e.toString());
     }
   }
+
+  Future<Map<String, dynamic>> getAutofillData(String userId, String eventName, String eventDescription) async {
+  final String getAutofillDataURL = 'http://${globals.domain}:8084/analytics/host/generate_autofill?description=$eventDescription&title=$eventName';
+
+  var headers = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    'Authorization': 'Bearer $userId',
+  };
+
+  try {
+    var response = await http.get(Uri.parse(getAutofillDataURL), headers: headers);
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } 
+    else {
+      throw Exception(jsonDecode(response.body));
+    }
+  } 
+  catch (e) {
+    throw Exception(e.toString());
+  }
 }
+
+
+
+}
+
+
+
+
+
+
