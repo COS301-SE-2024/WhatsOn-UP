@@ -705,16 +705,16 @@ class Api {
   }
 
   Future<Map<String, dynamic>> uploadImage(
-      Uint8List imageBytes, String userid) async {
+      Uint8List imageBytes, String userid, String JWT) async {
     String generateFilename(String userId) {
       final timestamp = DateTime.now().millisecondsSinceEpoch;
       return 'profile_image_${userId}_$timestamp.png';
     }
 
-    final uri = Uri.parse('http://${globals.domain}:8083/media/update');
+    final uri = Uri.parse('https://${globals.gatewayDomain}/media/update');
 
     final request = http.MultipartRequest('POST', uri);
-    request.headers['Authorization'] = 'Bearer $userid';
+    request.headers['Authorization'] = 'Bearer $JWT';
 
     final filename = generateFilename(userid);
     request.files.add(
@@ -828,15 +828,15 @@ class Api {
     required DateTime fromWhen,
     String? studentEmail,
     Uint8List? proofImage,
-    required String userId,
+    required String JWT,
   }) async {
     final String _applyUrl =
-        'http://${globals.domain}:8080/api/user/apply_for_host';
+        'https://${globals.gatewayDomain}/api/user/apply_for_host';
 
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Authorization': 'Bearer $userId',
+      'Authorization': 'Bearer $JWT',
     };
 
     var queryParams = {
@@ -863,7 +863,7 @@ class Api {
         // Non UP affiliated students need to upload proof image
         if (studentEmail == null && proofImage != null) {
           String applicationId = responseData['data']['application_id'];
-          await _uploadProofImage(applicationId, proofImage, userId);
+          await _uploadProofImage(applicationId, proofImage, JWT);
         }
 
         return responseData;
@@ -924,13 +924,13 @@ class Api {
   }
 
   Future<void> _uploadProofImage(
-      String applicationId, Uint8List imageBytes, String userId) async {
+      String applicationId, Uint8List imageBytes, String JWT) async {
     final String _uploadUrl =
-        'http://${globals.domain}:8083/media/proof?application_id=$applicationId';
+        'https://${globals.gatewayDomain}/media/proof?application_id=$applicationId';
 
     var request = http.MultipartRequest('POST', Uri.parse(_uploadUrl));
 
-    request.headers['Authorization'] = 'Bearer $userId';
+    request.headers['Authorization'] = 'Bearer $JWT';
     request.files.add(http.MultipartFile.fromBytes(
       'file',
       imageBytes,
@@ -1173,15 +1173,15 @@ class Api {
     }
   }
 
-  Future<Map<String, dynamic>> deleteEventMedia(
-      String imageName, String userId) async {
+  Future<Map<String, dynamic>>  deleteEventMedia(
+      String imageName, String JWT) async {
     final String deleteMediaUrl =
-        'http://${globals.domain}:8083/media/delete?media_name=$imageName';
+        'https://${globals.gatewayDomain}/media/delete?media_name=$imageName';
 
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Authorization': 'Bearer $userId',
+      'Authorization': 'Bearer $JWT',
     };
 
     try {

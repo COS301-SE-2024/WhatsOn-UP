@@ -396,7 +396,7 @@ class _EditEventState extends State<EditEvent> {
             for (var url in eventMedia) {
               String imageName = url.split('/').last;
 
-              api.deleteEventMedia(imageName, userP.userId).then((result) {
+              api.deleteEventMedia(imageName, userP.JWT).then((result) {
                 print('Deleted $imageName: $result');
               }).catchError((error) {
                 print('Error deleting $imageName: $error');
