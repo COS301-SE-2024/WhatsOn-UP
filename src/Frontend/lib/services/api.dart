@@ -993,14 +993,14 @@ class Api {
   }
 
   Future<Map<String, dynamic>> AcceptApplication(
-      {required String userId, required String applicationId}) async {
+      {required String JWT, required String applicationId}) async {
     String notifyUserUrl =
-        'http://${globals.domain}:8080/api/admin/accept_application?applicationId=$applicationId';
+        'https://${globals.gatewayDomain}/api/admin/accept_application?applicationId=$applicationId';
 
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Authorization': 'Bearer $userId',
+      'Authorization': 'Bearer $JWT',
     };
     try {
       var response =
@@ -1018,14 +1018,14 @@ class Api {
   }
 
   Future<Map<String, dynamic>> DeclineApplication(
-      {required String userId, required String applicationId}) async {
+      {required String JWT, required String applicationId}) async {
     String notifyUserUrl =
-        'http://${globals.domain}:8080/api/admin/reject_application?applicationId=$applicationId';
+        'https://${globals.gatewayDomain}/api/admin/reject_application?applicationId=$applicationId';
 
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Authorization': 'Bearer $userId',
+      'Authorization': 'Bearer $JWT',
     };
     try {
       var response =
@@ -1043,16 +1043,16 @@ class Api {
   }
 
   Future<Map<String, dynamic>> DemoteApplicant(
-      {required String userIdAdmin,
+      {required String JWT,
       required String userId,
       required String applicationId}) async {
     String notifyUserUrl =
-        'http://${globals.domain}:8080/api/admin/demote?userId=$userId';
+        'https://${globals.gatewayDomain}/api/admin/demote?userId=$userId';
 
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Authorization': 'Bearer $userIdAdmin',
+      'Authorization': 'Bearer $JWT',
     };
     try {
       var response =
@@ -1070,14 +1070,14 @@ class Api {
   }
 
   Future<Map<String, dynamic>> Acknowledgeapplication(
-      {required String userId}) async {
+      {required String JWT}) async {
     String notifyUserUrl =
-        'http://${globals.domain}:8080/api/user/acknowledge_application';
+        'https://${globals.gatewayDomain}/api/user/acknowledge_application';
 
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Authorization': 'Bearer $userId',
+      'Authorization': 'Bearer $JWT',
     };
     try {
       var response =

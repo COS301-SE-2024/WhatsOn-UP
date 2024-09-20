@@ -557,7 +557,7 @@ class MockApi extends _i1.Mock implements _i3.Api {
 
   @override
   _i5.Future<Map<String, dynamic>> AcceptApplication({
-    required String? userId,
+    required String? JWT,
     required String? applicationId,
   }) =>
       (super.noSuchMethod(
@@ -565,7 +565,7 @@ class MockApi extends _i1.Mock implements _i3.Api {
           #AcceptApplication,
           [],
           {
-            #userId: userId,
+            #JWT: JWT,
             #applicationId: applicationId,
           },
         ),
@@ -575,7 +575,7 @@ class MockApi extends _i1.Mock implements _i3.Api {
 
   @override
   _i5.Future<Map<String, dynamic>> DeclineApplication({
-    required String? userId,
+    required String? JWT,
     required String? applicationId,
   }) =>
       (super.noSuchMethod(
@@ -583,7 +583,7 @@ class MockApi extends _i1.Mock implements _i3.Api {
           #DeclineApplication,
           [],
           {
-            #userId: userId,
+            #JWT: JWT,
             #applicationId: applicationId,
           },
         ),
@@ -593,7 +593,7 @@ class MockApi extends _i1.Mock implements _i3.Api {
 
   @override
   _i5.Future<Map<String, dynamic>> DemoteApplicant({
-    required String? userIdAdmin,
+    required String? JWT,
     required String? userId,
     required String? applicationId,
   }) =>
@@ -602,7 +602,7 @@ class MockApi extends _i1.Mock implements _i3.Api {
           #DemoteApplicant,
           [],
           {
-            #userIdAdmin: userIdAdmin,
+            #JWT: JWT,
             #userId: userId,
             #applicationId: applicationId,
           },
@@ -613,12 +613,12 @@ class MockApi extends _i1.Mock implements _i3.Api {
 
   @override
   _i5.Future<Map<String, dynamic>> Acknowledgeapplication(
-          {required String? userId}) =>
+          {required String? JWT}) =>
       (super.noSuchMethod(
         Invocation.method(
           #Acknowledgeapplication,
           [],
-          {#userId: userId},
+          {#JWT: JWT},
         ),
         returnValue:
             _i5.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
@@ -709,6 +709,61 @@ class MockApi extends _i1.Mock implements _i3.Api {
       ) as _i5.Future<Map<String, dynamic>>);
 
   @override
+  _i5.Future<Map<String, dynamic>> getAllEventsAnalytics(String? userId) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getAllEventsAnalytics,
+          [userId],
+        ),
+        returnValue:
+            _i5.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
+      ) as _i5.Future<Map<String, dynamic>>);
+
+  @override
+  _i5.Future<Map<String, dynamic>> getAllHostsAnalytics(String? userId) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getAllHostsAnalytics,
+          [userId],
+        ),
+        returnValue:
+            _i5.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
+      ) as _i5.Future<Map<String, dynamic>>);
+
+  @override
+  _i5.Future<Map<String, dynamic>> getHostEventAnalytics(String? userId) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getHostEventAnalytics,
+          [userId],
+        ),
+        returnValue:
+            _i5.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
+      ) as _i5.Future<Map<String, dynamic>>);
+
+  @override
+  _i5.Future<Map<String, dynamic>> getAllPopularEvents(String? userId) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getAllPopularEvents,
+          [userId],
+        ),
+        returnValue:
+            _i5.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
+      ) as _i5.Future<Map<String, dynamic>>);
+
+  @override
+  _i5.Future<Map<String, dynamic>> getHostPopularEvents(String? userId) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getHostPopularEvents,
+          [userId],
+        ),
+        returnValue:
+            _i5.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
+      ) as _i5.Future<Map<String, dynamic>>);
+
+  @override
   _i5.Future<void> markSeen(
     String? eventID,
     String? JWT,
@@ -724,6 +779,25 @@ class MockApi extends _i1.Mock implements _i3.Api {
         returnValue: _i5.Future<void>.value(),
         returnValueForMissingStub: _i5.Future<void>.value(),
       ) as _i5.Future<void>);
+
+  @override
+  _i5.Future<Map<String, dynamic>> getAutofillData(
+    String? userId,
+    String? eventName,
+    String? eventDescription,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getAutofillData,
+          [
+            userId,
+            eventName,
+            eventDescription,
+          ],
+        ),
+        returnValue:
+            _i5.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
+      ) as _i5.Future<Map<String, dynamic>>);
 }
 
 /// A class which mocks [userProvider].

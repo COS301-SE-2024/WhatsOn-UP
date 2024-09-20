@@ -394,12 +394,12 @@ class _ApplicantState extends State<Applicant> {
     final applicationId = widget.user.applicationId;
     final response = action == 'Accept'
         ? await api.AcceptApplication(
-            userId: userId, applicationId: applicationId)
+            JWT: userP.JWT, applicationId: applicationId)
         : action == 'Reject'
             ? await api.DeclineApplication(
-                userId: userId, applicationId: applicationId)
+                JWT: userP.JWT, applicationId: applicationId)
             : await api.DemoteApplicant(
-                userIdAdmin: userId,
+                JWT: userP.JWT,
                 userId: widget.user.user.userId,
                 applicationId: applicationId);
 

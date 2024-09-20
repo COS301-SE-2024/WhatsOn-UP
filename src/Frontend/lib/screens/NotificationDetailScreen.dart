@@ -69,8 +69,9 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
 
     Api api = Api();
     try {
+userProvider userP = Provider.of<userProvider>(context, listen: false);
       var response =
-          await api.Acknowledgeapplication(userId: widget.notification.userId);
+          await api.Acknowledgeapplication(JWT: userP.JWT);
 
       if (response['status'] == 'error') {
       } else {
