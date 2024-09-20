@@ -11,3 +11,4 @@ WORKDIR /home/ubuntu/scripts
 RUN chmod +x *.sh
 
 RUN ./deploy.sh
+
