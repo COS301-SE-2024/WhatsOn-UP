@@ -284,7 +284,7 @@ class _NotificationsState extends State<Notifications> with TickerProviderStateM
           }
         else if(tab == "Invitations") {
             final invites = notifications
-                .where((n) => n.notificationTypes == 'invite'&& n.seenAt == null || n.seenAt != null)
+                .where((n) => n.notificationTypes == 'invite')
                 .toList();
             return ListView(
               children: [
