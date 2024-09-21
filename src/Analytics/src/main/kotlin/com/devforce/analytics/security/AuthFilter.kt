@@ -1,9 +1,10 @@
 package com.devforce.analytics.security
 
-import com.devforce.backend.dto.ResponseDto
+import com.devforce.analytics.dto.ResponseDto
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
+import io.jsonwebtoken.SignatureException
 import io.jsonwebtoken.ExpiredJwtException
 import jakarta.servlet.FilterChain
 import jakarta.servlet.ServletException
@@ -17,7 +18,6 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
 import java.io.IOException
-import java.security.SignatureException
 import java.util.Date
 
 @Component
@@ -46,6 +46,17 @@ class AuthFilter : OncePerRequestFilter() {
         filterChain: FilterChain
     ) {
         val requestURI = request.requestURI
+        response.setHeader("Access-Control-Allow-Origin", "https://frontend-1035006743185.us-central1.run.app")
+        response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+        response.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type")
+        response.setHeader("Access-Control-Allow-Credentials", "true")
+
+        if (request.method.equals("OPTIONS", ignoreCase = true)) {
+            // Respond with a 200 OK and terminate the filter chain
+            response.status = HttpServletResponse.SC_OK
+            return
+        }
+
         val jwt = getBearer(request)
         val match = ENDPOINTS.any { suffix -> requestURI.endsWith(suffix) }
 

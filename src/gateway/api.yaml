@@ -14,10 +14,10 @@ paths:
       description: Enable CORS by returning correct headers
       operationId: options
       x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
+        address: https://api-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Default response for CORS method
@@ -36,10 +36,10 @@ paths:
       summary: Get all events
       operationId: getEvents
       x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
+        address: https://api-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -57,10 +57,10 @@ paths:
       summary: Get event locations
       operationId: getEventLocations
       x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
+        address: https://api-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -91,10 +91,10 @@ paths:
           schema:
             type: object
       x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
+        address: https://api-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -118,10 +118,10 @@ paths:
           required: true
           type: string
       x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
+        address: https://api-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -146,10 +146,10 @@ paths:
           schema:
             type: object
       x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
+        address: https://api-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -173,10 +173,10 @@ paths:
           required: true
           type: string
       x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
+        address: https://api-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -210,10 +210,10 @@ paths:
           required: false
           type: number
       x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
+        address: https://api-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -242,10 +242,10 @@ paths:
           required: true
           type: string
       x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
+        address: https://api-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -263,10 +263,10 @@ paths:
       summary: Get all saved events
       operationId: getSavedEvents
       x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
+        address: https://api-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -290,10 +290,10 @@ paths:
           required: true
           type: string
       x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
+        address: https://api-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0  
+        deadline: 90.0  
       responses:
         '200':
           description: Successful
@@ -317,10 +317,10 @@ paths:
           required: true
           type: string
       x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
+        address: https://api-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -344,10 +344,10 @@ paths:
           required: true
           type: string
       x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
+        address: https://api-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -371,10 +371,10 @@ paths:
           required: true
           type: string
       x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
+        address: https://api-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -392,10 +392,10 @@ paths:
       summary: Get all RSVP events
       operationId: getRSVPEvents
       x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
+        address: https://api-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -419,10 +419,10 @@ paths:
           required: true
           type: string
       x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
+        address: https://api-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -440,10 +440,10 @@ paths:
       summary: Get user data
       operationId: getUser
       x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
+        address: https://api-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -484,10 +484,10 @@ paths:
           type: string
         
       x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
+        address: https://api-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -505,10 +505,10 @@ paths:
       summary: Dispute application
       operationId: disputeApplication
       x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
+        address: https://api-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -526,10 +526,10 @@ paths:
       summary: Acknowledge application
       operationId: acknowledgeApplication
       x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
+        address: https://api-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -547,10 +547,10 @@ paths:
       summary: Get all notifications
       operationId: getNotifications
       x-google-backend:
-        address: https://notifications-237rzrxg6a-uc.a.run.app
+        address: https://notifications-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -582,10 +582,10 @@ paths:
           type: string
           format: binary
       x-google-backend:
-        address: https://storage-237rzrxg6a-uc.a.run.app
+        address: https://storage-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -612,10 +612,10 @@ paths:
           type: string
           format: binary
       x-google-backend:
-        address: https://storage-237rzrxg6a-uc.a.run.app
+        address: https://storage-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -647,10 +647,10 @@ paths:
           type: string
           format: binary
       x-google-backend:
-        address: https://storage-237rzrxg6a-uc.a.run.app
+        address: https://storage-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -674,10 +674,10 @@ paths:
           required: true
           type: string
       x-google-backend:
-        address: https://storage-237rzrxg6a-uc.a.run.app
+        address: https://storage-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -695,10 +695,10 @@ paths:
       summary: Get all users
       operationId: getAllUsers
       x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
+        address: https://api-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -727,10 +727,10 @@ paths:
           required: true
           type: string
       x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
+        address: https://api-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -754,10 +754,10 @@ paths:
           required: true
           type: string
       x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
+        address: https://api-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -781,10 +781,10 @@ paths:
           required: true
           type: string
       x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
+        address: https://api-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -808,10 +808,10 @@ paths:
           required: true
           type: string
       x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
+        address: https://api-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -829,10 +829,10 @@ paths:
       summary: Get all applications
       operationId: getAllApplications
       x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
+        address: https://api-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -856,10 +856,10 @@ paths:
           required: true
           type: string
       x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
+        address: https://api-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -883,10 +883,10 @@ paths:
           required: true
           type: string
       x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
+        address: https://api-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -910,10 +910,10 @@ paths:
           required: true
           type: string
       x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
+        address: https://api-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -937,10 +937,10 @@ paths:
           required: true
           type: string
       x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
+        address: https://api-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -964,10 +964,10 @@ paths:
           required: true
           type: string
       x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
+        address: https://api-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -991,10 +991,10 @@ paths:
           required: true
           type: string
       x-google-backend:
-        address: https://notifications-237rzrxg6a-uc.a.run.app
+        address: https://notifications-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -1012,10 +1012,10 @@ paths:
       summary: Delete all notifications
       operationId: deleteAllNotifications
       x-google-backend:
-        address: https://notifications-237rzrxg6a-uc.a.run.app
+        address: https://notifications-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -1039,10 +1039,10 @@ paths:
           required: true
           type: string
       x-google-backend:
-        address: https://notifications-237rzrxg6a-uc.a.run.app
+        address: https://notifications-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -1063,7 +1063,7 @@ paths:
         address: https://analytics-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -1090,7 +1090,7 @@ paths:
         address: https://analytics-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -1111,7 +1111,7 @@ paths:
         address: https://analytics-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -1138,7 +1138,7 @@ paths:
         address: https://analytics-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -1160,7 +1160,7 @@ paths:
         address: https://analytics-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -1188,7 +1188,7 @@ paths:
         address: https://analytics-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -1210,7 +1210,7 @@ paths:
         address: https://analytics-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -1231,7 +1231,7 @@ paths:
         address: https://analytics-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -1258,7 +1258,7 @@ paths:
         address: https://analytics-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -1279,7 +1279,7 @@ paths:
         address: https://analytics-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -1311,7 +1311,7 @@ paths:
         address: https://analytics-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -1334,7 +1334,7 @@ paths:
         address: https://analytics-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -1355,7 +1355,7 @@ paths:
         address: https://recommendations-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -1383,7 +1383,7 @@ paths:
         address: https://recommendations-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -1397,10 +1397,28 @@ paths:
           description: Forbidden
 
 
+  /api/events/categories:
+      get:
+        summary: Fetch event categories
+        operationId: fetchEventCategories
+        x-google-backend:
+          address: https://api-1035006743185.us-central1.run.app
+          path_translation: APPEND_PATH_TO_ADDRESS
+          disable_auth: true
+          deadline: 90.0
+        responses:
+          '200':
+            description: Successful
+          '400':
+            description: Bad request
+          '500':
+            description: Internal server error
+          '401':
+            description: Unauthorized
+          '403':
+            description: Forbidden
 
-    
-
-
+ 
   
 
 

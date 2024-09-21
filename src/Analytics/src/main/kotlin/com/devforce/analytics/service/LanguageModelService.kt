@@ -3,7 +3,7 @@ package com.devforce.analytics.service
 import com.devforce.analytics.repo.RecommendedDateRepoImpl
 import com.devforce.analytics.repo.RecommendedVenueRepoImpl
 import com.devforce.analytics.security.CustomUser
-import com.devforce.backend.dto.ResponseDto
+import com.devforce.analytics.dto.ResponseDto
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.springframework.http.*
