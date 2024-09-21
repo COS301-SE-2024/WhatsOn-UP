@@ -483,8 +483,8 @@ Widget build(BuildContext context) {
                 Provider.of<notificationProvider>(context, listen: false);
              eventP.refreshSavedEvents(userP.JWT);
             _notificationProvider.refreshNotifications(userP.JWT);
-            SocketService('http://${globals.domain}:8082',
-                _notificationProvider, userP.userId, context);
+            SocketService('https://${globals.liveNotificationService}',
+                _notificationProvider, userP.JWT, context);
             userP.Generalusers(userP.JWT);
 
             userP.setUserData(

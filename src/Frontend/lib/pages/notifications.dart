@@ -371,15 +371,15 @@ class _NotificationsState extends State<Notifications> with TickerProviderStateM
                     ? '${notification.message.substring(0, 50)}...'
                     : notification.message,
               ),
-              onTap: () {
+              onTap: () async {
                 final userProvider userP = Provider.of<userProvider>(context, listen: false);
 
                 if (notification.notificationId != null) {
                   if(notification.seenAt == null){
-                    notification.markAsSeen(notification.notificationId, userP.JWT);
-                    notif.refreshNotifications(userP.JWT);
+                    await notification.markAsSeen(notification.notificationId, userP.JWT);
+                    await notif.refreshNotifications(userP.JWT);
                   }
-                  print(notification.seenAt);
+                  print('Notification was seen at: ${notification.seenAt}');
                   Navigator.push(
                     context,
                     MaterialPageRoute(
