@@ -1,7 +1,7 @@
 @echo off
 :: Run spring boot
 REM Run gradle
-gradle bootrun || (
+gradlew bootrun || (
     echo gradle bootrun failed for API service
     exit /b 1
 )

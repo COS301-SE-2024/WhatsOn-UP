@@ -14,6 +14,7 @@ class NotificationDetailScreen extends StatefulWidget {
   final AppNotification notification;
 
   NotificationDetailScreen({required this.notification});
+  
 
   @override
   _NotificationDetailScreenState createState() =>
@@ -29,6 +30,8 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
   }
 
   Future<void> _Accept() async {
+  userProvider userP = Provider.of<userProvider>(context, listen: false);
+
     setState(() {
       isLoading = true;
     });
@@ -36,7 +39,7 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
     Api api = Api();
     try {
       var response = await api.AcceptInvite(
-          userId: widget.notification.userId,
+          JWT: userP.JWT,
           notificationId: widget.notification.notificationId);
 
       if (response['status'] == 'error') {
@@ -66,8 +69,9 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
 
     Api api = Api();
     try {
+userProvider userP = Provider.of<userProvider>(context, listen: false);
       var response =
-          await api.Acknowledgeapplication(userId: widget.notification.userId);
+          await api.Acknowledgeapplication(JWT: userP.JWT);
 
       if (response['status'] == 'error') {
       } else {
@@ -167,10 +171,10 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
 
     Api api = Api();
     try {
-      await api.deleteNotification(widget.notification.notificationId, userP.userId);
+      await api.deleteNotification(widget.notification.notificationId, userP.JWT);
       print("Notification deleted");    
       _notificationProvider.removeNotification(widget.notification.notificationId);
-      await _notificationProvider.refreshNotifications(userP.userId);
+      await _notificationProvider.refreshNotifications(userP.JWT);
       Navigator.of(context).pop();
     } 
     catch (e) {

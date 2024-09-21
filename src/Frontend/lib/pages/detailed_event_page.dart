@@ -128,7 +128,7 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
         _isLoading = true;
       });
 
-      var result = await Api().rsvpEvent(widget.event.id, user!.id);
+      var result = await Api().rsvpEvent(widget.event.id, userP.JWT);
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Successfully RSVP\'d to event!')),
@@ -165,7 +165,7 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
       });
 
       await Api()
-          .DeletersvpEvent(widget.event.id, user!.id)
+          .DeletersvpEvent(widget.event.id, userP.JWT)
           .then((response) {});
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -259,7 +259,7 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
 
     if (confirmDelete ?? false) {
       Api api = Api();
-      api.DeleteEvent(_thisCurrentEvent.id, userP.userId)
+      api.DeleteEvent(_thisCurrentEvent.id, userP.JWT)
           .then((response) async {
         if (response['status'] == 'success') {
           print('Event deleted successfully. Response: $response');

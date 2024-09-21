@@ -612,6 +612,7 @@ class _EventCardState extends State<EventCard> {
                     ),
                   ),
                 ),
+                const SizedBox(height: 10.0),
                 Text(
                   widget.event.nameOfEvent,
                   style: TextStyle(
@@ -619,6 +620,8 @@ class _EventCardState extends State<EventCard> {
                     fontWeight: FontWeight.bold,
                     color: textColour,
                   ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
                 ),
                 const SizedBox(height: 4.0),
                 Row(
