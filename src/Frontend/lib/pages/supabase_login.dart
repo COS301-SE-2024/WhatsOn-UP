@@ -165,6 +165,7 @@
 import 'dart:async';
 import 'package:firstapp/pages/supabase_forgot_password.dart';
 import 'package:firstapp/pages/supabase_signup.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -206,10 +207,15 @@ class _SupabaseLoginState extends State<SupabaseLogin> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    myColor = Theme.of(context).primaryColor;
-    mediaSize = MediaQuery.of(context).size;
-    return Container(
+Widget build(BuildContext context) {
+  myColor = Theme.of(context).primaryColor;
+  MediaQueryData mediaQuery = MediaQuery.of(context);
+  mediaSize = kIsWeb ? Size(412.0, mediaQuery.size.height) : mediaQuery.size;
+  
+  // Wrap everything in Center to ensure width restriction is respected on the web
+  return Center(
+    child: Container(
+      width: mediaSize.width, // Respect width limitation on web
       color: const Color.fromARGB(255, 149, 137, 74),
       child: Scaffold(
         resizeToAvoidBottomInset: false,
@@ -221,8 +227,9 @@ class _SupabaseLoginState extends State<SupabaseLogin> {
           ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildTop() {
     return SizedBox(
@@ -476,8 +483,8 @@ class _SupabaseLoginState extends State<SupabaseLogin> {
                 Provider.of<notificationProvider>(context, listen: false);
              eventP.refreshSavedEvents(userP.JWT);
             _notificationProvider.refreshNotifications(userP.JWT);
-            SocketService('http://${globals.domain}:8082',
-                _notificationProvider, userP.userId, context);
+            SocketService('https://${globals.liveNotificationService}',
+                _notificationProvider, userP.JWT, context);
             userP.Generalusers(userP.JWT);
 
             userP.setUserData(
