@@ -185,7 +185,8 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
     userProvider userP = Provider.of<userProvider>(context, listen: false);
     EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
     Api api = Api();
-    api.postUsername(fullname, user!.id).then((response) {
+    user!;
+    api.postUsername(fullname, userP.JWT).then((response) {
       if (response['error'] != null) {
         print('An error occurred: ${response['error']}');
       } else {
@@ -207,9 +208,9 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
         notificationProvider _notificationProvider =
         Provider.of<notificationProvider>(context, listen: false);
 
-        _notificationProvider.refreshNotifications(userP.userId);
+        _notificationProvider.refreshNotifications(userP.JWT);
         SocketService('http://${globals.domain}:8082',_notificationProvider, userP.userId, context);
-        userP.Generalusers(userP.userId);
+        userP.Generalusers(userP.JWT);
 
 
         Navigator.push(

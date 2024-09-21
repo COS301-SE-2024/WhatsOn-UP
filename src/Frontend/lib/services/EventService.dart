@@ -12,7 +12,7 @@ import 'package:firstapp/widgets/event_card.dart';
 class EventService {
   final SupabaseClient supabase;
   EventService(this.supabase);
-  static final String baseUrl = 'http://${globals.domain}:8080';
+  static final String baseUrl = 'https://${globals.gatewayDomain}';
 
   Future<String?> _getJwtToken() async {
     final session = supabase.auth.currentSession;
@@ -20,7 +20,7 @@ class EventService {
     print(session?.accessToken);
     return session?.accessToken;
   }
-  Future<List<Event>> fetchPastEvents(String userId) async {
+  Future<List<Event>> fetchPastEvents(String JWT) async {
 
     final uri = Uri.parse('$baseUrl/api/events/get_passed_events');
 
@@ -40,7 +40,7 @@ class EventService {
 
         'Accept': 'application/json',
 
-        'Authorization': 'Bearer $userId',
+        'Authorization': 'Bearer $JWT',
 
       };
 
@@ -102,7 +102,7 @@ class EventService {
           return [];
         }
 
-        return   jsonResponse.map((json) => Category.fromJson(json as String)).toList();;
+        return   jsonResponse.map((json) => Category.fromJson(json as String)).toList();
       } else if (response.statusCode == 401) {
         print('Unauthorized request');
         throw Exception('Unauthorized request');

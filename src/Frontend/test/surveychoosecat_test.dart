@@ -28,7 +28,9 @@ void main() {
     when(mockUserProvider.email).thenReturn('user@gmail.com');
     when(mockUserProvider.password).thenReturn('password123');
     when(mockUserProvider.role).thenReturn('GENERAL');
-    when(mockApi.getCategories(userId:'userId')).thenAnswer((_) async {
+    when(mockUserProvider.JWT).thenReturn('test_user_JWT');
+
+    when(mockApi.getCategories(JWT:'userId')).thenAnswer((_) async {
       return [
         Category(id: '59ea9cf3-3764-403f-a9b0-01b6a86476ea', name: 'Film Screening'),
         Category(id: '6981b933-eda9-47c0-b5e6-933d03be60ff', name: 'Food Festival'),
@@ -38,7 +40,7 @@ void main() {
   });
 
   testWidgets('SurveyScreen displays loading spinner while fetching categories', (WidgetTester tester) async {
-    when(mockApi.getCategories(userId: anyNamed('userId'))).thenAnswer((_) async {
+    when(mockApi.getCategories(JWT: anyNamed('JWT'))).thenAnswer((_) async {
 
 
       return [];
@@ -65,7 +67,7 @@ void main() {
   testWidgets('SurveyScreen displays categories after fetching', (WidgetTester tester) async {
 
     final categories = [Category(id: 'id1', name: 'Category 1')];
-    when(mockApi.getCategories(userId: anyNamed('userId'))).thenAnswer((_) async => categories);
+    when(mockApi.getCategories(JWT: anyNamed('JWT'))).thenAnswer((_) async => categories);
     await tester.pumpWidget(
       MultiProvider(
         providers: [
@@ -89,7 +91,7 @@ void main() {
   });
 
   testWidgets('SurveyScreen displays error message if fetching categories fails', (WidgetTester tester) async {
-    when(mockApi.getCategories(userId: anyNamed('userId'))).thenThrow(Exception('Failed to fetch'));
+    when(mockApi.getCategories(JWT: anyNamed('JWT'))).thenThrow(Exception('Failed to fetch'));
 
     await tester.pumpWidget(
       MultiProvider(

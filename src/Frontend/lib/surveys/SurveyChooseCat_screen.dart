@@ -29,7 +29,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
     final Api api = Provider.of<Api>(context, listen: false);
     try {
       final List<Category> fetchedCategories =
-          await api.getCategories(userId: userP.userId);
+          await api.getCategories(JWT: userP.JWT);
       setState(() {
         categories = fetchedCategories;
       });

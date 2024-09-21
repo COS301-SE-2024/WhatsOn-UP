@@ -140,17 +140,17 @@ class userProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> Generalusers(String userId) async {
+  Future<void> Generalusers(String JWT) async {
     try {
-      _fetchGeneralusers(userId);
+      _fetchGeneralusers(JWT);
     } catch (e) {
       throw Exception('Error occurred while fetching general users: $e');
     }
   }
 
-  Future<void> _fetchGeneralusers(String userId) async {
+  Future<void> _fetchGeneralusers(String JWT) async {
     try {
-      final response = await api.getGeneralusersToHost(userId);
+      final response = await api.getGeneralusersToHost(JWT);
 
       generalapplications = Future.value(response);
       print('General users: $response');
