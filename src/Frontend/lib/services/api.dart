@@ -912,10 +912,15 @@ class Api {
       'Authorization': 'Bearer $JWT',
     };
     try {
+
       var response = await http.put(Uri.parse(url), headers: headers);
+      print('Broadcasting response: ${response.body}');
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
-      } else {
+      } else if(response.statusCode==403){
+        return jsonDecode(response.body);
+      }
+      else {
         throw Exception('Failed to BROADCAST');
       }
     } catch (e) {
