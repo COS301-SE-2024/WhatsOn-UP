@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Body, HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { EventEntity } from './entities/event.entity';
@@ -10,8 +10,6 @@ import * as jwt from 'jsonwebtoken';
 
 const API_KEY = ''
 const axios = require('axios');
-// const { computeOffset } = require ('spherical-geometry-js');
-
 @Injectable()
 export class UserRecommendationsService {
   constructor(
@@ -19,14 +17,25 @@ export class UserRecommendationsService {
     private readonly supabase: SupabaseClient,
   ) {}
 
-  async getRecommendedEvents(userID: string): Promise<any> {
+  async getRecommendedEvents(userID: string, numEvents: number): Promise<any> {
+
+    if(numEvents <= 0){
+      throw new HttpException(
+        {
+          status: 'error',
+          message: 'Number of events parameter must be greater than zero',
+          timestamp: new Date().toISOString(),
+        },
+        HttpStatus.BAD_REQUEST
+      );
+    }
 
     // Pull user preference values per category
     const { data: preferenceValues, error: prefError } = await this.supabase
     .rpc("get_user_category_preferences", { userid: userID });
 
     if (prefError) {
-    throw new Error(`Error fetching user category preferences: ${prefError.message}`);
+      throw new Error(`Error fetching user category preferences: ${prefError.message}`);
     }
 
     console.log(preferenceValues);
@@ -50,7 +59,7 @@ export class UserRecommendationsService {
     // Calculate predicted ratings
     let predictedRatings: {
         event: String,
-        fitness: number 
+        rating: number 
     }[] = events.map(event => {
       const category = event.category;
       const preferences = preferenceMap.get(category);
@@ -67,7 +76,7 @@ export class UserRecommendationsService {
       const surveyPreferenceValue = preferences.survey || 0;
 
       const binaryDigit = 1; // always 1
-      const rating = (interactionPreferenceValue * surveyPreferenceValue) * binaryDigit; //fitness 
+      const rating = (interactionPreferenceValue + surveyPreferenceValue) * binaryDigit; //fitness 
 
       console.log(`Event: ${event}, Category: ${category}, Rating: ${rating}`);
 
@@ -78,67 +87,58 @@ export class UserRecommendationsService {
     });
 
     // Sort predicted ratings in descending order
-    predictedRatings.sort((event1, event2) => event2.fitness - event1.fitness);
+    predictedRatings.sort((event1, event2) => event2.rating - event1.rating);
 
-    console.log('Predicted Ratings:', predictedRatings);
+    let selectedEvents = this.selection(predictedRatings, numEvents);
 
     return {
     status: 'success',
-    data: { message: this.selection(predictedRatings) },
+    data: { message: selectedEvents},
     timestamp: new Date().toISOString(),
     };
 
   }
 
-  selection(events: {
-    event: String,
-    fitness: number 
-  }[])
-  {
-    return events;
-  }
+  selection(events: { event: String, rating: number }[], numSelections: number) {
+    let selectedEvents: {event: String, rating: number}[] = [];
 
-  // function uniqueRouletteWheelSelection(predictedRatings, numSelections) {
-  //   let selectedEvents = [];
-  
-  //   // Check if numSelections exceeds the available events
-  //   if (numSelections > predictedRatings.length) {
-  //     console.warn('Requested more selections than available events. Returning all events.');
-  //     numSelections = predictedRatings.length; // Adjust to select all available events
-  //   }
-  
-  //   for (let i = 0; i < numSelections; i++) {
-  //     // Calculate total fitness for current ratings
-  //     const totalFitness = predictedRatings.reduce((sum, { fitness }) => sum + fitness, 0);
-  
-  //     if (totalFitness === 0) {
-  //       console.warn('All fitness values are zero, returning random event.');
-  //       const randomEvent = predictedRatings[Math.floor(Math.random() * predictedRatings.length)].event;
-  //       selectedEvents.push(randomEvent);
-  //       break;
-  //     }
-  
-  //     // Generate a random number between 0 and totalFitness
-  //     const randomValue = Math.random() * totalFitness;
-  
-  //     let runningSum = 0;
-  //     for (let j = 0; j < predictedRatings.length; j++) {
-  //       const { event, fitness } = predictedRatings[j];
-  //       runningSum += fitness;
-  
-  //       if (runningSum >= randomValue) {
-  //         selectedEvents.push(event);  // Select the event
-  
-  //         // Remove the selected event to prevent it from being selected again
-  //         predictedRatings.splice(j, 1);
-  //         break;
-  //       }
-  //     }
-  //   }
-  
-  //   return selectedEvents;
-  // }
-  
+
+    if (numSelections > events.length) {
+        console.warn('Requested more selections than available events. Returning all events');
+        numSelections = events.length;
+    }
+
+    const eventsCopy = [...events];
+
+    for (let i = 0; i < numSelections; i++) {
+        const totalFitness = eventsCopy.reduce((sum, { rating }) => sum + rating, 0);
+
+        // Case: No events (event categories) are favored -- becomes random selection
+        if (totalFitness === 0) {
+            console.warn('All fitness values are zero, returning random events');
+            const randomEvent = eventsCopy[Math.floor(Math.random() * eventsCopy.length)];
+            selectedEvents.push(randomEvent);
+            eventsCopy.splice(eventsCopy.findIndex(e => e === randomEvent), 1);
+        } else {
+            const randomValue = Math.random() * totalFitness; // portion of total fitness
+            let runningSum = 0;
+
+            // Perform roulette selection
+            for (let j = 0; j < eventsCopy.length; j++) {
+                const { event, rating } = eventsCopy[j];
+                runningSum += rating;
+
+                console.log('SELECTED EVENT STATE' + selectedEvents);
+                if (runningSum >= randomValue) {
+                      selectedEvents.push({event,rating});
+                    eventsCopy.splice(j, 1);
+                    break;
+                }
+            }
+        }
+    }
+    return selectedEvents;
+}
 
   // updates LatLng of each building
   // shouldn't need to be called often -- only as buildings are inserted into the db
