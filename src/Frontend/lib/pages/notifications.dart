@@ -282,8 +282,7 @@ class _NotificationsState extends State<Notifications> with TickerProviderStateM
               ],
             );
           }
-
-        else {
+        else if(tab == "Invitations") {
             final invites = notifications
                 .where((n) => n.notificationTypes == 'invite'&& n.seenAt == null || n.seenAt != null)
                 .toList();
@@ -296,8 +295,11 @@ class _NotificationsState extends State<Notifications> with TickerProviderStateM
               ],
             );
           }
+        else{
+          return Center(child: Text("No notifications available."));
 
         }
+      }
       },
     );
   }
@@ -311,7 +313,7 @@ class _NotificationsState extends State<Notifications> with TickerProviderStateM
         } else if (notif.notifications.isEmpty) {
           return   Center(child: Text("You have no notifications."));
 
-        } else {
+        } else if(tab == "Applications") {
           var notifications = notif.notifications;
             final applications = notifications
                 .where((n) => n.notificationTypes == 'application'&& n.seenAt == null )
@@ -324,6 +326,9 @@ class _NotificationsState extends State<Notifications> with TickerProviderStateM
                 ],
               ],
             );
+        }
+        else {
+          return Center(child: Text("No notifications available."));
         }
       },
     );
