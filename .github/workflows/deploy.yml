@@ -1,0 +1,30 @@
+name: Deploy to Google Cloud
+
+on:
+  push:
+    branches:
+      - develop  
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Google Cloud CLI
+        uses: google-github-actions/setup-gcloud@v0.2.0
+        with:
+          service_account_key: ${{ secrets.GOOGLE_CLOUD_SERVICE_ACCOUNT_KEY}}
+          project_id: whatsonup-analytics
+
+      - name: Build and push Docker image
+        run: |
+          gcloud builds submit --tag gcr.io/whatsonup-analytics/analytics .
+
+      - name: Deploy to Google Cloud Run
+        run: |
+          gcloud run deploy WhatsOnUp-Analytics-Deployment-Service-Account \
+            --image gcr.io/whatsonup-analytics/analytics \
+            --platform managed \
+            --region us-central1  
