@@ -287,8 +287,13 @@ class _HomePageState extends State<HomePage>
                         return Container();
                       }
 
-                      return EventCard(
-                          event: eventsHome[index], showBookmarkButton: true);
+                      userProvider userP = Provider.of<userProvider>(context);
+                      if (userP.role != 'GUEST') {
+                        return EventCard(event: eventsHome[index], showBookmarkButton: true);
+                      }
+                      else {
+                        return EventCard(event: eventsHome[index], showBookmarkButton: false);
+                      }
                     },
                   ),
                 ),
