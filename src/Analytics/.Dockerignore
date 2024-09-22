@@ -1,0 +1,9 @@
+# Ignore node_modules, build artifacts, and other unnecessary directories
+node_modules/
+build/
+dist/
+*.log
+*.tmp
+*out/
+bin/
+.idea/

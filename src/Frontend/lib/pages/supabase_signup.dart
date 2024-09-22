@@ -209,7 +209,7 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
         Provider.of<notificationProvider>(context, listen: false);
 
         _notificationProvider.refreshNotifications(userP.JWT);
-        SocketService('http://${globals.domain}:8082',_notificationProvider, userP.userId, context);
+        SocketService('https://notifications-live-1035006743185.us-central1.run.app',_notificationProvider, userP.JWT, context);
         userP.Generalusers(userP.JWT);
 
 

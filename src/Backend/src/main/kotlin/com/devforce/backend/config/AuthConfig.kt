@@ -45,6 +45,7 @@ class AuthConfig {
             }
             cors {
                 configurationSource = corsConfigurationSource()
+
             }
             csrf {
                 disable()
@@ -73,13 +74,18 @@ class AuthConfig {
     @Bean
     fun corsConfigurationSource(): CorsConfigurationSource {
         val configuration = CorsConfiguration().apply {
-            allowedOrigins = mutableListOf("*")
+            allowedOrigins = mutableListOf("https://frontend-1035006743185.us-central1.run.app")
             allowedMethods = mutableListOf("GET", "POST", "PUT", "DELETE", "OPTIONS")
-            allowedHeaders = mutableListOf("*")
+            allowedHeaders = mutableListOf("Content-Type", "Authorization", "X-Requested-With", "Accept", "access-control-allow-origin")
+            exposedHeaders = mutableListOf("Authorization", "Content-Disposition")
             allowCredentials = true
+            maxAge = 3600L  // Cache preflight response for 1 hour to reduce preflight requests
         }
+
         val source = UrlBasedCorsConfigurationSource()
         source.registerCorsConfiguration("/**", configuration)
         return source
     }
+
+
 }

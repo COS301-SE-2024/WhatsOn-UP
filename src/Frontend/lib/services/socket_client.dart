@@ -24,6 +24,8 @@ class SocketService {
       'token': 'Bearer $userId',
     };
 
+    print(userId);
+
     socket = IO.io(url, <String, dynamic>{
       'transports': ['websocket'],
       'query': {'token': userId},
