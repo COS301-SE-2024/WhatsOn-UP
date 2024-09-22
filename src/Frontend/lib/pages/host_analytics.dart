@@ -22,8 +22,9 @@ class _HostAnalyticsPageState extends State<HostAnalyticsPage> {
     // print ("USER ID: ${userP.userId}");
 
     try {
-      final response = await api.getAllEventsAnalytics(userP.JWT);
-      // final response = await api.getHostEventAnalytics("69ae72bc-8e2b-4400-b608-29f048d4f8c7");
+      // final response = await api.getAllEventsAnalytics(userP.JWT);
+      // final response = await api.getHostEventAnalytics("69ae72bc-8e2b-4400-b608-29f048d4f8c7", userP.JWT);
+      final response = await api.getHostEventAnalytics(userP.userId, userP.JWT);
       
       // print('EVENTS ANALYTICS RESPONSE: $response');
 
