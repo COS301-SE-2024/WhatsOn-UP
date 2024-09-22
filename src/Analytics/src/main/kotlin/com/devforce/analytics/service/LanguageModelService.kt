@@ -1,8 +1,9 @@
 package com.devforce.analytics.service
+
 import com.devforce.analytics.repo.RecommendedDateRepoImpl
 import com.devforce.analytics.repo.RecommendedVenueRepoImpl
 import com.devforce.analytics.security.CustomUser
-import com.devforce.backend.dto.ResponseDto
+import com.devforce.analytics.dto.ResponseDto
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.springframework.http.*
@@ -35,9 +36,8 @@ data class Descriptions(
 @Service
 class LanguageModelService {
 
-    private val API_KEY: String? = System.getenv("API_KEY")
-
-    private val API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=$API_KEY"
+    @Value("\${API_KEY}")
+    private val API_KEY: String? = null
 
     @Autowired
     private lateinit var recommendedDateRepo: RecommendedDateRepoImpl
@@ -47,6 +47,8 @@ class LanguageModelService {
     private lateinit var recommendedVenueRepo: RecommendedVenueRepoImpl
 
     fun generateEventDescription(prompt: String, title: String): ResponseEntity<ResponseDto> {
+        val API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=$API_KEY"
+
         val user = SecurityContextHolder.getContext().authentication.principal
         val userModel = (user as CustomUser).userModel
 
@@ -115,25 +117,24 @@ class LanguageModelService {
             val json = Json { ignoreUnknownKeys = true }
             val descriptions = json.decodeFromString<List<Descriptions>>(cleanedOutput)
 
+            val possibleVenues = recommendedVenueRepo.getPossibleVenues(userModel.userId, title, descriptions[0].category)
+            val possibleDates = recommendedDateRepo.getPossibleDates(userModel.userId, title, descriptions[0].category)
+
+            var i = 0
+
             val responseDto = descriptions.map { description ->
-                // Get possible venues and dates
-                val possibleVenues = recommendedVenueRepo.getPossibleVenues(userModel.userId, title, description.category)
-                val possibleDates = recommendedDateRepo.getPossibleDates(userModel.userId, title, description.category)
-
-                // Check if there are any results
-                val venue = possibleVenues.firstOrNull() ?: "No venue found"
-                val date = possibleDates.firstOrNull() ?: "No date found"
-
-                // Create the map
-                mapOf(
+                val mappedItem = mapOf(
                     "description" to description.description,
                     "category" to description.category,
-                    "venue" to venue,
-                    "date" to date
+                    "venue" to possibleVenues.getOrNull(i), // Add "venue" to venues, use getOrNull to prevent IndexOutOfBounds
+                    "date" to possibleDates.getOrNull(i) // Add "date" to dates, use getOrNull to prevent IndexOutOfBounds
                 )
+                i++
+                mappedItem
             }
 
             ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), responseDto))
+
 
         } else {
             ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), "Failed to generate description"))

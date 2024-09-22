@@ -8,15 +8,38 @@ schemes:
 produces:
   - application/json
 paths:
+  /**:
+    options:
+      summary: CORS support
+      description: Enable CORS by returning correct headers
+      operationId: options
+      x-google-backend:
+        address: https://api-1035006743185.us-central1.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        disable_auth: true
+        deadline: 90.0
+      responses:
+        '200':
+          description: Default response for CORS method
+          headers:
+            Access-Control-Allow-Origin:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Headers:
+              type: string
+            Access-Control-Max-Age:
+              type: string
+
   /api/events/get_all:
     get:
       summary: Get all events
       operationId: getEvents
       x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
+        address: https://api-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -34,10 +57,10 @@ paths:
       summary: Get event locations
       operationId: getEventLocations
       x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
+        address: https://api-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -68,10 +91,10 @@ paths:
           schema:
             type: object
       x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
+        address: https://api-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -95,10 +118,10 @@ paths:
           required: true
           type: string
       x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
+        address: https://api-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -123,10 +146,10 @@ paths:
           schema:
             type: object
       x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
+        address: https://api-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -150,10 +173,10 @@ paths:
           required: true
           type: string
       x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
+        address: https://api-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -187,10 +210,10 @@ paths:
           required: false
           type: number
       x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
+        address: https://api-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -219,10 +242,10 @@ paths:
           required: true
           type: string
       x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
+        address: https://api-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -240,10 +263,10 @@ paths:
       summary: Get all saved events
       operationId: getSavedEvents
       x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
+        address: https://api-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -267,10 +290,10 @@ paths:
           required: true
           type: string
       x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
+        address: https://api-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0  
+        deadline: 90.0  
       responses:
         '200':
           description: Successful
@@ -294,10 +317,10 @@ paths:
           required: true
           type: string
       x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
+        address: https://api-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -321,10 +344,10 @@ paths:
           required: true
           type: string
       x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
+        address: https://api-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -348,10 +371,10 @@ paths:
           required: true
           type: string
       x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
+        address: https://api-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -369,10 +392,10 @@ paths:
       summary: Get all RSVP events
       operationId: getRSVPEvents
       x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
+        address: https://api-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -396,10 +419,10 @@ paths:
           required: true
           type: string
       x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
+        address: https://api-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -417,10 +440,10 @@ paths:
       summary: Get user data
       operationId: getUser
       x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
+        address: https://api-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -461,10 +484,10 @@ paths:
           type: string
         
       x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
+        address: https://api-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -482,10 +505,10 @@ paths:
       summary: Dispute application
       operationId: disputeApplication
       x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
+        address: https://api-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -503,10 +526,10 @@ paths:
       summary: Acknowledge application
       operationId: acknowledgeApplication
       x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
+        address: https://api-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -524,10 +547,10 @@ paths:
       summary: Get all notifications
       operationId: getNotifications
       x-google-backend:
-        address: https://notifications-237rzrxg6a-uc.a.run.app
+        address: https://notifications-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -559,10 +582,10 @@ paths:
           type: string
           format: binary
       x-google-backend:
-        address: https://storage-237rzrxg6a-uc.a.run.app
+        address: https://storage-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -589,10 +612,10 @@ paths:
           type: string
           format: binary
       x-google-backend:
-        address: https://storage-237rzrxg6a-uc.a.run.app
+        address: https://storage-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -624,10 +647,10 @@ paths:
           type: string
           format: binary
       x-google-backend:
-        address: https://storage-237rzrxg6a-uc.a.run.app
+        address: https://storage-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -651,10 +674,10 @@ paths:
           required: true
           type: string
       x-google-backend:
-        address: https://storage-237rzrxg6a-uc.a.run.app
+        address: https://storage-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -672,10 +695,10 @@ paths:
       summary: Get all users
       operationId: getAllUsers
       x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
+        address: https://api-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -704,10 +727,10 @@ paths:
           required: true
           type: string
       x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
+        address: https://api-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -731,10 +754,10 @@ paths:
           required: true
           type: string
       x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
+        address: https://api-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -758,10 +781,10 @@ paths:
           required: true
           type: string
       x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
+        address: https://api-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -785,10 +808,10 @@ paths:
           required: true
           type: string
       x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
+        address: https://api-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -806,10 +829,10 @@ paths:
       summary: Get all applications
       operationId: getAllApplications
       x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
+        address: https://api-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -822,7 +845,7 @@ paths:
         '403':
           description: Forbidden
 
-  /api/admin/accept_applications:
+  /api/admin/accept_application:
     post:
       summary: accept application
       operationId: acceptApplicationAdmin
@@ -833,10 +856,10 @@ paths:
           required: true
           type: string
       x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
+        address: https://api-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -860,10 +883,10 @@ paths:
           required: true
           type: string
       x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
+        address: https://api-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -887,10 +910,10 @@ paths:
           required: true
           type: string
       x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
+        address: https://api-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -914,10 +937,10 @@ paths:
           required: true
           type: string
       x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
+        address: https://api-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -941,10 +964,10 @@ paths:
           required: true
           type: string
       x-google-backend:
-        address: https://api-237rzrxg6a-uc.a.run.app
+        address: https://api-1035006743185.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -957,20 +980,21 @@ paths:
         '403':
           description: Forbidden
 
-  /notifications/register:
-    get:
-      summary: Register for notifications
-      operationId: registerNotifications
+  /notifications/delete/{notificationId}:
+    delete:
+      summary: Delete notification
+      operationId: deleteNotification
       parameters:
-        - name: token
-          in: query
-          description: The ID of the user to register
+        - name: notificationId
+          in: path
+          description: The ID of the notification to delete
           required: true
           type: string
       x-google-backend:
-        address: https://notifications-live-237rzrxg6a-uc.a.run.app
+        address: https://notifications-1035006743185.us-central1.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
         disable_auth: true
-        deadline: 60.0
+        deadline: 90.0
       responses:
         '200':
           description: Successful
@@ -982,3 +1006,420 @@ paths:
           description: Unauthorized
         '403':
           description: Forbidden
+
+  /notifications/delete_all:
+    delete:
+      summary: Delete all notifications
+      operationId: deleteAllNotifications
+      x-google-backend:
+        address: https://notifications-1035006743185.us-central1.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        disable_auth: true
+        deadline: 90.0
+      responses:
+        '200':
+          description: Successful
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+  /notifications/mark_read/{notificationId}:
+    post:
+      summary: Mark notification as read
+      operationId: markNotificationAsRead
+      parameters:
+        - name: notificationId
+          in: path
+          description: The ID of the notification to mark as read
+          required: true
+          type: string
+      x-google-backend:
+        address: https://notifications-1035006743185.us-central1.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        disable_auth: true
+        deadline: 90.0
+      responses:
+        '200':
+          description: Successful
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+  /analytics/host/get:
+    get:
+      summary: Get host analytics
+      operationId: getHostAnalytics
+      x-google-backend:
+        address: https://analytics-1035006743185.us-central1.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        disable_auth: true
+        deadline: 90.0
+      responses:
+        '200':
+          description: Successful
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+  /analytics/admin/get_by_host/{userId}:
+    get:
+      summary: Get admin analytics by host
+      operationId: getAdminAnalyticsByHost
+      parameters:
+        - name: userId
+          in: path
+          description: The ID of the host to get analytics for
+          required: true
+          type: string
+      x-google-backend:
+        address: https://analytics-1035006743185.us-central1.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        disable_auth: true
+        deadline: 90.0
+      responses:
+        '200':
+          description: Successful
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+  /analytics/host/get_past_events:
+    get:
+      summary: Get past events analytics
+      operationId: getPastEventsAnalytics
+      x-google-backend:
+        address: https://analytics-1035006743185.us-central1.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        disable_auth: true
+        deadline: 90.0
+      responses:
+        '200':
+          description: Successful
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+  /analytics/admin/{userId}:
+    get:
+      summary: Get admin analytics
+      operationId: getAdminAnalytics
+      parameters:
+        - name: userId
+          in: path
+          description: The ID of the admin to get analytics for
+          required: true
+          type: string
+      x-google-backend:
+        address: https://analytics-1035006743185.us-central1.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        disable_auth: true
+        deadline: 90.0
+      responses:
+        '200':
+          description: Successful
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+
+  /analytics/host/get_aggregate_data:
+    get:
+      summary: Get aggregate host data
+      operationId: getAggregateHostData
+      x-google-backend:
+        address: https://analytics-1035006743185.us-central1.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        disable_auth: true
+        deadline: 90.0
+      responses:
+        '200':
+          description: Successful
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+
+  /analytics/admin/get_aggregate_data_by_host/{userId}:
+    get:
+      summary: Get aggregate admin data by host
+      operationId: getAggregateAdminDataByHost
+      parameters:
+        - name: userId
+          in: path
+          description: The ID of the host to get analytics for
+          required: true
+          type: string
+      x-google-backend:
+        address: https://analytics-1035006743185.us-central1.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        disable_auth: true
+        deadline: 90.0
+      responses:
+        '200':
+          description: Successful
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+
+  /analytics/admin/get_for_all_hosts:
+    get:
+      summary: Get admin analytics for all hosts
+      operationId: getAdminAnalyticsForAllHosts
+      x-google-backend:
+        address: https://analytics-1035006743185.us-central1.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        disable_auth: true
+        deadline: 90.0
+      responses:
+        '200':
+          description: Successful
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+  /analytics/admin/get_all_events:
+    get:
+      summary: Get all events analytics
+      operationId: getAllEventsAnalytics
+      x-google-backend:
+        address: https://analytics-1035006743185.us-central1.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        disable_auth: true
+        deadline: 90.0
+      responses:
+        '200':
+          description: Successful
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+  /analytics/admin/get_past_events_by_host/{userId}:
+    get:
+      summary: Get past events analytics by host
+      operationId: getPastEventsAnalyticsByHost
+      parameters:
+        - name: userId
+          in: path
+          description: The ID of the host to get analytics for
+          required: true
+          type: string
+      x-google-backend:
+        address: https://analytics-1035006743185.us-central1.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        disable_auth: true
+        deadline: 90.0
+      responses:
+        '200':
+          description: Successful
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+  /analytics/admin/get_all_aggregate_data:
+    get:
+      summary: Get all aggregate data
+      operationId: getAllAggregateData
+      x-google-backend:
+        address: https://analytics-1035006743185.us-central1.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        disable_auth: true
+        deadline: 90.0
+      responses:
+        '200':
+          description: Successful
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+  /analytics/host/generate_autofill:
+    get:
+      summary: Generate autofill data
+      operationId: generateAutofillData
+      parameters:
+        - name: description
+          in: query
+          description: The description of the autofill data
+          required: true
+          type: string
+        - name: title
+          in: query
+          description: The title of the autofill data
+          required: true
+          type: string
+      x-google-backend:
+        address: https://analytics-1035006743185.us-central1.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        disable_auth: true
+        deadline: 90.0
+      responses:
+        '200':
+          description: Successful
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+
+
+  /analytics/host/get_popular_events:
+    get:
+      summary: Get popular events
+      operationId: getPopularEvents
+      x-google-backend:
+        address: https://analytics-1035006743185.us-central1.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        disable_auth: true
+        deadline: 90.0
+      responses:
+        '200':
+          description: Successful
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+  /events/recommended_events:
+    get:
+      summary: Get recommended events
+      operationId: getRecommendedEvents
+      x-google-backend:
+        address: https://recommendations-1035006743185.us-central1.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        disable_auth: true
+        deadline: 90.0
+      responses:
+        '200':
+          description: Successful
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+  /preferences/init:
+    post:
+      summary: Initialize preferences
+      operationId: initPreferences
+      parameters:
+        - name: body
+          in: body
+          description: The preferences data to initialize
+          required: true
+          schema:
+            type: object
+      x-google-backend:
+        address: https://recommendations-1035006743185.us-central1.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        disable_auth: true
+        deadline: 90.0
+      responses:
+        '200':
+          description: Successful
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+
+  /api/events/categories:
+      get:
+        summary: Fetch event categories
+        operationId: fetchEventCategories
+        x-google-backend:
+          address: https://api-1035006743185.us-central1.run.app
+          path_translation: APPEND_PATH_TO_ADDRESS
+          disable_auth: true
+          deadline: 90.0
+        responses:
+          '200':
+            description: Successful
+          '400':
+            description: Bad request
+          '500':
+            description: Internal server error
+          '401':
+            description: Unauthorized
+          '403':
+            description: Forbidden
+
+ 
+  
+
+
+  

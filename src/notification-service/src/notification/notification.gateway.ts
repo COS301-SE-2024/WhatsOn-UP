@@ -5,6 +5,8 @@ import {
 } from '@nestjs/websockets';
 import { Server } from 'socket.io';
 import { createClient } from '@supabase/supabase-js';
+import { request } from 'http';
+import { JwtService } from '@nestjs/jwt';
 
 @WebSocketGateway(8082)
 export class NotificationGateway implements OnModuleInit {
@@ -14,6 +16,7 @@ export class NotificationGateway implements OnModuleInit {
   clients: Record<string, { socket: any; token: string }> = {};
 
   private supabase;
+  private jwtService: JwtService;
 
   constructor() {
     this.supabase = createClient(
@@ -21,6 +24,7 @@ export class NotificationGateway implements OnModuleInit {
       process.env.SUPABASE_KEY
     );
     this.setupEventListener();
+    this.jwtService = new JwtService();
   }
 
   private async setupEventListener() {
@@ -60,8 +64,6 @@ export class NotificationGateway implements OnModuleInit {
             this.emitError(notification.user_id, 'Client not found');
             return;
           }
-
-          console.log('Notification:', notification);
 
           if (!notification.event_id) {
             client.socket.emit('notification', {
@@ -116,12 +118,16 @@ export class NotificationGateway implements OnModuleInit {
   }
 
   onModuleInit() {
-    this.server.on('connection', (socket) => {
-      // Extract token from query
-      const token: string = socket.handshake.query.token.toString();
+    this.server.on('connection', async (socket) => {
       
+      let token: string = socket.handshake.query.token.toString();
 
       if (token) {
+        const secret = process.env.JWT_SECRET
+        await this.jwtService.verifyAsync(token, { secret });
+        const decoded = this.jwtService.decode(token);
+        token = decoded['sub'];
+        console.log('Client connected:', token);
         this.clients[socket.id] = { socket, token };
       } else {
         socket.emit('error', {

@@ -48,7 +48,6 @@ export class AppService {
       );
     }
 
-    console.log('Data:', data);
 
     return {
       status: 'success',
@@ -96,6 +95,73 @@ export class AppService {
     return {
       status: 'success',
       data,
+      timestamp: new Date().toISOString(),
+    };
+
+  }
+
+  async markNotificationRead(userId: string, notificationId: string): Promise<any> {
+    const { data: notificationData, error: notificationError } = await this.supabase
+      .from('notifications')
+      .select('notification_id, seen_at')
+      .eq('notification_id', notificationId)
+      .eq('user_id', userId);
+
+    if (notificationError) {
+      console.error('Error fetching notification:', notificationError);
+      throw new HttpException(
+        {
+          status: 'error',
+          message: 'Error fetching notification',
+          timestamp: new Date().toISOString(),
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    if (!notificationData || notificationData.length === 0) {
+      throw new HttpException(
+        {
+          status: 'error',
+          message: 'Notification not found',
+          timestamp: new Date().toISOString(),
+        },
+        HttpStatus.NOT_FOUND,
+      );
+
+    }
+  
+
+    if (notificationData[0].seen_at) {
+      return {
+        status: 'success',
+        message: 'Notification already read',
+        timestamp: new Date().toISOString(),
+      };
+    }
+
+    const { data, error } = await this.supabase
+      .from('notifications')
+      .update({ seen_at: new Date().toISOString() })
+      .eq('notification_id', notificationId)
+      .eq('user_id', userId);
+
+    if (error) {
+      console.error('Error marking notification as read:', error);
+      throw new HttpException(
+        {
+          status: 'error',
+          message: 'Error marking notification read',
+          timestamp: new Date().toISOString(),
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+
+    return {
+      status: 'success',
+      message: 'Notification marked read',
       timestamp: new Date().toISOString(),
     };
 
