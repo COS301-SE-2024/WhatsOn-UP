@@ -21,6 +21,9 @@ jobs:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
       GCP_SERVICE_ACCOUNT_KEY: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
+      SPRINGBOOT_ENV: ${{ secrets.SPRINGBOOT_ENV }}
+      RECOMMENDATIONS_ENV: ${{ secrets.RECOMMENDATIONS_ENV }}
+      NOTIFICATIONS_ENV: ${{ secrets.NOTIFICATIONS_ENV }}
 
     steps:
       - name: 'Checkout repository'
@@ -38,22 +41,25 @@ jobs:
       - name: 'Log in to Docker Hub'
         uses: docker/login-action@v2
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
+          username: ${{ env.DOCKER_USERNAME }}
           password: ${{ env.DOCKER_PASSWORD }}
       
       - name: 'Docker Auth'
         run: |
           gcloud auth configure-docker "us-east1-docker.pkg.dev"
 
-      - name: 'Check if scripts directory exists'
-        run: |
-          if [ ! -d "scripts" ]; then
-            echo "scripts directory not found!"
-            exit 1
-          fi
-
       - name: 'Run deployment script'
         run: |
+          touch src/Backend/.env
+          ${{env.SPRINGBOOT_ENV}} > src/Backend/.env
+          touch src/Analytics/.env
+          ${{env.SPRINGBOOT_ENV}} > src/Analytics/.env
+          touch src/recommendation-service/.env
+          ${{env.RECOMMENDATIONS_ENV}} > src/recommendation-service/.env
+          touch src/notification-service/.env
+          ${{env.NOTIFICATIONS_ENV}} > src/notification-service/.env
+          touch src/storage-service/.env
+          ${{env.NOTIFICATIONS_ENV}} > src/storage-service/.env
           cd scripts
           if [ -f "deploy.sh" ]; then
             chmod +x deploy.sh
