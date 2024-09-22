@@ -78,6 +78,13 @@ Future<void> refreshSavedEvents(String? JWT) async {
       throw Exception('Failed to fetch home events: $e');
     }
   }
+  Future<List<Category>> fetchCategories(String JWT, ) async {
+    try {
+      return await api.getCategories(JWT: JWT);
+    } catch (e) {
+      throw Exception('Failed to fetch categories: $e');
+    }
+  }
 
 
 Future<List<Event>> _fetchEventsRsvp(String userId, String JWT) async {
