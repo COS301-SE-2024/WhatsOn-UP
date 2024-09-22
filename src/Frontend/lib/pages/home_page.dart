@@ -133,11 +133,11 @@ class _HomePageState extends State<HomePage>
           flexibleSpace: _buildHeader(),
           bottom: TabBar(
             controller: _tabController,
-            indicatorColor: Color.fromARGB(255, 196, 179, 97),
-            labelColor: Color.fromARGB(255, 196, 179, 97),
+            indicatorColor: const Color.fromARGB(255, 196, 179, 97),
+            labelColor: const Color.fromARGB(255, 196, 179, 97),
             unselectedLabelColor: Colors.white70,
             indicatorWeight: 4,
-            indicatorPadding: EdgeInsets.only(bottom: 12),
+            indicatorPadding: const EdgeInsets.only(bottom: 12),
             tabs: const [
               Tab(text: 'Explore'),
               Tab(text: 'Saved Events'),
@@ -197,6 +197,7 @@ class _HomePageState extends State<HomePage>
   }
 
   Widget _buildExploreTab() {
+    userProvider userP = Provider.of<userProvider>(context);
     return FutureBuilder<List<List<Event>>>(
       future: fetchEvents(),
       builder: (context, snapshot) {
@@ -227,7 +228,7 @@ class _HomePageState extends State<HomePage>
                     controller: _searchController,
                     decoration: InputDecoration(
                       hintText: 'Search for events',
-                      prefixIcon: Icon(Icons.search),
+                      prefixIcon: const Icon(Icons.search),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(25.0),
                       ),
@@ -298,8 +299,9 @@ class _HomePageState extends State<HomePage>
                   ),
                 ),
                 const SizedBox(height: 12.0),
+
                 Padding(
-                  padding: EdgeInsets.all(12.0),
+                  padding: const EdgeInsets.all(12.0),
                   child: Row(
                     children: [
                       const Text(
@@ -308,6 +310,7 @@ class _HomePageState extends State<HomePage>
                             fontSize: 18.0, fontWeight: FontWeight.bold),
                       ),
                       const Spacer(),
+                      if (userP.role != "GUEST")
                       TextButton(
                         onPressed: () {
                           Navigator.push(
@@ -327,24 +330,36 @@ class _HomePageState extends State<HomePage>
                 ),
                 SizedBox(
                   height: 250.0,
-                  child: GridView.builder(
-                    scrollDirection: Axis.horizontal,
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 1,
-                      mainAxisSpacing: 8.0,
-                    ),
-                    itemCount: eventsRecommended.length,
-                    itemBuilder: (context, index) {
-                      if (index >= eventsRecommended.length) {
-                        return Container();
-                      }
+                  child: userP.role == "GUEST"
+                      ? const Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(16.0),
+                            child: Text(
+                              'Create an account or sign in to receive event recommendations!',
+                              style: TextStyle(fontSize: 16.0),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        )
+                      : GridView.builder(
+                          scrollDirection: Axis.horizontal,
+                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 1,
+                            mainAxisSpacing: 8.0,
+                          ),
+                          itemCount: eventsRecommended.length,
+                          itemBuilder: (context, index) {
+                            if (index >= eventsRecommended.length) {
+                              return Container();
+                            }
 
-                      return EventCard(
-                          event: eventsRecommended[index],
-                          showBookmarkButton: true, recommendations:true,);
-                    },
-                  ),
+                            return EventCard(
+                              event: eventsRecommended[index],
+                              showBookmarkButton: true,
+                              recommendations: true,
+                            );
+                          },
+                        ),
                 ),
               ],
             ),
