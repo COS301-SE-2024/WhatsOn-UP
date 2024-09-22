@@ -21,15 +21,8 @@ jobs:
       GCP_SERVICE_ACCOUNT_KEY: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
 
     steps:
-      - name: Checkout the code
-        uses: actions/checkout@v2
-
-      - name: Log into Docker Hub
-        run: echo $DOCKER_PASSWORD | docker login -u devforce123 --password-stdin
-
-      - name: Pull Docker Images
-        run: docker pull devforce123/ecommerce-service:latest || true
-
-      - name: Build Docker Image
-        run: |
-          docker build -t devforce123/ecommerce-service:latest .
+      - id: 'auth'
+        name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@f112390a2df9932162083945e46d439060d66ec2' # google-github-actions/auth@v2
+        with:
+          workload_identity_provider: '${{ env.GCP_SERVICE_ACCOUNT_KEY }}'
