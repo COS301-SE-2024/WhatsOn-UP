@@ -57,16 +57,16 @@ jobs:
         working-directory: ./src/Frontend
         run: flutter pub get
 
-      - name: 'Run deployment script'
+      - name: 'Create and write environment variables to .env files'
         run: |
-          # Create and write environment variables to .env files
           echo "${{ env.SPRINGBOOT_ENV }}" > src/Backend/.env
           echo "${{ env.SPRINGBOOT_ENV }}" > src/Analytics/.env
           echo "${{ env.RECOMMENDATIONS_ENV }}" > src/recommendation-service/.env
           echo "${{ env.NOTIFICATIONS_ENV }}" > src/notification-service/.env
           echo "${{ env.NOTIFICATIONS_ENV }}" > src/storage-service/.env
 
-          # Navigate to the scripts directory and run the deployment script
+      - name: 'Run deployment script'
+        run: |
           cd scripts
           if [ -f "deploy.sh" ]; then
             chmod +x deploy.sh
@@ -75,3 +75,12 @@ jobs:
             echo "deploy.sh script not found!"
             exit 1
           fi
+
+      - name: 'Delete the .env files'
+        run: |
+          rm -f src/Backend/.env
+          rm -f src/Analytics/.env
+          rm -f src/recommendation-service/.env
+          rm -f src/notification-service/.env
+          rm -f src/storage-service/.env
+
