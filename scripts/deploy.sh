@@ -1,55 +1,55 @@
 #!/bin/bash
 
 # Define variables
-DOCKER_HUB_REPO="devforce123/backend-services"
-GCR_REPO="us-east1-docker.pkg.dev/whatsonup/backend-services"
+# DOCKER_HUB_REPO="devforce123/backend-services"
+# GCR_REPO="us-east1-docker.pkg.dev/whatsonup/backend-services"
 
-# Arrays for service names and their respective directories
-services=("api" "storage" "notifications" "analytics" "recommendations")
-directories=("../src/Backend" "../src/storage-service" "../src/notification-service" "../src/Analytics" "../src/recommendation-service")
+# # Arrays for service names and their respective directories
+# services=("api" "storage" "notifications" "analytics" "recommendations")
+# directories=("../src/Backend" "../src/storage-service" "../src/notification-service" "../src/Analytics" "../src/recommendation-service")
 
-# Loop through services and directories
-for i in "${!services[@]}"; do
-  SERVICE_NAME=${services[$i]}
-  WORKING_DIR=${directories[$i]}
+# # Loop through services and directories
+# for i in "${!services[@]}"; do
+#   SERVICE_NAME=${services[$i]}
+#   WORKING_DIR=${directories[$i]}
   
-  echo "Deploying ${SERVICE_NAME}..."
+#   echo "Deploying ${SERVICE_NAME}..."
 
-  # Navigate to the service's directory
-  cd "${WORKING_DIR}" || exit
+#   # Navigate to the service's directory
+#   cd "${WORKING_DIR}" || exit
 
-  # Build Docker image
-  docker build -t "${DOCKER_HUB_REPO}:${SERVICE_NAME}" .
+#   # Build Docker image
+#   docker build -t "${DOCKER_HUB_REPO}:${SERVICE_NAME}" .
 
-  # Tag the image for Google Container Registry (GCR)
-  docker tag "${DOCKER_HUB_REPO}:${SERVICE_NAME}" "${GCR_REPO}/${SERVICE_NAME}:latest"
+#   # Tag the image for Google Container Registry (GCR)
+#   docker tag "${DOCKER_HUB_REPO}:${SERVICE_NAME}" "${GCR_REPO}/${SERVICE_NAME}:latest"
 
-  # Push to GCR
-  docker push "${GCR_REPO}/${SERVICE_NAME}:latest"
+#   # Push to GCR
+#   docker push "${GCR_REPO}/${SERVICE_NAME}:latest"
 
-  # Push to Docker Hub
-  docker push "${DOCKER_HUB_REPO}:${SERVICE_NAME}"
+#   # Push to Docker Hub
+#   docker push "${DOCKER_HUB_REPO}:${SERVICE_NAME}"
 
-  # Deploy to Google Cloud Run
-  gcloud run services update "${SERVICE_NAME}" \
-    --image "${GCR_REPO}/${SERVICE_NAME}:latest" \
-    --region us-central1 
+#   # Deploy to Google Cloud Run
+#   gcloud run services update "${SERVICE_NAME}" \
+#     --image "${GCR_REPO}/${SERVICE_NAME}:latest" \
+#     --region us-central1 
 
-  # Return to the original directory
-  cd - || exit
+#   # Return to the original directory
+#   cd - || exit
 
-  echo "${SERVICE_NAME} deployment completed."
-done
+#   echo "${SERVICE_NAME} deployment completed."
+# done
 
-echo "Deploying notifications-live..."
+# echo "Deploying notifications-live..."
 
-gcloud run services update notifications-live \
-  --image us-east1-docker.pkg.dev/whatsonup/backend-services/notifications:latest \
-  --region us-central1 
+# gcloud run services update notifications-live \
+#   --image us-east1-docker.pkg.dev/whatsonup/backend-services/notifications:latest \
+#   --region us-central1 
 
-echo "notifications-live deployment completed."
+# echo "notifications-live deployment completed."
 
-echo "All backend services deployed successfully."
+# echo "All backend services deployed successfully."
 
 # Deploy frontend service
 echo "Deploying frontend service..."

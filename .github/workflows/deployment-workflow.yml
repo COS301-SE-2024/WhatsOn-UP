@@ -47,6 +47,15 @@ jobs:
       - name: 'Docker Auth'
         run: |
           gcloud auth configure-docker "us-east1-docker.pkg.dev"
+      
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.22.1'
+    
+      - name: Install dependencies for Frontend
+        working-directory: ./src/Frontend
+        run: flutter pub get
 
       - name: 'Run deployment script'
         run: |
