@@ -1,9 +1,10 @@
 name: Deploy to Google Cloud
 
 on:
-  push:
+  pull_request:
     branches:
-      - develop  
+      # - main
+      - develo
 
 jobs:
   deploy:
