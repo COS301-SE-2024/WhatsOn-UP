@@ -1,4 +1,4 @@
-name: Backend Service Deployment Pipeline Fix
+name: Backend Services Deployment Pipeline Fix
 
 on:
   push:
@@ -50,16 +50,14 @@ jobs:
 
       - name: 'Run deployment script'
         run: |
-          touch src/Backend/.env
-          ${{env.SPRINGBOOT_ENV}} > src/Backend/.env
-          touch src/Analytics/.env
-          ${{env.SPRINGBOOT_ENV}} > src/Analytics/.env
-          touch src/recommendation-service/.env
-          ${{env.RECOMMENDATIONS_ENV}} > src/recommendation-service/.env
-          touch src/notification-service/.env
-          ${{env.NOTIFICATIONS_ENV}} > src/notification-service/.env
-          touch src/storage-service/.env
-          ${{env.NOTIFICATIONS_ENV}} > src/storage-service/.env
+          # Create and write environment variables to .env files
+          echo "${{ env.SPRINGBOOT_ENV }}" > src/Backend/.env
+          echo "${{ env.SPRINGBOOT_ENV }}" > src/Analytics/.env
+          echo "${{ env.RECOMMENDATIONS_ENV }}" > src/recommendation-service/.env
+          echo "${{ env.NOTIFICATIONS_ENV }}" > src/notification-service/.env
+          echo "${{ env.NOTIFICATIONS_ENV }}" > src/storage-service/.env
+
+          # Navigate to the scripts directory and run the deployment script
           cd scripts
           if [ -f "deploy.sh" ]; then
             chmod +x deploy.sh
