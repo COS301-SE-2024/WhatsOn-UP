@@ -109,7 +109,7 @@ class _BroadcastState extends State<Broadcast> {
     Api api = Provider.of<Api>(context, listen: false);
 
     try {
-      final response = await api.broadcast(messageController.text, userP.userId);
+      final response = await api.broadcast(messageController.text, userP.JWT);
       if (response['status'] == 'success') {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Broadcast sent successfully"), backgroundColor: Colors.green),

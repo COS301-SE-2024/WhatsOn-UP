@@ -1,3 +1,4 @@
+import '../services/api.dart';
 import '../utils.dart';
 
 class AppNotification {
@@ -38,8 +39,10 @@ class AppNotification {
           : null,
     );
   }
-  void markAsSeen() {
-    seenAt = formatDateTime(DateTime.now().toIso8601String());
+  void markAsSeen(String notificationID, String? JWT) {
+    Api api = Api();
+    api.markSeen(notificationID,JWT!);
+    // seenAt = formatDateTime(DateTime.now().toIso8601String());
   }
 
   @override

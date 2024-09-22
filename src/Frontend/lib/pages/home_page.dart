@@ -337,7 +337,7 @@ class _HomePageState extends State<HomePage>
 
                       return EventCard(
                           event: eventsRecommended[index],
-                          showBookmarkButton: true);
+                          showBookmarkButton: true, recommendations:true,);
                     },
                   ),
                 ),
@@ -365,25 +365,34 @@ class _HomePageState extends State<HomePage>
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (snapshot.hasData) {
-          final savedEvents = snapshot.data![1];
+          var savedEvents = snapshot.data![0];
+          List<Event> filteredEvents = [];
 
-          if (savedEvents.isEmpty) {
+
+          for (var event in savedEvents) {
+            print(event.saved);
+            if (event.saved == true) {
+              filteredEvents.add(event);
+            }
+          }
+
+          if (filteredEvents.isEmpty) {
             return const Center(child: Text('No saved events found.'));
           }
 
           return ListView.builder(
             padding: const EdgeInsets.symmetric(horizontal: 24.0),
-            itemCount: savedEvents.length,
+            itemCount: filteredEvents.length,
             itemBuilder: (context, index) {
-              if (index >= savedEvents.length) {
+              if (index >= filteredEvents.length) {
                 return Container();
               }
               return Container(
                 margin: const EdgeInsets.only(bottom: 14.0),
                 child: EventCard(
-                    event: savedEvents[index],
+                    event: filteredEvents[index],
                     showBookmarkButton: true,
-                    saved: true),
+                    ),
               );
             },
           );

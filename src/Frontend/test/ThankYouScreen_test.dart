@@ -36,7 +36,7 @@ void main() {
           mentors: [],
           categories: [],
           sessions: [],
-        ), invitees: [],
+        ), invitees: [], saved: true,
       ),
       Event(
         id: '2',
@@ -54,7 +54,7 @@ void main() {
           mentors: [],
           categories: [],
           sessions: [],
-        ), invitees: [],
+        ), invitees: [], saved: true,
       ),
     ]);
     when(mockEventProvider.eventsHome).thenAnswer((_) async =>
@@ -77,7 +77,7 @@ void main() {
           categories: [],
           sessions: [],
         ),
-        invitees: [],
+        invitees: [], saved: true,
       ),
       Event(
         id: '2',
@@ -97,7 +97,7 @@ void main() {
           categories: [],
           sessions: [],
         ),
-        invitees: [],
+        invitees: [], saved: true,
       ),
       Event(
         id: '3',
@@ -117,7 +117,7 @@ void main() {
           categories: [],
           sessions: [],
         ),
-        invitees: [],
+        invitees: [], saved: false,
       ),
     ]);
     when(mockEventProvider.eventsSaved).thenAnswer((_) async =>
@@ -139,7 +139,7 @@ void main() {
           categories: [],
           sessions: [],
         ),
-        invitees: [],
+        invitees: [], saved: false,
       ),
       Event(
         id: '2',
@@ -158,7 +158,8 @@ void main() {
           categories: [],
           sessions: [],
         ),
-        invitees: [],
+        invitees: [], 
+        saved: true,
       ),
       Event(
         id: '3',
@@ -177,7 +178,7 @@ void main() {
           categories: [],
           sessions: [],
         ),
-        invitees: [],
+        invitees: [], saved: true,
       ),
     ]);
     when(mockEventProvider.recommendations).thenAnswer((_) async =>
@@ -199,7 +200,7 @@ void main() {
           categories: [],
           sessions: [],
         ),
-        invitees: [],
+        invitees: [], saved: false,
       ),
       Event(
         id: '2',
@@ -218,7 +219,7 @@ void main() {
           categories: [],
           sessions: [],
         ),
-        invitees: [],
+        invitees: [], saved: true,
       ),
       Event(
         id: '3',
@@ -237,7 +238,7 @@ void main() {
           categories: [],
           sessions: [],
         ),
-        invitees: [],
+        invitees: [], saved: false,
       ),
     ]);
 

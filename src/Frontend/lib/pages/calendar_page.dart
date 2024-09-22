@@ -11,6 +11,7 @@ import 'package:firstapp/widgets/event_card.dart';
 import '../providers/user_provider.dart';
 import '../providers/events_providers.dart';
 import 'package:flutter/gestures.dart';
+import '../services/globals.dart' as globals;
 
 class CalendarPage extends StatefulWidget {
   const CalendarPage({super.key});
@@ -33,12 +34,7 @@ class _CalendarPageState extends State<CalendarPage>
       _fetchEvents();
     });
   }
-  // @override
-  // void didChangeDependencies() {
-  //   super.didChangeDependencies();
-  //   _fetchRSVPEvents();
-  //
-  // }
+
 
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
@@ -46,26 +42,6 @@ class _CalendarPageState extends State<CalendarPage>
   Map<DateTime, List<Map<String, dynamic>>> _groupedEvents = {};
   bool _isLoading = true;
 
-  // Future<void> _fetchRSVPEvents() async {
-
-  //   try {
-  //     EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
-  //     final response = await eventP.eventsRsvp;
-
-  //     final parsedEvents = parseEvents(response);
-
-  //     setState(() {
-  //       _groupedEvents = _groupEventsByDate(parsedEvents);
-  //       _isLoading = false;
-  //     });
-
-  //   } catch (e) {
-  //     print('RSVP Error: $e');
-  //     setState(() {
-  //       _isLoading = false;
-  //     });
-  //   }
-  // }
 
   Future<void> _fetchEvents() async {
     try {
@@ -73,7 +49,8 @@ class _CalendarPageState extends State<CalendarPage>
       userProvider userP = Provider.of<userProvider>(context, listen: false);
 
       String? userId = userP.role == 'guest' ? null : userP.userId;
-      eventP.fetchfortheFirstTimeRsvp(userId!);
+      String JWT = (userId != null) ? userP.JWT : 'guest_user'; //userP.JWT will not set at this point  
+      eventP.fetchfortheFirstTimeRsvp(userId!, JWT);
 
       List<Event> events = await eventP.eventsRsvp;
       // final parsedEvents = parseEvents(response);
@@ -137,6 +114,7 @@ class _CalendarPageState extends State<CalendarPage>
                 categories: [],
                 sessions: [],
               ),
+        'saved': event['saved'] ?? false,
       };
     }).toList();
   }
@@ -176,7 +154,9 @@ class _CalendarPageState extends State<CalendarPage>
                 'available': event.venue?.available ?? false,
               }
             : null,
-        'url': 'https://picsum.photos/200',
+        'url': event.imageUrls != null && event.imageUrls!.isNotEmpty
+            ? event.imageUrls![0]
+            : globals.defaultEventURL,
         'maxAttendees': event.maxAttendees ?? 0,
         'description': event.description ?? '',
         'id': event.id,
@@ -185,6 +165,7 @@ class _CalendarPageState extends State<CalendarPage>
             ? List<Attendee>.from(event.attendees!)
             : [],
         'metadata': event.metadata.toJson(),
+        'saved': event.saved ?? false,
       });
     });
 
@@ -226,34 +207,19 @@ class _CalendarPageState extends State<CalendarPage>
     }
   }
 
-  // Widget _buildNoEventsMessage(userProvider userP) {
-  //   final noEventsMessage = userP.role == 'GUEST'
-  //       ? 'There are no events occurring this month. Please check back later.'
-  //       : 'You have no RSVP\'d events for this month. Head to the [home page](/home) to find one that interests you.';
-
-  //   return Center(
-  //     child: Padding(
-  //       padding: const EdgeInsets.all(16.0),
-  //       child: Text(
-  //         noEventsMessage,
-  //         style: const TextStyle(fontSize: 18),
-  //         textAlign: TextAlign.center,
-  //       ),
-  //     ),
-  //   );
-  // }
-
   Widget _buildNoEventsMessage(userProvider userP, BuildContext context) {
+  final theme = Theme.of(context);
+  final textColour = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
   final Widget noEventsMessage = userP.role == 'GUEST'
-      ? const Text(
+      ? Text(
           'There are no events occurring this month. Please check back later.',
-          style: TextStyle(fontSize: 18),
+          style: TextStyle(fontSize: 18, color: textColour),
           textAlign: TextAlign.center,
         )
       : RichText(
           text: TextSpan(
             text: "You have no RSVP'd events for this month. Head to the ",
-            style: const TextStyle(fontSize: 18, color: Colors.black),
+            style: TextStyle(fontSize: 18, color: textColour),
             children: [
               TextSpan(
                 text: 'home page',
@@ -298,21 +264,9 @@ Widget _buildEventCard(Map<String, dynamic> event) {
         maxAttendees: event['maxAttendees'],
         isPrivate: event['isPrivate'],
         metadata: Metadata.fromJson(event['metadata']),
+        saved: event['saved'],
 
       );
-/* venue: event['venue'] != null ? Venue(
-        name: event['venue']['name'] ?? '',
-        boards: event['venue']['boards'] ?? '',
-        ac: event['venue']['ac'] ?? false,
-        wifi: event['venue']['wifi'] ?? false,
-        dataProject: event['venue']['dataProject'] ?? 0,
-        docCam: event['venue']['docCam'] ?? false,
-        mic: event['venue']['mic'] ?? false,
-        windows: event['venue']['windows'] ?? false,
-        capacity: event['venue']['capacity'] ?? 0,
-        available: event['venue']['available'] ?? false,
-        venueId: '', // addded via reccomendations
-      ) : null,*/
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -407,21 +361,25 @@ Widget _buildEventCard(Map<String, dynamic> event) {
   @override
   Widget build(BuildContext context) {
     final userP = Provider.of<userProvider>(context);
+    final theme = Theme.of(context);
+    final textColour = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
     super.build(context);
     return Scaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Text(
+      appBar: AppBar(
+        title: Text(
               'Calendar',
               style: TextStyle(
                 fontSize: 32,
                 fontWeight: FontWeight.bold,
+                color: textColour,
               ),
-            ),
           ),
+          backgroundColor: Colors.transparent,
+          automaticallyImplyLeading: false,
+      ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
           TableCalendar(
             firstDay: DateTime.utc(2023, 1, 1),
             lastDay: DateTime.utc(2030, 12, 31),
