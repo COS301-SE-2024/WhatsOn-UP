@@ -168,6 +168,13 @@ class _AdminAnalyticsPageState extends State<AdminAnalyticsPage> with SingleTick
       child: Column(
         children: [
           PopularEventsWidget(popularEvents: popularEvents), // Popular Events
+          const Divider(
+            color: Colors.grey,
+            height: 20,
+            thickness: 2,
+            indent: 20,
+            endIndent: 20,
+          ),
           SizedBox(
             height: 300,
             child: AnalyticsChartPage(monthlySummaries: monthlySummaries), // Average Rating Over Time
