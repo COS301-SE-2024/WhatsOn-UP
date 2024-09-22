@@ -1,7 +1,11 @@
 import 'package:firstapp/pages/home_page.dart';
 import 'package:firstapp/providers/notification_providers.dart';
+import 'package:firstapp/schemas/notification_schemas.dart';
+import 'package:firstapp/services/LocalNotifications.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:json_schema/json_schema.dart';
 import 'package:provider/provider.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
@@ -20,6 +24,8 @@ class SocketService {
       'token': 'Bearer $userId',
     };
 
+    print(userId);
+
     socket = IO.io(url, <String, dynamic>{
       'transports': ['websocket'],
       'query': {'token': userId},
@@ -37,11 +43,17 @@ class SocketService {
     socket.on('notification', (data) {
       print('Event received: $data');
 
-      _notificationProvider.refreshNotifications(userId);
+      final schema = JsonSchema.create(NOTIFICATION_SOCKET_SCHEMA);
+      final result = schema.validate(data);
 
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("You have a new notification")));
-     navigateToHomePage(context);
+      if(result.isValid){
+        _notificationProvider.refreshNotifications(userId);
+        LocalNotifications.showNotification(title: data['data']['notification_types']['name'], body: data['data']['message'], payload: "");
+      }
+      else{
+        throw Exception(result.errors);
+      }
+
 
     });
     socket.on('error', (error) {

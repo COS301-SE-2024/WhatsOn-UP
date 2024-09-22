@@ -2,8 +2,10 @@ package com.devforce.backend.service
 
 import com.devforce.backend.dto.ResponseDto
 import com.devforce.backend.model.ApplicationStatusModel
+import com.devforce.backend.model.BroadcastModel
 import com.devforce.backend.repo.*
 import com.devforce.backend.security.CustomUser
+import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.context.SecurityContextHolder
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
+@Transactional
 class AdminService {
 
     @Autowired
@@ -24,6 +27,9 @@ class AdminService {
 
     @Autowired
     lateinit var statusRepo: StatusRepo
+
+    @Autowired
+    lateinit var broadcastRepo: BroadcastRepo
 
     fun promoteUser(userId: UUID): ResponseEntity<ResponseDto> {
         val user = userRepo.findById(userId)
@@ -114,5 +120,21 @@ class AdminService {
         }
 
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), applications))
+    }
+
+    fun broadcastMessage(message: String): ResponseEntity<ResponseDto> {
+        val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
+
+        val broadcast = BroadcastModel().apply {
+            this.messageId = UUID.randomUUID()
+            this.eventId = null
+            this.message = message
+            this.fromId = user.userId
+            this.sentAt = Date()
+        }
+
+        broadcastRepo.save(broadcast)
+
+        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Message broadcasted successfully")))
     }
 }

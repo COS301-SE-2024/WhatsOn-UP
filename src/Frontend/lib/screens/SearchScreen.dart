@@ -3,23 +3,48 @@ import 'package:flutter/material.dart';
 import 'package:firstapp/widgets/SearchImageTile.dart';
 import 'package:firstapp/services/EventService.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:async';
+import 'package:firstapp/screens/FilterScreen.dart'; // Import the FilterScreen
+
 
 class SearchScreen extends StatefulWidget {
+  final bool showSearchHistoryOnStart;
+  final String? initialQuery;
+
+  SearchScreen({this.showSearchHistoryOnStart = false, this.initialQuery});
+
   @override
   _SearchScreenState createState() => _SearchScreenState();
 }
 
 class _SearchScreenState extends State<SearchScreen> {
   final EventService _eventService = EventService(Supabase.instance.client);
+  final TextEditingController _searchController = TextEditingController();
   List<Event> _searchResults = [];
-  List<String> _categories = [];
+  List<Category> _categories = [];
+  List<String> _searchHistory = [];
   bool _isLoading = false;
   bool _showSearchTiles = true;
+  bool _showSearchHistory = false;
+  bool _hasSearched = false;
+  Timer? _debounce;
 
   @override
   void initState() {
     super.initState();
     _fetchCategories();
+    _loadSearchHistory();
+    
+    if (widget.initialQuery != null && widget.initialQuery!.isNotEmpty) {
+      _searchController.text = widget.initialQuery!;
+      _searchEvents(widget.initialQuery!);
+    }
+
+    if (widget.showSearchHistoryOnStart) {
+      _showSearchHistory = true;
+      _showSearchTiles = false;
+    }
   }
 
   void _fetchCategories() async {
@@ -34,7 +59,6 @@ class _SearchScreenState extends State<SearchScreen> {
         _isLoading = false;
       });
     } catch (e) {
-      // Handle error, e.g., show an error message
       print('Error fetching categories: $e');
       setState(() {
         _isLoading = false;
@@ -43,10 +67,13 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   void _searchEvents(String query) async {
+    if (query.isEmpty) return;
     setState(() {
       _isLoading = true;
       _searchResults.clear();
       _showSearchTiles = false;
+      _showSearchHistory = false;
+      _hasSearched = true;
     });
 
     try {
@@ -55,8 +82,8 @@ class _SearchScreenState extends State<SearchScreen> {
         _searchResults = results;
         _isLoading = false;
       });
+      _saveSearchQuery(query);
     } catch (e) {
-      // Handle error, e.g., show an error message
       print('Error searching events: $e');
       setState(() {
         _isLoading = false;
@@ -68,7 +95,64 @@ class _SearchScreenState extends State<SearchScreen> {
     setState(() {
       _searchResults.clear();
       _showSearchTiles = true;
+      _hasSearched = false;
     });
+  }
+
+  void _loadSearchHistory() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _searchHistory = prefs.getStringList('searchHistory') ?? [];
+    });
+  }
+
+  void _saveSearchQuery(String query) async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      if (_searchHistory.contains(query)) {
+        _searchHistory.remove(query);
+      }
+      _searchHistory.insert(0, query);
+      if (_searchHistory.length > 5) {
+        _searchHistory.removeLast();
+      }
+      prefs.setStringList('searchHistory', _searchHistory);
+    });
+  }
+
+  void _removeSearchQuery(String query) async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _searchHistory.remove(query);
+      prefs.setStringList('searchHistory', _searchHistory);
+    });
+  }
+
+  void _onSearchChanged(String query) {
+    if (_debounce?.isActive ?? false) _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      _searchEvents(query);
+    });
+  }
+
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    super.dispose();
+  }
+
+  void _openFilterDialog() async {
+    final result = await showDialog<List<Event>>(
+      context: context,
+      builder: (context) => FilterScreen(),
+    );
+
+    if (result != null) {
+      setState(() {
+        _searchResults = result;
+        _hasSearched = true;
+      });
+    }
   }
 
   @override
@@ -97,14 +181,15 @@ class _SearchScreenState extends State<SearchScreen> {
                 borderRadius: BorderRadius.all(
                   Radius.circular(50),
                 ),
-                color: Colors.grey,
+                color: Colors.grey[200],
               ),
               child: Row(
                 children: [
-                  Icon(Icons.search),
+                  Icon(Icons.search), // Search icon color
                   SizedBox(width: 8.0),
                   Expanded(
                     child: TextField(
+                      controller: _searchController,
                       decoration: InputDecoration(
                         hintText: "Search for events",
                         border: InputBorder.none,
@@ -112,27 +197,56 @@ class _SearchScreenState extends State<SearchScreen> {
                       onSubmitted: _searchEvents,
                       onTap: () {
                         setState(() {
-                          _showSearchTiles = true;
+                          _showSearchHistory = true;
+                          _showSearchTiles = false;
                         });
                       },
-                      onChanged: (value) {
-                        setState(() {
-                          _showSearchTiles = true;
-                        });
-                      },
+                      onChanged: _onSearchChanged,
                     ),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.filter_list),
+                    color: Colors.black,
+                    onPressed: _openFilterDialog,
                   ),
                 ],
               ),
             ),
-            if (_showSearchTiles && _categories.isNotEmpty)
+            if (_showSearchHistory)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (_searchHistory.isNotEmpty)
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Search History'),
+                        ..._searchHistory.map((history) {
+                          return ListTile(
+                            title: Text(history),
+                            trailing: IconButton(
+                              icon: Icon(Icons.clear),
+                              onPressed: () => _removeSearchQuery(history),
+                            ),
+                            onTap: () {
+                              _searchEvents(history);
+                            },
+                          );
+                        }).toList(),
+                      ],
+                    ),
+                ],
+              ),
+            if (_showSearchTiles)
               GridView.count(
                 shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
+                physics: AlwaysScrollableScrollPhysics(),
                 crossAxisCount: 2,
                 children: _categories.map((category) {
+                  // List<String> parts = category.split(',');
+                  // String cat = parts.length > 1 ? parts[1] : '';
                   return SearchImageTile(
-                    title: category,
+                    title: category.name,
                     imageUrl: 'images/$category.jpg',
                     onTap: (title) => _searchEvents(title),
                   );
@@ -141,21 +255,25 @@ class _SearchScreenState extends State<SearchScreen> {
             SizedBox(height: 16.0),
             _isLoading
                 ? Center(child: CircularProgressIndicator())
-                : _searchResults.isEmpty && _categories.isEmpty
-                    ? Center(
-                        child: Text('No events found'),
-                      )
-                    : Expanded(
-                        child: ListView.builder(
-                          itemCount: _searchResults.length,
-                          itemBuilder: (context, index) {
-                            if (index >= _searchResults.length) {
-                              return Container();
-                            }
-                            return EventCard(event: _searchResults[index]);
-                          },
-                        ),
-                      ),
+                : _hasSearched && _searchResults.isEmpty
+                ? Center(child: Text('No events found'))
+                : Expanded(
+              child: ListView.builder(
+                itemCount: _searchResults.length,
+                itemBuilder: (context, index) {
+                  if (index >= _searchResults.length) {
+                    return Container();
+                  }
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 22.0,
+                      vertical: 8.0,
+                    ),
+                      child: EventCard(event: _searchResults[index], showBookmarkButton: true,),
+                  );
+                },
+              ),
+            ),
           ],
         ),
       ),

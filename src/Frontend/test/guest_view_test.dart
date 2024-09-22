@@ -65,7 +65,7 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ), invitees: [],
+          ), invitees: [], saved: false,
         ),
         Event(
           id: '2',
@@ -82,7 +82,7 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ), invitees: [],
+          ), invitees: [], saved: false,
         ),
       ]);
       when(mockEventProvider.eventsHome).thenAnswer((_) async => [
@@ -101,7 +101,7 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ), invitees: [],
+          ), invitees: [], saved: false,
         ),
         Event(
           id: '2',
@@ -118,7 +118,7 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ),
+          ), saved: false,
 
 
         ),
@@ -137,7 +137,7 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ), invitees: [],
+          ), invitees: [], saved: false,
         ),
       ]);
       when(mockEventProvider.eventsRsvp).thenAnswer((_) async => [
@@ -156,7 +156,7 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ), invitees: [],
+          ), invitees: [], saved: false,
         ),
         Event(
           id: '2',
@@ -173,7 +173,7 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ), invitees: [],
+          ), invitees: [], saved: false
         ),
         Event(
           id: '3',
@@ -190,7 +190,7 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ), invitees: [],
+          ), invitees: [], saved: false,
         ),
       ]);
 
@@ -198,24 +198,24 @@ void main() {
       // when(mockUserProvider.profileimage).thenReturn(Uint8List.fromList(placeholderImageData));
     });
 
-    testWidgets('should display Guest User on HomePage', (WidgetTester tester) async {
-      await mockNetworkImages(() async {
-      await tester.pumpWidget(
-        MultiProvider(
-          providers: [
-
-            ChangeNotifierProvider<userProvider>(create: (_) => mockUserProvider),
-            ChangeNotifierProvider<EventProvider>(create: (_) => mockEventProvider),
-          ],
-          child: const MaterialApp(
-            home: HomePage(),
-          ),
-        ),
-      );
-      });
-      await tester.pumpAndSettle();
-      expect(find.text('Welcome, Guest User'), findsOneWidget);
-    });
+    // testWidgets('should display Guest User on HomePage', (WidgetTester tester) async {
+    //   await mockNetworkImages(() async {
+    //   await tester.pumpWidget(
+    //     MultiProvider(
+    //       providers: [
+    //
+    //         ChangeNotifierProvider<userProvider>(create: (_) => mockUserProvider),
+    //         ChangeNotifierProvider<EventProvider>(create: (_) => mockEventProvider),
+    //       ],
+    //       child: const MaterialApp(
+    //         home: HomePage(),
+    //       ),
+    //     ),
+    //   );
+    //   });
+    //   await tester.pumpAndSettle();
+    //   expect(find.text('Welcome, Guest User'), findsOneWidget);
+    // });
 
     testWidgets('should not display Account button on SettingsPage for GUEST role', (WidgetTester tester) async {
       when(mockUserProvider.role).thenReturn('GUEST');

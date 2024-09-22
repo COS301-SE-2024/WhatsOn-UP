@@ -35,25 +35,25 @@ class UserController {
     }
 
 
-    @PutMapping("rspv_event/{id}")
+    @PutMapping("rsvp_event/{id}")
     @PreAuthorize("isAuthenticated()")
-    fun rspvEvent(@PathVariable id: UUID,): ResponseEntity<ResponseDto> {
+    fun rsvpEvent(@PathVariable id: UUID,): ResponseEntity<ResponseDto> {
         
-        return userService.rspvEvent(id)
+        return userService.rsvpEvent(id)
     }
 
-    @GetMapping("/get_rspv_events")
+    @GetMapping("/get_rsvp_events")
     @PreAuthorize("isAuthenticated()")
-    fun getRspvEvents(): ResponseEntity<ResponseDto> {
+    fun getRsvpEvents(): ResponseEntity<ResponseDto> {
         
-        return userService.getRspvEvents()
+        return userService.getRsvpEvents()
     }
 
-    @DeleteMapping("/delete_rspv_event/{id}")
+    @DeleteMapping("/delete_rsvp_event/{id}")
     @PreAuthorize("isAuthenticated()")
-    fun deleteRspvEvent(@PathVariable id: UUID, ): ResponseEntity<ResponseDto> {
+    fun deleteRsvpEvent(@PathVariable id: UUID, ): ResponseEntity<ResponseDto> {
         
-        return userService.deleteRspvEvent(id)
+        return userService.deleteRsvpEvent(id)
     }
 
     @PutMapping("/update_profile")
@@ -104,5 +104,10 @@ class UserController {
         return userService.verifyApplication(veriCode)
     }
 
+    @PutMapping("/rate_event/{id}")
+    @PreAuthorize("isAuthenticated()")
+    fun rateEvent(@PathVariable id: UUID, @RequestParam rating: Int, @RequestParam comment: String?): ResponseEntity<ResponseDto> {
+        return userService.rateEvent(id, rating, comment)
+    }
 
 }

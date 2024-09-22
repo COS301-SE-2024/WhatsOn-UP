@@ -12,4 +12,5 @@ data class UpdateEventDto(
     val maxParticipants: Int?,
     val metadata: Map<String, String>?,
     val isPrivate: Boolean?,
+    val hosts: Set<UUID>?,
 )

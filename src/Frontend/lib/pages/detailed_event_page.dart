@@ -1,19 +1,25 @@
 import 'dart:async';
 import 'package:firstapp/pages/edit_Event.dart';
+import 'package:firstapp/pages/explore_page.dart';
+import 'package:firstapp/pages/rate_event.dart';
 import 'package:firstapp/providers/events_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firstapp/widgets/event_card.dart';
 import 'package:firstapp/services/api.dart';
 import 'package:provider/provider.dart';
+import 'package:socket_io_client/socket_io_client.dart';
 import '../main.dart';
 import '../providers/user_provider.dart';
 import 'package:intl/intl.dart';
+import 'package:video_player/video_player.dart';
+import 'package:chewie/chewie.dart';
 
 class DetailedEventPage extends StatefulWidget {
   final Event event;
+String recommendations;
 
-  const DetailedEventPage({super.key, required this.event});
+   DetailedEventPage({super.key, required this.event,  this.recommendations=''});
 
   @override
   _DetailedEventPageState createState() => _DetailedEventPageState();
@@ -24,6 +30,60 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
   final user = supabase.auth.currentUser;
   late Event _thisCurrentEvent;
   bool _isLoading = false;
+  List<Widget> _mediaWidgets = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeMediaWidgets();
+  }
+
+  void _initializeMediaWidgets() {
+    _mediaWidgets = widget.event.imageUrls?.map((url) {
+      if (_isVideoUrl(url)) {
+        return _buildVideoPlayer(url);
+      } else {
+        return _buildImageWidget(url);
+      }
+    }).toList() ?? [];
+  }
+
+  bool _isVideoUrl(String url) {
+    return url.toLowerCase().endsWith('.mp4') || url.toLowerCase().endsWith('.mov');
+  }
+
+  Widget _buildImageWidget(String url) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(16.0),
+      child: Image.network(
+        url,
+        fit: BoxFit.cover,
+        width: double.infinity,
+      ),
+    );
+  }
+
+  Widget _buildVideoPlayer(String url) {
+    VideoPlayerController videoPlayerController = VideoPlayerController.network(url);
+    ChewieController chewieController = ChewieController(
+      videoPlayerController: videoPlayerController,
+      autoPlay: false,
+      looping: false,
+      aspectRatio: 16 / 9,
+      errorBuilder: (context, errorMessage) {
+        return Center(
+          child: Text(
+            errorMessage,
+            style: TextStyle(color: Colors.white),
+          ),
+        );
+      },
+    );
+
+    return Chewie(
+      controller: chewieController,
+    );
+  }
 
   @override
   void didChangeDependencies() {
@@ -33,12 +93,20 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
 
   Future<void> _fetchEvent() async {
     try {
+      Event? event;
       EventProvider eventProvider =
           Provider.of<EventProvider>(context, listen: false);
-      Event? event = await eventProvider.getEventById(widget.event.id);
+      if(widget.recommendations=='recommendations'){
+        _thisCurrentEvent = widget.event;
+        event =await eventProvider.getEventByIdR(widget.event.id);
+      }else{
+        _thisCurrentEvent = widget.event;
+         event = await eventProvider.getEventById(widget.event.id);
+      }
+
       if (event != null) {
         setState(() {
-          _thisCurrentEvent = event;
+          _thisCurrentEvent = event!;
         });
       } else {
         print('Event with ID ${widget.event.id} not found.');
@@ -51,17 +119,21 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
   Future<void> _addToCalendar() async {
     EventProvider eventProvider =
         Provider.of<EventProvider>(context, listen: false);
+
+    userProvider userP =
+        Provider.of<userProvider>(context,listen: false);
+
     try {
       setState(() {
         _isLoading = true;
       });
 
-      var result = await Api().rsvpEvent(widget.event.id, user!.id);
+      var result = await Api().rsvpEvent(widget.event.id, userP.JWT);
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Successfully RSVP\'d to event!')),
       );
-      await eventProvider.refreshRSVPEvents(user!.id);
+      await eventProvider.refreshRSVPEvents(user!.id, userP.JWT);
       await eventProvider.refreshEvents();
       print(
           'amount of attendees after event added to the calendar ${_thisCurrentEvent.attendees.length}');
@@ -82,28 +154,50 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
   Future<void> _removeFromCalendar() async {
     EventProvider eventProvider =
         Provider.of<EventProvider>(context, listen: false);
+
+    userProvider userP =
+        Provider.of<userProvider>(context,listen: false);
+
     print('Removing RSVP for event: ${widget.event.id}');
     try {
+      setState(() {
+        _isLoading = true;
+      });
+
       await Api()
-          .DeletersvpEvent(widget.event.id, user!.id)
+          .DeletersvpEvent(widget.event.id, userP.JWT)
           .then((response) {});
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Successfully removed RSVP !')),
+        const SnackBar(content: Text('Successfully removed your RSVP from the event!')),
       );
-      await eventProvider.refreshRSVPEvents(user!.id);
+      await eventProvider.refreshRSVPEvents(user!.id, userP.JWT);
       await eventProvider.refreshEvents();
+
+      setState(() {
+        _isLoading = false;
+      });
 
       Navigator.of(context).pushReplacementNamed('/home');
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to remove RSVP: ${e.toString()}')),
       );
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
   void _viewLocationOnMap() {
-    // Logic for viewing location on map
+    Venue? venue = _thisCurrentEvent.venue;
+    String? buildingName = (venue != null && venue.building != null) ? venue.building!.name : null;
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => NavigationPage(
+        initSearchQuery: buildingName
+      )),
+    );
   }
 
   void _reportEvent() {
@@ -113,6 +207,10 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
   Future<void> _editEvent() async {
     EventProvider eventProvider =
         Provider.of<EventProvider>(context, listen: false);
+
+    userProvider userP =
+        Provider.of<userProvider>(context,listen: false);
+        
     if (widget.event.id != null && widget.event.id is String) {
       print('Navigating to EditEvent with eventId: ${widget.event.id}');
       final resultEdit = await Navigator.push(
@@ -122,7 +220,7 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
       );
       if (resultEdit == true) {
         await eventProvider.refreshEvents();
-        await eventProvider.refreshRSVPEvents(user!.id);
+        await eventProvider.refreshRSVPEvents(user!.id, userP.JWT);
         Navigator.of(context).pushReplacementNamed('/home');
       }
     } else {
@@ -161,7 +259,7 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
 
     if (confirmDelete ?? false) {
       Api api = Api();
-      api.DeleteEvent(_thisCurrentEvent.id, userP.userId)
+      api.DeleteEvent(_thisCurrentEvent.id, userP.JWT)
           .then((response) async {
         if (response['status'] == 'success') {
           print('Event deleted successfully. Response: $response');
@@ -211,36 +309,20 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
                   });
                 },
               ),
-              items: widget.event.imageUrls?.map((url) {
-                return Builder(
-                  builder: (BuildContext context) {
-                    return ClipRRect(
-                      borderRadius: BorderRadius.circular(16.0),
-                      child: Image.network(
-                        url,
-                        fit: BoxFit.cover,
-                        width: double.infinity,
-                      ),
-                    );
-                  },
-                );
-              }).toList(),
+              items: _mediaWidgets,
             ),
             Row(
-              // Dots indicator for carousel
               mainAxisAlignment: MainAxisAlignment.center,
-              children: widget.event.imageUrls!.asMap().entries.map((entry) {
+              children: _mediaWidgets.asMap().entries.map((entry) {
                 int index = entry.key;
                 return Container(
                   width: 8.0,
                   height: 8.0,
-                  margin: const EdgeInsets.symmetric(
-                      vertical: 10.0, horizontal: 2.0),
+                  margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
                   decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: _currentImageIndex == index
-                          ? activeDotColour
-                          : dotColour),
+                    shape: BoxShape.circle,
+                    color: _currentImageIndex == index ? Colors.black : Colors.grey,
+                  ),
                 );
               }).toList(),
             ),
@@ -258,28 +340,6 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
                     ),
                   ),
                   const SizedBox(height: 8.0),
-                  // Row(
-                  //   children: [
-                  //     const Icon(Icons.calendar_today),
-                  //     const SizedBox(width: 8.0),
-                  //     Column(
-                  //       crossAxisAlignment: CrossAxisAlignment.start,
-                  //       children: [
-                  //         Text(
-                  //           'Start: ${_thisCurrentEvent.startTime}',
-                  //           style: const TextStyle(fontSize: 16.0),
-                  //         ),
-                  //         const SizedBox(height: 4.0),
-                  //         Text(
-                  //           'End: ${_thisCurrentEvent.endTime}',
-                  //           style: const TextStyle(fontSize: 16.0),
-                  //         ),
-
-                  //       ],
-                  //     ),
-                  //   ],
-                  // ),
-
                   Row(
                     children: [
                       const Icon(Icons.calendar_today),
@@ -373,17 +433,26 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
                         ),
                       ),
                   ],
-                  const SizedBox(height: 8.0),
                   if (_thisCurrentEvent.attendees
                       .any((attendee) => attendee.userId == userP.userId)) ...[
-                    ElevatedButton.icon(
-                      onPressed: _removeFromCalendar,
-                      icon: const Icon(Icons.calendar_today),
-                      label: const Text('Remove from my Calendar'),
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: const Size(double.infinity, 48),
-                      ),
-                    ),
+                    ElevatedButton(
+                          onPressed: _isLoading ? null : () => _removeFromCalendar(),
+                          style: ElevatedButton.styleFrom(
+                            minimumSize: const Size(double.infinity, 48),
+                          ),
+                          child: _isLoading
+                              ? const CircularProgressIndicator(
+                                  color: Colors.white,
+                                )
+                              : const Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(Icons.calendar_today),
+                                    SizedBox(width: 8),
+                                    Text('Remove from my Calendar'),
+                                  ],
+                                ),
+                        ),
                   ],
                   const SizedBox(height: 8.0),
                   ElevatedButton.icon(
@@ -417,9 +486,6 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
                       icon: const Icon(Icons.edit),
                       label: const Text('Edit Event'),
                       style: ElevatedButton.styleFrom(
-                        // foregroundColor: Colors.black,
-                        // backgroundColor: Colors.white,
-                        // side: const BorderSide(color: Colors.black),
                         minimumSize: const Size(double.infinity, 48),
                       ),
                     ),
@@ -429,8 +495,6 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
                       icon: const Icon(Icons.delete),
                       label: const Text('Remove Event'),
                       style: ElevatedButton.styleFrom(
-                        // foregroundColor: Colors.black,
-                        // backgroundColor: Colors.white,
                         side: const BorderSide(color: Colors.red),
                         minimumSize: const Size(double.infinity, 48),
                       ),
@@ -443,5 +507,15 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    for (var widget in _mediaWidgets) {
+      if (widget is Chewie) {
+        widget.controller.dispose();
+      }
+    }
+    super.dispose();
   }
 }

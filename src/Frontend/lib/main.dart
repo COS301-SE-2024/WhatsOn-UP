@@ -61,8 +61,10 @@ import 'package:firstapp/pages/application_event.dart';
 import 'package:firstapp/pages/calendar_page.dart';
 import 'package:firstapp/pages/detailed_event_page.dart';
 import 'package:firstapp/pages/editProfile_page.dart';
+import 'package:firstapp/pages/explore_page.dart';
 
 import 'package:firstapp/pages/home_page.dart';
+import 'package:firstapp/pages/manageEvents.dart';
 import 'package:firstapp/pages/notifications.dart';
 import 'package:firstapp/pages/host_application.dart';
 import 'package:firstapp/pages/profilePage.dart';
@@ -76,19 +78,25 @@ import 'package:firstapp/providers/events_providers.dart';
 import 'package:firstapp/providers/notification_providers.dart';
 import 'package:firstapp/providers/user_provider.dart';
 import 'package:firstapp/screens/SearchScreen.dart';
+import 'package:firstapp/surveys/SurveyRateCat_screen.dart';
+import 'package:firstapp/services/LocalNotifications.dart';
 import 'package:firstapp/services/api.dart';
 import 'package:firstapp/widgets/event_card.dart';
 import 'package:firstapp/widgets/theme_manager.dart';
 import 'package:flutter/material.dart';
+
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 late SupabaseClient supabaseClient;
 void main() async{
+  //Initialisations
   var api = Api();
+  WidgetsFlutterBinding.ensureInitialized();
+  await LocalNotifications.init();
   await Supabase.initialize(
     url: 'https://mehgbhiirnmypfgnkaud.supabase.co',
-    anonKey:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1laGdiaGlpcm5teXBmZ25rYXVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjI5NDMyMzYsImV4cCI6MjAzODUxOTIzNn0.g_oLlSZE3AH_nBntVe_hBPdthFDQHZqn0wxzS23kyrc'
+    anonKey:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1laGdiaGlpcm5teXBmZ25rYXVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjUxODEwNjksImV4cCI6MjA0MDc1NzA2OX0.pGKypDZySuoUTXnzaHmJO8TVdqNt5ond3eoKrp3qD-o'
   );
   // runApp(ChangeNotifierProvider<ThemeNotifier>(
   //   create: (_) => new ThemeNotifier(),
@@ -105,10 +113,23 @@ void main() async{
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => EventProvider(api: api)),
-        ChangeNotifierProvider(create: (context) => userProvider()),
+        ChangeNotifierProvider(create: (context) {
+          var supabase = Supabase.instance.client;
+          var userProv = userProvider();
+
+          supabase.auth.onAuthStateChange.listen((event) async {
+          Session? session = supabase.auth.currentSession;
+            if (session != null) {
+              userProv.JWT = session.accessToken; 
+              print('JWT Token refreshed: ${session.accessToken}');
+            } else {
+              print('Session expired or user not signed in.');
+            }
+          });
+          return userProv;
+        }),
         ChangeNotifierProvider(create: (context) => ThemeNotifier()),
-        ChangeNotifierProvider(
-            create: (context) => notificationProvider()),
+        ChangeNotifierProvider(create: (context) => notificationProvider()),
       ],
       child: MyApp(),
     ),
@@ -142,6 +163,9 @@ class MyApp extends StatelessWidget {
           '/notifications': (context)=> const Notifications (),
           '/generaluserapplications': (context)=> const TabGeneral(),
           '/userManual': (context)=> const UserManualWebView(),
+          '/navigation' : (context) => NavigationPage(),
+          '/surveyRate': (context) => SurveyratecatScreen(jsonCategories: ''),
+          '/manageEvents': (context) => ManageEvents(supabaseClient: supabaseClient),
         },
         debugShowCheckedModeBanner: false,
       ),
