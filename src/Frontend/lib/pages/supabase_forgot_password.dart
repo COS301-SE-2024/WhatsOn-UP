@@ -125,7 +125,7 @@ class _ForgotPassState extends State<ForgotPass> {
                 // );
                 await supabase.auth.resetPasswordForEmail(
                   email,
-                  redirectTo: 'io.supabase.flutterquickstart://login-callback/',
+                  redirectTo: 'http://localhost:8086/reset-password',
                 );
                 if (mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
