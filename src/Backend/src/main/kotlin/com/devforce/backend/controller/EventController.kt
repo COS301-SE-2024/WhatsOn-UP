@@ -116,9 +116,13 @@ class EventController {
     @PutMapping("/update-attendance")
     @PreAuthorize("hasRole('ADMIN')")
     fun updateAttendanceStatus(@RequestBody request: AttendanceUpdateDto): ResponseEntity<ResponseDto> {
+        println("Received request body: $request")
+        val eventUUID = UUID.fromString(request.eventId)
+        val userUUID = UUID.fromString(request.userId)
+
         return eventService.updateAttendanceStatus(
-                request.eventId,
-                request.userId,
+            eventUUID,
+            userUUID,
                 request.attended
             )
 
