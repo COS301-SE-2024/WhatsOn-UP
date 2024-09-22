@@ -1369,7 +1369,7 @@ class Api {
   }
 
   Future<Map<String, dynamic>> getAutofillData(String JWT, String eventName, String eventDescription) async {
-  final String getAutofillDataURL = 'http://${globals.gatewayDomain}/analytics/host/generate_autofill?description=$eventDescription&title=$eventName';
+  final String getAutofillDataURL = 'https://${globals.gatewayDomain}/analytics/host/generate_autofill?description=$eventDescription&title=$eventName';
 
   var headers = {
     'Content-Type': 'application/json',
