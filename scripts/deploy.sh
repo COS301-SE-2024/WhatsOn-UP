@@ -32,10 +32,7 @@ for i in "${!services[@]}"; do
 
   # Deploy to Google Cloud Run
   gcloud run services update "${SERVICE_NAME}" \
-    --image "${GCR_REPO}/${SERVICE_NAME}:latest" \
-    --region us-central1 \
-    --platform managed \
-    --allow-unauthenticated
+    --image "${GCR_REPO}/${SERVICE_NAME}:latest"
 
   # Return to the original directory
   cd - || exit
