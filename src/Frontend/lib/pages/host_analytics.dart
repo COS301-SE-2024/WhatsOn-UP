@@ -358,7 +358,7 @@ class _PopularEventsWidgetState extends State<PopularEventsWidget> {
         const Padding(
           padding: EdgeInsets.all(16.0),
           child: Text(
-            'My Popular Events',
+            'My Top 5 Popular Events',
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
         ),
