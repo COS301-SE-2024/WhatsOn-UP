@@ -7,16 +7,16 @@ import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
 
 import 'package:firstapp/providers/user_provider.dart';
-import 'package:firstapp/services/api.dart';
+
 import 'api_test.mocks.dart';
-// Mock classes
+
 
 
 void main() {
   late MockuserProvider mockUserProvider;
 
   testWidgets('TabGeneral widget shows correct tabs and navigates properly', (WidgetTester tester) async {
-    // Arrange
+
 
     mockUserProvider = MockuserProvider();
     String jsonData = '''

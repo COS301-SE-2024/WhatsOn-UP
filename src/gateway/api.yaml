@@ -1,0 +1,984 @@
+swagger: '2.0'
+info:
+  title: Whatson-Up API Gateway
+  description: This is the first version of the Whatson-Up API Gateway
+  version: 1.0.0
+schemes:
+  - https
+produces:
+  - application/json
+paths:
+  /api/events/get_all:
+    get:
+      summary: Get all events
+      operationId: getEvents
+      x-google-backend:
+        address: https://api-237rzrxg6a-uc.a.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        disable_auth: true
+        deadline: 60.0
+      responses:
+        '200':
+          description: Successful
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+  /api/events/get_locations:
+    get:
+      summary: Get event locations
+      operationId: getEventLocations
+      x-google-backend:
+        address: https://api-237rzrxg6a-uc.a.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        disable_auth: true
+        deadline: 60.0
+      responses:
+        '200':
+          description: Successful
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        
+
+  /api/events/update/{eventId}:
+    put:
+      summary: Update an event
+      operationId: updateEvent
+      parameters:
+        - name: eventId
+          in: path
+          description: The ID of the event to update
+          required: true
+          type: string
+        - name: body
+          in: body
+          description: The event data to update
+          required: true
+          schema:
+            type: object
+      x-google-backend:
+        address: https://api-237rzrxg6a-uc.a.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        disable_auth: true
+        deadline: 60.0
+      responses:
+        '200':
+          description: Successful
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+  /api/events/remove/{eventId}:
+    delete:
+      summary: Delete an event
+      operationId: deleteEvent
+      parameters:
+        - name: eventId
+          in: path
+          description: The ID of the event to delete
+          required: true
+          type: string
+      x-google-backend:
+        address: https://api-237rzrxg6a-uc.a.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        disable_auth: true
+        deadline: 60.0
+      responses:
+        '200':
+          description: Successful
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+  /api/events/create:
+    post:
+      summary: Create an event
+      operationId: createEvent
+      parameters:
+        - name: body
+          in: body
+          description: The event data to create
+          required: true
+          schema:
+            type: object
+      x-google-backend:
+        address: https://api-237rzrxg6a-uc.a.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        disable_auth: true
+        deadline: 60.0
+      responses:
+        '200':
+          description: Successful
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+  /api/events/search:
+    get:
+      summary: Search for events
+      operationId: searchEvents
+      parameters:
+        - name: searchString
+          in: query
+          description: The search query
+          required: true
+          type: string
+      x-google-backend:
+        address: https://api-237rzrxg6a-uc.a.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        disable_auth: true
+        deadline: 60.0
+      responses:
+        '200':
+          description: Successful
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden 
+
+  /api/events/filter:
+    get:
+      summary: Filter events
+      operationId: filterEvents
+      parameters:
+        - name: searchString
+          in: query
+          description: The filter query
+          required: false
+          type: string
+        - name: endTime
+          in: query
+          description: The filter type
+          required: false
+          type: string
+        - name: maxAttendees
+          in: query
+          description: The filter type
+          required: false
+          type: number
+      x-google-backend:
+        address: https://api-237rzrxg6a-uc.a.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        disable_auth: true
+        deadline: 60.0
+      responses:
+        '200':
+          description: Successful
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+  /api/events/broadcast:
+    put:
+      summary: Broadcast an event
+      operationId: broadcastEvent
+      parameters:
+        - name: message
+          in: query
+          description: The ID of the event to broadcast
+          required: true
+          type: string
+        - name: eventId
+          in: query
+          description: The ID of the event to broadcast
+          required: true
+          type: string
+      x-google-backend:
+        address: https://api-237rzrxg6a-uc.a.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        disable_auth: true
+        deadline: 60.0
+      responses:
+        '200':
+          description: Successful
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+  /api/user/get_saved_events:
+    get:
+      summary: Get all saved events
+      operationId: getSavedEvents
+      x-google-backend:
+        address: https://api-237rzrxg6a-uc.a.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        disable_auth: true
+        deadline: 60.0
+      responses:
+        '200':
+          description: Successful
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+  /api/user/save_event/{eventID}:
+    put:
+      summary: Save an event
+      operationId: saveEvent
+      parameters:
+        - name: eventID
+          in:  path
+          description: The ID of the event to save
+          required: true
+          type: string
+      x-google-backend:
+        address: https://api-237rzrxg6a-uc.a.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        disable_auth: true
+        deadline: 60.0  
+      responses:
+        '200':
+          description: Successful
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+  /api/user/delete_saved_event/{eventID}:
+    delete:
+      summary: Delete a saved event
+      operationId: deleteSavedEvent
+      parameters:
+        - name: eventID
+          in: path
+          description: The ID of the event to delete
+          required: true
+          type: string
+      x-google-backend:
+        address: https://api-237rzrxg6a-uc.a.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        disable_auth: true
+        deadline: 60.0
+      responses:
+        '200':
+          description: Successful
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+  /api/user/update_profile:
+    put:
+      summary: Update user profile
+      operationId: updateProfile
+      parameters:
+        - name: fullName
+          in: query
+          description: The user data to update
+          required: true
+          type: string
+      x-google-backend:
+        address: https://api-237rzrxg6a-uc.a.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        disable_auth: true
+        deadline: 60.0
+      responses:
+        '200':
+          description: Successful
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+  /api/user/rsvp_event/{eventID}:
+    put:
+      summary: RSVP to an event
+      operationId: rsvpEvent
+      parameters:
+        - name: eventID
+          in: path
+          description: The ID of the event to RSVP to
+          required: true
+          type: string
+      x-google-backend:
+        address: https://api-237rzrxg6a-uc.a.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        disable_auth: true
+        deadline: 60.0
+      responses:
+        '200':
+          description: Successful
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+  /api/user/get_rsvp_events:
+    get:
+      summary: Get all RSVP events
+      operationId: getRSVPEvents
+      x-google-backend:
+        address: https://api-237rzrxg6a-uc.a.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        disable_auth: true
+        deadline: 60.0
+      responses:
+        '200':
+          description: Successful
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+  
+  /api/user/delete_rsvp_event/{eventID}:
+    delete:
+      summary: Delete an RSVP event
+      operationId: deleteRSVPEvent
+      parameters:
+        - name: eventID
+          in: path
+          description: The ID of the event to delete
+          required: true
+          type: string
+      x-google-backend:
+        address: https://api-237rzrxg6a-uc.a.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        disable_auth: true
+        deadline: 60.0
+      responses:
+        '200':
+          description: Successful
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+  /api/user/get_user:
+    get:
+      summary: Get user data
+      operationId: getUser
+      x-google-backend:
+        address: https://api-237rzrxg6a-uc.a.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        disable_auth: true
+        deadline: 60.0
+      responses:
+        '200':
+          description: Successful
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+  /api/user/apply_for_host:
+    put:
+      summary: Apply for host
+      operationId: applyForHost
+      parameters:
+        - name: reason
+          in: query
+          description: The host data to apply
+          required: true
+          type: string
+        - name: howLong
+          in: query
+          description: The host data to apply
+          required: true
+          type: string
+        - name: fromWhen
+          in: query
+          description: The host data to apply
+          required: true
+          type: string  
+
+        - name: studentEmail
+          in: query
+          description: The host data to apply
+          required: false
+          type: string
+        
+      x-google-backend:
+        address: https://api-237rzrxg6a-uc.a.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        disable_auth: true
+        deadline: 60.0
+      responses:
+        '200':
+          description: Successful
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+  /api/user/dispute_application:
+    post:
+      summary: Dispute application
+      operationId: disputeApplication
+      x-google-backend:
+        address: https://api-237rzrxg6a-uc.a.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        disable_auth: true
+        deadline: 60.0
+      responses:
+        '200':
+          description: Successful
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+  /api/user/acknowledge_application:
+    post:
+      summary: Acknowledge application
+      operationId: acknowledgeApplication
+      x-google-backend:
+        address: https://api-237rzrxg6a-uc.a.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        disable_auth: true
+        deadline: 60.0
+      responses:
+        '200':
+          description: Successful
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+  /notifications/get_all:
+    get:
+      summary: Get all notifications
+      operationId: getNotifications
+      x-google-backend:
+        address: https://notifications-237rzrxg6a-uc.a.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        disable_auth: true
+        deadline: 60.0
+      responses:
+        '200':
+          description: Successful
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+  /media/upload:
+    post:
+      summary: Upload media
+      operationId: uploadMedia
+      consumes:
+        - multipart/form-data
+      parameters:
+        - name: event_id
+          in: query
+          description: The ID of the event associated with the media upload
+          required: true
+          type: string
+        - name: file
+          in: formData
+          description: The media file to upload
+          required: true
+          type: string
+          format: binary
+      x-google-backend:
+        address: https://storage-237rzrxg6a-uc.a.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        disable_auth: true
+        deadline: 60.0
+      responses:
+        '200':
+          description: Successful
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+  /media/update:
+    post:
+      summary: update media
+      operationId: updateMedia
+      consumes:
+        - multipart/form-data
+      parameters:
+        - name: file
+          in: formData
+          description: The media file to update
+          required: true
+          type: string
+          format: binary
+      x-google-backend:
+        address: https://storage-237rzrxg6a-uc.a.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        disable_auth: true
+        deadline: 60.0
+      responses:
+        '200':
+          description: Successful
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+  /media/proof:
+    post:
+      summary: Upload proof
+      operationId: uploadProof
+      consumes:
+        - multipart/form-data
+      parameters:
+        - name: application_id
+          in: query
+          description: The ID of the application associated with the media upload
+          required: true
+          type: string
+        - name: file
+          in: formData
+          description: The media file to upload
+          required: true
+          type: string
+          format: binary
+      x-google-backend:
+        address: https://storage-237rzrxg6a-uc.a.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        disable_auth: true
+        deadline: 60.0
+      responses:
+        '200':
+          description: Successful
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+  /media/delete:
+    delete:
+      summary: Delete media
+      operationId: deleteMedia
+      parameters:
+        - name: media
+          in: query
+          description: The media data to delete
+          required: true
+          type: string
+      x-google-backend:
+        address: https://storage-237rzrxg6a-uc.a.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        disable_auth: true
+        deadline: 60.0
+      responses:
+        '200':
+          description: Successful
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+  /api/interactions/get_all_users:
+    get:
+      summary: Get all users
+      operationId: getAllUsers
+      x-google-backend:
+        address: https://api-237rzrxg6a-uc.a.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        disable_auth: true
+        deadline: 60.0
+      responses:
+        '200':
+          description: Successful
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+  /api/interactions/send_invite:
+    put:
+      summary: Invite user
+      operationId: inviteUser
+      parameters:
+        - name: userId
+          in: query
+          description: The userId of the user to invite
+          required: true
+          type: string
+        - name: eventId
+          in: query
+          description: The ID of the event to invite the user to
+          required: true
+          type: string
+      x-google-backend:
+        address: https://api-237rzrxg6a-uc.a.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        disable_auth: true
+        deadline: 60.0
+      responses:
+        '200':
+          description: Successful
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+  /api/interactions/accept_invite/{invitationId}:
+    post:
+      summary: Accept invite
+      operationId: acceptInvite
+      parameters:
+        - name: invitationId
+          in: path
+          description: The ID of the application to accept
+          required: true
+          type: string
+      x-google-backend:
+        address: https://api-237rzrxg6a-uc.a.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        disable_auth: true
+        deadline: 60.0
+      responses:
+        '200':
+          description: Successful
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+  /api/interactions/reject_invite/{invitationId}:
+    post:
+      summary: Reject invite
+      operationId: rejectInvite
+      parameters:
+        - name: invitationId
+          in: path
+          description: The ID of the invitation to reject
+          required: true
+          type: string
+      x-google-backend:
+        address: https://api-237rzrxg6a-uc.a.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        disable_auth: true
+        deadline: 60.0
+      responses:
+        '200':
+          description: Successful
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden  
+
+  /api/admin/all_applications/{search}:
+    get:
+      summary: Get all applications by search
+      operationId: getAllApplicationsBySearch
+      parameters:
+        - name: search
+          in: path
+          description: The search query
+          required: true
+          type: string
+      x-google-backend:
+        address: https://api-237rzrxg6a-uc.a.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        disable_auth: true
+        deadline: 60.0
+      responses:
+        '200':
+          description: Successful
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+  /api/admin/all_applications:
+    get:
+      summary: Get all applications
+      operationId: getAllApplications
+      x-google-backend:
+        address: https://api-237rzrxg6a-uc.a.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        disable_auth: true
+        deadline: 60.0
+      responses:
+        '200':
+          description: Successful
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+  /api/admin/accept_applications:
+    post:
+      summary: accept application
+      operationId: acceptApplicationAdmin
+      parameters:
+        - name: applicationId
+          in: query
+          description: The ID of the application to accept
+          required: true
+          type: string
+      x-google-backend:
+        address: https://api-237rzrxg6a-uc.a.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        disable_auth: true
+        deadline: 60.0
+      responses:
+        '200':
+          description: Successful
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+  /api/admin/reject_application:
+    post:
+      summary: reject application
+      operationId: rejectApplicationAdmin
+      parameters:
+        - name: applicationId
+          in: query
+          description: The ID of the application to reject
+          required: true
+          type: string
+      x-google-backend:
+        address: https://api-237rzrxg6a-uc.a.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        disable_auth: true
+        deadline: 60.0
+      responses:
+        '200':
+          description: Successful
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+  /api/admin/demote:
+    post:
+      summary: Demote user
+      operationId: demoteUser
+      parameters:
+        - name: userId
+          in: query
+          description: The ID of the user to demote
+          required: true
+          type: string
+      x-google-backend:
+        address: https://api-237rzrxg6a-uc.a.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        disable_auth: true
+        deadline: 60.0
+      responses:
+        '200':
+          description: Successful
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+  /api/admin/promote:
+    post:
+      summary: Promote user
+      operationId: promoteUser
+      parameters:
+        - name: userId
+          in: query
+          description: The ID of the user to promote
+          required: true
+          type: string
+      x-google-backend:
+        address: https://api-237rzrxg6a-uc.a.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        disable_auth: true
+        deadline: 60.0
+      responses:
+        '200':
+          description: Successful
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+  /api/admin/broadcast:
+    put:
+      summary: Broadcast an event
+      operationId: broadcastEventAdmin
+      parameters:
+        - name: message
+          in: query
+          description: The ID of the event to broadcast
+          required: true
+          type: string
+      x-google-backend:
+        address: https://api-237rzrxg6a-uc.a.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        disable_auth: true
+        deadline: 60.0
+      responses:
+        '200':
+          description: Successful
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+  /notifications/register:
+    get:
+      summary: Register for notifications
+      operationId: registerNotifications
+      parameters:
+        - name: token
+          in: query
+          description: The ID of the user to register
+          required: true
+          type: string
+      x-google-backend:
+        address: https://notifications-live-237rzrxg6a-uc.a.run.app
+        disable_auth: true
+        deadline: 60.0
+      responses:
+        '200':
+          description: Successful
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden

@@ -25,23 +25,29 @@ class _SettingsPageState extends State<SettingsPage> {
     final theme = Theme.of(context);
     final borderColour =
         theme.brightness == Brightness.dark ? Colors.white : Colors.black;
+    final textColour = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
 
     userProvider userP = Provider.of<userProvider>(context, listen: false);
     String userRole = userP.role;
 
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+              'Settings',
+              style: TextStyle(
+                fontSize: 32,
+                fontWeight: FontWeight.bold,
+                color: textColour,
+              ),
+          ),
+          backgroundColor: Colors.transparent,
+          automaticallyImplyLeading: false,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Settings',
-              style: TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
             const SizedBox(height: 20),
             Container(
               decoration: BoxDecoration(

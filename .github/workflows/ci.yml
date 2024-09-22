@@ -19,6 +19,8 @@ jobs:
       DB_USERNAME: ${{ secrets.DB_USERNAME }}
       DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_TOKEN }}
+      GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
+      BEREAR_TOKEN: ${{ secrets.BEREAR_TOKEN }}
 
     steps:
     - name: Checkout repository
@@ -40,7 +42,8 @@ jobs:
 
     - name: Run Frontend tests with coverage
       working-directory: ./src/Frontend
-      run: flutter test --coverage
+      run: flutter test --coverage --dart-define=GOOGLE_MAPS_API_KEY=${{ secrets.GOOGLE_MAPS_API_KEY }}
+
 
     - name: Verify Frontend lcov report
       run: |
@@ -65,6 +68,8 @@ jobs:
 
     - name: Run Backend tests with Gradle
       working-directory: ./src/Backend
+      env: 
+        BEARER_TOKEN: ${{ secrets.BEARER_TOKEN }}
       run: ./gradlew clean test codeCoverageReport
 
     - name: Convert Jacoco report to lcov

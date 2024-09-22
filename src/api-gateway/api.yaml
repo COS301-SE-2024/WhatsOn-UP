@@ -1,0 +1,29 @@
+swagger: '2.0'
+info:
+  title: Whatson-Up API Gateway
+  description: This is the first version of the Whatson-Up API Gateway
+  version: 1.0.0
+schemes:
+  - https
+produces:
+  - application/json
+paths:
+  /events/get_all:
+    get:
+      summary: Get all events
+      operationId: getEvents
+      x-google-backend:
+        address: https://api-237rzrxg6a-uc.a.run.app/api/events/get_all
+      responses:
+        '200':
+          description: A successful response containing event data
+
+  /notifications/get_all:
+    get:
+      summary: Get all events
+      operationId: getEvents
+      x-google-backend:
+        address: https://api-237rzrxg6a-uc.a.run.app/api/events/get_all
+      responses:
+        '200':
+          description: A successful response containing event data
