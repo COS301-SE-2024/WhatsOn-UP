@@ -658,12 +658,12 @@ class _EventCardState extends State<EventCard> {
                               widget.event.saved=true;
                               _fetchEvent(widget.recommendations,widget.event.saved,widget.event);
                               eventP.refreshEvents();
-                              eventP.refreshRecommendations(userP.userId);
+                              eventP.refreshRecommendations(userP.JWT);
                             }else{
                                widget.event.saved=false;
                                _fetchEvent(widget.recommendations,widget.event.saved, widget.event);
                             eventP.refreshEvents();
-                            eventP.refreshRecommendations(userP.userId);
+                            eventP.refreshRecommendations(userP.JWT);
                             }
                           });
                             // if (isBookmarked == true) {

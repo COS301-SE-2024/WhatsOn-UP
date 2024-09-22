@@ -24,8 +24,6 @@ class SocketService {
       'token': 'Bearer $JWT',
     };
 
-    print(userId);
-
     socket = IO.io(url, <String, dynamic>{
       'transports': ['websocket'],
       'query': {'token': JWT},
