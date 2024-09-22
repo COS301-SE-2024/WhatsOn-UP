@@ -31,7 +31,7 @@ for i in "${!services[@]}"; do
   docker push "${DOCKER_HUB_REPO}:${SERVICE_NAME}"
 
   # Deploy to Google Cloud Run
-  gcloud run deploy "${SERVICE_NAME}" \
+  gcloud run services update "${SERVICE_NAME}" \
     --image "${GCR_REPO}/${SERVICE_NAME}:latest" \
     --region us-central1 \
     --platform managed \
@@ -45,11 +45,9 @@ done
 
 echo "Deploying notifications-live..."
 
-gcloud run deploy notifications-live \
+gcloud run services update notifications-live \
   --image us-east1-docker.pkg.dev/whatsonup/backend-services/notifications:latest \
-  --region us-central1 \
-  --platform managed \
-  --allow-unauthenticated
+  --region us-central1 
 
 echo "notifications-live deployment completed."
 
@@ -83,10 +81,8 @@ docker push us-east1-docker.pkg.dev/whatsonup/backend-services/frontend:latest
 docker push devforce123/frontend-services:latest
 
 # Deploy to Google Cloud Run
-gcloud run deploy frontend \
+gcloud run services update frontend \
   --image us-east1-docker.pkg.dev/whatsonup/backend-services/frontend:latest \
-  --region us-central1 \
-  --platform managed \
-  --allow-unauthenticated
+  --region us-central1 
 
 echo "Frontend service deployment completed."
