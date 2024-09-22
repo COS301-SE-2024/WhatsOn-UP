@@ -40,3 +40,9 @@ jobs:
         with:
           username: ${{ env.DOCKER_USERNAME }}
           password: ${{ env.DOCKER_PASSWORD }}
+
+      - name: 'Run deployment script'
+        run: |
+          cd scripts
+          chmod +x deploy.sh
+          ./deploy.sh
