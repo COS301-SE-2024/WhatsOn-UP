@@ -847,6 +847,9 @@ class Api {
     if (duration != 'Permanent') {
       queryParams['howLong'] = duration == '1 week' ? '7' : '30';
     }
+    else{
+      queryParams['howLong'] = '500000';
+    }
 
     if (studentEmail != null) {
       queryParams['studentEmail'] = studentEmail;
