@@ -192,12 +192,14 @@ class Api {
         // final List<Event> events =
         // eventsJson.map((jsonEvent) => Event.fromJson(jsonEvent)).toList();
         final List<Event> events = eventsJson.map((jsonEvent) {
+
           // Extract the event part of the JSON
           final eventJson = jsonEvent['event'];
           // final rating = jsonEvent['rating'];
+
+
           return Event.fromJson(eventJson);
         }).toList();
-        print('Recommended events: $events');
         return events;
       } else {
         throw Exception('Failed to load recommended events');
@@ -1125,7 +1127,7 @@ class Api {
       var response = await http.post(Uri.parse(notifyUserUrl),
           headers: headers, body: jsonEncode(data));
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 201) {
         return jsonDecode(response.body);
       } else {
         final errorResponse = jsonDecode(response.body);

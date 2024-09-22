@@ -26,7 +26,8 @@ class _SurveyScreenState extends State<SurveyScreen> {
   Future<void> fetchCategories() async {
     setLoading(true);
     userProvider userP = Provider.of<userProvider>(context, listen: false);
-    final Api api = Provider.of<Api>(context, listen: false);
+
+    final Api api = Api();
     try {
       final List<Category> fetchedCategories =
           await api.getCategories(JWT: userP.JWT);

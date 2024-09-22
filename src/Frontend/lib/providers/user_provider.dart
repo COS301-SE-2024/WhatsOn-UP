@@ -133,6 +133,7 @@ class userProvider extends ChangeNotifier {
       profileimage = null;
       _isGuest = false;
       hasChanges = true;
+      JWT=null;
     }
 
     if (hasChanges) {
