@@ -31,6 +31,7 @@ class _EventAttendanceState extends State<EventAttendance> {
   Map<String, bool?> attendanceStatuses = {};
   bool isLoading = true;
   EventService eventService = EventService(Supabase.instance.client);
+  final user = Supabase.instance.client.auth.currentUser;
 
   @override
   void initState() {
@@ -38,11 +39,11 @@ class _EventAttendanceState extends State<EventAttendance> {
     filteredAttendees = widget.event.attendees;
     searchController.addListener(filterAttendees);
     fetchAttendanceData();
-  }
+      }
 
   Future<void> fetchAttendanceData() async {
     try {
-      final user = Supabase.instance.client.auth.currentUser;
+     // final user = Supabase.instance.client.auth.currentUser;
       final data = await eventService.fetchAttendanceData(widget.event.id,user!.id );
 
       setState(() {
@@ -69,6 +70,7 @@ class _EventAttendanceState extends State<EventAttendance> {
   }
 
   Future<void> exportToCSV() async {
+    //PermissionStatus status = await Permission.storage.request();
 
     if (await Permission.storage
         .request()
@@ -187,6 +189,8 @@ class _EventAttendanceState extends State<EventAttendance> {
     }
   }*/
   Future<void> importFromCSV() async {
+    PermissionStatus status = await Permission.storage.request();
+    if (status.isGranted) {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['csv', 'xls', 'xlsx', 'tsv'],
@@ -198,41 +202,81 @@ class _EventAttendanceState extends State<EventAttendance> {
 
       if (extension != null) {
         if (extension == 'csv' || extension == 'tsv') {
-          // Handle CSV or TSV
           await _importCsvOrTsv(file);
         } else if (extension == 'xlsx' || extension == 'xls') {
-          // Handle Excel files (.xls or .xlsx)
           await _importExcel(file);
         }  else {
           print('Unsupported file type');
         }
       }
     }
+  }else {
+      // Handle denied or restricted permission case
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Storage permission is required to import CSV'),
+          duration: Duration(seconds: 3),
+        ),
+      );
+    }
   }
 
   Future<void> _importCsvOrTsv(PlatformFile file) async {
-    // Read CSV or TSV file content
-    final bytes = file.bytes;
-    if (bytes == null) return;
+   /*  print("made it to excel func");
+
+    final filePath = file.path;
+    if (filePath == null) {
+      print("File path is null. Could not open the file.");
+      return;
+    }
+
+    final bytes = File(filePath).readAsBytesSync();
+    var excel = Excel.decodeBytes(bytes);
+
+
+    if (bytes == null) {
+      print("File bytes are null. Could not read the file.");
+      return;
+    }*/
+
+    print("made it to csv func");
+    final filePath = file.path;
+    if (filePath == null) {
+      print("File path is null. Could not open the file.");
+      return;
+    }
+
+    try{
+      final bytes = await File(filePath).readAsBytes();
+      print("Selected file: ${file.name}, Size: ${file.size}, Extension: ${file.extension}");
+      print("File bytes length: ${bytes.length}");
 
     final csvString = utf8.decode(bytes);
     final isTsv = file.extension == 'tsv';
     final csvData = CsvToListConverter(fieldDelimiter: isTsv ? '\t' : ',').convert(csvString);
 
     if (csvData.isNotEmpty) {
-      // Skipping header row and processing data rows
       for (var i = 1; i < csvData.length; i++) {
         final row = csvData[i];
+        print("Row data: $row");
+
+        if (row.length >= 2) {
         final fullName = row[0] as String;
         final attendanceStatus = row[1] as String;
 
-        // Find the attendee and update their status
+        final fullNameTrimmed = fullName.trim().toLowerCase();
         final attendee = widget.event.attendees.firstWhere(
-              (attendee) => attendee.fullName == fullName,
+              (attendee) => attendee.fullName.trim().toLowerCase() == fullNameTrimmed,
           orElse: () => Attendee(userId: '', fullName: '', profileImage: '', role: Role(id: 0, name: '')),
         );
 
+
+        /*  final attendee = widget.event.attendees.firstWhere(
+              (attendee) => attendee.fullName == fullName,
+          orElse: () => Attendee(userId: '', fullName: '', profileImage: '', role: Role(id: 0, name: '')),
+        );*/
         if (attendee != null) {
+        if (attendee.userId.isNotEmpty) {
           bool? status = attendanceStatus == 'Present'
               ? true
               : attendanceStatus == 'Absent' ? false : null;
@@ -241,35 +285,49 @@ class _EventAttendanceState extends State<EventAttendance> {
             attendanceStatuses[attendee.userId] = status;
           });
 
-          // Optionally, send updated statuses to the backend
           try {
+            print("printing b4 we call the event service");
+            print(widget.event.id);
+            print(attendee.userId);
+            print(status);
             await eventService.updateAttendanceStatus(
               widget.event.id,
               attendee.userId,
               status,
+              user!.id,
             );
           } catch (e) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text('Failed to update attendance for $fullName'),
-                duration: Duration(seconds: 3),
+                duration: Duration(seconds: 5),
               ),
             );
           }
-        } else {
+        } }else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('No attendee found with the name $fullName'),
-              duration: Duration(seconds: 3),
+              duration: Duration(seconds: 5),
             ),
           );
         }
-      }
+      }}
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('File imported successfully'),
-          duration: Duration(seconds: 3),
+          duration: Duration(seconds: 5),
+        ),
+      );
+    }
+  }
+    catch (e) {
+      print("Error reading CSV file: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to import CSV: $e'),
+          duration: Duration(seconds: 5),
         ),
       );
     }
@@ -278,30 +336,62 @@ class _EventAttendanceState extends State<EventAttendance> {
   Future<void> _importExcel(PlatformFile file) async {
 
     print("made it to excel func");
-    var bytes = file.bytes;
-    if (bytes == null) return;
 
+    final filePath = file.path;
+    if (filePath == null) {
+      print("File path is null. Could not open the file.");
+      return;
+    }
+
+    final bytes = File(filePath).readAsBytesSync();
     var excel = Excel.decodeBytes(bytes);
+
+
+    if (bytes == null) {
+      print("File bytes are null. Could not read the file.");
+      return;
+    }
+   // var excel = Excel.decodeBytes(bytes);
 
     // Loop through each sheet in the Excel file
     for (var table in excel.tables.keys) {
+      print("Reading sheet: $table");
       List<List<dynamic>> rows = excel.tables[table]!.rows;
 
-      // Skipping header row
+      if (rows.isNotEmpty) {
       for (var i = 1; i < rows.length; i++) {
         final row = rows[i];
-        final fullName = row[0] as String;
-        final attendanceStatus = row[1] as String;
+        print("Row data: $row");
+        if (row.length >= 2) {
+          final fullName = _getCellValue(row[0]);
+          final attendanceStatus = _getCellValue(row[1]);
+
+       // final fullName = row[0] as String;
+        //final attendanceStatus = row[1] as String;
         print("WHAT WE READDDDDDDDDDDDDDDDD");
         print(fullName);
         print(attendanceStatus);
-        // Similar logic as in the CSV/TSV import for finding the attendee and updating their status
+
+        final fullNameTrimmed = fullName.trim().toLowerCase();
         final attendee = widget.event.attendees.firstWhere(
+              (attendee) => attendee.fullName.trim().toLowerCase() == fullNameTrimmed,
+          orElse: () => Attendee(userId: '', fullName: '', profileImage: '', role: Role(id: 0, name: '')),
+        );
+
+        if (attendee != null) {
+        /*final attendee = widget.event.attendees.firstWhere(
               (attendee) => attendee.fullName == fullName,
           orElse: () => Attendee(userId: '', fullName: '', profileImage: '', role: Role(id: 0, name: '')),
         );
 
         if (attendee != null) {
+
+        final attendee = widget.event.attendees.firstWhere(
+              (attendee) => attendee.fullName == fullName,
+          orElse: () => Attendee(userId: '', fullName: '', profileImage: '', role: Role(id: 0, name: '')),
+        );
+        */
+        if (attendee.userId.isNotEmpty) {
           bool? status = attendanceStatus == 'Present'
               ? true
               : attendanceStatus == 'Absent' ? false : null;
@@ -311,10 +401,16 @@ class _EventAttendanceState extends State<EventAttendance> {
           });
 
           try {
+            print("printing b4 we call the event service");
+            print(widget.event.id);
+            print(attendee.userId);
+            print(status);
+
             await eventService.updateAttendanceStatus(
               widget.event.id,
               attendee.userId,
               status,
+              user!.id,
             );
           } catch (e) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -324,7 +420,7 @@ class _EventAttendanceState extends State<EventAttendance> {
               ),
             );
           }
-        } else {
+        } }else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('No attendee found with the name $fullName'),
@@ -332,6 +428,8 @@ class _EventAttendanceState extends State<EventAttendance> {
             ),
           );
         }
+        }
+      }
       }
     }
 
@@ -343,6 +441,12 @@ class _EventAttendanceState extends State<EventAttendance> {
     );
   }
 
+  String _getCellValue(dynamic cell) {
+    if (cell is Data) {
+      return cell.value.toString();  // Assuming 'value' holds the actual content
+    }
+    return cell.toString();  // Fallback if it's already a plain string or other type
+  }
 
 
 

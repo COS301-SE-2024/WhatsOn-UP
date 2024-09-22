@@ -230,21 +230,21 @@ class EventService {
     }
   }
 
-  Future<void> updateAttendanceStatus(String eventId, String userId, bool? attended) async {
+  Future<void> updateAttendanceStatus(String eventId, String userId, bool? attended, String currUserId) async {
    print("DETAILSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
    print(eventId);
    print(userId);
    print(attended);
-    final url = '$baseUrl/api/event/update-attendance';
+    final url = '$baseUrl/api/events/update-attendance';
     final response = await http.put(
       Uri.parse('$url'),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer $userId',
+        'Authorization': 'Bearer $currUserId',
       },
       body: jsonEncode({
-        'event_id': eventId,
-        'user_id': userId,
+        'eventId': eventId,
+        'userId': userId,
         'attended': attended,
       }),
     );
