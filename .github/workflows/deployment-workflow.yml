@@ -1,14 +1,12 @@
-name: Backend Services Deployment Pipeline Fix
+name: Deployment Pipeline
 
 on:
   push:
     branches:
       - main
-      - develop
   pull_request:
     branches:
       - main
-      - develop
 
 jobs:
   deploy:
