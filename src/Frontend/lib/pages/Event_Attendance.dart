@@ -32,6 +32,7 @@ class _EventAttendanceState extends State<EventAttendance> {
   bool isLoading = true;
   EventService eventService = EventService(Supabase.instance.client);
   final user = Supabase.instance.client.auth.currentUser;
+  List<String> invalidNames = [];
 
   @override
   void initState() {
@@ -70,11 +71,7 @@ class _EventAttendanceState extends State<EventAttendance> {
   }
 
   Future<void> exportToCSV() async {
-    //PermissionStatus status = await Permission.storage.request();
-
-    if (await Permission.storage
-        .request()
-        .isGranted) {
+    if (await Permission.storage.request().isGranted) {
       List<List<dynamic>> rows = [];
       rows.add(["Full Name", "Attendance Status"]);
       for (var attendee in filteredAttendees) {
@@ -93,7 +90,6 @@ class _EventAttendanceState extends State<EventAttendance> {
       final fileName = 'attendance_${widget.event.nameOfEvent}.csv';
 
       try {
-        // Save file in the public Downloads directory using MediaStore API
         final directory = Directory('/storage/emulated/0/Download');
         final file = File(path.join(directory.path, fileName));
 
@@ -139,7 +135,7 @@ class _EventAttendanceState extends State<EventAttendance> {
                 TextButton(
                   child: Text('Stay'),
                   onPressed: () {
-                    Navigator.of(context).pop(); // Close the dialog
+                    Navigator.of(context).pop();
                   },
                 ),
               ],
@@ -163,32 +159,12 @@ class _EventAttendanceState extends State<EventAttendance> {
       );
     }
   }
-        /*final intent = AndroidIntent(
-          action: 'action_view',
-          type: 'vnd.android.document/directory',
-          flags: <int>[Flag.FLAG_ACTIVITY_NEW_TASK],
-        );
-        await intent.launch();
-      } catch (e) {
-        // Handle errors, if any
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Failed to export CSV: $e'),
-            duration: Duration(seconds: 3),
-          ),
-        );
-      }
-    } else {
-      // Permission not granted
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Storage permission is required to export CSV'),
-          duration: Duration(seconds: 3),
-        ),
-      );
-    }
-  }*/
+
   Future<void> importFromCSV() async {
+    setState(() {
+      isLoading = true;
+    });
+    try{
     PermissionStatus status = await Permission.storage.request();
     if (status.isGranted) {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
@@ -207,38 +183,46 @@ class _EventAttendanceState extends State<EventAttendance> {
           await _importExcel(file);
         }  else {
           print('Unsupported file type');
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Unsupported file type'),
+              duration: Duration(seconds: 5),
+              backgroundColor: Colors.red,
+            ),
+          );
         }
       }
     }
   }else {
-      // Handle denied or restricted permission case
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Storage permission is required to import CSV'),
           duration: Duration(seconds: 3),
+          backgroundColor: Colors.red,
         ),
       );
+    }}
+    catch (e) {
+      print("Error reading Excel file: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to import Excel: $e'),
+          backgroundColor: Colors.red,
+          duration: Duration(seconds: 5),
+        ),
+      );
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
   Future<void> _importCsvOrTsv(PlatformFile file) async {
-   /*  print("made it to excel func");
-
-    final filePath = file.path;
-    if (filePath == null) {
-      print("File path is null. Could not open the file.");
-      return;
-    }
-
-    final bytes = File(filePath).readAsBytesSync();
-    var excel = Excel.decodeBytes(bytes);
-
-
-    if (bytes == null) {
-      print("File bytes are null. Could not read the file.");
-      return;
-    }*/
-
+    setState(() {
+      isLoading = true;
+    });
     print("made it to csv func");
     final filePath = file.path;
     if (filePath == null) {
@@ -246,7 +230,7 @@ class _EventAttendanceState extends State<EventAttendance> {
       return;
     }
 
-    try{
+
       final bytes = await File(filePath).readAsBytes();
       print("Selected file: ${file.name}, Size: ${file.size}, Extension: ${file.extension}");
       print("File bytes length: ${bytes.length}");
@@ -255,85 +239,127 @@ class _EventAttendanceState extends State<EventAttendance> {
     final isTsv = file.extension == 'tsv';
     final csvData = CsvToListConverter(fieldDelimiter: isTsv ? '\t' : ',').convert(csvString);
 
+      invalidNames.clear();
+
     if (csvData.isNotEmpty) {
       for (var i = 1; i < csvData.length; i++) {
         final row = csvData[i];
         print("Row data: $row");
 
         if (row.length >= 2) {
-        final fullName = row[0] as String;
-        final attendanceStatus = row[1] as String;
+          final fullName = row[0] as String;
+          final attendanceStatus = row[1] as String;
 
-        final fullNameTrimmed = fullName.trim().toLowerCase();
-        final attendee = widget.event.attendees.firstWhere(
-              (attendee) => attendee.fullName.trim().toLowerCase() == fullNameTrimmed,
-          orElse: () => Attendee(userId: '', fullName: '', profileImage: '', role: Role(id: 0, name: '')),
-        );
+          final fullNameTrimmed = fullName.trim().toLowerCase();
+          final attendee = widget.event.attendees.firstWhere(
+                (attendee) =>
+            attendee.fullName.trim().toLowerCase() == fullNameTrimmed,
+            orElse: () {
+              invalidNames.add(fullName);
+              return Attendee(userId: '',
+                  fullName: '',
+                  profileImage: '',
+                  role: Role(id: 0, name: ''));
+            },
+          );
 
 
-        /*  final attendee = widget.event.attendees.firstWhere(
+          /*  final attendee = widget.event.attendees.firstWhere(
               (attendee) => attendee.fullName == fullName,
           orElse: () => Attendee(userId: '', fullName: '', profileImage: '', role: Role(id: 0, name: '')),
         );*/
-        if (attendee != null) {
-        if (attendee.userId.isNotEmpty) {
-          bool? status = attendanceStatus == 'Present'
-              ? true
-              : attendanceStatus == 'Absent' ? false : null;
+          if (attendee != null && attendee.userId.isNotEmpty) {
+              bool? status = attendanceStatus == 'Present'
+                  ? true
+                  : attendanceStatus == 'Absent' ? false : null;
 
-          setState(() {
-            attendanceStatuses[attendee.userId] = status;
-          });
+              setState(() {
+                attendanceStatuses[attendee.userId] = status;
+              });
 
-          try {
-            print("printing b4 we call the event service");
-            print(widget.event.id);
-            print(attendee.userId);
-            print(status);
-            await eventService.updateAttendanceStatus(
-              widget.event.id,
-              attendee.userId,
-              status,
-              user!.id,
-            );
-          } catch (e) {
+              try {
+                print("printing b4 we call the event service");
+                print(widget.event.id);
+                print(attendee.userId);
+                print(status);
+                await eventService.updateAttendanceStatus(
+                  widget.event.id,
+                  attendee.userId,
+                  status,
+                  user!.id,
+                );
+               /* setState(() {
+                  attendanceStatuses[attendee.userId] = status;
+                });*/
+                setState(() {
+                  isLoading = false;
+                });
+              } catch (e) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Failed to update attendance for $fullName'),
+                    duration: Duration(seconds: 5),
+                  ),
+                );
+              }
+            }
+          else {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text('Failed to update attendance for $fullName'),
+                content: Text('No attendee found with the name $fullName'),
                 duration: Duration(seconds: 5),
               ),
             );
           }
-        } }else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('No attendee found with the name $fullName'),
-              duration: Duration(seconds: 5),
-            ),
-          );
         }
+      }
+
+      if (invalidNames.isNotEmpty) {
+        _showInvalidNamesDialog();
+        return;
       }}
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('File imported successfully'),
           duration: Duration(seconds: 5),
+          backgroundColor: Colors.green,
         ),
       );
     }
-  }
-    catch (e) {
-      print("Error reading CSV file: $e");
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Failed to import CSV: $e'),
-          duration: Duration(seconds: 5),
-        ),
-      );
-    }
-  }
 
-  Future<void> _importExcel(PlatformFile file) async {
+
+
+void _showInvalidNamesDialog() {
+    print('inside dialog');
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Invalid Names'),
+        content: SingleChildScrollView(
+          child: ListBody(
+            children:
+            [Text('Other attendees will be recorded except the following:'),
+            ...invalidNames.map((name) => Text(name)).toList(),
+      ]
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: Text('OK'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
+
+Future<void> _importExcel(PlatformFile file) async {
 
     print("made it to excel func");
 
@@ -352,9 +378,8 @@ class _EventAttendanceState extends State<EventAttendance> {
       return;
     }
    // var excel = Excel.decodeBytes(bytes);
-
-    // Loop through each sheet in the Excel file
-    for (var table in excel.tables.keys) {
+    invalidNames.clear();
+   for (var table in excel.tables.keys) {
       print("Reading sheet: $table");
       List<List<dynamic>> rows = excel.tables[table]!.rows;
 
@@ -375,23 +400,16 @@ class _EventAttendanceState extends State<EventAttendance> {
         final fullNameTrimmed = fullName.trim().toLowerCase();
         final attendee = widget.event.attendees.firstWhere(
               (attendee) => attendee.fullName.trim().toLowerCase() == fullNameTrimmed,
-          orElse: () => Attendee(userId: '', fullName: '', profileImage: '', role: Role(id: 0, name: '')),
-        );
+          orElse: () {
+            invalidNames.add(fullName);
+            return Attendee(userId: '',
+                fullName: '',
+                profileImage: '',
+                role: Role(id: 0, name: ''));
+          },
+          );
 
-        if (attendee != null) {
-        /*final attendee = widget.event.attendees.firstWhere(
-              (attendee) => attendee.fullName == fullName,
-          orElse: () => Attendee(userId: '', fullName: '', profileImage: '', role: Role(id: 0, name: '')),
-        );
-
-        if (attendee != null) {
-
-        final attendee = widget.event.attendees.firstWhere(
-              (attendee) => attendee.fullName == fullName,
-          orElse: () => Attendee(userId: '', fullName: '', profileImage: '', role: Role(id: 0, name: '')),
-        );
-        */
-        if (attendee.userId.isNotEmpty) {
+        if (attendee != null && attendee.userId.isNotEmpty) {
           bool? status = attendanceStatus == 'Present'
               ? true
               : attendanceStatus == 'Absent' ? false : null;
@@ -420,11 +438,12 @@ class _EventAttendanceState extends State<EventAttendance> {
               ),
             );
           }
-        } }else {
+         }else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('No attendee found with the name $fullName'),
               duration: Duration(seconds: 3),
+              backgroundColor: Colors.red,
             ),
           );
         }
@@ -432,20 +451,24 @@ class _EventAttendanceState extends State<EventAttendance> {
       }
       }
     }
+    if (invalidNames.isNotEmpty) {
+      _showInvalidNamesDialog();
+    }
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Excel file imported successfully'),
         duration: Duration(seconds: 3),
+        backgroundColor: Colors.green,
       ),
     );
   }
 
   String _getCellValue(dynamic cell) {
     if (cell is Data) {
-      return cell.value.toString();  // Assuming 'value' holds the actual content
+      return cell.value.toString();
     }
-    return cell.toString();  // Fallback if it's already a plain string or other type
+    return cell.toString();
   }
 
 
@@ -519,7 +542,7 @@ class _EventAttendanceState extends State<EventAttendance> {
                         ),
                       trailing: TextButton(
                       onPressed: () {
-                      // Optional: Add action for the button
+
                       },
                       child: Text(
                       statusText,
