@@ -125,7 +125,7 @@ class _ForgotPassState extends State<ForgotPass> {
                 // );
                 await supabase.auth.resetPasswordForEmail(
                   email,
-                  redirectTo: 'http://localhost:8086/reset-password',
+                  redirectTo: 'https://recommendations-1035006743185.us-central1.run.app/reset-password',
                 );
                 if (mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(

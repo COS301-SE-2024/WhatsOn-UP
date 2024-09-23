@@ -160,7 +160,7 @@ export class AppService {
 
                     try {
                         // Call your backend endpoint to reset the password
-                        const response = await fetch('http://localhost:8086/reset-password', {
+                        const response = await fetch('https://recommendations-1035006743185.us-central1.run.app/reset-password', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
