@@ -33,6 +33,7 @@ class _PasteventsState extends State<Pastevents> {
 
     if (user != null) {
       _pastEvents = widget.eventService.fetchPastEvents(userP.JWT);
+      // _pastEvents = widget.eventService.fetchPastEvents("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2OWFlNzJiYy04ZTJiLTQ0MDAtYjYwOC0yOWYwNDhkNGY4YzciLCJleHAiOjQ4NzkwNDY4NTIsImlhdCI6MTcyNTQ0Njg1MiwiYXV0aG9yIjoiTWFtYW50YW5rYW5lIn0.TXPXOSRHvK8O8toijFiHfAVsoYk9QxgTvj2TPSMSj8Q");
     } else {
 
       _pastEvents = Future.error('User is not authenticated');
