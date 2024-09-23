@@ -25,5 +25,14 @@ jobs:
         uses: github/super-linter@v4
         env:
           VALIDATE_ALL_CODEBASE: false
-          DEFAULT_BRANCH: "main"
+          VALIDATE_KOTLIN: true
+          VALIDATE_JAVA: true
+          VALIDATE_JAVASCRIPT_ES: true
+          VALIDATE_JAVASCRIPT_STANDARD: true
+          VALIDATE_TYPESCRIPT_ES: true
+          VALIDATE_TYPESCRIPT_STANDARD: true
+          VALIDATE_DART: true
+          VALIDATE_FLUTTER: true
+          VALIDATE_DOCKERFILE: true
+          DEFAULT_BRANCH: "develop"
           GITHUB_TOKEN: ${{ secrets.LINTER_TOKEN }}
