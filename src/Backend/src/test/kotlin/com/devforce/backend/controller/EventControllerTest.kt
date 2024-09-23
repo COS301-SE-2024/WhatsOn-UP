@@ -57,7 +57,7 @@ class EventControllerIntegrationTest {
     private lateinit var eventRepo: EventRepo
 
 
-    @Value("\${bearer-token}")
+    @Value("\${BEARER_TOKEN}")
     private val bearerToken: String? = null
 
 
