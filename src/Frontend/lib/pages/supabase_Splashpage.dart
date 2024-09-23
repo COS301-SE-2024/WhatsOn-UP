@@ -32,6 +32,7 @@ class _SplashPageState extends State<SplashPage> {
     final session = supabase.auth.currentSession;
     if (!mounted) return;
     if (session != null) {
+
       userP.JWT=session?.accessToken;
       await _login();
     } else {

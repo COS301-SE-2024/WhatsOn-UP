@@ -132,8 +132,9 @@ class userProvider extends ChangeNotifier {
       _Role = '';
       profileimage = null;
       _isGuest = false;
-      hasChanges = true;
       JWT=null;
+      hasChanges = true;
+
     }
 
     if (hasChanges) {
