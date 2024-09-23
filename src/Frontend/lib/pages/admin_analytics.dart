@@ -720,27 +720,63 @@ class SkewnessChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SfCartesianChart(
-      title: const ChartTitle(text: 'Skewness Over Time'),
-      legend: const Legend(isVisible: true),
-      tooltipBehavior: TooltipBehavior(enable: true),
-      primaryXAxis: const CategoryAxis(),
-      primaryYAxis: const NumericAxis(
-        minimum: -2,
-        maximum: 2,
-        interval: 0.5,
-        title: AxisTitle(text: 'Skewness'),
-      ),
-      series: <LineSeries<MonthlySummary, String>>[
-        LineSeries<MonthlySummary, String>(
-          name: 'Skewness',
-          dataSource: monthlySummaries,
-          xValueMapper: (MonthlySummary summary, _) => summary.month,
-          yValueMapper: (MonthlySummary summary, _) => summary.skewness,
-          markerSettings: const MarkerSettings(isVisible: true),
-          dataLabelSettings: const DataLabelSettings(isVisible: true),
+    return Stack(
+      children: [
+        SfCartesianChart(
+          title: const ChartTitle(text: 'Skewness Over Time'),
+          legend: const Legend(isVisible: true),
+          tooltipBehavior: TooltipBehavior(enable: true),
+          primaryXAxis: const CategoryAxis(),
+          primaryYAxis: const NumericAxis(
+            minimum: -2,
+            maximum: 2,
+            interval: 0.5,
+            title: AxisTitle(text: 'Skewness'),
+          ),
+          series: <LineSeries<MonthlySummary, String>>[
+            LineSeries<MonthlySummary, String>(
+              name: 'Skewness',
+              dataSource: monthlySummaries,
+              xValueMapper: (MonthlySummary summary, _) => summary.month,
+              yValueMapper: (MonthlySummary summary, _) => summary.skewness,
+              markerSettings: const MarkerSettings(isVisible: true),
+              dataLabelSettings: const DataLabelSettings(isVisible: true),
+            ),
+          ],
+        ),
+        Positioned(
+          top: 8,
+          right: 8,
+          child: IconButton(
+            icon: const Icon(Icons.info_outline),
+            onPressed: () => _showInfoDialog(context),
+          ),
         ),
       ],
+    );
+  }
+
+  void _showInfoDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Skewness Over Time'),
+          content: const Text(
+            'This chart displays the skewness of ratings over time for all events. '
+            'Skewness measures the asymmetry of the rating distribution. '
+            'Positive skewness indicates that events received higher ratings, '
+            'while negative skewness indicates that events received lower ratings. '
+            'A skewness of 0 suggests a symmetrical distribution.'
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Close'),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        );
+      },
     );
   }
 }
