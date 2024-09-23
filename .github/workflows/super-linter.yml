@@ -25,3 +25,5 @@ jobs:
           VALIDATE_ALL_CODEBASE: true
           DEFAULT_BRANCH: "develop"
           GITHUB_TOKEN: ${{ secrets.LINTER_TOKEN }}
+
+          
