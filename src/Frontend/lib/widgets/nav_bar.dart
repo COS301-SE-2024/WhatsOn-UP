@@ -84,10 +84,12 @@ class NavBar extends StatelessWidget {
             value: 1,
             child: ListTile(
                 leading: Icon(Icons.event), title: Text('Manage Events'))),
+    if (userRole == 'ADMIN') ... [
         const PopupMenuItem<int>(
             value: 2,
             child: ListTile(
                 leading: Icon(Icons.broadcast_on_home), title: Text('Broadcast'))),
+    ],
         if (userRole == 'ADMIN') ... [
           const PopupMenuItem<int>(
               value: 3,

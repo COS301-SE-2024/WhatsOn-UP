@@ -168,6 +168,13 @@ class _AdminAnalyticsPageState extends State<AdminAnalyticsPage> with SingleTick
       child: Column(
         children: [
           PopularEventsWidget(popularEvents: popularEvents), // Popular Events
+          const Divider(
+            color: Colors.grey,
+            height: 20,
+            thickness: 2,
+            indent: 20,
+            endIndent: 20,
+          ),
           SizedBox(
             height: 300,
             child: AnalyticsChartPage(monthlySummaries: monthlySummaries), // Average Rating Over Time
@@ -320,31 +327,63 @@ class AnalyticsChartPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SfCartesianChart(
-      title: const ChartTitle(text: 'Average Rating Over Time'),
-      legend: const Legend(isVisible: true),
-      tooltipBehavior: TooltipBehavior(enable: true),
-      primaryXAxis: const CategoryAxis(),
-      primaryYAxis: const NumericAxis(
-        minimum: 0,
-        maximum: 5,
-        interval: 1,
-        title: AxisTitle(text: 'Average Rating'),
-      ),
-      series: <LineSeries<MonthlySummary, String>>[
-        LineSeries<MonthlySummary, String>(
-          name: 'Average Rating',
-          dataSource: monthlySummaries,
-          xValueMapper: (MonthlySummary summary, _) => summary.month,
-          yValueMapper: (MonthlySummary summary, _) => summary.averageRating,
-          markerSettings: const MarkerSettings(isVisible: true),
-          dataLabelSettings: const DataLabelSettings(isVisible: true),
+    return Stack(
+      children: [
+        SfCartesianChart(
+          title: const ChartTitle(text: 'Average Rating Over Time'),
+          legend: const Legend(isVisible: true),
+          tooltipBehavior: TooltipBehavior(enable: true),
+          primaryXAxis: const CategoryAxis(),
+          primaryYAxis: const NumericAxis(
+            minimum: 0,
+            maximum: 5,
+            interval: 1,
+            title: AxisTitle(text: 'Average Rating'),
+          ),
+          series: <LineSeries<MonthlySummary, String>>[
+            LineSeries<MonthlySummary, String>(
+              name: 'Average Rating',
+              dataSource: monthlySummaries,
+              xValueMapper: (MonthlySummary summary, _) => summary.month,
+              yValueMapper: (MonthlySummary summary, _) => summary.averageRating,
+              markerSettings: const MarkerSettings(isVisible: true),
+              dataLabelSettings: const DataLabelSettings(isVisible: true),
+            ),
+          ],
+        ),
+        Positioned(
+          top: 8,
+          right: 8,
+          child: IconButton(
+            icon: const Icon(Icons.info_outline),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text('Average Rating Over Time'),
+                    content: const Text(
+                      'This chart displays the average rating over time for all events in the app. '
+                      'Each point represents the average rating for all events for a specific month. '
+                    ),
+                    actions: <Widget>[
+                      TextButton(
+                        child: const Text('Close'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+          ),
         ),
       ],
     );
   }
 }
-
 
 class CapacityAttendanceChart extends StatelessWidget {
   final List<MonthlySummary> monthlySummaries;
@@ -353,30 +392,65 @@ class CapacityAttendanceChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SfCartesianChart(
-      title: const ChartTitle(text: 'Capacity & Attendance Ratios'),
-      legend: const Legend(isVisible: true),
-      tooltipBehavior: TooltipBehavior(enable: true),
-      primaryXAxis: const CategoryAxis(),
-      series: <CartesianSeries>[
-        ColumnSeries<MonthlySummary, String>(
-          name: 'Capacity Ratio',
-          dataSource: monthlySummaries,
-          xValueMapper: (MonthlySummary summary, _) => summary.month,
-          yValueMapper: (MonthlySummary summary, _) => summary.capacityRatio,
-          dataLabelSettings: const DataLabelSettings(isVisible: true),
+    return Stack(
+      children: [
+        SfCartesianChart(
+          title: const ChartTitle(text: 'Capacity & Attendance Ratios'),
+          legend: const Legend(isVisible: true),
+          tooltipBehavior: TooltipBehavior(enable: true),
+          primaryXAxis: const CategoryAxis(),
+          series: <CartesianSeries>[
+            ColumnSeries<MonthlySummary, String>(
+              name: 'Capacity Ratio',
+              dataSource: monthlySummaries,
+              xValueMapper: (MonthlySummary summary, _) => summary.month,
+              yValueMapper: (MonthlySummary summary, _) => summary.capacityRatio,
+              dataLabelSettings: const DataLabelSettings(isVisible: true),
+            ),
+            ColumnSeries<MonthlySummary, String>(
+              name: 'Attendance Ratio',
+              dataSource: monthlySummaries,
+              xValueMapper: (MonthlySummary summary, _) => summary.month,
+              yValueMapper: (MonthlySummary summary, _) => summary.attendanceRatio,
+              dataLabelSettings: const DataLabelSettings(isVisible: true),
+            ),
+          ],
         ),
-        ColumnSeries<MonthlySummary, String>(
-          name: 'Attendance Ratio',
-          dataSource: monthlySummaries,
-          xValueMapper: (MonthlySummary summary, _) => summary.month,
-          yValueMapper: (MonthlySummary summary, _) => summary.attendanceRatio,
-          dataLabelSettings: const DataLabelSettings(isVisible: true),
+        Positioned(
+          top: 8,
+          right: 8,
+          child: IconButton(
+            icon: const Icon(Icons.info_outline),
+            onPressed: () => _showInfoDialog(context),
+          ),
         ),
       ],
     );
   }
+
+  void _showInfoDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Capacity & Attendance Ratios'),
+          content: const Text(
+            'This chart compares the capacity ratio and attendance ratio over time for all events. '
+            'The capacity ratio shows how much of the available space was utilised, '
+            'while the attendance ratio indicates the proportion of expected attendees who actually showed up.'
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Close'),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        );
+      },
+    );
+  }
 }
+
 
 class FeedbackChart extends StatelessWidget {
   final List<MonthlySummary> monthlySummaries;
@@ -385,27 +459,61 @@ class FeedbackChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SfCartesianChart(
-      title: const ChartTitle(text: 'Feedback Ratio Over Time'),
-      legend: const Legend(isVisible: true),
-      tooltipBehavior: TooltipBehavior(enable: true),
-      primaryXAxis: const CategoryAxis(),
-      primaryYAxis: const NumericAxis(
-        minimum: 0,
-        maximum: 100,
-        interval: 10,
-        title: AxisTitle(text: 'Feedback Ratio (%)'),
-      ),
-      series: <LineSeries<MonthlySummary, String>>[
-        LineSeries<MonthlySummary, String>(
-          name: 'Feedback Ratio',
-          dataSource: monthlySummaries,
-          xValueMapper: (MonthlySummary summary, _) => summary.month,
-          yValueMapper: (MonthlySummary summary, _) => summary.feedbackRatio,
-          markerSettings: const MarkerSettings(isVisible: true),
-          dataLabelSettings: const DataLabelSettings(isVisible: true),
+    return Stack(
+      children: [
+        SfCartesianChart(
+          title: const ChartTitle(text: 'Feedback Ratio Over Time'),
+          legend: const Legend(isVisible: true),
+          tooltipBehavior: TooltipBehavior(enable: true),
+          primaryXAxis: const CategoryAxis(),
+          primaryYAxis: const NumericAxis(
+            minimum: 0,
+            maximum: 100,
+            interval: 10,
+            title: AxisTitle(text: 'Feedback Ratio (%)'),
+          ),
+          series: <LineSeries<MonthlySummary, String>>[
+            LineSeries<MonthlySummary, String>(
+              name: 'Feedback Ratio',
+              dataSource: monthlySummaries,
+              xValueMapper: (MonthlySummary summary, _) => summary.month,
+              yValueMapper: (MonthlySummary summary, _) => summary.feedbackRatio,
+              markerSettings: const MarkerSettings(isVisible: true),
+              dataLabelSettings: const DataLabelSettings(isVisible: true),
+            ),
+          ],
+        ),
+        Positioned(
+          top: 8,
+          right: 8,
+          child: IconButton(
+            icon: const Icon(Icons.info_outline),
+            onPressed: () => _showInfoDialog(context),
+          ),
         ),
       ],
+    );
+  }
+
+  void _showInfoDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Feedback Ratio Over Time'),
+          content: const Text(
+            'This chart displays the feedback ratio over time for all events. '
+            'The feedback ratio represents the percentage of attendees who provided feedback after each event. '
+            'A higher ratio indicates more engagement from the participants.'
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Close'),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        );
+      },
     );
   }
 }
@@ -418,21 +526,55 @@ class RSVPChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SfCartesianChart(
-      title: const ChartTitle(text: 'RSVP Ratio Over Time'),
-      legend: const Legend(isVisible: true),
-      tooltipBehavior: TooltipBehavior(enable: true),
-      primaryXAxis: const CategoryAxis(),
-      series: <LineSeries<MonthlySummary, String>>[
-        LineSeries<MonthlySummary, String>(
-          name: 'RSVP Ratio',
-          dataSource: monthlySummaries,
-          xValueMapper: (MonthlySummary summary, _) => summary.month,
-          yValueMapper: (MonthlySummary summary, _) => summary.rsvpRatio,
-          markerSettings: const MarkerSettings(isVisible: true),
-          dataLabelSettings: const DataLabelSettings(isVisible: true),
+    return Stack(
+      children: [
+        SfCartesianChart(
+          title: const ChartTitle(text: 'RSVP Ratio Over Time'),
+          legend: const Legend(isVisible: true),
+          tooltipBehavior: TooltipBehavior(enable: true),
+          primaryXAxis: const CategoryAxis(),
+          series: <LineSeries<MonthlySummary, String>>[
+            LineSeries<MonthlySummary, String>(
+              name: 'RSVP Ratio',
+              dataSource: monthlySummaries,
+              xValueMapper: (MonthlySummary summary, _) => summary.month,
+              yValueMapper: (MonthlySummary summary, _) => summary.rsvpRatio,
+              markerSettings: const MarkerSettings(isVisible: true),
+              dataLabelSettings: const DataLabelSettings(isVisible: true),
+            ),
+          ],
+        ),
+        Positioned(
+          top: 8,
+          right: 8,
+          child: IconButton(
+            icon: const Icon(Icons.info_outline),
+            onPressed: () => _showInfoDialog(context),
+          ),
         ),
       ],
+    );
+  }
+
+  void _showInfoDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('RSVP Ratio Over Time'),
+          content: const Text(
+            'This chart shows the RSVP ratio over time for all events. '
+            'The RSVP ratio represents the percentage of invited people who responded to the event invitation. '
+            'A higher ratio indicates better communication and engagement with potential attendees.'
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Close'),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        );
+      },
     );
   }
 }
@@ -444,21 +586,55 @@ class DurationChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SfCartesianChart(
-      title: const ChartTitle(text: 'Event Duration Over Time'),
-      legend: const Legend(isVisible: true),
-      tooltipBehavior: TooltipBehavior(enable: true),
-      primaryXAxis: const CategoryAxis(),
-      series: <LineSeries<MonthlySummary, String>>[
-        LineSeries<MonthlySummary, String>(
-          name: 'Duration',
-          dataSource: monthlySummaries,
-          xValueMapper: (MonthlySummary summary, _) => summary.month,
-          yValueMapper: (MonthlySummary summary, _) => summary.duration,
-          markerSettings: const MarkerSettings(isVisible: true),
-          dataLabelSettings: const DataLabelSettings(isVisible: true),
+    return Stack(
+      children: [
+        SfCartesianChart(
+          title: const ChartTitle(text: 'Event Duration Over Time'),
+          legend: const Legend(isVisible: true),
+          tooltipBehavior: TooltipBehavior(enable: true),
+          primaryXAxis: const CategoryAxis(),
+          series: <LineSeries<MonthlySummary, String>>[
+            LineSeries<MonthlySummary, String>(
+              name: 'Duration',
+              dataSource: monthlySummaries,
+              xValueMapper: (MonthlySummary summary, _) => summary.month,
+              yValueMapper: (MonthlySummary summary, _) => summary.duration,
+              markerSettings: const MarkerSettings(isVisible: true),
+              dataLabelSettings: const DataLabelSettings(isVisible: true),
+            ),
+          ],
+        ),
+        Positioned(
+          top: 8,
+          right: 8,
+          child: IconButton(
+            icon: const Icon(Icons.info_outline),
+            onPressed: () => _showInfoDialog(context),
+          ),
         ),
       ],
+    );
+  }
+
+  void _showInfoDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Event Duration Over Time'),
+          content: const Text(
+            'This chart displays the average duration of events over time for all events. '
+            'The duration is measured in hours. '
+            'This information can help in understanding trends in event length and planning future events.'
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Close'),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        );
+      },
     );
   }
 }
@@ -471,34 +647,68 @@ class RatingDistributionChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SfCartesianChart(
-      title: const ChartTitle(text: 'Rating Distribution'),
-      legend: const Legend(isVisible: true),
-      tooltipBehavior: TooltipBehavior(enable: true),
-      primaryXAxis: const CategoryAxis(),
-      series: <CartesianSeries>[
-        ColumnSeries<MonthlySummary, String>(
-          name: 'Highest Rating',
-          dataSource: monthlySummaries,
-          xValueMapper: (MonthlySummary summary, _) => summary.month,
-          yValueMapper: (MonthlySummary summary, _) => summary.highestRating,
-          dataLabelSettings: const DataLabelSettings(isVisible: true),
+    return Stack(
+      children: [
+        SfCartesianChart(
+          title: const ChartTitle(text: 'Rating Distribution'),
+          legend: const Legend(isVisible: true),
+          tooltipBehavior: TooltipBehavior(enable: true),
+          primaryXAxis: const CategoryAxis(),
+          series: <CartesianSeries>[
+            ColumnSeries<MonthlySummary, String>(
+              name: 'Highest Rating',
+              dataSource: monthlySummaries,
+              xValueMapper: (MonthlySummary summary, _) => summary.month,
+              yValueMapper: (MonthlySummary summary, _) => summary.highestRating,
+              dataLabelSettings: const DataLabelSettings(isVisible: true),
+            ),
+            ColumnSeries<MonthlySummary, String>(
+              name: 'Median Rating',
+              dataSource: monthlySummaries,
+              xValueMapper: (MonthlySummary summary, _) => summary.month,
+              yValueMapper: (MonthlySummary summary, _) => summary.medianRating,
+              dataLabelSettings: const DataLabelSettings(isVisible: true),
+            ),
+            ColumnSeries<MonthlySummary, String>(
+              name: 'Lowest Rating',
+              dataSource: monthlySummaries,
+              xValueMapper: (MonthlySummary summary, _) => summary.month,
+              yValueMapper: (MonthlySummary summary, _) => summary.lowestRating,
+              dataLabelSettings: const DataLabelSettings(isVisible: true),
+            ),
+          ],
         ),
-        ColumnSeries<MonthlySummary, String>(
-          name: 'Median Rating',
-          dataSource: monthlySummaries,
-          xValueMapper: (MonthlySummary summary, _) => summary.month,
-          yValueMapper: (MonthlySummary summary, _) => summary.medianRating,
-          dataLabelSettings: const DataLabelSettings(isVisible: true),
-        ),
-        ColumnSeries<MonthlySummary, String>(
-          name: 'Lowest Rating',
-          dataSource: monthlySummaries,
-          xValueMapper: (MonthlySummary summary, _) => summary.month,
-          yValueMapper: (MonthlySummary summary, _) => summary.lowestRating,
-          dataLabelSettings: const DataLabelSettings(isVisible: true),
+        Positioned(
+          top: 8,
+          right: 8,
+          child: IconButton(
+            icon: const Icon(Icons.info_outline),
+            onPressed: () => _showInfoDialog(context),
+          ),
         ),
       ],
+    );
+  }
+
+  void _showInfoDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Rating Distribution'),
+          content: const Text(
+            'This chart shows the distribution of ratings over time for all events. '
+            'It displays the highest, median, and lowest ratings for each month. '
+            'This helps in understanding the range and central tendency of event ratings.'
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Close'),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        );
+      },
     );
   }
 }
@@ -510,27 +720,63 @@ class SkewnessChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SfCartesianChart(
-      title: const ChartTitle(text: 'Skewness Over Time'),
-      legend: const Legend(isVisible: true),
-      tooltipBehavior: TooltipBehavior(enable: true),
-      primaryXAxis: const CategoryAxis(),
-      primaryYAxis: const NumericAxis(
-        minimum: -2,
-        maximum: 2,
-        interval: 0.5,
-        title: AxisTitle(text: 'Skewness'),
-      ),
-      series: <LineSeries<MonthlySummary, String>>[
-        LineSeries<MonthlySummary, String>(
-          name: 'Skewness',
-          dataSource: monthlySummaries,
-          xValueMapper: (MonthlySummary summary, _) => summary.month,
-          yValueMapper: (MonthlySummary summary, _) => summary.skewness,
-          markerSettings: const MarkerSettings(isVisible: true),
-          dataLabelSettings: const DataLabelSettings(isVisible: true),
+    return Stack(
+      children: [
+        SfCartesianChart(
+          title: const ChartTitle(text: 'Skewness Over Time'),
+          legend: const Legend(isVisible: true),
+          tooltipBehavior: TooltipBehavior(enable: true),
+          primaryXAxis: const CategoryAxis(),
+          primaryYAxis: const NumericAxis(
+            minimum: -2,
+            maximum: 2,
+            interval: 0.5,
+            title: AxisTitle(text: 'Skewness'),
+          ),
+          series: <LineSeries<MonthlySummary, String>>[
+            LineSeries<MonthlySummary, String>(
+              name: 'Skewness',
+              dataSource: monthlySummaries,
+              xValueMapper: (MonthlySummary summary, _) => summary.month,
+              yValueMapper: (MonthlySummary summary, _) => summary.skewness,
+              markerSettings: const MarkerSettings(isVisible: true),
+              dataLabelSettings: const DataLabelSettings(isVisible: true),
+            ),
+          ],
+        ),
+        Positioned(
+          top: 8,
+          right: 8,
+          child: IconButton(
+            icon: const Icon(Icons.info_outline),
+            onPressed: () => _showInfoDialog(context),
+          ),
         ),
       ],
+    );
+  }
+
+  void _showInfoDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Skewness Over Time'),
+          content: const Text(
+            'This chart displays the skewness of ratings over time for all events. '
+            'Skewness measures the asymmetry of the rating distribution. '
+            'Positive skewness indicates that events received higher ratings, '
+            'while negative skewness indicates that events received lower ratings. '
+            'A skewness of 0 suggests a symmetrical distribution.'
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Close'),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        );
+      },
     );
   }
 }
@@ -587,7 +833,7 @@ class _PopularEventsWidgetState extends State<PopularEventsWidget> {
         const Padding(
           padding: EdgeInsets.all(16.0),
           child: Text(
-            'Popular Events',
+            'Top 5 most Popular Events',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
         ),

@@ -97,6 +97,7 @@ class userProvider extends ChangeNotifier {
     _Role = role;
     this.profileImage = profileImage;
     _isGuest = isGuest;
+    JWT=null;
     notifyListeners();
   }
 
@@ -133,6 +134,7 @@ class userProvider extends ChangeNotifier {
       profileimage = null;
       _isGuest = false;
       hasChanges = true;
+      JWT=null;
     }
 
     if (hasChanges) {

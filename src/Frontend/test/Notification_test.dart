@@ -503,7 +503,7 @@ void main() {
     when(mockUserProvider.profileImage).thenReturn('https://via.placeholder.com/150');
 
     final notifications = [
-      AppNotification(notificationTypes: 'invites', message: 'You have an invite', eventId: '', userId: '', sentAt: '', notificationId: '', seenAt:''),
+      AppNotification(notificationTypes: 'invite', message: 'You have an invite', eventId: '', userId: '', sentAt: '', notificationId: '', seenAt:''),
     ];
 
     when(mockNotificationProvider.notifications).thenReturn(notifications);
