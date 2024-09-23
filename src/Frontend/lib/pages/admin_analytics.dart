@@ -327,25 +327,58 @@ class AnalyticsChartPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SfCartesianChart(
-      title: const ChartTitle(text: 'Average Rating Over Time'),
-      legend: const Legend(isVisible: true),
-      tooltipBehavior: TooltipBehavior(enable: true),
-      primaryXAxis: const CategoryAxis(),
-      primaryYAxis: const NumericAxis(
-        minimum: 0,
-        maximum: 5,
-        interval: 1,
-        title: AxisTitle(text: 'Average Rating'),
-      ),
-      series: <LineSeries<MonthlySummary, String>>[
-        LineSeries<MonthlySummary, String>(
-          name: 'Average Rating',
-          dataSource: monthlySummaries,
-          xValueMapper: (MonthlySummary summary, _) => summary.month,
-          yValueMapper: (MonthlySummary summary, _) => summary.averageRating,
-          markerSettings: const MarkerSettings(isVisible: true),
-          dataLabelSettings: const DataLabelSettings(isVisible: true),
+    return Stack(
+      children: [
+        SfCartesianChart(
+          title: const ChartTitle(text: 'Average Rating Over Time'),
+          legend: const Legend(isVisible: true),
+          tooltipBehavior: TooltipBehavior(enable: true),
+          primaryXAxis: const CategoryAxis(),
+          primaryYAxis: const NumericAxis(
+            minimum: 0,
+            maximum: 5,
+            interval: 1,
+            title: AxisTitle(text: 'Average Rating'),
+          ),
+          series: <LineSeries<MonthlySummary, String>>[
+            LineSeries<MonthlySummary, String>(
+              name: 'Average Rating',
+              dataSource: monthlySummaries,
+              xValueMapper: (MonthlySummary summary, _) => summary.month,
+              yValueMapper: (MonthlySummary summary, _) => summary.averageRating,
+              markerSettings: const MarkerSettings(isVisible: true),
+              dataLabelSettings: const DataLabelSettings(isVisible: true),
+            ),
+          ],
+        ),
+        Positioned(
+          top: 8,
+          right: 8,
+          child: IconButton(
+            icon: const Icon(Icons.info_outline),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text('Average Rating Over Time'),
+                    content: const Text(
+                      'This chart displays the average rating over time for all events in the app. '
+                      'Each point represents the average rating for all events for a specific month. '
+                    ),
+                    actions: <Widget>[
+                      TextButton(
+                        child: const Text('Close'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+          ),
         ),
       ],
     );
