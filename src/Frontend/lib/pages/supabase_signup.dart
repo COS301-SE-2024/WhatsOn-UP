@@ -28,22 +28,26 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
   late Color myColor;
   late Size mediaSize;
 
-  @override
-  void initState() {
-    super.initState();
-    _authSubscription = supabase.auth.onAuthStateChange.listen((event) {
-      final session = event.session;
-      if (session != null) {
-        Navigator.of(context).pushReplacementNamed('/login');
-      }
-    });
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _authSubscription = supabase.auth.onAuthStateChange.listen((event) {
+  //     final session = event.session;
+  //     if (session != null) {
+  //       Navigator.of(context).pushReplacementNamed('/login');
+  //     }
+  //   });
+  // }
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+
+     _fullnameController.dispose();
+
     // _authSubscription.cancel();
+
     super.dispose();
   }
 
@@ -153,11 +157,13 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
                 final AuthResponse res = await supabase.auth
                     .signUp(email: email, password: password);
                 if (mounted) {
-                  print("CALLING USERNAME INPUT");
+
+                  Provider.of<userProvider>(context, listen: false).JWT =
+                      supabase.auth.currentSession!.accessToken;
                   await _usernameInput(); // Ensure the username is saved
                   ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text("Signed up successfully")));
-                  Navigator.of(context).pushReplacementNamed('/login');
+
                 }
               } on AuthException catch (error) {
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
