@@ -147,11 +147,6 @@ void main() {
       when(mockUserProvider.email).thenReturn('user@gmail.com');
       when(mockUserProvider.password).thenReturn('password123');
 
-      // final placeholderImage = img.Image(width: 20, height: 20);
-      // final placeholderImageData = img.encodePng(placeholderImage);
-      //
-      // when(mockUserProvider.profileImage)
-      //     .thenReturn(Uint8List.fromList(placeholderImageData));
       String mockImageUrl = 'https://via.placeholder.com/150';
       when(mockUserProvider.profileImage)
           .thenReturn(mockImageUrl);

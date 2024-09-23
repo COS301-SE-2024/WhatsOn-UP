@@ -377,6 +377,16 @@ class MockEventProvider extends _i1.Mock implements _i7.EventProvider {
       ) as _i8.Future<void>);
 
   @override
+  _i8.Future<List<_i9.Category>> fetchCategories(String? JWT) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #fetchCategories,
+          [JWT],
+        ),
+        returnValue: _i8.Future<List<_i9.Category>>.value(<_i9.Category>[]),
+      ) as _i8.Future<List<_i9.Category>>);
+
+  @override
   void fetchfortheFirstTimeRsvp(
     String? userId,
     String? JWT,

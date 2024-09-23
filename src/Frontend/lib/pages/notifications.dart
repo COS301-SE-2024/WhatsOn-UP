@@ -282,10 +282,9 @@ class _NotificationsState extends State<Notifications> with TickerProviderStateM
               ],
             );
           }
-
-        else {
+        else if(tab == "Invitations") {
             final invites = notifications
-                .where((n) => n.notificationTypes == 'invite'&& n.seenAt == null || n.seenAt != null)
+                .where((n) => n.notificationTypes == 'invite')
                 .toList();
             return ListView(
               children: [
@@ -296,8 +295,11 @@ class _NotificationsState extends State<Notifications> with TickerProviderStateM
               ],
             );
           }
+        else{
+          return Center(child: Text("No notifications available."));
 
         }
+      }
       },
     );
   }
@@ -311,7 +313,7 @@ class _NotificationsState extends State<Notifications> with TickerProviderStateM
         } else if (notif.notifications.isEmpty) {
           return   Center(child: Text("You have no notifications."));
 
-        } else {
+        } else if(tab == "Applications") {
           var notifications = notif.notifications;
             final applications = notifications
                 .where((n) => n.notificationTypes == 'application'&& n.seenAt == null )
@@ -324,6 +326,9 @@ class _NotificationsState extends State<Notifications> with TickerProviderStateM
                 ],
               ],
             );
+        }
+        else {
+          return Center(child: Text("No notifications available."));
         }
       },
     );
@@ -371,15 +376,15 @@ class _NotificationsState extends State<Notifications> with TickerProviderStateM
                     ? '${notification.message.substring(0, 50)}...'
                     : notification.message,
               ),
-              onTap: () {
+              onTap: () async {
                 final userProvider userP = Provider.of<userProvider>(context, listen: false);
 
                 if (notification.notificationId != null) {
                   if(notification.seenAt == null){
-                    notification.markAsSeen(notification.notificationId, userP.JWT);
-                    notif.refreshNotifications(userP.JWT);
+                    await notification.markAsSeen(notification.notificationId, userP.JWT);
+                    await notif.refreshNotifications(userP.JWT);
                   }
-                  print(notification.seenAt);
+                  print('Notification was seen at: ${notification.seenAt}');
                   Navigator.push(
                     context,
                     MaterialPageRoute(
