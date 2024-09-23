@@ -159,7 +159,7 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
                   await _usernameInput(); // Ensure the username is saved
                   ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text("Signed up successfully")));
-                  Navigator.of(context).pushReplacementNamed('/login');
+
                 }
               } on AuthException catch (error) {
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
