@@ -22,8 +22,9 @@ class _HostAnalyticsPageState extends State<HostAnalyticsPage> {
     // print ("USER ID: ${userP.userId}");
 
     try {
-      final response = await api.getAllEventsAnalytics(userP.JWT);
-      // final response = await api.getHostEventAnalytics("69ae72bc-8e2b-4400-b608-29f048d4f8c7");
+      // final response = await api.getAllEventsAnalytics(userP.JWT);
+      // final response = await api.getHostEventAnalytics("69ae72bc-8e2b-4400-b608-29f048d4f8c7", userP.JWT);
+      final response = await api.getHostEventAnalytics(userP.userId, userP.JWT);
       
       // print('EVENTS ANALYTICS RESPONSE: $response');
 
@@ -357,7 +358,7 @@ class _PopularEventsWidgetState extends State<PopularEventsWidget> {
         const Padding(
           padding: EdgeInsets.all(16.0),
           child: Text(
-            'My Popular Events',
+            'My Top 5 Popular Events',
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
         ),

@@ -97,6 +97,7 @@ class userProvider extends ChangeNotifier {
     _Role = role;
     this.profileImage = profileImage;
     _isGuest = isGuest;
+    JWT=null;
     notifyListeners();
   }
 
