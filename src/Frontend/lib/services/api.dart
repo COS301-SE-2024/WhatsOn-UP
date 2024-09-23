@@ -847,6 +847,9 @@ class Api {
     if (duration != 'Permanent') {
       queryParams['howLong'] = duration == '1 week' ? '7' : '30';
     }
+    else{
+      queryParams['howLong'] = '500000';
+    }
 
     if (studentEmail != null) {
       queryParams['studentEmail'] = studentEmail;
@@ -884,7 +887,7 @@ class Api {
   Future<Map<String, dynamic>> broadcastEvent(
       String eventId, String message, String JWT) async {
     final String url =
-        'http://${globals.gatewayDomain}/api/events/broadcast?eventId=$eventId&message=$message';
+        'https://${globals.gatewayDomain}/api/events/broadcast?eventId=$eventId&message=$message';
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -905,17 +908,22 @@ class Api {
 
   Future<Map<String, dynamic>> broadcast(String message, String JWT) async {
     final String url =
-        'http://${globals.gatewayDomain}/api/admin/broadcast?message=$message';
+        'https://${globals.gatewayDomain}/api/admin/broadcast?message=$message';
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
       'Authorization': 'Bearer $JWT',
     };
     try {
+
       var response = await http.put(Uri.parse(url), headers: headers);
+      print('Broadcasting response: ${response.body}');
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
-      } else {
+      } else if(response.statusCode==403){
+        return jsonDecode(response.body);
+      }
+      else {
         throw Exception('Failed to BROADCAST');
       }
     } catch (e) {
@@ -947,7 +955,7 @@ class Api {
   static Future<List<UserModel>> getAllUsers(String JWT) async {
 
     final String _userUrl =
-        'http://${globals.gatewayDomain}/api/interactions/get_all_users';
+        'https://${globals.gatewayDomain}/api/interactions/get_all_users';
     var headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -1146,10 +1154,10 @@ class Api {
 
     if (comment == '') {
       rateEventURL =
-          'http://${globals.gatewayDomain}/api/user/rate_event/$eventId?rating=$rating';
+          'https://${globals.gatewayDomain}/api/user/rate_event/$eventId?rating=$rating';
     } else {
       rateEventURL =
-          'http://${globals.gatewayDomain}/api/user/rate_event/$eventId?comment=${Uri.encodeComponent(comment)}&rating=$rating';
+          'https://${globals.gatewayDomain}/api/user/rate_event/$eventId?comment=${Uri.encodeComponent(comment)}&rating=$rating';
     }
 
     var headers = {
@@ -1201,7 +1209,7 @@ class Api {
   Future<Map<String, dynamic>> deleteNotification(
       String notificationId, String JWT) async {
     final String deleteNotificationUrl =
-        'http://${globals.gatewayDomain}/notifications/delete/$notificationId';
+        'https://${globals.gatewayDomain}/notifications/delete/$notificationId';
 
     var headers = {
       'Content-Type': 'application/json',
@@ -1369,7 +1377,7 @@ class Api {
   }
 
   Future<Map<String, dynamic>> getAutofillData(String JWT, String eventName, String eventDescription) async {
-  final String getAutofillDataURL = 'http://${globals.gatewayDomain}/analytics/host/generate_autofill?description=$eventDescription&title=$eventName';
+  final String getAutofillDataURL = 'https://${globals.gatewayDomain}/analytics/host/generate_autofill?description=$eventDescription&title=$eventName';
 
   var headers = {
     'Content-Type': 'application/json',
