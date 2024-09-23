@@ -478,7 +478,10 @@ Widget build(BuildContext context) {
             userP.role = role;
             userP.profileImage = profileImage;
 
-            eventP.refreshRecommendations(userP.JWT);
+             api.JWT=userP.JWT;
+
+             await eventP.refreshEvents(userP.JWT);
+            await eventP.refreshRecommendations(userP.JWT);
             notificationProvider _notificationProvider =
                 Provider.of<notificationProvider>(context, listen: false);
              eventP.refreshSavedEvents(userP.JWT);

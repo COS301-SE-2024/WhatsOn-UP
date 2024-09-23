@@ -785,7 +785,8 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                       );
                     } finally {
                       print("ARRRIVEDDDDD AT FINALLY");
-                      eventP.refreshEvents();
+
+                      eventP.refreshEvents(userP.JWT);
                       setState(() {
                         _isLoading = false;
                         selectedImages = null;

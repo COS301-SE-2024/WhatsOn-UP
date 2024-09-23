@@ -213,9 +213,9 @@ class _HomePageState extends State<HomePage>
           final eventsHome = snapshot.data![0];
           final eventsRecommended = snapshot.data![2];
 
-          if (eventsHome.isEmpty) {
-            return const Center(child: Text('No events found.'));
-          }
+          // if (eventsHome.isEmpty) {
+          //   return const Center(child: Text('No events found.'));
+          // }
 
           return SingleChildScrollView(
             child: Column(

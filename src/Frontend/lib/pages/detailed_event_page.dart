@@ -134,7 +134,7 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
         const SnackBar(content: Text('Successfully RSVP\'d to event!')),
       );
       await eventProvider.refreshRSVPEvents(user!.id, userP.JWT);
-      await eventProvider.refreshEvents();
+      await eventProvider.refreshEvents(userP.JWT);
       print(
           'amount of attendees after event added to the calendar ${_thisCurrentEvent.attendees.length}');
       setState(() {
@@ -172,7 +172,7 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
         const SnackBar(content: Text('Successfully removed your RSVP from the event!')),
       );
       await eventProvider.refreshRSVPEvents(user!.id, userP.JWT);
-      await eventProvider.refreshEvents();
+      await eventProvider.refreshEvents(userP.JWT);
 
       setState(() {
         _isLoading = false;
@@ -219,7 +219,7 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
             builder: (context) => EditEvent(eventId: widget.event.id)),
       );
       if (resultEdit == true) {
-        await eventProvider.refreshEvents();
+        await eventProvider.refreshEvents(userP.JWT);
         await eventProvider.refreshRSVPEvents(user!.id, userP.JWT);
         Navigator.of(context).pushReplacementNamed('/home');
       }
@@ -266,7 +266,7 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Event deleted successfully')),
           );
-          await eventProvider.refreshEvents();
+          await eventProvider.refreshEvents(userP.JWT);
           Navigator.of(context).pushReplacementNamed('/home');
         } else {
           print('Failed to delete event. Response: $response');

@@ -1,6 +1,8 @@
 
+import 'package:firstapp/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:firstapp/widgets/event_card.dart';
+import 'package:provider/provider.dart';
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 import '../main.dart';
 import '../services/api.dart';
@@ -15,15 +17,15 @@ class EventProvider with ChangeNotifier {
   late Future<List<Event>> _eventsSaved;
   late Future<List<Event>> _eventRecommedations;
   EventProvider({required this.api}) {
-    _eventsHome = _fetchEventsHome();
+    _eventsHome = Future.value([]);
     _eventsSaved = Future.value([]);
     _eventsRsvp = Future.value([]);
 
   }
 
-  Future<void> refreshEvents() async {
+  Future<void> refreshEvents(String JWT) async {
     try {
-      _eventsHome = _fetchEventsHome();
+      _eventsHome = _fetchEventsHome(JWT);
       notifyListeners();
     } catch (e) {
       throw Exception('Failed to refresh events: $e');
@@ -46,9 +48,10 @@ Future<void> refreshRecommendations(String JWT) async {
       throw Exception('Failed to refresh events: $e');
     }
   }
-  Future<List<Event>> _fetchEventsHome() async {
+  Future<List<Event>> _fetchEventsHome(String JWT) async {
+
     try {
-      return await api.getAllEvents();
+      return await api.getAllEvents(JWT);
     } catch (e) {
       throw Exception('Failed to fetch home events: $e');
     }
@@ -70,14 +73,7 @@ Future<void> refreshSavedEvents(String? JWT) async {
     }
   }
 
-  Future<List<Event>> _fetchCalendarEventsGuest() async {
-    try {
-      // return await api.getAllEventsGuest();
-      return await api.getAllEvents();
-    } catch (e) {
-      throw Exception('Failed to fetch home events: $e');
-    }
-  }
+
   Future<List<Category>> fetchCategories(String JWT, ) async {
     try {
       return await api.getCategories(JWT: JWT);
@@ -85,7 +81,14 @@ Future<void> refreshSavedEvents(String? JWT) async {
       throw Exception('Failed to fetch categories: $e');
     }
   }
-
+  // Future<List<Event>> _fetchCalendarEventsGuest() async {
+  //   try {
+  //     // return await api.getAllEventsGuest();
+  //     return await api.getAllEvents(userP.JWT);
+  //   } catch (e) {
+  //     throw Exception('Failed to fetch home events: $e');
+  //   }
+  // }
 
 Future<List<Event>> _fetchEventsRsvp(String userId, String JWT) async {
   print("DOUBLEU +$JWT");
@@ -218,18 +221,15 @@ Future<List<Event>> _fetchEventsRsvp(String userId, String JWT) async {
 
 
   void addEventSaved(Event event,String JWT) {
-    _eventsSaved.then((events) {
+
       api.putSavedEvent(event.id,JWT);
       notifyListeners();
-    });
   }
 
   void removeEventSaved(Event event,String JWT) {
-    _eventsSaved.then((events) {
+
       api.DeleteSavedEvent(event.id,JWT);
-      events.remove(event);
       notifyListeners();
-    });
   }
 
   Future<Event?> getEventById(String id) async {
@@ -347,10 +347,10 @@ Future<List<Event>> _fetchEventsRsvp(String userId, String JWT) async {
     }
   }
 
-  Future<List<Event>> _fetchHostEvents(String hostId) async {
+  Future<List<Event>> _fetchHostEvents(String hostId,String JWT,String role) async {
 
     try {
-      List<Event> allEvents = await api.getAllEvents();
+      List<Event> allEvents = await api.getAllEvents(JWT);
       List<Event> hostEvents = allEvents.where((event) => event.hosts.contains(hostId)).toList();
       return hostEvents;
     }
@@ -358,10 +358,10 @@ Future<List<Event>> _fetchEventsRsvp(String userId, String JWT) async {
       throw Exception('Failed to fetch host events: $e');
     }
   }
-  Future<List<Event>> getHostEvents(String hostId) async {
+  Future<List<Event>> getHostEvents(String hostId,String JWT,String role) async {
 
     try {
-      return await _fetchHostEvents(hostId);
+      return await _fetchHostEvents(hostId,JWT,role);
     } catch (e) {
       throw Exception('Failed to fetch host events: $e');
     }

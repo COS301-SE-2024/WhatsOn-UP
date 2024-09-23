@@ -31,6 +31,7 @@ class Api {
   var refreshToken = 'refreshToken';
   var JWT;
 
+
   setState(){
 
     final session = supabase.auth.currentSession;
@@ -97,20 +98,34 @@ class Api {
     }
   }
 
-  Future<List<Event>> getAllEvents() async {
-    final _rsvpEventsURL = 'https://${globals.gatewayDomain}/api/events/get_all';
+  Future<List<Event>> getAllEvents(String JWT) async {
 
-    var headers = {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      };
+    final _rsvpEventsURL = 'https://${globals.gatewayDomain}/api/events/get_all';
+    var headers;
+
+if( JWT.isNotEmpty){
+
+  headers = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    'Authorization': 'Bearer $JWT',
+
+  };
+}else{
+  headers={
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  };
+}
 
     try {
+
+      print('headers: $headers');
       var response = await http.get(
         Uri.parse(_rsvpEventsURL),
         headers: headers
       );
-
+  print('response: ${response.body}');
       if (response.statusCode == 200) {
         // Parse the JSON response
         final Map<String, dynamic> decodedJson = json.decode(response.body);
@@ -378,6 +393,7 @@ class Api {
 
   Future<Map<String, dynamic>> putSavedEvent(
       String eventId, String JWT) async {
+    print('Event ID in putsaved event: $eventId');
     final String _rsvpEventUrl =
         'https://${globals.gatewayDomain}/api/user/save_event/$eventId';
 
@@ -391,6 +407,7 @@ class Api {
       var response = await http.put(Uri.parse(_rsvpEventUrl), headers: headers);
 
       if (response.statusCode == 200) {
+        print('Response body after saving: ${response.body}');
         return jsonDecode(response.body);
       } else {
         throw Exception(jsonDecode(response.body));
@@ -416,6 +433,7 @@ class Api {
           await http.delete(Uri.parse(_rsvpEventUrl), headers: headers);
 
       if (response.statusCode == 200) {
+        print('Response body after unsaving: ${response.body}');
         return jsonDecode(response.body);
       } else {
         throw Exception(jsonDecode(response.body));
