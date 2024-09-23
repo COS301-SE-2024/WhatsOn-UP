@@ -517,7 +517,7 @@ class _EventCardState extends State<EventCard> {
   //     print('Error fetching event: $e');
   //   }
   // }
-  Future<void> _fetchEvent(bool recommendations, bool saved, Event event) async {
+  Future<void> _fetchEvent(bool recommendations, bool saved, Event event,String JWT) async {
     try {
       setState(() {
         _isLoading = true;
@@ -526,12 +526,20 @@ class _EventCardState extends State<EventCard> {
       Event? eventM;
       EventProvider eventProvider = Provider.of<EventProvider>(context, listen: false);
 
+
       if (recommendations) {
         eventM = await eventProvider.getEventById(event.id);
+        eventProvider.addEventSaved(eventM!,JWT);
         eventM?.saved = saved;
+        eventProvider.refreshRecommendations(JWT);
+        eventProvider.refreshEvents();
+
       } else {
         eventM = await eventProvider.getEventByIdR(event.id);
+        eventProvider.addEventSaved(eventM!,JWT);
         eventM?.saved = saved;
+        eventProvider.refreshRecommendations(JWT);
+        eventProvider.refreshEvents();
       }
 
     } catch (e) {
@@ -655,15 +663,22 @@ class _EventCardState extends State<EventCard> {
                             // isBookmarked = !isBookmarked;
                             widget.event.saved=!widget.event.saved;
                             if(widget.event.saved==true){
-                              widget.event.saved=true;
-                              _fetchEvent(widget.recommendations,widget.event.saved,widget.event);
-                              eventP.refreshEvents();
-                              eventP.refreshRecommendations(userP.userId);
+
+                              setState(() {
+                                widget.event.saved=true;
+                                eventP.addEventSaved(widget.event,userP.JWT);
+                                _fetchEvent(widget.recommendations,widget.event.saved,widget.event,userP.JWT);
+                                eventP.refreshEvents();
+                                eventP.refreshRecommendations(userP.JWT);
+                              });
+
                             }else{
-                               widget.event.saved=false;
-                               _fetchEvent(widget.recommendations,widget.event.saved, widget.event);
-                            eventP.refreshEvents();
-                            eventP.refreshRecommendations(userP.userId);
+                              setState(() {
+                                widget.event.saved=false;
+                                _fetchEvent(widget.recommendations,widget.event.saved, widget.event,userP.JWT);
+                                eventP.refreshEvents();
+                                eventP.refreshRecommendations(userP.JWT);
+                              });
                             }
                           });
                             // if (isBookmarked == true) {

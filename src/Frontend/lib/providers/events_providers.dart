@@ -220,7 +220,6 @@ Future<List<Event>> _fetchEventsRsvp(String userId, String JWT) async {
   void addEventSaved(Event event,String JWT) {
     _eventsSaved.then((events) {
       api.putSavedEvent(event.id,JWT);
-      events.add(event);
       notifyListeners();
     });
   }
@@ -251,6 +250,7 @@ Future<List<Event>> _fetchEventsRsvp(String userId, String JWT) async {
       throw Exception('Failed to get event by ID: $e');
     }
   }
+
   // void EditEventName(String id, String eventName) async {
   //   try {
   //     List<Event> events = await _eventsHome;
