@@ -57,6 +57,7 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
   final _formKey = GlobalKey<FormState>();
   final _formKeyAI = GlobalKey<FormState>();
   bool _isLoading = true;
+  bool _isAutoFillDataLoading = false;
   late TextEditingController _maxAttendeesController;
   late TutorialCoachMark tutorialCoachMark;
   bool _tutorialShown = false;
@@ -387,62 +388,83 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: const Text('Enter Event Details'),
-                    content: Form(
-                      key: _formKeyAI,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Text(
-                            'Fill in the event name and a short description of the event. Our system will suggest an enhanced description, recommended venues, time and date, and categories based on the information you provide.',
-                            style: TextStyle(color: Colors.grey, fontSize: 14),
-                          ),
-                          const SizedBox(height: 20),
-                          TextFormField(
-                            controller: _eventNameControllerAI,
-                            decoration: InputDecoration(hintText: 'Event Name'),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Event Name is required';
-                              }
-                              return null;
-                            },
-                          ),
-                          const SizedBox(height: 10),
-                          TextFormField(
-                            controller: _eventDescriptionControllerAI,
-                            decoration: InputDecoration(hintText: 'Event Description'),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Event Description is required';
-                              }
-                              return null;
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                    actions: [
-                      TextButton(
-                        child: const Text('Cancel'),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                      TextButton(
-                        child: const Text('Submit'),
-                        onPressed: () async {
-                          if (_formKeyAI.currentState?.validate() == true) {
-                            String eventName = _eventNameControllerAI.text;
-                            String eventDescription = _eventDescriptionControllerAI.text;
-                            Navigator.of(context).pop();
+                  return StatefulBuilder(
+                    builder: (context, setState) {
+                      return AlertDialog(
+                        title: const Text('Enter Event Details'),
+                        content: Form(
+                          key: _formKeyAI,
+                          child: _isAutoFillDataLoading
+                            ? const SizedBox(
+                                height: 50,
+                                width: 50,
+                                child: Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              )
+                            : Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Text(
+                                    'Fill in the event name and a short description of the event. Our system will suggest an enhanced description, recommended venues, time and date, and categories based on the information you provide.',
+                                    style: TextStyle(color: Colors.grey, fontSize: 14),
+                                  ),
+                                  const SizedBox(height: 20),
+                                  TextFormField(
+                                    controller: _eventNameControllerAI,
+                                    decoration: InputDecoration(hintText: 'Event Name'),
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Event Name is required';
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                  const SizedBox(height: 10),
+                                  TextFormField(
+                                    controller: _eventDescriptionControllerAI,
+                                    decoration: InputDecoration(hintText: 'Event Description'),
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Event Description is required';
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                ],
+                              ),
+                        ),
+                        actions: _isAutoFillDataLoading
+                          ? null
+                          : [
+                              TextButton(
+                                child: const Text('Cancel'),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                              TextButton(
+                                child: const Text('Submit'),
+                                onPressed: () async {
+                                  if (_formKeyAI.currentState?.validate() == true) {
+                                    String eventName = _eventNameControllerAI.text;
+                                    String eventDescription = _eventDescriptionControllerAI.text;
 
-                            await getAutofillData(eventName, eventDescription);
-                          }
-                        },
-                      ),
-                    ],
+                                    setState(() {
+                                      _isAutoFillDataLoading = true;
+                                    });
+
+                                    await getAutofillData(eventName, eventDescription);
+
+                                    setState(() {
+                                      _isAutoFillDataLoading = false;
+                                    });
+                                  }
+                                },
+                              ),
+                            ],
+                      );
+                    },
                   );
                 },
               );
@@ -955,13 +977,17 @@ class _AutofillOptionsWidgetState extends State<AutofillOptionsWidget> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 ElevatedButton(
-                  onPressed: () => Navigator.pop(context),
+                  onPressed: () => {
+                    Navigator.pop(context),
+                    Navigator.pop(context),
+                  },
                   child: Text('Cancel'),
                 ),
                 ElevatedButton(
                   onPressed: selectedOption != null
                       ? () {
                           widget.onSelect(selectedOption!);
+                          Navigator.pop(context);
                           Navigator.pop(context);
                         }
                       : null,

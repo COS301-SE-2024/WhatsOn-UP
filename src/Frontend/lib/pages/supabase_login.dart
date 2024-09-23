@@ -358,7 +358,7 @@ Widget build(BuildContext context) {
           TextButton(
           // ElevatedButton(
               onPressed: () {
-                Navigator.push(
+                Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
                       builder: (context) => const SupabaseSignup()),

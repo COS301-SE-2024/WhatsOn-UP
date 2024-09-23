@@ -564,14 +564,10 @@ class _EventCardState extends State<EventCard> {
     EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
     userProvider userP = Provider.of<userProvider>(context, listen: false);
     String userRole = userP.role;
-    widget.showBookmarkButton = widget.showBookmarkButton && userRole != "GUEST";
 
-    widget.showBookmarkButton=widget.broadcast=="EDIT"
-    ?false
-    :true;
-   isbroadcast=widget.broadcast=="EDIT"
-       ?true
-       :false;
+    bool showBookmarkButton = widget.showBookmarkButton && userRole != "GUEST" && widget.broadcast != "EDIT";
+    isbroadcast = widget.broadcast == "EDIT";
+
     final theme = Theme.of(context);
     final cardColour = theme.colorScheme.surface;
     final textColour = theme.colorScheme.onSurface;
@@ -650,7 +646,7 @@ class _EventCardState extends State<EventCard> {
                         ),
                       ),
                     ),
-                    if (widget.showBookmarkButton)
+                    if (showBookmarkButton)
                       IconButton(
                         icon: Icon(
                           // isBookmarked ? Icons.bookmark : Icons.bookmark_border,
