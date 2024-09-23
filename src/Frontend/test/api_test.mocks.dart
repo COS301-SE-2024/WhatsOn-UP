@@ -330,10 +330,10 @@ class MockEventProvider extends _i1.Mock implements _i7.EventProvider {
       ) as bool);
 
   @override
-  _i8.Future<void> refreshEvents() => (super.noSuchMethod(
+  _i8.Future<void> refreshEvents(String? JWT) => (super.noSuchMethod(
         Invocation.method(
           #refreshEvents,
-          [],
+          [JWT],
         ),
         returnValue: _i8.Future<void>.value(),
         returnValueForMissingStub: _i8.Future<void>.value(),
@@ -625,11 +625,19 @@ class MockEventProvider extends _i1.Mock implements _i7.EventProvider {
       );
 
   @override
-  _i8.Future<List<_i9.Event>> getHostEvents(String? hostId) =>
+  _i8.Future<List<_i9.Event>> getHostEvents(
+    String? hostId,
+    String? JWT,
+    String? role,
+  ) =>
       (super.noSuchMethod(
         Invocation.method(
           #getHostEvents,
-          [hostId],
+          [
+            hostId,
+            JWT,
+            role,
+          ],
         ),
         returnValue: _i8.Future<List<_i9.Event>>.value(<_i9.Event>[]),
       ) as _i8.Future<List<_i9.Event>>);
@@ -1027,10 +1035,10 @@ class MockApi extends _i1.Mock implements _i2.Api {
       ) as _i8.Future<Map<String, dynamic>>);
 
   @override
-  _i8.Future<List<_i9.Event>> getAllEvents() => (super.noSuchMethod(
+  _i8.Future<List<_i9.Event>> getAllEvents(String? JWT) => (super.noSuchMethod(
         Invocation.method(
           #getAllEvents,
-          [],
+          [JWT],
         ),
         returnValue: _i8.Future<List<_i9.Event>>.value(<_i9.Event>[]),
       ) as _i8.Future<List<_i9.Event>>);

@@ -316,7 +316,7 @@ class _NotificationsState extends State<Notifications> with TickerProviderStateM
         } else if(tab == "Applications") {
           var notifications = notif.notifications;
             final applications = notifications
-                .where((n) => n.notificationTypes == 'application'&& n.seenAt == null )
+                .where((n) => n.notificationTypes == 'application')
                 .toList();
             return ListView(
               children: [
