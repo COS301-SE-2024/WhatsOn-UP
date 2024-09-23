@@ -385,7 +385,6 @@ class AnalyticsChartPage extends StatelessWidget {
   }
 }
 
-
 class CapacityAttendanceChart extends StatelessWidget {
   final List<MonthlySummary> monthlySummaries;
 
@@ -393,30 +392,65 @@ class CapacityAttendanceChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SfCartesianChart(
-      title: const ChartTitle(text: 'Capacity & Attendance Ratios'),
-      legend: const Legend(isVisible: true),
-      tooltipBehavior: TooltipBehavior(enable: true),
-      primaryXAxis: const CategoryAxis(),
-      series: <CartesianSeries>[
-        ColumnSeries<MonthlySummary, String>(
-          name: 'Capacity Ratio',
-          dataSource: monthlySummaries,
-          xValueMapper: (MonthlySummary summary, _) => summary.month,
-          yValueMapper: (MonthlySummary summary, _) => summary.capacityRatio,
-          dataLabelSettings: const DataLabelSettings(isVisible: true),
+    return Stack(
+      children: [
+        SfCartesianChart(
+          title: const ChartTitle(text: 'Capacity & Attendance Ratios'),
+          legend: const Legend(isVisible: true),
+          tooltipBehavior: TooltipBehavior(enable: true),
+          primaryXAxis: const CategoryAxis(),
+          series: <CartesianSeries>[
+            ColumnSeries<MonthlySummary, String>(
+              name: 'Capacity Ratio',
+              dataSource: monthlySummaries,
+              xValueMapper: (MonthlySummary summary, _) => summary.month,
+              yValueMapper: (MonthlySummary summary, _) => summary.capacityRatio,
+              dataLabelSettings: const DataLabelSettings(isVisible: true),
+            ),
+            ColumnSeries<MonthlySummary, String>(
+              name: 'Attendance Ratio',
+              dataSource: monthlySummaries,
+              xValueMapper: (MonthlySummary summary, _) => summary.month,
+              yValueMapper: (MonthlySummary summary, _) => summary.attendanceRatio,
+              dataLabelSettings: const DataLabelSettings(isVisible: true),
+            ),
+          ],
         ),
-        ColumnSeries<MonthlySummary, String>(
-          name: 'Attendance Ratio',
-          dataSource: monthlySummaries,
-          xValueMapper: (MonthlySummary summary, _) => summary.month,
-          yValueMapper: (MonthlySummary summary, _) => summary.attendanceRatio,
-          dataLabelSettings: const DataLabelSettings(isVisible: true),
+        Positioned(
+          top: 8,
+          right: 8,
+          child: IconButton(
+            icon: const Icon(Icons.info_outline),
+            onPressed: () => _showInfoDialog(context),
+          ),
         ),
       ],
     );
   }
+
+  void _showInfoDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Capacity & Attendance Ratios'),
+          content: const Text(
+            'This chart compares the capacity ratio and attendance ratio over time for all events. '
+            'The capacity ratio shows how much of the available space was utilised, '
+            'while the attendance ratio indicates the proportion of expected attendees who actually showed up.'
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Close'),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        );
+      },
+    );
+  }
 }
+
 
 class FeedbackChart extends StatelessWidget {
   final List<MonthlySummary> monthlySummaries;
