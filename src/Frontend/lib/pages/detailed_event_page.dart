@@ -463,17 +463,17 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
                       minimumSize: const Size(double.infinity, 48),
                     ),
                   ),
-                  const SizedBox(height: 8.0),
-                  if (userP.role != "GUEST")
-                    ElevatedButton.icon(
-                      onPressed: _reportEvent,
-                      icon: const Icon(Icons.report),
-                      label: const Text('Report Event'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
-                        minimumSize: const Size(double.infinity, 48),
-                      ),
-                    ),
+                  // const SizedBox(height: 8.0),
+                  // if (userP.role != "GUEST")
+                  //   ElevatedButton.icon(
+                  //     onPressed: _reportEvent,
+                  //     icon: const Icon(Icons.report),
+                  //     label: const Text('Report Event'),
+                  //     style: ElevatedButton.styleFrom(
+                  //       backgroundColor: Colors.red,
+                  //       minimumSize: const Size(double.infinity, 48),
+                  //     ),
+                  //   ),
                   const SizedBox(height: 16.0),
                   if (_thisCurrentEvent != null &&
                       (_thisCurrentEvent!.hosts != null &&

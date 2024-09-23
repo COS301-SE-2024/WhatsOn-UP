@@ -43,7 +43,11 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+
      _fullnameController.dispose();
+
+    // _authSubscription.cancel();
+
     super.dispose();
   }
 
@@ -182,18 +186,17 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
 
   Future<void> _usernameInput() async {
     final user = supabase.auth.currentUser;
-    String fullname = _fullnameController.text;
-    print('Username: $fullname');
+    String name = _fullnameController.text;
+    print('Username: $name');
     userProvider userP = Provider.of<userProvider>(context, listen: false);
     EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
     Api api = Api();
     user!;
-    api.postUsername(fullname, userP.JWT).then((response) {
+    api.postUsername(name, userP.JWT).then((response) {
       if (response['error'] != null) {
         print('An error occurred: ${response['error']}');
       } else {
         print('Username added successfully');
-        String fullName = response['data']['user']['fullName'] ?? 'Unknown';
         String userEmail = user.userMetadata?['email'];
         String UserId = user.id;
         String role = response['data']['user']['role'] ?? 'Unknown';
@@ -201,7 +204,7 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
             response['data']['user']['profileImage'] ?? 'Unknown';
 
         userP.userId = user.id;
-        userP.Fullname = fullName;
+        userP.Fullname = name;
         userP.email = userEmail;
         userP.role = role;
         userP.profileImage = profileImage;
