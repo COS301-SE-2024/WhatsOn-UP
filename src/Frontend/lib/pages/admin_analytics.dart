@@ -647,34 +647,68 @@ class RatingDistributionChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SfCartesianChart(
-      title: const ChartTitle(text: 'Rating Distribution'),
-      legend: const Legend(isVisible: true),
-      tooltipBehavior: TooltipBehavior(enable: true),
-      primaryXAxis: const CategoryAxis(),
-      series: <CartesianSeries>[
-        ColumnSeries<MonthlySummary, String>(
-          name: 'Highest Rating',
-          dataSource: monthlySummaries,
-          xValueMapper: (MonthlySummary summary, _) => summary.month,
-          yValueMapper: (MonthlySummary summary, _) => summary.highestRating,
-          dataLabelSettings: const DataLabelSettings(isVisible: true),
+    return Stack(
+      children: [
+        SfCartesianChart(
+          title: const ChartTitle(text: 'Rating Distribution'),
+          legend: const Legend(isVisible: true),
+          tooltipBehavior: TooltipBehavior(enable: true),
+          primaryXAxis: const CategoryAxis(),
+          series: <CartesianSeries>[
+            ColumnSeries<MonthlySummary, String>(
+              name: 'Highest Rating',
+              dataSource: monthlySummaries,
+              xValueMapper: (MonthlySummary summary, _) => summary.month,
+              yValueMapper: (MonthlySummary summary, _) => summary.highestRating,
+              dataLabelSettings: const DataLabelSettings(isVisible: true),
+            ),
+            ColumnSeries<MonthlySummary, String>(
+              name: 'Median Rating',
+              dataSource: monthlySummaries,
+              xValueMapper: (MonthlySummary summary, _) => summary.month,
+              yValueMapper: (MonthlySummary summary, _) => summary.medianRating,
+              dataLabelSettings: const DataLabelSettings(isVisible: true),
+            ),
+            ColumnSeries<MonthlySummary, String>(
+              name: 'Lowest Rating',
+              dataSource: monthlySummaries,
+              xValueMapper: (MonthlySummary summary, _) => summary.month,
+              yValueMapper: (MonthlySummary summary, _) => summary.lowestRating,
+              dataLabelSettings: const DataLabelSettings(isVisible: true),
+            ),
+          ],
         ),
-        ColumnSeries<MonthlySummary, String>(
-          name: 'Median Rating',
-          dataSource: monthlySummaries,
-          xValueMapper: (MonthlySummary summary, _) => summary.month,
-          yValueMapper: (MonthlySummary summary, _) => summary.medianRating,
-          dataLabelSettings: const DataLabelSettings(isVisible: true),
-        ),
-        ColumnSeries<MonthlySummary, String>(
-          name: 'Lowest Rating',
-          dataSource: monthlySummaries,
-          xValueMapper: (MonthlySummary summary, _) => summary.month,
-          yValueMapper: (MonthlySummary summary, _) => summary.lowestRating,
-          dataLabelSettings: const DataLabelSettings(isVisible: true),
+        Positioned(
+          top: 8,
+          right: 8,
+          child: IconButton(
+            icon: const Icon(Icons.info_outline),
+            onPressed: () => _showInfoDialog(context),
+          ),
         ),
       ],
+    );
+  }
+
+  void _showInfoDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Rating Distribution'),
+          content: const Text(
+            'This chart shows the distribution of ratings over time for all events. '
+            'It displays the highest, median, and lowest ratings for each month. '
+            'This helps in understanding the range and central tendency of event ratings.'
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Close'),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        );
+      },
     );
   }
 }
