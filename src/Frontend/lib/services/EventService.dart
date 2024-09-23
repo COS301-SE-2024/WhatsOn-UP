@@ -23,48 +23,36 @@ class EventService {
     return session?.accessToken;
   }
   Future<List<Event>> fetchPastEvents(String JWT) async {
-
-    final uri = Uri.parse('$baseUrl/api/events/get_passed_events');
-
+    // final uri = Uri.parse('$baseUrl/api/events/get_passed_events');
+    final uri = Uri.parse('$baseUrl/analytics/host/get_past_events');
     try {
-      // final jwtToken = await _getJwtToken();
-
-      //if (jwtToken == null) {
-
-      //throw Exception('JWT token not found');
-
-      //}
-
       var headers = {
-
         'Content-Type': 'application/json',
-
         'Accept': 'application/json',
-
         'Authorization': 'Bearer $JWT',
-
       };
 
-
-
       final response = await http.get(uri, headers: headers);
-
       if (response.statusCode == 200) {
         final Map<String, dynamic> decodedJson = json.decode(response.body);
+        final Map<String, dynamic> data = decodedJson['data'];
+        List<Event> allEvents = [];
+        data.forEach((month, events) {
+          if (events is List) {
+            allEvents.addAll(events.map((jsonEvent) => Event.fromJson(jsonEvent)));
+          }
+        });
+        return allEvents;
 
-        final List<dynamic> eventsJson = decodedJson['data'];
-
-        final List<Event> events = eventsJson.map((jsonEvent) =>
-
-            Event.fromJson(jsonEvent)).toList();
-
-        return events;
-      } else if (response.statusCode == 401) {
+      } 
+      else if (response.statusCode == 401) {
         throw Exception('Unauthorized request');
-      } else {
+      } 
+      else {
         throw Exception('Failed to load past events');
       }
-    } catch (e) {
+    } 
+    catch (e) {
       throw Exception('Failed to connect to the server: $e');
     }
   }
