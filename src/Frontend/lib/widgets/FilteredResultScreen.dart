@@ -39,11 +39,14 @@ class FilteredResultScreen extends StatelessWidget {
                   children: [
                     Icon(Icons.search),
                     SizedBox(width: 8.0),
-                    Text(
-                      "Search for events",
-                      style: TextStyle(color: Colors.black54),
+                Expanded(
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: "Search for events",
+                      border: InputBorder.none,
                     ),
-                  ],
+                  ),
+                )],
                 ),
               ),
             ),
