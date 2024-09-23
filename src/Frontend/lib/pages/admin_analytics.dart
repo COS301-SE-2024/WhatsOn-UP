@@ -526,21 +526,55 @@ class RSVPChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SfCartesianChart(
-      title: const ChartTitle(text: 'RSVP Ratio Over Time'),
-      legend: const Legend(isVisible: true),
-      tooltipBehavior: TooltipBehavior(enable: true),
-      primaryXAxis: const CategoryAxis(),
-      series: <LineSeries<MonthlySummary, String>>[
-        LineSeries<MonthlySummary, String>(
-          name: 'RSVP Ratio',
-          dataSource: monthlySummaries,
-          xValueMapper: (MonthlySummary summary, _) => summary.month,
-          yValueMapper: (MonthlySummary summary, _) => summary.rsvpRatio,
-          markerSettings: const MarkerSettings(isVisible: true),
-          dataLabelSettings: const DataLabelSettings(isVisible: true),
+    return Stack(
+      children: [
+        SfCartesianChart(
+          title: const ChartTitle(text: 'RSVP Ratio Over Time'),
+          legend: const Legend(isVisible: true),
+          tooltipBehavior: TooltipBehavior(enable: true),
+          primaryXAxis: const CategoryAxis(),
+          series: <LineSeries<MonthlySummary, String>>[
+            LineSeries<MonthlySummary, String>(
+              name: 'RSVP Ratio',
+              dataSource: monthlySummaries,
+              xValueMapper: (MonthlySummary summary, _) => summary.month,
+              yValueMapper: (MonthlySummary summary, _) => summary.rsvpRatio,
+              markerSettings: const MarkerSettings(isVisible: true),
+              dataLabelSettings: const DataLabelSettings(isVisible: true),
+            ),
+          ],
+        ),
+        Positioned(
+          top: 8,
+          right: 8,
+          child: IconButton(
+            icon: const Icon(Icons.info_outline),
+            onPressed: () => _showInfoDialog(context),
+          ),
         ),
       ],
+    );
+  }
+
+  void _showInfoDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('RSVP Ratio Over Time'),
+          content: const Text(
+            'This chart shows the RSVP ratio over time for all events. '
+            'The RSVP ratio represents the percentage of invited people who responded to the event invitation. '
+            'A higher ratio indicates better communication and engagement with potential attendees.'
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Close'),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        );
+      },
     );
   }
 }
