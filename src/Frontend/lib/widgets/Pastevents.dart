@@ -33,7 +33,6 @@ class _PasteventsState extends State<Pastevents> {
 
     if (user != null) {
       _pastEvents = widget.eventService.fetchPastEvents(userP.JWT);
-      // _pastEvents = widget.eventService.fetchPastEvents("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2OWFlNzJiYy04ZTJiLTQ0MDAtYjYwOC0yOWYwNDhkNGY4YzciLCJleHAiOjQ4NzkwNDY4NTIsImlhdCI6MTcyNTQ0Njg1MiwiYXV0aG9yIjoiTWFtYW50YW5rYW5lIn0.TXPXOSRHvK8O8toijFiHfAVsoYk9QxgTvj2TPSMSj8Q");
     } else {
 
       _pastEvents = Future.error('User is not authenticated');
@@ -49,11 +48,11 @@ class _PasteventsState extends State<Pastevents> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Past Events'),
+        title: const Text('Past Events'),
       ),
       body: Column(
         children: [
-          SizedBox(width: 35.0),
+          const SizedBox(width: 35.0),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: Center(
@@ -81,7 +80,7 @@ class _PasteventsState extends State<Pastevents> {
                       ),
                     ),
                   ),
-                  SizedBox(width: 35.0),
+                  const SizedBox(width: 35.0),
                   SizedBox(
                     width: MediaQuery.of(context).size.width * 0.27,
                     child: Container(
@@ -107,22 +106,41 @@ class _PasteventsState extends State<Pastevents> {
               ),
             ),
           ),
-          SizedBox(width: 35.0),
+          const SizedBox(width: 35.0),
           Expanded(
             child: FutureBuilder<List<Event>>(
               future: _pastEvents,
               builder: (context, AsyncSnapshot<List<Event>> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
+                  return const Center(
                     child: SpinKitPianoWave(
                       color: Color.fromARGB(255, 149, 137, 74),
                       size: 50.0,
                     ),
                   );
                 } else if (snapshot.hasError) {
-                  return Center(child: Text('Error loading events'));
+                  return const Center(child: Text('Error loading events'));
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return Center(child: Text('No events available'));
+                    return const Center(
+                      child: const Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.info_outline, size: 64, color: Color.fromARGB(255, 119, 119, 119),),
+                          SizedBox(height: 16),
+                          Center(
+                            child: Text(
+                              'No Events Available',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Color.fromARGB(255, 119, 119, 119),
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );  
                 } else {
                   List<Event> events = snapshot.data!;
                   DateTime now = DateTime.now();
@@ -133,10 +151,15 @@ class _PasteventsState extends State<Pastevents> {
 
 
                   return ListView.builder(
+                    padding: const EdgeInsets.symmetric(horizontal: 24.0),
                     itemCount: events.length,
                     itemBuilder: (context, index) {
-                      return EventCard(
-                          event: events[index], showBookmarkButton: false,
+                      return Container(
+                        margin: const EdgeInsets.only(bottom: 14.0),
+                        child: EventCard(
+                            event: events[index],
+                            showBookmarkButton: false,
+                            ),
                       );
 
                     },
