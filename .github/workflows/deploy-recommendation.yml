@@ -4,9 +4,9 @@ on:
   push:
     branches:
       - feat/linter
-    # paths:
-    #   - 'src/recommendation-service/**' # Only run for changes in the recommendation service directory
-    #   - 'scripts/deploy-recommendations.sh'
+    paths:
+      - 'src/recommendation-service/**' # Only run for changes in the recommendation service directory
+      - 'scripts/deploy-recommendations.sh'
 
   pull_request:
     branches:
