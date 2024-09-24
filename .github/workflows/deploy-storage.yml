@@ -1,0 +1,60 @@
+name: Storage Service Deployment Pipeline
+
+on:
+  push:
+    branches:
+      - feat/linter
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'src/storage-service/**' # Only run for changes in the storage service directory
+      - 'scripts/deploy-storage.sh'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_TOKEN }}
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+      GCP_SERVICE_ACCOUNT_KEY: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
+      STORAGE_ENV: ${{ secrets.NOTIFICATIONS_ENV }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Authenticate to Google Cloud
+        id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: '${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}'
+
+      - name: Set Google Cloud Project
+        run: gcloud config set project ${{ env.GCP_PROJECT_ID }}
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ env.DOCKER_USERNAME }}
+          password: ${{ env.DOCKER_PASSWORD }}
+
+      - name: Create and write environment variables to .env files
+        run: |
+          echo "${{ env.STORAGE_ENV }}" > src/storage-service/.env
+
+      - name: Run deployment script
+        run: |
+          cd scripts
+          if [ -f "deploy-storage.sh" ]; then
+            chmod +x deploy-storage.sh
+            ./deploy-storage.sh
+          else
+            echo "deploy-storage.sh script not found!"
+            exit 1
+          fi
+
+      - name: Delete the .env files
+        run: |
+          rm -f src/storage-service/.env
