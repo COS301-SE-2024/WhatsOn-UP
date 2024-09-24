@@ -4,6 +4,7 @@ on:
   pull_request:
     branches:
       - main
+      - develop
 
 jobs:
   deploy:
@@ -28,7 +29,7 @@ jobs:
         id: 'auth'
         uses: 'google-github-actions/auth@v2'
         with:
-          credentials_json: '${{ env.GCP_SERVICE_ACCOUNT_KEY }}' # Correctly pass JSON here
+          credentials_json: '${{ env.GCP_SERVICE_ACCOUNT_KEY }}'
 
       - name: 'Set Google Cloud Project'
         run: gcloud config set project ${{ env.GCP_PROJECT_ID }}
@@ -38,7 +39,7 @@ jobs:
         with:
           username: ${{ env.DOCKER_USERNAME }}
           password: ${{ env.DOCKER_PASSWORD }}
-      
+
       - name: 'Docker Auth'
         run: |
           gcloud auth configure-docker "us-east1-docker.pkg.dev"
@@ -47,29 +48,16 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.22.1'
-    
-      - name: Install dependencies for Frontend
-        working-directory: ./src/Frontend
-        run: flutter pub get
+  
+
+      - name: 'Check for changes in services'
+        run: ./scripts/check_changes.sh
 
       - name: 'Create and write environment variables to .env files'
-        run: |
-          echo "${{ env.SPRINGBOOT_ENV }}" > src/Backend/.env
-          echo "${{ env.SPRINGBOOT_ENV }}" > src/Analytics/.env
-          echo "${{ env.RECOMMENDATIONS_ENV }}" > src/recommendation-service/.env
-          echo "${{ env.NOTIFICATIONS_ENV }}" > src/notification-service/.env
-          echo "${{ env.NOTIFICATIONS_ENV }}" > src/storage-service/.env
+        run: ./scripts/set_env_files.sh
 
-      - name: 'Run deployment script'
-        run: |
-          cd scripts
-          if [ -f "deploy.sh" ]; then
-            chmod +x deploy.sh
-            ./deploy.sh
-          else
-            echo "deploy.sh script not found!"
-            exit 1
-          fi
+      - name: 'Deploy services with changes'
+        run: ./scripts/deploy_services.sh
 
       - name: 'Delete the .env files'
         run: |
@@ -78,4 +66,3 @@ jobs:
           rm -f src/recommendation-service/.env
           rm -f src/notification-service/.env
           rm -f src/storage-service/.env
-
