@@ -68,20 +68,21 @@ jobs:
       - name: 'Run deployment script'
         run: |
           cd scripts
-          if [ -f "./check-changes.sh" ]; then
-            chmod +x ./check-changes.sh
-            ./check-changes.sh
-          else
-            echo "./check-changes.sh script not found!"
-            exit 1
-          fi
-          if [ -f "./deploy_services.sh" ]; then
-            chmod +x ./deploy_services.sh
-            ./deploy_services.sh
-          else
-            echo "./deploy_services.sh script not found!"
-            exit 1
-          fi
+      
+          run_script() {
+            local script_name="$1"
+            if [ -f "$script_name" ]; then
+              chmod +x "$script_name"
+              ./"$script_name"
+            else
+              echo "$script_name script not found!"
+              exit 1
+            fi
+          }
+      
+          run_script "./check-changes.sh"
+          run_script "./deploy_services.sh"
+        
 
       - name: 'Delete the .env files'
         run: |
