@@ -309,7 +309,7 @@ class _HomePageState extends State<HomePage>
                     children: [
                       const SizedBox(height: 20),
                       Text(
-                        "Create an account or sign in to your existing account to receive personalised event recommendations.",
+                        "Create an account or sign in to your existing account to receive personalised event recommendations!",
                         style: TextStyle(fontSize: 16, color: Colors.grey[600]),
                         textAlign: TextAlign.center,
                       ),

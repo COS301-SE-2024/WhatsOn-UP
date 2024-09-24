@@ -175,7 +175,10 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                 });
               }
             },
-            child: const Text('Select Images and Videos'),
+            child: const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8.0),
+              child: Text('Select Media'),
+            ),
           ),
           if (selectedMedia.isNotEmpty)
             Padding(
@@ -412,7 +415,7 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                                   const SizedBox(height: 20),
                                   TextFormField(
                                     controller: _eventNameControllerAI,
-                                    decoration: InputDecoration(hintText: 'Event Name'),
+                                    decoration: const InputDecoration(hintText: 'Event Name'),
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
                                         return 'Event Name is required';
@@ -423,7 +426,7 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                                   const SizedBox(height: 10),
                                   TextFormField(
                                     controller: _eventDescriptionControllerAI,
-                                    decoration: InputDecoration(hintText: 'Event Description'),
+                                    decoration: const InputDecoration(hintText: 'Event Description'),
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
                                         return 'Event Description is required';
@@ -898,8 +901,8 @@ class _AutofillOptionsWidgetState extends State<AutofillOptionsWidget> {
       height: MediaQuery.of(context).size.height * 0.8,
       child: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
+          const Padding(
+            padding: EdgeInsets.all(16.0),
             child: Text(
               'Choose an Autofill Option',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -912,7 +915,7 @@ class _AutofillOptionsWidgetState extends State<AutofillOptionsWidget> {
                 final option = widget.options[index];
                 final isSelected = option == selectedOption;
                 return Card(
-                  margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   elevation: isSelected ? 8 : 1,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -934,29 +937,29 @@ class _AutofillOptionsWidgetState extends State<AutofillOptionsWidget> {
                         children: [
                           Text(
                             option.category,
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                           ),
-                          SizedBox(height: 8),
+                          const SizedBox(height: 8),
                           Text(
                             option.venue.venueName,
                             style: TextStyle(fontSize: 16, color: Colors.grey[600]),
                           ),
-                          SizedBox(height: 8),
+                          const SizedBox(height: 8),
                           Text(
                             _formatDateTime(option.startDateTime, option.endDateTime),
-                            style: TextStyle(fontSize: 16, color: Colors.blue),
+                            style: const TextStyle(fontSize: 16, color: Colors.blue),
                           ),
-                          SizedBox(height: 12),
+                          const SizedBox(height: 12),
                           Text(
                             option.description,
-                            style: TextStyle(fontSize: 14),
+                            style: const TextStyle(fontSize: 14),
                             maxLines: 3,
                             overflow: TextOverflow.ellipsis,
                           ),
                           if (isSelected) ...[
-                            SizedBox(height: 12),
+                            const SizedBox(height: 12),
                             Text(
-                              'Tap the comfirm selection button to choose this option',
+                              'Tap the confirm selection button to choose this option',
                               style: TextStyle(
                                 color: Theme.of(context).primaryColor,
                                 fontWeight: FontWeight.bold,
@@ -981,7 +984,7 @@ class _AutofillOptionsWidgetState extends State<AutofillOptionsWidget> {
                     Navigator.pop(context),
                     Navigator.pop(context),
                   },
-                  child: Text('Cancel'),
+                  child: const Text('Cancel'),
                 ),
                 ElevatedButton(
                   onPressed: selectedOption != null
@@ -991,7 +994,7 @@ class _AutofillOptionsWidgetState extends State<AutofillOptionsWidget> {
                           Navigator.pop(context);
                         }
                       : null,
-                  child: Text('Confirm Selection'),
+                  child: const Text('Confirm Selection'),
                 ),
               ],
             ),
