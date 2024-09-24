@@ -19,7 +19,6 @@ class _HostAnalyticsPageState extends State<HostAnalyticsPage> {
   Future<void> _getAllEventsAnalytics() async {
     userProvider userP = Provider.of<userProvider>(context, listen: false);
 
-    // print ("USER ID: ${userP.userId}");
 
     try {
       // final response = await api.getAllEventsAnalytics(userP.JWT);
@@ -36,8 +35,6 @@ class _HostAnalyticsPageState extends State<HostAnalyticsPage> {
           }
         });
       }
-
-      // print("Fetched events: $fetchedEvents");
 
       setState(() {
         events = fetchedEvents;
@@ -215,6 +212,12 @@ class EventDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final bool isDarkMode = theme.brightness == Brightness.dark;
+    final cardColor = isDarkMode ? Colors.grey[800] : Colors.blueGrey.shade50;
+    final textColor = isDarkMode ? Colors.white70 : Colors.black87;
+    final iconColor = isDarkMode ? Colors.amber.shade200 : Colors.amber;
+
     return Scaffold(
       appBar: AppBar(title: Text(event.title)),
       body: SingleChildScrollView(
@@ -262,12 +265,57 @@ class EventDetailsPage extends StatelessWidget {
             Text('Median Rating: ${event.medianRating}'),
             Text('Highest Rating: ${event.highestRating}'),
             Text('Lowest Rating: ${event.lowestRating}'),
-            // Text('Mode: ${event.mode}'),
-            // Text('Skewness: ${event.skewness.toStringAsFixed(2)}'),
             Text('RSVP Ratio: ${event.rsvpRatio.toStringAsFixed(2)}%'),
             Text('Capacity Ratio: ${event.capacityRatio.toStringAsFixed(2)}%'),
-            Text('Attendance Ratio: ${event.attendanceRatio.toStringAsFixed(2)}%'),
+            Text('Attendance Ratio: ${event.attendanceRatio.toStringAsFixed(2)}%'), // 
             Text('Feedback Ratio: ${event.feedbackRatio.toStringAsFixed(2)}%'),
+            const SizedBox(height: 24),
+
+            const Text('User Feedback', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 8),
+            Container(
+              height: 300,
+              child: ListView.builder(
+                itemCount: event.feedback.length,
+                itemBuilder: (context, index) {
+                  final feedback = event.feedback[index];
+                  final profileImage = feedback["userId"]["profileImage"];
+                  return Card(
+                    color: cardColor,
+                    margin: const EdgeInsets.symmetric(vertical: 8),
+                    child: ListTile(
+                      leading: profileImage.isNotEmpty
+                          ? CircleAvatar(
+                              backgroundImage: NetworkImage(profileImage),
+                            )
+                          : CircleAvatar(
+                              backgroundColor: Color.fromARGB(255, 48, 86, 139),
+                              child: Text(
+                                feedback['userId']['fullName'][0].toUpperCase(),
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                      title: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              feedback['userId']['fullName'],
+                              style: TextStyle(color: textColor),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          for (var i = 0; i < feedback['rating']; i++)
+                            Icon(Icons.star, size: 16, color: iconColor),
+                          for (var i = feedback['rating']; i < 5; i++)
+                            Icon(Icons.star_border, size: 16, color: iconColor),
+                        ],
+                      ),
+                      subtitle: Text(feedback['comment'], style: TextStyle(color: textColor)),
+                    ),
+                  );
+                },
+              ),
+            ),
           ],
         ),
       ),
