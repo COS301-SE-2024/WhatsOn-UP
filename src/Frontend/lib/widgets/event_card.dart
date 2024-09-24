@@ -657,27 +657,27 @@ class _EventCardState extends State<EventCard> {
                         ),
                         onPressed: () {
                           setState(() {
-                            // isBookmarked = !isBookmarked;
+
                             widget.event.saved=!widget.event.saved;
                             if(widget.event.saved==true){
+                              setState(() {
+                                _isLoading = true;
+                              });
                               eventP.addEventSaved(widget.event,userP.JWT);
+                                        setState(() {
+                                          _isLoading=false;
+                                        });
 
-                              // setState(() {
-                              //   widget.event.saved=true;
-                              //
-                              //   _fetchEvent(widget.recommendations,widget.event.saved,widget.event,userP.JWT);
-                              //   eventP.refreshEvents(userP.JWT,userP.role);
-                              //   eventP.refreshRecommendations(userP.JWT);
-                              // });
 
                             }else{
+                              setState(() {
+                                _isLoading = true;
+                              });
                               eventP.removeEventSaved(widget.event,userP.JWT);
-                              // setState(() {
-                              //   widget.event.saved=false;
-                              //   _fetchEvent(widget.recommendations,widget.event.saved, widget.event,userP.JWT);
-                              //   eventP.refreshEvents(userP.JWT,userP.role);
-                              //   eventP.refreshRecommendations(userP.JWT);
-                              // });
+                              setState(() {
+                                _isLoading=false;
+                              });
+
                             }
                           });
                             // if (isBookmarked == true) {

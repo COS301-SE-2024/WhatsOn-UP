@@ -86,6 +86,7 @@ class _SplashPageState extends State<SplashPage> {
         userP.email = userEmail;
         userP.role = role;
         userP.profileImage = profileImage;
+        eventP.refreshEvents(userP.JWT);
         eventP.refreshRecommendations(userP.JWT);
         eventP.refreshSavedEvents(userP.JWT);
         notificationProvider _notificationProvider =

@@ -98,12 +98,10 @@ class Api {
     }
   }
 
-  Future<List<Event>> getAllEvents(String JWT) async {
+  Future<List<Event>> getAllEvents(String? JWT) async {
 
     final _rsvpEventsURL = 'https://${globals.gatewayDomain}/api/events/get_all';
     var headers;
-
-if( JWT.isNotEmpty){
 
   headers = {
     'Content-Type': 'application/json',
@@ -111,12 +109,7 @@ if( JWT.isNotEmpty){
     'Authorization': 'Bearer $JWT',
 
   };
-}else{
-  headers={
-    'Content-Type': 'application/json',
-    'Accept': 'application/json',
-  };
-}
+
 
     try {
 
@@ -657,24 +650,41 @@ if( JWT.isNotEmpty){
     }
   }
 
-  Future<List<dynamic>> getAllEventsGuest() async {
-    try {
-      final _rsvpEventsURL = 'https://${globals.gatewayDomain}/api/events/get_all';
+  Future<List<Event>> getAllEventsGuest() async {
+    // try {
+    final _rsvpEventsURL = 'https://${globals.gatewayDomain}/api/events/get_all';
       var headers = {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
       };
-
-      var response =
-          await http.get(Uri.parse(_rsvpEventsURL), headers: headers);
+    //
+    //   var response =
+    //       await http.get(Uri.parse(_rsvpEventsURL), headers: headers);
+    //
+    //   if (response.statusCode == 200) {
+    //     var decodedJson = jsonDecode(response.body)['data'];
+    //     return decodedJson;
+    //   } else {
+    //     throw Exception(jsonDecode(response.body));
+    //   }
+    // }
+    try {
+      var response = await http.get(
+        Uri.parse(_rsvpEventsURL),
+        headers: headers,
+      );
 
       if (response.statusCode == 200) {
-        var decodedJson = jsonDecode(response.body)['data'];
-        return decodedJson;
+        final Map<String, dynamic> decodedJson = json.decode(response.body);
+        final List<dynamic> eventsJson = decodedJson['data'];
+
+        final List<Event> events =
+        eventsJson.map((jsonEvent) => Event.fromJson(jsonEvent)).toList();
+        return events;
       } else {
-        throw Exception(jsonDecode(response.body));
+        throw Exception('Failed to load events');
       }
-    } catch (e) {
+    }catch (e) {
       throw Exception(e.toString());
     }
   }

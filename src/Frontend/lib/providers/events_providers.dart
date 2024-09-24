@@ -23,9 +23,30 @@ class EventProvider with ChangeNotifier {
 
   }
 
-  Future<void> refreshEvents(String JWT) async {
+  Future<void> refreshEvents(String? JWT) async {
     try {
-      _eventsHome = _fetchEventsHome(JWT);
+      if(JWT == ''){
+        _eventsHome = Future(() async {
+          List<dynamic> responseData = await api.getAllEventsGuest();
+
+          List<Event> events = responseData.map((eventData) {
+            if (eventData is Map<String, dynamic>) {
+              return Event.fromJson(eventData);
+            } else if (eventData is Event) {
+              return eventData;
+            } else {
+              throw Exception("Unexpected data type: ${eventData.runtimeType}");
+            }
+          }).toList();
+
+          return events;
+        });
+      }
+      else{
+        print('fetching events as a non-guest JWT: $JWT');
+        _eventsHome = _fetchEventsHome(JWT);
+      }
+
       notifyListeners();
     } catch (e) {
       throw Exception('Failed to refresh events: $e');
@@ -48,10 +69,18 @@ Future<void> refreshRecommendations(String JWT) async {
       throw Exception('Failed to refresh events: $e');
     }
   }
-  Future<List<Event>> _fetchEventsHome(String JWT) async {
+  Future<List<Event>> _fetchEventsHome(String? JWT) async {
 
     try {
-      return await api.getAllEvents(JWT);
+      if(JWT == null){
+       return await api.getAllEventsGuest();
+
+      }
+      else{
+        print('fetching events as a non-guest JWT2: $JWT');
+        return await api.getAllEvents(JWT);
+      }
+
     } catch (e) {
       throw Exception('Failed to fetch home events: $e');
     }
@@ -95,6 +124,7 @@ Future<List<Event>> _fetchEventsRsvp(String userId, String JWT) async {
   try {
     List<dynamic> responseData;
     if (userId == "guest") {
+      print('I am a guest');
       responseData = await api.getAllEventsGuest();
     }
     else {
