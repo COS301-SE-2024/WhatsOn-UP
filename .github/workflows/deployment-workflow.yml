@@ -67,11 +67,20 @@ jobs:
 
       - name: 'Run deployment script'
         run: |
-          cd scripts
-          chmod +x check-changes.sh
-          chmod +x deploy_services.sh
-          run_script "./check-changes.sh"
-          run_script "./deploy_services.sh"
+          run_script() {
+            local script_name="$1"
+            if [ -f "$script_name" ]; then
+              chmod +x "$script_name"
+              ./"$script_name"
+            else
+              echo "$script_name script not found!"
+              exit 1
+            fi
+          }
+      
+          run_script "./scripts/check_changes.sh"
+          run_script "./scripts/deploy_services.sh"
+        
         
 
       - name: 'Delete the .env files'
