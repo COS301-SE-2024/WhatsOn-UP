@@ -67,9 +67,9 @@ class _HomePageState extends State<HomePage>
    }
    else {
      final eventsHome = await eventP.eventsHome;
-     final eventsSaved = await eventP.eventsSaved;
+     // final eventsSaved = await eventP.eventsSaved;
      final eventsRecommended = await eventP.recommendations;
-     return [eventsHome, eventsSaved, eventsRecommended];
+     return [eventsHome, [], eventsRecommended];
    }
   }
 

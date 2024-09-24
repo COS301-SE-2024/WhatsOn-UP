@@ -696,11 +696,12 @@ class Api {
     required String description,
     required DateTime startDate,
     required DateTime endDate,
-    required String location,
+    required String locationId,
     int? maxParticipants,
-    String? metadata,
+    Map<String, String>? metadata,
     bool isPrivate = false,
     List<String>? media,
+
   }) async {
     final String _userUrl =
         'https://${globals.gatewayDomain}/api/events/update/$eventId';
@@ -710,20 +711,37 @@ class Api {
       'Accept': 'application/json',
       'Authorization': 'Bearer $JWT',
     };
-    print(location);
-    var body = jsonEncode({
-      'title': title,
-      'description': description,
-      // 'startDate': startDate.toIso8601String(),
-      // 'endDate': endDate.toIso8601String(),
-      'location': location,
-      'maxParticipants': maxParticipants,
-      'metadata': metadata,
-    });
+    var body;
+    if(locationId==''){
+
+   body = jsonEncode({
+    'title': title,
+    'description': description,
+    'startDate': startDate.toIso8601String(),
+    'endDate': endDate.toIso8601String(),
+    'maxParticipants': maxParticipants,
+    'metadata': metadata,
+    'isPrivate': isPrivate,
+  });
+}
+else{
+  body = jsonEncode({
+    'title': title,
+    'description': description,
+    'startDate': startDate.toIso8601String(),
+    'endDate': endDate.toIso8601String(),
+    'location': locationId,
+    'maxParticipants': maxParticipants,
+    'metadata': metadata,
+    'isPrivate': isPrivate,
+  });
+}
+
 
     try {
       var response =
           await http.put(Uri.parse(_userUrl), headers: headers, body: body);
+      print('this is the response body after editing: ${response.body}');
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
       } else {
