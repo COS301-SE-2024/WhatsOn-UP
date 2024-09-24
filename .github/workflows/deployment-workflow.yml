@@ -68,8 +68,8 @@ jobs:
       - name: 'Run deployment script'
         run: |
           cd scripts
-          chmod +x "./check-changes.sh"
-          chmod +x "./deploy_services.sh"
+          chmod +x check-changes.sh
+          chmod +x deploy_services.sh
           run_script "./check-changes.sh"
           run_script "./deploy_services.sh"
         
