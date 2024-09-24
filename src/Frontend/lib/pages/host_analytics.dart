@@ -211,7 +211,7 @@ class EventDetailsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final bool isDarkMode = theme.brightness == Brightness.dark;
-    final cardColor = isDarkMode ? Colors.grey[800] : Colors.blueGrey.shade50;
+    final cardColor = isDarkMode ? Colors.grey[850] : Colors.white;
     final textColor = isDarkMode ? Colors.white70 : Colors.black87;
     final iconColor = isDarkMode ? Colors.amber.shade200 : Colors.amber;
 
@@ -222,124 +222,197 @@ class EventDetailsPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(event.description),
-            const SizedBox(height: 16),
-            Text('Date: ${DateFormat('dd MMM yyyy, HH:mm').format(event.startDateTime)}'),
-            Text('Attendees: ${event.attendees.length}/${event.maxAttendees}'),
-            Text('Average Rating: ${event.averageRating.toStringAsFixed(1)}'),
-            const SizedBox(height: 24),
-            // Text('Feedback Distribution', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            // SizedBox(height: 8),
-            SizedBox(
-              height: 300,
-              child: SfCartesianChart(
-                title: const ChartTitle(text: 'Feedback Distribution'),
-                tooltipBehavior: TooltipBehavior(enable: true),
-                primaryXAxis: const CategoryAxis(
-                  title: AxisTitle(text: 'Rating'),
+            _buildSectionHeader('Event Details', Icons.event),
+            Card(
+              color: cardColor,
+              margin: const EdgeInsets.symmetric(vertical: 8),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(event.description, style: TextStyle(fontSize: 16, color: textColor)),
+                    const SizedBox(height: 16),
+                    _buildDetailRow('Date', DateFormat('dd MMM yyyy, HH:mm').format(event.startDateTime), textColor),
+                    _buildDetailRow('Attendees', '${event.attendees.length}/${event.maxAttendees}', textColor),
+                    _buildDetailRow('Average Rating', event.averageRating.toStringAsFixed(1), textColor),
+                  ],
                 ),
-                primaryYAxis: const NumericAxis(
-                  minimum: 0,
-                  // maximum: event.attendees.length.toDouble(),
-                  interval: 1,
-                  title: AxisTitle(text: 'Feedback Count'),
-                ),
-                series: <ColumnSeries>[
-                  ColumnSeries<Map<String, dynamic>, String>(
-                    dataSource: [1, 2, 3, 4, 5].map((rating) => {
-                      'rating': rating.toString(),
-                      'count': event.feedback.where((f) => f['rating'] == rating).length,
-                    }).toList(),
-                    xValueMapper: (data, _) => data['rating'],
-                    yValueMapper: (data, _) => data['count'],
-                  )
-                ],
               ),
             ),
             const SizedBox(height: 24),
-            const Text('Event Statistics', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 8),
-            Text('Median Rating: ${event.medianRating}'),
-            Text('Highest Rating: ${event.highestRating}'),
-            Text('Lowest Rating: ${event.lowestRating}'),
-            Text('RSVP Ratio: ${event.rsvpRatio.toStringAsFixed(2)}%'),
-            Text('Capacity Ratio: ${event.capacityRatio.toStringAsFixed(2)}%'),
-            Text('Attendance Ratio: ${event.attendanceRatio.toStringAsFixed(2)}%'),
-            Text('Feedback Ratio: ${event.feedbackRatio.toStringAsFixed(2)}%'),
+
+            _buildSectionHeader('Feedback Distribution', Icons.bar_chart),
+            Card(
+              color: cardColor,
+              margin: const EdgeInsets.symmetric(vertical: 8),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: SizedBox(
+                  height: 300,
+                  child: SfCartesianChart(
+                    title: const ChartTitle(text: 'Feedback Distribution'),
+                    tooltipBehavior: TooltipBehavior(enable: true),
+                    primaryXAxis: const CategoryAxis(
+                      title: AxisTitle(text: 'Rating'),
+                    ),
+                    primaryYAxis: const NumericAxis(
+                      minimum: 0,
+                      interval: 1,
+                      title: AxisTitle(text: 'Feedback Count'),
+                    ),
+                    series: <ColumnSeries>[
+                      ColumnSeries<Map<String, dynamic>, String>(
+                        dataSource: [1, 2, 3, 4, 5].map((rating) => {
+                          'rating': rating.toString(),
+                          'count': event.feedback.where((f) => f['rating'] == rating).length,
+                        }).toList(),
+                        xValueMapper: (data, _) => data['rating'],
+                        yValueMapper: (data, _) => data['count'],
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
             const SizedBox(height: 24),
 
-            const Text('User Feedback', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 8),
-            Container(
-              height: 300,
-              child: event.feedback.isNotEmpty
-                  ? ListView.builder(
-                      itemCount: event.feedback.length,
-                      itemBuilder: (context, index) {
-                        final feedback = event.feedback[index];
-                        final profileImage = feedback["userId"]["profileImage"];
+            _buildSectionHeader('Event Statistics', Icons.insert_chart),
+            Card(
+              color: cardColor,
+              margin: const EdgeInsets.symmetric(vertical: 8),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildStatisticRow('Median Rating', event.medianRating.toString(), textColor),
+                    _buildStatisticRow('Highest Rating', event.highestRating.toString(), textColor),
+                    _buildStatisticRow('Lowest Rating', event.lowestRating.toString(), textColor),
+                    _buildStatisticRow('RSVP Ratio', '${event.rsvpRatio.toStringAsFixed(2)}%', textColor),
+                    _buildStatisticRow('Capacity Ratio', '${event.capacityRatio.toStringAsFixed(2)}%', textColor),
+                    _buildStatisticRow('Attendance Ratio', '${event.attendanceRatio.toStringAsFixed(2)}%', textColor),
+                    _buildStatisticRow('Feedback Ratio', '${event.feedbackRatio.toStringAsFixed(2)}%', textColor),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 24),
 
-                        return Card(
-                          color: cardColor,
-                          margin: const EdgeInsets.symmetric(vertical: 8),
-                          child: ListTile(
-                            leading: profileImage.isNotEmpty
-                                ? CircleAvatar(
-                                    backgroundImage: NetworkImage(profileImage),
-                                  )
-                                : CircleAvatar(
-                                    backgroundColor: Color.fromARGB(255, 48, 86, 139),
-                                    child: Text(
-                                      feedback['userId']['fullName'][0].toUpperCase(),
-                                      style: const TextStyle(color: Colors.white),
+            _buildSectionHeader('User Feedback', Icons.feedback),
+            Card(
+              color: cardColor,
+              margin: const EdgeInsets.symmetric(vertical: 8),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Container(
+                  height: 300,
+                  child: event.feedback.isNotEmpty
+                      ? ListView.builder(
+                          itemCount: event.feedback.length,
+                          itemBuilder: (context, index) {
+                            final feedback = event.feedback[index];
+                            final profileImage = feedback["userId"]["profileImage"];
+
+                            return Card(
+                              color: isDarkMode ? Colors.grey[800] : Colors.blueGrey.shade50,
+                              margin: const EdgeInsets.symmetric(vertical: 8),
+                              child: ListTile(
+                                leading: profileImage.isNotEmpty
+                                    ? CircleAvatar(
+                                        backgroundImage: NetworkImage(profileImage),
+                                      )
+                                    : CircleAvatar(
+                                        backgroundColor: Color.fromARGB(255, 48, 86, 139),
+                                        child: Text(
+                                          feedback['userId']['fullName'][0].toUpperCase(),
+                                          style: const TextStyle(color: Colors.white),
+                                        ),
+                                      ),
+                                title: Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        feedback['userId']['fullName'],
+                                        style: TextStyle(color: textColor),
+                                      ),
                                     ),
-                                  ),
-                            title: Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    feedback['userId']['fullName'],
-                                    style: TextStyle(color: textColor),
-                                  ),
+                                    const SizedBox(width: 8),
+                                    for (var i = 0; i < feedback['rating']; i++)
+                                      Icon(Icons.star, size: 16, color: iconColor),
+                                    for (var i = feedback['rating']; i < 5; i++)
+                                      Icon(Icons.star_border, size: 16, color: iconColor),
+                                  ],
                                 ),
-                                const SizedBox(width: 8),
-                                for (var i = 0; i < feedback['rating']; i++)
-                                  Icon(Icons.star, size: 16, color: iconColor),
-                                for (var i = feedback['rating']; i < 5; i++)
-                                  Icon(Icons.star_border, size: 16, color: iconColor),
-                              ],
-                            ),
-                            subtitle: Text(feedback['comment'], style: TextStyle(color: textColor)),
-                          ),
-                        );
-                      },
-                    )
-                  :  const Center(
-                      child: const Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.info_outline, size: 64, color: Color.fromARGB(255, 119, 119, 119),),
-                          SizedBox(height: 16),
-                          Center(
-                            child: Text(
-                              'No feedback received yet.',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 119, 119, 119),
+                                subtitle: Text(feedback['comment'], style: TextStyle(color: textColor)),
                               ),
-                              textAlign: TextAlign.center,
-                            ),
+                            );
+                          },
+                        )
+                      : const Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.info_outline, size: 64, color: Color.fromARGB(255, 119, 119, 119)),
+                              SizedBox(height: 16),
+                              Center(
+                                child: Text(
+                                  'No feedback received yet.',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color.fromARGB(255, 119, 119, 119),
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    )
+                        ),
+                ),
+              ),
             ),
           ],
         ),
       ),
     );
   }
+}
+
+Widget _buildSectionHeader(String title, IconData icon) {
+  return Row(
+    children: [
+      Icon(icon, size: 28, color: Colors.blueGrey),
+      const SizedBox(width: 8),
+      Text(title, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+    ],
+  );
+}
+
+Widget _buildDetailRow(String label, String value, Color textColor) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 4),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(label, style: TextStyle(color: textColor, fontWeight: FontWeight.bold)),
+        Text(value, style: TextStyle(color: textColor)),
+      ],
+    ),
+  );
+}
+
+Widget _buildStatisticRow(String label, String value, Color textColor) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 4),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(label, style: TextStyle(color: textColor, fontWeight: FontWeight.w600)),
+        Text(value, style: TextStyle(color: textColor)),
+      ],
+    ),
+  );
 }
 
 class Event {
