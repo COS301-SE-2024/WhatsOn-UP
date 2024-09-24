@@ -49,7 +49,7 @@ void main() {
       String mockImageUrl = '';
       when(mockUserProvider.profileImage)
           .thenReturn(mockImageUrl);
-      when(mockApi.getAllEvents()).thenAnswer((_) async => [
+      when(mockApi.getAllEvents('JWT')).thenAnswer((_) async => [
         Event(
           id: '1',
           nameOfEvent: 'Test Event 1',

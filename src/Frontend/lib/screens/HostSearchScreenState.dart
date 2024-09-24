@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:firstapp/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firstapp/providers/events_providers.dart';
@@ -43,7 +44,8 @@ class _HostSearchScreenState extends State<HostSearchScreen> {
     });
 
     try {
-      final results = await _api.getAllEvents(); // Fetch all events
+      userProvider userP = Provider.of<userProvider>(context, listen: false);
+      final results = await _api.getAllEvents(userP.JWT); // Fetch all events
       final hostEvents = results.where((event) {
         if (event.hosts is List<Map<String, dynamic>>) {
           return (event.hosts as List<Map<String, dynamic>>)
