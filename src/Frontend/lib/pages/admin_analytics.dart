@@ -1020,7 +1020,7 @@ class EventDetailsPage extends StatelessWidget {
             ),
             const SizedBox(height: 24),
 
-            _buildSectionHeader('Event Statistics', Icons.insert_chart),
+            _buildSectionHeader('Event Statistics', Icons.view_list),
             Card(
               color: cardColor,
               margin: const EdgeInsets.symmetric(vertical: 8),
