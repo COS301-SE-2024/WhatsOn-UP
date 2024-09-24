@@ -411,13 +411,13 @@ class MockApi extends _i1.Mock implements _i3.Api {
       ) as _i5.Future<Map<String, dynamic>>);
 
   @override
-  _i5.Future<List<dynamic>> getAllEventsGuest() => (super.noSuchMethod(
+  _i5.Future<List<_i6.Event>> getAllEventsGuest() => (super.noSuchMethod(
         Invocation.method(
           #getAllEventsGuest,
           [],
         ),
-        returnValue: _i5.Future<List<dynamic>>.value(<dynamic>[]),
-      ) as _i5.Future<List<dynamic>>);
+        returnValue: _i5.Future<List<_i6.Event>>.value(<_i6.Event>[]),
+      ) as _i5.Future<List<_i6.Event>>);
 
   @override
   _i5.Future<Map<String, dynamic>> updateEvent({
