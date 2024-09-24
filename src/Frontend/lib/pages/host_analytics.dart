@@ -18,10 +18,7 @@ class _HostAnalyticsPageState extends State<HostAnalyticsPage> {
 
   Future<void> _getAllEventsAnalytics() async {
     userProvider userP = Provider.of<userProvider>(context, listen: false);
-
-
     try {
-      // final response = await api.getAllEventsAnalytics(userP.JWT);
       // final response = await api.getHostEventAnalytics("69ae72bc-8e2b-4400-b608-29f048d4f8c7", userP.JWT);
       final response = await api.getHostEventAnalytics(userP.userId, userP.JWT);
       
@@ -267,7 +264,7 @@ class EventDetailsPage extends StatelessWidget {
             Text('Lowest Rating: ${event.lowestRating}'),
             Text('RSVP Ratio: ${event.rsvpRatio.toStringAsFixed(2)}%'),
             Text('Capacity Ratio: ${event.capacityRatio.toStringAsFixed(2)}%'),
-            Text('Attendance Ratio: ${event.attendanceRatio.toStringAsFixed(2)}%'), // 
+            Text('Attendance Ratio: ${event.attendanceRatio.toStringAsFixed(2)}%'),
             Text('Feedback Ratio: ${event.feedbackRatio.toStringAsFixed(2)}%'),
             const SizedBox(height: 24),
 
@@ -275,46 +272,68 @@ class EventDetailsPage extends StatelessWidget {
             const SizedBox(height: 8),
             Container(
               height: 300,
-              child: ListView.builder(
-                itemCount: event.feedback.length,
-                itemBuilder: (context, index) {
-                  final feedback = event.feedback[index];
-                  final profileImage = feedback["userId"]["profileImage"];
-                  return Card(
-                    color: cardColor,
-                    margin: const EdgeInsets.symmetric(vertical: 8),
-                    child: ListTile(
-                      leading: profileImage.isNotEmpty
-                          ? CircleAvatar(
-                              backgroundImage: NetworkImage(profileImage),
-                            )
-                          : CircleAvatar(
-                              backgroundColor: Color.fromARGB(255, 48, 86, 139),
-                              child: Text(
-                                feedback['userId']['fullName'][0].toUpperCase(),
-                                style: TextStyle(color: Colors.white),
-                              ),
+              child: event.feedback.isNotEmpty
+                  ? ListView.builder(
+                      itemCount: event.feedback.length,
+                      itemBuilder: (context, index) {
+                        final feedback = event.feedback[index];
+                        final profileImage = feedback["userId"]["profileImage"];
+
+                        return Card(
+                          color: cardColor,
+                          margin: const EdgeInsets.symmetric(vertical: 8),
+                          child: ListTile(
+                            leading: profileImage.isNotEmpty
+                                ? CircleAvatar(
+                                    backgroundImage: NetworkImage(profileImage),
+                                  )
+                                : CircleAvatar(
+                                    backgroundColor: Color.fromARGB(255, 48, 86, 139),
+                                    child: Text(
+                                      feedback['userId']['fullName'][0].toUpperCase(),
+                                      style: const TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                            title: Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    feedback['userId']['fullName'],
+                                    style: TextStyle(color: textColor),
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                for (var i = 0; i < feedback['rating']; i++)
+                                  Icon(Icons.star, size: 16, color: iconColor),
+                                for (var i = feedback['rating']; i < 5; i++)
+                                  Icon(Icons.star_border, size: 16, color: iconColor),
+                              ],
                             ),
-                      title: Row(
+                            subtitle: Text(feedback['comment'], style: TextStyle(color: textColor)),
+                          ),
+                        );
+                      },
+                    )
+                  :  const Center(
+                      child: const Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Expanded(
+                          Icon(Icons.info_outline, size: 64, color: Color.fromARGB(255, 119, 119, 119),),
+                          SizedBox(height: 16),
+                          Center(
                             child: Text(
-                              feedback['userId']['fullName'],
-                              style: TextStyle(color: textColor),
+                              'No feedback received yet.',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Color.fromARGB(255, 119, 119, 119),
+                              ),
+                              textAlign: TextAlign.center,
                             ),
                           ),
-                          const SizedBox(width: 8),
-                          for (var i = 0; i < feedback['rating']; i++)
-                            Icon(Icons.star, size: 16, color: iconColor),
-                          for (var i = feedback['rating']; i < 5; i++)
-                            Icon(Icons.star_border, size: 16, color: iconColor),
                         ],
                       ),
-                      subtitle: Text(feedback['comment'], style: TextStyle(color: textColor)),
-                    ),
-                  );
-                },
-              ),
+                    )
             ),
           ],
         ),
