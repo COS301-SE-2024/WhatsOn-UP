@@ -237,12 +237,22 @@ class _AdminAnalyticsPageState extends State<AdminAnalyticsPage> with SingleTick
             itemCount: filteredUserData.length,
             itemBuilder: (context, index) {
               String name = filteredUserData[index].keys.first;
-              
-              String profileImageUrl = 'https://place-hold.it/300'; // TEMP
+              String profileImageUrl = filteredUserData[index][name]['profileImage'] ?? "";
+
+              bool isValidNetworkImage = Uri.tryParse(profileImageUrl)?.hasAbsolutePath ?? false;
+
+              ImageProvider profileImageProvider;
+
+              if (!isValidNetworkImage) {
+                profileImageProvider = const AssetImage('assets/images/user.png');
+              } 
+              else {
+                profileImageProvider = NetworkImage(profileImageUrl);
+              }
 
               return ListTile(
                 leading: CircleAvatar(
-                  backgroundImage: NetworkImage(profileImageUrl),
+                  backgroundImage: profileImageProvider,
                   radius: 24,
                 ),
                 title: Text(name),
