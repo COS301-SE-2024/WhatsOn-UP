@@ -19,11 +19,15 @@ jobs:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
       GCP_SERVICE_ACCOUNT_KEY: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
-      FRONTEND_ENV: ${{ secrets.FRONTEND_ENV }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.22.1'  # Specify the Flutter version you want to use
 
       - name: Authenticate to Google Cloud
         id: auth
@@ -40,10 +44,6 @@ jobs:
           username: ${{ env.DOCKER_USERNAME }}
           password: ${{ env.DOCKER_PASSWORD }}
 
-      - name: Create and write environment variables to .env files
-        run: |
-          echo "${{ env.FRONTEND_ENV }}" > src/Frontend/.env
-
       - name: Run deployment script
         run: |
           cd scripts
@@ -54,7 +54,3 @@ jobs:
             echo "deploy-frontend.sh script not found!"
             exit 1
           fi
-
-      - name: Delete the .env files
-        run: |
-          rm -f src/Frontend/.env
