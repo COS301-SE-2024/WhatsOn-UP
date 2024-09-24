@@ -1,0 +1,59 @@
+name: Frontend Deployment Pipeline
+
+on:
+  push:
+    branches:
+      - feat/linter
+    paths:
+      - 'src/Frontend/**' # Only run for changes in the frontend service directory
+      - 'scripts/deploy-frontend.sh'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'src/Frontend/**' # Only run for changes in the frontend service directory
+      - 'scripts/deploy-frontend.sh'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_TOKEN }}
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+      GCP_SERVICE_ACCOUNT_KEY: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.22.1'  # Specify the Flutter version you want to use
+
+      - name: Authenticate to Google Cloud
+        id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: '${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}'
+
+      - name: Set Google Cloud Project
+        run: gcloud config set project ${{ env.GCP_PROJECT_ID }}
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ env.DOCKER_USERNAME }}
+          password: ${{ env.DOCKER_PASSWORD }}
+
+      - name: Run deployment script
+        run: |
+          cd scripts
+          if [ -f "deploy-frontend.sh" ]; then
+            chmod +x deploy-frontend.sh
+            ./deploy-frontend.sh
+          else
+            echo "deploy-frontend.sh script not found!"
+            exit 1
+          fi
