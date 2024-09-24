@@ -53,14 +53,9 @@ class _AdminAnalyticsPageState extends State<AdminAnalyticsPage> with SingleTick
     try {
       final response = await api.getAllHostsAnalytics(userP.JWT);
 
-      // print("HOST DATA: $response");
-
       setState(() {
         userData = List<Map<String, dynamic>>.from(response['data']);
         filteredUserData = userData;
-
-        // print("USER DATA: $userData");
-        // print("FILTERED USER DATA: $filteredUserData");
 
         isNamesLoading = false;
       });
@@ -242,8 +237,14 @@ class _AdminAnalyticsPageState extends State<AdminAnalyticsPage> with SingleTick
             itemCount: filteredUserData.length,
             itemBuilder: (context, index) {
               String name = filteredUserData[index].keys.first;
-              // print("USER DATA: " + filteredUserData[index][name].toString());
+              
+              String profileImageUrl = 'https://place-hold.it/300'; // TEMP
+
               return ListTile(
+                leading: CircleAvatar(
+                  backgroundImage: NetworkImage(profileImageUrl),
+                  radius: 24,
+                ),
                 title: Text(name),
                 onTap: () {
                   Navigator.push(
