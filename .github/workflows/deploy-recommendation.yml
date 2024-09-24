@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - feat/linter
+    paths:
+      - 'src/recommendation-service/**' # Only run for changes in the recommendation service directory
+      - 'scripts/deploy-recommendations.sh'
+
   pull_request:
     branches:
       - main
@@ -47,11 +51,11 @@ jobs:
       - name: Run deployment script
         run: |
           cd scripts
-          if [ -f "deploy-recommendation.sh" ]; then
-            chmod +x deploy-recommendation.sh
-            ./deploy-recommendation.sh
+          if [ -f "deploy-recommendations.sh" ]; then
+            chmod +x deploy-recommendations.sh
+            ./deploy-recommendations.sh
           else
-            echo "deploy-recommendation.sh script not found!"
+            echo "deploy-recommendations.sh script not found!"
             exit 1
           fi
 

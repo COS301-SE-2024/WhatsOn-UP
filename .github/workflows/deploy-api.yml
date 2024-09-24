@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - feat/linter
+    paths:
+      - 'src/Backend/**' # Only run for changes in the Backend directory
+      - 'scripts/deploy-api.sh'
   pull_request:
     branches:
       - main

@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - feat/linter
+    paths:
+      - 'src/storage-service/**' # Only run for changes in the storage service directory
+      - 'scripts/deploy-storage.sh'
   pull_request:
     branches:
       - main

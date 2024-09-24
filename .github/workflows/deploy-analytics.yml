@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - feat/linter
+    paths:
+      - 'src/Analytics/**' # Only run for changes in the analytics directory
+      - 'scripts/deploy-analytics.sh'
   pull_request:
     branches:
       - main

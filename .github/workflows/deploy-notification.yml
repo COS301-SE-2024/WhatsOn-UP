@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - feat/linter
+    paths:
+      - 'src/notification-service/**' # Only run for changes in the notification service directory
+      - 'scripts/deploy-notifications.sh'
   pull_request:
     branches:
       - main

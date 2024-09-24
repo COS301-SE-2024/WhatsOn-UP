@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - feat/linter
+    paths:
+      - 'src/Frontend/**' # Only run for changes in the frontend service directory
+      - 'scripts/deploy-frontend.sh'
   pull_request:
     branches:
       - main
