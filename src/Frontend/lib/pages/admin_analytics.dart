@@ -17,6 +17,7 @@ class AdminAnalyticsPage extends StatefulWidget {
 class _AdminAnalyticsPageState extends State<AdminAnalyticsPage> with SingleTickerProviderStateMixin {
     bool isLoading = true;
     bool isNamesLoading = true;
+    bool isPopularEventsLoading = true;
     late TabController _tabController;
     Api api = Api();
     List<MonthlySummary> monthlySummaries = [];
@@ -81,10 +82,14 @@ class _AdminAnalyticsPageState extends State<AdminAnalyticsPage> with SingleTick
 
       setState(() {
         popularEvents = List<Map<String, dynamic>>.from(response['data']);
+        isPopularEventsLoading = false;
       });
     } 
     catch (e) {
       print('Error getting popular events: $e');
+      setState(() {
+        isPopularEventsLoading = false;
+      });
     }
   }
 
@@ -167,7 +172,11 @@ class _AdminAnalyticsPageState extends State<AdminAnalyticsPage> with SingleTick
     return SingleChildScrollView(
       child: Column(
         children: [
-          PopularEventsWidget(popularEvents: popularEvents), // Popular Events
+          isPopularEventsLoading
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : PopularEventsWidget(popularEvents: popularEvents), // Popular Events
           const Divider(
             color: Colors.grey,
             height: 20,
