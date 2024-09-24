@@ -174,95 +174,95 @@ void main() {
        expect(finalEvents.length, initialEvents.length);
      });
 
-    // test('Edit event name in eventsHome', () async {
-    //
-    //   Event mockEvent =   Event(
-    //     id: '1',
-    //     nameOfEvent: 'Test Event 1',
-    //     venue: Venue(venueId: 'V123', building:
-    //     Building(buildingId: 'B001', name: 'Main Building', accessType: 'Public', location: 'Central Campus', campus: null),
-    //         name: 'Conference Room A', boards: 'Whiteboard', ac: true, wifi: true, dataProject: 1, docCam: true,
-    //         mic: true, windows: true, capacity: 50, available: true),
-    //     description: 'Test Description 1',
-    //     imageUrls: [],
-    //     hosts: [],
-    //     startTime: '2022-01-01T10:00:00.000Z',
-    //     endTime: '2022-01-01T12:00:00.000Z',
-    //     maxAttendees: 100,
-    //     isPrivate: true,
-    //     attendees: [],
-    //
-    //     metadata: Metadata(
-    //       mentors: [],
-    //       categories: [],
-    //       sessions: [],
-    //     ), invitees: [], saved: false,
-    //   );
-    //
-    //   var eventToUpdate = mockEvent;
-    //   var originalName = eventToUpdate.nameOfEvent;
-    //   var newName = 'Updated Event Name';
-    //
-    //   await  eventProvider.EditEventName(eventToUpdate.id!, newName);
-    //
-    //
-    //   var updatedEvent = (await eventProvider.eventsHome).firstWhere((e) => e.id == eventToUpdate.id);
-    //   expect(updatedEvent.nameOfEvent, newName);
-    //   if (updatedEvent != null) {
-    //     expect(updatedEvent.nameOfEvent, newName);
-    //   } else {
-    //     fail('No event found with the given ID');
-    //   }
-    //
-    //
-    //   await eventProvider.EditEventName(eventToUpdate.id!, originalName);
-    // });
+    test('Edit event name in eventsHome', () async {
+
+      Event mockEvent =   Event(
+        id: '1',
+        nameOfEvent: 'Test Event 1',
+        venue: Venue(venueId: 'V123', building:
+        Building(buildingId: 'B001', name: 'Main Building', accessType: 'Public', location: 'Central Campus', campus: null),
+            name: 'Conference Room A', boards: 'Whiteboard', ac: true, wifi: true, dataProject: 1, docCam: true,
+            mic: true, windows: true, capacity: 50, available: true),
+        description: 'Test Description 1',
+        imageUrls: [],
+        hosts: [],
+        startTime: '2022-01-01T10:00:00.000Z',
+        endTime: '2022-01-01T12:00:00.000Z',
+        maxAttendees: 100,
+        isPrivate: true,
+        attendees: [],
+
+        metadata: Metadata(
+          mentors: [],
+          categories: [],
+          sessions: [],
+        ), invitees: [], saved: false,
+      );
+
+      var eventToUpdate = mockEvent;
+      var originalName = eventToUpdate.nameOfEvent;
+      var newName = 'Updated Event Name';
+
+      await  eventProvider.EditEventName(eventToUpdate.id!, newName);
+
+
+      var updatedEvent = (await eventProvider.eventsHome).firstWhere((e) => e.id == eventToUpdate.id);
+      expect(updatedEvent.nameOfEvent, newName);
+      if (updatedEvent != null) {
+        expect(updatedEvent.nameOfEvent, newName);
+      } else {
+        fail('No event found with the given ID');
+      }
+
+
+      await eventProvider.EditEventName(eventToUpdate.id!, originalName);
+    });
 
 
 
 
 
-    // test('Edit event description in eventsHome', () async {
-    //   var eventToUpdate = (await eventProvider.eventsHome).first;
-    //   var originalDescription = eventToUpdate.description;
-    //   var newDescription = 'Updated Event Description';
-    //
-    //    eventProvider.EditEventDescription(eventToUpdate.id!, newDescription);
-    //
-    //   var updatedEvent = (await eventProvider.eventsHome).firstWhere((e) => e.id == eventToUpdate.id);
-    //   expect(updatedEvent.description, newDescription);
-    //
-    //    eventProvider.EditEventDescription(eventToUpdate.id!, originalDescription);
-    // });
+    test('Edit event description in eventsHome', () async {
+      var eventToUpdate = (await eventProvider.eventsHome).first;
+      var originalDescription = eventToUpdate.description;
+      var newDescription = 'Updated Event Description';
 
-    // test('Edit event location in eventsHome', () async {
-    //   var eventToUpdate = (await eventProvider.eventsHome).first;
-    //   var originalLocation = eventToUpdate.venue;
-    //   var newLocation = 'Updated Event Location';
-    //   print(eventToUpdate.venue?.name);
-    //
-    //   await eventProvider.EditEventLocation(eventToUpdate.id, newLocation);
-    //
-    //   var updatedEvent = (await eventProvider.eventsHome).firstWhere((e) => e.id == eventToUpdate.id);
-    //   expect(updatedEvent.venue!.name, newLocation);
-    //
-    //   //eventProvider.EditEventLocation(eventToUpdate.id!, originalLocation);
-    // });
+       eventProvider.EditEventDescription(eventToUpdate.id!, newDescription);
+
+      var updatedEvent = (await eventProvider.eventsHome).firstWhere((e) => e.id == eventToUpdate.id);
+      expect(updatedEvent.description, newDescription);
+
+       eventProvider.EditEventDescription(eventToUpdate.id!, originalDescription);
+    });
+
+    test('Edit event location in eventsHome', () async {
+      var eventToUpdate = (await eventProvider.eventsHome).first;
+      var originalLocation = eventToUpdate.venue;
+      var newLocation = 'Updated Event Location';
+      print(eventToUpdate.venue?.name);
+
+      await eventProvider.EditEventLocation(eventToUpdate.id, newLocation);
+
+      var updatedEvent = (await eventProvider.eventsHome).firstWhere((e) => e.id == eventToUpdate.id);
+      expect(updatedEvent.venue!.name, newLocation);
+
+      //eventProvider.EditEventLocation(eventToUpdate.id!, originalLocation);
+    });
 
 
 
-    // test('Edit event max participants in eventsHome', () async {
-    //   var eventToUpdate = (await eventProvider.eventsHome).first;
-    //   var originalMaxParticipants = eventToUpdate.maxAttendees;
-    //   var newMaxParticipants = 200;
-    //
-    //   await eventProvider.EditEventMaxParticipants(eventToUpdate.id!, newMaxParticipants);
-    //
-    //   var updatedEvent = (await eventProvider.eventsHome).firstWhere((e) => e.id == eventToUpdate.id);
-    //   expect(updatedEvent.maxAttendees, newMaxParticipants);
-    //
-    //   await eventProvider.EditEventMaxParticipants(eventToUpdate.id!, originalMaxParticipants);
-    // });
+    test('Edit event max participants in eventsHome', () async {
+      var eventToUpdate = (await eventProvider.eventsHome).first;
+      var originalMaxParticipants = eventToUpdate.maxAttendees;
+      var newMaxParticipants = 200;
+
+      await eventProvider.EditEventMaxParticipants(eventToUpdate.id!, newMaxParticipants);
+
+      var updatedEvent = (await eventProvider.eventsHome).firstWhere((e) => e.id == eventToUpdate.id);
+      expect(updatedEvent.maxAttendees, newMaxParticipants);
+
+      await eventProvider.EditEventMaxParticipants(eventToUpdate.id!, originalMaxParticipants);
+    });
 
 
   });

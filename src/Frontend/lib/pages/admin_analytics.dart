@@ -232,8 +232,17 @@ class _AdminAnalyticsPageState extends State<AdminAnalyticsPage> with SingleTick
           child: ListView.builder(
             itemCount: filteredUserData.length,
             itemBuilder: (context, index) {
-              String name = filteredUserData[index].keys.first;
-              // print("USER DATA: " + filteredUserData[index][name].toString());
+              String name = '';
+              if (filteredUserData.isNotEmpty && filteredUserData[index].isNotEmpty) {
+
+                name = filteredUserData[index].keys.first;
+
+              } else {
+
+                print('No user data available at index $index');
+
+              }
+
               return ListTile(
                 title: Text(name),
                 onTap: () {
