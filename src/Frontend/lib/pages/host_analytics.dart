@@ -251,7 +251,6 @@ class EventDetailsPage extends StatelessWidget {
                 child: SizedBox(
                   height: 300,
                   child: SfCartesianChart(
-                    title: const ChartTitle(text: 'Feedback Distribution'),
                     tooltipBehavior: TooltipBehavior(enable: true),
                     primaryXAxis: const CategoryAxis(
                       title: AxisTitle(text: 'Rating'),
