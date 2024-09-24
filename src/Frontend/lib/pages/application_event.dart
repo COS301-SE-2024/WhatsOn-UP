@@ -959,7 +959,7 @@ class _AutofillOptionsWidgetState extends State<AutofillOptionsWidget> {
                           if (isSelected) ...[
                             const SizedBox(height: 12),
                             Text(
-                              'Tap the comfirm selection button to choose this option',
+                              'Tap the confirm selection button to choose this option',
                               style: TextStyle(
                                 color: Theme.of(context).primaryColor,
                                 fontWeight: FontWeight.bold,
