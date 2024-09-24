@@ -11,33 +11,46 @@ class TabGeneral extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    userProvider userP = Provider.of<userProvider>(context, listen: true);
     return DefaultTabController(
-      length: 4,
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Manage General Applications'),
-          bottom: const TabBar(
-            tabs: [
-              Tab(text: 'All'),
-              Tab(text: 'Pending'),
-              Tab(text: 'Verified'),
-              Tab(text: 'Promoted'),
-            ],
-            labelColor: Color.fromARGB(255, 149, 137, 74),
-            unselectedLabelColor: Colors.black,
-            indicatorColor: Color.fromARGB(255, 149, 137, 74),
-          ),
-        ),
-        body: const TabBarView(
-          children: [
-            UserList(statusFilter: null),
-            UserList(statusFilter: 'PENDING'),
-            UserList(statusFilter: 'VERIFIED'),
-            UserList(statusFilter: 'ACKNOWLEDGED'),
-          ],
-        ),
+  length: 4,
+  child: Scaffold(
+    appBar: AppBar(
+      title: const Text('Manage General Applications'),
+      bottom: const TabBar(
+        tabs: [
+          Tab(text: 'All'),
+          Tab(text: 'Pending'),
+          Tab(text: 'Verified'),
+          Tab(text: 'Promoted'),
+        ],
+        labelColor: Color.fromARGB(255, 149, 137, 74),
+        unselectedLabelColor: Colors.black,
+        indicatorColor: Color.fromARGB(255, 149, 137, 74),
       ),
-    );
+    ),
+    body: TabBarView(
+      children: [
+        RefreshIndicator(
+          onRefresh: userP.refreshApplications, // Replace with your refresh logic
+          child: const UserList(statusFilter: null),
+        ),
+        RefreshIndicator(
+          onRefresh: userP.refreshApplications,
+          child: const UserList(statusFilter: 'PENDING'),
+        ),
+        RefreshIndicator(
+          onRefresh: userP.refreshApplications,
+          child: const UserList(statusFilter: 'VERIFIED'),
+        ),
+        RefreshIndicator(
+          onRefresh: userP.refreshApplications,
+          child: const UserList(statusFilter: 'ACKNOWLEDGED'),
+        ),
+      ],
+    ),
+  ),
+);
   }
 }
 
