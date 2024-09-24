@@ -4,8 +4,10 @@ on:
     branches:
       - develop
       - main
+
 jobs:
   deploy:
+    name: Deploy
     runs-on: ubuntu-latest
     env:
       DB_URL: ${{ secrets.DB_URL }}
@@ -18,6 +20,7 @@ jobs:
       SPRINGBOOT_ENV: ${{ secrets.SPRINGBOOT_ENV }}
       RECOMMENDATIONS_ENV: ${{ secrets.RECOMMENDATIONS_ENV }}
       NOTIFICATIONS_ENV: ${{ secrets.NOTIFICATIONS_ENV }}
+      
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
