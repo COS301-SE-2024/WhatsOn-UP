@@ -3,8 +3,8 @@ name: Deployment Pipeline
 on:
   pull_request:
     branches:
+      - develop
       - main
-      # - develop
 
 jobs:
   deploy:

@@ -8,7 +8,9 @@ name: Linting Workflow
 
 on:
   pull_request:
-    branches: [ "main", "develop" ]
+    branches:
+      # - develop
+      - main
 
 jobs:
   run-lint:
