@@ -41,6 +41,12 @@ class AdminController {
         return adminService.getForAllHosts()
     }
 
+    @GetMapping("/get_all_past_events")
+    fun dashboard(): ResponseEntity<ResponseDto> {
+        return adminService.getPastEvents()
+    }
+
+
     @GetMapping("/get_all_events")
     fun getAllEvents(): ResponseEntity<ResponseDto> {
         return adminService.getAllEvents()

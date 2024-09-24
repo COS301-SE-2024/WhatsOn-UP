@@ -88,7 +88,7 @@ class _SplashPageState extends State<SplashPage> {
         userP.profileImage = profileImage;
         eventP.refreshEvents(userP.JWT);
         eventP.refreshRecommendations(userP.JWT);
-        eventP.refreshSavedEvents(userP.JWT);
+        // eventP.refreshSavedEvents(userP.JWT);
         notificationProvider _notificationProvider =
         Provider.of<notificationProvider>(context, listen: false);
         _notificationProvider.refreshNotifications(userP.JWT);

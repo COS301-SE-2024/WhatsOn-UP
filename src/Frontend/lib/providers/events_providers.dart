@@ -77,7 +77,6 @@ Future<void> refreshRecommendations(String JWT) async {
 
       }
       else{
-        print('fetching events as a non-guest JWT2: $JWT');
         return await api.getAllEvents(JWT);
       }
 
@@ -85,14 +84,14 @@ Future<void> refreshRecommendations(String JWT) async {
       throw Exception('Failed to fetch home events: $e');
     }
   }
-Future<void> refreshSavedEvents(String? JWT) async {
-    try {
-      _eventsSaved = _fetchEventsSaved(JWT);
-      notifyListeners();
-    } catch (e) {
-      throw Exception('Failed to refresh events: $e');
-    }
-  }
+// Future<void> refreshSavedEvents(String? JWT) async {
+//     try {
+//       _eventsSaved = _fetchEventsSaved(JWT);
+//       notifyListeners();
+//     } catch (e) {
+//       throw Exception('Failed to refresh events: $e');
+//     }
+//   }
   
   Future<List<Event>> _fetchRecommendations(String JWT) async {
     try {
@@ -152,19 +151,19 @@ Future<List<Event>> _fetchEventsRsvp(String userId, String JWT) async {
 
 
 
-  Future<List<Event>> _fetchEventsSaved(String? JWT) async {
-    try {
-      if(JWT == null){
-        throw Exception('JWT null for _fetchEventsSaved method');
-      }
-      var responseData=await api.getAllSavedEvents(JWT);
-      List<Event> events = responseData;
-
-      return events;
-    } catch (e) {
-      throw Exception('Failed to fetch saved events: $e');
-    }
-  }
+  // Future<List<Event>> _fetchEventsSaved(String? JWT) async {
+  //   try {
+  //     if(JWT == null){
+  //       throw Exception('JWT null for _fetchEventsSaved method');
+  //     }
+  //     var responseData=await api.getAllSavedEvents(JWT);
+  //     List<Event> events = responseData;
+  //
+  //     return events;
+  //   } catch (e) {
+  //     throw Exception('Failed to fetch saved events: $e');
+  //   }
+  // }
 
 
   Future<List<Event>> get recommendations async {
@@ -190,63 +189,63 @@ Future<List<Event>> _fetchEventsRsvp(String userId, String JWT) async {
     }
   }
 
-  Future<List<Event>> get eventsSaved async {
-    try {
+  // Future<List<Event>> get eventsSaved async {
+  //   try {
+  //
+  //     return await _eventsSaved;
+  //   } catch (e) {
+  //     throw Exception('Failed to fetch saved events: $e');
+  //   }
+  // }
 
-      return await _eventsSaved;
-    } catch (e) {
-      throw Exception('Failed to fetch saved events: $e');
-    }
-  }
 
+  // Future<void> addEventHome(Map<String, dynamic> eventData) async {
+  //
+  //   Event event = Event.fromJson(eventData);
+  //   List<Event> events = await _eventsHome;
+  //   events.add(event);
+  //   notifyListeners();
+  // }
 
-  Future<void> addEventHome(Map<String, dynamic> eventData) async {
+  // void addEventsHome(List<Event> events) {
+  //   _eventsHome.then((existingEvents) {
+  //     existingEvents.addAll(events);
+  //     notifyListeners();
+  //   });
+  // }
 
-    Event event = Event.fromJson(eventData);
-    List<Event> events = await _eventsHome;
-    events.add(event);
-    notifyListeners();
-  }
+  // Future<void> removeEventHome(Event event) async {
+  //   // _eventsHome.then((events) {
+  //   //   events.remove(event);
+  //   //   notifyListeners();
+  //   // });
+  //   List<Event> events = await _eventsHome;
+  //   events.remove(event);
+  //   notifyListeners();
+  // }
 
-  void addEventsHome(List<Event> events) {
-    _eventsHome.then((existingEvents) {
-      existingEvents.addAll(events);
-      notifyListeners();
-    });
-  }
-
-  Future<void> removeEventHome(Event event) async {
-    // _eventsHome.then((events) {
-    //   events.remove(event);
-    //   notifyListeners();
-    // });
-    List<Event> events = await _eventsHome;
-    events.remove(event);
-    notifyListeners();
-  }
-
-  void addEventRSVP(Event event) {
-    _eventsHome.then((events) {
-      events.add(event);
-      notifyListeners();
-    });
-  }
+  // void addEventRSVP(Event event) {
+  //   _eventsHome.then((events) {
+  //     events.add(event);
+  //     notifyListeners();
+  //   });
+  // }
 
   //
-  void addEventsRSVP(List<Event> events) {
-    _eventsHome.then((existingEvents) {
-      existingEvents.addAll(events);
-      notifyListeners();
-    });
-  }
+  // void addEventsRSVP(List<Event> events) {
+  //   _eventsHome.then((existingEvents) {
+  //     existingEvents.addAll(events);
+  //     notifyListeners();
+  //   });
+  // }
 
   //
-  void removeEventRSVP(Event event) {
-    _eventsHome.then((events) {
-      events.remove(event);
-      notifyListeners();
-    });
-  }
+  // void removeEventRSVP(Event event) {
+  //   _eventsHome.then((events) {
+  //     events.remove(event);
+  //     notifyListeners();
+  //   });
+  // }
 
 
 
@@ -291,91 +290,91 @@ Future<List<Event>> _fetchEventsRsvp(String userId, String JWT) async {
   //     throw Exception('Failed to get event by ID: $e');
   //   }
   // }
-  Future<void> EditEventName(String id, String eventName) async {
-    try {
-      List<Event> events = await _eventsHome;
-      Event? event = events.firstWhere((event) => event.id == id);
-      if (event != null) {
-        event.nameOfEvent = eventName;
-        notifyListeners();
-      } else {
-        throw Exception('Event with ID $id not found');
-      }
-    } catch (e) {
-      throw Exception('Failed to edit event name: $e');
-    }
-  }
-
-  void EditEventDescription(String id, String Description) async {
-    try {
-      List<Event> events = await _eventsHome;
-      Event? event = events.firstWhere((event) => event.id == id);
-      event.description = Description;
-      notifyListeners();
-    } catch (e) {
-      throw Exception('Failed to get event by ID: $e');
-    }
-  }
-
-
-  Future<void> EditEventLocation(String id, String Location) async {
-    try {
-      List<Event> events = await _eventsHome;
-      Event? event = events.firstWhere((event) => event.id == id);
-      if (event != null) {
-        event.venue?.name = Location;
-        notifyListeners();
-      }
-    } catch (e) {
-      throw Exception('Failed to get event by ID: $e');
-    }
-  }
-
-  Future<void> EditEventMaxParticipants(String id, int maxParticipants) async {
-    try {
-      List<Event> events = await _eventsHome;
-      Event? event = events.firstWhere((event) => event.id == id);
-      if (event != null) {
-        event.maxAttendees = maxParticipants;
-        notifyListeners();
-      }
-    } catch (e) {
-      throw Exception('Failed to get event by ID: $e');
-    }
-  }
-
-  void EditEventsIsPrivate(String id, bool isPrivate) async {
-    try {
-      List<Event> events = await _eventsHome;
-      Event? event = events.firstWhere((event) => event.id == id);
-      event.isPrivate = isPrivate;
-      notifyListeners();
-    } catch (e) {
-      throw Exception('Failed to get event by ID: $e');
-    }
-  }
-
-  void EditEventStartTime(String id, DateTime startTime) async {
-    try {
-      List<Event> events = await _eventsHome;
-      Event? event = events.firstWhere((event) => event.id == id);
-      event.startTime = startTime as String;
-      notifyListeners();
-    } catch (e) {
-      throw Exception('Failed to get event by ID: $e');
-    }
-  }
-
-  void EditEventEndTime(String id, DateTime endTime) async {
-    try {
-      List<Event> events = await _eventsHome;
-      Event? event = events.firstWhere((event) => event.id == id);
-      event.endTime = endTime as String;
-      notifyListeners();
-    } catch (e) {
-      throw Exception('Failed to get event by ID: $e');
-    }
-  }
+  // Future<void> EditEventName(String id, String eventName) async {
+  //   try {
+  //     List<Event> events = await _eventsHome;
+  //     Event? event = events.firstWhere((event) => event.id == id);
+  //     if (event != null) {
+  //       event.nameOfEvent = eventName;
+  //       notifyListeners();
+  //     } else {
+  //       throw Exception('Event with ID $id not found');
+  //     }
+  //   } catch (e) {
+  //     throw Exception('Failed to edit event name: $e');
+  //   }
+  // }
+  //
+  // void EditEventDescription(String id, String Description) async {
+  //   try {
+  //     List<Event> events = await _eventsHome;
+  //     Event? event = events.firstWhere((event) => event.id == id);
+  //     event.description = Description;
+  //     notifyListeners();
+  //   } catch (e) {
+  //     throw Exception('Failed to get event by ID: $e');
+  //   }
+  // }
+  //
+  //
+  // Future<void> EditEventLocation(String id, String Location) async {
+  //   try {
+  //     List<Event> events = await _eventsHome;
+  //     Event? event = events.firstWhere((event) => event.id == id);
+  //     if (event != null) {
+  //       event.venue?.name = Location;
+  //       notifyListeners();
+  //     }
+  //   } catch (e) {
+  //     throw Exception('Failed to get event by ID: $e');
+  //   }
+  // }
+  //
+  // Future<void> EditEventMaxParticipants(String id, int maxParticipants) async {
+  //   try {
+  //     List<Event> events = await _eventsHome;
+  //     Event? event = events.firstWhere((event) => event.id == id);
+  //     if (event != null) {
+  //       event.maxAttendees = maxParticipants;
+  //       notifyListeners();
+  //     }
+  //   } catch (e) {
+  //     throw Exception('Failed to get event by ID: $e');
+  //   }
+  // }
+  //
+  // void EditEventsIsPrivate(String id, bool isPrivate) async {
+  //   try {
+  //     List<Event> events = await _eventsHome;
+  //     Event? event = events.firstWhere((event) => event.id == id);
+  //     event.isPrivate = isPrivate;
+  //     notifyListeners();
+  //   } catch (e) {
+  //     throw Exception('Failed to get event by ID: $e');
+  //   }
+  // }
+  //
+  // void EditEventStartTime(String id, DateTime startTime) async {
+  //   try {
+  //     List<Event> events = await _eventsHome;
+  //     Event? event = events.firstWhere((event) => event.id == id);
+  //     event.startTime = startTime as String;
+  //     notifyListeners();
+  //   } catch (e) {
+  //     throw Exception('Failed to get event by ID: $e');
+  //   }
+  // }
+  //
+  // void EditEventEndTime(String id, DateTime endTime) async {
+  //   try {
+  //     List<Event> events = await _eventsHome;
+  //     Event? event = events.firstWhere((event) => event.id == id);
+  //     event.endTime = endTime as String;
+  //     notifyListeners();
+  //   } catch (e) {
+  //     throw Exception('Failed to get event by ID: $e');
+  //   }
+  // }
 
   Future<List<Event>> _fetchHostEvents(String hostId,String JWT,String role) async {
 

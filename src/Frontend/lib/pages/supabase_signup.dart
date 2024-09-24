@@ -214,7 +214,7 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
         userP.profileImage = profileImage;
         eventP.refreshEvents(userP.JWT);
         eventP.refreshRecommendations(userP.JWT);
-        eventP.refreshSavedEvents(userP.JWT);
+        // eventP.refreshSavedEvents(userP.JWT);
         notificationProvider _notificationProvider =
         Provider.of<notificationProvider>(context, listen: false);
 

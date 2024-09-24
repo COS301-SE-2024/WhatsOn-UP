@@ -236,7 +236,16 @@ class _AdminAnalyticsPageState extends State<AdminAnalyticsPage> with SingleTick
           child: ListView.builder(
             itemCount: filteredUserData.length,
             itemBuilder: (context, index) {
-              String name = filteredUserData[index].keys.first;
+              String name = '';
+              if (filteredUserData.isNotEmpty && filteredUserData[index].isNotEmpty) {
+
+                name = filteredUserData[index].keys.first;
+
+              } else {
+
+                print('No user data available at index $index');
+
+              }
               String profileImageUrl = filteredUserData[index][name]['profileImage'] ?? "";
 
               bool isValidNetworkImage = Uri.tryParse(profileImageUrl)?.hasAbsolutePath ?? false;
@@ -957,7 +966,6 @@ class EventDetailsPage extends StatelessWidget {
     final bool isDarkMode = theme.brightness == Brightness.dark;
     final cardColor = isDarkMode ? Colors.grey[850] : Colors.white;
     final textColor = isDarkMode ? Colors.white70 : Colors.black87;
-
     return Scaffold(
       appBar: AppBar(title: Text(event.title)),
       body: SingleChildScrollView(
@@ -995,6 +1003,7 @@ class EventDetailsPage extends StatelessWidget {
                 child: SizedBox(
                   height: 300,
                   child: SfCartesianChart(
+                    title: const ChartTitle(text: 'Feedback Distribution'),
                     tooltipBehavior: TooltipBehavior(enable: true),
                     primaryXAxis: const CategoryAxis(
                       title: AxisTitle(text: 'Rating'),
@@ -1020,7 +1029,7 @@ class EventDetailsPage extends StatelessWidget {
             ),
             const SizedBox(height: 24),
 
-            _buildSectionHeader('Event Statistics', Icons.view_list),
+            _buildSectionHeader('Event Statistics', Icons.insert_chart),
             Card(
               color: cardColor,
               margin: const EdgeInsets.symmetric(vertical: 8),

@@ -318,12 +318,6 @@ class MockEventProvider extends _i1.Mock implements _i7.EventProvider {
       ) as _i8.Future<List<_i9.Event>>);
 
   @override
-  _i8.Future<List<_i9.Event>> get eventsSaved => (super.noSuchMethod(
-        Invocation.getter(#eventsSaved),
-        returnValue: _i8.Future<List<_i9.Event>>.value(<_i9.Event>[]),
-      ) as _i8.Future<List<_i9.Event>>);
-
-  @override
   bool get hasListeners => (super.noSuchMethod(
         Invocation.getter(#hasListeners),
         returnValue: false,
@@ -367,16 +361,6 @@ class MockEventProvider extends _i1.Mock implements _i7.EventProvider {
       ) as _i8.Future<void>);
 
   @override
-  _i8.Future<void> refreshSavedEvents(String? JWT) => (super.noSuchMethod(
-        Invocation.method(
-          #refreshSavedEvents,
-          [JWT],
-        ),
-        returnValue: _i8.Future<void>.value(),
-        returnValueForMissingStub: _i8.Future<void>.value(),
-      ) as _i8.Future<void>);
-
-  @override
   _i8.Future<List<_i9.Category>> fetchCategories(String? JWT) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -398,63 +382,6 @@ class MockEventProvider extends _i1.Mock implements _i7.EventProvider {
             userId,
             JWT,
           ],
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
-  _i8.Future<void> addEventHome(Map<String, dynamic>? eventData) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #addEventHome,
-          [eventData],
-        ),
-        returnValue: _i8.Future<void>.value(),
-        returnValueForMissingStub: _i8.Future<void>.value(),
-      ) as _i8.Future<void>);
-
-  @override
-  void addEventsHome(List<_i9.Event>? events) => super.noSuchMethod(
-        Invocation.method(
-          #addEventsHome,
-          [events],
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
-  _i8.Future<void> removeEventHome(_i9.Event? event) => (super.noSuchMethod(
-        Invocation.method(
-          #removeEventHome,
-          [event],
-        ),
-        returnValue: _i8.Future<void>.value(),
-        returnValueForMissingStub: _i8.Future<void>.value(),
-      ) as _i8.Future<void>);
-
-  @override
-  void addEventRSVP(_i9.Event? event) => super.noSuchMethod(
-        Invocation.method(
-          #addEventRSVP,
-          [event],
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
-  void addEventsRSVP(List<_i9.Event>? events) => super.noSuchMethod(
-        Invocation.method(
-          #addEventsRSVP,
-          [events],
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
-  void removeEventRSVP(_i9.Event? event) => super.noSuchMethod(
-        Invocation.method(
-          #removeEventRSVP,
-          [event],
         ),
         returnValueForMissingStub: null,
       );
@@ -508,121 +435,6 @@ class MockEventProvider extends _i1.Mock implements _i7.EventProvider {
         ),
         returnValue: _i8.Future<_i9.Event?>.value(),
       ) as _i8.Future<_i9.Event?>);
-
-  @override
-  _i8.Future<void> EditEventName(
-    String? id,
-    String? eventName,
-  ) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #EditEventName,
-          [
-            id,
-            eventName,
-          ],
-        ),
-        returnValue: _i8.Future<void>.value(),
-        returnValueForMissingStub: _i8.Future<void>.value(),
-      ) as _i8.Future<void>);
-
-  @override
-  void EditEventDescription(
-    String? id,
-    String? Description,
-  ) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #EditEventDescription,
-          [
-            id,
-            Description,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
-  _i8.Future<void> EditEventLocation(
-    String? id,
-    String? Location,
-  ) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #EditEventLocation,
-          [
-            id,
-            Location,
-          ],
-        ),
-        returnValue: _i8.Future<void>.value(),
-        returnValueForMissingStub: _i8.Future<void>.value(),
-      ) as _i8.Future<void>);
-
-  @override
-  _i8.Future<void> EditEventMaxParticipants(
-    String? id,
-    int? maxParticipants,
-  ) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #EditEventMaxParticipants,
-          [
-            id,
-            maxParticipants,
-          ],
-        ),
-        returnValue: _i8.Future<void>.value(),
-        returnValueForMissingStub: _i8.Future<void>.value(),
-      ) as _i8.Future<void>);
-
-  @override
-  void EditEventsIsPrivate(
-    String? id,
-    bool? isPrivate,
-  ) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #EditEventsIsPrivate,
-          [
-            id,
-            isPrivate,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
-  void EditEventStartTime(
-    String? id,
-    DateTime? startTime,
-  ) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #EditEventStartTime,
-          [
-            id,
-            startTime,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
-  void EditEventEndTime(
-    String? id,
-    DateTime? endTime,
-  ) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #EditEventEndTime,
-          [
-            id,
-            endTime,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
 
   @override
   _i8.Future<List<_i9.Event>> getHostEvents(
@@ -1333,9 +1145,9 @@ class MockApi extends _i1.Mock implements _i2.Api {
     required String? description,
     required DateTime? startDate,
     required DateTime? endDate,
-    required String? location,
+    required String? locationId,
     int? maxParticipants,
-    String? metadata,
+    Map<String, String>? metadata,
     bool? isPrivate = false,
     List<String>? media,
   }) =>
@@ -1350,7 +1162,7 @@ class MockApi extends _i1.Mock implements _i2.Api {
             #description: description,
             #startDate: startDate,
             #endDate: endDate,
-            #location: location,
+            #locationId: locationId,
             #maxParticipants: maxParticipants,
             #metadata: metadata,
             #isPrivate: isPrivate,

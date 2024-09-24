@@ -484,7 +484,7 @@ Widget build(BuildContext context) {
             await eventP.refreshRecommendations(userP.JWT);
             notificationProvider _notificationProvider =
                 Provider.of<notificationProvider>(context, listen: false);
-             eventP.refreshSavedEvents(userP.JWT);
+             // eventP.refreshSavedEvents(userP.JWT);
             _notificationProvider.refreshNotifications(userP.JWT);
             SocketService('https://${globals.liveNotificationService}',
                 _notificationProvider, userP.JWT, context);

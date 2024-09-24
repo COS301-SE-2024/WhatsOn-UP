@@ -19,7 +19,7 @@ import 'package:firstapp/pages/manageEvents.dart';
 import 'package:firstapp/pages/application_event.dart';
 import 'allHome_events.dart';
 import 'notifications.dart';
-
+import 'package:animated_text_kit/animated_text_kit.dart';
 class HomePage extends StatefulWidget {
   const HomePage({
     Key? key,
@@ -67,9 +67,9 @@ class _HomePageState extends State<HomePage>
    }
    else {
      final eventsHome = await eventP.eventsHome;
-     final eventsSaved = await eventP.eventsSaved;
+     // final eventsSaved = await eventP.eventsSaved;
      final eventsRecommended = await eventP.recommendations;
-     return [eventsHome, eventsSaved, eventsRecommended];
+     return [eventsHome, [], eventsRecommended];
    }
   }
 
@@ -222,9 +222,7 @@ class _HomePageState extends State<HomePage>
           final eventsHome = snapshot.data![0];
           final eventsRecommended = snapshot.data![2];
 
-          // if (eventsHome.isEmpty) {
-          //   return const Center(child: Text('No events found.'));
-          // }
+
 
           return SingleChildScrollView(
             child: Column(
@@ -258,10 +256,31 @@ class _HomePageState extends State<HomePage>
                   padding: const EdgeInsets.all(12.0),
                   child: Row(
                     children: [
-                      const Text(
-                        'Recommended Events',
-                        style: TextStyle(
-                            fontSize: 18.0, fontWeight: FontWeight.bold),
+                      SizedBox(
+                        height: 50.0,
+                        child: AnimatedTextKit(
+                          animatedTexts: [
+                            RotateAnimatedText(
+                              'Personalised Events',
+                              textStyle: const TextStyle(
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.bold,
+                                color: Color.fromARGB(255, 149, 137, 74),
+                              ),
+                            ),
+                            RotateAnimatedText(
+                              'Recommended Events',
+                              textStyle: const TextStyle(
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.bold,
+                                color:Color.fromARGB(255, 149, 137, 74),
+                              ),
+                            ),
+
+                          ],
+                          repeatForever: true,
+                          pause: const Duration(milliseconds: 200),
+                        ),
                       ),
                       const Spacer(),
                       if (userP.role != "GUEST")
