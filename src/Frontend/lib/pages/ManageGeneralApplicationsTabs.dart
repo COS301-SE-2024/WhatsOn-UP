@@ -32,7 +32,7 @@ class TabGeneral extends StatelessWidget {
     body: TabBarView(
       children: [
         RefreshIndicator(
-          onRefresh: userP.refreshApplications, // Replace with your refresh logic
+          onRefresh: userP.refreshApplications,
           child: const UserList(statusFilter: null),
         ),
         RefreshIndicator(

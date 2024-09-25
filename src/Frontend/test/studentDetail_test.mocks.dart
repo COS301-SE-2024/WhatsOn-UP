@@ -1047,6 +1047,16 @@ class MockuserProvider extends _i1.Mock implements _i2.userProvider {
       ) as _i5.Future<void>);
 
   @override
+  _i5.Future<void> refreshApplications() => (super.noSuchMethod(
+        Invocation.method(
+          #refreshApplications,
+          [],
+        ),
+        returnValue: _i5.Future<void>.value(),
+        returnValueForMissingStub: _i5.Future<void>.value(),
+      ) as _i5.Future<void>);
+
+  @override
   void addListener(_i9.VoidCallback? listener) => super.noSuchMethod(
         Invocation.method(
           #addListener,
