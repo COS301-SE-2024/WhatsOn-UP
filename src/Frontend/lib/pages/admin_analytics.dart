@@ -425,7 +425,24 @@ double _roundNum(double value) {
   return double.parse(value.toStringAsFixed(2));
 }
 
+  String _getMonthAbbreviation(String month) {
+    const monthAbbreviations = {
+      'JANUARY': 'JAN',
+      'FEBRUARY': 'FEB',
+      'MARCH': 'MAR',
+      'APRIL': 'APR',
+      'MAY': 'MAY',
+      'JUNE': 'JUN',
+      'JULY': 'JUL',
+      'AUGUST': 'AUG',
+      'SEPTEMBER': 'SEP',
+      'OCTOBER': 'OCT',
+      'NOVEMBER': 'NOV',
+      'DECEMBER': 'DEC',
+    };
 
+    return monthAbbreviations[month.toUpperCase()] ?? month;
+  }
 
 class AnalyticsChartPage extends StatelessWidget {
   final List<MonthlySummary> monthlySummaries;
@@ -451,7 +468,7 @@ class AnalyticsChartPage extends StatelessWidget {
             LineSeries<MonthlySummary, String>(
               name: 'Average Rating',
               dataSource: monthlySummaries,
-              xValueMapper: (MonthlySummary summary, _) => summary.month,
+              xValueMapper: (MonthlySummary summary, _) =>  _getMonthAbbreviation(summary.month),
               yValueMapper: (MonthlySummary summary, _) => summary.averageRating,
               markerSettings: const MarkerSettings(isVisible: true),
               dataLabelSettings: const DataLabelSettings(isVisible: true),
@@ -510,14 +527,14 @@ class CapacityAttendanceChart extends StatelessWidget {
             ColumnSeries<MonthlySummary, String>(
               name: 'Capacity Ratio',
               dataSource: monthlySummaries,
-              xValueMapper: (MonthlySummary summary, _) => summary.month,
+              xValueMapper: (MonthlySummary summary, _) =>  _getMonthAbbreviation(summary.month),
               yValueMapper: (MonthlySummary summary, _) => summary.capacityRatio,
               dataLabelSettings: const DataLabelSettings(isVisible: true),
             ),
             ColumnSeries<MonthlySummary, String>(
               name: 'Attendance Ratio',
               dataSource: monthlySummaries,
-              xValueMapper: (MonthlySummary summary, _) => summary.month,
+              xValueMapper: (MonthlySummary summary, _) =>  _getMonthAbbreviation(summary.month),
               yValueMapper: (MonthlySummary summary, _) => summary.attendanceRatio,
               dataLabelSettings: const DataLabelSettings(isVisible: true),
             ),
@@ -583,7 +600,7 @@ class FeedbackChart extends StatelessWidget {
             LineSeries<MonthlySummary, String>(
               name: 'Feedback Ratio',
               dataSource: monthlySummaries,
-              xValueMapper: (MonthlySummary summary, _) => summary.month,
+              xValueMapper: (MonthlySummary summary, _) =>  _getMonthAbbreviation(summary.month),
               yValueMapper: (MonthlySummary summary, _) => summary.feedbackRatio,
               markerSettings: const MarkerSettings(isVisible: true),
               dataLabelSettings: const DataLabelSettings(isVisible: true),
@@ -644,7 +661,7 @@ class RSVPChart extends StatelessWidget {
             LineSeries<MonthlySummary, String>(
               name: 'RSVP Ratio',
               dataSource: monthlySummaries,
-              xValueMapper: (MonthlySummary summary, _) => summary.month,
+              xValueMapper: (MonthlySummary summary, _) =>  _getMonthAbbreviation(summary.month),
               yValueMapper: (MonthlySummary summary, _) => summary.rsvpRatio,
               markerSettings: const MarkerSettings(isVisible: true),
               dataLabelSettings: const DataLabelSettings(isVisible: true),
@@ -704,7 +721,7 @@ class DurationChart extends StatelessWidget {
             LineSeries<MonthlySummary, String>(
               name: 'Duration',
               dataSource: monthlySummaries,
-              xValueMapper: (MonthlySummary summary, _) => summary.month,
+              xValueMapper: (MonthlySummary summary, _) =>  _getMonthAbbreviation(summary.month),
               yValueMapper: (MonthlySummary summary, _) => summary.duration,
               markerSettings: const MarkerSettings(isVisible: true),
               dataLabelSettings: const DataLabelSettings(isVisible: true),
@@ -765,21 +782,21 @@ class RatingDistributionChart extends StatelessWidget {
             ColumnSeries<MonthlySummary, String>(
               name: 'Highest Rating',
               dataSource: monthlySummaries,
-              xValueMapper: (MonthlySummary summary, _) => summary.month,
+              xValueMapper: (MonthlySummary summary, _) =>  _getMonthAbbreviation(summary.month),
               yValueMapper: (MonthlySummary summary, _) => summary.highestRating,
               dataLabelSettings: const DataLabelSettings(isVisible: true),
             ),
             ColumnSeries<MonthlySummary, String>(
               name: 'Median Rating',
               dataSource: monthlySummaries,
-              xValueMapper: (MonthlySummary summary, _) => summary.month,
+              xValueMapper: (MonthlySummary summary, _) =>  _getMonthAbbreviation(summary.month),
               yValueMapper: (MonthlySummary summary, _) => summary.medianRating,
               dataLabelSettings: const DataLabelSettings(isVisible: true),
             ),
             ColumnSeries<MonthlySummary, String>(
               name: 'Lowest Rating',
               dataSource: monthlySummaries,
-              xValueMapper: (MonthlySummary summary, _) => summary.month,
+              xValueMapper: (MonthlySummary summary, _) =>  _getMonthAbbreviation(summary.month),
               yValueMapper: (MonthlySummary summary, _) => summary.lowestRating,
               dataLabelSettings: const DataLabelSettings(isVisible: true),
             ),
@@ -844,7 +861,7 @@ class SkewnessChart extends StatelessWidget {
             LineSeries<MonthlySummary, String>(
               name: 'Skewness',
               dataSource: monthlySummaries,
-              xValueMapper: (MonthlySummary summary, _) => summary.month,
+              xValueMapper: (MonthlySummary summary, _) =>  _getMonthAbbreviation(summary.month),
               yValueMapper: (MonthlySummary summary, _) => summary.skewness,
               markerSettings: const MarkerSettings(isVisible: true),
               dataLabelSettings: const DataLabelSettings(isVisible: true),
