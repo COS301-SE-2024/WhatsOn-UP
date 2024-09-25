@@ -17,6 +17,7 @@ class AdminAnalyticsPage extends StatefulWidget {
 class _AdminAnalyticsPageState extends State<AdminAnalyticsPage> with SingleTickerProviderStateMixin {
     bool isLoading = true;
     bool isNamesLoading = true;
+    bool isPopularEventsLoading = true;
     late TabController _tabController;
     Api api = Api();
     List<MonthlySummary> monthlySummaries = [];
@@ -52,14 +53,9 @@ class _AdminAnalyticsPageState extends State<AdminAnalyticsPage> with SingleTick
     try {
       final response = await api.getAllHostsAnalytics(userP.JWT);
 
-      // print("HOST DATA: $response");
-
       setState(() {
         userData = List<Map<String, dynamic>>.from(response['data']);
         filteredUserData = userData;
-
-        // print("USER DATA: $userData");
-        // print("FILTERED USER DATA: $filteredUserData");
 
         isNamesLoading = false;
       });
@@ -81,10 +77,14 @@ class _AdminAnalyticsPageState extends State<AdminAnalyticsPage> with SingleTick
 
       setState(() {
         popularEvents = List<Map<String, dynamic>>.from(response['data']);
+        isPopularEventsLoading = false;
       });
     } 
     catch (e) {
       print('Error getting popular events: $e');
+      setState(() {
+        isPopularEventsLoading = false;
+      });
     }
   }
 
@@ -167,7 +167,11 @@ class _AdminAnalyticsPageState extends State<AdminAnalyticsPage> with SingleTick
     return SingleChildScrollView(
       child: Column(
         children: [
-          PopularEventsWidget(popularEvents: popularEvents), // Popular Events
+          isPopularEventsLoading
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : PopularEventsWidget(popularEvents: popularEvents), // Popular Events
           const Divider(
             color: Colors.grey,
             height: 20,
@@ -232,9 +236,34 @@ class _AdminAnalyticsPageState extends State<AdminAnalyticsPage> with SingleTick
           child: ListView.builder(
             itemCount: filteredUserData.length,
             itemBuilder: (context, index) {
-              String name = filteredUserData[index].keys.first;
-              // print("USER DATA: " + filteredUserData[index][name].toString());
+              String name = '';
+              if (filteredUserData.isNotEmpty && filteredUserData[index].isNotEmpty) {
+
+                name = filteredUserData[index].keys.first;
+
+              } else {
+
+                print('No user data available at index $index');
+
+              }
+              String profileImageUrl = filteredUserData[index][name]['profileImage'] ?? "";
+
+              bool isValidNetworkImage = Uri.tryParse(profileImageUrl)?.hasAbsolutePath ?? false;
+
+              ImageProvider profileImageProvider;
+
+              if (!isValidNetworkImage) {
+                profileImageProvider = const AssetImage('assets/images/user.png');
+              } 
+              else {
+                profileImageProvider = NetworkImage(profileImageUrl);
+              }
+
               return ListTile(
+                leading: CircleAvatar(
+                  backgroundImage: profileImageProvider,
+                  radius: 24,
+                ),
                 title: Text(name),
                 onTap: () {
                   Navigator.push(
@@ -933,6 +962,10 @@ class EventDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final bool isDarkMode = theme.brightness == Brightness.dark;
+    final cardColor = isDarkMode ? Colors.grey[850] : Colors.white;
+    final textColor = isDarkMode ? Colors.white70 : Colors.black87;
     return Scaffold(
       appBar: AppBar(title: Text(event.title)),
       body: SingleChildScrollView(
@@ -940,58 +973,124 @@ class EventDetailsPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(event.description),
-            const SizedBox(height: 16),
-            Text('Host: ${event.hosts[0]['fullName']}'),
-            Text('Date: ${DateFormat('dd MMM yyyy, HH:mm').format(event.startDateTime)}'),
-            Text('Attendees: ${event.attendees.length}/${event.maxAttendees}'),
-            Text('Average Rating: ${event.averageRating.toStringAsFixed(1)}'),
-            const SizedBox(height: 24),
-            // Text('Feedback Distribution', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            // SizedBox(height: 8),
-            SizedBox(
-              height: 300,
-              child: SfCartesianChart(
-                title: const ChartTitle(text: 'Feedback Distribution'),
-                tooltipBehavior: TooltipBehavior(enable: true),
-                primaryXAxis: const CategoryAxis(
-                  title: AxisTitle(text: 'Rating'),
+            _buildSectionHeader('Event Details', Icons.event),
+            Card(
+              color: cardColor,
+              margin: const EdgeInsets.symmetric(vertical: 8),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(event.description, style: TextStyle(fontSize: 16, color: textColor)),
+                    const SizedBox(height: 16),
+                    _buildDetailRow("Hosts", event.hosts.map((host) => host['fullName']).join(', '), textColor),
+                    _buildDetailRow('Date', DateFormat('dd MMM yyyy, HH:mm').format(event.startDateTime), textColor),
+                    _buildDetailRow('Attendees', '${event.attendees.length}/${event.maxAttendees}', textColor),
+                    _buildDetailRow('Average Rating', event.averageRating.toStringAsFixed(1), textColor),
+                  ],
                 ),
-                primaryYAxis: const NumericAxis(
-                  minimum: 0,
-                  // maximum: event.attendees.length.toDouble(),
-                  interval: 1,
-                  title: AxisTitle(text: 'Feedback Count'),
-                ),
-                series: <ColumnSeries>[
-                  ColumnSeries<Map<String, dynamic>, String>(
-                    dataSource: [1, 2, 3, 4, 5].map((rating) => {
-                      'rating': rating.toString(),
-                      'count': event.feedback.where((f) => f['rating'] == rating).length,
-                    }).toList(),
-                    xValueMapper: (data, _) => data['rating'],
-                    yValueMapper: (data, _) => data['count'],
-                  )
-                ],
               ),
             ),
             const SizedBox(height: 24),
-            const Text('Event Statistics', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 8),
-            Text('Median Rating: ${event.medianRating}'),
-            Text('Highest Rating: ${event.highestRating}'),
-            Text('Lowest Rating: ${event.lowestRating}'),
-            // Text('Mode: ${event.mode}'),
-            // Text('Skewness: ${event.skewness.toStringAsFixed(2)}'),
-            Text('RSVP Ratio: ${event.rsvpRatio.toStringAsFixed(2)}%'),
-            Text('Capacity Ratio: ${event.capacityRatio.toStringAsFixed(2)}%'),
-            Text('Attendance Ratio: ${event.attendanceRatio.toStringAsFixed(2)}%'),
-            Text('Feedback Ratio: ${event.feedbackRatio.toStringAsFixed(2)}%'),
+
+            _buildSectionHeader('Feedback Distribution', Icons.bar_chart),
+            Card(
+              color: cardColor,
+              margin: const EdgeInsets.symmetric(vertical: 8),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: SizedBox(
+                  height: 300,
+                  child: SfCartesianChart(
+                    title: const ChartTitle(text: 'Feedback Distribution'),
+                    tooltipBehavior: TooltipBehavior(enable: true),
+                    primaryXAxis: const CategoryAxis(
+                      title: AxisTitle(text: 'Rating'),
+                    ),
+                    primaryYAxis: const NumericAxis(
+                      minimum: 0,
+                      interval: 1,
+                      title: AxisTitle(text: 'Feedback Count'),
+                    ),
+                    series: <ColumnSeries>[
+                      ColumnSeries<Map<String, dynamic>, String>(
+                        dataSource: [1, 2, 3, 4, 5].map((rating) => {
+                          'rating': rating.toString(),
+                          'count': event.feedback.where((f) => f['rating'] == rating).length,
+                        }).toList(),
+                        xValueMapper: (data, _) => data['rating'],
+                        yValueMapper: (data, _) => data['count'],
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 24),
+
+            _buildSectionHeader('Event Statistics', Icons.insert_chart),
+            Card(
+              color: cardColor,
+              margin: const EdgeInsets.symmetric(vertical: 8),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildStatisticRow('Median Rating', event.medianRating.toString(), textColor),
+                    _buildStatisticRow('Highest Rating', event.highestRating.toString(), textColor),
+                    _buildStatisticRow('Lowest Rating', event.lowestRating.toString(), textColor),
+                    _buildStatisticRow('RSVP Ratio', '${event.rsvpRatio.toStringAsFixed(2)}%', textColor),
+                    _buildStatisticRow('Capacity Ratio', '${event.capacityRatio.toStringAsFixed(2)}%', textColor),
+                    _buildStatisticRow('Attendance Ratio', '${event.attendanceRatio.toStringAsFixed(2)}%', textColor),
+                    _buildStatisticRow('Feedback Ratio', '${event.feedbackRatio.toStringAsFixed(2)}%', textColor),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 24),
           ],
         ),
       ),
     );
   }
+}
+
+Widget _buildSectionHeader(String title, IconData icon) {
+  return Row(
+    children: [
+      Icon(icon, size: 28, color: Colors.blueGrey),
+      const SizedBox(width: 8),
+      Text(title, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+    ],
+  );
+}
+
+Widget _buildDetailRow(String label, String value, Color textColor) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 4),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(label, style: TextStyle(color: textColor, fontWeight: FontWeight.bold)),
+        Text(value, style: TextStyle(color: textColor)),
+      ],
+    ),
+  );
+}
+
+Widget _buildStatisticRow(String label, String value, Color textColor) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 4),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(label, style: TextStyle(color: textColor, fontWeight: FontWeight.w600)),
+        Text(value, style: TextStyle(color: textColor)),
+      ],
+    ),
+  );
 }
 
 class Event {

@@ -43,6 +43,7 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    // _authSubscription.cancel();
 
      _fullnameController.dispose();
 
@@ -157,6 +158,9 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
                 final AuthResponse res = await supabase.auth
                     .signUp(email: email, password: password);
                 if (mounted) {
+                  print("CALLING USERNAME INPUT");
+                  Provider.of<userProvider>(context, listen: false).JWT =
+                      supabase.auth.currentSession!.accessToken;
 
                   Provider.of<userProvider>(context, listen: false).JWT =
                       supabase.auth.currentSession!.accessToken;
@@ -208,8 +212,9 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
         userP.email = userEmail;
         userP.role = role;
         userP.profileImage = profileImage;
+        eventP.refreshEvents(userP.JWT);
         eventP.refreshRecommendations(userP.JWT);
-        eventP.refreshSavedEvents(userP.JWT);
+        // eventP.refreshSavedEvents(userP.JWT);
         notificationProvider _notificationProvider =
         Provider.of<notificationProvider>(context, listen: false);
 

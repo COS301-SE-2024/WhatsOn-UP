@@ -3,8 +3,9 @@ name: Testing Pipeline
 on:
   pull_request:
     branches:
-      - develop
       - main
+      - develop
+
 
 jobs:
   build-and-test:

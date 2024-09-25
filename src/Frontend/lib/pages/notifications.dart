@@ -55,6 +55,10 @@ class _NotificationsState extends State<Notifications> with TickerProviderStateM
       _isLoading = true;
     });
 
+    notificationProvider notificationP = Provider.of<notificationProvider>(context,listen: false);
+    userProvider userP = Provider.of<userProvider>(context,listen: false);
+    notificationP.refreshNotifications(userP.JWT);
+
     setState(() {
       _isLoading = false;
     });
@@ -87,63 +91,67 @@ class _NotificationsState extends State<Notifications> with TickerProviderStateM
 
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-              'Notifications',
-              style: TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.bold,
-                color: textColour,
-              ),
-          ),
-          backgroundColor: Colors.transparent,
-          automaticallyImplyLeading: false,
+  appBar: AppBar(
+    title: Text(
+      'Notifications',
+      style: TextStyle(
+        fontSize: 32,
+        fontWeight: FontWeight.bold,
+        color: textColour,
       ),
-      body: RefreshIndicator(
-        onRefresh: _refreshNotifications,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TabBar(
+    ),
+    backgroundColor: Colors.transparent,
+    automaticallyImplyLeading: false,
+  ),
+  body: RefreshIndicator(
+    onRefresh: _refreshNotifications,
+    child: SingleChildScrollView(
+      physics: AlwaysScrollableScrollPhysics(),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TabBar(
+            controller: _tabController,
+            labelColor: Colors.red,
+            indicatorColor: Colors.red,
+            labelPadding: EdgeInsets.symmetric(horizontal: 20),
+            tabs: [
+              const Tab(
+                text: "Unseen",
+              ),
+              const Tab(
+                text: "Seen",
+              ),
+              if (userP.role == "ADMIN")
+                const Tab(
+                  text: "Applications",
+                )
+              else
+                const Tab(
+                  text: "Invitations",
+                ),
+            ],
+          ),
+          SizedBox(
+            height: 500, // Set an appropriate height for TabBarView
+            child: TabBarView(
               controller: _tabController,
-              labelColor: Colors.red,
-              // unselectedLabelColor: Colors.black,
-              indicatorColor: Colors.red,
-              labelPadding: EdgeInsets.symmetric(horizontal: 20),
-              tabs: [
-                const Tab(
-                  text: "Unseen",
-                ),
-                const Tab(
-                  text: "Seen",
-                ),
+              children: [
+                _buildNotificationsView("Unseen"),
+                _buildNotificationsView("Seen"),
                 if (userP.role == "ADMIN")
-                  const Tab(
-                    text: "Applications",
-                  )
+                  _buildNotificationsAdminView("Applications")
                 else
-                  const Tab(
-                    text: "Invitations",
-                  ),
+                  _buildNotificationsView("Invitations"),
               ],
             ),
-            Expanded(
-              child: TabBarView(
-                controller: _tabController,
-                children: [
-                  _buildNotificationsView("Unseen"),
-                  _buildNotificationsView("Seen"),
-                  if (userP.role == "ADMIN")
-                    _buildNotificationsAdminView("Applications")
-                  else
-                    _buildNotificationsView("Invitations"),
-                ],
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
-    );
+    ),
+  ),
+);
+
   }
 
   Widget _buildGuestView() {
@@ -316,7 +324,7 @@ class _NotificationsState extends State<Notifications> with TickerProviderStateM
         } else if(tab == "Applications") {
           var notifications = notif.notifications;
             final applications = notifications
-                .where((n) => n.notificationTypes == 'application'&& n.seenAt == null )
+                .where((n) => n.notificationTypes == 'application')
                 .toList();
             return ListView(
               children: [

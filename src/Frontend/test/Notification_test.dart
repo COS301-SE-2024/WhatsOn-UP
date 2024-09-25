@@ -501,6 +501,8 @@ void main() {
     when(mockUserProvider.userId).thenReturn('1');
     when(mockUserProvider.role).thenReturn("GENERAL");
     when(mockUserProvider.profileImage).thenReturn('https://via.placeholder.com/150');
+    when(mockUserProvider.JWT).thenReturn('jwt');
+
 
     final notifications = [
       AppNotification(notificationTypes: 'invite', message: 'You have an invite', eventId: '', userId: '', sentAt: '', notificationId: '', seenAt:''),
@@ -548,6 +550,8 @@ void main() {
     when(mockUserProvider.userId).thenReturn('1');
     when(mockUserProvider.role).thenReturn("ADMIN");
     when(mockUserProvider.profileImage).thenReturn('https://via.placeholder.com/150');
+    when(mockUserProvider.JWT).thenReturn('test_user_JWT');
+
 
     final notifications = [
       AppNotification(notificationTypes: 'recommendation', message: 'You have an invite', eventId: '', userId: '', sentAt: DateTime.now().toString(), notificationId: '', seenAt: DateTime.now().toString()),
@@ -597,6 +601,8 @@ void main() {
     when(mockUserProvider.userId).thenReturn('1');
     when(mockUserProvider.role).thenReturn("ADMIN");
     when(mockUserProvider.profileImage).thenReturn('https://via.placeholder.com/150');
+    when(mockUserProvider.JWT).thenReturn('jwt');
+
 
     when(mockNotificationProvider.notifications).thenReturn([]);
 
@@ -640,6 +646,8 @@ void main() {
     when(mockUserProvider.userId).thenReturn('1');
     when(mockUserProvider.role).thenReturn("GENERAL");
     when(mockUserProvider.profileImage).thenReturn('https://via.placeholder.com/150');
+    when(mockUserProvider.JWT).thenReturn('jwt');
+
 
     final notifications = [
       AppNotification(notificationTypes: 'invite', message: 'You have an invite', eventId: '', userId: '', sentAt: '', notificationId: '', seenAt: null),
@@ -684,6 +692,8 @@ void main() {
     when(mockUserProvider.userId).thenReturn('1');
     when(mockUserProvider.role).thenReturn("GENERAL");
     when(mockUserProvider.profileImage).thenReturn('https://via.placeholder.com/150');
+    when(mockUserProvider.JWT).thenReturn('jwt');
+
 
     when(mockNotificationProvider.notifications).thenReturn([]);
 
@@ -715,6 +725,8 @@ void main() {
     when(mockUserProvider.userId).thenReturn('1');
     when(mockUserProvider.role).thenReturn("ADMIN");
     when(mockUserProvider.profileImage).thenReturn('https://via.placeholder.com/150');
+    when(mockUserProvider.JWT).thenReturn('test_user_JWT');
+
 
     final notifications = [
       AppNotification(notificationTypes: 'invite', message: 'You have an invite', eventId: '', userId: '', sentAt: DateTime.now().toString(), notificationId: '', seenAt: DateTime.now().toString(),),
@@ -804,7 +816,7 @@ void main() {
     when(mockUserProvider.userId).thenReturn('1');
     when(mockUserProvider.role).thenReturn("ADMIN");
     when(mockUserProvider.profileImage).thenReturn('https://via.placeholder.com/150');
-    when(mockUserProvider.JWT).thenThrow(JWTNotSetException());
+    when(mockUserProvider.JWT).thenReturn('jwt');
     final notifications = [
       AppNotification(notificationTypes: 'invite', message: 'You have an invite', eventId: '', userId: '', sentAt: DateTime.now().toString(), notificationId: '', seenAt: DateTime.now().toString(),),
       AppNotification(notificationTypes: 'broadcast', message: 'New broadcast message', eventId: '', userId: '', sentAt: DateTime.now().toString(), notificationId: '', seenAt: DateTime.now().toString()),

@@ -517,39 +517,40 @@ class _EventCardState extends State<EventCard> {
   //     print('Error fetching event: $e');
   //   }
   // }
-  Future<void> _fetchEvent(bool recommendations, bool saved, Event event,String JWT) async {
-    try {
-      setState(() {
-        _isLoading = true;
-      });
-
-      Event? eventM;
-      EventProvider eventProvider = Provider.of<EventProvider>(context, listen: false);
-
-
-      if (recommendations) {
-        eventM = await eventProvider.getEventById(event.id);
-        eventProvider.addEventSaved(eventM!,JWT);
-        eventM?.saved = saved;
-        eventProvider.refreshRecommendations(JWT);
-        eventProvider.refreshEvents();
-
-      } else {
-        eventM = await eventProvider.getEventByIdR(event.id);
-        eventProvider.addEventSaved(eventM!,JWT);
-        eventM?.saved = saved;
-        eventProvider.refreshRecommendations(JWT);
-        eventProvider.refreshEvents();
-      }
-
-    } catch (e) {
-      print('Error fetching event: $e');
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
-    }
-  }
+//   Future<void> _fetchEvent(bool recommendations, bool saved, Event event,String JWT) async {
+//     try {
+//       setState(() {
+//         _isLoading = true;
+//       });
+//
+//       Event? eventM;
+//       EventProvider eventProvider = Provider.of<EventProvider>(context, listen: false);
+// userProvider userP = Provider.of<userProvider>(context, listen: false);
+//
+//       if (recommendations) {
+//         eventM = await eventProvider.getEventById(event.id);
+//
+//         eventProvider.addEventSaved(eventM!,JWT);
+//         eventM?.saved = saved;
+//         eventProvider.refreshRecommendations(JWT);
+//         eventProvider.refreshEvents(userP.JWT,userP.role);
+//
+//       } else {
+//         eventM = await eventProvider.getEventByIdR(event.id);
+//         eventProvider.removeEventSaved(eventM!,JWT);
+//         eventM?.saved = saved;
+//         eventProvider.refreshRecommendations(JWT);
+//         eventProvider.refreshEvents(userP.JWT,userP.role);
+//       }
+//
+//     } catch (e) {
+//       print('Error fetching event: $e');
+//     } finally {
+//       setState(() {
+//         _isLoading = false;
+//       });
+//     }
+//   }
 
 
 
@@ -656,25 +657,27 @@ class _EventCardState extends State<EventCard> {
                         ),
                         onPressed: () {
                           setState(() {
-                            // isBookmarked = !isBookmarked;
+
                             widget.event.saved=!widget.event.saved;
                             if(widget.event.saved==true){
-
                               setState(() {
-                                widget.event.saved=true;
-                                eventP.addEventSaved(widget.event,userP.JWT);
-                                _fetchEvent(widget.recommendations,widget.event.saved,widget.event,userP.JWT);
-                                eventP.refreshEvents();
-                                eventP.refreshRecommendations(userP.JWT);
+                                _isLoading = true;
                               });
+                              eventP.addEventSaved(widget.event,userP.JWT);
+                                        setState(() {
+                                          _isLoading=false;
+                                        });
+
 
                             }else{
                               setState(() {
-                                widget.event.saved=false;
-                                _fetchEvent(widget.recommendations,widget.event.saved, widget.event,userP.JWT);
-                                eventP.refreshEvents();
-                                eventP.refreshRecommendations(userP.JWT);
+                                _isLoading = true;
                               });
+                              eventP.removeEventSaved(widget.event,userP.JWT);
+                              setState(() {
+                                _isLoading=false;
+                              });
+
                             }
                           });
                             // if (isBookmarked == true) {
