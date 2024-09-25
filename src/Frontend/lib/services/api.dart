@@ -31,6 +31,7 @@ class Api {
   var refreshToken = 'refreshToken';
   var JWT;
 
+
   setState(){
 
     final session = supabase.auth.currentSession;
@@ -97,20 +98,27 @@ class Api {
     }
   }
 
-  Future<List<Event>> getAllEvents() async {
-    final _rsvpEventsURL = 'https://${globals.gatewayDomain}/api/events/get_all';
+  Future<List<Event>> getAllEvents(String? JWT) async {
 
-    var headers = {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      };
+    final _rsvpEventsURL = 'https://${globals.gatewayDomain}/api/events/get_all';
+    var headers;
+
+  headers = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    'Authorization': 'Bearer $JWT',
+
+  };
+
 
     try {
+
+      print('headers: $headers');
       var response = await http.get(
         Uri.parse(_rsvpEventsURL),
         headers: headers
       );
-
+  print('response: ${response.body}');
       if (response.statusCode == 200) {
         // Parse the JSON response
         final Map<String, dynamic> decodedJson = json.decode(response.body);
@@ -378,6 +386,7 @@ class Api {
 
   Future<Map<String, dynamic>> putSavedEvent(
       String eventId, String JWT) async {
+    print('Event ID in putsaved event: $eventId');
     final String _rsvpEventUrl =
         'https://${globals.gatewayDomain}/api/user/save_event/$eventId';
 
@@ -391,6 +400,7 @@ class Api {
       var response = await http.put(Uri.parse(_rsvpEventUrl), headers: headers);
 
       if (response.statusCode == 200) {
+        print('Response body after saving: ${response.body}');
         return jsonDecode(response.body);
       } else {
         throw Exception(jsonDecode(response.body));
@@ -416,6 +426,7 @@ class Api {
           await http.delete(Uri.parse(_rsvpEventUrl), headers: headers);
 
       if (response.statusCode == 200) {
+        print('Response body after unsaving: ${response.body}');
         return jsonDecode(response.body);
       } else {
         throw Exception(jsonDecode(response.body));
@@ -639,24 +650,41 @@ class Api {
     }
   }
 
-  Future<List<dynamic>> getAllEventsGuest() async {
-    try {
-      final _rsvpEventsURL = 'https://${globals.gatewayDomain}/api/events/get_all';
+  Future<List<Event>> getAllEventsGuest() async {
+    // try {
+    final _rsvpEventsURL = 'https://${globals.gatewayDomain}/api/events/get_all';
       var headers = {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
       };
-
-      var response =
-          await http.get(Uri.parse(_rsvpEventsURL), headers: headers);
+    //
+    //   var response =
+    //       await http.get(Uri.parse(_rsvpEventsURL), headers: headers);
+    //
+    //   if (response.statusCode == 200) {
+    //     var decodedJson = jsonDecode(response.body)['data'];
+    //     return decodedJson;
+    //   } else {
+    //     throw Exception(jsonDecode(response.body));
+    //   }
+    // }
+    try {
+      var response = await http.get(
+        Uri.parse(_rsvpEventsURL),
+        headers: headers,
+      );
 
       if (response.statusCode == 200) {
-        var decodedJson = jsonDecode(response.body)['data'];
-        return decodedJson;
+        final Map<String, dynamic> decodedJson = json.decode(response.body);
+        final List<dynamic> eventsJson = decodedJson['data'];
+
+        final List<Event> events =
+        eventsJson.map((jsonEvent) => Event.fromJson(jsonEvent)).toList();
+        return events;
       } else {
-        throw Exception(jsonDecode(response.body));
+        throw Exception('Failed to load events');
       }
-    } catch (e) {
+    }catch (e) {
       throw Exception(e.toString());
     }
   }
@@ -668,11 +696,12 @@ class Api {
     required String description,
     required DateTime startDate,
     required DateTime endDate,
-    required String location,
+    required String locationId,
     int? maxParticipants,
-    String? metadata,
+    Map<String, String>? metadata,
     bool isPrivate = false,
     List<String>? media,
+
   }) async {
     final String _userUrl =
         'https://${globals.gatewayDomain}/api/events/update/$eventId';
@@ -682,20 +711,37 @@ class Api {
       'Accept': 'application/json',
       'Authorization': 'Bearer $JWT',
     };
-    print(location);
-    var body = jsonEncode({
-      'title': title,
-      'description': description,
-      // 'startDate': startDate.toIso8601String(),
-      // 'endDate': endDate.toIso8601String(),
-      'location': location,
-      'maxParticipants': maxParticipants,
-      'metadata': metadata,
-    });
+    var body;
+    if(locationId==''){
+
+   body = jsonEncode({
+    'title': title,
+    'description': description,
+    'startDate': startDate.toIso8601String(),
+    'endDate': endDate.toIso8601String(),
+    'maxParticipants': maxParticipants,
+    'metadata': metadata,
+    'isPrivate': isPrivate,
+  });
+}
+else{
+  body = jsonEncode({
+    'title': title,
+    'description': description,
+    'startDate': startDate.toIso8601String(),
+    'endDate': endDate.toIso8601String(),
+    'location': locationId,
+    'maxParticipants': maxParticipants,
+    'metadata': metadata,
+    'isPrivate': isPrivate,
+  });
+}
+
 
     try {
       var response =
           await http.put(Uri.parse(_userUrl), headers: headers, body: body);
+      print('this is the response body after editing: ${response.body}');
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
       } else {

@@ -178,7 +178,8 @@ class AdminService {
             mapOf(
                 host.fullName to mapOf(
                     "monthlySummaries" to monthlySummaries,
-                    "overallSummary" to overallSummary
+                    "overallSummary" to overallSummary,
+                    "profileImage" to host.profileImage
                 )
             )
         }
