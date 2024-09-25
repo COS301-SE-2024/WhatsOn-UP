@@ -781,6 +781,10 @@ class RatingDistributionChart extends StatelessWidget {
           legend: const Legend(isVisible: true),
           tooltipBehavior: TooltipBehavior(enable: true),
           primaryXAxis: const CategoryAxis(),
+          primaryYAxis: const NumericAxis(
+            minimum: 0,
+            maximum: 5,
+          ),
           series: <CartesianSeries>[
             ColumnSeries<MonthlySummary, String>(
               name: 'Highest Rating',
