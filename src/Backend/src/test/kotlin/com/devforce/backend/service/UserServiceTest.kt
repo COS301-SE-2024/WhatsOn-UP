@@ -63,7 +63,7 @@ class UserServiceTest {
         userid = UUID.randomUUID()
         user = UserModel().apply {
             userId= userid
-            role = RoleModel().apply { name = "ADMIN" }
+            role = RoleModel().apply { name = "HOST" }
         }
         val roleName = "HOST"
         val authorities = setOf(SimpleGrantedAuthority(roleName))
