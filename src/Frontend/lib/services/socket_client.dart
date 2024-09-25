@@ -12,15 +12,15 @@ class SocketService {
   late IO.Socket socket;
   final notificationProvider _notificationProvider;
   final BuildContext context;
-  SocketService(String url, this._notificationProvider,String userId,this.context) {
+  SocketService(String url, this._notificationProvider,String JWT,this.context) {
     // _notificationProvider=Provider.of<notificationProvider>(context, listen: true);
     final headers = {
-      'token': 'Bearer $userId',
+      'token': 'Bearer $JWT',
     };
 
     socket = IO.io(url, <String, dynamic>{
       'transports': ['websocket'],
-      'query': {'token': userId},
+      'query': {'token': JWT},
     });
 
     // Add event listeners
@@ -36,15 +36,15 @@ class SocketService {
       print('Event received: $data');
 
       final schema = JsonSchema.create(NOTIFICATION_SOCKET_SCHEMA);
-      final result = schema.validate(data);
+      // final result = schema.validate(data);
+      _notificationProvider.refreshNotifications(JWT);
+      LocalNotifications.showNotification(title: data['data']['notification_types']['name'], body: data['data']['message'], payload: "");
 
-      if(result.isValid){
-        _notificationProvider.refreshNotifications(userId);
-        LocalNotifications.showNotification(title: data['data']['notification_types']['name'], body: data['data']['message'], payload: "");
-      }
-      else{
-        throw Exception(result.errors);
-      }
+      // if(result.isValid){
+      // }
+      // else{
+      //   throw Exception(result.errors);
+      // }
 
 
     });
@@ -52,8 +52,8 @@ class SocketService {
       print('Error: $error');
     });
   }
-  void refreshNotifications(String userId) {
-    _notificationProvider.refreshNotifications(userId);
+  void refreshNotifications(String JWT) {
+    _notificationProvider.refreshNotifications(JWT);
   }
 
   void navigateToHomePage(BuildContext context) {

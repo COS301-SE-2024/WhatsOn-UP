@@ -10,7 +10,9 @@ import com.devforce.backend.repo.EventRepo
 import com.devforce.backend.repo.VenueRepo
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
+import io.github.cdimascio.dotenv.Dotenv
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -55,7 +57,7 @@ class EventControllerIntegrationTest {
     private lateinit var eventRepo: EventRepo
 
 
-    @Value("\${bearer-token}")
+    @Value("\${BEARER_TOKEN}")
     private val bearerToken: String? = null
 
 
@@ -530,6 +532,24 @@ class EventControllerIntegrationTest {
         }
         assertEquals(event.metadata, event2.metadata)
 
+    }
+
+    companion object {
+        @JvmStatic
+        @BeforeAll
+        fun setUp(): Unit {
+            val dotenv: Dotenv = Dotenv.load()
+
+            System.setProperty("DB_USERNAME", dotenv.get("DB_USERNAME"))
+            System.setProperty("MAIL_PASSWORD", dotenv.get("MAIL_PASSWORD"))
+            System.setProperty("MAIL_USERNAME", dotenv.get("MAIL_USERNAME"))
+            System.setProperty("SECRET", dotenv.get("SECRET"))
+
+            System.setProperty("CORS_ORIGINS", dotenv.get("CORS_ORIGINS"))
+            System.setProperty("DB_PASSWORD", dotenv.get("DB_PASSWORD"))
+            System.setProperty("DB_URL", dotenv.get("DB_URL"))
+            System.setProperty("BEARER_TOKEN", dotenv.get("BEARER_TOKEN"))
+        }
     }
 
 }

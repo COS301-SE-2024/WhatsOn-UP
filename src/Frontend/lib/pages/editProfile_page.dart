@@ -35,7 +35,7 @@ class _EditprofilePageState extends State<EditprofilePage> {
         });
 
         Api api = Api();
-        var response = await api.uploadImage(imageBytes, userP.userId);
+        var response = await api.uploadImage(imageBytes, userP.userId, userP.JWT);
 
         if (response['status'] == 'success') {
           print('Upload successful: $response');

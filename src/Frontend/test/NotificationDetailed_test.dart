@@ -26,7 +26,7 @@ void main() {
         eventInvite: false,
       );
 
-      when(mockApi.AcceptInvite(userId: 'user123', notificationId: 'notif123'))
+      when(mockApi.AcceptInvite(JWT: 'user123', notificationId: 'notif123'))
           .thenAnswer((_) async => {'success': true});
       var testTimeandDate = formatDateTime('2024-08-01T12:00:00Z');
       print(testTimeandDate);

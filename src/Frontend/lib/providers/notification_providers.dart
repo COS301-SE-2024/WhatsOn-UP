@@ -9,9 +9,9 @@ class notificationProvider extends ChangeNotifier {
   late List<AppNotification> _notifications = [];
   List<AppNotification> get notifications => _notifications;
 
-  Future<void> fetchNotifications(String userId) async {
+  Future<void> fetchNotifications(String JWT) async {
     try {
-      List<AppNotification> response = await api.getAllNotification(userId: userId);
+      List<AppNotification> response = await api.getAllNotification(JWT: JWT);
       _notifications = response;
       notifyListeners();
     } catch (e) {
@@ -20,8 +20,8 @@ class notificationProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> refreshNotifications(String userId) async {
-    await fetchNotifications(userId);
+  Future<void> refreshNotifications(String JWT) async {
+    await fetchNotifications(JWT);
   }
 
   void addNotification(var eventData) {

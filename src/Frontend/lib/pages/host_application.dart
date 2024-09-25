@@ -193,7 +193,7 @@ class _HostApplicationPageState extends State<HostApplicationPage> {
                   ),
                   const SizedBox(height: 30),
                   ElevatedButton(
-                    onPressed: _isLoading ? null : () => _submitForm(userId),
+                    onPressed: _isLoading ? null : () => _submitForm(user.JWT),
                     style: ElevatedButton.styleFrom(
                       minimumSize: const Size(double.infinity, 50),
                     ),
@@ -212,7 +212,7 @@ class _HostApplicationPageState extends State<HostApplicationPage> {
     );
   }
 
-  Future<void> _submitForm(String userId) async {
+  Future<void> _submitForm(String JWT) async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       if (!_isStudent && _stickerImage == null) {
@@ -226,7 +226,7 @@ class _HostApplicationPageState extends State<HostApplicationPage> {
         _isLoading = true;
       });
 
-      await submitHostApplication(userId);
+      await submitHostApplication(JWT);
 
       // Reset form after it was submitted
       _formKey.currentState?.reset();
@@ -245,7 +245,7 @@ class _HostApplicationPageState extends State<HostApplicationPage> {
     }
   }
 
-  Future<void> submitHostApplication(String userID) async {
+  Future<void> submitHostApplication(String JWT) async {
     try {
       var result = await Api().applyForHost(
         reason: _reason,
@@ -253,7 +253,7 @@ class _HostApplicationPageState extends State<HostApplicationPage> {
         fromWhen: _startDate,
         studentEmail: _isStudent ? _studentEmail : null,
         proofImage: !_isStudent ? _stickerImage : null,
-        userId: userID,
+        JWT: JWT,
       );
 
       print('Application submitted successfully: ${result['data']['message']}');

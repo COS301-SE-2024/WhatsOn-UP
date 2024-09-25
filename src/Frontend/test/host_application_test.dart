@@ -19,6 +19,7 @@ void main() {
       when(mockUserProvider.email).thenReturn('user@gmail.com');
       when(mockUserProvider.password).thenReturn('password123');
       when(mockUserProvider.role).thenReturn('GENERAL');
+      when(mockUserProvider.JWT).thenReturn('test_user_JWT');
     });
 
     Widget createHostApplicationPage() {

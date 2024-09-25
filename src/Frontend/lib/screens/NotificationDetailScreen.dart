@@ -13,7 +13,8 @@ import '../widgets/notification_card.dart';
 class NotificationDetailScreen extends StatefulWidget {
   final AppNotification notification;
 
-  const NotificationDetailScreen({super.key, required this.notification});
+  NotificationDetailScreen({required this.notification});
+  
 
   @override
   _NotificationDetailScreenState createState() =>
@@ -29,6 +30,8 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
   }
 
   Future<void> _Accept() async {
+  userProvider userP = Provider.of<userProvider>(context, listen: false);
+
     setState(() {
       isLoading = true;
     });
@@ -36,7 +39,7 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
     Api api = Api();
     try {
       var response = await api.AcceptInvite(
-          userId: widget.notification.userId,
+          JWT: userP.JWT,
           notificationId: widget.notification.notificationId);
 
       if (response['status'] == 'error') {
@@ -47,7 +50,7 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
       String errorMessage = e.toString();
       if (errorMessage.contains("Invite already accepted")) {
         ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("This invite has been already accepted")));
+            SnackBar(content: Text("This invite has been already accepted")));
       } else {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text("An error occurred: $e")));
@@ -66,12 +69,13 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
 
     Api api = Api();
     try {
+userProvider userP = Provider.of<userProvider>(context, listen: false);
       var response =
-          await api.Acknowledgeapplication(userId: widget.notification.userId);
+          await api.Acknowledgeapplication(JWT: userP.JWT);
 
       if (response['status'] == 'error') {
       } else {
-        const SnackBar(content: Text("Application Acknowledged"));
+        SnackBar(content: Text("Application Acknowledged"));
       }
     } catch (e) {
 
@@ -167,10 +171,10 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
 
     Api api = Api();
     try {
-      await api.deleteNotification(widget.notification.notificationId, userP.userId);
+      await api.deleteNotification(widget.notification.notificationId, userP.JWT);
       print("Notification deleted");    
       _notificationProvider.removeNotification(widget.notification.notificationId);
-      await _notificationProvider.refreshNotifications(userP.userId);
+      await _notificationProvider.refreshNotifications(userP.JWT);
       Navigator.of(context).pop();
     } 
     catch (e) {
@@ -188,13 +192,13 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
         title: Text(capitalize(widget.notification.notificationTypes)),
         actions: [
           IconButton(
-            icon: const Icon(Icons.delete),
+            icon: Icon(Icons.delete),
             onPressed: _showDeleteConfirmationDialog,
           ),
         ],
       ),
       body: isLoading
-          ? const Center(
+          ? Center(
               child: SpinKitPianoWave(
                 color: Color.fromARGB(255, 149, 137, 74),
                 size: 50.0,
@@ -205,25 +209,25 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 150.0),
+                  SizedBox(height: 150.0),
                   Text(
                     'Sent At: $formattedDateSentAt',
                     style:
-                        const TextStyle(fontSize: 12.0, fontStyle: FontStyle.italic),
+                        TextStyle(fontSize: 12.0, fontStyle: FontStyle.italic),
                     textAlign: TextAlign.end,
                   ),
                   ChatBubble(
                     clipper:
                         ChatBubbleClipper3(type: BubbleType.receiverBubble),
                     backGroundColor: Colors.blueAccent,
-                    margin: const EdgeInsets.all(20),
+                    margin: EdgeInsets.all(20),
                     child: Container(
                       constraints: BoxConstraints(
                         maxWidth: MediaQuery.of(context).size.width * 0.7,
                       ),
                       child: Text(
                         widget.notification.message,
-                        style: const TextStyle(color: Colors.white, fontSize: 18.0),
+                        style: TextStyle(color: Colors.white, fontSize: 18.0),
                       ),
                     ),
                   ),
@@ -240,7 +244,7 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
                     ),
                   ],
                   if (widget.notification.notificationTypes == 'invite') ...[
-                    const SizedBox(height: 20.0),
+                    SizedBox(height: 20.0),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
@@ -250,43 +254,43 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
                             onPressed: _Accept,
                             style: TextButton.styleFrom(
                               foregroundColor: Colors.greenAccent,
-                              side: const BorderSide(color: Colors.black),
-                              padding: const EdgeInsets.symmetric(
+                              side: BorderSide(color: Colors.black),
+                              padding: EdgeInsets.symmetric(
                                   vertical: 12.0, horizontal: 20.0),
                             ),
-                            child: const Text('Accept'),
+                            child: Text('Accept'),
                           ),
                         if (widget.notification.eventInvite == true)
                           TextButton(
                             onPressed: () {
-                              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                   content: Text(
                                       "This invite has been already accepted")));
                             },
                             style: TextButton.styleFrom(
                               foregroundColor: Colors.greenAccent,
-                              side: const BorderSide(color: Colors.black),
-                              padding: const EdgeInsets.symmetric(
+                              side: BorderSide(color: Colors.black),
+                              padding: EdgeInsets.symmetric(
                                   vertical: 12.0, horizontal: 20.0),
                             ),
-                            child: const Text('Accepted'),
+                            child: Text('Accepted'),
                           ),
                       ],
                     ),
                   ],
                   if (widget.notification.notificationTypes == 'reminder') ...[
-                    const SizedBox(height: 20.0),
+                    SizedBox(height: 20.0),
                     TextButton(
                       onPressed: () {
                         Navigator.pushNamed(context, '/calendar');
                       },
                       style: TextButton.styleFrom(
                         foregroundColor: Colors.blueAccent,
-                        side: const BorderSide(color: Colors.black),
+                        side: BorderSide(color: Colors.black),
                       ),
-                      child: const Text('Go to Calendar'),
+                      child: Text('Go to Calendar'),
                     ),
-                    const SizedBox(height: 20.0),
+                    SizedBox(height: 20.0),
                   ],
                   if (widget.notification.notificationTypes ==
                       'application') ...[
@@ -294,8 +298,8 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
                       onPressed: _Acknowledge,
                       style: TextButton.styleFrom(
                         foregroundColor: Colors.black,
-                        side: const BorderSide(color: Colors.black),
-                        padding: const EdgeInsets.symmetric(
+                        side: BorderSide(color: Colors.black),
+                        padding: EdgeInsets.symmetric(
                             vertical: 12.0, horizontal: 20.0),
                       ),
                       child: const Text('Acknowledge'),

@@ -137,7 +137,7 @@ class _SearchScreenState extends State<SearchScreen> {
   void _openFilterDialog() async {
     final result = await showDialog<List<Event>>(
       context: context,
-      builder: (context) => FilterScreen(),
+      builder: (context) =>  FilterScreen( searchResults:_searchResults),
     );
 
     if (result != null) {

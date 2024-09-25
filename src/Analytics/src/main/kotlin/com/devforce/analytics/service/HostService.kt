@@ -5,7 +5,7 @@ import com.devforce.analytics.dto.MonthlyEventSummary
 import com.devforce.analytics.dto.OverallEventSummary
 import com.devforce.analytics.repo.*
 import com.devforce.analytics.security.CustomUser
-import com.devforce.backend.dto.ResponseDto
+import com.devforce.analytics.dto.ResponseDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.context.SecurityContextHolder

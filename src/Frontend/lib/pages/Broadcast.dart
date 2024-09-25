@@ -106,15 +106,19 @@ class _BroadcastState extends State<Broadcast> {
     });
 
     userProvider userP = Provider.of<userProvider>(context, listen: false);
-    Api api = Provider.of<Api>(context, listen: false);
-
+    Api api = Api();
     try {
-      final response = await api.broadcast(messageController.text, userP.userId);
+      final response = await api.broadcast(messageController.text, userP.JWT);
       if (response['status'] == 'success') {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Broadcast sent successfully"), backgroundColor: Colors.green),
         );
         Navigator.of(context).pop();
+      }
+      else if(response['status'] == '403') {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Only admins can broadcast'), backgroundColor: Colors.red),
+        );
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(

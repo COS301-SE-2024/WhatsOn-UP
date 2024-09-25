@@ -28,12 +28,16 @@ class _SplashPageState extends State<SplashPage> {
 
   Future<void> _redirect() async {
     await Future.delayed(Duration(seconds: 2));
+    userProvider userP = Provider.of<userProvider>(context, listen: false);
     final session = supabase.auth.currentSession;
     if (!mounted) return;
     if (session != null) {
 
+      userP.JWT=session?.accessToken;
       await _login();
     } else {
+
+      userP.JWT=session?.accessToken;
       Navigator.of(context).pushReplacementNamed('/login');
     }
   }
@@ -67,13 +71,13 @@ class _SplashPageState extends State<SplashPage> {
     Api api = Api();
 
     ;
-    api.getUser(user!.id).then((response) {
+    api.getUser(userP.JWT).then((response) {
       if (response['error'] != null) {
         print('An error occurred: ${response['error']}');
       } else {
         String fullName = response['data']['user']['fullName'] ?? 'Unknown';
-        String userEmail = user.userMetadata?['email'];
-        String UserId = user.id;
+        String userEmail = user?.userMetadata!['email'];
+        String UserId = user!.id;
         String role = response['data']['user']['role'] ?? 'Unknown';
         String profileImage = response['data']['user']['profileImage'] ?? 'Unknown';
 
@@ -82,13 +86,14 @@ class _SplashPageState extends State<SplashPage> {
         userP.email = userEmail;
         userP.role = role;
         userP.profileImage = profileImage;
-        eventP.refreshRecommendations(userP.userId);
-        eventP.refreshSavedEvents(userP.JWT);
+        eventP.refreshEvents(userP.JWT);
+        eventP.refreshRecommendations(userP.JWT);
+        // eventP.refreshSavedEvents(userP.JWT);
         notificationProvider _notificationProvider =
         Provider.of<notificationProvider>(context, listen: false);
-        _notificationProvider.refreshNotifications(userP.userId);
-        SocketService('http://${globals.domain}:8082',_notificationProvider, userP.userId, context);
-        userP.Generalusers(userP.userId);
+        _notificationProvider.refreshNotifications(userP.JWT);
+        SocketService('https://${globals.liveNotificationService}',_notificationProvider, userP.JWT, context);
+        userP.Generalusers(userP.JWT); 
 
 
         userP.profileimage = profileImage;

@@ -2,7 +2,7 @@ package com.devforce.analytics.controller
 
 import com.devforce.analytics.service.AdminService
 import com.devforce.analytics.service.HostService
-import com.devforce.backend.dto.ResponseDto
+import com.devforce.analytics.dto.ResponseDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
@@ -40,6 +40,12 @@ class AdminController {
     fun getAllHosts(): ResponseEntity<ResponseDto> {
         return adminService.getForAllHosts()
     }
+
+    @GetMapping("/get_all_past_events")
+    fun dashboard(): ResponseEntity<ResponseDto> {
+        return adminService.getPastEvents()
+    }
+
 
     @GetMapping("/get_all_events")
     fun getAllEvents(): ResponseEntity<ResponseDto> {

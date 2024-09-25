@@ -83,6 +83,7 @@ import 'package:firstapp/services/LocalNotifications.dart';
 import 'package:firstapp/services/api.dart';
 import 'package:firstapp/widgets/event_card.dart';
 import 'package:firstapp/widgets/theme_manager.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
@@ -106,19 +107,10 @@ void main() async{
     url: 'https://mehgbhiirnmypfgnkaud.supabase.co',
     anonKey:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1laGdiaGlpcm5teXBmZ25rYXVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjUxODEwNjksImV4cCI6MjA0MDc1NzA2OX0.pGKypDZySuoUTXnzaHmJO8TVdqNt5ond3eoKrp3qD-o'
   );
-  // runApp(ChangeNotifierProvider<ThemeNotifier>(
-  //   create: (_) => new ThemeNotifier(),
-  //   child: MyApp(),
-  // ));
-  // runApp(
-  //   ChangeNotifierProvider<ThemeNotifier>(
-  //     create:(context)=> userProvider(),
-  //      child:  MyApp(),
-  //   ),
-  // );
-
-  runApp(
-    MultiProvider(
+  final runnableApp = _buildRunnableApp(
+    isWeb: kIsWeb,
+    webAppWidth: 412.0,
+    app: MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => EventProvider(api: api)),
         ChangeNotifierProvider(create: (context) {
@@ -126,9 +118,10 @@ void main() async{
           var userProv = userProvider();
 
           supabase.auth.onAuthStateChange.listen((event) async {
-          Session? session = supabase.auth.currentSession;
+            Session? session = supabase.auth.currentSession;
             if (session != null) {
-              userProv.JWT = session.accessToken; 
+              userProv.JWT = session.accessToken;
+
               print('JWT Token refreshed: ${session.accessToken}');
             } else {
               print('Session expired or user not signed in.');
@@ -142,7 +135,28 @@ void main() async{
       child: const MyApp(),
     ),
   );
+
+  runApp(runnableApp);
 }
+
+Widget _buildRunnableApp({
+  required bool isWeb,
+  required double webAppWidth,
+  required Widget app,
+  }) {
+    if (!isWeb) {
+      return app;
+    }
+
+    return Center(
+      child: ClipRect(
+        child: SizedBox(
+          width: webAppWidth,
+          child: app,
+        ),
+      ),
+    );
+  }
 
 final supabase = Supabase.instance.client;
 

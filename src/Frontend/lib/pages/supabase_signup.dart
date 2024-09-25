@@ -28,22 +28,27 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
   late Color myColor;
   late Size mediaSize;
 
-  @override
-  void initState() {
-    super.initState();
-    _authSubscription = supabase.auth.onAuthStateChange.listen((event) {
-      final session = event.session;
-      if (session != null) {
-        Navigator.of(context).pushReplacementNamed('/login');
-      }
-    });
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _authSubscription = supabase.auth.onAuthStateChange.listen((event) {
+  //     final session = event.session;
+  //     if (session != null) {
+  //       Navigator.of(context).pushReplacementNamed('/login');
+  //     }
+  //   });
+  // }
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
-    _authSubscription.cancel();
+    // _authSubscription.cancel();
+
+     _fullnameController.dispose();
+
+    // _authSubscription.cancel();
+
     super.dispose();
   }
 
@@ -154,10 +159,15 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
                     .signUp(email: email, password: password);
                 if (mounted) {
                   print("CALLING USERNAME INPUT");
+                  Provider.of<userProvider>(context, listen: false).JWT =
+                      supabase.auth.currentSession!.accessToken;
+
+                  Provider.of<userProvider>(context, listen: false).JWT =
+                      supabase.auth.currentSession!.accessToken;
                   await _usernameInput(); // Ensure the username is saved
                   ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text("Signed up successfully")));
-                  Navigator.of(context).pushReplacementNamed('/login');
+
                 }
               } on AuthException catch (error) {
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -180,17 +190,17 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
 
   Future<void> _usernameInput() async {
     final user = supabase.auth.currentUser;
-    String fullname = _fullnameController.text;
-    print('Username: $fullname');
+    String name = _fullnameController.text;
+    print('Username: $name');
     userProvider userP = Provider.of<userProvider>(context, listen: false);
     EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
     Api api = Api();
-    api.postUsername(fullname, user!.id).then((response) {
+    user!;
+    api.postUsername(name, userP.JWT).then((response) {
       if (response['error'] != null) {
         print('An error occurred: ${response['error']}');
       } else {
         print('Username added successfully');
-        String fullName = response['data']['user']['fullName'] ?? 'Unknown';
         String userEmail = user.userMetadata?['email'];
         String UserId = user.id;
         String role = response['data']['user']['role'] ?? 'Unknown';
@@ -198,18 +208,19 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
             response['data']['user']['profileImage'] ?? 'Unknown';
 
         userP.userId = user.id;
-        userP.Fullname = fullName;
+        userP.Fullname = name;
         userP.email = userEmail;
         userP.role = role;
         userP.profileImage = profileImage;
-        eventP.refreshRecommendations(userP.userId);
-        eventP.refreshSavedEvents(userP.JWT);
+        eventP.refreshEvents(userP.JWT);
+        eventP.refreshRecommendations(userP.JWT);
+        // eventP.refreshSavedEvents(userP.JWT);
         notificationProvider _notificationProvider =
         Provider.of<notificationProvider>(context, listen: false);
 
-        _notificationProvider.refreshNotifications(userP.userId);
-        SocketService('http://${globals.domain}:8082',_notificationProvider, userP.userId, context);
-        userP.Generalusers(userP.userId);
+        _notificationProvider.refreshNotifications(userP.JWT);
+        SocketService('https://${globals.liveNotificationService}',_notificationProvider, userP.JWT, context);
+        userP.Generalusers(userP.JWT);
 
 
         Navigator.push(
