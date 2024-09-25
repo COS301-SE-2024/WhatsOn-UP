@@ -12,6 +12,9 @@ class AnalyticsDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final bool isDarkMode = theme.brightness == Brightness.dark;
+
     final monthlySummaries = (userData['monthlySummaries'] as List)
         .map((summary) => MonthlySummary.fromJson(summary))
         .toList();
@@ -22,45 +25,98 @@ class AnalyticsDetailPage extends StatelessWidget {
         title: Text(name),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            if (monthlySummaries.isNotEmpty) ...[
-              SizedBox(
-                height: 300,
-                child: AnalyticsChartPage(monthlySummaries: monthlySummaries), // Average Rating Over Time
-              ),
-              SizedBox(
-                height: 300,
-                child: RatingDistributionChart(monthlySummaries: monthlySummaries), // Rating Distribution
-              ),
-              SizedBox(
-                height: 300,
-                child: FeedbackDistributionChart(monthlySummaries: monthlySummaries), // Feedback Distribution
-              ),
-            ] else
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.6,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.info_outline, size: 64, color: Color.fromARGB(255, 119, 119, 119),),
-                    SizedBox(height: 16),
-                    Center(
-                      child: Text(
-                        'No monthly data available for $name',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: const Color.fromARGB(255, 119, 119, 119),
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ],
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              if (monthlySummaries.isNotEmpty) ...[
+                _buildSectionHeader('Average Rating Over Time', Icons.star),
+                Card(
+                  color: isDarkMode ? Colors.grey[800] : Colors.blueGrey.shade50,
+                  elevation: 4,
+                  margin: const EdgeInsets.symmetric(vertical: 8),
+                  child: SizedBox(
+                    height: 300,
+                    child: AnalyticsChartPage(monthlySummaries: monthlySummaries), // Average Rating Over Time
+                  ),
                 ),
-              ),
-          ],
+              const SizedBox(height: 20),
+
+                _buildSectionHeader('Rating Distrubtion', Icons.bar_chart),
+                Card(
+                  color: isDarkMode ? Colors.grey[800] : Colors.blueGrey.shade50,
+                  elevation: 4,
+                  margin: const EdgeInsets.symmetric(vertical: 8),
+                  child: SizedBox(
+                    height: 300,
+                    child: RatingDistributionChart(monthlySummaries: monthlySummaries), // Rating Distribution
+                  ),
+                ),
+              const SizedBox(height: 20),
+
+                _buildSectionHeader('Feedback Distribution', Icons.pie_chart),
+                Card(
+                  color: isDarkMode ? Colors.grey[800] : Colors.blueGrey.shade50,
+                  elevation: 4,
+                  margin: const EdgeInsets.symmetric(vertical: 8),
+                  child: SizedBox(
+                    height: 300,
+                    child: FeedbackDistributionChart(monthlySummaries: monthlySummaries), // Feedback Distribution
+                  ),
+                ),
+                const SizedBox(height: 20),
+
+                _buildSectionHeader('Event Duration vs Average Rating', Icons.scatter_plot),
+                Card(
+                  color: isDarkMode ? Colors.grey[800] : Colors.blueGrey.shade50,
+                  elevation: 4,
+                  margin: const EdgeInsets.symmetric(vertical: 8),
+                  child: SizedBox(
+                    height: 300,
+                    child: EventDurationVsRatingChart(monthlySummaries: monthlySummaries), // Event Duration vs Average Rating
+                  ),
+                ),
+              ] else
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.6,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.info_outline, size: 64, color: Color.fromARGB(255, 119, 119, 119),),
+                      SizedBox(height: 16),
+                      Center(
+                        child: Text(
+                          'No monthly data available for $name',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: const Color.fromARGB(255, 119, 119, 119),
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+            ],
+          ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildSectionHeader(String title, IconData icon) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Row(
+        children: [
+          Icon(icon, size: 28, color: Colors.blueGrey),
+          const SizedBox(width: 8),
+          Text(
+            title,
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+        ],
       ),
     );
   }
@@ -74,7 +130,7 @@ class AnalyticsChartPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SfCartesianChart(
-      title: const ChartTitle(text: 'Average Rating Over Time'),
+      // title: const ChartTitle(text: 'Average Rating Over Time'),
       legend: const Legend(isVisible: true),
       tooltipBehavior: TooltipBehavior(enable: true),
       primaryXAxis: const CategoryAxis(),
@@ -106,7 +162,7 @@ class RatingDistributionChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SfCartesianChart(
-      title: ChartTitle(text: 'Rating Distribution'),
+      // title: ChartTitle(text: 'Rating Distribution'),
       legend: Legend(isVisible: true),
       tooltipBehavior: TooltipBehavior(enable: true),
       primaryXAxis: CategoryAxis(),
@@ -142,7 +198,7 @@ class FeedbackDistributionChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SfCircularChart(
-      title: ChartTitle(text: 'Feedback Distribution'),
+      // title: ChartTitle(text: 'Feedback Distribution'),
       legend: Legend(isVisible: true),
       series: <CircularSeries>[
         PieSeries<MonthlySummary, String>(
@@ -164,7 +220,7 @@ class EventDurationVsRatingChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SfCartesianChart(
-      title: ChartTitle(text: 'Event Duration vs Average Rating'),
+      // title: ChartTitle(text: 'Event Duration vs Average Rating'),
       legend: Legend(isVisible: true),
       tooltipBehavior: TooltipBehavior(enable: true),
       primaryXAxis: NumericAxis(title: AxisTitle(text: 'Duration (hours)')),

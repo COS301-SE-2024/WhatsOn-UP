@@ -182,7 +182,6 @@ class _AdminAnalyticsPageState extends State<AdminAnalyticsPage> with SingleTick
             margin: const EdgeInsets.symmetric(vertical: 8),
             child: PopularEventsWidget(popularEvents: popularEvents), // Popular Events
           ),
-          // const Divider(color: Colors.grey, height: 20, thickness: 2, indent: 20, endIndent: 20),
           const SizedBox(height: 20),
           
           _buildSectionHeader('Average Rating Over Time', Icons.star),
