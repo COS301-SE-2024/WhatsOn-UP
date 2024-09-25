@@ -107,7 +107,7 @@ void main() {
 
       await tester.pumpAndSettle(const Duration(seconds: 5));
 
-      expect(find.byType(SfCartesianChart), findsNWidgets(2));
+      expect(find.byType(SfCartesianChart), findsNWidgets(3));
       expect(find.byType(SfCircularChart), findsOneWidget);
     });
 

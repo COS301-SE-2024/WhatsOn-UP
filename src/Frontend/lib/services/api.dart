@@ -1378,28 +1378,28 @@ else{
   }
 
   Future<Map<String, dynamic>> getHostPopularEvents(String JWT) async {
-  final String getHostPopularEventsURL = 'https://${globals.gatewayDomain}/analytics/host/get_popular_events';
+    final String getHostPopularEventsURL = 'https://${globals.gatewayDomain}/analytics/host/get_popular_events';
 
-  var headers = {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json',
-    'Authorization': 'Bearer $JWT',
-  };
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $JWT',
+    };
 
-  try {
-    var response = await http.get(Uri.parse(getHostPopularEventsURL), headers: headers);
+    try {
+      var response = await http.get(Uri.parse(getHostPopularEventsURL), headers: headers);
 
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } 
+      else {
+        throw Exception(jsonDecode(response.body));
+      }
     } 
-    else {
-      throw Exception(jsonDecode(response.body));
+    catch (e) {
+      throw Exception(e.toString());
     }
-  } 
-  catch (e) {
-    throw Exception(e.toString());
   }
-}
 
   Future<void> markSeen(String eventID, String JWT) async {
     final url = 'https://${globals.gatewayDomain}/notifications/mark_read/$eventID';
@@ -1425,28 +1425,28 @@ else{
   }
 
   Future<Map<String, dynamic>> getAutofillData(String JWT, String eventName, String eventDescription) async {
-  final String getAutofillDataURL = 'https://${globals.gatewayDomain}/analytics/host/generate_autofill?description=$eventDescription&title=$eventName';
+    final String getAutofillDataURL = 'https://${globals.gatewayDomain}/analytics/host/generate_autofill?description=$eventDescription&title=$eventName';
 
-  var headers = {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json',
-    'Authorization': 'Bearer $JWT',
-  };
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $JWT',
+    };
 
-  try {
-    var response = await http.get(Uri.parse(getAutofillDataURL), headers: headers);
+    try {
+      var response = await http.get(Uri.parse(getAutofillDataURL), headers: headers);
 
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } 
+      else {
+        throw Exception(jsonDecode(response.body));
+      }
     } 
-    else {
-      throw Exception(jsonDecode(response.body));
+    catch (e) {
+      throw Exception(e.toString());
     }
-  } 
-  catch (e) {
-    throw Exception(e.toString());
   }
-}
 
 
 
