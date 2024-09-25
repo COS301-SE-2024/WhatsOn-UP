@@ -122,6 +122,25 @@ class AnalyticsDetailPage extends StatelessWidget {
   }
 }
 
+String _getMonthAbbreviation(String month) {
+    const monthAbbreviations = {
+      'JANUARY': 'JAN',
+      'FEBRUARY': 'FEB',
+      'MARCH': 'MAR',
+      'APRIL': 'APR',
+      'MAY': 'MAY',
+      'JUNE': 'JUN',
+      'JULY': 'JUL',
+      'AUGUST': 'AUG',
+      'SEPTEMBER': 'SEP',
+      'OCTOBER': 'OCT',
+      'NOVEMBER': 'NOV',
+      'DECEMBER': 'DEC',
+    };
+
+    return monthAbbreviations[month.toUpperCase()] ?? month;
+  }
+
 class AnalyticsChartPage extends StatelessWidget {
   final List<MonthlySummary> monthlySummaries;
 
@@ -144,7 +163,7 @@ class AnalyticsChartPage extends StatelessWidget {
         LineSeries<MonthlySummary, String>(
           name: 'Average Rating',
           dataSource: monthlySummaries,
-          xValueMapper: (MonthlySummary summary, _) => summary.month,
+          xValueMapper: (MonthlySummary summary, _) => _getMonthAbbreviation(summary.month),
           yValueMapper: (MonthlySummary summary, _) => summary.averageRating,
           markerSettings: const MarkerSettings(isVisible: true),
           dataLabelSettings: const DataLabelSettings(isVisible: true),
@@ -169,19 +188,19 @@ class RatingDistributionChart extends StatelessWidget {
       series: <ColumnSeries>[
         ColumnSeries<MonthlySummary, String>(
           dataSource: monthlySummaries,
-          xValueMapper: (MonthlySummary summary, _) => summary.month,
+          xValueMapper: (MonthlySummary summary, _) => _getMonthAbbreviation(summary.month),
           yValueMapper: (MonthlySummary summary, _) => summary.lowestRating,
           name: 'Lowest Rating',
         ),
         ColumnSeries<MonthlySummary, String>(
           dataSource: monthlySummaries,
-          xValueMapper: (MonthlySummary summary, _) => summary.month,
+          xValueMapper: (MonthlySummary summary, _) => _getMonthAbbreviation(summary.month),
           yValueMapper: (MonthlySummary summary, _) => summary.averageRating,
           name: 'Average Rating',
         ),
         ColumnSeries<MonthlySummary, String>(
           dataSource: monthlySummaries,
-          xValueMapper: (MonthlySummary summary, _) => summary.month,
+          xValueMapper: (MonthlySummary summary, _) => _getMonthAbbreviation(summary.month),
           yValueMapper: (MonthlySummary summary, _) => summary.highestRating,
           name: 'Highest Rating',
         ),
@@ -203,7 +222,7 @@ class FeedbackDistributionChart extends StatelessWidget {
       series: <CircularSeries>[
         PieSeries<MonthlySummary, String>(
           dataSource: monthlySummaries,
-          xValueMapper: (MonthlySummary summary, _) => summary.month,
+          xValueMapper: (MonthlySummary summary, _) => _getMonthAbbreviation(summary.month),
           yValueMapper: (MonthlySummary summary, _) => summary.feedbackRatio,
           dataLabelSettings: DataLabelSettings(isVisible: true),
         ),

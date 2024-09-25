@@ -424,24 +424,24 @@ double _roundNum(double value) {
   return double.parse(value.toStringAsFixed(2));
 }
 
-  String _getMonthAbbreviation(String month) {
-    const monthAbbreviations = {
-      'JANUARY': 'JAN',
-      'FEBRUARY': 'FEB',
-      'MARCH': 'MAR',
-      'APRIL': 'APR',
-      'MAY': 'MAY',
-      'JUNE': 'JUN',
-      'JULY': 'JUL',
-      'AUGUST': 'AUG',
-      'SEPTEMBER': 'SEP',
-      'OCTOBER': 'OCT',
-      'NOVEMBER': 'NOV',
-      'DECEMBER': 'DEC',
-    };
+String _getMonthAbbreviation(String month) {
+  const monthAbbreviations = {
+    'JANUARY': 'JAN',
+    'FEBRUARY': 'FEB',
+    'MARCH': 'MAR',
+    'APRIL': 'APR',
+    'MAY': 'MAY',
+    'JUNE': 'JUN',
+    'JULY': 'JUL',
+    'AUGUST': 'AUG',
+    'SEPTEMBER': 'SEP',
+    'OCTOBER': 'OCT',
+    'NOVEMBER': 'NOV',
+    'DECEMBER': 'DEC',
+  };
 
-    return monthAbbreviations[month.toUpperCase()] ?? month;
-  }
+  return monthAbbreviations[month.toUpperCase()] ?? month;
+}
 
 class AnalyticsChartPage extends StatelessWidget {
   final List<MonthlySummary> monthlySummaries;
