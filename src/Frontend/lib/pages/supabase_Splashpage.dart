@@ -32,6 +32,7 @@ class _SplashPageState extends State<SplashPage> {
     final session = supabase.auth.currentSession;
     if (!mounted) return;
     if (session != null) {
+
       userP.JWT=session?.accessToken;
       await _login();
     } else {
@@ -85,8 +86,9 @@ class _SplashPageState extends State<SplashPage> {
         userP.email = userEmail;
         userP.role = role;
         userP.profileImage = profileImage;
+        eventP.refreshEvents(userP.JWT);
         eventP.refreshRecommendations(userP.JWT);
-        eventP.refreshSavedEvents(userP.JWT);
+        // eventP.refreshSavedEvents(userP.JWT);
         notificationProvider _notificationProvider =
         Provider.of<notificationProvider>(context, listen: false);
         _notificationProvider.refreshNotifications(userP.JWT);

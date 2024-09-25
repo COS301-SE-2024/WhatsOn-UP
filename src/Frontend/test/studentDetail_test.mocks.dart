@@ -129,10 +129,10 @@ class MockApi extends _i1.Mock implements _i3.Api {
       ) as _i5.Future<Map<String, dynamic>>);
 
   @override
-  _i5.Future<List<_i6.Event>> getAllEvents() => (super.noSuchMethod(
+  _i5.Future<List<_i6.Event>> getAllEvents(String? JWT) => (super.noSuchMethod(
         Invocation.method(
           #getAllEvents,
-          [],
+          [JWT],
         ),
         returnValue: _i5.Future<List<_i6.Event>>.value(<_i6.Event>[]),
       ) as _i5.Future<List<_i6.Event>>);
@@ -411,13 +411,13 @@ class MockApi extends _i1.Mock implements _i3.Api {
       ) as _i5.Future<Map<String, dynamic>>);
 
   @override
-  _i5.Future<List<dynamic>> getAllEventsGuest() => (super.noSuchMethod(
+  _i5.Future<List<_i6.Event>> getAllEventsGuest() => (super.noSuchMethod(
         Invocation.method(
           #getAllEventsGuest,
           [],
         ),
-        returnValue: _i5.Future<List<dynamic>>.value(<dynamic>[]),
-      ) as _i5.Future<List<dynamic>>);
+        returnValue: _i5.Future<List<_i6.Event>>.value(<_i6.Event>[]),
+      ) as _i5.Future<List<_i6.Event>>);
 
   @override
   _i5.Future<Map<String, dynamic>> updateEvent({
@@ -427,9 +427,9 @@ class MockApi extends _i1.Mock implements _i3.Api {
     required String? description,
     required DateTime? startDate,
     required DateTime? endDate,
-    required String? location,
+    required String? locationId,
     int? maxParticipants,
-    String? metadata,
+    Map<String, String>? metadata,
     bool? isPrivate = false,
     List<String>? media,
   }) =>
@@ -444,7 +444,7 @@ class MockApi extends _i1.Mock implements _i3.Api {
             #description: description,
             #startDate: startDate,
             #endDate: endDate,
-            #location: location,
+            #locationId: locationId,
             #maxParticipants: maxParticipants,
             #metadata: metadata,
             #isPrivate: isPrivate,

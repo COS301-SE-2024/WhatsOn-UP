@@ -151,6 +151,19 @@ class AdminService {
         }
     }
 
+    fun getPastEvents(): ResponseEntity<ResponseDto> {
+        val events = pastEventsRepo.findPastEvents(null)
+
+        val eventsDto = events
+            .map { event -> EventDto(event) }
+            .groupBy { eventDto -> eventDto.startDateTime.month }
+            .mapValues { (_, eventDtos) -> eventDtos.sortedBy { it.startDateTime } }
+
+
+        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto)
+        )
+    }
+
     fun getForAllHosts(): ResponseEntity<ResponseDto> {
         val hosts = userRepo.findAllUsers()
         val details: List<Map<String, Map<String, Any>>> = hosts.map { host ->
@@ -165,7 +178,8 @@ class AdminService {
             mapOf(
                 host.fullName to mapOf(
                     "monthlySummaries" to monthlySummaries,
-                    "overallSummary" to overallSummary
+                    "overallSummary" to overallSummary,
+                    "profileImage" to host.profileImage
                 )
             )
         }

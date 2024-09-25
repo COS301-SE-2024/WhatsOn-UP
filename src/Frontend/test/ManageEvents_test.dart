@@ -62,7 +62,7 @@ void main() {
       mockEventProvider = MockEventProvider();
       mockUserProvider = MockuserProvider();
       when(mockUserProvider.Fullname).thenReturn('User Name');
-      when(mockApi.getAllEvents()).thenAnswer((_) async =>
+      when(mockApi.getAllEvents('JWT')).thenAnswer((_) async =>
       [
         Event(
           id: '1',

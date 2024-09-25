@@ -358,7 +358,7 @@ Widget build(BuildContext context) {
           TextButton(
           // ElevatedButton(
               onPressed: () {
-                Navigator.push(
+                Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
                       builder: (context) => const SupabaseSignup()),
@@ -438,8 +438,7 @@ Widget build(BuildContext context) {
 
     if (isGuest) {
       userP.setGuestUser();
-      // eventP.fetchfortheFirstTimeRsvp('guest');
-      // Skip getting events
+      eventP.refreshEvents('');
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const HomePage()),
@@ -478,10 +477,14 @@ Widget build(BuildContext context) {
             userP.role = role;
             userP.profileImage = profileImage;
 
-            eventP.refreshRecommendations(userP.JWT);
+             api.JWT=userP.JWT;
+
+             await eventP.refreshEvents(userP.JWT);
+
+            await eventP.refreshRecommendations(userP.JWT);
             notificationProvider _notificationProvider =
                 Provider.of<notificationProvider>(context, listen: false);
-             eventP.refreshSavedEvents(userP.JWT);
+             // eventP.refreshSavedEvents(userP.JWT);
             _notificationProvider.refreshNotifications(userP.JWT);
             SocketService('https://${globals.liveNotificationService}',
                 _notificationProvider, userP.JWT, context);

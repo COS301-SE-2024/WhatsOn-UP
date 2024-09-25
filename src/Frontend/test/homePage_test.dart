@@ -91,65 +91,65 @@ void main() {
               invitees: [], saved: true,
             ),
           ]);
-      when(mockEventProvider.eventsSaved).thenAnswer((_) async => [
-            Event(
-              id: '1',
-              nameOfEvent: 'Test Event 1 RSVP',
-              venue: null,
-              description: 'Test Description 1',
-              imageUrls: [],
-              hosts: [],
-              startTime: '2022-01-01T10:00:00.000Z',
-              endTime: '2022-01-01T12:00:00.000Z',
-              maxAttendees: 100,
-              isPrivate: true,
-              attendees: [],
-              metadata: Metadata(
-                mentors: [],
-                categories: [],
-                sessions: [],
-              ),
-              invitees: [], saved: true,
-            ),
-            Event(
-              id: '2',
-              nameOfEvent: 'Test Event 2 RSVP',
-              venue: null,
-              description: 'Test Description 2',
-              imageUrls: [],
-              hosts: [],
-              startTime: '2022-01-02T10:00:00.000Z',
-              endTime: '2022-01-02T12:00:00.000Z',
-              maxAttendees: 150,
-              isPrivate: false,
-              attendees: [],
-              metadata: Metadata(
-                mentors: [],
-                categories: [],
-                sessions: [],
-              ),
-              invitees: [], saved: true,
-            ),
-            Event(
-              id: '3',
-              nameOfEvent: 'Test Event 3 RSVP',
-              venue: null,
-              description: 'Test Description 3',
-              imageUrls: [],
-              hosts: [],
-              startTime: '2022-01-03T10:00:00.000Z',
-              endTime: '2022-01-03T12:00:00.000Z',
-              maxAttendees: 200,
-              isPrivate: false,
-              attendees: [],
-              metadata: Metadata(
-                mentors: [],
-                categories: [],
-                sessions: [],
-              ),
-              invitees: [], saved: true,
-            ),
-          ]);
+      // when(mockEventProvider.eventsSaved).thenAnswer((_) async => [
+      //       Event(
+      //         id: '1',
+      //         nameOfEvent: 'Test Event 1 RSVP',
+      //         venue: null,
+      //         description: 'Test Description 1',
+      //         imageUrls: [],
+      //         hosts: [],
+      //         startTime: '2022-01-01T10:00:00.000Z',
+      //         endTime: '2022-01-01T12:00:00.000Z',
+      //         maxAttendees: 100,
+      //         isPrivate: true,
+      //         attendees: [],
+      //         metadata: Metadata(
+      //           mentors: [],
+      //           categories: [],
+      //           sessions: [],
+      //         ),
+      //         invitees: [], saved: true,
+      //       ),
+      //       Event(
+      //         id: '2',
+      //         nameOfEvent: 'Test Event 2 RSVP',
+      //         venue: null,
+      //         description: 'Test Description 2',
+      //         imageUrls: [],
+      //         hosts: [],
+      //         startTime: '2022-01-02T10:00:00.000Z',
+      //         endTime: '2022-01-02T12:00:00.000Z',
+      //         maxAttendees: 150,
+      //         isPrivate: false,
+      //         attendees: [],
+      //         metadata: Metadata(
+      //           mentors: [],
+      //           categories: [],
+      //           sessions: [],
+      //         ),
+      //         invitees: [], saved: true,
+      //       ),
+      //       Event(
+      //         id: '3',
+      //         nameOfEvent: 'Test Event 3 RSVP',
+      //         venue: null,
+      //         description: 'Test Description 3',
+      //         imageUrls: [],
+      //         hosts: [],
+      //         startTime: '2022-01-03T10:00:00.000Z',
+      //         endTime: '2022-01-03T12:00:00.000Z',
+      //         maxAttendees: 200,
+      //         isPrivate: false,
+      //         attendees: [],
+      //         metadata: Metadata(
+      //           mentors: [],
+      //           categories: [],
+      //           sessions: [],
+      //         ),
+      //         invitees: [], saved: true,
+      //       ),
+      //     ]);
       when(mockEventProvider.recommendations).thenAnswer((_) async => [
             Event(
               id: '1',
@@ -354,7 +354,7 @@ void main() {
       });
 
       verify(mockEventProvider.eventsHome).called(greaterThanOrEqualTo(1));
-      verify(mockEventProvider.eventsSaved).called(greaterThanOrEqualTo(1));
+      // verify(mockEventProvider.eventsSaved).called(greaterThanOrEqualTo(1));
       verify(mockEventProvider.recommendations).called(greaterThanOrEqualTo(1));
     });
 
@@ -377,7 +377,7 @@ void main() {
         await tester.pump();
         expect(find.text('All Events'), findsOneWidget);
         expect(find.text('Event 1'), findsOneWidget);
-        expect(find.text('Recommended Events'), findsOneWidget);
+        expect(find.text('Personalised Events'), findsOneWidget);
         expect(find.text('Event 2'), findsOneWidget);
       });
     });
