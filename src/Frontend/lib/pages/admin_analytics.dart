@@ -209,7 +209,7 @@ class _AdminAnalyticsPageState extends State<AdminAnalyticsPage> with SingleTick
           ),
           const SizedBox(height: 20),
 
-          _buildSectionHeader('Feedback Ratio Over Time', Icons.feedback),
+          _buildSectionHeader('Feedback Ratio Over Time', Icons.reviews),
           Card(
             color: isDarkMode ? Colors.grey[800] : Colors.blueGrey.shade50,
             elevation: 4,
