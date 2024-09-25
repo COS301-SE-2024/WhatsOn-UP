@@ -522,6 +522,10 @@ class CapacityAttendanceChart extends StatelessWidget {
           legend: const Legend(isVisible: true),
           tooltipBehavior: TooltipBehavior(enable: true),
           primaryXAxis: const CategoryAxis(),
+          primaryYAxis: const NumericAxis(
+            minimum: 0,
+            maximum: 100,
+          ),
           series: <CartesianSeries>[
             ColumnSeries<MonthlySummary, String>(
               name: 'Capacity Ratio',
