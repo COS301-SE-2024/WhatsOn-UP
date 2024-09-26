@@ -748,7 +748,7 @@ class DurationChart extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Event Duration Over Time'),
+          title: const Text('Total Event Duration Per Month'),
           content: const Text(
             'This chart displays the total duration of all events that occurred each month. '
             'The duration is measured in hours. '
