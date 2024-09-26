@@ -240,28 +240,60 @@ class _HomePageState extends State<HomePage>
               children: [
                 Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: TextField(
-                    controller: _searchController,
-                    decoration: InputDecoration(
-                      hintText: 'Search for events',
-                      prefixIcon: const Icon(Icons.search),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(25.0),
-                      ),
-                    ),
-                    onSubmitted: (query) {
-                      if (query.isNotEmpty) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  SearchScreen(initialQuery: query)),
-                        );
-                      }
-                      _clearSearchInput();
-                    },
+                  child: AnimatedBuilder(
+                  animation: _animation,
+                    builder: (context, child) {
+                      return Container(
+                        padding: const EdgeInsets.all(2), // Border padding
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(25),
+                          border: Border.all(
+                            width: 3,
+                            color: Colors.transparent,
+                          ),
+                          gradient: LinearGradient(
+                            colors: const [
+                              Colors.purple,
+                              Colors.blue,
+                              Colors.cyan,
+                              Colors.green,
+                              Colors.yellow,
+                            ],
+                            stops: [0.0, 0.25, 0.5, 0.75, 1.0],
+                            transform: GradientRotation(pi * _animation.value),
+                          ),
+                        ),
+                        child: TextField(
+                          controller: _searchController,
+                          decoration: InputDecoration(
+                            hintText: 'Search for events',
+                            prefixIcon: const Icon(Icons.search),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(25.0),
+                              borderSide: BorderSide.none,
+                            ),
+                            filled: true,
+                            fillColor: Colors.white,
+                          ),
+                          onSubmitted: (query) {
+                            if (query.isNotEmpty) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        SearchScreen(initialQuery: query)),
+                              );
+                            }
+                            _clearSearchInput();
+                          },
+                        ),
+                      );
+                    }
                   ),
                 ),
+
+
+
                 Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: Row(
