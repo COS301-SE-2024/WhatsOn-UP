@@ -41,6 +41,10 @@ class AdminService {
             return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "User is an admin"))
         }
 
+        if (userModel.role!!.name == "HOST") {
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "User is already a host"))
+        }
+
         userModel.role = roleRepo.findByName("HOST")
 
         userRepo.save(userModel)
@@ -69,14 +73,6 @@ class AdminService {
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "User demoted to general successfully")))
     }
 
-    fun deleteUser(userId: UUID): ResponseEntity<ResponseDto> {
-        val user = userRepo.findById(userId)
-        if (user.isEmpty) {
-            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "User not found"))
-        }
-        userRepo.delete(user.get())
-        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "User deleted successfully")))
-    }
 
     fun acceptApplication(applicationId: UUID): ResponseEntity<ResponseDto> {
         val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
