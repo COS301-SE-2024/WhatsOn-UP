@@ -209,14 +209,6 @@ class UserService {
         )
     }
 
-    fun deleteUser(): ResponseEntity<ResponseDto> {
-        val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
-        userRepo.delete(user)
-
-        return ResponseEntity.ok(
-            ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Account deleted successfully"))
-        )
-    }
 
     @Autowired
     lateinit var mailSender: MailSender
@@ -315,7 +307,7 @@ class UserService {
             ?: return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Application not found"))
 
         if (applicationModel.status!!.name != "ACCEPTED") {
-            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Application not accepted"))
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Application not accepted yet"))
         }
 
         if (applicationModel.expiryDateTime!!.isBefore(LocalDateTime.now())) {
@@ -332,24 +324,24 @@ class UserService {
         )
     }
 
-    fun disputeApplication(): ResponseEntity<ResponseDto> {
-        val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
-
-        val application = hostApplicationsRepo.findByUserId(user.userId)
-        if (application.isEmpty()) {
-            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Application not found"))
-        }
-        val applicationModel = application[0]
-            ?: return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Application not found"))
-
-        if (applicationModel.status!!.name != "REJECTED") {
-            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Application not rejected"))
-        }
-        applicationModel.status = statusRepo.findByName("DISPUTED")
-        hostApplicationsRepo.save(applicationModel)
-        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Application disputed successfully"))
-        )
-    }
+//    fun disputeApplication(): ResponseEntity<ResponseDto> {
+//        val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
+//
+//        val application = hostApplicationsRepo.findByUserId(user.userId)
+//        if (application.isEmpty()) {
+//            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Application not found"))
+//        }
+//        val applicationModel = application[0]
+//            ?: return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Application not found"))
+//
+//        if (applicationModel.status!!.name != "REJECTED") {
+//            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Application not rejected"))
+//        }
+//        applicationModel.status = statusRepo.findByName("DISPUTED")
+//        hostApplicationsRepo.save(applicationModel)
+//        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Application disputed successfully"))
+//        )
+//    }
 
     fun rateEvent(eventId: UUID, rating: Int, comment: String?): ResponseEntity<ResponseDto> {
         val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
@@ -366,9 +358,6 @@ class UserService {
             return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Rating must be between 1 and 5"))
         }
 
-        if (comment != null && comment.length > 255) {
-            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Comment must be less than 255 characters"))
-        }
 
         val feedBack = FeedbackModel().apply {
             this.user = user
