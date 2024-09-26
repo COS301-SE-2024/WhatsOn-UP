@@ -20,6 +20,7 @@ import 'package:firstapp/pages/application_event.dart';
 import 'allHome_events.dart';
 import 'notifications.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'dart:math';
 class HomePage extends StatefulWidget {
   const HomePage({
     Key? key,
@@ -34,16 +35,25 @@ class _HomePageState extends State<HomePage>
   int _selectedIndex = 0;
   late TabController _tabController;
   final TextEditingController _searchController = TextEditingController();
+  late AnimationController _controller;
+  late Animation<double> _animation;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 20),
+    )..repeat();
+    _animation = Tween<double>(begin: 0, end: 1).animate(_controller);
   }
 
   @override
   void dispose() {
     _searchController.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
