@@ -232,7 +232,7 @@ class _AdminAnalyticsPageState extends State<AdminAnalyticsPage> with SingleTick
           ),
           const SizedBox(height: 20),
 
-          _buildSectionHeader('Event Duration Over Time', Icons.timer),
+          _buildSectionHeader('Total Event Duration Per Month', Icons.timer),
           Card(
             color: isDarkMode ? Colors.grey[800] : Colors.blueGrey.shade50,
             elevation: 4,
@@ -750,7 +750,7 @@ class DurationChart extends StatelessWidget {
         return AlertDialog(
           title: const Text('Event Duration Over Time'),
           content: const Text(
-            'This chart displays the average duration of events over time for all events. '
+            'This chart displays the total duration of all events that occurred each month. '
             'The duration is measured in hours. '
             'This information can help in understanding trends in event length and planning future events.'
           ),
