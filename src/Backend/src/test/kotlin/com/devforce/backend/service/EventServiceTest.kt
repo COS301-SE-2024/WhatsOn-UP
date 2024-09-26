@@ -24,6 +24,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
 import java.time.LocalDateTime
 import java.util.*
+import javax.swing.text.html.Option
 
 @AutoConfigureMockMvc
 class EventServiceTest {
@@ -56,15 +57,6 @@ class EventServiceTest {
         SecurityContextHolder.getContext().authentication = auth
     }
 
-//    @Test
-//    fun `test venue not found`() {
-//        val id = UUID.randomUUID()
-//        `when`(venueRepo.findByVenueId(id)).thenReturn(null)
-//        val response = eventService.createEvent(createEventDto)
-//
-//        assertEquals("error", response.body!!.status)
-//        assertEquals("Venue not found", response.body!!.data["message"])
-//    }
 
     @Test
     fun `!!!Create event success!!!`() {
@@ -139,6 +131,8 @@ class EventServiceTest {
 
         val response = eventServiceWithMocks.updateEvent(id, updateEventDto)
         assertEquals("success", response.body?.status)
+
+        `when`(eventRepo.save(event)).thenReturn(event).thenThrow()
     }
 
     @Test
@@ -216,6 +210,33 @@ class EventServiceTest {
         val response = eventServiceWithMocks.filterEvents(filterByDto)
 
         assertEquals("success", response.body?.status)
+    }
+
+    @Test
+    fun `Test update attendance`(){
+        val eventId = UUID.randomUUID()
+        val userId = UUID.randomUUID()
+        val attended = true;
+        `when`(eventRepo.updateAttendanceStatus(eventId, userId, attended)).thenReturn(0)
+
+        var response = eventServiceWithMocks.updateAttendanceStatus(eventId, userId, attended)
+
+        assertEquals("error", response.body?.status)
+
+        `when`(eventRepo.updateAttendanceStatus(eventId, userId, attended)).thenReturn(2)
+
+        response = eventServiceWithMocks.updateAttendanceStatus(eventId, userId, attended)
+
+        assertEquals("success", response.body?.status)
+
+        `when`(eventRepo.updateAttendanceStatus(eventId, userId, attended)).thenThrow(RuntimeException::class.java)
+
+        // Act: Test for error case when exception occurs
+        response = eventServiceWithMocks.updateAttendanceStatus(eventId, userId, attended)
+
+        // Assert: Check if the response status is "error"
+        assertEquals("error", response.body?.status)
+
     }
 
 }
