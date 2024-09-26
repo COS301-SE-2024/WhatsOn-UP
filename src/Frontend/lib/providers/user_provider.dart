@@ -162,7 +162,25 @@ class userProvider extends ChangeNotifier {
       throw Exception('Failed to load general users');
     }
   }
+  
+  Future<void> refreshApplications() async {
+    try {
+      _generalApplications = _fetchApplications(JWT);
+      notifyListeners();
+    } catch (e) {
+      throw Exception('Failed to refresh host applications: $e');
+    }
+  }
+
+  Future<GeneralApplications> _fetchApplications(String JWT) async {
+    try {
+      return await api.getGeneralusersToHost(JWT);
+    } catch (e) {
+      throw Exception('Failed to fetch host applications: $e');
+    }
+  }
 }
+
 
 class Status {
   final int id;

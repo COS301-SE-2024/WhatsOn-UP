@@ -31,8 +31,6 @@ class _AdminAnalyticsPageState extends State<AdminAnalyticsPage> with SingleTick
     userProvider userP = Provider.of<userProvider>(context, listen: false);
     try {
       final response = await api.getAllEventsAnalytics(userP.JWT);
-      // print('EVENTS ANALYTICS RESPONSE: $response');
-
       List<MonthlySummary> summaries = parseMonthlySummaries(response['data']);
 
       setState(() {
@@ -135,82 +133,161 @@ class _AdminAnalyticsPageState extends State<AdminAnalyticsPage> with SingleTick
   }
   
   Widget _buildAllEventsTab() {
-    if (isLoading) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
-    }
+  if (isLoading) {
+    return const Center(
+      child: CircularProgressIndicator(),
+    );
+  }
 
-    if (monthlySummaries.isEmpty) {
-      return const Center(
-        child: const Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.info_outline, size: 64, color: Color.fromARGB(255, 119, 119, 119),),
-            SizedBox(height: 16),
-            Center(
-              child: Text(
-                'No analytics data available.',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(255, 119, 119, 119),
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ],
-        ),
-      );
-    }
+    final theme = Theme.of(context);
+    final bool isDarkMode = theme.brightness == Brightness.dark;
 
-    return SingleChildScrollView(
+  if (monthlySummaries.isEmpty) {
+    return const Center(
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          Icon(Icons.info_outline, size: 64, color: Color.fromARGB(255, 119, 119, 119),),
+          SizedBox(height: 16),
+          Center(
+            child: Text(
+              'No analytics data available.',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Color.fromARGB(255, 119, 119, 119),
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  return SingleChildScrollView(
+    child: Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildSectionHeader('Top 5 Most Popular Events', Icons.trending_up),
           isPopularEventsLoading
           ? const Center(
               child: CircularProgressIndicator(),
             )
-          : PopularEventsWidget(popularEvents: popularEvents), // Popular Events
-          const Divider(
-            color: Colors.grey,
-            height: 20,
-            thickness: 2,
-            indent: 20,
-            endIndent: 20,
+          : Card(
+            color: isDarkMode ? Colors.grey[800] : Colors.blueGrey.shade50,
+            elevation: 4,
+            margin: const EdgeInsets.symmetric(vertical: 8),
+            child: PopularEventsWidget(popularEvents: popularEvents), // Popular Events
           ),
-          SizedBox(
-            height: 300,
-            child: AnalyticsChartPage(monthlySummaries: monthlySummaries), // Average Rating Over Time
+          const SizedBox(height: 20),
+          
+          _buildSectionHeader('Average Rating Over Time', Icons.star),
+          Card(
+            color: isDarkMode ? Colors.grey[800] : Colors.blueGrey.shade50,
+            elevation: 4,
+            margin: const EdgeInsets.symmetric(vertical: 8),
+            child: SizedBox(
+              height: 300,
+              child: AnalyticsChartPage(monthlySummaries: monthlySummaries), // Average Rating Over Time
+            ),
           ),
-          SizedBox(
-            height: 300,
-            child: CapacityAttendanceChart(monthlySummaries: monthlySummaries), // Capacity and Attendance Ratios
+          const SizedBox(height: 20),
+          
+          _buildSectionHeader('Capacity and Attendance Ratios', Icons.people),
+          Card(
+            color: isDarkMode ? Colors.grey[800] : Colors.blueGrey.shade50,
+            elevation: 4,
+            margin: const EdgeInsets.symmetric(vertical: 8),
+            child: SizedBox(
+              height: 300,
+              child: CapacityAttendanceChart(monthlySummaries: monthlySummaries), // Capacity and Attendance Ratios
+            ),
           ),
-          SizedBox(
-            height: 300,
-            child: FeedbackChart(monthlySummaries: monthlySummaries), // Feedback Ratio Over Time
+          const SizedBox(height: 20),
+
+          _buildSectionHeader('Feedback Ratio Over Time', Icons.reviews),
+          Card(
+            color: isDarkMode ? Colors.grey[800] : Colors.blueGrey.shade50,
+            elevation: 4,
+            margin: const EdgeInsets.symmetric(vertical: 8),
+            child: SizedBox(
+              height: 300,
+              child: FeedbackChart(monthlySummaries: monthlySummaries), // Feedback Ratio Over Time
+            ),
           ),
-          SizedBox(
-            height: 300,
-            child: RSVPChart(monthlySummaries: monthlySummaries), // RSVP Ratio Over Time
+          const SizedBox(height: 20),
+          
+          _buildSectionHeader('RSVP Ratio Over Time', Icons.event_available),
+          Card(
+            color: isDarkMode ? Colors.grey[800] : Colors.blueGrey.shade50,
+            elevation: 4,
+            margin: const EdgeInsets.symmetric(vertical: 8),
+            child: SizedBox(
+              height: 300,
+              child: RSVPChart(monthlySummaries: monthlySummaries), // RSVP Ratio Over Time
+            ),
           ),
-          SizedBox(
-            height: 300,
-            child: DurationChart(monthlySummaries: monthlySummaries), // Event Duration Over Time
+          const SizedBox(height: 20),
+
+          _buildSectionHeader('Event Duration Over Time', Icons.timer),
+          Card(
+            color: isDarkMode ? Colors.grey[800] : Colors.blueGrey.shade50,
+            elevation: 4,
+            margin: const EdgeInsets.symmetric(vertical: 8),
+            child: SizedBox(
+              height: 300,
+              child: DurationChart(monthlySummaries: monthlySummaries), // Event Duration Over Time
+            ),
           ),
-          SizedBox(
-            height: 300,
-            child: RatingDistributionChart(monthlySummaries: monthlySummaries), // Rating Distribution
+          const SizedBox(height: 20),
+
+          _buildSectionHeader('Rating Distribution', Icons.bar_chart),
+          Card(
+            color: isDarkMode ? Colors.grey[800] : Colors.blueGrey.shade50,
+            elevation: 4,
+            margin: const EdgeInsets.symmetric(vertical: 8),
+            child: SizedBox(
+              height: 300,
+              child: RatingDistributionChart(monthlySummaries: monthlySummaries), // Rating Distribution
+            ),
           ),
-          SizedBox(
-            height: 300,
-            child: SkewnessChart(monthlySummaries: monthlySummaries), // Skewness Over Time
+          const SizedBox(height: 20),
+
+          _buildSectionHeader('Skewness Over Time', Icons.insights),
+          Card(
+            color: isDarkMode ? Colors.grey[800] : Colors.blueGrey.shade50,
+            elevation: 4,
+            margin: const EdgeInsets.symmetric(vertical: 8),
+            child: SizedBox(
+              height: 300,
+              child: SkewnessChart(monthlySummaries: monthlySummaries), // Skewness Over Time
+            ),
           ),
         ],
       ),
-    );   
-  }
+    ),
+  );
+}
+
+Widget _buildSectionHeader(String title, IconData icon) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 8),
+    child: Row(
+      children: [
+        Icon(icon, size: 28, color: Colors.blueGrey),
+        const SizedBox(width: 8),
+        Text(
+          title,
+          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+      ],
+    ),
+  );
+}
+
 
   Widget _buildHostData() {
     if (isNamesLoading) {
@@ -347,7 +424,24 @@ double _roundNum(double value) {
   return double.parse(value.toStringAsFixed(2));
 }
 
+String _getMonthAbbreviation(String month) {
+  const monthAbbreviations = {
+    'JANUARY': 'JAN',
+    'FEBRUARY': 'FEB',
+    'MARCH': 'MAR',
+    'APRIL': 'APR',
+    'MAY': 'MAY',
+    'JUNE': 'JUN',
+    'JULY': 'JUL',
+    'AUGUST': 'AUG',
+    'SEPTEMBER': 'SEP',
+    'OCTOBER': 'OCT',
+    'NOVEMBER': 'NOV',
+    'DECEMBER': 'DEC',
+  };
 
+  return monthAbbreviations[month.toUpperCase()] ?? month;
+}
 
 class AnalyticsChartPage extends StatelessWidget {
   final List<MonthlySummary> monthlySummaries;
@@ -359,7 +453,7 @@ class AnalyticsChartPage extends StatelessWidget {
     return Stack(
       children: [
         SfCartesianChart(
-          title: const ChartTitle(text: 'Average Rating Over Time'),
+          // title: const ChartTitle(text: 'Average Rating Over Time'),
           legend: const Legend(isVisible: true),
           tooltipBehavior: TooltipBehavior(enable: true),
           primaryXAxis: const CategoryAxis(),
@@ -373,7 +467,7 @@ class AnalyticsChartPage extends StatelessWidget {
             LineSeries<MonthlySummary, String>(
               name: 'Average Rating',
               dataSource: monthlySummaries,
-              xValueMapper: (MonthlySummary summary, _) => summary.month,
+              xValueMapper: (MonthlySummary summary, _) =>  _getMonthAbbreviation(summary.month),
               yValueMapper: (MonthlySummary summary, _) => summary.averageRating,
               markerSettings: const MarkerSettings(isVisible: true),
               dataLabelSettings: const DataLabelSettings(isVisible: true),
@@ -424,22 +518,26 @@ class CapacityAttendanceChart extends StatelessWidget {
     return Stack(
       children: [
         SfCartesianChart(
-          title: const ChartTitle(text: 'Capacity & Attendance Ratios'),
+          // title: const ChartTitle(text: 'Capacity & Attendance Ratios'),
           legend: const Legend(isVisible: true),
           tooltipBehavior: TooltipBehavior(enable: true),
           primaryXAxis: const CategoryAxis(),
+          primaryYAxis: const NumericAxis(
+            minimum: 0,
+            maximum: 100,
+          ),
           series: <CartesianSeries>[
             ColumnSeries<MonthlySummary, String>(
               name: 'Capacity Ratio',
               dataSource: monthlySummaries,
-              xValueMapper: (MonthlySummary summary, _) => summary.month,
+              xValueMapper: (MonthlySummary summary, _) =>  _getMonthAbbreviation(summary.month),
               yValueMapper: (MonthlySummary summary, _) => summary.capacityRatio,
               dataLabelSettings: const DataLabelSettings(isVisible: true),
             ),
             ColumnSeries<MonthlySummary, String>(
               name: 'Attendance Ratio',
               dataSource: monthlySummaries,
-              xValueMapper: (MonthlySummary summary, _) => summary.month,
+              xValueMapper: (MonthlySummary summary, _) =>  _getMonthAbbreviation(summary.month),
               yValueMapper: (MonthlySummary summary, _) => summary.attendanceRatio,
               dataLabelSettings: const DataLabelSettings(isVisible: true),
             ),
@@ -491,7 +589,7 @@ class FeedbackChart extends StatelessWidget {
     return Stack(
       children: [
         SfCartesianChart(
-          title: const ChartTitle(text: 'Feedback Ratio Over Time'),
+          // title: const ChartTitle(text: 'Feedback Ratio Over Time'),
           legend: const Legend(isVisible: true),
           tooltipBehavior: TooltipBehavior(enable: true),
           primaryXAxis: const CategoryAxis(),
@@ -505,7 +603,7 @@ class FeedbackChart extends StatelessWidget {
             LineSeries<MonthlySummary, String>(
               name: 'Feedback Ratio',
               dataSource: monthlySummaries,
-              xValueMapper: (MonthlySummary summary, _) => summary.month,
+              xValueMapper: (MonthlySummary summary, _) =>  _getMonthAbbreviation(summary.month),
               yValueMapper: (MonthlySummary summary, _) => summary.feedbackRatio,
               markerSettings: const MarkerSettings(isVisible: true),
               dataLabelSettings: const DataLabelSettings(isVisible: true),
@@ -558,7 +656,7 @@ class RSVPChart extends StatelessWidget {
     return Stack(
       children: [
         SfCartesianChart(
-          title: const ChartTitle(text: 'RSVP Ratio Over Time'),
+          // title: const ChartTitle(text: 'RSVP Ratio Over Time'),
           legend: const Legend(isVisible: true),
           tooltipBehavior: TooltipBehavior(enable: true),
           primaryXAxis: const CategoryAxis(),
@@ -566,7 +664,7 @@ class RSVPChart extends StatelessWidget {
             LineSeries<MonthlySummary, String>(
               name: 'RSVP Ratio',
               dataSource: monthlySummaries,
-              xValueMapper: (MonthlySummary summary, _) => summary.month,
+              xValueMapper: (MonthlySummary summary, _) =>  _getMonthAbbreviation(summary.month),
               yValueMapper: (MonthlySummary summary, _) => summary.rsvpRatio,
               markerSettings: const MarkerSettings(isVisible: true),
               dataLabelSettings: const DataLabelSettings(isVisible: true),
@@ -618,7 +716,7 @@ class DurationChart extends StatelessWidget {
     return Stack(
       children: [
         SfCartesianChart(
-          title: const ChartTitle(text: 'Event Duration Over Time'),
+          // title: const ChartTitle(text: 'Event Duration Over Time'),
           legend: const Legend(isVisible: true),
           tooltipBehavior: TooltipBehavior(enable: true),
           primaryXAxis: const CategoryAxis(),
@@ -626,7 +724,7 @@ class DurationChart extends StatelessWidget {
             LineSeries<MonthlySummary, String>(
               name: 'Duration',
               dataSource: monthlySummaries,
-              xValueMapper: (MonthlySummary summary, _) => summary.month,
+              xValueMapper: (MonthlySummary summary, _) =>  _getMonthAbbreviation(summary.month),
               yValueMapper: (MonthlySummary summary, _) => summary.duration,
               markerSettings: const MarkerSettings(isVisible: true),
               dataLabelSettings: const DataLabelSettings(isVisible: true),
@@ -679,29 +777,33 @@ class RatingDistributionChart extends StatelessWidget {
     return Stack(
       children: [
         SfCartesianChart(
-          title: const ChartTitle(text: 'Rating Distribution'),
+          // title: const ChartTitle(text: 'Rating Distribution'),
           legend: const Legend(isVisible: true),
           tooltipBehavior: TooltipBehavior(enable: true),
           primaryXAxis: const CategoryAxis(),
+          primaryYAxis: const NumericAxis(
+            minimum: 0,
+            maximum: 5,
+          ),
           series: <CartesianSeries>[
             ColumnSeries<MonthlySummary, String>(
               name: 'Highest Rating',
               dataSource: monthlySummaries,
-              xValueMapper: (MonthlySummary summary, _) => summary.month,
+              xValueMapper: (MonthlySummary summary, _) =>  _getMonthAbbreviation(summary.month),
               yValueMapper: (MonthlySummary summary, _) => summary.highestRating,
               dataLabelSettings: const DataLabelSettings(isVisible: true),
             ),
             ColumnSeries<MonthlySummary, String>(
               name: 'Median Rating',
               dataSource: monthlySummaries,
-              xValueMapper: (MonthlySummary summary, _) => summary.month,
+              xValueMapper: (MonthlySummary summary, _) =>  _getMonthAbbreviation(summary.month),
               yValueMapper: (MonthlySummary summary, _) => summary.medianRating,
               dataLabelSettings: const DataLabelSettings(isVisible: true),
             ),
             ColumnSeries<MonthlySummary, String>(
               name: 'Lowest Rating',
               dataSource: monthlySummaries,
-              xValueMapper: (MonthlySummary summary, _) => summary.month,
+              xValueMapper: (MonthlySummary summary, _) =>  _getMonthAbbreviation(summary.month),
               yValueMapper: (MonthlySummary summary, _) => summary.lowestRating,
               dataLabelSettings: const DataLabelSettings(isVisible: true),
             ),
@@ -752,7 +854,7 @@ class SkewnessChart extends StatelessWidget {
     return Stack(
       children: [
         SfCartesianChart(
-          title: const ChartTitle(text: 'Skewness Over Time'),
+          // title: const ChartTitle(text: 'Skewness Over Time'),
           legend: const Legend(isVisible: true),
           tooltipBehavior: TooltipBehavior(enable: true),
           primaryXAxis: const CategoryAxis(),
@@ -766,7 +868,7 @@ class SkewnessChart extends StatelessWidget {
             LineSeries<MonthlySummary, String>(
               name: 'Skewness',
               dataSource: monthlySummaries,
-              xValueMapper: (MonthlySummary summary, _) => summary.month,
+              xValueMapper: (MonthlySummary summary, _) =>  _getMonthAbbreviation(summary.month),
               yValueMapper: (MonthlySummary summary, _) => summary.skewness,
               markerSettings: const MarkerSettings(isVisible: true),
               dataLabelSettings: const DataLabelSettings(isVisible: true),
@@ -859,13 +961,13 @@ class _PopularEventsWidgetState extends State<PopularEventsWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Text(
-            'Top 5 most Popular Events',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-        ),
+        // const Padding(
+        //   padding: EdgeInsets.all(16.0),
+        //   child: Text(
+        //     'Top 5 most Popular Events',
+        //     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        //   ),
+        // ),
         SizedBox(
           height: 200,
           child: ListView.builder(

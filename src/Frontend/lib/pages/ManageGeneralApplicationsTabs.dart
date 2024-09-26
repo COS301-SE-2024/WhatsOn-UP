@@ -11,33 +11,46 @@ class TabGeneral extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    userProvider userP = Provider.of<userProvider>(context, listen: true);
     return DefaultTabController(
-      length: 4,
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Manage General Applications'),
-          bottom: const TabBar(
-            tabs: [
-              Tab(text: 'All'),
-              Tab(text: 'Pending'),
-              Tab(text: 'Verified'),
-              Tab(text: 'Promoted'),
-            ],
-            labelColor: Color.fromARGB(255, 149, 137, 74),
-            unselectedLabelColor: Colors.black,
-            indicatorColor: Color.fromARGB(255, 149, 137, 74),
-          ),
-        ),
-        body: const TabBarView(
-          children: [
-            UserList(statusFilter: null),
-            UserList(statusFilter: 'PENDING'),
-            UserList(statusFilter: 'VERIFIED'),
-            UserList(statusFilter: 'ACKNOWLEDGED'),
-          ],
-        ),
+  length: 4,
+  child: Scaffold(
+    appBar: AppBar(
+      title: const Text('Manage General Applications'),
+      bottom: const TabBar(
+        tabs: [
+          Tab(text: 'All'),
+          Tab(text: 'Pending'),
+          Tab(text: 'Verified'),
+          Tab(text: 'Promoted'),
+        ],
+        labelColor: Color.fromARGB(255, 149, 137, 74),
+        unselectedLabelColor: Colors.black,
+        indicatorColor: Color.fromARGB(255, 149, 137, 74),
       ),
-    );
+    ),
+    body: TabBarView(
+      children: [
+        RefreshIndicator(
+          onRefresh: userP.refreshApplications,
+          child: const UserList(statusFilter: null),
+        ),
+        RefreshIndicator(
+          onRefresh: userP.refreshApplications,
+          child: const UserList(statusFilter: 'PENDING'),
+        ),
+        RefreshIndicator(
+          onRefresh: userP.refreshApplications,
+          child: const UserList(statusFilter: 'VERIFIED'),
+        ),
+        RefreshIndicator(
+          onRefresh: userP.refreshApplications,
+          child: const UserList(statusFilter: 'ACKNOWLEDGED'),
+        ),
+      ],
+    ),
+  ),
+);
   }
 }
 
@@ -162,6 +175,47 @@ class _ApplicantState extends State<Applicant> {
     }
   }
 
+  void _showStatusInfo(String status) {
+    String infoMessage;
+    switch (status) {
+      case 'PENDING':
+        infoMessage = 'A verification link has been sent to the user\'s email to verify their identity, or the user has uploaded their hosting proof and is waiting for approval.';
+      case 'VERIFIED':
+        infoMessage = 'The user has verified through the verification link sent to their email.';
+        break;
+      case 'REJECTED':
+        infoMessage = 'The application was rejected by an admin, or the user\'s privileges have been revoked.';
+        break;
+      case 'DISPUTED':
+        infoMessage = 'The application is under dispute.'; //not implemented yet
+        break;
+      case 'ACKNOWLEDGED':
+        infoMessage = 'The application has been approved by an admin and the user has acknowledged that they have been accepted.'; 
+        break;
+      default:
+        infoMessage = 'Error getting status information.';
+        break;
+    }
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Status Information'),
+          content: Text(infoMessage),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -251,6 +305,16 @@ class _ApplicantState extends State<Applicant> {
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
                         ),
+                      ),
+                      SizedBox(width: 8),
+                      IconButton(
+                        icon: Icon(
+                          Icons.info_outline,
+                          color: Colors.white,
+                        ),
+                        onPressed: () {
+                          _showStatusInfo(widget.user.status.name);
+                        },
                       ),
                     ],
                   ),
