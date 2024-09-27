@@ -44,13 +44,15 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
 
       if (response['status'] == 'error') {
       } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("This invite has been accepted"), backgroundColor: Colors.green));
         Navigator.of(context).pushReplacementNamed('/notifications');
       }
     } catch (e) {
       String errorMessage = e.toString();
       if (errorMessage.contains("Invite already accepted")) {
         ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("This invite has been already accepted")));
+            SnackBar(content: Text("This invite has been already accepted"), backgroundColor: Colors.red));
       } else {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text("An error occurred: $e")));
@@ -94,12 +96,12 @@ userProvider userP = Provider.of<userProvider>(context, listen: false);
 
       if (response['status'] == 'error') {
       } else {
-        SnackBar(content: Text("Application Acknowledged"));
+        SnackBar(content: Text("Application Acknowledged"), backgroundColor: Colors.green);
       }
     } catch (e) {
 
         ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text("An error occurred: $e")));
+            .showSnackBar(SnackBar(content: Text("This application has been already acknowledged"), backgroundColor: Colors.red));
 
     } finally {
       Navigator.of(context).pushReplacementNamed('/notifications');
@@ -267,33 +269,38 @@ userProvider userP = Provider.of<userProvider>(context, listen: false);
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        if (widget.notification.eventInvite == null ||
-                            widget.notification.eventInvite == false)
-                          TextButton(
-                            onPressed: _Accept,
-                            style: TextButton.styleFrom(
-                              foregroundColor: Colors.greenAccent,
-                              side: BorderSide(color: Colors.black),
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 12.0, horizontal: 20.0),
-                            ),
-                            child: Text('Accept'),
-                          ),
-                        if (widget.notification.eventInvite == true)
+                        if (widget.notification.message.contains('###'))...[
                           TextButton(
                             onPressed: () {
                               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                   content: Text(
-                                      "This invite has been already accepted")));
+                                      "This invite has been accepted")));
                             },
                             style: TextButton.styleFrom(
-                              foregroundColor: Colors.greenAccent,
+                              foregroundColor: Colors.white,
+                              backgroundColor: Color.fromARGB(255, 0, 128, 132),
                               side: BorderSide(color: Colors.black),
                               padding: EdgeInsets.symmetric(
                                   vertical: 12.0, horizontal: 20.0),
                             ),
-                            child: Text('Accepted'),
+                            child: Text('Already Accepted'),
                           ),
+                        ]else ...[
+                          TextButton(
+                            onPressed: () {
+                              _Accept();
+                            },
+                            style: TextButton.styleFrom(
+                              foregroundColor: Colors.white,
+                              backgroundColor: Color.fromARGB(255, 0, 128, 132),
+                              side: BorderSide(color: Colors.black),
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 12.0, horizontal: 20.0),
+                            ),
+                            child: Text('Accept invite'),
+                          ),
+                          ],
+
                       ],
                     ),
                   ],
@@ -311,6 +318,7 @@ userProvider userP = Provider.of<userProvider>(context, listen: false);
                     ),
                     SizedBox(height: 20.0),
                   ],
+
                   if (widget.notification.notificationTypes ==
                       'application') ...[
                     TextButton(

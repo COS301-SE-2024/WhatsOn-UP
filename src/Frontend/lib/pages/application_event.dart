@@ -381,6 +381,8 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
     mediaSize = MediaQuery.of(context).size;
     userProvider userP = Provider.of<userProvider>(context,listen: false);
     EventProvider eventP=Provider.of<EventProvider>(context,listen: false);
+    final Duration maxEventDuration = const Duration(hours: 23, minutes: 59);
+
         return Scaffold(
       appBar: AppBar(
         title: const Text('Create Event'),
@@ -646,6 +648,17 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                           selectedTime.hour,
                           selectedTime.minute,
                         );
+
+                        final eventDuration = _endDateTime.difference(_startDateTime);
+                        if (eventDuration > maxEventDuration) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                'Event duration cannot exceed 24 hours',
+                              ),
+                            ),
+                          );
+                        }
                         _updateDateTimeControllers();
                       });
                     }
@@ -654,6 +667,11 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                 validator: (value) {
                   if (_endDateTime.isBefore(_startDateTime)) {
                     return 'End date and time must be after the start date and time';
+                  }
+
+                   final eventDuration = _endDateTime.difference(_startDateTime);
+                  if (eventDuration > maxEventDuration) {
+                    return 'Event duration cannot exceed 24 hours';
                   }
                   return null;
                 },

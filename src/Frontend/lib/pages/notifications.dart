@@ -65,48 +65,45 @@ class _NotificationsState extends State<Notifications> with TickerProviderStateM
   }
 
   @override
-  Widget build(BuildContext context) {
-    userProvider userP = Provider.of<userProvider>(context, listen: false);
-    String userRole = userP.role;
-    final theme = Theme.of(context);
-    final textColour = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
+Widget build(BuildContext context) {
+  userProvider userP = Provider.of<userProvider>(context, listen: false);
+  String userRole = userP.role;
+  final theme = Theme.of(context);
+  final textColour = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
 
-    if (userRole == "GUEST") {
-      return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            'Notifications',
-            style: TextStyle(
-              fontSize: 32,
-              fontWeight: FontWeight.bold,
-              color: textColour,
-            ),
-          ),
-          backgroundColor: Colors.transparent,
-          automaticallyImplyLeading: false,
-        ),
-        body: _buildGuestView(),
-      );
-    }
-
-
+  if (userRole == "GUEST") {
     return Scaffold(
-  appBar: AppBar(
-    title: Text(
-      'Notifications',
-      style: TextStyle(
-        fontSize: 32,
-        fontWeight: FontWeight.bold,
-        color: textColour,
+      appBar: AppBar(
+        title: Text(
+          'Notifications',
+          style: TextStyle(
+            fontSize: 32,
+            fontWeight: FontWeight.bold,
+            color: textColour,
+          ),
+        ),
+        backgroundColor: Colors.transparent,
+        automaticallyImplyLeading: false,
       ),
+      body: _buildGuestView(),
+    );
+  }
+
+  return Scaffold(
+    appBar: AppBar(
+      title: Text(
+        'Notifications',
+        style: TextStyle(
+          fontSize: 32,
+          fontWeight: FontWeight.bold,
+          color: textColour,
+        ),
+      ),
+      backgroundColor: Colors.transparent,
+      automaticallyImplyLeading: false,
     ),
-    backgroundColor: Colors.transparent,
-    automaticallyImplyLeading: false,
-  ),
-  body: RefreshIndicator(
-    onRefresh: _refreshNotifications,
-    child: SingleChildScrollView(
-      physics: AlwaysScrollableScrollPhysics(),
+    body: RefreshIndicator(
+      onRefresh: _refreshNotifications,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -132,8 +129,7 @@ class _NotificationsState extends State<Notifications> with TickerProviderStateM
                 ),
             ],
           ),
-          SizedBox(
-            height: 500, // Set an appropriate height for TabBarView
+          Expanded( 
             child: TabBarView(
               controller: _tabController,
               children: [
@@ -149,11 +145,8 @@ class _NotificationsState extends State<Notifications> with TickerProviderStateM
         ],
       ),
     ),
-  ),
-);
-
-  }
-
+  );
+}
   Widget _buildGuestView() {
     return Center(
       child: Padding(
