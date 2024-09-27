@@ -102,6 +102,10 @@ export default defineUserConfig({
               link: '/documentation/srs/use-cases.html',
             },
             {
+              text: 'Class Diagram',
+              link: '/documentation/srs/Class-Diagram.html',
+            },
+            {
               text: 'Functional Requirements',
               link: '/documentation/srs/Functional-requirements.html',
             },
