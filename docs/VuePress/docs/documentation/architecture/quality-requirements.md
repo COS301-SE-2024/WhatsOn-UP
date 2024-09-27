@@ -61,7 +61,7 @@ Currently, the system employs **four user roles**: **guest**, **general**, **hos
 * **Host**: Can manage events, create content,broadcast any information that needs to be communicated to their attendees (this is limited only to the events they have created not other hosts/users events).
 * **Admin**: Has full control over the system, including managing users, content, and application settings..
 
-## Access control matrix to illustrate different privileges
+### Access control matrix to illustrate different privileges
 
 | Functionality | Guest users  | General users  | Host users | Admin users |
 | :---- | :---- | :---- | :---- | :---- |
@@ -81,13 +81,8 @@ Currently, the system employs **four user roles**: **guest**, **general**, **hos
 | View public events | yes | yes | yes | yes |
 | Application for Host privileges  | no | yes | no | no |
 
-## 
 
-## 
-
-## 
-
-## Role based security in the services(Backend)
+### Role based security in the services(Backend)
 
 Example :   
 We have ensured that users have access to the endpoints available to their role.  
@@ -96,16 +91,13 @@ Here is an example of a general user attempting to delete an event (The UI would
 ![Security Diagram](../../.vuepress/public/images/security1.png)
 
 
-
-
-
 4. ## Accessibility
 
 4.1 The application should be accessible to users with disabilities.
 
 Strategy:
 
-* The application must be screen reader friendly.
+*The application must be screen reader friendly.
 * Addition of dark mode and light mode
 
 Implementation:
