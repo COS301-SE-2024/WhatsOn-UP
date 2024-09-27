@@ -59,16 +59,18 @@ class _HomePageState extends State<HomePage>
       //ANIMATION TIMER CHANGED HERE
       duration: const Duration(seconds: 5),
     )..repeat();
-  /*  _animation = CurvedAnimation(
+    //_animation = Tween<double>(begin: 0, end: 1).animate(_controller);
+   // _controller.forward();
+    _animation = CurvedAnimation(
       parent: Tween<double>(begin: 0, end: 1).animate(_controller),
       curve: Curves.easeInOut,
-    );*/
-
+    );
     Timer.periodic(const Duration(seconds: 20), (timer) {
       setState(() {
         isGradientBorder = !isGradientBorder;
       });
     });
+  //  _controller.forward();
   }
 
   @override
@@ -238,6 +240,13 @@ class _HomePageState extends State<HomePage>
 
   Widget _buildExploreTab() {
     userProvider userP = Provider.of<userProvider>(context);
+    if (_animation == null) {
+      return Center(child: SpinKitPianoWave(
+        color: Color.fromARGB(255, 149, 137, 74),
+        size: 50.0,
+      )); // Show a loading indicator or placeholder
+    }
+
     return FutureBuilder<List<List<Event>>>(
       future: fetchEvents(),
       builder: (context, snapshot) {
