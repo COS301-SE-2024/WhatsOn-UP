@@ -81,25 +81,63 @@ export default defineUserConfig({
           ],
         },
       ],
-      // '/documentation/srs/': [
-      //   {
-      //     text: 'SRS Document',
-      //     children: [
-      //       {
-      //         text: 'Introduction',
-      //         link: '/documentation/srs/introduction.html',
-      //       },
-      //       {
-      //         text: 'Requirements',
-      //         link: '/documentation/srs/requirements.html',
-      //       },
-      //       {
-      //         text: 'Use Cases',
-      //         link: '/documentation/srs/use-cases.html',
-      //       },
-      //     ],
-      //   },
-      // ],
+      '/documentation/srs/': [
+        {
+          text: 'SRS Document',
+          children: [
+            {
+              text: 'Important Links',
+              link: '/documentation/srs/ImportantLinks.html',
+            },
+            {
+              text: 'Project Vision',
+              link: '/documentation/srs/introduction.html',
+            },
+            {text:'Project Objectives',
+              link: '/documentation/srs/project-objectives.html'
+            },
+
+            {
+              text: 'Use Cases',
+              link: '/documentation/srs/use-cases.html',
+            },
+            {
+              text: 'Functional Requirements',
+              link: '/documentation/srs/Functional-requirements.html',
+            },
+            {text:'System Overview',
+              link: '/documentation/srs/System-Overview.html'
+            },
+            {
+              text: 'Quality Requirements',
+              link: '/documentation/srs/quality-requirements.html',
+            },
+            {
+              text: 'Architectural Design Strategies',
+              link: '/documentation/srs/architectural-design-strategies.html',
+            },
+            {
+              text: 'Architectural Constraints',
+              link: '/documentation/srs/architectural-constraints.html',
+            },
+            {
+              text: 'Architectural Structure',
+              link: '/documentation/srs/architectural-structure.html',
+            },
+            {text:'WOW FACTORS',
+              link:'/documentation/srs/Wow-Factors.html',
+            },
+            {text:'Proposed Technologies A deep dive',
+              link: '/documentation/srs/Proposed-technologies.html'
+            },
+            {text:'Project Methodology',
+              link: '/documentation/srs/project-methodology.html',
+            },
+
+            
+          ],
+        },
+      ],
       // '/documentation/design/': [
       //   {
       //     text: 'Design Document',
