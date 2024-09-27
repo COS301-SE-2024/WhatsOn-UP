@@ -62,6 +62,25 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
     }
   }
 
+   @override
+  void initState() {
+    super.initState();
+
+    _markNotificationAsSeen();
+  }
+
+  Future<void> _markNotificationAsSeen() async {
+    var notification = widget.notification;
+    userProvider userP = Provider.of<userProvider>(context, listen: false);
+    notificationProvider notif = Provider.of<notificationProvider>(context, listen: false);
+
+    if(notification.seenAt == null){
+      await notification.markAsSeen(notification.notificationId, userP.JWT);
+      await notif.refreshNotifications(userP.JWT);
+    }
+    print('Notification was seen at: ${notification.seenAt}');
+  }
+
   Future<void> _Acknowledge() async {
     setState(() {
       isLoading = true;

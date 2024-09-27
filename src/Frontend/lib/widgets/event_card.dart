@@ -638,13 +638,22 @@ class _EventCardState extends State<EventCard> {
                       color: textColour,
                     ),
                     Expanded(
-                      child: Text(
-                        widget.event.venue?.name ?? 'No Venue',
-                        style: TextStyle(
-                          fontSize: 14.0,
-                          color: textColour,
-                        ),
-                      ),
+                      child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
+          decoration: BoxDecoration(
+            color: Colors.grey[200], // Background color
+            borderRadius: BorderRadius.circular(16.0), // Rounded corners
+          ),
+          child: Text(
+            widget.event.venue?.name ?? 'No Venue',
+            style: TextStyle(
+              fontSize: 14.0,
+              color: textColour,
+            ),
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
+        ),
                     ),
                     if (showBookmarkButton)
                       IconButton(
