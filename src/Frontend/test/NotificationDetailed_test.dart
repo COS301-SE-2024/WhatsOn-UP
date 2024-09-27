@@ -39,7 +39,7 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text('Sent At: $testTimeandDate'), findsOneWidget);
       expect(find.text('You have a new invite!'), findsOneWidget);
-      expect(find.text('Accept'), findsOneWidget);
+      expect(find.text('Accept invite'), findsOneWidget);
       // expect(find.text('Seen At: Not seen yet'), findsOneWidget);
       // Uncomment below to test the tap functionality
       // await tester.tap(find.text('Accept'));
@@ -79,7 +79,7 @@ void main() {
     testWidgets('Displays correct information for already accepted invite notification', (WidgetTester tester) async {
       final alreadyAcceptedNotification = AppNotification(
         notificationTypes: 'invite',
-        message: 'You have a new invite!',
+        message: '###You have a new invite!',
         sentAt: '2024-08-01T12:00:00Z',
         userId: 'user123',
         notificationId: 'notif124',
@@ -99,8 +99,8 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('Sent At: $testTimeandDate2'), findsOneWidget);
-      expect(find.text('You have a new invite!'), findsOneWidget);
-      expect(find.text('Accepted'), findsOneWidget);
+      expect(find.text('###You have a new invite!'), findsOneWidget);
+      expect(find.text('Already Accepted'), findsOneWidget);
     });
   });
 }
