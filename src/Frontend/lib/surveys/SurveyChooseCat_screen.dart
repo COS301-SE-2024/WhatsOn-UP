@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:firstapp/providers/events_providers.dart';
 import 'package:firstapp/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -26,12 +27,14 @@ class _SurveyScreenState extends State<SurveyScreen> {
   Future<void> fetchCategories() async {
     setLoading(true);
     userProvider userP = Provider.of<userProvider>(context, listen: false);
-    final Api api = Provider.of<Api>(context, listen: false);
+   EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
+
+
     try {
-      final List<Category> fetchedCategories =
-          await api.getCategories(userId: userP.userId);
+      final List<Category> fetchedCategories = await eventP.fetchCategories(userP.JWT);
       setState(() {
         categories = fetchedCategories;
+
       });
     } catch (e) {
       setState(() {
@@ -155,7 +158,6 @@ class _SurveyScreenState extends State<SurveyScreen> {
     final String jsonCategories =
         jsonEncode(selectedCategories.map((e) => e.toJson()).toList());
 
-    print('Selected Categories: $jsonCategories');
     Navigator.push(
         context,
         PageTransition(

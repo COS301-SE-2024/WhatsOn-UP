@@ -43,7 +43,7 @@ export class UserPreferencesService {
           console.log(error);
           switch (error.code) {
               case '23503' : 
-                  errorMsg += " Invalid userId or categoryId supplied";
+                  errorMsg += " Invalid JWT or categoryId supplied";
                   break;
               case '23505' : {
                   //extract and return category id
@@ -65,7 +65,7 @@ export class UserPreferencesService {
                 hint: error.hint,
                 timestamp: new Date().toISOString(),
               },
-              HttpStatus.INTERNAL_SERVER_ERROR,
+              HttpStatus.BAD_REQUEST,
             );
       }
       

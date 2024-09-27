@@ -4,6 +4,7 @@ import com.devforce.backend.dto.FilterByDto
 import com.devforce.backend.model.EventModel
 import jakarta.transaction.Transactional
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.jpa.repository.query.Procedure
 import org.springframework.data.repository.query.Param
@@ -24,6 +25,7 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
                 "LEFT JOIN FETCH e.venue v " +
                 "LEFT JOIN FETCH v.building b " +
                 "LEFT JOIN FETCH b.campus c " +
+                "LEFT JOIN FETCH e.savedEvents se " +
                 "WHERE (e.isPrivate = false " +
                 "OR :userId IS NULL " +
                 "OR a.userId = :userId " +
@@ -31,7 +33,6 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
                 "OR h.userId = :userId)"
     )
     fun findAllByUser(@Param("userId") userId: UUID?): List<EventModel>
-
 
 
     @Query(
@@ -150,6 +151,16 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
     @Transactional
     @Procedure(procedureName = "delete_event")
     fun deleteEvent(eventId: UUID)
+
+
+    @Query("SELECT ea.user_id, ea.attended FROM event_attendees ea WHERE ea.event_id = :eventId", nativeQuery = true)
+    fun findAttendanceByEventId(@Param("eventId") eventId: UUID): List<Map<String, Any>>
+
+
+    @Modifying
+    @Query("UPDATE EventAttendanceModel a SET a.attended = :attended WHERE a.eventId = :eventId AND a.userId = :userId")
+    fun updateAttendanceStatus(eventId: UUID, userId: UUID, attended: Boolean?): Int
+
 
 }
 

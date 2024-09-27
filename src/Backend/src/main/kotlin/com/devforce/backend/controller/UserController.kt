@@ -69,12 +69,6 @@ class UserController {
         return userService.getUser()
     }
 
-    @DeleteMapping("/delete_user")
-    @PreAuthorize("isAuthenticated()")
-    fun deleteUser(): ResponseEntity<ResponseDto> {
-        return userService.deleteUser()
-    }
-
     @PutMapping("/apply_for_host")
     @PreAuthorize("isAuthenticated()")
     fun applyHost(
@@ -92,11 +86,11 @@ class UserController {
         return userService.acknowledgeApplication()
     }
 
-    @PostMapping("/dispute_application")
-    @PreAuthorize("isAuthenticated()")
-    fun disputeApplication(): ResponseEntity<ResponseDto> {
-        return userService.disputeApplication()
-    }
+//    @PostMapping("/dispute_application")
+//    @PreAuthorize("isAuthenticated()")
+//    fun disputeApplication(): ResponseEntity<ResponseDto> {
+//        return userService.disputeApplication()
+//    }
 
     @GetMapping("/verify_application")
     @PreAuthorize("permitAll()")

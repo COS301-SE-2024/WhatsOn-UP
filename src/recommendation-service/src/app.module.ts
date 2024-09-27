@@ -5,6 +5,7 @@ import { UserPreferencesModule } from './user-preferences/user-preferences.modul
 import { UserRecommendationsModule } from './user-recommendations/user-recommendations.module';
 import { SupabaseProvider } from './supabase-provider/supabase-provider';
 
+
 @Module({
   imports: [UserPreferencesModule, UserRecommendationsModule],
   controllers: [AppController],

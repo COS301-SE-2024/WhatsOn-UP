@@ -165,6 +165,7 @@
 import 'dart:async';
 import 'package:firstapp/pages/supabase_forgot_password.dart';
 import 'package:firstapp/pages/supabase_signup.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -194,6 +195,7 @@ class _SupabaseLoginState extends State<SupabaseLogin> {
   late Color myColor;
   late Size mediaSize;
   bool _obscurePassword = true;
+  bool isLoading = false;
 
 
   @override
@@ -205,10 +207,15 @@ class _SupabaseLoginState extends State<SupabaseLogin> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    myColor = Theme.of(context).primaryColor;
-    mediaSize = MediaQuery.of(context).size;
-    return Container(
+Widget build(BuildContext context) {
+  myColor = Theme.of(context).primaryColor;
+  MediaQueryData mediaQuery = MediaQuery.of(context);
+  mediaSize = kIsWeb ? Size(412.0, mediaQuery.size.height) : mediaQuery.size;
+  
+  // Wrap everything in Center to ensure width restriction is respected on the web
+  return Center(
+    child: Container(
+      width: mediaSize.width, // Respect width limitation on web
       color: const Color.fromARGB(255, 149, 137, 74),
       child: Scaffold(
         resizeToAvoidBottomInset: false,
@@ -220,8 +227,9 @@ class _SupabaseLoginState extends State<SupabaseLogin> {
           ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildTop() {
     return SizedBox(
@@ -244,6 +252,10 @@ class _SupabaseLoginState extends State<SupabaseLogin> {
   }
 
   Widget _buildBottom(BuildContext context) {
+    ThemeData theme = Theme.of(context);
+    final googleButtonBackground = theme.brightness == Brightness.dark ? const Color.fromARGB(255, 20, 20, 20) : Colors.white;
+    final googleButtonTextColor = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
+
     return Container(
       width: mediaSize.width,
       height: mediaSize.height * 0.7,
@@ -251,7 +263,7 @@ class _SupabaseLoginState extends State<SupabaseLogin> {
       decoration: BoxDecoration(
         // color: Colors.white,
         color: Theme.of(context).colorScheme.surface,
-        borderRadius: BorderRadius.only(
+        borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(30.0),
           topRight: Radius.circular(30.0),
         ),
@@ -290,6 +302,18 @@ class _SupabaseLoginState extends State<SupabaseLogin> {
             ),
             obscureText: _obscurePassword,
           ),
+          Align(
+          alignment: Alignment.centerRight,
+          child: TextButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ForgotPass()),
+              );
+            },
+            child: const Text('Forgot password?'),
+          ),
+        ),
           const SizedBox(height: 20),
           // TextButton(
           ElevatedButton(
@@ -305,20 +329,13 @@ class _SupabaseLoginState extends State<SupabaseLogin> {
                 final authResponse = await supabase.auth
                     .signInWithPassword(password: password, email: email);
 
-                //for reset password workd
-                //  await supabase.auth.resetPasswordForEmail(email,
-                //    redirectTo: 'io.supabase.flutterquickstart://login-callback/',
-                //  );
-
-                //update password
-                //  await supabase.auth.updateUser({
-                //    password: password,
-                //  } as UserAttributes);
-
                 if (mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       content:
                           Text("Logged In: ${authResponse.user!.email!}")));
+
+                  Provider.of<userProvider>(context, listen: false).JWT = 
+                    supabase.auth.currentSession!.accessToken;
                   await _login();
                 }
               } on AuthException catch (error) {
@@ -333,50 +350,55 @@ class _SupabaseLoginState extends State<SupabaseLogin> {
                 ));
               }
             },
-
-            child: const Text('Login'),
+            child: isLoading
+                ? const CircularProgressIndicator(color: Colors.white,)
+                : const Text('Login'),
           ),
           const SizedBox(height: 10),
-          // TextButton(
-          ElevatedButton(
+          TextButton(
+          // ElevatedButton(
               onPressed: () {
-                Navigator.push(
+                Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
                       builder: (context) => const SupabaseSignup()),
                 );
               },
 
-              child: Text('Sign Up')),
+              child: const Text('Don\'t have an account? Sign Up')),
           const SizedBox(height: 10),
-          TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const ForgotPass()),
-                );
-              },
-              child: Text('I forgot my password')),
           const SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              IconButton(
-                icon: const Image(
-                  width: 32,
-                  height: 32,
+          ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const GoogleSignInPage()),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: googleButtonBackground,
+              foregroundColor: googleButtonTextColor,
+              side: const BorderSide(color: Colors.grey, width: 1.0),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0),
+              ),
+              padding: const EdgeInsets.symmetric(vertical: 12.0),
+              textStyle: const TextStyle(fontSize: 16),
+            ),
+            child: const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image(
+                  width: 24,
+                  height: 24,
                   image: Svg('assets/images/google-icon.svg'),
                 ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const GoogleSignInPage()),
-                  );
-                },
-              ),
-            ],
+                SizedBox(width: 8),
+                Text('Sign in with Google'),
+              ],
+            ),
           ),
+
           const SizedBox(height: 20),
           TextButton(
             onPressed: () async {
@@ -385,7 +407,7 @@ class _SupabaseLoginState extends State<SupabaseLogin> {
 
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => HomePage()),
+                  MaterialPageRoute(builder: (context) => const HomePage()),
                 );
               } catch (e) {
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -416,11 +438,10 @@ class _SupabaseLoginState extends State<SupabaseLogin> {
 
     if (isGuest) {
       userP.setGuestUser();
-      // eventP.fetchfortheFirstTimeRsvp('guest');
-      // Skip getting events
+      eventP.refreshEvents('');
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => HomePage()),
+        MaterialPageRoute(builder: (context) => const HomePage()),
       );
     } else {
       final user = supabase.auth.currentUser;
@@ -434,7 +455,12 @@ class _SupabaseLoginState extends State<SupabaseLogin> {
 
         Api api = Api();
         try {
-          final response = await api.getUser(user.id);
+          setState(() {
+            isLoading = true;
+          });
+
+
+          final response = await api.getUser(userP.JWT!);
           if (response['error'] != null) {
             print('An error occurred: ${response['error']}');
           } else {
@@ -450,14 +476,19 @@ class _SupabaseLoginState extends State<SupabaseLogin> {
             userP.email = userEmail;
             userP.role = role;
             userP.profileImage = profileImage;
-            eventP.refreshRecommendations(userP.userId);
+
+             api.JWT=userP.JWT;
+
+             await eventP.refreshEvents(userP.JWT);
+
+            await eventP.refreshRecommendations(userP.JWT);
             notificationProvider _notificationProvider =
                 Provider.of<notificationProvider>(context, listen: false);
-             eventP.refreshSavedEvents(userP.userId);
-            _notificationProvider.refreshNotifications(userP.userId);
-            SocketService('http://${globals.domain}:8082',
-                _notificationProvider, userP.userId, context);
-            userP.Generalusers(userP.userId);
+             // eventP.refreshSavedEvents(userP.JWT);
+            _notificationProvider.refreshNotifications(userP.JWT);
+            SocketService('https://${globals.liveNotificationService}',
+                _notificationProvider, userP.JWT, context);
+            userP.Generalusers(userP.JWT);
 
             userP.setUserData(
               userId: user.id,
@@ -468,15 +499,19 @@ class _SupabaseLoginState extends State<SupabaseLogin> {
               isGuest: false,
             );
 
+            setState(() {
+              isLoading = false;
+            });
+
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => HomePage()),
+              MaterialPageRoute(builder: (context) => const HomePage()),
             );
           }
         } catch (e) {
           print('Error getting user data: $e');
         }
-        print('signup successful');
+
       }
     }
   }

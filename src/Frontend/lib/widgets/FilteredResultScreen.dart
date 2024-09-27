@@ -39,11 +39,14 @@ class FilteredResultScreen extends StatelessWidget {
                   children: [
                     Icon(Icons.search),
                     SizedBox(width: 8.0),
-                    Text(
-                      "Search for events",
-                      style: TextStyle(color: Colors.black54),
+                Expanded(
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: "Search for events",
+                      border: InputBorder.none,
                     ),
-                  ],
+                  ),
+                )],
                 ),
               ),
             ),
@@ -54,7 +57,13 @@ class FilteredResultScreen extends StatelessWidget {
             child: ListView.builder(
               itemCount: filteredEvents.length,
               itemBuilder: (context, index) {
-                return EventCard(event: filteredEvents[index], showBookmarkButton: false);
+                return Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 22.0,
+                      vertical: 8.0,
+                    ),
+                      child: EventCard(event: filteredEvents[index], showBookmarkButton: true,),
+                );
               },
             ),
           ),

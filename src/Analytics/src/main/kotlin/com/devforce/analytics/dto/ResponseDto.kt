@@ -1,4 +1,4 @@
-package com.devforce.backend.dto
+package com.devforce.analytics.dto
 
 data class ResponseDto(
     val status: String,

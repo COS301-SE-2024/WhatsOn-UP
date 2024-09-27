@@ -1,18 +1,23 @@
-FROM devforce123/backend-service:api
+# Use a stable JDK image
+FROM openjdk:17-jdk-alpine
 
+# Set working directory
+WORKDIR /app
 
-WORKDIR /home/ubuntu
+# Copy project files into container
+COPY . .
 
-RUN rm -rf /home/ubuntu/*
-
-ADD . .
-
+# Give execution permissions to the Gradle wrapper
 RUN chmod +x ./gradlew
 
-RUN sed -i 's/\r//' gradlew
+# Fix line endings if necessary
+RUN sed -i 's/\r//' ./gradlew
 
+# Build the project using Gradle
 RUN ./gradlew assemble
 
+# Expose the application port
 EXPOSE 8084
 
+# Command to start the Spring Boot application
 CMD ["./gradlew", "bootRun"]

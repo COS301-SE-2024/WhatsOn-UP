@@ -1,11 +1,13 @@
 import 'package:firstapp/providers/events_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:firstapp/pages/detailed_event_page.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import '../pages/BroadcastEvent.dart';
 import '../pages/Event_Attendance.dart';
 import '../providers/user_provider.dart';
 import '../services/api.dart';
+import '../services/globals.dart' as globals;
 
 
 class Category {
@@ -343,6 +345,7 @@ class Event {
   final List<Attendee> attendees;
   final Metadata metadata;
   final List<Attendee>? invitees;
+  bool saved;
   Event({
     required this.nameOfEvent,
     this.venue,
@@ -357,6 +360,7 @@ class Event {
     required this.attendees,
     required this.metadata,
     this.invitees,
+    required this.saved,
   });
 
   factory Event.fromJson(Map<String, dynamic> json) {
@@ -374,7 +378,7 @@ class Event {
           ? List<String>.from(
               json['eventMedia'].map((media) => media?.toString() ?? ''))
           : [
-              'https://images.pexels.com/photos/1190297/pexels-photo-1190297.jpeg'
+              globals.defaultEventURL
             ],
       description: json['description']?.toString() ?? '',
       id: json['id']?.toString() ?? '',
@@ -400,6 +404,7 @@ class Event {
               ? List<Attendee>.from(
                   json['invitees'].map((invitee) => Attendee.fromJson(invitee)))
               : [],
+      saved: json['saved'] ?? false,
     );
     return eventVat;
   }
@@ -419,6 +424,7 @@ class Event {
       'attendees': attendees.map((attendee) => attendee.toJson()).toList(),
       'metadata': metadata.toJson(),
       'invitees': invitees?.map((invitee) => invitee.toJson()).toList(),
+      'saved': saved,
     };
   }
 }
@@ -426,10 +432,10 @@ class Event {
 class EventCard extends StatefulWidget {
   final Event event;
   bool showBookmarkButton;
-  bool saved;
   String broadcast;
+  bool recommendations;
 
-  EventCard({Key? key, required this.event, required this.showBookmarkButton ,this.broadcast='',this.saved=false})
+  EventCard({Key? key, required this.event, required this.showBookmarkButton ,this.broadcast='',this.recommendations=false})
       : super(key: key);
 
   @override
@@ -438,7 +444,7 @@ class EventCard extends StatefulWidget {
 
 String getValidImageUrl(List<String>? imageUrls) {
   const List<String> validExtensions = ['jpeg', 'jpg', 'png'];
-  const String defaultUrl = 'https://images.pexels.com/photos/1190297/pexels-photo-1190297.jpeg'; // only videos in the array
+  const String defaultUrl = globals.defaultEventURL;
 
   if (imageUrls == null || imageUrls.isEmpty) {
     return defaultUrl;
@@ -492,7 +498,59 @@ class _EventCardState extends State<EventCard> {
   //   }
   // }
 
-
+  // Future<void> _fetchEvent(bool recommendations, bool saved, Event event) async {
+  //   try {
+  //     Event? eventM;
+  //     EventProvider eventProvider =
+  //     Provider.of<EventProvider>(context, listen: false);
+  //     if(recommendations==true){
+  //       eventM = await eventProvider.getEventById(event.id);
+  //
+  //       eventM?.saved=saved;
+  //     }else{
+  //
+  //       eventM =await eventProvider.getEventByIdR(event.id);
+  //       eventM?.saved=saved;
+  //     }
+  //
+  //   } catch (e) {
+  //     print('Error fetching event: $e');
+  //   }
+  // }
+//   Future<void> _fetchEvent(bool recommendations, bool saved, Event event,String JWT) async {
+//     try {
+//       setState(() {
+//         _isLoading = true;
+//       });
+//
+//       Event? eventM;
+//       EventProvider eventProvider = Provider.of<EventProvider>(context, listen: false);
+// userProvider userP = Provider.of<userProvider>(context, listen: false);
+//
+//       if (recommendations) {
+//         eventM = await eventProvider.getEventById(event.id);
+//
+//         eventProvider.addEventSaved(eventM!,JWT);
+//         eventM?.saved = saved;
+//         eventProvider.refreshRecommendations(JWT);
+//         eventProvider.refreshEvents(userP.JWT,userP.role);
+//
+//       } else {
+//         eventM = await eventProvider.getEventByIdR(event.id);
+//         eventProvider.removeEventSaved(eventM!,JWT);
+//         eventM?.saved = saved;
+//         eventProvider.refreshRecommendations(JWT);
+//         eventProvider.refreshEvents(userP.JWT,userP.role);
+//       }
+//
+//     } catch (e) {
+//       print('Error fetching event: $e');
+//     } finally {
+//       setState(() {
+//         _isLoading = false;
+//       });
+//     }
+//   }
 
 
 
@@ -506,17 +564,10 @@ class _EventCardState extends State<EventCard> {
     EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
     userProvider userP = Provider.of<userProvider>(context, listen: false);
     String userRole = userP.role;
-    widget.showBookmarkButton = widget.showBookmarkButton && userRole != "GUEST";
 
-    widget.showBookmarkButton=widget.broadcast=="EDIT"
-    ?false
-    :true;
-   widget.saved==true
-       ?isBookmarked=true
-       :isBookmarked=false;
-   isbroadcast=widget.broadcast=="EDIT"
-       ?true
-       :false;
+    bool showBookmarkButton = widget.showBookmarkButton && userRole != "GUEST" && widget.broadcast != "EDIT";
+    isbroadcast = widget.broadcast == "EDIT";
+
     final theme = Theme.of(context);
     final cardColour = theme.colorScheme.surface;
     final textColour = theme.colorScheme.onSurface;
@@ -566,6 +617,7 @@ class _EventCardState extends State<EventCard> {
                     ),
                   ),
                 ),
+                const SizedBox(height: 10.0),
                 Text(
                   widget.event.nameOfEvent,
                   style: TextStyle(
@@ -573,6 +625,8 @@ class _EventCardState extends State<EventCard> {
                     fontWeight: FontWeight.bold,
                     color: textColour,
                   ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
                 ),
                 const SizedBox(height: 4.0),
                 Row(
@@ -592,30 +646,56 @@ class _EventCardState extends State<EventCard> {
                         ),
                       ),
                     ),
-                    if (widget.showBookmarkButton)
+                    if (showBookmarkButton)
                       IconButton(
                         icon: Icon(
-                          isBookmarked ? Icons.bookmark : Icons.bookmark_border,
+                          // isBookmarked ? Icons.bookmark : Icons.bookmark_border,
+                          widget.event.saved? Icons.bookmark : Icons.bookmark_border,
                           size: 20.0,
-                          color: isBookmarked ? Colors.black : textColour,
+                          // color: isBookmarked ? Colors.black : textColour,
+                           color: widget.event.saved? Colors.black : textColour,
                         ),
                         onPressed: () {
                           setState(() {
-                            isBookmarked = !isBookmarked;
-                            if (isBookmarked == true) {
-                              eventP.addEventSaved(widget.event,userP.userId);
 
-                            } else {
-                              eventP.removeEventSaved(widget.event,userP.userId);
+                            widget.event.saved=!widget.event.saved;
+                            if(widget.event.saved==true){
+                              setState(() {
+                                _isLoading = true;
+                              });
+                              eventP.addEventSaved(widget.event,userP.JWT);
+                                        setState(() {
+                                          _isLoading=false;
+                                        });
+
+
+                            }else{
+                              setState(() {
+                                _isLoading = true;
+                              });
+                              eventP.removeEventSaved(widget.event,userP.JWT);
+                              setState(() {
+                                _isLoading=false;
+                              });
+
                             }
                           });
+                            // if (isBookmarked == true) {
+                            //   eventP.addEventSaved(widget.event,userP.userId);
+                            //   eventP.refreshEvents();
+                            //
+                            // } else {
+                            //   eventP.removeEventSaved(widget.event,userP.userId);
+                            //   eventP.refreshEvents();
+                            // }
+                          // });
                         },
                       ),
 
                   ],
                 ),
                 const SizedBox(height: 10.0),
-                if(isbroadcast && widget.event.attendees.length>0)
+                if(isbroadcast)
                 Row(
 
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -654,7 +734,7 @@ class _EventCardState extends State<EventCard> {
 
                       ),
                     const SizedBox(height: 10.0),
-
+                    if(widget.event.attendees.length>0)
                       Container(
                         decoration: BoxDecoration(
                           border: Border.all(color: Colors.grey),
@@ -680,13 +760,21 @@ class _EventCardState extends State<EventCard> {
                   ],
                 ),
 
-
+                if (_isLoading)
+                  Center(
+                    child: SpinKitPianoWave(
+    color: Color.fromARGB(255, 149, 137, 74),
+    size: 50.0,
+    ),
+                  ),
               ],
             ),
           ),
         ),
       ),
     );
+
+
   }
 
 

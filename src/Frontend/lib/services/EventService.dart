@@ -12,7 +12,9 @@ import 'package:firstapp/widgets/event_card.dart';
 class EventService {
   final SupabaseClient supabase;
   EventService(this.supabase);
-  static final String baseUrl = 'http://${globals.domain}:8080';
+
+  //static final String baseUrl = 'http://${globals.domain}:8080';
+  static final String baseUrl = 'https://${globals.gatewayDomain}';
 
   Future<String?> _getJwtToken() async {
     final session = supabase.auth.currentSession;
@@ -20,63 +22,41 @@ class EventService {
     print(session?.accessToken);
     return session?.accessToken;
   }
-  Future<List<Event>> fetchPastEvents(String userId) async {
-
-    final uri = Uri.parse('$baseUrl/api/events/get_passed_events');
-
+  Future<List<Event>> fetchPastEvents(String JWT) async {
+    // final uri = Uri.parse('$baseUrl/api/events/get_passed_events');
+    final uri = Uri.parse('$baseUrl/analytics/host/get_past_events');
     try {
-
-      // final jwtToken = await _getJwtToken();
-
-      //if (jwtToken == null) {
-
-      //throw Exception('JWT token not found');
-
-      //}
-
       var headers = {
-
         'Content-Type': 'application/json',
-
         'Accept': 'application/json',
-
-        'Authorization': 'Bearer $userId',
-
+        'Authorization': 'Bearer $JWT',
       };
 
-
-
       final response = await http.get(uri, headers: headers);
-
       if (response.statusCode == 200) {
-
         final Map<String, dynamic> decodedJson = json.decode(response.body);
+        final Map<String, dynamic> data = decodedJson['data'];
+        List<Event> allEvents = [];
+        data.forEach((month, events) {
+          if (events is List) {
+            allEvents.addAll(events.map((jsonEvent) => Event.fromJson(jsonEvent)));
+          }
+        });
+        return allEvents;
 
-        final List<dynamic> eventsJson = decodedJson['data'];
-
-        final List<Event> events = eventsJson.map((jsonEvent) =>
-
-            Event.fromJson(jsonEvent)).toList();
-
-        return events;
-
-      } else if (response.statusCode == 401) {
-
+      } 
+      else if (response.statusCode == 401) {
         throw Exception('Unauthorized request');
-
-      } else {
-
+      } 
+      else {
         throw Exception('Failed to load past events');
-
       }
-
-    } catch (e) {
-
+    } 
+    catch (e) {
       throw Exception('Failed to connect to the server: $e');
-
     }
-
   }
+
   Future<List<Category>> fetchUniqueCategories() async {
     final uri = Uri.parse('$baseUrl/api/events/categories');
 
@@ -102,7 +82,7 @@ class EventService {
           return [];
         }
 
-        return   jsonResponse.map((json) => Category.fromJson(json as String)).toList();;
+        return   jsonResponse.map((json) => Category.fromJson(json as String)).toList();
       } else if (response.statusCode == 401) {
         print('Unauthorized request');
         throw Exception('Unauthorized request');
@@ -216,6 +196,52 @@ class EventService {
       return data.map((item) => Venue.fromJson(item as Map<String, dynamic>)).toList();
     } else {
       throw Exception('Failed to load locations');
+    }
+  }
+
+
+  Future<List<dynamic>> fetchAttendanceData(String eventId, String JWT) async {
+    final url = '$baseUrl/api/events/$eventId/attendance';
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer $JWT',
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final jsonResponse = jsonDecode(response.body);
+      return jsonResponse['data'];
+    } else {
+      throw Exception('Failed to fetch attendance data');
+    }
+  }
+
+
+  Future<void> updateAttendanceStatus(String eventId, String userId, bool? attended, String JWT) async {
+  // print("DETAILSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
+   //print(eventId);
+   //print(userId);
+   //print(attended);
+    final url = '$baseUrl/api/events/update-attendance';
+    final response = await http.put(
+      Uri.parse('$url'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $JWT',
+      },
+      body: jsonEncode({
+        'eventId': eventId,
+        'userId': userId,
+        'attended': attended,
+      }),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to update attendance status');
     }
   }
 }

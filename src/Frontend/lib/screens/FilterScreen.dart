@@ -6,6 +6,8 @@ import 'package:firstapp/widgets/FilteredResultScreen.dart';
 import 'package:intl/intl.dart';
 
 class FilterScreen extends StatefulWidget {
+  final List<Event>? searchResults;
+  FilterScreen({this.searchResults});
   @override
   _FilterScreenState createState() => _FilterScreenState();
 }
@@ -80,7 +82,7 @@ class _FilterScreenState extends State<FilterScreen> with SingleTickerProviderSt
                       Expanded(
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: goldishBrown, // Background color
+                            backgroundColor: goldishBrown,
                           ),
                           child: Text(
                             "Clear Selection",
@@ -89,11 +91,11 @@ class _FilterScreenState extends State<FilterScreen> with SingleTickerProviderSt
                           onPressed: isSelectionMade ? _clearSelection : null,
                         ),
                       ),
-                      SizedBox(width: 16.0), // Add spacing between buttons
+                      SizedBox(width: 16.0),
                       Expanded(
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: goldishBrown, // Background color
+                            backgroundColor: goldishBrown,
                           ),
                           child: Text(
                             "Filter Events",
@@ -141,7 +143,7 @@ class _FilterScreenState extends State<FilterScreen> with SingleTickerProviderSt
                     if (title == "Event Type") selectedEventType = "";
                   } else {
                     onSelected(option);
-                    _controller.forward(from: 0.0); // Start animation from beginning
+                    _controller.forward(from: 0.0);
                   }
                 });
               },
@@ -189,26 +191,33 @@ class _FilterScreenState extends State<FilterScreen> with SingleTickerProviderSt
   }
 
   void _filterEvents() async {
-    DateTime now = DateTime.now();
-    String? startDate;
-    String? endDate;
+    List<Event> filteredEvents = widget.searchResults ?? [];
+    if (widget.searchResults != null && widget.searchResults!.isNotEmpty) {
 
-    switch (selectedDateRange) {
-      case "Today":
-        startDate = now.toIso8601String();
-        endDate = now.toIso8601String();
-        break;
-      case "Last week":
-        startDate = now.subtract(Duration(days: 7)).toIso8601String();
-        endDate = now.toIso8601String();
-        break;
-      case "Next week":
-        startDate = now.toIso8601String();
-        endDate = now.add(Duration(days: 7)).toIso8601String();
-        break;
-      default:
-      // Handle other cases
-    }
+      filteredEvents = _applyFiltersLocally(widget.searchResults!);
+
+    } else {
+      DateTime now = DateTime.now();
+      String? startDate;
+      String? endDate;
+
+      switch (selectedDateRange) {
+        case "Today":
+          startDate = now.toIso8601String();
+          endDate = now.toIso8601String();
+          break;
+        case "Last week":
+          startDate = now.subtract(Duration(days: 7)).toIso8601String();
+          endDate = now.toIso8601String();
+          break;
+        case "Next week":
+          startDate = now.toIso8601String();
+          endDate = now.add(Duration(days: 7)).toIso8601String();
+          break;
+        default:
+        // Handle other cases
+      }
+
 
     int? maxCapacity;
 
@@ -244,11 +253,86 @@ class _FilterScreenState extends State<FilterScreen> with SingleTickerProviderSt
     }
     catch (error) {
       print("Error filtering events: $error");
+      return;
     }
 
   }
+    Navigator.of(context).push(MaterialPageRoute(
 
-  void _clearSelection() {
+      builder: (context) => FilteredResultScreen(filteredEvents: filteredEvents),
+
+    ));
+
+  }
+  List<Event> _applyFiltersLocally(List<Event> events) {
+      DateTime now = DateTime.now();
+      DateTime? startDate;
+      DateTime? endDate;
+
+      switch (selectedDateRange) {
+        case "Today":
+          startDate = DateTime(now.year, now.month, now.day);
+          endDate = startDate?.add(Duration(days: 1));
+          break;
+        case "Last week":
+          startDate = now.subtract(Duration(days: 7));
+          endDate = now;
+          break;
+        case "Next week":
+          startDate = now;
+          endDate = now.add(Duration(days: 7));
+          break;
+        default:
+        // Handle other cases or leave as is
+          break;
+      }
+
+      // Capacity filtering
+      int? maxCapacity;
+
+      switch (selectedCapacityRange) {
+        case "0 - 50":
+          maxCapacity = 50;
+          break;
+        case "50 - 100":
+          maxCapacity = 100;
+          break;
+        case "100 - 200":
+          maxCapacity = 200;
+          break;
+        case "200 - 300":
+          maxCapacity = 300;
+          break;
+        case "300 - 400":
+          maxCapacity = 400;
+          break;
+        case "400 - 500":
+          maxCapacity = 500;
+          break;
+        default:
+        // Handle other cases or leave as is
+          break;
+      }
+
+
+      bool isPrivate = selectedEventType == "Private";
+
+      return events.where((event) {
+        bool matchesDate = true;
+        if (startDate != null && endDate != null) {
+          DateTime eventDate = DateTime.parse(event.startTime);
+          matchesDate = eventDate.isAfter(startDate) && eventDate.isBefore(endDate);
+        }
+
+        bool matchesCapacity = maxCapacity == null || event.maxAttendees <= maxCapacity;
+        bool matchesType = selectedEventType.isEmpty || (isPrivate ? event.isPrivate : !event.isPrivate);
+
+        return matchesDate && matchesCapacity && matchesType;
+      }).toList();
+  }
+
+
+    void _clearSelection() {
     setState(() {
       selectedDateRange = "";
       selectedCapacityRange = "";

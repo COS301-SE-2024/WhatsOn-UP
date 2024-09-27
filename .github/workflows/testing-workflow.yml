@@ -1,14 +1,11 @@
-name: CI Pipeline
+name: Testing Pipeline
 
 on:
-  push:
-    branches:
-      - develop
-      - main
   pull_request:
     branches:
-      - develop
       - main
+      - develop
+
 
 jobs:
   build-and-test:
@@ -20,7 +17,10 @@ jobs:
       DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_TOKEN }}
       GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
-      BEREAR_TOKEN: ${{ secrets.BEREAR_TOKEN }}
+      BEARER_TOKEN: ${{ secrets.BEARER_TOKEN }}
+      SPRINGBOOT_ENV: ${{ secrets.SPRINGBOOT_ENV }}
+      RECOMMENDATIONS_ENV: ${{ secrets.RECOMMENDATIONS_ENV }}
+      NOTIFICATIONS_ENV: ${{ secrets.NOTIFICATIONS_ENV }}
 
     steps:
     - name: Checkout repository
@@ -53,6 +53,14 @@ jobs:
         fi
       working-directory: ./src/Frontend
 
+    - name: 'Create and write environment variables to .env files'
+      run: |
+        echo "${{ env.SPRINGBOOT_ENV }}" > src/Backend/.env
+        echo "${{ env.SPRINGBOOT_ENV }}" > src/Analytics/.env
+        echo "${{ env.RECOMMENDATIONS_ENV }}" > src/recommendation-service/.env
+        echo "${{ env.NOTIFICATIONS_ENV }}" > src/notification-service/.env
+        echo "${{ env.NOTIFICATIONS_ENV }}" > src/storage-service/.env
+
     - name: Set up JDK 17
       uses: actions/setup-java@v3
       with:
@@ -71,6 +79,14 @@ jobs:
       env: 
         BEARER_TOKEN: ${{ secrets.BEARER_TOKEN }}
       run: ./gradlew clean test codeCoverageReport
+
+    - name: 'Delete the .env files'
+      run: |
+        rm -f src/Backend/.env
+        rm -f src/Analytics/.env
+        rm -f src/recommendation-service/.env
+        rm -f src/notification-service/.env
+        rm -f src/storage-service/.env
 
     - name: Convert Jacoco report to lcov
       run: |

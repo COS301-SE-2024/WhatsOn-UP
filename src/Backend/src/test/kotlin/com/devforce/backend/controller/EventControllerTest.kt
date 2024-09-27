@@ -10,8 +10,11 @@ import com.devforce.backend.repo.EventRepo
 import com.devforce.backend.repo.VenueRepo
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
+import io.github.cdimascio.dotenv.Dotenv
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.fail
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -55,7 +58,7 @@ class EventControllerIntegrationTest {
     private lateinit var eventRepo: EventRepo
 
 
-    @Value("\${bearer-token}")
+    @Value("\${BEARER_TOKEN}")
     private val bearerToken: String? = null
 
 
@@ -134,7 +137,7 @@ class EventControllerIntegrationTest {
     }
 
     @Test
-    fun `test createEvent and verify database`() {
+    fun `test createEvent and delete and verify database`() {
         val initialCount = eventRepository.count()
         val randomId = UUID.randomUUID()
 
@@ -180,12 +183,13 @@ class EventControllerIntegrationTest {
         val responseString = resultActions.andReturn().response.contentAsString
         val responseDto: ResponseDto = objectMapper.readValue(responseString)
 
+        var eventDto: EventDto? = null
         // Perform your custom assertions
         assertEquals("success", responseDto.status)
         try {
-            val eventDto: EventDto = objectMapper.readValue(objectMapper.writeValueAsString(responseDto.data))
+            eventDto = objectMapper.readValue(objectMapper.writeValueAsString(responseDto.data))
             assertNotNull(eventDto)
-            assertEquals(createEventDto.title, eventDto.title)
+            assertEquals(createEventDto.title, eventDto!!.title)
             assertEquals(createEventDto.description, eventDto.description)
             assertEquals(createEventDto.startDateTime, eventDto.startDateTime)
             assertEquals(createEventDto.endDateTime, eventDto.endDateTime)
@@ -203,6 +207,24 @@ class EventControllerIntegrationTest {
         // Verify that the event was saved in the database
         val updatedCount = eventRepository.count()
         assertEquals(initialCount + 1, updatedCount)
+
+        val resultActions2 = mockMvc.perform(
+            MockMvcRequestBuilders.delete("$baseUri/remove/${eventDto?.id}")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, bearerToken)
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+
+        val responseString2 = resultActions2.andReturn().response.contentAsString
+        val responseDto2: ResponseDto = objectMapper.readValue(responseString2)
+
+        assertEquals("success", responseDto2.status)
+
+        val updatedCount2 = eventRepository.count()
+
+        assertEquals(initialCount, updatedCount2)
+
+
 
     }
 
@@ -530,6 +552,191 @@ class EventControllerIntegrationTest {
         }
         assertEquals(event.metadata, event2.metadata)
 
+    }
+
+    @Test
+    fun `test getUniqueCategories`(){
+        setup()
+        val resultActions = mockMvc.perform(
+            MockMvcRequestBuilders.get("$baseUri/categories")
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+
+        // Extract the response content and perform custom assertions
+        val responseString = resultActions.andReturn().response.contentAsString
+        val responseDto: ResponseDto = objectMapper.readValue(responseString)
+
+        // Perform your custom assertions
+        assertEquals("Categories fetched successfully", responseDto.status)
+        try {
+            val categories: List<String> = objectMapper.readValue(objectMapper.writeValueAsString(responseDto.data))
+            assertNotNull(categories)
+            assertEquals(categories.isNotEmpty(), true)
+
+        } catch (e: Exception) {
+            fail("Failed to parse response data")
+        }
+
+    }
+
+    @Test
+    fun `test getLocations`(){
+        setup()
+        val resultActions = mockMvc.perform(
+            MockMvcRequestBuilders.get("$baseUri/get_locations")
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+
+        // Extract the response content and perform custom assertions
+        val responseString = resultActions.andReturn().response.contentAsString
+        val responseDto: ResponseDto = objectMapper.readValue(responseString)
+
+        // Perform your custom assertions
+        assertEquals("success", responseDto.status)
+        try {
+            val locations: List<VenueModel> = objectMapper.readValue(objectMapper.writeValueAsString(responseDto.data))
+            assertNotNull(locations)
+            assertEquals(locations.isNotEmpty(), true)
+
+        } catch (e: Exception) {
+            fail("Failed to parse response data")
+        }
+
+    }
+
+    @Test
+    fun `test filterEvents`(){
+        setup()
+        val params: MultiValueMap<String, String> = LinkedMultiValueMap<String, String>().apply {
+            add("isPrivate", true.toString()) // Convert Boolean to String
+            add("maxAttendees", 10.toString()) // Convert Int to String
+        }
+
+        // Perform the POST request with query parameters
+        val resultActions = mockMvc.perform(
+            MockMvcRequestBuilders.get("$baseUri/filter")
+                .contentType(MediaType.APPLICATION_JSON)
+                .params(params)
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+
+        // Extract the response content and perform custom assertions
+        val responseString = resultActions.andReturn().response.contentAsString
+        val responseDto: ResponseDto = objectMapper.readValue(responseString)
+
+        // Perform your custom assertions
+        assertEquals("success", responseDto.status)
+        try {
+            val eventDtos: List<EventDto> = objectMapper.readValue(objectMapper.writeValueAsString(responseDto.data))
+            assertNotNull(eventDtos)
+            assertEquals(eventDtos.isNotEmpty(), true)
+
+        } catch (e: Exception) {
+            fail("Failed to parse response data")
+        }
+
+    }
+
+    @Test
+    fun `test filterEvents as host`(){
+        setup()
+        val params: MultiValueMap<String, String> = LinkedMultiValueMap<String, String>().apply {
+            add("isPrivate", true.toString()) // Convert Boolean to String
+            add("maxAttendees", 10.toString()) // Convert Int to String
+        }
+
+        // Perform the GET request with query parameters
+        val resultActions = mockMvc.perform(
+            MockMvcRequestBuilders.get("$baseUri/filter")
+                .contentType(MediaType.APPLICATION_JSON)
+                .params(params) // Add query parameters
+                .header(HttpHeaders.AUTHORIZATION, bearerToken)
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+
+        // Extract the response content and perform custom assertions
+        val responseString = resultActions.andReturn().response.contentAsString
+        val responseDto: ResponseDto = objectMapper.readValue(responseString)
+
+        // Perform your custom assertions
+        assertEquals("success", responseDto.status)
+        try {
+            val eventDtos: List<EventDto> = objectMapper.readValue(objectMapper.writeValueAsString(responseDto.data))
+            assertNotNull(eventDtos)
+            assertEquals(eventDtos.isNotEmpty(), true)
+
+        } catch (e: Exception) {
+            fail("Failed to parse response data")
+        }
+    }
+
+    @Test
+    fun `test attendance`(){
+        setup()
+        val params: MultiValueMap<String, String> = LinkedMultiValueMap<String, String>().apply {
+            add("eventId", UUID.randomUUID().toString())
+            add("userId", UUID.randomUUID().toString())
+        }
+
+        // Perform the POST request with query parameters
+        val resultActions = mockMvc.perform(
+            MockMvcRequestBuilders.get("$baseUri/*/attendance")
+                .contentType(MediaType.APPLICATION_JSON)
+                .params(params)
+        )
+            .andExpect(MockMvcResultMatchers.status().isBadRequest)
+
+    }
+
+    @Test
+    fun `test broadcastMessage`(){
+        //add the event
+        val randomId = UUID.randomUUID()
+        setup(randomId)
+
+        val params: MultiValueMap<String, String> = LinkedMultiValueMap<String, String>().apply {
+            add("eventId", randomId.toString())
+            add("message", "Hello")
+        }
+
+        // Perform the POST request with query parameters
+        val resultActions = mockMvc.perform(
+            MockMvcRequestBuilders.put("$baseUri/broadcast")
+                .contentType(MediaType.APPLICATION_JSON)
+                .params(params)
+                .header(HttpHeaders.AUTHORIZATION, bearerToken)
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+
+        // Extract the response content and perform custom assertions
+        val responseString = resultActions.andReturn().response.contentAsString
+        val responseDto: ResponseDto = objectMapper.readValue(responseString)
+
+        // Perform your custom assertions
+        assertEquals("success", responseDto.status)
+
+    }
+
+
+
+    companion object {
+        @JvmStatic
+        @BeforeAll
+        fun setUp(): Unit {
+            val dotenv: Dotenv = Dotenv.load()
+
+            System.setProperty("DB_USERNAME", dotenv.get("DB_USERNAME"))
+            System.setProperty("MAIL_PASSWORD", dotenv.get("MAIL_PASSWORD"))
+            System.setProperty("MAIL_USERNAME", dotenv.get("MAIL_USERNAME"))
+            System.setProperty("SECRET", dotenv.get("SECRET"))
+
+            System.setProperty("CORS_ORIGINS", dotenv.get("CORS_ORIGINS"))
+            System.setProperty("DB_PASSWORD", dotenv.get("DB_PASSWORD"))
+            System.setProperty("DB_URL", dotenv.get("DB_URL"))
+            System.setProperty("BEARER_TOKEN", dotenv.get("BEARER_TOKEN"))
+        }
     }
 
 }

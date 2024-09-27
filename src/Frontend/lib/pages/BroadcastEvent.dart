@@ -223,7 +223,7 @@ class _BroadcastEventDialogState extends State<BroadcastEventDialog> {
     });
 
     try {
-      final response = await api.broadcastEvent(widget.event.id, messageController.text, userP.userId);
+      final response = await api.broadcastEvent(widget.event.id, messageController.text, userP.JWT);
       if (response['status'] == 'success') {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Broadcast sent successfully"), backgroundColor: Colors.green),

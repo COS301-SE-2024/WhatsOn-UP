@@ -33,7 +33,7 @@ void main() {
       mockEventProvider = MockEventProvider();
       mockUserProvider = MockuserProvider();
       when(mockUserProvider.Fullname).thenReturn('User Name');
-      when(mockApi.getAllEvents()).thenAnswer((_) async =>
+      when(mockApi.getAllEvents('JWT')).thenAnswer((_) async =>
       [
         Event(
           id: '1',
@@ -53,7 +53,7 @@ void main() {
             categories: [],
             sessions: [],
           ),
-          invitees: [],
+          invitees: [], saved: false,
         ),
         Event(
           id: '2',
@@ -73,7 +73,7 @@ void main() {
             categories: [],
             sessions: [],
           ),
-          invitees: [],
+          invitees: [], saved: false,
         ),
       ]);
       when(mockEventProvider.eventsHome).thenAnswer((_) async =>
@@ -96,7 +96,7 @@ void main() {
             categories: [],
             sessions: [],
           ),
-          invitees: [],
+          invitees: [], saved: false,
         ),
         Event(
           id: '2',
@@ -116,7 +116,7 @@ void main() {
             categories: [],
             sessions: [],
           ),
-          invitees: [],
+          invitees: [], saved: false,
         ),
         Event(
           id: '3',
@@ -136,7 +136,7 @@ void main() {
             categories: [],
             sessions: [],
           ),
-          invitees: [],
+          invitees: [], saved: false,
         ),
       ]);
       when(mockEventProvider.eventsRsvp).thenAnswer((_) async =>
@@ -159,7 +159,7 @@ void main() {
             categories: [],
             sessions: [],
           ),
-          invitees: [],
+          invitees: [], saved: false,
         ),
         Event(
           id: '2',
@@ -179,7 +179,7 @@ void main() {
             categories: [],
             sessions: [],
           ),
-          invitees: [],
+          invitees: [], saved: false,
         ),
         Event(
           id: '3',
@@ -199,7 +199,7 @@ void main() {
             categories: [],
             sessions: [],
           ),
-          invitees: [],
+          invitees: [], saved: false,
         ),
       ]);
     });

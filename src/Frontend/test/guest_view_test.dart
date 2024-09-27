@@ -49,7 +49,7 @@ void main() {
       String mockImageUrl = '';
       when(mockUserProvider.profileImage)
           .thenReturn(mockImageUrl);
-      when(mockApi.getAllEvents()).thenAnswer((_) async => [
+      when(mockApi.getAllEvents('JWT')).thenAnswer((_) async => [
         Event(
           id: '1',
           nameOfEvent: 'Test Event 1',
@@ -65,7 +65,7 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ), invitees: [],
+          ), invitees: [], saved: false,
         ),
         Event(
           id: '2',
@@ -82,7 +82,7 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ), invitees: [],
+          ), invitees: [], saved: false,
         ),
       ]);
       when(mockEventProvider.eventsHome).thenAnswer((_) async => [
@@ -101,7 +101,7 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ), invitees: [],
+          ), invitees: [], saved: false,
         ),
         Event(
           id: '2',
@@ -118,7 +118,7 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ),
+          ), saved: false,
 
 
         ),
@@ -137,7 +137,7 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ), invitees: [],
+          ), invitees: [], saved: false,
         ),
       ]);
       when(mockEventProvider.eventsRsvp).thenAnswer((_) async => [
@@ -156,7 +156,7 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ), invitees: [],
+          ), invitees: [], saved: false,
         ),
         Event(
           id: '2',
@@ -173,7 +173,7 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ), invitees: [],
+          ), invitees: [], saved: false
         ),
         Event(
           id: '3',
@@ -190,7 +190,7 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ), invitees: [],
+          ), invitees: [], saved: false,
         ),
       ]);
 

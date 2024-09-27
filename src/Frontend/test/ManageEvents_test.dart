@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:mocktail_image_network/mocktail_image_network.dart';
 import 'package:provider/provider.dart';
 import 'package:firstapp/pages/manageEvents.dart';
 import 'package:firstapp/providers/user_provider.dart';
@@ -61,7 +62,7 @@ void main() {
       mockEventProvider = MockEventProvider();
       mockUserProvider = MockuserProvider();
       when(mockUserProvider.Fullname).thenReturn('User Name');
-      when(mockApi.getAllEvents()).thenAnswer((_) async =>
+      when(mockApi.getAllEvents('JWT')).thenAnswer((_) async =>
       [
         Event(
           id: '1',
@@ -80,7 +81,7 @@ void main() {
             categories: [],
             sessions: [],
           ),
-          invitees: [],
+          invitees: [], saved: true,
         ),
         Event(
           id: '2',
@@ -99,7 +100,7 @@ void main() {
             categories: [],
             sessions: [],
           ),
-          invitees: [],
+          invitees: [], saved: true,
         ),
       ]);
       when(mockEventProvider.eventsHome).thenAnswer((_) async =>
@@ -121,7 +122,7 @@ void main() {
             categories: [],
             sessions: [],
           ),
-          invitees: [],
+          invitees: [], saved: true,
         ),
         Event(
           id: '2',
@@ -139,7 +140,7 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ),
+          ), saved: false,
 
 
         ),
@@ -160,7 +161,7 @@ void main() {
             categories: [],
             sessions: [],
           ),
-          invitees: [],
+          invitees: [], saved: true,
         ),
       ]);
       when(mockEventProvider.eventsRsvp).thenAnswer((_) async =>
@@ -182,7 +183,7 @@ void main() {
             categories: [],
             sessions: [],
           ),
-          invitees: [],
+          invitees: [], saved: true,
         ),
         Event(
           id: '2',
@@ -201,7 +202,7 @@ void main() {
             categories: [],
             sessions: [],
           ),
-          invitees: [],
+          invitees: [], saved: true,
         ),
         Event(
           id: '3',
@@ -220,7 +221,7 @@ void main() {
             categories: [],
             sessions: [],
           ),
-          invitees: [],
+          invitees: [], saved: false,
         ),
       ]);
     });
@@ -303,6 +304,7 @@ void main() {
 //
     testWidgets('General user Host Applications is visible for ADMIN role only', (WidgetTester tester) async {
       when(mockUserProvider.role).thenReturn('ADMIN');
+
       await tester.pumpWidget(
         MultiProvider(
           providers: [
@@ -357,28 +359,31 @@ void main() {
 
     });
 //
-    // testWidgets('Navigates to EventManagementCategory when All Events is tapped', (WidgetTester tester) async {
+    testWidgets('Navigates to EventManagementCategory when All Events is tapped', (WidgetTester tester) async {
+      when(mockUserProvider.role).thenReturn('ADMIN');
+      await mockNetworkImages(() async {
+        await tester.pumpWidget(
+          MultiProvider(
+            providers: [
 
-    //   when(mockUserProvider.role).thenReturn('ADMIN');
-    //   await tester.pumpWidget(
-    //     MultiProvider(
-    //       providers: [
+              ChangeNotifierProvider<EventProvider>(
+                  create: (_) => mockEventProvider),
+              ChangeNotifierProvider<userProvider>(
+                  create: (_) => mockUserProvider),
+            ],
+            child: MaterialApp(
+              home: ManageEvents(supabaseClient: Supabase.instance.client),
+            ),
+          ),
+        );
 
-    //         ChangeNotifierProvider<EventProvider>(create: (_) => mockEventProvider),
-    //         ChangeNotifierProvider<userProvider>(create: (_) => mockUserProvider),
-    //       ],
-    //       child: MaterialApp(
-    //         home: ManageEvents( supabaseClient: Supabase.instance.client),
-    //       ),
-    //     ),
-    //   );
+        expect(find.text('All Events'), findsOneWidget);
+        await tester.tap(find.text('All Events'));
+        await tester.pumpAndSettle();
 
-    //    expect(find.text('All Events'), findsOneWidget);
-    //    await tester.tap(find.text('All Events'));
-    //   await tester.pumpAndSettle();
-
-    //   expect(find.byType(EventmanagementCategory), findsOneWidget);
-    // });
+        expect(find.byType(EventmanagementCategory), findsOneWidget);
+      });
+    });
 
 testWidgets('setLoading method updates _isLoading state', (WidgetTester tester) async{
       when(mockUserProvider.role).thenReturn('HOST');

@@ -1,3 +1,4 @@
+import 'package:firstapp/pages/host_analytics.dart';
 import 'package:firstapp/pages/supabase_login.dart';
 import 'package:firstapp/pages/supabase_signup.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'package:firstapp/pages/editProfile_page.dart';
 import 'package:provider/provider.dart';
 import '../main.dart';
 import '../providers/user_provider.dart';
+import '../services/api.dart';
 import 'notifications.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -131,8 +133,23 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                       child: Column(
                         children: [
+                          if (userRole == "ADMIN" || userRole == "HOST") ... [
+                            _buildProfileOption(
+                              text: 'My Event Analytics',
+                              icon: Icons.bar_chart,
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => HostAnalyticsPage()),
+                                );
+                              },
+                            ),
+                            _buildDivider(),
+                          ],
                           _buildProfileOption(
                             text: 'Notifications',
+                            icon: Icons.notifications,
                             onTap: () {
                               Navigator.push(
                                 context,
@@ -143,7 +160,8 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                           _buildDivider(),
                           _buildProfileOption(
-                            text: 'Security',
+                            text: 'Reset Password',
+                            icon: Icons.password,
                             onTap: () {
                               Navigator.of(context).pushNamed('/resetPassword');
                             },
@@ -152,6 +170,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           if (userRole != "ADMIN" && userRole != "HOST") ...[
                             _buildProfileOption(
                               text: 'Host Application',
+                              icon: Icons.assignment,
                               onTap: () {
                                 Navigator.of(context)
                                     .pushNamed('/hostApplication');
@@ -161,9 +180,12 @@ class _ProfilePageState extends State<ProfilePage> {
                           ],
                           _buildProfileOption(
                             text: 'Logout',
+                            icon: Icons.logout,
                             onTap: () {
                               final session = supabase.auth.currentSession;
                               if (session != null) {
+
+
                                 supabase.auth.signOut();
                               }
                               Navigator.push(
@@ -188,6 +210,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         children: [
                           _buildProfileOption(
                             text: 'Limited Guest Features',
+                            icon: Icons.info,
                             onTap: () {
                               showDialog(
                                 context: context,
@@ -238,8 +261,10 @@ class _ProfilePageState extends State<ProfilePage> {
     required String text,
     Widget? trailing,
     required VoidCallback onTap,
+    IconData? icon,
   }) {
     return ListTile(
+      leading: icon != null ? Icon(icon) : null,
       title: Text(text),
       trailing: trailing != null
           ? SizedBox(
