@@ -1,17 +1,16 @@
-## Quality requirements
-
 1. ## Usability
 
-   1.1 The application should have an intuitive user interface, easy navigation, and clear event categorization to ensure users can quickly find and engage with events of interest.  
-   Strategy:
+1.1  The application should have an intuitive user interface, easy navigation, and clear event categorization to ensure users can quickly find and engage with events of interest.  
+
+Strategy:
 * Designing a simple Intuitive layout that allows for easy navigation between pages.
 
   Implementation:
 
 * We used Interface metaphors which have the ability to make learning the system much easier,this helps the users to understand underlying conceptual models.
 
-             Examples:
-
+Examples:
+(These examples are not comprehensive; they merely demonstrate the concepts utilised in the project.)
 | Material interface metaphors | Conceptual understanding |
 | :---- | :---- |
 | **Home Icon** (very common in websites or apps for navigation to the introductory page) | Users understand that pressing "home" will take them back to a familiar or central point in the app or website |
@@ -19,40 +18,41 @@
 | **Tiles Describing Event Categories** (used in event management platforms and filter tiles):  |  Users understand that each tile represents a distinct event category (e.g., music, sports, workshops), much like how they’d see categories or schedules in a physical event venue.  |
 | **Loading circles** | Users understand that they need to wait while the process completes, just as they would wait for a task to finish in real life.This allows the user to stay informed of changes in the app. |
 
-(These examples are not exhaustive; they simply illustrate the concepts applied in the project.)
 
 2. ## Performance
 
-   2.1 The application should respond quickly to user interactions, with fast loading times for event listings, calendar views, and navigation features.  
-   Strategy:
+2.1 The application should respond quickly to user interactions, with fast loading times for event listings, calendar views, and navigation features.  
+
+Strategy:
+
 * Making use of state management tools
 * The use of performance testing tools
 
 Implementation:
 
 * Currently we are using the following tools to test performance
-    * Apache Jmeter
-    * Load and stress metre
+    * Google lighthouse
     * Flutter integration testing would give us an indication of performance progression.
 * Current state management tools being used
-    * Flutter providers-helps in managing state and sharing data across an application .How this helps with performance is that it allows data to be passed down the widget tree and notifying dependent widget when data changes creating a fast seamless experience for the user in terms of latency .The concept of providers is similar to the Observer pattern.                                                                                            Image: (Sánchez, 2022\)
-
-
+    * Flutter providers-helps in managing state and sharing data across an application .How this helps with performance is that it allows data to be passed down the widget tree and notifying dependent widget when data changes creating a fast seamless experience for the user in terms of latency .The concept of providers is similar to the Observer pattern.                                                                                    
 
 * Cloud run provides built-in load balancing and global distribution mechanisms that reduce latency and improve performance during high traffic.The use of Joins rather than hibernate functions because joins are handled directly by the database, which is optimised for query execution. Whilst hibernate functions are handled in the services layer (this is meant to separate the database logic from the application). Another reason why joins provide better performance is because the database retrieves the data from multiple tables in a single query. This reduces the number of round trips between your application and the database. Whilst hibernate uses object-relational mapping (ORM), which often involves multiple SQL queries to fetch data from related tables. This often results in the N+1 problem, where multiple queries are executed to load related entities, resulting in slower performance.
 
+Automatic Scaling: Cloud Run automatically scales up and down based on the incoming traffic. (scalability) This means that it can handle sudden traffic spikes by dynamically adjusting the number of container instances, and it can also scale down to zero when there’s no traffic, optimising resource usage.
+
 3. ## Security
 
-   3.1 User data should be securely stored and transmitted, with measures in place to prevent unauthorised access, data breaches, and malicious activities.  
-   strategy :
-* Make use of token-based authorisation and use use role based security in the services
+3.1  User data should be securely stored and transmitted, with measures in place to prevent unauthorised access, data breaches, and malicious activities.  
+
+Strategy :
+* Make use of token-based authorisation and use use-role based security in the services
 * Making use of Role-based access control
 
 Implementation:
 
-Automatic Scaling: Cloud Run automatically scales up and down based on the incoming traffic. (scalability) This means that it can handle sudden traffic spikes by dynamically adjusting the number of container instances, and it can also scale down to zero when there’s no traffic, optimising resource usage.
+* We implemented JWT for user authentication across the services. Each service verifies the validity of the JWT, and if it is valid, the service proceeds with the request.
 
-## Role-based access control
+### Role-based access control
 
 Currently, the system employs **four user roles**: **guest**, **general**, **host**, and **admin**, each providing distinct application views and varying levels of privileges.
 
@@ -92,7 +92,7 @@ Currently, the system employs **four user roles**: **guest**, **general**, **hos
 Example :   
 We have ensured that users have access to the endpoints available to their role.  
 Here is an example of a general user attempting to delete an event (The UI wouldn’t give the user the option to create an event,this is just to demonstrate using postman what would happen if you do not qualify to use a endpoint based on your role)  
-![][image1]
+![security][../images/security.webp]
 
 4. ## Accessibility
 
