@@ -691,8 +691,8 @@ class RSVPChart extends StatelessWidget {
           title: const Text('RSVP Ratio Over Time'),
           content: const Text(
             'This chart shows the RSVP ratio over time for all events. '
-            'The RSVP ratio represents the percentage of invited people who responded to the event invitation. '
-            'A higher ratio indicates better communication and engagement with potential attendees.'
+            'The RSVP ratio represents the proportion of RSVPs relative to the total number of potential attendees. '
+            'A lower ratio might indicate that users might not have been that interested in the events happening that month.'
           ),
           actions: <Widget>[
             TextButton(
