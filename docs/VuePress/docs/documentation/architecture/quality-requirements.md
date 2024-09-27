@@ -92,11 +92,16 @@ Currently, the system employs **four user roles**: **guest**, **general**, **hos
 Example :   
 We have ensured that users have access to the endpoints available to their role.  
 Here is an example of a general user attempting to delete an event (The UI wouldn’t give the user the option to create an event,this is just to demonstrate using postman what would happen if you do not qualify to use a endpoint based on your role)  
-![security][../images/security.webp]
+![Security Diagram](../../.vuepress/public/images/security2.png)
+![Security Diagram](../../.vuepress/public/images/security1.png)
+
+
+
+
 
 4. ## Accessibility
 
-   4.1 The application should be accessible to users with disabilities.
+4.1 The application should be accessible to users with disabilities.
 
 Strategy:
 
@@ -111,14 +116,16 @@ We integrated the device's screen reader features to ensure compatibility with o
 
 5. ## Scalability
 
-   5.1 The application infrastructure should be able to handle increasing numbers of users and events without degradation in performance or reliability.  
-   Strategy:
-    1. Using auto scaling groups in cloud environments.
-        2. Incoming traffic should be distributed evenly across server instances.
+5.1 The application infrastructure should be able to handle increasing numbers of users and events without degradation in performance or reliability.  
 
-   Implementation:
+Strategy:
 
-   Scaling Groups
+* Using auto scaling groups in cloud environments.
+*  Incoming traffic should be distributed evenly across server instances.
+
+Implementation:
+
+Scaling Groups
 
 * We are currently using google cloud for our services.How it does this is as the load increases or the services increase each service can scale horizontally to ensure that no one service is overloaded with requests.
 * The use of Joins rather than hibernate functions because joins are handled directly by the database, which is optimised for query execution. Whilst hibernate functions are handled in the services layer (this is meant to separate the database logic from the application). Another reason why joins provide better performance is because the database retrieves the data from multiple tables in a single query. This reduces the number of round trips between your application and the database. Whilst hibernate uses object-relational mapping (ORM), which often involves multiple SQL queries to fetch data from related tables. This often results in the N+1 problem, where multiple queries are executed to load related entities, resulting in slower performance.
