@@ -306,9 +306,14 @@ class UserService {
         val applicationModel = application[0]
             ?: return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Application not found"))
 
+        if (applicationModel.status!!.name == "ACKNOWLEDGED"){
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Application already acknowledged"))
+        }
+
         if (applicationModel.status!!.name != "ACCEPTED") {
             return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Application not accepted yet"))
         }
+
 
         if (applicationModel.expiryDateTime!!.isBefore(LocalDateTime.now())) {
             return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Application expired"))
