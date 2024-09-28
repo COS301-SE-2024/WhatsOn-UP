@@ -57,7 +57,8 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
       borderRadius: BorderRadius.circular(16.0),
       child: Image.network(
         url,
-        fit: BoxFit.cover,
+        // fit: BoxFit.cover,
+        fit: BoxFit.contain,
         width: double.infinity,
       ),
     );
