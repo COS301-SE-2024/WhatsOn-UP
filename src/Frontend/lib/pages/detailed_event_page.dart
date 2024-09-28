@@ -481,24 +481,26 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
                               _thisCurrentEvent!.hosts[0] == userP.Fullname ||
                           userP.role == 'ADMIN')) ...[
                     const SizedBox(height: 8.0),
-                    ElevatedButton.icon(
-                      onPressed: _editEvent,
-                      icon: const Icon(Icons.edit),
-                      label: const Text('Edit Event'),
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: const Size(double.infinity, 48),
+                    if (_thisCurrentEvent == null) ... [
+                      ElevatedButton.icon(
+                        onPressed: _editEvent,
+                        icon: const Icon(Icons.edit),
+                        label: const Text('Edit Event'),
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: const Size(double.infinity, 48),
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 8.0),
-                    ElevatedButton.icon(
-                      onPressed: _DeleteEvent,
-                      icon: const Icon(Icons.delete),
-                      label: const Text('Remove Event'),
-                      style: ElevatedButton.styleFrom(
-                        side: const BorderSide(color: Colors.red),
-                        minimumSize: const Size(double.infinity, 48),
+                      const SizedBox(height: 8.0),
+                      ElevatedButton.icon(
+                        onPressed: _DeleteEvent,
+                        icon: const Icon(Icons.delete),
+                        label: const Text('Remove Event'),
+                        style: ElevatedButton.styleFrom(
+                          side: const BorderSide(color: Colors.red),
+                          minimumSize: const Size(double.infinity, 48),
+                        ),
                       ),
-                    ),
+                    ],
                   ],
                 ],
               ),
