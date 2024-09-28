@@ -102,6 +102,10 @@ export default defineUserConfig({
               link: '/documentation/srs/use-cases.html',
             },
             {
+              text: 'Use Case Diagrams',
+              link: '/documentation/srs/use-case-diagram.html',
+            },
+            {
               text: 'Class Diagram',
               link: '/documentation/srs/Class-Diagram.html',
             },

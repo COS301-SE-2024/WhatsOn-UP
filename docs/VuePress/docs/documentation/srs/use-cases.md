@@ -27,7 +27,7 @@ The user also benefits from analytics and insights related to their hosted event
 The **Admin User** on the **WhatsOn@UP** platform plays a critical role in overseeing the system and maintaining its operational standards. One of their key responsibilities is reviewing and approving host applications submitted by General Users. Admins can grant these hosting privileges for a limited time and have the authority to revoke them as needed to ensure proper platform usage .In addition, the Admin monitors all events within the system to ensure they comply with platform guidelines and policies, maintaining the integrity of the events hosted on the platform . They also manage crucial system settings and configurations, such as security settings, notification preferences, and feature toggles, ensuring that the platform remains secure and user-friendly .Beyond event and system management, Admins have the ability to generate comprehensive reports and analytics, providing insights into user engagement, event trends, and overall system usage. This data helps with strategic planning and decision-making, ensuring the platform continues to meet the needs of its users .
 ##
 #
-#### User Stories 
+## User Stories 
 #
 1. **As a Guest User:**
 
