@@ -264,10 +264,10 @@ class EventService {
     fun getUniqueCategories(): List<String> {
         return eventRepo.findUniqueCategories()
     }
-    private fun extractCategory(metadata: String): String? {
-        val json = ObjectMapper().readTree(metadata)
-        return json.get("category")?.asText()
-    }
+//    private fun extractCategory(metadata: String): String? {
+//        val json = ObjectMapper().readTree(metadata)
+//        return json.get("category")?.asText()
+//    }
 
     fun broadcastMessage(message: String, eventId: UUID): ResponseEntity<ResponseDto> {
         val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel

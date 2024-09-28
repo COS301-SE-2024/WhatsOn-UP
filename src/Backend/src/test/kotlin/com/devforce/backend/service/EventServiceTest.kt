@@ -8,6 +8,7 @@ import com.devforce.backend.model.EventModel
 import com.devforce.backend.model.RoleModel
 import com.devforce.backend.model.UserModel
 import com.devforce.backend.model.VenueModel
+import com.devforce.backend.repo.BroadcastRepo
 import com.devforce.backend.repo.EventRepo
 import com.devforce.backend.repo.UserRepo
 import com.devforce.backend.repo.VenueRepo
@@ -42,6 +43,9 @@ class EventServiceTest {
     @InjectMocks
     private lateinit var eventServiceWithMocks: EventService
 
+    @Mock
+    private lateinit var broadcastRepo: BroadcastRepo
+
     @BeforeEach
     fun setUp() {
         MockitoAnnotations.openMocks(this)
@@ -52,6 +56,21 @@ class EventServiceTest {
             role = RoleModel().apply { name = "ADMIN" }
         }
         val roleName = "ADMIN"
+        val authorities = setOf(SimpleGrantedAuthority(roleName))
+        val userDetails = CustomUser(id, authorities, user)
+        val auth = UsernamePasswordAuthenticationToken(userDetails, authorities, userDetails.authorities)
+        SecurityContextHolder.getContext().authentication = auth
+    }
+
+    fun setUp(role: String) {
+        MockitoAnnotations.openMocks(this)
+
+        val id = UUID.randomUUID()
+        val user = UserModel().apply {
+            userId= id
+            this.role = RoleModel().apply { name = role }
+        }
+        val roleName = role
         val authorities = setOf(SimpleGrantedAuthority(roleName))
         val userDetails = CustomUser(id, authorities, user)
         val auth = UsernamePasswordAuthenticationToken(userDetails, authorities, userDetails.authorities)
@@ -224,9 +243,17 @@ class EventServiceTest {
         updateEventDto.maxParticipants = 10
         venue.available = true
 
-        val existingEvent = EventModel()
+        val existingEvent = EventModel().apply {
+            eventId = id
+            title = "Event"
+            description = "Description"
+            this.venue = venue
+            this.maxAttendees = 5
 
-        `when`(eventRepo.findById(id)).thenReturn(Optional.of(eventModel))
+
+        }
+
+        `when`(eventRepo.findById(id)).thenReturn(Optional.of(existingEvent))
         `when`(updateEventDto.location?.let { venueRepo.findByVenueId(it) }).thenReturn(venue)
         `when`(eventRepo.save(existingEvent)).thenReturn(existingEvent)
 
@@ -237,7 +264,15 @@ class EventServiceTest {
         assertEquals(updateEventDto.description, (response.body?.data as EventDto).description)
 
 
-        `when`(eventRepo.findById(id)).thenThrow(NoSuchElementException::class.java)
+        setUp("HOST")
+        `when`(eventRepo.findById(id)).thenReturn(Optional.of(existingEvent))
+        response = eventServiceWithMocks.updateEvent(id, updateEventDto)
+
+        assertEquals("error", response.body?.status)
+        result = response.body?.data as Map<String, String>
+        assertEquals("You are not authorized to update this event", result["message"])
+
+        `when`(eventRepo.findById(id)).then{ throw Exception() }
         response = eventServiceWithMocks.updateEvent(id, updateEventDto)
 
         assertEquals("error", response.body?.status)
@@ -245,30 +280,123 @@ class EventServiceTest {
         assertEquals("Failed to update event", result["message"])
 
 
-        `when`(eventRepo.findById(id)).thenThrow(RuntimeException::class.java)
-        response = eventServiceWithMocks.updateEvent(id, updateEventDto)
+    }
+
+    @Test
+    fun `Test delete event`(){
+        val id = UUID.randomUUID()
+        val eventModel = EventModel().apply {
+            eventId = id
+            title = "Event"
+            description = "Description"
+        }
+
+        `when`(eventRepo.findById(id)).thenReturn(Optional.empty())
+
+        var response = eventServiceWithMocks.deleteEvent(id)
+
+        assertEquals("error", response.body?.status)
+        var result: Map<String, String> = response.body?.data as Map<String, String>
+        assertEquals("Event not found", result["message"])
+
+        `when`(eventRepo.findById(id)).thenReturn(Optional.of(eventModel))
+        `when`(eventRepo.deleteEvent(id)).then{}
+
+        response = eventServiceWithMocks.deleteEvent(id)
+
+        assertEquals("success", response.body?.status)
+        result = response.body?.data as Map<String, String>
+        assertEquals("Event deleted successfully", result["message"])
+
+
+        setUp("HOST")
+        `when`(eventRepo.findById(id)).thenReturn(Optional.of(eventModel))
+        `when`(eventRepo.deleteEvent(id)).then{}
+
+        response = eventServiceWithMocks.deleteEvent(id)
+
+        assertEquals("error", response.body?.status)
+        result = response.body?.data as Map<String, String>
+        assertEquals("You are not authorized to delete this event", result["message"])
+    }
+
+
+    @Test
+    fun `Test search events`(){
+        val userModel = UserModel().apply {
+            userId = UUID.randomUUID()
+        }
+        `when`(eventRepo.searchEvents("string", userModel.userId)).thenReturn(listOf())
+
+        val response = eventServiceWithMocks.searchEvents("string")
+
+        assertEquals("success", response.body?.status)
+        assertEquals(0, (response.body?.data as List<EventDto>).size)
+    }
+
+    @Test
+    fun `Test getUnique Categories`(){
+        `when`(eventRepo.findUniqueCategories()).thenReturn(listOf("category1", "category2"))
+
+        val response = eventServiceWithMocks.getUniqueCategories()
+        assertEquals(2, response.size)
+    }
+
+    @Test
+    fun `Test broadcast`(){
+        val id = UUID.randomUUID()
+        val eventModel = EventModel().apply {
+            eventId = id
+            title = "Event"
+            description = "Description"
+        }
+
+        `when`(eventRepo.findById(id)).thenReturn(Optional.of(eventModel))
+
+        var response = eventServiceWithMocks.broadcastMessage("Alert", id)
+
+        assertEquals("success", response.body?.status)
+        var result: Map<String, String> = response.body?.data as Map<String, String>
+        assertEquals("Broadcast sent successfully", result["message"])
+
+        `when`(eventRepo.findById(id)).thenReturn(Optional.empty())
+
+        response = eventServiceWithMocks.broadcastMessage("Alert", id)
 
         assertEquals("error", response.body?.status)
         result = response.body?.data as Map<String, String>
         assertEquals("Event not found", result["message"])
 
 
+        setUp("HOST")
+        `when`(eventRepo.findById(id)).thenReturn(Optional.of(eventModel))
 
+        response = eventServiceWithMocks.broadcastMessage("Alert", id)
 
+        assertEquals("error", response.body?.status)
+        result = response.body?.data as Map<String, String>
+        assertEquals("You are not authorized to broadcast to this event", result["message"])
 
+    }
 
+    @Test
+    fun `Test filter`(){
+        val filterByDto = FilterByDto(
+            "category",
+            "location",
+            true,
+            10
+        )
 
+        val userModel = UserModel().apply {
+            userId = UUID.randomUUID()
+        }
+        `when`(eventRepo.filterEvents(filterByDto, userModel.userId)).thenReturn(listOf())
 
+        val response = eventServiceWithMocks.filterEvents(filterByDto)
 
-
-
-
-
-
-
-
-
-
+        assertEquals("success", response.body?.status)
+        assertEquals(0, (response.body?.data as List<EventDto>).size)
     }
 
 
@@ -299,5 +427,42 @@ class EventServiceTest {
         assertEquals("error", response.body?.status)
 
     }
+
+    @Test
+    fun `Test get attendance`(){
+        val eventId = UUID.randomUUID()
+        val userId = UUID.randomUUID()
+        val attended = true;
+        `when`(eventRepo.findAttendanceByEventId(eventId)).thenReturn(listOf(mapOf("user_id" to userId, "attended" to attended)))
+
+        var response = eventServiceWithMocks.getAllAttendanceByEventId(eventId)
+
+        assertEquals("success", response.body?.status)
+        assertEquals(1, (response.body?.data as List<Map<String, Any>>).size)
+
+        `when`(eventRepo.findAttendanceByEventId(eventId)).thenReturn(listOf())
+
+        // Act: Test for error case when exception occurs
+        response = eventServiceWithMocks.getAllAttendanceByEventId(eventId)
+
+        // Assert: Check if the response status is "error"
+        assertEquals("error", response.body?.status)
+        val result = response.body?.data as Map<String, String>
+        assertEquals("No attendance records found for the event", result["message"])
+
+    }
+
+    @Test
+    fun `Test get locations`(){
+        `when`(venueRepo.findAll()).thenReturn(listOf(VenueModel(), VenueModel()))
+
+        val response = eventServiceWithMocks.getLocations()
+
+        val result = response.body?.data as List<VenueModel>
+
+        assertEquals("success", response.body?.status)
+        assertEquals(2, result.size)
+    }
+
 
 }
