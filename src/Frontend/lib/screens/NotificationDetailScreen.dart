@@ -208,6 +208,9 @@ userProvider userP = Provider.of<userProvider>(context, listen: false);
   Widget build(BuildContext context) {
     String formattedDateSentAt = formatDateTime(widget.notification.sentAt);
 
+    ThemeData theme = Theme.of(context);
+    final acknowledgedBorderColour = theme.colorScheme.primary;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(capitalize(widget.notification.notificationTypes)),
@@ -324,8 +327,7 @@ userProvider userP = Provider.of<userProvider>(context, listen: false);
                     TextButton(
                       onPressed: _Acknowledge,
                       style: TextButton.styleFrom(
-                        foregroundColor: Colors.black,
-                        side: BorderSide(color: Colors.black),
+                        side: BorderSide(color: acknowledgedBorderColour),
                         padding: EdgeInsets.symmetric(
                             vertical: 12.0, horizontal: 20.0),
                       ),
