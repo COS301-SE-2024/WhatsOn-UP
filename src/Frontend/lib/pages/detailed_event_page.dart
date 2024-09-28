@@ -288,7 +288,7 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
         : Colors.grey;
     final activeDotColour =
         theme.brightness == Brightness.dark ? Colors.white : Colors.black;
-
+    DateTime eventEndTime = DateTime.parse(_thisCurrentEvent.endTime);
     return Scaffold(
       appBar: AppBar(
         title: Text(_thisCurrentEvent.nameOfEvent),
@@ -482,7 +482,7 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
                               _thisCurrentEvent!.hosts[0] == userP.Fullname ||
                           userP.role == 'ADMIN')) ...[
                     const SizedBox(height: 8.0),
-                    // if (_thisCurrentEvent == null) ... [
+                    if (eventEndTime.isAfter(DateTime.now())) ...[
                       ElevatedButton.icon(
                         onPressed: _editEvent,
                         icon: const Icon(Icons.edit),
@@ -501,7 +501,7 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
                           minimumSize: const Size(double.infinity, 48),
                         ),
                       ),
-                    // ],
+                    ],
                   ],
                 ],
               ),
