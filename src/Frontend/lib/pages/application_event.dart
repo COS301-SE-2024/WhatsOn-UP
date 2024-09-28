@@ -511,7 +511,7 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                   size: 50.0,
                 ),
               )
-                  : FutureBuilder<List<CategoryData.Venue>>(
+              : FutureBuilder<List<CategoryData.Venue>>(
                 future: _venuesFuture,
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
@@ -529,7 +529,7 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                             .toLowerCase()
                             .contains(textEditingValue.text.toLowerCase()));
                       },
-                      displayStringForOption: (CategoryData.Venue venue) => venue.name,
+                      displayStringForOption: (CategoryData.Venue venue) => '${venue.name} \t-\t (Capacity: ${venue.capacity})',
                       fieldViewBuilder: (context, controller, focusNode, onEditingComplete) {
                         _venueController = controller;
                         return TextFormField(
