@@ -358,12 +358,12 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
               _endDateTime = selectedOption.endDateTime;
               _updateDateTimeControllers();
               _selectedCategory = selectedOption.category;
-              
-              // Find the venue in _venues list and set it as _selectedVenue
-              // _selectedVenue = _venues.firstWhere(
-              //   (venue) => venue.id == selectedOption.venue.venueId,
-              //   orElse: () => null,
-              // );
+              _maxAttendees = selectedOption.maxAttendees;
+
+              _selectedVenue = _venues.firstWhere(
+                (venue) => venue.name == selectedOption.venue.venueName,
+                orElse: () => CategoryData.Venue(name: 'No venue', capacity: 0, venueId: '', ac: false, wifi: false, dataProject: 0, docCam: false, mic: false, windows: false, available: false, ),
+              );
               if (_selectedVenue != null) {
                 _venueController.text = _selectedVenue!.name;
               }
@@ -861,6 +861,7 @@ class AutofillOption {
   final Venue venue;
   final DateTime startDateTime;
   final DateTime endDateTime;
+  final int maxAttendees;
 
   AutofillOption({
     required this.description,
@@ -868,6 +869,7 @@ class AutofillOption {
     required this.venue,
     required this.startDateTime,
     required this.endDateTime,
+    required this.maxAttendees,
   });
 
   factory AutofillOption.fromJson(Map<String, dynamic> json) {
@@ -877,6 +879,7 @@ class AutofillOption {
       venue: Venue.fromJson(json['venue']),
       startDateTime: DateTime.parse(json['date']['startDateTime']),
       endDateTime: DateTime.parse(json['date']['endDateTime']),
+      maxAttendees: json['venue']['maxAttendees'],
     );
   }
 }
@@ -960,6 +963,12 @@ class _AutofillOptionsWidgetState extends State<AutofillOptionsWidget> {
                           const SizedBox(height: 8),
                           Text(
                             option.venue.venueName,
+                            style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'Suggested Attendees: ' +
+                            option.maxAttendees.toString(),
                             style: TextStyle(fontSize: 16, color: Colors.grey[600]),
                           ),
                           const SizedBox(height: 8),
