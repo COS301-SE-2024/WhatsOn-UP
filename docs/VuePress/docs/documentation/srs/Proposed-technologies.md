@@ -1,4 +1,4 @@
-# Technology choices(NEEDS TO BE UPDATED)
+# Technology choices
 
 | Use case | Proposed technology/framework |
 | :---- | :---- |
