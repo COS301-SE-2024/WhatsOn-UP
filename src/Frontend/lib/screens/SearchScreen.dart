@@ -152,48 +152,21 @@ class _SearchScreenState extends State<SearchScreen> {
 
   Future<List<Event>> fetchEventsByCategory(String category) async {
     try {
-      // Accessing the userProvider to get the JWT
+
       userProvider userP = Provider.of<userProvider>(context, listen: false);
-      // Fetching events using the JWT
+
       var response = await _api.getAllEvents(userP.JWT);
 
       if (response != null) {
-        // Assuming response is a List of events
-        print(response);
-        List<Event> events = response.map<Event>((eventData) {
-          // Ensure eventData is a Map
-          if (eventData is Map<String, dynamic>) {
-            // Convert metadata from JSON string to Map
-            Map<String, dynamic> metadata = json.decode(eventData['metadata']);
-            // Merge metadata into the event data
-            eventData['metadata'] = metadata;
-            return Event.fromJson(eventData); // Create Event object
-          } else {
-            throw Exception("Invalid event data structure");
-          }
-        }).toList();
-        final filteredEvents = events.where((event) {
-          if (event.metadata is Map<String, dynamic>) {
-            return event.metadata.categories == category; // Check if category matches
-          }
-          return false; // Return false if metadata is not of the expected type
-        }).toList();
 
-        // Filtering events by category
+        print(response);
+          if (event.metadata is Map<String, dynamic>) {
+        List<Event> events = response.map<Event>((event) => Event.fromJson(event as Map<String, dynamic>)).toList();
         print ("print events");
         print(events);
-        /*    final hostEvents = results.where((event) {
-        if (event.hosts is List<Map<String, dynamic>>) {
-          return (event.hosts as List<Map<String, dynamic>>)
-              .any((host) => host['userId'] == widget.hostId);
-        } else if (event.hosts is List<String>) {
-          return (event.hosts as List<String>).contains(widget.hostId);
-        }
-        return false;
-      }).toList();
-*/
         return events.where((event) => event.metadata.categories == category).toList();
-      } else {
+
+        } else {
         // Handle empty or null response
         return [];
       }
