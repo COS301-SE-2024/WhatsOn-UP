@@ -160,7 +160,6 @@ class _SearchScreenState extends State<SearchScreen> {
       if (response != null) {
 
         print(response);
-          if (event.metadata is Map<String, dynamic>) {
         List<Event> events = response.map<Event>((event) => Event.fromJson(event as Map<String, dynamic>)).toList();
         print ("print events");
         print(events);
