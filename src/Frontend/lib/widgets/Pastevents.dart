@@ -4,7 +4,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:firstapp/services/EventService.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import '../screens/FilterScreen.dart';
+//import '../screens/FilterScreen.dart';
 import '../screens/SearchScreen.dart';
 import 'event_card.dart';
 // import 'package:firstapp/main.dart';
@@ -57,10 +57,10 @@ class _PasteventsState extends State<Pastevents> {
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: Center(
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+               // mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.27,
+                  Expanded(
+                   // width: MediaQuery.of(context).size.width * 0.27,
                     child: Container(
                       decoration: BoxDecoration(
                         border: Border.all(color: borderColour),
@@ -77,28 +77,6 @@ class _PasteventsState extends State<Pastevents> {
                         },
                         icon: Icon(Icons.search, color: textColour),
                         label: Text('Search', style: TextStyle(color: textColour)),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 35.0),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.27,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(color: borderColour),
-                        borderRadius: BorderRadius.circular(16.0),
-                      ),
-                      child: TextButton.icon(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => FilterScreen(),
-                            ),
-                          );
-                        },
-                        icon: Icon(Icons.filter_list, color: textColour),
-                        label: Text('Filter', style: TextStyle(color: textColour)),
                       ),
                     ),
                   ),
