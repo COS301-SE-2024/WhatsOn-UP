@@ -11,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 import 'package:firstapp/screens/FilterScreen.dart';
 
+import '../pages/NoEventsFoundScreen.dart';
 import '../providers/user_provider.dart';
 import '../services/api.dart'; // Import the FilterScreen
 
@@ -38,6 +39,7 @@ class _SearchScreenState extends State<SearchScreen> {
   bool _showSearchHistory = false;
   bool _hasSearched = false;
   Timer? _debounce;
+
 
 
 
@@ -299,8 +301,9 @@ class _SearchScreenState extends State<SearchScreen> {
                   return SearchImageTile(
                     title: categoryName,
                     imageUrl: 'assets/images/$categoryName.jpg',
-                    onTap: (title) =>  Center(
-                      child: Text('No events found'),
+                    onTap: (title) =>   Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => NoEventsFoundScreen()),
                     ),
                   );
                 }).toList(),
