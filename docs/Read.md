@@ -83,7 +83,7 @@ events.
 ### Registration and Login
 Please navigate to the Guest section of the help menu to get information on how to Register or Login.
 
-### search For Events
+### Search For Events
 Please navigate to the Guest section of the help menu to get information on how to search For Events.
 ### View Calendar
 1. Once you have logged in your app navigate to the calendar icon.
@@ -108,14 +108,18 @@ Please navigate to the Guest section of the help menu to get information on how 
 ### Notifications
 1. Once you have logged in your app navigate to the notification icon.
 2. Once you are on the page there would be three tabs depending what type of user you are :
-    2.1 if you are a General or Host user you will see the the following tabs:unseen,seen,Invitations
+
+    2.1 if you are a General or Host user you will see the the following tabs:unseen,seen,Invitations.
+
     2.2 if you are an Admin user you will see the following tabs: unseen,seen,Applications
+
 3. in the Unseen tab that will contain all notifications you have not yet view
 4. in the seen tab that will contain all notifications you have viewed
 5. if you have the Invitations tab that is where are your invitations would be whether they are seen or unseen.
 6. if you have the Applications tab that is where are your applications would be whether they are seen or unseen.
 7. There are other notification types that you can get but you will see them under seen or unseen .
-###Types of Notifications and what they are:
+### Types of Notifications and what they are:
+
 * Broadcasts:
     + Messages sent by the admin to all users of the app.
     + These messages may also be sent when a host updates or deletes an event, or when the host wishes to communicate additional information to current attendees.
@@ -132,61 +136,146 @@ Only Admins or General users can receive these types of notifications.
 
 
 ### Manage Profile
-1. Once you have logged in your app navigate to the profile icon or you can access settings then navigate to profile to make personalised changes.
+1. Once you have logged in your app navigate to the profile icon or you can access settings then navigate to profile to make personalized changes.
+
+### Host applications
+1. After logging into the app, navigate to the profile icon or access the settings menu.
+2. Once you are on the profile page click on the "Host application" tab.
+3. You will be directed to a host application form. Fill in the required details.
+4. Once you have filled in the form click on the "Submit" button to submit your application.
+5. If you provided a student email address, a verification link will be sent to your inbox. Click the link to verify your application.
+6. After verification, your application will be reviewed by the admin. You will receive a notification about the status of your application once it has been processed
+
+**Application status:**
+
+1. Accepted: Your application has been approved, and you are now a host. You will need to acknowledge this status to smoothly transition into your temporary host role.
+2. Rejected: Your application was not approved, and you have not been granted host status.
+3. Once approved, you will be able to create and manage events as a host.
+
+**Note: If your application is rejected, you must wait one month before submitting a new application. Ensure you request a sufficient hosting duration to avoid delays. Alternatively, you can contact an admin directly to request a promotion without reapplying.**
+
+
 
 
 
 
 ### Other features
-The user will have to create host application to have access to host privallages such us:
-* Create events
-* Edit events
-* Delete events
-* Event Management which includes
+The user will have to create host application to have access to host privileges such us:
 
-    + manage attendees
+* Event Management which includes
+    + manage attendees(Attendees list)
     + broadcast messages directly to attendees
     + Create events,Edit events, Delete events can be seen under this section as well
     + you can view Past events 
 + view your events analytics under profile 
 
-**Please see under Host in this help menu for further information on how these features work**
+**Please see under Host in this help menu for further information on how these features work. Yo can also see under General in the help menu to see how to create a host application under 'Host applications'**
 
 ---
 
 ## Host
 ### Registration and Login
-### search For Events
+**Please go under General on this help menu to help on how to use this feature.**
+### Search For Events
+**Please go under Guest on this help menu to help on how to use this feature.**
 ### View Calendar
+**Please go under Guest on this help menu to help on how to use this feature.**
 ### RSVP Events  
+**Please go under General on this help menu to help on how to use this feature.**
 ### Save Events
+**Please go under General on this help menu to help on how to use this feature.**
+### Edit events
+1. Once you have logged in the app you can press the more button found at the bottom navigation bar (three vertical dots).
+2. Press the Manage events 
+3. Then open my events tile.
+4. press the event you want to delete
+5. The detailed page will pop up.
+6. Press the edit event button.
+7. you will be presented with the a form with all the already existing information of the event .
+8. you can change any field.
+9. After your changes you can then submit and a notification would be sent to attendees about your update.
+
+### Delete events
+1. Once you have logged in the app you can press the more button found at the bottom navigation bar (three vertical dots).
+2. Press the Manage events 
+3. Then open my events tile.
+4. press the event you want to delete
+5. The detailed page will pop up.
+6. Press the delete event button then the event would be deleted.
+
 ### Notifications
+**Please go under General on this help menu to help on how to use this feature.**
 ### Manage Profile
+**Please go under General on this help menu to help on how to use this feature.**
 ### Create Events
-1. Once you have logged in your app navigate to the create event icon which is a plus sign(Please refer to the image below).
-2. Fill in the form you can either fill it manually(how you would fill in the form) or you can use the smart event located at the top right corner(Please refer to the image below for an example of of the event page)
-3. How to use the Smart suggestion:
-  3.1 Click on the smart suggestion icon which is a sparkle icon(see an example of how that would look like ).
 
+1. After logging into the app, navigate to the "Create Event" icon, represented by a plus sign (see the image below for reference).
 
-  3.2 once you have clicked enter the title and the description and wait for the smart suggestion to suggests you the description, category,time,venue and the recommended amount of attendees you should host.(This will be auto-filled for you once you choose a an option).(Please see an example of how that would look like below)
+2. Complete the event form by either manually entering the details or using the Smart Suggestion feature, located at the top-right corner of the event page (refer to the image below for an example).
+
+3. Using Smart Suggestions:
+
+    3.1. Click on the Smart Suggestion icon, represented by a sparkle (see the image below for an example).
+
+    3.2. After clicking, enter the event title and a brief description. The Smart Suggestion feature will generate and autofill details such as the event description, category, time, venue, and recommended number of attendees based on your input. Simply select an option, and the fields will automatically populate. (Refer to the image below for an example of how it works).
 
 ### Invite Users
-This feature would be visible to right after you have created an event or you can edit an event and invite users.
+This feature becomes available immediately after creating an event, or you can access it by editing an existing event to invite users.
 
-How to invite
-1. You will be presented with a page and on the of the page you will see a search field.
-2. Enter the name of the user you wish to invite in the search field and select the user.
-3. Once you have selected the user you wish to invite click on the invite button which would be a plus sign(See below for an illustration).
-4. If you want to un-invite press the trash icon to remove the user from the invitee list.
-5. then press the arrow icon-Send icon to submit your list(see illustration)
+How to Invite Users:
 
-**The attendees will receive an notification for an invite.For more information on how notification works please see under general of this help menu and look for the subtitle "Notifications" if you need more help.**
-### Admin management Host Application
-### Admin management events
-### Location
-### HOST Application
+1. You will be directed to a page with a search field at the top.
+2. Type the name of the user you want to invite in the search field and select them from the results.
+3. After selecting a user, click the "Invite" button, represented by a plus sign (see illustration below).
+To remove a user from the invite list, click the trash icon next to their name.
+4. Once you’ve finalized your invitees, click the "Send" button, represented by an arrow icon (see illustration below), to submit your list.
+
+**Attendees will receive a notification for the invite. For more information on how notifications work, refer to the "Notifications" section under General in this help menu.**
+
+### Event Management 
+**1. Manage attendees (Attendees list):**
+
+Access this feature through the "Manage Events" section.
+
+1. If you're a host, navigate to "My Events." Admins can manage all events through the "Admin" section.
+2. Click the "Attendees" button to open the list of attendees.
+At the bottom right of the page, you'll see two buttons: a down arrow and an up arrow.
+3. The down arrow allows you to export or download the attendees list. You can either open it in your downloads folder or continue using the app while the file downloads.
+4. The up arrow is used for uploading an updated attendees list. (See the image below for reference.)
+
+**Working with the Attendees List:**
+
+    + Once you've downloaded the list as a CSV file, you can open and edit it in spreadsheet software such as Microsoft Excel, Google Sheets, LibreOffice, or a text editor.
+
+    + You can update each attendee's status using the following options: **Present, Absent, Unknown**
+
+    + After editing, simply upload the file back into the system. The status updates will be displayed on the user interface.
+
+
+
+**2. Broadcast Messages to Attendees:**
+
+As a host, go to the "Manage Events" section.
+Click on the "My Events" tile.
+Select the "Broadcast" button.
+Type your message, with the option to include emojis.
+Click the "Submit" button to send your message to all attendees.
+
+**3. Past events :**
+1. As a host you can go to manage events
+2. Then click the my events tile
+3. Then click the past events button.
+4. You can view the past events details and attendees list.
+
+### Analytics (My analytics)
+1. Navigate to the home page and go to the top left and click your profile.
+2. Then click the button option called "My Event Analytics".
+[]
+3. once inside you will see analytical points about the events that you have hosted more information can be found on the information icon about the graphs.
+[]
+
 ### Sign Out
+**Please go under General on this help menu to help on how to use this feature.**
 
 ---
 
