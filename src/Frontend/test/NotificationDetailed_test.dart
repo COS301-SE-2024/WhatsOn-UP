@@ -45,37 +45,71 @@ void main() {
     });
 
     testWidgets('Displays correct information for invite notification', (WidgetTester tester) async {
-      final notification = AppNotification(
-        notificationTypes: 'invite',
-        message: 'You have a new invite!',
-        sentAt: '2024-08-01T12:00:00Z',
-        userId: 'user123',
-        notificationId: 'notif123',
-        seenAt: null,
-        eventId: '1',
-        eventInvite: false,
-      );
+  final notification = AppNotification(
+    notificationTypes: 'invite',
+    message: 'You have a new invite!',
+    sentAt: '2024-08-01T12:00:00Z',
+    userId: 'user123',
+    notificationId: 'notif123',
+    seenAt: null,
+    eventId: '1',
+    eventInvite: false,
+  );
 
-      when(mockApi.AcceptInvite(JWT: 'user123', notificationId: 'notif123'))
-          .thenAnswer((_) async => {'success': true});
-      var testTimeandDate = formatDateTime('2024-08-01T12:00:00Z');
-      print(testTimeandDate);
-      await tester.pumpWidget(
-        MaterialApp(
-          home: NotificationDetailScreen(notification: notification),
-
+  await mockNetworkImages(() async {
+    await tester.pumpWidget(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider<userProvider>(
+            create: (_) => mockUserProvider,
+          ),
+          ChangeNotifierProvider<notificationProvider>(
+            create: (_) => mocknotificationProvider,
+          ),
+        ],
+        child: MaterialApp(
+          home: NotificationDetailScreen(notification: notification, api: mockApi),
+          routes: {
+            '/calendar': (context) => Scaffold(body: Text('Calendar')),
+          },
         ),
-      );
-      await tester.pumpAndSettle();
-      expect(find.text('Sent At: $testTimeandDate'), findsOneWidget);
-      expect(find.text('You have a new invite!'), findsOneWidget);
-      expect(find.text('Accept invite'), findsOneWidget);
-      // expect(find.text('Seen At: Not seen yet'), findsOneWidget);
-      // Uncomment below to test the tap functionality
-      // await tester.tap(find.text('Accept'));
-      // await tester.pump();
-      // verify(mockApi.AcceptInvite(userId: 'user123', notificationId: 'notif123')).called(1);
-    });
+      ),
+    );
+
+    when(mockApi.AcceptInvite(JWT: 'user123', notificationId: 'notif123'))
+        .thenAnswer((_) async => {'success': true});
+
+    var testTimeAndDate = formatDateTime('2024-08-01T12:00:00Z');
+    print(testTimeAndDate);
+
+    MultiProvider(
+                    providers: [
+                      ChangeNotifierProvider<userProvider>(
+                          create: (_) => mockUserProvider),
+                      ChangeNotifierProvider<notificationProvider>(
+                          create: (_) => mocknotificationProvider),
+                    ],
+
+                    child: MaterialApp(
+                      home:  NotificationDetailScreen(notification: notification, api:mockApi),
+                      routes: {
+                        '/calendar': (context) => Scaffold(body: Text('Calendar')),
+                      },
+                    ),
+                  );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Sent At: $testTimeAndDate'), findsOneWidget);
+    expect(find.text('You have a new invite!'), findsOneWidget);
+    expect(find.text('Accept invite'), findsOneWidget);
+
+    // Uncomment below to test the tap functionality
+    // await tester.tap(find.text('Accept'));
+    // await tester.pump();
+    // verify(mockApi.AcceptInvite(userId: 'user123', notificationId: 'notif123')).called(1);
+  });
+});
+
 
     testWidgets('Displays correct information for reminder notification and navigates to calendar', (WidgetTester tester) async {
       final reminderNotification = AppNotification(
@@ -106,7 +140,7 @@ void main() {
                     ],
 
                     child: MaterialApp(
-                      home:  NotificationDetailScreen(notification: reminderNotification),
+                      home:  NotificationDetailScreen(notification: reminderNotification, api:mockApi),
                       routes: {
                         '/calendar': (context) => Scaffold(body: Text('Calendar')),
                       },
@@ -137,10 +171,21 @@ void main() {
 
       var testTimeandDate2 = formatDateTime('2024-08-01T12:00:00Z');
       await tester.pumpWidget(
-        MaterialApp(
-          home: NotificationDetailScreen(notification: alreadyAcceptedNotification),
+        MultiProvider(
+                    providers: [
+                      ChangeNotifierProvider<userProvider>(
+                          create: (_) => mockUserProvider),
+                      ChangeNotifierProvider<notificationProvider>(
+                          create: (_) => mocknotificationProvider),
+                    ],
 
-        ),
+                    child: MaterialApp(
+                      home:  NotificationDetailScreen(notification: alreadyAcceptedNotification, api:mockApi),
+                      routes: {
+                        '/calendar': (context) => Scaffold(body: Text('Calendar')),
+                      },
+                    ),
+                  )
       );
       await tester.pumpAndSettle();
 

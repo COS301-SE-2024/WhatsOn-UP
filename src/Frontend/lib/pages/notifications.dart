@@ -2,6 +2,7 @@
 import 'package:firstapp/pages/supabase_signup.dart';
 import 'package:firstapp/providers/notification_providers.dart';
 import 'package:firstapp/providers/user_provider.dart';
+import 'package:firstapp/services/api.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../screens/NotificationDetailScreen.dart';
@@ -379,12 +380,13 @@ Widget build(BuildContext context) {
               ),
               onTap: () async {
                 final userProvider userP = Provider.of<userProvider>(context, listen: false);
+                final api = Api();
 
                 if (notification.notificationId != null) {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => NotificationDetailScreen(notification: notification),
+                      builder: (context) => NotificationDetailScreen(notification: notification, api: api),
                     ),
                   ).then((_) {});
                 } else {

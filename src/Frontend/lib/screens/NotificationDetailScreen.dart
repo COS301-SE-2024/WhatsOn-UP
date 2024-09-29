@@ -12,8 +12,12 @@ import '../widgets/notification_card.dart';
 
 class NotificationDetailScreen extends StatefulWidget {
   final AppNotification notification;
+  final Api api;
 
-  NotificationDetailScreen({required this.notification});
+  NotificationDetailScreen({
+    required this.notification,
+    required this.api
+  });
   
 
   @override
@@ -73,11 +77,12 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
 
   Future<void> _markNotificationAsSeen() async {
     var notification = widget.notification;
+    var api = widget.api;
     userProvider userP = Provider.of<userProvider>(context, listen: false);
     notificationProvider notif = Provider.of<notificationProvider>(context, listen: false);
 
     if(notification.seenAt == null){
-      await notification.markAsSeen(notification.notificationId, userP.JWT);
+      await notification.markAsSeen(notification.notificationId, userP.JWT, api);
       await notif.refreshNotifications(userP.JWT);
     }
     print('Notification was seen at: ${notification.seenAt}');
