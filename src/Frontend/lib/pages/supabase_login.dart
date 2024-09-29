@@ -58,7 +58,7 @@ Widget build(BuildContext context) {
         backgroundColor: Colors.transparent,
         body: Stack(
           children: [
-            Positioned(top: 40, child: _buildTop()), // 80
+            Positioned(top: 80, child: _buildTop()), // 40
             Positioned(bottom: 0, child: _buildBottom(context)),
           ],
         ),
@@ -73,23 +73,23 @@ Widget build(BuildContext context) {
       child: const Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Text(
-          //   'WhatsOn@UP',
-          //   style: TextStyle(
-          //     fontSize: 40,
-          //     color: Colors.white,
-          //     fontWeight: FontWeight.bold,
-          //     letterSpacing: 2,
-          //   ),
-          // ),
-          SizedBox(
-          width: 200, 
-          height: 200,
-          child: const Image(
-            image: AssetImage('images/whatsonupLogo.png'),
-            fit: BoxFit.contain,
+          Text(
+            'WhatsOn@UP',
+            style: TextStyle(
+              fontSize: 40,
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 2,
+            ),
           ),
-        ),
+        //   SizedBox(
+        //   width: 200, 
+        //   height: 200,
+        //   child: const Image(
+        //     image: AssetImage('images/whatsonupLogo.png'),
+        //     fit: BoxFit.contain,
+        //   ),
+        // ),
         ],
       ),
     );
