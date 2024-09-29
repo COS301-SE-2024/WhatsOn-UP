@@ -31,7 +31,7 @@ class SearchTile extends StatelessWidget {
         ),
         SearchImageTile(
           title: 'Health',
-          imageUrl: 'assets/images/Sports & Fitness.jpg',
+          imageUrl: 'assets/images/Cultural Festival.jpg',
           onTap: (title) => onFilterSelected(title),
         ),
       ],
