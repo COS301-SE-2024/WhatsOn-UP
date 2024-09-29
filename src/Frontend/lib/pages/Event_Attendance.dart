@@ -104,6 +104,7 @@ class _EventAttendanceState extends State<EventAttendance> {
             content: Text(
                 'Attendance list exported as CSV to Downloads: $fileName'),
             duration: Duration(seconds: 5),
+            backgroundColor: Colors.green,
           ),
         );
 
@@ -131,6 +132,7 @@ class _EventAttendanceState extends State<EventAttendance> {
                         SnackBar(
                           content: Text('Unable to open folder: $e'),
                           duration: Duration(seconds: 3),
+                          backgroundColor: Colors.red,
                         ),
                       );
                     }
@@ -151,6 +153,7 @@ class _EventAttendanceState extends State<EventAttendance> {
           SnackBar(
             content: Text('Failed to export CSV: $e'),
             duration: Duration(seconds: 3),
+            backgroundColor: Colors.red,
           ),
         );
       }
@@ -159,6 +162,7 @@ class _EventAttendanceState extends State<EventAttendance> {
         SnackBar(
           content: Text('Storage permission is required to export CSV'),
           duration: Duration(seconds: 3),
+          backgroundColor: Colors.red,
         ),
       );
     }
@@ -305,6 +309,7 @@ class _EventAttendanceState extends State<EventAttendance> {
                   SnackBar(
                     content: Text('Failed to update attendance for $fullName'),
                     duration: Duration(seconds: 5),
+                    backgroundColor: Colors.red,
                   ),
                 );
               }
@@ -314,6 +319,7 @@ class _EventAttendanceState extends State<EventAttendance> {
               SnackBar(
                 content: Text('No attendee found with the name $fullName'),
                 duration: Duration(seconds: 5),
+                backgroundColor: Colors.red,
               ),
             );
           }
@@ -441,6 +447,7 @@ Future<void> _importExcel(PlatformFile file) async {
               SnackBar(
                 content: Text('Failed to update attendance for $fullName'),
                 duration: Duration(seconds: 3),
+                backgroundColor: Colors.red,
               ),
             );
           }
