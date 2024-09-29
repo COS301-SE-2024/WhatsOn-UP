@@ -1,167 +1,3 @@
-// import 'dart:async';
-//
-// import 'package:flutter/cupertino.dart';
-// import 'package:flutter/material.dart';
-// import 'package:supabase_flutter/supabase_flutter.dart';
-//
-// import '../main.dart';
-//
-// class SupabaseLogin extends StatefulWidget {
-//   const SupabaseLogin({super.key});
-//   @override
-//   State<SupabaseLogin> createState() => _SupabaseLoginState();
-// }
-//
-// class _SupabaseLoginState extends State<SupabaseLogin> {
-//   final _emailController = TextEditingController();
-//
-//   late final StreamSubscription<AuthState> _authSubscription;
-//
-//   @override
-//   void initState() {
-//     super.initState();
-//     _authSubscription = supabase.auth.onAuthStateChange.listen((event) {
-//       final session = event.session;
-//       if (session != null) {
-//         Navigator.of(context).pushReplacementNamed('/account');
-//       }
-//     });
-//   }
-//
-//   @override
-//   void dispose() {
-//     _emailController.dispose();
-//     _authSubscription.cancel();
-//     super.dispose();
-//   }
-
-// @override
-// Widget build(BuildContext context) {
-//   return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('login'),
-//       ),
-//       body: ListView(
-//         padding: const EdgeInsets.all(12),
-//         children: [
-//           TextFormField(
-//             controller: _emailController,
-//             decoration: const InputDecoration(labelText: 'Email'),
-//           ),
-//
-//           SizedBox(height: 12),
-//           ElevatedButton(
-//             onPressed: () async {
-//               try {
-//                 final email = _emailController.text.trim();
-//                 await supabase.auth.signInWithOtp(
-//                   email: email,
-//                   emailRedirectTo:
-//                       'io.supabase.flutterquickstart://login-callback/',
-//
-//                 );
-//
-//                 if (mounted) {
-//                   ScaffoldMessenger.of(context).showSnackBar(
-//                       const SnackBar(content: Text('Check your inbox')));
-//                 }
-//               } on AuthException catch (error) {
-//                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-//                   content: Text(error.message),
-//                   backgroundColor: Theme.of(context).colorScheme.error,
-//                 ));
-//               } catch (error) {
-//                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-//                   content: Text('Error occured please try again '),
-//                   backgroundColor: Theme.of(context).colorScheme.error,
-//                 ));
-//               }
-//
-//               // final password = _passwordController.text;
-//               // final response = await supabase.auth.signIn(email: email, password: password);
-//               // if (response.error != null) {
-//               //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-//               //     content: Text('Error: ${response.error!.message}'),
-//               //   ));
-//               // }
-//             },
-//             child: const Text('Login'),
-//           ),
-//         ],
-//       ));
-// }
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('WhatON@UP'),
-//         centerTitle: true,
-//       ),
-//       body: Padding(
-//         padding: const EdgeInsets.all(16.0),
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.stretch,
-//           children: [
-//             const SizedBox(height: 50),
-//             const Text(
-//               'Welcome to WhatON@UP',
-//               textAlign: TextAlign.center,
-//               style: TextStyle(
-//                 fontSize: 24,
-//                 fontWeight: FontWeight.bold,
-//               ),
-//             ),
-//             const SizedBox(height: 20),
-//             TextFormField(
-//               controller: _emailController,
-//               decoration: InputDecoration(
-//                 labelText: 'Email',
-//                 border: OutlineInputBorder(
-//                   borderRadius: BorderRadius.circular(8.0),
-//                 ),
-//               ),
-//             ),
-//             const SizedBox(height: 20),
-//             ElevatedButton(
-//               onPressed: () async {
-//                 try {
-//                   final email = _emailController.text.trim();
-//                   await supabase.auth.signInWithOtp(
-//                     email: email,
-//                     emailRedirectTo:
-//                     'io.supabase.flutterquickstart://login-callback/',
-//                   );
-//
-//                   if (mounted) {
-//                     ScaffoldMessenger.of(context).showSnackBar(
-//                         const SnackBar(content: Text('Check your inbox')));
-//                   }
-//                 } on AuthException catch (error) {
-//                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-//                     content: Text(error.message),
-//                     backgroundColor: Theme.of(context).colorScheme.error,
-//                   ));
-//                 } catch (error) {
-//                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-//                     content: Text('Error occurred, please try again'),
-//                     backgroundColor: Theme.of(context).colorScheme.error,
-//                   ));
-//                 }
-//               },
-//               style: ElevatedButton.styleFrom(
-//                 padding: const EdgeInsets.symmetric(vertical: 16.0),
-//                 shape: RoundedRectangleBorder(
-//                   borderRadius: BorderRadius.circular(8.0),
-//                 ),
-//               ),
-//               child: const Text('Login'),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
 import 'dart:async';
 import 'package:firstapp/pages/supabase_forgot_password.dart';
 import 'package:firstapp/pages/supabase_signup.dart';
@@ -366,38 +202,38 @@ Widget build(BuildContext context) {
               },
 
               child: const Text('Don\'t have an account? Sign Up')),
-          const SizedBox(height: 10),
-          const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const GoogleSignInPage()),
-              );
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: googleButtonBackground,
-              foregroundColor: googleButtonTextColor,
-              side: const BorderSide(color: Colors.grey, width: 1.0),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20.0),
-              ),
-              padding: const EdgeInsets.symmetric(vertical: 12.0),
-              textStyle: const TextStyle(fontSize: 16),
-            ),
-            child: const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image(
-                  width: 24,
-                  height: 24,
-                  image: Svg('assets/images/google-icon.svg'),
-                ),
-                SizedBox(width: 8),
-                Text('Sign in with Google'),
-              ],
-            ),
-          ),
+          // const SizedBox(height: 10),
+          // const SizedBox(height: 20),
+          // ElevatedButton(
+          //   onPressed: () {
+          //     Navigator.push(
+          //       context,
+          //       MaterialPageRoute(builder: (context) => const GoogleSignInPage()),
+          //     );
+          //   },
+          //   style: ElevatedButton.styleFrom(
+          //     backgroundColor: googleButtonBackground,
+          //     foregroundColor: googleButtonTextColor,
+          //     side: const BorderSide(color: Colors.grey, width: 1.0),
+          //     shape: RoundedRectangleBorder(
+          //       borderRadius: BorderRadius.circular(20.0),
+          //     ),
+          //     padding: const EdgeInsets.symmetric(vertical: 12.0),
+          //     textStyle: const TextStyle(fontSize: 16),
+          //   ),
+          //   child: const Row(
+          //     mainAxisAlignment: MainAxisAlignment.center,
+          //     children: [
+          //       Image(
+          //         width: 24,
+          //         height: 24,
+          //         image: Svg('assets/images/google-icon.svg'),
+          //       ),
+          //       SizedBox(width: 8),
+          //       Text('Sign in with Google'),
+          //     ],
+          //   ),
+          // ),
 
           const SizedBox(height: 20),
           TextButton(
