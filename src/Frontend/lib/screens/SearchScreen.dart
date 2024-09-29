@@ -299,7 +299,9 @@ class _SearchScreenState extends State<SearchScreen> {
                   return SearchImageTile(
                     title: categoryName,
                     imageUrl: 'assets/images/$categoryName.jpg',
-                    onTap: (title) => fetchEventsByCategory(title),
+                    onTap: (title) =>  Center(
+                      child: Text('No events found'),
+                    ),
                   );
                 }).toList(),
               ),
