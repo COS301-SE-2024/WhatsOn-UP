@@ -249,11 +249,12 @@ At the bottom right of the page, you'll see two buttons: a down arrow and an up 
 
 **Working with the Attendees List:**
 
-    + Once you've downloaded the list as a CSV file, you can open and edit it in spreadsheet software such as Microsoft Excel, Google Sheets, LibreOffice, or a text editor.
+    1. Once you've downloaded the list as a CSV file, you can open and edit it in spreadsheet software such as Microsoft Excel, Google Sheets, LibreOffice, or a text editor.
 
-    + You can update each attendee's status using the following options: **Present, Absent, Unknown**
+    2. You can update each attendee's status using the following options: 
+    Present, Absent, Unknown
 
-    + After editing, simply upload the file back into the system. The status updates will be displayed on the user interface.
+    3. After editing, simply upload the file back into the system. The status updates will be displayed on the user interface.
 
 
 
