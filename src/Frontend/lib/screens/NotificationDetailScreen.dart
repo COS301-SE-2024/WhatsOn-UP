@@ -55,7 +55,8 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
             SnackBar(content: Text("This invite has been already accepted"), backgroundColor: Colors.red));
       } else {
         ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text("An error occurred: $e")));
+            .showSnackBar(SnackBar(content: Text("An error occurred: $e"),
+          backgroundColor: Colors.red,));
       }
     } finally {
       setState(() {
@@ -122,7 +123,8 @@ userProvider userP = Provider.of<userProvider>(context, listen: false);
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Unable to rate event. Missing information.")),
+        SnackBar(content: Text("Unable to rate event. Missing information."),
+          backgroundColor: Colors.red,),
       );
     }
   }
@@ -180,7 +182,7 @@ userProvider userP = Provider.of<userProvider>(context, listen: false);
       Navigator.of(context).pop();
     } 
     catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("An error occurred while deleting the notification")));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("An error occurred while deleting the notification"),  backgroundColor: Colors.red,));
       print("Error deleting notification: $e");
     } 
   }
@@ -255,7 +257,8 @@ userProvider userP = Provider.of<userProvider>(context, listen: false);
                             onPressed: () {
                               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                   content: Text(
-                                      "This invite has been accepted")));
+                                      "This invite has been accepted"),
+                                backgroundColor: Colors.green,));
                             },
                             style: TextButton.styleFrom(
                               foregroundColor: Colors.white,
