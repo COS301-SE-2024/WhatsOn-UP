@@ -244,7 +244,7 @@ class _HomePageState extends State<HomePage>
       return Center(child: SpinKitPianoWave(
         color: Color.fromARGB(255, 149, 137, 74),
         size: 50.0,
-      )); // Show a loading indicator or placeholder
+      )); // Show
     }
 
     return FutureBuilder<List<List<Event>>>(
