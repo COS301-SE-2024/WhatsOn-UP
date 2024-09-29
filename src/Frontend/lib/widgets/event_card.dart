@@ -695,7 +695,7 @@ class _EventCardState extends State<EventCard> {
                   ],
                 ),
                 const SizedBox(height: 10.0),
-                if(isbroadcast && widget.event.attendees.length>0)
+                if(isbroadcast)
                 Row(
 
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -734,7 +734,7 @@ class _EventCardState extends State<EventCard> {
 
                       ),
                     const SizedBox(height: 10.0),
-
+                    if(widget.event.attendees.length>0)
                       Container(
                         decoration: BoxDecoration(
                           border: Border.all(color: Colors.grey),
