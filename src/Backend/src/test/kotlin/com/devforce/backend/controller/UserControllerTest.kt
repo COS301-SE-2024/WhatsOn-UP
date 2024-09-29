@@ -259,7 +259,6 @@ class UserControllerIntegrationTest {
 
         val data = response.body?.data as Map<String, String>
         assertEquals("Application submitted successfully. Check your email for verification link", data["message"])
-
     }
 
 
