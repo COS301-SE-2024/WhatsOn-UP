@@ -29,7 +29,8 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
   Future<void> _resetPassword() async {
     if (_passwordController.text != _confirmPasswordController.text) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Passwords do not match')),
+        const SnackBar(content: Text('Passwords do not match'),
+          backgroundColor: Colors.red,),
       );
       return;
     }
@@ -47,17 +48,20 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
 
       if (response.user != null) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Password reset successful')),
+          const SnackBar(content: Text('Password reset successful'),
+            backgroundColor: Colors.green,),
         );
         Navigator.of(context).pushReplacementNamed('/login');
       }
     } on AuthException catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.message)),
+        SnackBar(content: Text(e.message),
+          backgroundColor: Colors.red,),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Error occurred, please try again')),
+        const SnackBar(content: Text('Error occurred, please try again'),
+          backgroundColor: Colors.red,),
       );
     }
 
