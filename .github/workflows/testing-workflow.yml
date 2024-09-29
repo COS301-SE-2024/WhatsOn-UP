@@ -88,18 +88,18 @@ jobs:
         rm -f src/notification-service/.env
         rm -f src/storage-service/.env
 
-    - name: Convert Jacoco report to lcov
-      run: |
-        python3 scripts/jacoco2lcov.py ./src/Backend/build/reports/jacoco/report.xml backend.lcov.info
+    # - name: Convert Jacoco report to lcov
+    #   run: |
+    #     python3 scripts/jacoco2lcov.py ./src/Backend/build/reports/jacoco/report.xml backend.lcov.info
 
-    - name: Merge coverage reports
-      run: |
-        lcov -a ./src/Frontend/coverage/lcov.info -a backend.lcov.info -o merged.lcov.info
+    # - name: Merge coverage reports
+    #   run: |
+    #     lcov -a backend.lcov.info -o merged.lcov.info
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v4
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-        files: merged.lcov.info
+        files: codeCoverageReport
         flags: unittests
         name: codecov-umbrella
