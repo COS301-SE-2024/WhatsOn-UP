@@ -27,7 +27,7 @@ As a guest, you're limited to basic functionality. To unlock extended features, 
 Once your account is created, you will be prompted to log in with your new credentials (username and password). After logging in, you'll gain access to additional features available to General Users.
 5. To login enter your full name and enter the password you submitted during the time you signed up.
 
-**For more details on the additional features and how to use them, refer to the General User section of the help menu.**
+
 ##
 ### Search For Events
 1. Navigate to the Home Page.
@@ -47,7 +47,8 @@ To sign out you can use two approaches to do this.
 1. Click on the profile icon on the top right of the page.
 2. Click on the "Log out" button.
 3. Alternatively, you can click on the three dots on the bottom right of the page(**This is if you are an Admin or Host if not click the settings icon and navigate to profile**).
-Note: If you are a guest user you would be exiting the app without not signing out.There will be various areas where in the user can sign-up the(**refer to the image below for an example how that would look like** )
+
+Note: If you are a guest user, you will exit the app without signing out. Various areas within the app will provide options for signing up (refer to the image below for an example of how that might appear).
 []
 ## After creating an account you can do the following:
 ### 1. You can explore the General, Host, or Admin sections of this help menu. Look for the relevant subtitles to learn about each feature:
@@ -175,15 +176,15 @@ The user will have to create host application to have access to host privileges 
 
 ## Host
 ### Registration and Login
-**Please go under General on this help menu to help on how to use this feature.**
+Please go under General on this help menu to help on how to use this feature.
 ### Search For Events
-**Please go under Guest on this help menu to help on how to use this feature.**
+Please go under Guest on this help menu to help on how to use this feature.
 ### View Calendar
-**Please go under Guest on this help menu to help on how to use this feature.**
+Please go under Guest on this help menu to help on how to use this feature.
 ### RSVP Events  
-**Please go under General on this help menu to help on how to use this feature.**
+Please go under General on this help menu to help on how to use this feature.
 ### Save Events
-**Please go under General on this help menu to help on how to use this feature.**
+Please go under General on this help menu to help on how to use this feature.
 ### Edit events
 1. Once you have logged in the app you can press the more button found at the bottom navigation bar (three vertical dots).
 2. Press the Manage events 
@@ -204,9 +205,9 @@ The user will have to create host application to have access to host privileges 
 6. Press the delete event button then the event would be deleted.
 
 ### Notifications
-**Please go under General on this help menu to help on how to use this feature.**
+Please go under General on this help menu to help on how to use this feature.
 ### Manage Profile
-**Please go under General on this help menu to help on how to use this feature.**
+Please go under General on this help menu to help on how to use this feature.
 ### Create Events
 
 1. After logging into the app, navigate to the "Create Event" icon, represented by a plus sign (see the image below for reference).
@@ -240,8 +241,8 @@ Access this feature through the "Manage Events" section.
 1. If you're a host, navigate to "My Events." Admins can manage all events through the "Admin" section.
 2. Click the "Attendees" button to open the list of attendees.
 At the bottom right of the page, you'll see two buttons: a down arrow and an up arrow.
-3. The down arrow allows you to export or download the attendees list. You can either open it in your downloads folder or continue using the app while the file downloads.
-4. The up arrow is used for uploading an updated attendees list. (See the image below for reference.)
+3. The down arrow allows you to export the attendee list as a CSV file, while the up arrow lets you import an updated list.
+ (See the image below for reference.)
 
 **Working with the Attendees List:**
 
@@ -255,17 +256,19 @@ At the bottom right of the page, you'll see two buttons: a down arrow and an up 
 
 **2. Broadcast Messages to Attendees:**
 
-As a host, go to the "Manage Events" section.
-Click on the "My Events" tile.
-Select the "Broadcast" button.
-Type your message, with the option to include emojis.
-Click the "Submit" button to send your message to all attendees.
+Once your event is created and attendees have RSVPed, you can send broadcast messages directly to attendees. To do this:
+
+1. Navigate to the event management section.
+2. Click on the "Broadcast" button next to the event details.
+3. Type your message in the text box provided.
+4. Click "Send" to broadcast your message to all attendees. This can be used for event updates, reminders, or changes in event details.
 
 **3. Past events :**
-1. As a host you can go to manage events
-2. Then click the my events tile
-3. Then click the past events button.
-4. You can view the past events details and attendees list.
+You can view your past events by:
+
+1. Navigating to the "My Events" section under event management.
+2. Selecting the "Past Events" tab to see a list of events that have already occurred.
+3. Here, you can review event details and export attendee lists for analysis.
 
 ### Analytics (My analytics)
 1. Navigate to the home page and go to the top left and click your profile.
@@ -281,18 +284,49 @@ Click the "Submit" button to send your message to all attendees.
 
 ## Admin
 ### Registration and Login
-### search For Events
+Please go under Guest on this help menu to help on how to use this feature.
+### Search For Events
+Please go under Guest on this help menu to help on how to use this feature.
 ### View Calendar
+Please go under Guest on this help menu to help on how to use this feature.
 ### RSVP Events  
+Please go under General on this help menu to help on how to use this feature.
 ### Save Events
+Please go under General on this help menu to help on how to use this feature.
 ### Notifications
+Please go under Guest on this help menu to help on how to use this feature.
 ### Manage Profile
+Please go under General on this help menu to help on how to use this feature.
 ### Create Events
+Please go under Host on this help menu to help on how to use this feature.
 ### Invite Users
+Please go under Host on this help menu to help on how to use this feature.
 ### Admin management Host Application
+1. Navigate to the "More" button located at the bottom-right corner of the navigation bar (represented by three vertical dots).
+2. Click on the "Event Management" option.
+3. Click on the "General user host applications" option.
+4. You will see a list of host applications categorized under four tabs:
+
+    * Pending: Host applications that are waiting for verification through email.
+    * Verified:Applications that have been verified.These applications can be verified without an email but through the documentation the user uploaded
+    * Promoted:Users who have been promoted to host.
+    * All:A complete list of all host applications.
+
+5. When you click on a user's application, you will see the following details:
+    * Profile Picture and Username of the applicant.
+    * An option to view the application details, where you can:
+        * Review the reason for the application.
+        * View any documentation the user has uploaded to support their request for promotion.
+        * See which admin processed the application.
+    * The current status of the application (with an information icon that explains the meaning of each status when clicked).
+6. Depending on the application's status, you can reject, accept, or demote the user.
+
 ### Admin management events
-### Location
-### HOST Application
+Please go under Host on this help menu to help on how to use this feature.
+This feature is the same as host only difference is that you have control over all events in the app in its entity.
+### Navigation
+Please go under General on this help menu to help on how to use this feature.
 ### Sign Out
+Please go under General on this help menu to help on how to use this feature.
 
 
