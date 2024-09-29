@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:firstapp/pages/allRecommended_events.dart';
 import 'package:firstapp/pages/supabase_signup.dart';
 import 'package:firstapp/widgets/event_card.dart';
@@ -22,15 +20,6 @@ import 'package:firstapp/pages/application_event.dart';
 import 'allHome_events.dart';
 import 'notifications.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
-import 'dart:math';
-
-const Color pantone159 = Color(0xFFF67F46); // humanities
-const Color pantone2718 = Color(0xFF2671AF); //health science
-const Color pantone201 = Color(0xFF9F1A35); // law
-const Color pantone377 = Color(0xFF7C9F2D); //NAS
-const Color pantone2945C = Color(0x000772a4); //EMS
-const Color pantone322 = Color(0x00005b63); //EBIT
-
 class HomePage extends StatefulWidget {
   const HomePage({
     Key? key,
@@ -40,44 +29,21 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage>
-    with TickerProviderStateMixin {
+    with SingleTickerProviderStateMixin {
   Api api = Api();
   int _selectedIndex = 0;
   late TabController _tabController;
   final TextEditingController _searchController = TextEditingController();
-  late AnimationController _controller;
-  late Animation<double> _animation;
-  bool isGradientBorder = true;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
-
-    _controller = AnimationController(
-      vsync: this,
-      //ANIMATION TIMER CHANGED HERE
-      duration: const Duration(seconds: 5),
-    )..repeat();
-    //_animation = Tween<double>(begin: 0, end: 1).animate(_controller);
-   // _controller.forward();
-    _animation = CurvedAnimation(
-      parent: Tween<double>(begin: 0, end: 1).animate(_controller),
-      curve: Curves.easeInOut,
-    );
-    Timer.periodic(const Duration(seconds: 20), (timer) {
-      setState(() {
-        isGradientBorder = !isGradientBorder;
-      });
-    });
-  //  _controller.forward();
   }
 
   @override
   void dispose() {
     _searchController.dispose();
-    _controller.dispose();
-    _tabController.dispose();
     super.dispose();
   }
 
@@ -241,13 +207,6 @@ class _HomePageState extends State<HomePage>
 
   Widget _buildExploreTab() {
     userProvider userP = Provider.of<userProvider>(context);
-    if (_animation == null) {
-      return Center(child: SpinKitPianoWave(
-        color: Color.fromARGB(255, 149, 137, 74),
-        size: 50.0,
-      )); // Show a loading indicator or placeholder
-    }
-
     return FutureBuilder<List<List<Event>>>(
       future: fetchEvents(),
       builder: (context, snapshot) {
@@ -272,63 +231,28 @@ class _HomePageState extends State<HomePage>
               children: [
                 Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: AnimatedBuilder(
-                  animation: _animation,
-                    builder: (context, child) {
-                    return Container(
-                        padding: const EdgeInsets.all(2),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(25),
-                          border: Border.all(
-                            width: 1.2, //  border width
-                            color: isGradientBorder ? Colors.transparent : Colors.black,
-                          ),
-                          gradient: isGradientBorder
-                              ? LinearGradient(
-                            colors: const [
-                              pantone201,
-                              pantone2718,
-                              pantone2945C,
-                              pantone377,
-                              pantone322,
-                            ],
-                            stops: [0.0, 0.25, 0.5, 0.75, 1.0],
-                            transform: GradientRotation(pi * _animation.value),
-                          )
-                          : null,
-                        ),
-                        child: TextField(
-                          controller: _searchController,
-                          decoration: InputDecoration(
-                            hintText: 'Search for events',
-                            prefixIcon: const Icon(Icons.search),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(25.0),
-                              borderSide: BorderSide.none,
-                            ),
-                            filled: true,
-                            fillColor: Colors.white,
-                          ),
-                          onSubmitted: (query) {
-                            if (query.isNotEmpty) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        SearchScreen(initialQuery: query)),
-                              );
-                            }
-                            _clearSearchInput();
-                          },
-                        ),
-                    );
-                    }
-
+                  child: TextField(
+                    controller: _searchController,
+                    decoration: InputDecoration(
+                      hintText: 'Search for events',
+                      prefixIcon: const Icon(Icons.search),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(25.0),
+                      ),
+                    ),
+                    onSubmitted: (query) {
+                      if (query.isNotEmpty) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  SearchScreen(initialQuery: query)),
+                        );
+                      }
+                      _clearSearchInput();
+                    },
                   ),
                 ),
-
-
-
                 Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: Row(
