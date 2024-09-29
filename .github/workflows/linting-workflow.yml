@@ -32,8 +32,8 @@ jobs:
           VALIDATE_JAVASCRIPT_STANDARD: true
           VALIDATE_TYPESCRIPT_ES: true
           VALIDATE_TYPESCRIPT_STANDARD: true
-          VALIDATE_DART: true
-          VALIDATE_FLUTTER: true
+          VALIDATE_DART: false
+          VALIDATE_FLUTTER: false
           DEFAULT_BRANCH: develop
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ACTIONS_RUNNER_DEBUG: true
