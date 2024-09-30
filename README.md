@@ -9,7 +9,7 @@
 ![GitHub Languages](https://img.shields.io/github/languages/count/COS301-SE-2024/WhatsOn-UP)
 ![GitHub Last Commit](https://img.shields.io/github/last-commit/COS301-SE-2024/WhatsOn-UP)
 ![GitHub RepoSize](https://img.shields.io/github/repo-size/COS301-SE-2024/WhatsOn-UP)
-[![Testing Pipeline](https://github.com/COS301-SE-2024/WhatsOn-UP/actions/workflows/testing-workflow.yml/badge.svg)](https://github.com/COS301-SE-2024/WhatsOn-UP/actions/workflows/testing-workflow.yml)
+[![CI Pipeline](https://github.com/COS301-SE-2024/WhatsOn-UP/actions/workflows/ci.yml/badge.svg)](https://github.com/COS301-SE-2024/WhatsOn-UP/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/github/COS301-SE-2024/WhatsOn-UP/branch/develop/graph/badge.svg?token=NCfwbRRGxD)](https://codecov.io/github/COS301-SE-2024/WhatsOn-UP)
 ## Project description
 WhatsOn@UP system aims to be a central hub for all University of Pretoria events, providing a centralized platform for students and guests to easily find and manage events.

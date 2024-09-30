@@ -4,7 +4,55 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="18d06f0c-60cc-4393-ad9b-789fc02af3e3" name="Changes" comment="" />
+    <list default="true" id="18d06f0c-60cc-4393-ad9b-789fc02af3e3" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../../.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/.vuepress/.cache/deps/@vue_devtools-api.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/.vuepress/.cache/deps/@vue_devtools-api.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/.vuepress/.cache/deps/@vuepress_shared.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/.vuepress/.cache/deps/@vuepress_shared.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/.vuepress/.cache/deps/_metadata.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/.vuepress/.cache/deps/chunk-UKCZNIRO.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/.vuepress/.cache/deps/chunk-UKCZNIRO.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/.vuepress/.cache/deps/chunk-WLIL22LS.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/.vuepress/.cache/deps/chunk-WLIL22LS.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/.vuepress/.cache/deps/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/.vuepress/.cache/deps/vue-router.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/.vuepress/.cache/deps/vue-router.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/.vuepress/.cache/deps/vue.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/.vuepress/.cache/deps/vue.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/.vuepress/.temp/internal/clientConfigs.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/.vuepress/.temp/internal/routes.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/.vuepress/.temp/internal/siteData.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/.vuepress/.temp/internal/themeData.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/.vuepress/.temp/pages/404.html.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/.vuepress/.temp/pages/404.html.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/.vuepress/.temp/pages/documentation/architecture/architectural-constraints.html.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/.vuepress/.temp/pages/documentation/architecture/architectural-constraints.html.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/.vuepress/.temp/pages/documentation/architecture/architectural-design-strategies.html.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/.vuepress/.temp/pages/documentation/architecture/architectural-design-strategies.html.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/.vuepress/.temp/pages/documentation/architecture/architectural-patterns.html.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/.vuepress/.temp/pages/documentation/architecture/architectural-patterns.html.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/.vuepress/.temp/pages/documentation/architecture/architectural-structure.html.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/.vuepress/.temp/pages/documentation/architecture/architectural-structure.html.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/.vuepress/.temp/pages/documentation/architecture/deployment-diagram.html.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/.vuepress/.temp/pages/documentation/architecture/deployment-diagram.html.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/.vuepress/.temp/pages/documentation/architecture/index.html.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/.vuepress/.temp/pages/documentation/architecture/index.html.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/.vuepress/.temp/pages/documentation/architecture/introduction.html.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/.vuepress/.temp/pages/documentation/architecture/introduction.html.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/.vuepress/.temp/pages/documentation/architecture/quality-requirements.html.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/.vuepress/.temp/pages/documentation/architecture/quality-requirements.html.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/.vuepress/.temp/pages/documentation/index.html.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/.vuepress/.temp/pages/documentation/index.html.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/.vuepress/.temp/pages/index.html.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/.vuepress/.temp/pages/index.html.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/.vuepress/.temp/prismjs/config.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/.vuepress/.temp/styles/index.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/.vuepress/.temp/styles/palette.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/.vuepress/.temp/vite-root/index.html" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -13,9 +61,9 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 4
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 4
+}</component>
   <component name="ProjectId" id="2mBovxcEqaZXaIJWjhtea60SedF" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -28,11 +76,11 @@
     "ACTIVE_CLOUD_PROJECT_NAME": "whatsonup-analytics",
     "ACTIVE_CLOUD_PROJECT_NUMBER": "427279140188",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "com.google.cloudcode.ide_session_index": "20240917_0000",
+    "com.google.cloudcode.ide_session_index": "20240930_0001",
     "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "feat/export__attendance__list",
+    "git-widget-placeholder": "fix/search__and__filter",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/khany/Documents/GitHub/WhatsOn-UP/src/Frontend",
+    "last_opened_file_path": "C:/Users/khany/Documents/GitHub/WhatsOn-UP/docs/VuePress/docs",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -59,6 +107,8 @@
       <option name="presentableId" value="Default" />
       <updated>1726559565197</updated>
       <workItem from="1726559566317" duration="467000" />
+      <workItem from="1727659470190" duration="37000" />
+      <workItem from="1727659640264" duration="172000" />
     </task>
     <servers />
   </component>
