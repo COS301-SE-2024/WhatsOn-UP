@@ -34,11 +34,9 @@ As a guest, you're limited to basic functionality. To unlock extended features, 
 Once your account is created, you will be directed to a user survey which will need to be completed. After logging in, you'll gain access to additional features available to General Users.
 
 <img src="Pictures/survey_1_filled.png" alt="Image description" height="500">
-&nbsp &nbsp &nbsp &nbsp
 <img src="Pictures/survey_2_filled.png" alt="Image description" height="500">
 <br>
 <img src="Pictures/survey_3_filled.png" alt="Image description" height="500">
-&nbsp &nbsp &nbsp &nbsp
 <img src="Pictures/survey_thank_you_screen.png" alt="Image description" height="500">
 
 5. To login enter your full name and enter the password you submitted during the time you signed up.
