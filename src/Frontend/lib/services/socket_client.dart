@@ -21,7 +21,7 @@ class SocketService {
   SocketService(String url, this._notificationProvider,String JWT,this.context) {
     // _notificationProvider=Provider.of<notificationProvider>(context, listen: true);
     final headers = {
-      'token': 'Bearer $JWT',
+      'token': '$JWT',
     };
 
     socket = IO.io(url, <String, dynamic>{
