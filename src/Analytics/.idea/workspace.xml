@@ -18,10 +18,10 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "customColor": "",
-  "associatedIndex": 7
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 7
+}</component>
   <component name="ProjectId" id="2mmjOg7XoIAbCSYRvLmieXub7Qi" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -30,7 +30,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "com.google.cloudcode.ide_session_index": "20240930_0000",
+    "com.google.cloudcode.ide_session_index": "20240930_0001",
     "dart.analysis.tool.window.visible": "false",
     "git-widget-placeholder": "fix/documentation",
     "kotlin-language-version-configured": "true",
@@ -71,6 +71,7 @@
       <option name="presentableId" value="Default" />
       <updated>1727688615579</updated>
       <workItem from="1727688616577" duration="202000" />
+      <workItem from="1727689311542" duration="187000" />
     </task>
     <servers />
   </component>
