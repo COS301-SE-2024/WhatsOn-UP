@@ -39,21 +39,21 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage>
-    with TickerProviderStateMixin {
+    with SingleTickerProviderStateMixin {
   Api api = Api();
   int _selectedIndex = 0;
   late TabController _tabController;
   final TextEditingController _searchController = TextEditingController();
-  late AnimationController _controller;
-  late Animation<double> _animation;
-  bool isGradientBorder = true;
+  //late AnimationController _controller;
+ // late Animation<double> _animation;
+  //bool isGradientBorder = true;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
 
-    _controller = AnimationController(
+    /*_controller = AnimationController(
       vsync: this,
       //ANIMATION TIMER CHANGED HERE
       duration: const Duration(seconds: 5),
@@ -69,14 +69,14 @@ class _HomePageState extends State<HomePage>
         isGradientBorder = !isGradientBorder;
       });
     });
-  //  _controller.forward();
+  //  _controller.forward();*/
   }
 
   @override
   void dispose() {
     _searchController.dispose();
-    _controller.dispose();
-    _tabController.dispose();
+   // _controller.dispose();
+   // _tabController.dispose();
     super.dispose();
   }
 
@@ -217,6 +217,7 @@ class _HomePageState extends State<HomePage>
                         : const AssetImage('assets/images/user.png')
                             as ImageProvider,
                 radius: 27.0,
+                backgroundColor: Colors.white,
               ),
             ),
             const SizedBox(width: 16.0),
@@ -239,12 +240,12 @@ class _HomePageState extends State<HomePage>
 
   Widget _buildExploreTab() {
     userProvider userP = Provider.of<userProvider>(context);
-    if (_animation == null) {
+    /*if (_animation == null) {
       return Center(child: SpinKitPianoWave(
         color: Color.fromARGB(255, 149, 137, 74),
         size: 50.0,
       )); // Show
-    }
+    }*/
 
     return FutureBuilder<List<List<Event>>>(
       future: fetchEvents(),
@@ -270,7 +271,7 @@ class _HomePageState extends State<HomePage>
               children: [
                 Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: AnimatedBuilder(
+                  /*child: AnimatedBuilder(
                   animation: _animation,
                     builder: (context, child) {
                     return Container(
@@ -279,7 +280,7 @@ class _HomePageState extends State<HomePage>
                           borderRadius: BorderRadius.circular(25),
                           border: Border.all(
                             width: 1.2, //  border width
-                            color: isGradientBorder ? Colors.transparent : Colors.black,
+                          //  color: isGradientBorder ? Colors.transparent : Colors.black,
                           ),
                           gradient: isGradientBorder
                               ? LinearGradient(
@@ -294,7 +295,7 @@ class _HomePageState extends State<HomePage>
                             transform: GradientRotation(pi * _animation.value),
                           )
                           : null,
-                        ),
+                        ),*/
                         child: TextField(
                           controller: _searchController,
                           decoration: InputDecoration(
@@ -302,10 +303,10 @@ class _HomePageState extends State<HomePage>
                             prefixIcon: const Icon(Icons.search),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(25.0),
-                              borderSide: BorderSide.none,
+                             // borderSide: BorderSide.none,
                             ),
-                            filled: true,
-                            fillColor: Colors.white,
+                          /*  filled: true,
+                            fillColor: Colors.white,*/
                           ),
                           onSubmitted: (query) {
                             if (query.isNotEmpty) {
@@ -318,9 +319,6 @@ class _HomePageState extends State<HomePage>
                             }
                             _clearSearchInput();
                           },
-                        ),
-                    );
-                    }
 
                   ),
                 ),
@@ -357,7 +355,7 @@ class _HomePageState extends State<HomePage>
                           pause: const Duration(milliseconds: 200),
                         ),
                       ),
-                      const Spacer(),
+                      //const Spacer(),
                       if (userP.role != "GUEST")
                       TextButton(
                         onPressed: () {
