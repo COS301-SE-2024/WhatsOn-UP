@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:firstapp/pages/allRecommended_events.dart';
 import 'package:firstapp/pages/supabase_signup.dart';
 import 'package:firstapp/widgets/event_card.dart';
