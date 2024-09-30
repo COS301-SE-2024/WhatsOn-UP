@@ -297,7 +297,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   String categoryName = category.name;
                   return SearchImageTile(
                     title: categoryName,
-                    imageUrl: 'assets/images/$categoryName.jpg',
+                    imageUrl: 'images/$categoryName.jpg',
                     onTap: (title) =>   Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => NoEventsFoundScreen()),
