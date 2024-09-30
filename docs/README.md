@@ -16,18 +16,31 @@ As a guest, you're limited to basic functionality. To unlock extended features, 
 
 1. Navigate to the Registration Page
 * Click on the Register button or link found on the homepage.
+<img src="Pictures/sign_in_blank_login_signup.png" alt="Image description" height="500">
+
 
 2. Fill Out the Registration Form
  Provide the following details:
 * Username: Choose a unique username.
 * Email Address: Enter a valid email address.
 * Password: Create a strong password.
-3. Submit the Registration Form
 
-    After filling in the required fields, click the Submit button to create your account.
+3. Submit the Registration Form
+* After filling in the required fields, click the Submit button to create your account.
+
+<img src="Pictures/sign_up_filled.png" alt="Image description" height="500">
 
 4. Log In to Access More Features
-Once your account is created, you will be prompted to log in with your new credentials (username and password). After logging in, you'll gain access to additional features available to General Users.
+Once your account is created, you will be directed to a user survey which will need to be completed. After logging in, you'll gain access to additional features available to General Users.
+
+<img src="Pictures/survey_1_filled.png" alt="Image description" height="500">
+&nbsp &nbsp &nbsp &nbsp
+<img src="Pictures/survey_2_filled.png" alt="Image description" height="500">
+<br>
+<img src="Pictures/survey_3_filled.png" alt="Image description" height="500">
+&nbsp &nbsp &nbsp &nbsp
+<img src="Pictures/survey_thank_you_screen.png" alt="Image description" height="500">
+
 5. To login enter your full name and enter the password you submitted during the time you signed up.
 
 
