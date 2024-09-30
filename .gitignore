@@ -46,3 +46,7 @@ public/
 **/.vuepress/.cache/** 
 
 
+.env
+.env.local
+.env.*.local
+
