@@ -9,7 +9,7 @@
 ![GitHub Languages](https://img.shields.io/github/languages/count/COS301-SE-2024/WhatsOn-UP)
 ![GitHub Last Commit](https://img.shields.io/github/last-commit/COS301-SE-2024/WhatsOn-UP)
 ![GitHub RepoSize](https://img.shields.io/github/repo-size/COS301-SE-2024/WhatsOn-UP)
-[![CI Pipeline](https://github.com/COS301-SE-2024/WhatsOn-UP/actions/workflows/ci.yml/badge.svg)](https://github.com/COS301-SE-2024/WhatsOn-UP/actions/workflows/ci.yml)
+[![Testing Pipeline](https://github.com/COS301-SE-2024/WhatsOn-UP/actions/workflows/testing-workflow.yml/badge.svg)](https://github.com/COS301-SE-2024/WhatsOn-UP/actions/workflows/testing-workflow.yml)
 [![codecov](https://codecov.io/github/COS301-SE-2024/WhatsOn-UP/branch/develop/graph/badge.svg?token=NCfwbRRGxD)](https://codecov.io/github/COS301-SE-2024/WhatsOn-UP)
 ## Project description
 WhatsOn@UP system aims to be a central hub for all University of Pretoria events, providing a centralized platform for students and guests to easily find and manage events.
@@ -23,7 +23,9 @@ WhatsOn@UP system aims to be a central hub for all University of Pretoria events
 <br/>
     <ul><li><a href="https://drive.google.com/file/d/1tH-Z4wL-U17SL5ecBKT7rOWEyJ3HX0MR/view?usp=drive_link">Demo 2 Video</a></li></ul>
      <ul><li><a href="https://drive.google.com/file/d/1MWEgor5A3dLAVuCLGt-PwdRHh4tB8tA6/view?usp=drive_link">Demo 3 Video</a></li></ul>
-    </td>
+     <ul><li><a href="https://drive.google.com/file/d/1MWEgor5A3dLAVuCLGt-PwdRHh4tB8tA6/view?usp=drive_link">Demo 4 Video</a></li></ul>
+
+</td>
   </tr>
   <tr>
     <th>Project Board</th>

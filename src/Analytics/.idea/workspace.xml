@@ -1,57 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="AutoImportSettings">
-    <option name="autoReloadType" value="NONE" />
+    <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ffe5bd8b-130f-4cd6-8230-fbf4c94104d6" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-    </list>
+    <list default="true" id="5c9d746f-4ebe-4e8a-9edf-61bbb8c53694" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ClangdSettings">
-    <option name="formatViaClangd" value="false" />
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-  </component>
-  <component name="MarkdownSettingsMigration">
-    <option name="stateVersion" value="1" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
   </component>
   <component name="ProjectColorInfo">{
-  &quot;customColor&quot;: &quot;&quot;,
-  &quot;associatedIndex&quot;: 5
+  &quot;associatedIndex&quot;: 7
 }</component>
-  <component name="ProjectId" id="2lHcv7ITyjQ6sGgwoVpRRQjACUO" />
+  <component name="ProjectId" id="2mRMwSstkIXACK8s5avDpqaNPgp" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.cidr.known.project.marker": "true",
-    "RunOnceActivity.readMode.enableVisualFormatting": "true",
-    "cf.first.check.clang-format": "false",
-    "cidr.known.project.marker": "true",
-    "com.google.cloudcode.ide_session_index": "20240930_0000",
+    "com.google.cloudcode.ide_session_index": "20240926_0000",
     "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "fix/documentation",
+    "git-widget-placeholder": "fix/search__and__filter",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/khany/Documents/GitHub/WhatsOn-UP",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
+    "last_opened_file_path": "C:/Users/khany/Documents/GitHub/WhatsOn-UP/src/Analytics",
     "nodejs_package_manager_path": "npm",
     "show.migrate.to.gradle.popup": "false",
     "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "kotlin-gradle-user-dirs": [
+      "C:\\Users\\khany\\.gradle"
+    ]
   }
 }]]></component>
+  <component name="RunManager">
+    <configuration name="AnalyticsApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="Analytics.main" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.devforce.analytics.AnalyticsApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -63,12 +64,13 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="ffe5bd8b-130f-4cd6-8230-fbf4c94104d6" name="Changes" comment="" />
-      <created>1724840669727</created>
+      <changelist id="5c9d746f-4ebe-4e8a-9edf-61bbb8c53694" name="Changes" comment="" />
+      <created>1727035174379</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1724840669727</updated>
-      <workItem from="1727684899575" duration="394000" />
+      <updated>1727035174379</updated>
+      <workItem from="1727035175571" duration="108000" />
+      <workItem from="1727374921436" duration="16000" />
     </task>
     <servers />
   </component>
