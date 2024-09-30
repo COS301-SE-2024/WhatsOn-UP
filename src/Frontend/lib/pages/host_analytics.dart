@@ -19,7 +19,7 @@ class _HostAnalyticsPageState extends State<HostAnalyticsPage> {
   Future<void> _getAllEventsAnalytics() async {
     userProvider userP = Provider.of<userProvider>(context, listen: false);
     try {
-      // final response = await api.getHostEventAnalytics("69ae72bc-8e2b-4400-b608-29f048d4f8c7", userP.JWT);
+      // final response = await api.getHostEventAnalytics("eca82eaf-fe48-4016-bc87-c24587be7081", userP.JWT);
       final response = await api.getHostEventAnalytics(userP.userId, userP.JWT);
       
       // print('EVENTS ANALYTICS RESPONSE: $response');
@@ -51,7 +51,7 @@ class _HostAnalyticsPageState extends State<HostAnalyticsPage> {
 
     try {
       final response = await api.getHostPopularEvents(userP.JWT);
-      // final response = await api.getHostPopularEvents("69ae72bc-8e2b-4400-b608-29f048d4f8c7");
+      // final response = await api.getHostPopularEvents("eca82eaf-fe48-4016-bc87-c24587be7081");
       // print('POPULAR EVENTS RESPONSE: $response');
 
       setState(() {
