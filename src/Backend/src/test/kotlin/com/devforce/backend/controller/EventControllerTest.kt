@@ -253,7 +253,7 @@ class EventControllerIntegrationTest {
             maxAttendees = 10
             isPrivate = true
             venue = location
-            hosts = mutableSetOf(UserModel().apply { userId = UUID.fromString("69ae72bc-8e2b-4400-b608-29f048d4f8c7") })
+            hosts = mutableSetOf(UserModel().apply { userId = UUID.fromString("eca82eaf-fe48-4016-bc87-c24587be7081") })
             metadata = mapOf("category" to "Tech").toString()
 
         }

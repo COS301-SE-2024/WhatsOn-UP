@@ -112,7 +112,7 @@ class AdminControllerIntegrationTest {
     fun `test accept or reject application`(){
         var response = mockMvc.perform(post("$baseUri/accept_application")
             .header(HttpHeaders.AUTHORIZATION, bearerToken)
-            .param("applicationId", "69ae72bc-8e2b-4400-b608-29f048d4f8c7")
+            .param("applicationId", "eca82eaf-fe48-4016-bc87-c24587be7081")
             .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON))
 
@@ -124,7 +124,7 @@ class AdminControllerIntegrationTest {
 
         response = mockMvc.perform(post("$baseUri/reject_application")
             .header(HttpHeaders.AUTHORIZATION, bearerToken)
-            .param("applicationId", "69ae72bc-8e2b-4400-b608-29f048d4f8c7")
+            .param("applicationId", "eca82eaf-fe48-4016-bc87-c24587be7081")
             .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON))
 
