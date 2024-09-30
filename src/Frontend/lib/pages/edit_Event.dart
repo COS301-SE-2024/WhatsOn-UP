@@ -436,9 +436,7 @@ class _EditEventState extends State<EditEvent> {
 
 
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Event updated successfully'),
-                backgroundColor: Colors.green,
-              ),
+              const SnackBar(content: Text('Event updated successfully')),
             );
             Navigator.pop(context, true);
 
@@ -455,8 +453,7 @@ class _EditEventState extends State<EditEvent> {
           }).catchError((error) {
             print('Error updating event: $error');
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Failed to update event: $error'),
-                backgroundColor: Colors.red,),
+              SnackBar(content: Text('Failed to update event: $error')),
             );
           });
         } else {
@@ -479,8 +476,7 @@ class _EditEventState extends State<EditEvent> {
             eventP.refreshRecommendations(userP.JWT);
 
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Event updated successfully'),
-                backgroundColor: Colors.green,),
+              const SnackBar(content: Text('Event updated successfully')),
             );
             Navigator.pop(context, true);
 
@@ -496,8 +492,7 @@ class _EditEventState extends State<EditEvent> {
           }).catchError((error) {
             print('Error updating event: $error');
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Failed to update event: $error'),
-                backgroundColor: Colors.red,),
+              SnackBar(content: Text('Failed to update event: $error')),
             );
           });
         }

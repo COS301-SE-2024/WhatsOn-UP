@@ -464,6 +464,101 @@ class _EventCardState extends State<EventCard> {
   bool isbroadcast=false;
   bool _isLoading=false;
 
+  // Future<void> _addSaved() async {
+  //
+  //   EventProvider eventProvider =
+  //   Provider.of<EventProvider>(context, listen: false);
+  //
+  //
+  //   try {
+  //     setState(() {
+  //       _isLoading = true;
+  //     });
+  //
+  //     var result = await Api().putSavedEvent(widget.event.id, user!.id);
+  //
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       const SnackBar(content: Text('Successfully RSVP\'d to event!')),
+  //     );
+  //     await eventProvider.refreshRSVPEvents(user!.id);
+  //     await eventProvider.refreshEvents();
+  //     print(
+  //         'amount of attendees after event added to the calendar ${_thisCurrentEvent.attendees.length}');
+  //     setState(() {
+  //       _isLoading = false;
+  //     });
+  //     Navigator.of(context).pushReplacementNamed('/home');
+  //   } catch (e) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(content: Text('Failed to RSVP: ${e.toString()}')),
+  //     );
+  //     setState(() {
+  //       _isLoading = false;
+  //     });
+  //   }
+  // }
+
+  // Future<void> _fetchEvent(bool recommendations, bool saved, Event event) async {
+  //   try {
+  //     Event? eventM;
+  //     EventProvider eventProvider =
+  //     Provider.of<EventProvider>(context, listen: false);
+  //     if(recommendations==true){
+  //       eventM = await eventProvider.getEventById(event.id);
+  //
+  //       eventM?.saved=saved;
+  //     }else{
+  //
+  //       eventM =await eventProvider.getEventByIdR(event.id);
+  //       eventM?.saved=saved;
+  //     }
+  //
+  //   } catch (e) {
+  //     print('Error fetching event: $e');
+  //   }
+  // }
+//   Future<void> _fetchEvent(bool recommendations, bool saved, Event event,String JWT) async {
+//     try {
+//       setState(() {
+//         _isLoading = true;
+//       });
+//
+//       Event? eventM;
+//       EventProvider eventProvider = Provider.of<EventProvider>(context, listen: false);
+// userProvider userP = Provider.of<userProvider>(context, listen: false);
+//
+//       if (recommendations) {
+//         eventM = await eventProvider.getEventById(event.id);
+//
+//         eventProvider.addEventSaved(eventM!,JWT);
+//         eventM?.saved = saved;
+//         eventProvider.refreshRecommendations(JWT);
+//         eventProvider.refreshEvents(userP.JWT,userP.role);
+//
+//       } else {
+//         eventM = await eventProvider.getEventByIdR(event.id);
+//         eventProvider.removeEventSaved(eventM!,JWT);
+//         eventM?.saved = saved;
+//         eventProvider.refreshRecommendations(JWT);
+//         eventProvider.refreshEvents(userP.JWT,userP.role);
+//       }
+//
+//     } catch (e) {
+//       print('Error fetching event: $e');
+//     } finally {
+//       setState(() {
+//         _isLoading = false;
+//       });
+//     }
+//   }
+
+
+
+
+
+
+
+
   @override
   Widget build(BuildContext context) {
     EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
@@ -473,12 +568,7 @@ class _EventCardState extends State<EventCard> {
     bool showBookmarkButton = widget.showBookmarkButton && userRole != "GUEST" && widget.broadcast != "EDIT";
     isbroadcast = widget.broadcast == "EDIT";
 
-
     final theme = Theme.of(context);
-    final backgroundVenueColour =
-        theme.brightness == Brightness.dark ? Color.fromARGB(255, 41, 41, 41) : Colors.grey[200];
-    final bookMarkSavedColour =
-        theme.brightness == Brightness.dark ? Colors.white : Colors.black;
     final cardColour = theme.colorScheme.surface;
     final textColour = theme.colorScheme.onSurface;
 
@@ -548,22 +638,13 @@ class _EventCardState extends State<EventCard> {
                       color: textColour,
                     ),
                     Expanded(
-                      child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
-                    decoration: BoxDecoration(
-                      color: backgroundVenueColour, // Background color
-                      borderRadius: BorderRadius.circular(16.0), // Rounded corners
-                    ),
-                    child: Text(
-                      widget.event.venue?.name ?? 'No Venue',
-                      style: TextStyle(
-                        fontSize: 14.0,
-                        color: textColour,
+                      child: Text(
+                        widget.event.venue?.name ?? 'No Venue',
+                        style: TextStyle(
+                          fontSize: 14.0,
+                          color: textColour,
+                        ),
                       ),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                    ),
-                  ),
                     ),
                     if (showBookmarkButton)
                       IconButton(
@@ -572,7 +653,7 @@ class _EventCardState extends State<EventCard> {
                           widget.event.saved? Icons.bookmark : Icons.bookmark_border,
                           size: 20.0,
                           // color: isBookmarked ? Colors.black : textColour,
-                           color: widget.event.saved? bookMarkSavedColour : textColour,
+                           color: widget.event.saved? Colors.black : textColour,
                         ),
                         onPressed: () {
                           setState(() {
@@ -614,7 +695,7 @@ class _EventCardState extends State<EventCard> {
                   ],
                 ),
                 const SizedBox(height: 10.0),
-                if(isbroadcast)
+                if(isbroadcast && widget.event.attendees.length>0)
                 Row(
 
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -653,7 +734,7 @@ class _EventCardState extends State<EventCard> {
 
                       ),
                     const SizedBox(height: 10.0),
-                    if(widget.event.attendees.length>0)
+
                       Container(
                         decoration: BoxDecoration(
                           border: Border.all(color: Colors.grey),

@@ -137,34 +137,7 @@ class LanguageModelService {
 
 
         } else {
-            val possibleVenues = recommendedVenueRepo.getPossibleVenues(userModel.userId, title,
-                "Sports & Fitness".toString()
-            )
-            val possibleDates = recommendedDateRepo.getPossibleDates(userModel.userId, title, "Sports & Fitness".toString()
-            )
-
-            var i = 0
-
-            val descriptions = listOf(
-                "Join us for an interactive and engaging workshop where you'll learn the fundamentals of web development and build your first website. This hands-on session is perfect for beginners looking to get started in the world of coding.",
-                "Indulge in a delightful evening of delicious food and engaging conversation with fellow foodies. We'll be showcasing the best local culinary creations, offering insights into the art of food preparation, and fostering a vibrant community of food enthusiasts.",
-                "Experience a captivating performance by our talented dance troupe, showcasing a fusion of traditional and contemporary styles. Prepare to be mesmerized by their intricate movements, expressive storytelling, and vibrant costumes.",
-                "Join us for an interactive and engaging workshop where you'll learn the fundamentals of web development and build your first website. This hands-on session is perfect for beginners looking to get started in the world of coding."
-            )
-
-
-            val responseDto = descriptions.map { description ->
-                val mappedItem = mapOf(
-                    "description" to description[i],
-                    "category" to "Sports & Fitness",
-                    "venue" to possibleVenues.getOrNull(i),
-                    "date" to possibleDates.getOrNull(i)
-                )
-                i++
-                mappedItem
-            }
-
-            ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), responseDto))
+            ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), "Failed to generate description"))
         }
     }
 }

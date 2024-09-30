@@ -65,8 +65,7 @@ class _InviteUsersWidgetState extends State<InviteUsers> {
     });
 
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Invitations sent successfully!'),
-        backgroundColor: Colors.green,),
+      SnackBar(content: Text('Invitations sent successfully!')),
     );
 
     Navigator.of(context).pushReplacement(

@@ -121,18 +121,18 @@ Future<void> refreshRecommendations(String JWT) async {
 Future<List<Event>> _fetchEventsRsvp(String userId, String JWT) async {
   print("DOUBLEU +$JWT");
   try {
-    List<Event> events;
+    List<dynamic> responseData;
     if (userId == "guest") {
       print('I am a guest');
-      events = await api.getAllEventsGuest();
+      responseData = await api.getAllEventsGuest();
     }
     else {
-      events = await api.getRSVPEvents(JWT);
+      responseData = await api.getRSVPEvents(JWT);
     }
 
-    // List<Event> events = responseData
-    //     .map((eventData) => Event.fromJson(eventData as Map<String, dynamic>))
-    //     .toList();
+    List<Event> events = responseData
+        .map((eventData) => Event.fromJson(eventData as Map<String, dynamic>))
+        .toList();
 
 
 

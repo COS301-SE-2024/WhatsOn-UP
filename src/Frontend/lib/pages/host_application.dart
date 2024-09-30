@@ -216,10 +216,7 @@ class _HostApplicationPageState extends State<HostApplicationPage> {
       _formKey.currentState!.save();
       if (!_isStudent && _stickerImage == null) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Please upload a permission sticker'),
-            backgroundColor: Colors.red,
-          ),
+          const SnackBar(content: Text('Please upload a permission sticker')),
         );
         return;
       }
@@ -261,9 +258,7 @@ class _HostApplicationPageState extends State<HostApplicationPage> {
       print('Application submitted successfully: ${result['data']['message']}');
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Application submitted successfully. Please check your email for a verification link.'),
-          backgroundColor: Colors.green,
-        ),
+          content: Text('Application submitted successfully. Please check your email for a verification link.'),),
       );
     } catch (e) {
       print('Failed to submit application: $e');

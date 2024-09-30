@@ -9,7 +9,7 @@ data class CreateEventDto(
     val startDateTime: LocalDateTime,
     val endDateTime: LocalDateTime,
     val location: UUID,
-    var maxParticipants: Int?,
+    val maxParticipants: Int?,
     val metadata: Map<String, String>?,
     val isPrivate: Boolean?,
     val hosts: Set<UUID>?,

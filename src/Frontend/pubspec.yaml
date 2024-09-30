@@ -86,6 +86,7 @@ dependencies:
   spreadsheet_decoder: ^2.3.0
   syncfusion_flutter_charts: ^26.2.13
   animated_text_kit: ^4.2.2
+  font_awesome_flutter: ^10.7.0
 dio: ^5.5.0+1
 page_transition: "^2.1.0"
 flutter_pannable_rating_bar: ^2.7.2+1

@@ -39,7 +39,8 @@ class AppNotification {
           : null,
     );
   }
-  Future<void> markAsSeen(String notificationID, String? JWT, Api api) async {
+  Future<void> markAsSeen(String notificationID, String? JWT) async {
+    Api api = Api();
     await api.markSeen(notificationID,JWT!);
     // seenAt = formatDateTime(DateTime.now().toIso8601String());
   }

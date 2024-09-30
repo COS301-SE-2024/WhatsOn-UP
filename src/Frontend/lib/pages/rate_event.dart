@@ -35,7 +35,6 @@ class _RateEventPageState extends State<RateEventPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Thank you! Your rating has been submitted successfully.'),
-          backgroundColor: Colors.green,
         ),
       );
       Navigator.of(context).pop();
