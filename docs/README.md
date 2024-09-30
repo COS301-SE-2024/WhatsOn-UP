@@ -1,97 +1,336 @@
 # Help Center
-## Table Of Contents
-1. [Registration and Login](#register-and-login)
-2. [Search For Events](#search-for-events)
-3. [RSVP Events](#rsvp-events)
-4. [View Calendar](#view-calendar)
-5. [Manage Profile](#manage-profile)
-6. [Create Events](#create-events)
-8. [Invite Users](#invite-users)
-9. [Admin management Host Application](#admin-management-host-application)
-10. [Admin management events](#admin-management-events)
-11. [Location](#location)
-12. [HOST Application](#host-application)
-13. [Notifications](#notifications)
-7. [Sign Out](#sign-out)
-
-## Register and Login
-A guest user is limited to only basic functionality. For extended functionality you must create an account on the register page. To create an account: <br>
-1. Navigate to the register page
-![sign-up-instruction-1](Pictures/sign_up_instruction.jpg)
-2. Enter in your name, username, email, and password - ensure that this password is secure
-3. Tap the register button
-![sign-up-instruction-2](Pictures/sign_up_instruction_2.jpg)
-
-Congratulations, you have now created your very own WhatsOn@UP account! To login to this account, navigate to the log in page - where you will enter your login credentials
-![log-in-instruction](Pictures/login_instruction.png)
-
-## Search for events
-To search for various events, you first have to navigate to the the home page. The home tab is where you can browse the various upcoming (and ongoing) events in your institution, alongside events you have saved in the past.
-
-To search for upcoming events:
-1. Click on the search button near the top of the screen
-2. Enter an event that you would like to search for
-3. Optionally, you can tap on one of the _category cards_ presented, to find events of a certain theme
-4. Filter events based on their attributes
-
-## View Calendar
-In the app Calendar a user is able to see a different view of upcoming events, selecting an event that they want more details about.
-
-## Location
-1. Retrieving real campus venues when an even is created 
-
-## RSVP Events
-In the WhatsOn@UP app, a registered user is able to RSVP to publicly available events, and events they were directly invited to. To RSVP an event
-1. Navigate to the Home page
-2. Select an event that you want attend
-3. Click on the `Add to my Calendar` button
-4. Navigate to the calendar tab to see the added event
-
-## Manage Profile
-You are able to view and manage your profile details, along with adding profile images of your choice. To achieve this
-1. Tap on `more` in the navbar - This will open a popup with various options
-2. From the list of options, tap `settings`
-3. In the settings menu tap the `profile` option
-3. Alternatively, you can access the profile page by tapping your profile icon from the home page
-5. Once in the profile page, select `edit profile` button
-6. Once you've edited you're details, tap the `save` button to save your changes
 
 
-## Create Events
-## Invite Users
-1. Navigate to the `Create Event` page or press the `+` button on the home page
-2. Fill in the event details
-3. press submit
-4. it will navigate to the `Invite Users` page
-5. Enter the fullname of the user you want to invite
-6. press the `Invite` button
-7. The user will receive an invite to the event
-8. The user can accept or decline the invite in their notifications
+## Table of Contents
 
-## Admin Management Host Application
-1. Navigate to manage events
-2. Select the General Host Application tab
-3. you will see a list of applications
-4. you can accept or decline the application
-5. If the user is not verified you won't be able to accept the application or decline only if they have submitted documents.
+1. [Guest ](#guest)
+2. [General User](#general-user)
+3. [Host](#host)
+4. [Admin](#admin)
 
-## Admin management events
-1. Navigate to manage events
-2. You can navigate All attendees for a specific event
-3. You can navigate to all events to see any event as an admin
-4. You can delete an event or even edit the event
+---
 
-## HOST Application
-1. general  user can apply for a promotion with the necessary details shown on the form as a UP student or non UP student
-2. User can then acknowledge the application response they got from the admin in their notifications if the admin has accepted their application
-3. If the application has been rejected the user will also receive a notification 
-## Notifications
-1. The user will receive a notification when they have been invited to an event
-2. The user will receive a notification when their application has been accepted or rejected
-3. The user will receive broadcast if an event was edited that they have RSVP'd to
-## Sign Out
-To sign out
-1. select the `more` button on the navbar
-2. select the `settings` button in the list that pops up
-3. navigate to `profile`
-4. tap the `Logout` button
+## Guest
+### Registration and Login
+As a guest, you're limited to basic functionality. To unlock extended features, you need to create an account. Follow these steps to register:
+
+1. Navigate to the Registration Page
+* Click on the Register button or link found on the homepage.
+
+2. Fill Out the Registration Form
+ Provide the following details:
+* Username: Choose a unique username.
+* Email Address: Enter a valid email address.
+* Password: Create a strong password.
+3. Submit the Registration Form
+
+    After filling in the required fields, click the Submit button to create your account.
+
+4. Log In to Access More Features
+Once your account is created, you will be prompted to log in with your new credentials (username and password). After logging in, you'll gain access to additional features available to General Users.
+5. To login enter your full name and enter the password you submitted during the time you signed up.
+
+
+##
+### Search For Events
+1. Navigate to the Home Page.
+2. At the top, you'll find a search bar (**refer to the image below for guidance**).
+3. Enter the name of the event you're looking for in the search bar.
+4. Press Enter to search for the event.
+5. For a more advanced search press the filter icon at the search bar on the far right(**refer to the image below for guidance**).
+##
+### Navigate to the Event venue
+1. Once you've found the event you're interested in, click on the event 
+2. Click on the "Navigate to venue".
+3. You will be shown the location of the event on a map.
+
+##
+### Sign out
+To sign out you can use two approaches to do this.
+1. Click on the profile icon on the top right of the page.
+2. Click on the "Log out" button.
+3. Alternatively, you can click on the three dots on the bottom right of the page(**This is if you are an Admin or Host if not click the settings icon and navigate to profile**).
+
+Note: If you are a guest user, you will exit the app without signing out. Various areas within the app will provide options for signing up (refer to the image below for an example of how that might appear).
+[]
+## After creating an account you can do the following:
+### 1. You can explore the General, Host, or Admin sections of this help menu. Look for the relevant subtitles to learn about each feature:
+
++ RSVP Events: Find the subtitle "RSVP Events" in the respective section to learn how to RSVP to events.
++ Notifications: Go to the subtitle "Notifications" to understand how event notifications work.
++ Saving Event: Refer to the subtitle "Saving Event" to learn how to save events for later.
++ Navigation:
++ Event Details: Find the subtitle "Event Details" to learn how to view event details.
+
+
+**Specifically for General user you can explore on this feature:**
++ HOST Application: Find the subtitle "Host applications" to learn how to apply to become a host.
+
+
+### 2. You can  explore the  Host or Admin sections of this help menu. Look for the relevant subtitles to learn about each feature:
++ Create Events: Find the subtitle "Create Events" in the respective section to learn how to create
+events.
++ Manage Events: Find the subtitle "Manage Events" in the respective section to learn how to manage
+events.
+
++ Notifications: Go to the subtitle "Notifications" to understand how event notifications work.
+
++ Invite Users: Look for "Invite Users" to find out how to invite others to your events.
+### 3.  You can  explore the Admin sections of this help menu. Look for the relevant subtitles to learn about each feature:
+
++ Manage Events: Find the subtitle "Manage Events" to learn how to manage events.
+
++ Manage Host Applications: ind the subtitle "Manage Host Applications" to learn how to manage host applications.
+
+
+## General User
+### Registration and Login
+Please navigate to the Guest section of the help menu to get information on how to Register or Login.
+
+### Search For Events
+Please navigate to the Guest section of the help menu to get information on how to search For Events.
+### View Calendar
+1. Once you have logged in your app navigate to the calendar icon.
+2. You will be shown a calendar view of all the events you have RSVP'd to or saved.
+
+### RSVP Events  
+1. Once you have logged in your app click on an event.
+2. ClicK on a button that says "Add to my calendar".
+3. This will RSVP your event and add it automatically to the apps calendar.
+
+**You will receive notifications for events you have RSVPed to as the event date approaches. For more information on how the notification system works, please refer to the 'Notifications' section under the General of this help menu**
+
+### Save Events
+1. Once you have logged in your app click on the bookmark icon that would be on the right corner of each event card.
+2. If the book mark button is filled with the colour black that implies it has been save else its not yet saved.(Please refer to the image below for an example of this).
+
+
+3. To see all the events that you have saved:In the home page click the "Saved Events" tab to view all the events you have saved.(Please refer to the image below for an example of this).
+
+
+
+### Notifications
+1. Once you have logged in your app navigate to the notification icon.
+2. Once you are on the page there would be three tabs depending what type of user you are :
+
+    2.1 if you are a General or Host user you will see the the following tabs:unseen,seen,Invitations.
+
+    2.2 if you are an Admin user you will see the following tabs: unseen,seen,Applications
+
+3. in the Unseen tab that will contain all notifications you have not yet view
+4. in the seen tab that will contain all notifications you have viewed
+5. if you have the Invitations tab that is where are your invitations would be whether they are seen or unseen.
+6. if you have the Applications tab that is where are your applications would be whether they are seen or unseen.
+7. There are other notification types that you can get but you will see them under seen or unseen .
+### Types of Notifications and what they are:
+
+* Broadcasts:
+    + Messages sent by the admin to all users of the app.
+    + These messages may also be sent when a host updates or deletes an event, or when the host wishes to communicate additional information to current attendees.
+* Invitations:
+
+These messages are sent directly from a host to an individual, inviting them to an event.
+The recipient can choose to accept or ignore the invitation. If accepted, the event will be RSVPed and automatically added to the user’s calendar.
+
+* Applications
+Only Admins or General users can receive these types of notifications.
+* When a host application is made all admins will receive a notification to indicate that a new application needs attending.
+
+* When a admin processes an application the applicant will receive a notification.
+
+
+### Manage Profile
+1. Once you have logged in your app navigate to the profile icon or you can access settings then navigate to profile to make personalized changes.
+
+### Host applications
+1. After logging into the app, navigate to the profile icon or access the settings menu.
+2. Once you are on the profile page click on the "Host application" tab.
+3. You will be directed to a host application form. Fill in the required details.
+4. Once you have filled in the form click on the "Submit" button to submit your application.
+5. If you provided a student email address, a verification link will be sent to your inbox. Click the link to verify your application.
+6. After verification, your application will be reviewed by the admin. You will receive a notification about the status of your application once it has been processed
+
+**Application status:**
+
+1. Accepted: Your application has been approved, and you are now a host. You will need to acknowledge this status to smoothly transition into your temporary host role.
+2. Rejected: Your application was not approved, and you have not been granted host status.
+3. Once approved, you will be able to create and manage events as a host.
+
+**Note: If your application is rejected, you must wait one month before submitting a new application. Ensure you request a sufficient hosting duration to avoid delays. Alternatively, you can contact an admin directly to request a promotion without reapplying.**
+
+
+
+
+
+
+### Other features
+The user will have to create host application to have access to host privileges such us:
+
+* Event Management which includes
+    + manage attendees(Attendees list)
+    + broadcast messages directly to attendees
+    + Create events,Edit events, Delete events can be seen under this section as well
+    + you can view Past events 
++ view your events analytics under profile 
+
+**Please see under Host in this help menu for further information on how these features work. Yo can also see under General in the help menu to see how to create a host application under 'Host applications'**
+
+---
+
+## Host
+### Registration and Login
+Please go under General on this help menu to help on how to use this feature.
+### Search For Events
+Please go under Guest on this help menu to help on how to use this feature.
+### View Calendar
+Please go under Guest on this help menu to help on how to use this feature.
+### RSVP Events  
+Please go under General on this help menu to help on how to use this feature.
+### Save Events
+Please go under General on this help menu to help on how to use this feature.
+### Edit events
+1. Once you have logged in the app you can press the more button found at the bottom navigation bar (three vertical dots).
+2. Press the Manage events 
+3. Then open my events tile.
+4. press the event you want to delete
+5. The detailed page will pop up.
+6. Press the edit event button.
+7. you will be presented with the a form with all the already existing information of the event .
+8. you can change any field.
+9. After your changes you can then submit and a notification would be sent to attendees about your update.
+
+### Delete events
+1. Once you have logged in the app you can press the more button found at the bottom navigation bar (three vertical dots).
+2. Press the Manage events 
+3. Then open my events tile.
+4. press the event you want to delete
+5. The detailed page will pop up.
+6. Press the delete event button then the event would be deleted.
+
+### Notifications
+Please go under General on this help menu to help on how to use this feature.
+### Manage Profile
+Please go under General on this help menu to help on how to use this feature.
+### Create Events
+
+1. After logging into the app, navigate to the "Create Event" icon, represented by a plus sign (see the image below for reference).
+
+2. Complete the event form by either manually entering the details or using the Smart Suggestion feature, located at the top-right corner of the event page (refer to the image below for an example).
+
+3. Using Smart Suggestions:
+
+    3.1. Click on the Smart Suggestion icon, represented by a sparkle (see the image below for an example).
+
+    3.2. After clicking, enter the event title and a brief description. The Smart Suggestion feature will generate and autofill details such as the event description, category, time, venue, and recommended number of attendees based on your input. Simply select an option, and the fields will automatically populate. (Refer to the image below for an example of how it works).
+
+### Invite Users
+This feature becomes available immediately after creating an event, or you can access it by editing an existing event to invite users.
+
+How to Invite Users:
+
+1. You will be directed to a page with a search field at the top.
+2. Type the name of the user you want to invite in the search field and select them from the results.
+3. After selecting a user, click the "Invite" button, represented by a plus sign (see illustration below).
+To remove a user from the invite list, click the trash icon next to their name.
+4. Once you’ve finalized your invitees, click the "Send" button, represented by an arrow icon (see illustration below), to submit your list.
+
+**Attendees will receive a notification for the invite. For more information on how notifications work, refer to the "Notifications" section under General in this help menu.**
+
+### Event Management 
+**1. Manage attendees (Attendees list):**
+
+Access this feature through the "Manage Events" section.
+
+1. If you're a host, navigate to "My Events." Admins can manage all events through the "Admin" section.
+2. Click the "Attendees" button to open the list of attendees.
+At the bottom right of the page, you'll see two buttons: a down arrow and an up arrow.
+3. The down arrow allows you to export the attendee list as a CSV file, while the up arrow lets you import an updated list.
+ (See the image below for reference.)
+
+**Working with the Attendees List:**
+
+    1. Once you've downloaded the list as a CSV file, you can open and edit it in spreadsheet software such as Microsoft Excel, Google Sheets, LibreOffice, or a text editor.
+
+    2. You can update each attendee's status using the following options: 
+    Present, Absent, Unknown
+
+    3. After editing, simply upload the file back into the system. The status updates will be displayed on the user interface.
+
+
+
+**2. Broadcast Messages to Attendees:**
+
+Once your event is created and attendees have RSVPed, you can send broadcast messages directly to attendees. To do this:
+
+1. Navigate to the event management section.
+2. Click on the "Broadcast" button next to the event details.
+3. Type your message in the text box provided.
+4. Click "Send" to broadcast your message to all attendees. This can be used for event updates, reminders, or changes in event details.
+
+**3. Past events :**
+You can view your past events by:
+
+1. Navigating to the "My Events" section under event management.
+2. Selecting the "Past Events" tab to see a list of events that have already occurred.
+3. Here, you can review event details and export attendee lists for analysis.
+
+### Analytics (My analytics)
+1. Navigate to the home page and go to the top left and click your profile.
+2. Then click the button option called "My Event Analytics".
+[]
+3. once inside you will see analytical points about the events that you have hosted more information can be found on the information icon about the graphs.
+[]
+
+### Sign Out
+**Please go under General on this help menu to help on how to use this feature.**
+
+---
+
+## Admin
+### Registration and Login
+Please go under Guest on this help menu to help on how to use this feature.
+### Search For Events
+Please go under Guest on this help menu to help on how to use this feature.
+### View Calendar
+Please go under Guest on this help menu to help on how to use this feature.
+### RSVP Events  
+Please go under General on this help menu to help on how to use this feature.
+### Save Events
+Please go under General on this help menu to help on how to use this feature.
+### Notifications
+Please go under Guest on this help menu to help on how to use this feature.
+### Manage Profile
+Please go under General on this help menu to help on how to use this feature.
+### Create Events
+Please go under Host on this help menu to help on how to use this feature.
+### Invite Users
+Please go under Host on this help menu to help on how to use this feature.
+### Admin management Host Application
+1. Navigate to the "More" button located at the bottom-right corner of the navigation bar (represented by three vertical dots).
+2. Click on the "Event Management" option.
+3. Click on the "General user host applications" option.
+4. You will see a list of host applications categorized under four tabs:
+
+    * Pending: Host applications that are waiting for verification through email.
+    * Verified:Applications that have been verified.These applications can be verified without an email but through the documentation the user uploaded
+    * Promoted:Users who have been promoted to host.
+    * All:A complete list of all host applications.
+
+5. When you click on a user's application, you will see the following details:
+    * Profile Picture and Username of the applicant.
+    * An option to view the application details, where you can:
+        * Review the reason for the application.
+        * View any documentation the user has uploaded to support their request for promotion.
+        * See which admin processed the application.
+    * The current status of the application (with an information icon that explains the meaning of each status when clicked).
+6. Depending on the application's status, you can reject, accept, or demote the user.
+
+### Admin management events
+Please go under Host on this help menu to help on how to use this feature.
+This feature is the same as host only difference is that you have control over all events in the app in its entity.
+### Navigation
+Please go under General on this help menu to help on how to use this feature.
+### Sign Out
+Please go under General on this help menu to help on how to use this feature.
+
+
