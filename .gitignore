@@ -42,7 +42,7 @@ secrets.yml
 node_modules
 .env
 public/
-/.vuepress/.temp/
-/.vuepress/.cache/
+**/.vuepress/.temp/** 
+**/.vuepress/.cache/** 
 
 
