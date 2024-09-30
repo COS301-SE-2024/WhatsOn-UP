@@ -288,32 +288,25 @@ class _FilterScreenState extends State<FilterScreen> with SingleTickerProviderSt
       }
 
       // Capacity filtering
-      int? minCapacity;
       int? maxCapacity;
 
       switch (selectedCapacityRange) {
         case "0 - 50":
-          minCapacity = 0;
           maxCapacity = 50;
           break;
         case "50 - 100":
-          minCapacity = 50;
           maxCapacity = 100;
           break;
         case "100 - 200":
-          minCapacity = 100;
           maxCapacity = 200;
           break;
         case "200 - 300":
-          minCapacity = 200;
           maxCapacity = 300;
           break;
         case "300 - 400":
-          minCapacity = 300;
           maxCapacity = 400;
           break;
         case "400 - 500":
-          minCapacity = 400;
           maxCapacity = 500;
           break;
         default:
@@ -331,9 +324,7 @@ class _FilterScreenState extends State<FilterScreen> with SingleTickerProviderSt
           matchesDate = eventDate.isAfter(startDate) && eventDate.isBefore(endDate);
         }
 
-        bool matchesCapacity = (minCapacity == null || event.maxAttendees >= minCapacity) &&
-            (maxCapacity == null || event.maxAttendees <= maxCapacity);
-
+        bool matchesCapacity = maxCapacity == null || event.maxAttendees <= maxCapacity;
         bool matchesType = selectedEventType.isEmpty || (isPrivate ? event.isPrivate : !event.isPrivate);
 
         return matchesDate && matchesCapacity && matchesType;

@@ -17,7 +17,6 @@ import '../services/api.dart'; // Import the FilterScreen
 
 
 class SearchScreen extends StatefulWidget {
-
   final bool showSearchHistoryOnStart;
   final String? initialQuery;
 
@@ -81,8 +80,6 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   void _searchEvents(String query) async {
-    print("Category being searched");
-    print(query);
     if (query.isEmpty) return;
     setState(() {
       _isLoading = true;

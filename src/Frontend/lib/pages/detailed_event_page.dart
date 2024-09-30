@@ -57,7 +57,8 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
       borderRadius: BorderRadius.circular(16.0),
       child: Image.network(
         url,
-        fit: BoxFit.cover,
+        // fit: BoxFit.cover,
+        fit: BoxFit.contain,
         width: double.infinity,
       ),
     );
@@ -131,7 +132,8 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
       var result = await Api().rsvpEvent(widget.event.id, userP.JWT);
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Successfully RSVP\'d to event!')),
+        const SnackBar(content: Text('Successfully RSVP\'d to event!'),
+          backgroundColor: Colors.green,),
       );
       await eventProvider.refreshRSVPEvents(user!.id, userP.JWT);
       await eventProvider.refreshEvents(userP.JWT);
@@ -143,7 +145,8 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
       Navigator.of(context).pushReplacementNamed('/home');
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to RSVP: ${e.toString()}')),
+        SnackBar(content: Text('Failed to RSVP: ${e.toString()}'),
+          backgroundColor: Colors.red,),
       );
       setState(() {
         _isLoading = false;
@@ -169,7 +172,8 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
           .then((response) {});
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Successfully removed your RSVP from the event!')),
+        const SnackBar(content: Text('Successfully removed your RSVP from the event!'),
+          backgroundColor: Colors.green,),
       );
       await eventProvider.refreshRSVPEvents(user!.id, userP.JWT);
       await eventProvider.refreshEvents(userP.JWT);
@@ -181,7 +185,8 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
       Navigator.of(context).pushReplacementNamed('/home');
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to remove RSVP: ${e.toString()}')),
+        SnackBar(content: Text('Failed to remove RSVP: ${e.toString()}'),
+          backgroundColor: Colors.red,),
       );
       setState(() {
         _isLoading = false;
@@ -264,14 +269,16 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
         if (response['status'] == 'success') {
           print('Event deleted successfully. Response: $response');
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Event deleted successfully')),
+            const SnackBar(content: Text('Event deleted successfully'),
+              backgroundColor: Colors.green,),
           );
           await eventProvider.refreshEvents(userP.JWT);
           Navigator.of(context).pushReplacementNamed('/home');
         } else {
           print('Failed to delete event. Response: $response');
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Failed to delete event')),
+            const SnackBar(content: Text('Failed to delete event'),
+              backgroundColor: Colors.red,),
           );
         }
       });
@@ -287,7 +294,7 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
         : Colors.grey;
     final activeDotColour =
         theme.brightness == Brightness.dark ? Colors.white : Colors.black;
-
+    DateTime eventEndTime = DateTime.parse(_thisCurrentEvent.endTime);
     return Scaffold(
       appBar: AppBar(
         title: Text(_thisCurrentEvent.nameOfEvent),
@@ -481,24 +488,26 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
                               _thisCurrentEvent!.hosts[0] == userP.Fullname ||
                           userP.role == 'ADMIN')) ...[
                     const SizedBox(height: 8.0),
-                    ElevatedButton.icon(
-                      onPressed: _editEvent,
-                      icon: const Icon(Icons.edit),
-                      label: const Text('Edit Event'),
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: const Size(double.infinity, 48),
+                    if (eventEndTime.isAfter(DateTime.now())) ...[
+                      ElevatedButton.icon(
+                        onPressed: _editEvent,
+                        icon: const Icon(Icons.edit),
+                        label: const Text('Edit Event'),
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: const Size(double.infinity, 48),
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 8.0),
-                    ElevatedButton.icon(
-                      onPressed: _DeleteEvent,
-                      icon: const Icon(Icons.delete),
-                      label: const Text('Remove Event'),
-                      style: ElevatedButton.styleFrom(
-                        side: const BorderSide(color: Colors.red),
-                        minimumSize: const Size(double.infinity, 48),
+                      const SizedBox(height: 8.0),
+                      ElevatedButton.icon(
+                        onPressed: _DeleteEvent,
+                        icon: const Icon(Icons.delete),
+                        label: const Text('Remove Event'),
+                        style: ElevatedButton.styleFrom(
+                          side: const BorderSide(color: Colors.red),
+                          minimumSize: const Size(double.infinity, 48),
+                        ),
                       ),
-                    ),
+                    ],
                   ],
                 ],
               ),

@@ -886,13 +886,13 @@ class MockApi extends _i1.Mock implements _i2.Api {
       ) as _i8.Future<List<_i9.Event>>);
 
   @override
-  _i8.Future<List<dynamic>> getRSVPEvents(String? JWT) => (super.noSuchMethod(
+  _i8.Future<List<_i9.Event>> getRSVPEvents(String? JWT) => (super.noSuchMethod(
         Invocation.method(
           #getRSVPEvents,
           [JWT],
         ),
-        returnValue: _i8.Future<List<dynamic>>.value(<dynamic>[]),
-      ) as _i8.Future<List<dynamic>>);
+        returnValue: _i8.Future<List<_i9.Event>>.value(<_i9.Event>[]),
+      ) as _i8.Future<List<_i9.Event>>);
 
   @override
   _i8.Future<Map<String, dynamic>> postChangeUser(

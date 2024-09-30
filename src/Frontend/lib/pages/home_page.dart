@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:firstapp/pages/allRecommended_events.dart';
 import 'package:firstapp/pages/supabase_signup.dart';
 import 'package:firstapp/widgets/event_card.dart';
@@ -217,6 +218,7 @@ class _HomePageState extends State<HomePage>
                         : const AssetImage('assets/images/user.png')
                             as ImageProvider,
                 radius: 27.0,
+                backgroundColor: Colors.white,
               ),
             ),
             const SizedBox(width: 16.0),

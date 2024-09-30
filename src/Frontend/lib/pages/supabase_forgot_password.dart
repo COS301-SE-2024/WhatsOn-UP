@@ -130,7 +130,10 @@ class _ForgotPassState extends State<ForgotPass> {
                 if (mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       content: Text(
-                          "A link to reset your password has been sent to your inbox.")));
+                          "A link to reset your password has been sent to your inbox."),
+
+
+                  ));
                 }
               } on AuthException catch (error) {
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(

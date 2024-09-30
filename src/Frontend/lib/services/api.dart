@@ -217,7 +217,7 @@ class Api {
     }
   }
 
-  Future<List<dynamic>> getRSVPEvents(String JWT) async {
+  Future<List<Event>> getRSVPEvents(String JWT) async {
     try {
       final String _rsvpEventsURL =
           'https://${globals.gatewayDomain}/api/user/get_rsvp_events';
@@ -231,7 +231,13 @@ class Api {
           await http.get(Uri.parse(_rsvpEventsURL), headers: headers);
 
       if (response.statusCode == 200) {
-        return jsonDecode(response.body)['data'];
+        // return jsonDecode(response.body)['data'];
+        final List<dynamic> decodedJson = jsonDecode(response.body)['data'];
+        final List<Event> events = decodedJson
+            .map((jsonEvent) => Event.fromJson(jsonEvent as Map<String, dynamic>))
+            .toList();
+        
+        return events;
       } else {
         throw Exception(jsonDecode(response.body));
       }
@@ -651,23 +657,12 @@ class Api {
   }
 
   Future<List<Event>> getAllEventsGuest() async {
-    // try {
     final _rsvpEventsURL = 'https://${globals.gatewayDomain}/api/events/get_all';
       var headers = {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
       };
-    //
-    //   var response =
-    //       await http.get(Uri.parse(_rsvpEventsURL), headers: headers);
-    //
-    //   if (response.statusCode == 200) {
-    //     var decodedJson = jsonDecode(response.body)['data'];
-    //     return decodedJson;
-    //   } else {
-    //     throw Exception(jsonDecode(response.body));
-    //   }
-    // }
+
     try {
       var response = await http.get(
         Uri.parse(_rsvpEventsURL),
