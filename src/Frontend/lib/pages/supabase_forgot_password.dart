@@ -42,6 +42,7 @@ class _ForgotPassState extends State<ForgotPass> {
     return Container(
       color: const Color.fromARGB(255, 149, 137, 74),
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: Colors.transparent,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
@@ -124,7 +125,7 @@ class _ForgotPassState extends State<ForgotPass> {
                 // );
                 await supabase.auth.resetPasswordForEmail(
                   email,
-                  redirectTo: 'io.supabase.flutterquickstart://login-callback/',
+                  redirectTo: 'https://recommendations-1035006743185.us-central1.run.app/reset-password',
                 );
                 if (mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(

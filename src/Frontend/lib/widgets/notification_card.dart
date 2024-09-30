@@ -1,3 +1,4 @@
+import '../services/api.dart';
 import '../utils.dart';
 
 class AppNotification {
@@ -10,6 +11,7 @@ class AppNotification {
   final String notificationId;
   String? seenAt;
   final String notificationTypes;
+  String? referencedEvent;
 
   AppNotification({
     required this.message,
@@ -18,6 +20,7 @@ class AppNotification {
     required this.sentAt,
     required this.notificationId,
     required this.notificationTypes,
+    this.referencedEvent,
     this.seenAt,
     this.eventInvite,
   });
@@ -28,6 +31,7 @@ class AppNotification {
       userId: json['user_id'],
       sentAt: json['sent_at'],
       seenAt: json['seen_at'],
+      referencedEvent: json['referenced_event'],
       notificationId: json['notification_id'],
       notificationTypes: json['notification_types']['name'],
       eventInvite: json['event_invitees'] != null
@@ -35,13 +39,15 @@ class AppNotification {
           : null,
     );
   }
-  void markAsSeen() {
-    seenAt = formatDateTime(DateTime.now().toIso8601String());
+  Future<void> markAsSeen(String notificationID, String? JWT) async {
+    Api api = Api();
+    await api.markSeen(notificationID,JWT!);
+    // seenAt = formatDateTime(DateTime.now().toIso8601String());
   }
 
   @override
   String toString() {
-    return 'Notification(message: $message, eventId: $eventId, userId: $userId, sentAt: $sentAt, notificationId: $notificationId, notificationTypes: $notificationTypes, seenAt: $seenAt, eventInvite: $eventInvite)';
+    return 'Notification(message: $message, eventId: $eventId, userId: $userId, sentAt: $sentAt, notificationId: $notificationId, notificationTypes: $notificationTypes, seenAt: $seenAt, referencedEvent: $referencedEvent, eventInvite: $eventInvite)';
   }
 }
 

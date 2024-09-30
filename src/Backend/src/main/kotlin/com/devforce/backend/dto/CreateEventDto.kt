@@ -12,4 +12,5 @@ data class CreateEventDto(
     val maxParticipants: Int?,
     val metadata: Map<String, String>?,
     val isPrivate: Boolean?,
+    val hosts: Set<UUID>?,
 )

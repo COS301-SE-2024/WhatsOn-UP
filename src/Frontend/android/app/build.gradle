@@ -28,7 +28,12 @@ android {
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
+    defaultConfig {
+        multiDexEnabled true
+    }
+
     compileOptions {
+        coreLibraryDesugaringEnabled true
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
@@ -42,6 +47,9 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutterVersionCode.toInteger()
         versionName = flutterVersionName
+        manifestPlaceholders = [
+            GOOGLE_MAPS_API_KEY: "${System.env.GOOGLE_MAPS_API_KEY}"
+            ]
     }
 
     buildTypes {
@@ -55,4 +63,9 @@ android {
 
 flutter {
     source = "../.."
+}
+
+dependencies{
+    implementation platform("org.jetbrains.kotlin:kotlin-bom:1.8.0")
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.2.2'
 }

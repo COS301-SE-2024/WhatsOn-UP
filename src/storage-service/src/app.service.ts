@@ -109,7 +109,37 @@ export class AppService {
     }
   }
 
-  async uploadEventMedia(file: any, event_id: string){
+  async uploadEventMedia(file: any, event_id: string, user_id: string) {
+    const { data: userevent, error: userEventError } = await this.supabase
+      .from('event_hosts')
+      .select('user_id, event_id')
+      .eq('user_id', user_id)
+      .eq('event_id', event_id);
+
+    if (userEventError) {
+      throw new HttpException(
+        {
+          status: 'error',
+          message: 'Error fetching user event',
+          timestamp: new Date().toISOString(),
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    if (userevent.length == 0) {
+      throw new HttpException(
+        {
+          status: 'error',
+          message: 'User not authorized to upload media',
+          timestamp: new Date().toISOString(),
+        },
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+
+
     const filename = this.generateRandomString(50) + file.originalname.substring(file.originalname.lastIndexOf('.'));
     const { data: fileInfo, error: fileError } = await this.supabase.storage
       .from('storage')
@@ -171,7 +201,61 @@ export class AppService {
     }
   }
 
-  async deleteMedia(media_name: string): Promise<string> {
+  async deleteMedia(media_name: string, user_id: string): Promise<string> {
+    const { data: media, error: mediaError } = await this.supabase.from('event_media').select('media_name, event_id').eq('media_name, event_id', media_name);
+
+    if (mediaError) {
+      throw new HttpException(
+        {
+          status: 'error',
+          message: 'Error fetching media',
+          timestamp: new Date().toISOString(),
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    if (media.length == 0) {
+      throw new HttpException(
+        {
+          status: 'error',
+          message: 'Media not found',
+          timestamp: new Date().toISOString(),
+        },
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    const { data: user, error: userError } = await this.supabase
+      .from('event_hosts')
+      .select('user_id, event_id')
+      .eq('user_id', user_id)
+      .eq('event_id', media[0]['event_id']);
+
+
+    if (userError) {
+      throw new HttpException(
+        {
+          status: 'error',
+          message: 'Error fetching user event',
+          timestamp: new Date().toISOString(),
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    if (user.length == 0) {
+      throw new HttpException(
+        {
+          status: 'error',
+          message: 'User not authorized to delete media',
+          timestamp: new Date().toISOString(),
+        },
+        HttpStatus.NOT_FOUND,
+      );
+
+    }
+
     try {
       // Remove the file from storage
       const { error: storageError } = await this.supabase.storage
@@ -219,7 +303,44 @@ export class AppService {
     }
   }
 
-  async uploadProof(file: any, application_id: string) {
+  async uploadProof(file: any, application_id: string, user_id: string) {
+
+    const { data: user, error: userError } = await this.supabase.from('host_applications').select('user_id, application_id').eq('user_id', user_id);
+
+    if (userError) {
+      throw new HttpException(
+        {
+          status: 'error',
+          message: 'Error fetching user application',
+          timestamp: new Date().toISOString(),
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    if (user.length == 0) {
+      throw new HttpException(
+        {
+          status: 'error',
+          message: 'User application not found',
+          timestamp: new Date().toISOString(),
+        },
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    if (user[0].application_id != application_id) {
+      throw new HttpException(
+        {
+          status: 'error',
+          message: 'User not authorized to upload proof',
+          timestamp: new Date().toISOString(),
+        },
+        HttpStatus.UNAUTHORIZED,
+
+      );
+
+    }
     const filename = this.generateRandomString(50) + file.originalname.substring(file.originalname.lastIndexOf('.'));
     
     // Upload file to storage

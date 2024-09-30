@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:firstapp/services/EventService.dart';
-import 'package:supabase_auth_ui/supabase_auth_ui.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:firstapp/widgets/event_card.dart';
+import 'package:firstapp/widgets/FilteredResultScreen.dart';
+import 'package:intl/intl.dart';
 
 class FilterScreen extends StatefulWidget {
+  final List<Event>? searchResults;
+  FilterScreen({this.searchResults});
   @override
   _FilterScreenState createState() => _FilterScreenState();
 }
 
-class _FilterScreenState extends State<FilterScreen>
-    with SingleTickerProviderStateMixin {
+class _FilterScreenState extends State<FilterScreen> with SingleTickerProviderStateMixin {
   EventService eventService = EventService(Supabase.instance.client);
 
   late String selectedDateRange = "";
@@ -19,282 +23,335 @@ class _FilterScreenState extends State<FilterScreen>
   late Animation<double> _scaleAnimation;
   late Animation<Color?> _colorAnimation;
 
+  static const Color goldishBrown = Color.fromARGB(255, 149, 137, 74);
+
   @override
   void initState() {
     super.initState();
-    _controller =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 500));
+    _controller = AnimationController(vsync: this, duration: Duration(milliseconds: 500));
 
     _scaleAnimation = Tween<double>(begin: 1.0, end: 1.2).animate(
       CurvedAnimation(parent: _controller, curve: Curves.elasticInOut),
     );
 
-    _colorAnimation =
-        ColorTween(begin: Colors.blue[800], end: Colors.pink[300]).animate(
+    _colorAnimation = ColorTween(begin: goldishBrown, end: Colors.brown[300]).animate(
       CurvedAnimation(parent: _controller, curve: Curves.elasticInOut),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    TextStyle whiteTextTheme =
-        Theme.of(context).textTheme.labelLarge!.copyWith(color: Colors.white);
+    TextStyle whiteTextTheme = Theme.of(context).textTheme.labelLarge!.copyWith(color: Colors.white);
+
+    bool isSelectionMade = selectedDateRange.isNotEmpty || selectedCapacityRange.isNotEmpty || selectedEventType.isNotEmpty;
 
     return Scaffold(
       appBar: AppBar(
         title: Text('Event Filter'),
       ),
       body: SafeArea(
-        child: Column(
-          children: <Widget>[
-            _buildFilterOptions(
-                "Date Range", ["Last week", "Today", "Next week"], (value) {
-              setState(() {
-                selectedDateRange = value;
-              });
-            }),
-            _buildFilterOptions("Capacity Range", [
-              "0 - 50",
-              "50 - 100",
-              "100 - 200",
-              "200 - 300",
-              "300 - 400",
-              "400 - 500"
-            ], (value) {
-              setState(() {
-                selectedCapacityRange = value;
-              });
-            }),
-            _buildFilterOptions("Event Type", ["Private", "Public"], (value) {
-              setState(() {
-                selectedEventType = value;
-              });
-            }),
-            Spacer(),
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: const Size(double.infinity, 48),
-                  ),
-                  child: Text(
-                    "Filter Events",
-                    style: whiteTextTheme,
-                  ),
-                  onPressed: _filterEvents,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildFilterOptions(
-      String title, List<String> options, Function(String) onSelected) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(left: 16.0),
-            child: Text(title,
-                style: Theme.of(context)
-                    .textTheme
-                    .titleMedium), // Use subtitle1 for the title style
-          ),
-          Wrap(
-            alignment: WrapAlignment.start,
-            spacing: 10.0,
-            children: options.map((option) {
-              bool isSelected = _isSelected(option);
-              return GestureDetector(
-                onTap: () {
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                _buildFilterSection("Date Range", ["Last week", "Today", "Next week"], (value) {
                   setState(() {
-                    if (isSelected) {
-                      selectedDateRange = "";
-                      selectedCapacityRange = "";
-                      selectedEventType = "";
-                    } else {
-                      onSelected(option);
-                    }
+                    selectedDateRange = value;
                   });
-                },
-                child: AnimatedContainer(
-                  duration: Duration(milliseconds: 300),
-                  curve: Curves.easeInOut,
-                  decoration: BoxDecoration(
-                    color:
-                        isSelected ? _colorAnimation.value : Colors.grey[200],
-                    borderRadius: BorderRadius.circular(30.0),
-                  ),
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                  child: Stack(
-                    alignment: Alignment.center,
+                }),
+                SizedBox(height: 16.0),
+                _buildFilterSection("Capacity Range", ["0 - 50", "50 - 100", "100 - 200", "200 - 300", "300 - 400", "400 - 500"], (value) {
+                  setState(() {
+                    selectedCapacityRange = value;
+                  });
+                }),
+                SizedBox(height: 16.0),
+                _buildFilterSection("Event Type", ["Private", "Public"], (value) {
+                  setState(() {
+                    selectedEventType = value;
+                  });
+                }),
+                SizedBox(height: 20.0),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          isSelected
-                              ? Icon(Icons.check_circle,
-                                  color: Colors.white, size: 20.0)
-                              : SizedBox.shrink(),
-                          SizedBox(width: 8.0), //  space between icon and text
-                          Text(
-                            option,
-                            style: TextStyle(
-                              color: isSelected ? Colors.white : Colors.black,
-                            ),
+                      Expanded(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: goldishBrown,
                           ),
-                        ],
+                          child: Text(
+                            "Clear Selection",
+                            style: whiteTextTheme,
+                          ),
+                          onPressed: isSelectionMade ? _clearSelection : null,
+                        ),
                       ),
-                      AnimatedBuilder(
-                        animation: _controller,
-                        builder: (context, child) {
-                          return Transform.scale(
-                            scale: isSelected ? _scaleAnimation.value : 1.0,
-                            child: child,
-                          );
-                        },
-                        child: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              if (isSelected) {
-                                selectedDateRange = "";
-                                selectedCapacityRange = "";
-                                selectedEventType = "";
-                              } else {
-                                onSelected(option);
-                                _controller.forward(
-                                    from:
-                                        0.0); // Start animation from beginning
-                              }
-                            });
-                          },
-                          child: SizedBox(),
+                      SizedBox(width: 16.0),
+                      Expanded(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: goldishBrown,
+                          ),
+                          child: Text(
+                            "Filter Events",
+                            style: whiteTextTheme,
+                          ),
+                          onPressed: isSelectionMade ? _filterEvents : null,
                         ),
                       ),
                     ],
                   ),
                 ),
-              );
-            }).toList(),
+              ],
+            ),
           ),
-        ],
+        ),
       ),
     );
   }
 
-  bool _isSelected(String option) {
-    return option == selectedDateRange ||
-        option == selectedCapacityRange ||
-        option == selectedEventType;
+  Widget _buildFilterSection(String title, List<String> options, Function(String) onSelected) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(title, style: Theme.of(context).textTheme.titleMedium),
+        SizedBox(height: 8.0),
+        GridView.builder(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 3,
+            crossAxisSpacing: 10.0,
+            mainAxisSpacing: 10.0,
+          ),
+          itemCount: options.length,
+          itemBuilder: (context, index) {
+            String option = options[index];
+            bool isSelected = _isSelected(option);
+
+            return GestureDetector(
+              onTap: () {
+                setState(() {
+                  if (isSelected) {
+                    if (title == "Date Range") selectedDateRange = "";
+                    if (title == "Capacity Range") selectedCapacityRange = "";
+                    if (title == "Event Type") selectedEventType = "";
+                  } else {
+                    onSelected(option);
+                    _controller.forward(from: 0.0);
+                  }
+                });
+              },
+              child: AnimatedContainer(
+                duration: Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+                decoration: BoxDecoration(
+                  color: isSelected ? _colorAnimation.value : Colors.white,
+                  border: Border.all(
+                    color: isSelected ? Colors.transparent : goldishBrown,
+                  ),
+                  borderRadius: BorderRadius.circular(30.0),
+                ),
+                padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                child: Center(
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      isSelected
+                          ? Icon(Icons.check_circle, color: Colors.white, size: 20.0)
+                          : SizedBox.shrink(),
+                      SizedBox(width: 8.0),
+                      Flexible(
+                        child: Text(
+                          option,
+                          style: TextStyle(
+                            color: isSelected ? Colors.white : Colors.black,
+                          ),
+                          overflow: TextOverflow.ellipsis, // Handle overflow text
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+      ],
+    );
   }
 
-  void _filterEvents() {
-    // Prepare date range timestamps
-    DateTime now = DateTime.now();
-    int startDate = 0;
-    int endDate = 0;
+  bool _isSelected(String option) {
+    return option == selectedDateRange || option == selectedCapacityRange || option == selectedEventType;
+  }
 
-    switch (selectedDateRange) {
-      case "Today":
-        startDate = now.millisecondsSinceEpoch;
-        endDate = now.millisecondsSinceEpoch;
-        break;
-      case "Last week":
-        startDate = now.subtract(Duration(days: 7)).millisecondsSinceEpoch;
-        endDate = now.millisecondsSinceEpoch;
-        break;
-      case "Next week":
-        startDate = now.millisecondsSinceEpoch;
-        endDate = now.add(Duration(days: 7)).millisecondsSinceEpoch;
-        break;
-      default:
-      //  TODO
-    }
-    print(
-        "Selected Date Range: $selectedDateRange, Start Date: $startDate, End Date: $endDate");
+  void _filterEvents() async {
+    List<Event> filteredEvents = widget.searchResults ?? [];
+    if (widget.searchResults != null && widget.searchResults!.isNotEmpty) {
 
-    // Prepare capacity range
-    int minCapacity = 0;
-    int maxCapacity = 0;
+      filteredEvents = _applyFiltersLocally(widget.searchResults!);
+
+    } else {
+      DateTime now = DateTime.now();
+      String? startDate;
+      String? endDate;
+
+      switch (selectedDateRange) {
+        case "Today":
+          startDate = now.toIso8601String();
+          endDate = now.toIso8601String();
+          break;
+        case "Last week":
+          startDate = now.subtract(Duration(days: 7)).toIso8601String();
+          endDate = now.toIso8601String();
+          break;
+        case "Next week":
+          startDate = now.toIso8601String();
+          endDate = now.add(Duration(days: 7)).toIso8601String();
+          break;
+        default:
+        // Handle other cases
+      }
+
+
+    int? maxCapacity;
 
     switch (selectedCapacityRange) {
       case "0 - 50":
-        minCapacity = 0;
         maxCapacity = 50;
         break;
       case "50 - 100":
-        minCapacity = 50;
         maxCapacity = 100;
         break;
       case "100 - 200":
-        minCapacity = 100;
         maxCapacity = 200;
         break;
       case "200 - 300":
-        minCapacity = 200;
         maxCapacity = 300;
         break;
       case "300 - 400":
-        minCapacity = 300;
         maxCapacity = 400;
         break;
       case "400 - 500":
-        minCapacity = 400;
         maxCapacity = 500;
         break;
       default:
-      // TODO
+      // Handle other cases
     }
 
-    // Prepare event type
     bool isPrivate = selectedEventType == "Private";
-
-    // Call EventService to filter events
-    eventService
-        .filterEvents(startDate.toString(), endDate.toString(), minCapacity,
-            maxCapacity, isPrivate)
-        .then((events) {
-      // Handle the filtered events
-      print("Filtered Events: $events");
-      // Example: Displaying events in rows
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text("Filtered Events"),
-          content: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children:
-                  events.map<Widget>((event) => _buildEventRow(event)).toList(),
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('Close'),
-            ),
-          ],
-        ),
-      );
-    }).catchError((error) {
+    try {
+      List<Event> events = await eventService.filterEvents(startDate, endDate, maxCapacity, isPrivate);
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => FilteredResultScreen(filteredEvents: events),
+      ));
+    }
+    catch (error) {
       print("Error filtering events: $error");
-      // Handle error
+      return;
+    }
+
+  }
+    Navigator.of(context).push(MaterialPageRoute(
+
+      builder: (context) => FilteredResultScreen(filteredEvents: filteredEvents),
+
+    ));
+
+  }
+  List<Event> _applyFiltersLocally(List<Event> events) {
+      DateTime now = DateTime.now();
+      DateTime? startDate;
+      DateTime? endDate;
+
+      switch (selectedDateRange) {
+        case "Today":
+          startDate = DateTime(now.year, now.month, now.day);
+          endDate = startDate?.add(Duration(days: 1));
+          break;
+        case "Last week":
+          startDate = now.subtract(Duration(days: 7));
+          endDate = now;
+          break;
+        case "Next week":
+          startDate = now;
+          endDate = now.add(Duration(days: 7));
+          break;
+        default:
+        // Handle other cases or leave as is
+          break;
+      }
+
+      // Capacity filtering
+      int? minCapacity;
+      int? maxCapacity;
+
+      switch (selectedCapacityRange) {
+        case "0 - 50":
+          minCapacity = 0;
+          maxCapacity = 50;
+          break;
+        case "50 - 100":
+          minCapacity = 50;
+          maxCapacity = 100;
+          break;
+        case "100 - 200":
+          minCapacity = 100;
+          maxCapacity = 200;
+          break;
+        case "200 - 300":
+          minCapacity = 200;
+          maxCapacity = 300;
+          break;
+        case "300 - 400":
+          minCapacity = 300;
+          maxCapacity = 400;
+          break;
+        case "400 - 500":
+          minCapacity = 400;
+          maxCapacity = 500;
+          break;
+        default:
+        // Handle other cases or leave as is
+          break;
+      }
+
+
+      bool isPrivate = selectedEventType == "Private";
+
+      return events.where((event) {
+        bool matchesDate = true;
+        if (startDate != null && endDate != null) {
+          DateTime eventDate = DateTime.parse(event.startTime);
+          matchesDate = eventDate.isAfter(startDate) && eventDate.isBefore(endDate);
+        }
+
+        bool matchesCapacity = (minCapacity == null || event.maxAttendees >= minCapacity) &&
+            (maxCapacity == null || event.maxAttendees <= maxCapacity);
+
+        bool matchesType = selectedEventType.isEmpty || (isPrivate ? event.isPrivate : !event.isPrivate);
+
+        return matchesDate && matchesCapacity && matchesType;
+      }).toList();
+  }
+
+
+    void _clearSelection() {
+    setState(() {
+      selectedDateRange = "";
+      selectedCapacityRange = "";
+      selectedEventType = "";
     });
   }
 
-  Widget _buildEventRow(dynamic event) {
-    return ListTile(
-      title: Text(event['title']),
-      subtitle: Text(event['description']),
-    );
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 }

@@ -26,10 +26,6 @@ class AdminController {
         return adminService.demoteUser(userId)
     }
 
-    @DeleteMapping("/delete_user")
-    fun deleteUser(@RequestParam userId: UUID): ResponseEntity<ResponseDto> {
-        return adminService.deleteUser(userId)
-    }
 
     @PostMapping("/accept_application")
     fun acceptApplication(@RequestParam applicationId: UUID): ResponseEntity<ResponseDto> {
@@ -56,6 +52,11 @@ class AdminController {
         }
 
         return adminService.getAllApplications(status)
+    }
+
+    @PutMapping("/broadcast")
+    fun broadcastMessage(@RequestParam message: String): ResponseEntity<ResponseDto> {
+        return adminService.broadcastMessage(message)
     }
 
 

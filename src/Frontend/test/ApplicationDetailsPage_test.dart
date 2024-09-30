@@ -38,11 +38,11 @@ void main() {
         ),
       );
 
-      // Check if the reason is displayed correctly
+
       expect(find.text('Reason:'), findsOneWidget);
       expect(find.text('Test reason'), findsOneWidget);
 
-      // Check if the duration is displayed correctly
+
       expect(find.text('Duration:'), findsOneWidget);
       expect(find.text(testTimeandDate2), findsOneWidget);
 
@@ -145,49 +145,5 @@ void main() {
 
     });
   });
-  // testWidgets('ApplicantDetailsPage displays applicant details correctly for Acknowledge status', (WidgetTester tester) async {
-  //   final application = Application(
-  //     applicationId: 'app1',
-  //     status: Status(id: 3, name: 'ACKNOWLEDGED'),
-  //     user: UserGeneral(
-  //       userId: 'user1',
-  //       fullName: 'Jane Doe',
-  //       profileImage: 'https://example.com/user-image.jpg',
-  //       role: Role(id: 2, name: 'USER'),
-  //     ),
-  //     expiryDateTime: '2024-12-31T23:59:59Z',
-  //     acceptedRejectedBy: null,
-  //     reason: 'Test reason',
-  //     verificationCode: '1234',
-  //   );
-  //
-  //   await mockNetworkImages(() async {
-  //     await tester.pumpWidget(
-  //       MaterialApp(
-  //         home: Scaffold(
-  //           body: ApplicantDetailsPage(user: application),
-  //         ),
-  //       ),
-  //     );
-  //     await tester.pumpAndSettle();
-  //
-  //
-  //     expect(find.text('Reason:'), findsOneWidget);
-  //     expect(find.text('Test reason'), findsOneWidget);
-  //
-  //
-  //     expect(find.text('Duration:'), findsOneWidget);
-  //     expect(find.text('2024-12-31T23:59:59Z'), findsOneWidget);
-  //     expect(find.text('Demote'), findsOneWidget);
-  //
-  //
-  //
-  //
-  //     expect(find.text('Accepted by:'), findsNothing);
-  //
-  //     expect(find.text('Rejected by:'), findsNothing);
-  //
-  //
-  //   });
-  // });
+
 }

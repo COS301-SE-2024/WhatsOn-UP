@@ -26,7 +26,8 @@ class EditEvent extends StatefulWidget {
 class _EditEventState extends State<EditEvent> {
   late Event _thisCurrentEvent;
   bool isLoading = false;
-
+  List<Uint8List> imageBytesList = [];
+  String oldvenue='';
   @override
   void initState() {
     super.initState();
@@ -44,6 +45,7 @@ class _EditEventState extends State<EditEvent> {
           eventNameController.text = _thisCurrentEvent.nameOfEvent;
           eventDescriptionController.text = _thisCurrentEvent.description;
           //modified here
+          oldvenue= _thisCurrentEvent.venue!.name;
           venueController.text = _thisCurrentEvent.venue!.name;
           maxAttendeesController.text =
               _thisCurrentEvent.maxAttendees.toString();
@@ -109,8 +111,7 @@ class _EditEventState extends State<EditEvent> {
 
   Widget _buildForm() {
     String maxAttendees = _thisCurrentEvent.maxAttendees.toString();
-    print('this current event is ${_thisCurrentEvent.startTime}');
-    print('this current event is ${_thisCurrentEvent.endTime}');
+
     EventProvider eventP = Provider.of<EventProvider>(context);
     return Form(
       key: _formKey,
@@ -166,15 +167,6 @@ class _EditEventState extends State<EditEvent> {
                     onPressed: () {
                       showSubmitDialog(context);
                     },
-                    // style: ElevatedButton.styleFrom(
-                    //   foregroundColor: Colors.black,
-                    //   backgroundColor: Colors.white,
-                    //   shape: RoundedRectangleBorder(
-                    //     borderRadius: BorderRadius.circular(20),
-                    //     side: BorderSide(color: Colors.grey, width: 1),
-                    //   ),
-                    //   padding: EdgeInsets.symmetric(vertical: 16),
-                    // ),
                     child: const Text('Submit Changes'),
                   ),
                 ),
@@ -308,38 +300,47 @@ class _EditEventState extends State<EditEvent> {
     );
   }
 
+  List<Map<String, dynamic>> selectedMedia = [];
   Widget _buildImagePicker() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Upload Images:'),
+        const Text('Upload Images and Videos:'),
         const SizedBox(height: 10),
         ElevatedButton(
           onPressed: () async {
-            final List<XFile>? pickedFiles = await _picker.pickMultiImage();
+            final List<XFile>? pickedFiles = await _picker.pickMultipleMedia();
             if (pickedFiles != null) {
               setState(() {
-                selectedImages = pickedFiles;
+                selectedMedia.clear();
+                for (XFile file in pickedFiles) {
+                  selectedMedia.add({
+                    'file': file,
+                    'name': file.name,
+                  });
+                }
               });
             }
           },
-          // style: ElevatedButton.styleFrom(
-          //   foregroundColor: Colors.black, backgroundColor: Colors.white,
-          //   shape: RoundedRectangleBorder(
-          //     borderRadius: BorderRadius.circular(20),
-          //     side: BorderSide(color: Colors.grey, width: 1),
-          //   ),
-          //   padding: const EdgeInsets.symmetric(
-          //       horizontal: 16.0, vertical: 7.0),
-          // ),
-          child: const Text('Select Images'),
+          child: const Text('Select Images and Videos'),
         ),
-        if (selectedImages != null)
+        if (selectedMedia.isNotEmpty)
           Padding(
             padding: const EdgeInsets.only(top: 10),
             child: Wrap(
               spacing: 10,
-              children: selectedImages!.map((file) => Text(file.name)).toList(),
+              children: selectedMedia.map((media) {
+                final isVideo = media['name'].toLowerCase().endsWith('.mp4') ||
+                    media['name'].toLowerCase().endsWith('.mov');
+                return Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(isVideo ? Icons.video_library : Icons.image),
+                    const SizedBox(width: 5),
+                    Text(media['name']),
+                  ],
+                );
+              }).toList(),
             ),
           ),
       ],
@@ -348,27 +349,28 @@ class _EditEventState extends State<EditEvent> {
 
   Future<void> _submitForm() async {
     EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
+    userProvider userP = Provider.of<userProvider>(context, listen: false);
     final userSuperbase = supabase.auth.currentUser;
     if (_formKey.currentState!.validate()) {
       setState(() {
         isLoading = true;
       });
-      if (eventNameController.text.isNotEmpty) {
-        print('updating to ${eventNameController.text}');
-        eventP.EditEventName(_thisCurrentEvent.id, eventNameController.text);
-      }
-      if (eventDescriptionController.text.isNotEmpty) {
-        eventP.EditEventDescription(
-            _thisCurrentEvent.id, eventDescriptionController.text);
-      }
-      if (venueController.text.isNotEmpty) {
-        eventP.EditEventLocation(_thisCurrentEvent.id, venueController.text);
-      }
+      // if (eventNameController.text.isNotEmpty) {
+      //   print('updating to ${eventNameController.text}');
+      //   eventP.EditEventName(_thisCurrentEvent.id, eventNameController.text);
+      // }
+      // if (eventDescriptionController.text.isNotEmpty) {
+      //   eventP.EditEventDescription(
+      //       _thisCurrentEvent.id, eventDescriptionController.text);
+      // }
+      // if (venueController.text.isNotEmpty) {
+      //   eventP.EditEventLocation(_thisCurrentEvent.id, venueController.text);
+      // }
 
       final maxAttendees = int.tryParse(maxAttendeesController.text);
-      if (maxAttendeesController.text.isNotEmpty) {
-        eventP.EditEventMaxParticipants(_thisCurrentEvent.id, maxAttendees!);
-      }
+      // if (maxAttendeesController.text.isNotEmpty) {
+      //   eventP.EditEventMaxParticipants(_thisCurrentEvent.id, maxAttendees!);
+      // }
 
       DateTime startDateTime = DateTime(startDate.year, startDate.month,
           startDate.day, startTime.hour, startTime.minute);
@@ -376,8 +378,11 @@ class _EditEventState extends State<EditEvent> {
           endTime.hour, endTime.minute);
 
       List<String>? mediaUrls =
-          selectedImages?.map((file) => file.path).toList();
+      selectedImages?.map((file) => file.path).toList();
 
+
+      //   eventP.EditEventLocation(_thisCurrentEvent.id, venueController.text);
+      // })
       Event? event = await eventP.getEventById(widget.eventId);
       if (event != null) {
         setState(() {
@@ -385,66 +390,135 @@ class _EditEventState extends State<EditEvent> {
         });
         Api api = Api();
 
-        api
-            .updateEvent(
-          userId: userSuperbase!.id,
-          eventId: _thisCurrentEvent.id,
-          title: eventNameController.text,
-          description: eventDescriptionController.text,
-          startDate: startDateTime,
-          endDate: endDateTime,
-          location: venueController.text,
-          maxParticipants: maxAttendees,
-          isPrivate: isPublic,
-          media: mediaUrls,
-        )
-            .then((response) {
-          setState(() {
-            isLoading = false;
-          });
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Event updated successfully')),
-          );
-          Navigator.pop(context, true);
+        List<String>? eventMedia = event.imageUrls;
+        if (selectedMedia.isNotEmpty) {
+          if (eventMedia != null) {
+            for (var url in eventMedia) {
+              String imageName = url
+                  .split('/')
+                  .last;
 
-          eventNameController.clear();
-          eventDescriptionController.clear();
-          venueController.clear();
-          maxAttendeesController.clear();
-          setState(() {
-            selectedImages = null;
-            isPublic = true;
+              api.deleteEventMedia(imageName, userP.JWT).then((result) {
+                print('Deleted $imageName: $result');
+              }).catchError((error) {
+                print('Error deleting $imageName: $error');
+              });
+            }
+          }
+        }
+
+        for (var media in selectedMedia) {
+          XFile file = media['file'];
+          String originalFilename = media['name'];
+          Uint8List mediaBytes = await file.readAsBytes();
+          await api.eventUploadImage(
+              mediaBytes, userP.JWT, widget.eventId, originalFilename);
+        }
+
+        if (oldvenue != venueController.text) {
+          Api api = Api();
+          api
+              .updateEvent(
+            JWT: userP.JWT,
+            eventId: _thisCurrentEvent.id,
+            title: eventNameController.text,
+            description: eventDescriptionController.text,
+            startDate: startDateTime,
+            endDate: endDateTime,
+            locationId: _thisCurrentEvent.venue!.venueId,
+            maxParticipants: maxAttendees,
+            isPrivate: isPublic,
+            media: mediaUrls,
+          )
+              .then((response) {
+            eventP.refreshEvents(userP.JWT);
+            eventP.refreshRecommendations(userP.JWT);
+
+
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Event updated successfully')),
+            );
+            Navigator.pop(context, true);
+
+
+            eventNameController.clear();
+            eventDescriptionController.clear();
+            venueController.clear();
+            maxAttendeesController.clear();
+            setState(() {
+              selectedImages = null;
+              isPublic = true;
+              isLoading = false;
+            });
+          }).catchError((error) {
+            print('Error updating event: $error');
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Failed to update event: $error')),
+            );
           });
-        }).catchError((error) {
-          print('Error creating event: $error');
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Failed to create event: $error')),
-          );
-        });
+        } else {
+          Api api = Api();
+          api
+              .updateEvent(
+            JWT: userP.JWT,
+            eventId: _thisCurrentEvent.id,
+            title: eventNameController.text,
+            description: eventDescriptionController.text,
+            startDate: startDateTime,
+            endDate: endDateTime,
+            locationId: '',
+            maxParticipants: maxAttendees,
+            isPrivate: isPublic,
+            media: mediaUrls,
+          )
+              .then((response) {
+            eventP.refreshEvents(userP.JWT);
+            eventP.refreshRecommendations(userP.JWT);
+
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Event updated successfully')),
+            );
+            Navigator.pop(context, true);
+
+            eventNameController.clear();
+            eventDescriptionController.clear();
+            venueController.clear();
+            maxAttendeesController.clear();
+            setState(() {
+              selectedImages = null;
+              isPublic = true;
+              isLoading = false;
+            });
+          }).catchError((error) {
+            print('Error updating event: $error');
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Failed to update event: $error')),
+            );
+          });
+        }
       }
     }
   }
-
-  void showSubmitDialog(BuildContext context) {
-    bool isValid = _formKey.currentState!.validate();
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return CupertinoAlertDialog(
-          content: Text(isValid ? 'Submitted' : 'Could not submit'),
-          actions: <Widget>[
-            CupertinoDialogAction(
-              child: const Text('Okay'),
-              onPressed: () {
-                Navigator.of(context).pop();
-                if (isValid) {
-                  _submitForm();
-                }
-              },
-            ),
-          ],
+      void showSubmitDialog(BuildContext context) {
+        bool isValid = _formKey.currentState!.validate();
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return CupertinoAlertDialog(
+              content: Text(isValid ? 'Submitted' : 'Could not submit'),
+              actions: <Widget>[
+                CupertinoDialogAction(
+                  child: const Text('Okay'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    if (isValid) {
+                      _submitForm();
+                    }
+                  },
+                ),
+              ],
+            );
+          },
         );
-      },
-    );
-  }
-}
+      }
+    }

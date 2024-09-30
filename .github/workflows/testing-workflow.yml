@@ -1,0 +1,105 @@
+name: Testing Pipeline
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+
+
+jobs:
+  build-and-test:
+    name: Build and Test
+    runs-on: ubuntu-latest
+    env:
+      DB_URL: ${{ secrets.DB_URL }}
+      DB_USERNAME: ${{ secrets.DB_USERNAME }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_TOKEN }}
+      GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
+      BEARER_TOKEN: ${{ secrets.BEARER_TOKEN }}
+      SPRINGBOOT_ENV: ${{ secrets.SPRINGBOOT_ENV }}
+      RECOMMENDATIONS_ENV: ${{ secrets.RECOMMENDATIONS_ENV }}
+      NOTIFICATIONS_ENV: ${{ secrets.NOTIFICATIONS_ENV }}
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Install Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.22.1'
+
+    - name: Install dependencies for Frontend
+      working-directory: ./src/Frontend
+      run: flutter pub get
+
+    - name: Install lcov and Python3
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y lcov python3-pip
+
+    - name: Run Frontend tests with coverage
+      working-directory: ./src/Frontend
+      run: flutter test --coverage --dart-define=GOOGLE_MAPS_API_KEY=${{ secrets.GOOGLE_MAPS_API_KEY }}
+
+
+    - name: Verify Frontend lcov report
+      run: |
+        if [ ! -f ./coverage/lcov.info ]; then
+          echo "lcov report not generated!"
+          exit 1
+        fi
+      working-directory: ./src/Frontend
+
+    - name: 'Create and write environment variables to .env files'
+      run: |
+        echo "${{ env.SPRINGBOOT_ENV }}" > src/Backend/.env
+        echo "${{ env.SPRINGBOOT_ENV }}" > src/Analytics/.env
+        echo "${{ env.RECOMMENDATIONS_ENV }}" > src/recommendation-service/.env
+        echo "${{ env.NOTIFICATIONS_ENV }}" > src/notification-service/.env
+        echo "${{ env.NOTIFICATIONS_ENV }}" > src/storage-service/.env
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+
+    - name: Grant execute permission for gradlew
+      run: chmod +x ./src/Backend/gradlew
+
+    - name: Assemble with Gradle
+      run: ./gradlew assemble
+      working-directory: ./src/Backend
+
+    - name: Run Backend tests with Gradle
+      working-directory: ./src/Backend
+      env: 
+        BEARER_TOKEN: ${{ secrets.BEARER_TOKEN }}
+      run: ./gradlew clean test codeCoverageReport
+
+    - name: 'Delete the .env files'
+      run: |
+        rm -f src/Backend/.env
+        rm -f src/Analytics/.env
+        rm -f src/recommendation-service/.env
+        rm -f src/notification-service/.env
+        rm -f src/storage-service/.env
+
+    - name: Convert Jacoco report to lcov
+      run: |
+        python3 scripts/jacoco2lcov.py ./src/Backend/build/reports/jacoco/report.xml backend.lcov.info
+
+    - name: Merge coverage reports
+      run: |
+        lcov -a ./src/Frontend/coverage/lcov.info -a backend.lcov.info -o merged.lcov.info
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v4
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: merged.lcov.info
+        flags: unittests
+        name: codecov-umbrella
