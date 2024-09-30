@@ -45,9 +45,12 @@ class _HostSearchScreenState extends State<HostSearchScreen> {
 
     try {
       userProvider userP = Provider.of<userProvider>(context, listen: false);
-      final results = await _api.getAllEvents(userP.JWT); // Fetch all events
+      final results = await _api.getAllEvents(userP.JWT);
+      print("response");
+      print(results);
       final hostEvents = results.where((event) {
         if (event.hosts is List<Map<String, dynamic>>) {
+          print(event.hosts);
           return (event.hosts as List<Map<String, dynamic>>)
               .any((host) => host['userId'] == widget.hostId);
         } else if (event.hosts is List<String>) {

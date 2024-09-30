@@ -138,7 +138,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                   padding: const EdgeInsets.all(16.0),
                   child: ElevatedButton(
                     onPressed: _saveSelectedCategories,
-                    child: const Text('next'),
+                    child: const Text('Next'),
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 40, vertical: 15),
