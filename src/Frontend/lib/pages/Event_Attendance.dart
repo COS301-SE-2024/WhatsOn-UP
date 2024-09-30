@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:provider/provider.dart';
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 import 'dart:typed_data';
 import 'dart:convert';
-import '../providers/user_provider.dart' as UserProvider;
 import '../widgets/event_card.dart';
 import 'dart:io';
 import 'package:csv/csv.dart';
@@ -36,20 +34,18 @@ class _EventAttendanceState extends State<EventAttendance> {
   final user = Supabase.instance.client.auth.currentUser;
   List<String> invalidNames = [];
 
-
   @override
   void initState() {
     super.initState();
     filteredAttendees = widget.event.attendees;
     searchController.addListener(filterAttendees);
     fetchAttendanceData();
-    //userProvider userP = Provider.of<userProvider>(context, listen: false);
       }
 
   Future<void> fetchAttendanceData() async {
     try {
-      UserProvider.userProvider userP= Provider.of<UserProvider.userProvider>(context, listen: false);
-      final data = await eventService.fetchAttendanceData(widget.event.id, userP.JWT);
+     // final user = Supabase.instance.client.auth.currentUser;
+      final data = await eventService.fetchAttendanceData(widget.event.id,user!.id );
 
       setState(() {
         for (var record in data) {
@@ -104,7 +100,6 @@ class _EventAttendanceState extends State<EventAttendance> {
             content: Text(
                 'Attendance list exported as CSV to Downloads: $fileName'),
             duration: Duration(seconds: 5),
-            backgroundColor: Colors.green,
           ),
         );
 
@@ -132,7 +127,6 @@ class _EventAttendanceState extends State<EventAttendance> {
                         SnackBar(
                           content: Text('Unable to open folder: $e'),
                           duration: Duration(seconds: 3),
-                          backgroundColor: Colors.red,
                         ),
                       );
                     }
@@ -153,7 +147,6 @@ class _EventAttendanceState extends State<EventAttendance> {
           SnackBar(
             content: Text('Failed to export CSV: $e'),
             duration: Duration(seconds: 3),
-            backgroundColor: Colors.red,
           ),
         );
       }
@@ -162,7 +155,6 @@ class _EventAttendanceState extends State<EventAttendance> {
         SnackBar(
           content: Text('Storage permission is required to export CSV'),
           duration: Duration(seconds: 3),
-          backgroundColor: Colors.red,
         ),
       );
     }
@@ -286,17 +278,15 @@ class _EventAttendanceState extends State<EventAttendance> {
               });
 
               try {
-                //print("printing b4 we call the event service");
-                //print(widget.event.id);
-                //print(attendee.userId);
-                //print(status);
-                UserProvider.userProvider userP= Provider.of<UserProvider.userProvider>(context, listen: false);
-
+                print("printing b4 we call the event service");
+                print(widget.event.id);
+                print(attendee.userId);
+                print(status);
                 await eventService.updateAttendanceStatus(
                   widget.event.id,
                   attendee.userId,
                   status,
-                  userP.JWT,
+                  user!.id,
                 );
                /* setState(() {
                   attendanceStatuses[attendee.userId] = status;
@@ -309,7 +299,6 @@ class _EventAttendanceState extends State<EventAttendance> {
                   SnackBar(
                     content: Text('Failed to update attendance for $fullName'),
                     duration: Duration(seconds: 5),
-                    backgroundColor: Colors.red,
                   ),
                 );
               }
@@ -319,7 +308,6 @@ class _EventAttendanceState extends State<EventAttendance> {
               SnackBar(
                 content: Text('No attendee found with the name $fullName'),
                 duration: Duration(seconds: 5),
-                backgroundColor: Colors.red,
               ),
             );
           }
@@ -431,23 +419,22 @@ Future<void> _importExcel(PlatformFile file) async {
           });
 
           try {
-            //print("printing b4 we call the event service");
-            //print(widget.event.id);
-            //print(attendee.userId);
-            //print(status);
-            UserProvider.userProvider userP= Provider.of<UserProvider.userProvider>(context, listen: false);
+            print("printing b4 we call the event service");
+            print(widget.event.id);
+            print(attendee.userId);
+            print(status);
+
             await eventService.updateAttendanceStatus(
               widget.event.id,
               attendee.userId,
               status,
-              userP.JWT,
+              user!.id,
             );
           } catch (e) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text('Failed to update attendance for $fullName'),
                 duration: Duration(seconds: 3),
-                backgroundColor: Colors.red,
               ),
             );
           }

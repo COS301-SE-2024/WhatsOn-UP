@@ -301,10 +301,6 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
       targets: targets,
       colorShadow: Colors.black.withOpacity(0.5),
       textSkip: "SKIP",
-      textStyleSkip: const TextStyle(
-        color:Colors.red,
-        fontSize: 18,
-      ),
       paddingFocus: 10,
       opacityShadow: 0.8,
       onFinish: () {
@@ -362,12 +358,12 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
               _endDateTime = selectedOption.endDateTime;
               _updateDateTimeControllers();
               _selectedCategory = selectedOption.category;
-              _maxAttendees = selectedOption.maxAttendees;
-
-              _selectedVenue = _venues.firstWhere(
-                (venue) => venue.name == selectedOption.venue.venueName,
-                orElse: () => CategoryData.Venue(name: 'No venue', capacity: 0, venueId: '', ac: false, wifi: false, dataProject: 0, docCam: false, mic: false, windows: false, available: false, ),
-              );
+              
+              // Find the venue in _venues list and set it as _selectedVenue
+              // _selectedVenue = _venues.firstWhere(
+              //   (venue) => venue.id == selectedOption.venue.venueId,
+              //   orElse: () => null,
+              // );
               if (_selectedVenue != null) {
                 _venueController.text = _selectedVenue!.name;
               }
@@ -385,8 +381,6 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
     mediaSize = MediaQuery.of(context).size;
     userProvider userP = Provider.of<userProvider>(context,listen: false);
     EventProvider eventP=Provider.of<EventProvider>(context,listen: false);
-    final Duration maxEventDuration = const Duration(hours: 23, minutes: 59);
-
         return Scaffold(
       appBar: AppBar(
         title: const Text('Create Event'),
@@ -515,7 +509,7 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                   size: 50.0,
                 ),
               )
-              : FutureBuilder<List<CategoryData.Venue>>(
+                  : FutureBuilder<List<CategoryData.Venue>>(
                 future: _venuesFuture,
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
@@ -533,7 +527,7 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                             .toLowerCase()
                             .contains(textEditingValue.text.toLowerCase()));
                       },
-                      displayStringForOption: (CategoryData.Venue venue) => '${venue.name} \t-\t (Capacity: ${venue.capacity})',
+                      displayStringForOption: (CategoryData.Venue venue) => venue.name,
                       fieldViewBuilder: (context, controller, focusNode, onEditingComplete) {
                         _venueController = controller;
                         return TextFormField(
@@ -652,18 +646,6 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                           selectedTime.hour,
                           selectedTime.minute,
                         );
-
-                        final eventDuration = _endDateTime.difference(_startDateTime);
-                        if (eventDuration > maxEventDuration) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text(
-                                'Event duration cannot exceed 24 hours',
-                              ),
-                              backgroundColor: Colors.red,
-                            ),
-                          );
-                        }
                         _updateDateTimeControllers();
                       });
                     }
@@ -672,11 +654,6 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                 validator: (value) {
                   if (_endDateTime.isBefore(_startDateTime)) {
                     return 'End date and time must be after the start date and time';
-                  }
-
-                   final eventDuration = _endDateTime.difference(_startDateTime);
-                  if (eventDuration > maxEventDuration) {
-                    return 'Event duration cannot exceed 24 hours';
                   }
                   return null;
                 },
@@ -804,9 +781,7 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                           print("image uploaded");
                         //  eventP.refreshEvents();
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Event created successfully!'),
-                              backgroundColor: Colors.green,
-                            ),
+                            const SnackBar(content: Text('Event created successfully!')),
                           );
 
                           Navigator.of(context).pushReplacement(
@@ -831,8 +806,7 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                     } catch (e) {
 
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Failed to create event: $e'),
-                          backgroundColor: Colors.red,),
+                        SnackBar(content: Text('Failed to create event: $e')),
                       );
                     } finally {
                       print("ARRRIVEDDDDD AT FINALLY");
@@ -869,7 +843,6 @@ class AutofillOption {
   final Venue venue;
   final DateTime startDateTime;
   final DateTime endDateTime;
-  final int maxAttendees;
 
   AutofillOption({
     required this.description,
@@ -877,7 +850,6 @@ class AutofillOption {
     required this.venue,
     required this.startDateTime,
     required this.endDateTime,
-    required this.maxAttendees,
   });
 
   factory AutofillOption.fromJson(Map<String, dynamic> json) {
@@ -887,7 +859,6 @@ class AutofillOption {
       venue: Venue.fromJson(json['venue']),
       startDateTime: DateTime.parse(json['date']['startDateTime']),
       endDateTime: DateTime.parse(json['date']['endDateTime']),
-      maxAttendees: json['venue']['maxAttendees'],
     );
   }
 }
@@ -971,12 +942,6 @@ class _AutofillOptionsWidgetState extends State<AutofillOptionsWidget> {
                           const SizedBox(height: 8),
                           Text(
                             option.venue.venueName,
-                            style: TextStyle(fontSize: 16, color: Colors.grey[600]),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            'Suggested Attendees: ' +
-                            option.maxAttendees.toString(),
                             style: TextStyle(fontSize: 16, color: Colors.grey[600]),
                           ),
                           const SizedBox(height: 8),

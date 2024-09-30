@@ -232,7 +232,7 @@ class _AdminAnalyticsPageState extends State<AdminAnalyticsPage> with SingleTick
           ),
           const SizedBox(height: 20),
 
-          _buildSectionHeader('Total Event Duration Per Month', Icons.timer),
+          _buildSectionHeader('Event Duration Over Time', Icons.timer),
           Card(
             color: isDarkMode ? Colors.grey[800] : Colors.blueGrey.shade50,
             elevation: 4,
@@ -691,8 +691,8 @@ class RSVPChart extends StatelessWidget {
           title: const Text('RSVP Ratio Over Time'),
           content: const Text(
             'This chart shows the RSVP ratio over time for all events. '
-            'The RSVP ratio represents the proportion of RSVPs relative to the total number of potential attendees. '
-            'A lower ratio might indicate that users might not have been that interested in the events happening that month.'
+            'The RSVP ratio represents the percentage of invited people who responded to the event invitation. '
+            'A higher ratio indicates better communication and engagement with potential attendees.'
           ),
           actions: <Widget>[
             TextButton(
@@ -748,9 +748,9 @@ class DurationChart extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Total Event Duration Per Month'),
+          title: const Text('Event Duration Over Time'),
           content: const Text(
-            'This chart displays the total duration of all events that occurred each month. '
+            'This chart displays the average duration of events over time for all events. '
             'The duration is measured in hours. '
             'This information can help in understanding trends in event length and planning future events.'
           ),

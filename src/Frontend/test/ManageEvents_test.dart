@@ -248,7 +248,7 @@ void main() {
       expect(find.text('All Events'), findsOneWidget);
       expect(find.text('Past Events'), findsOneWidget);
       expect(find.text('Create Event'), findsOneWidget);
-      expect(find.text('General User Host Applications'), findsOneWidget);
+      expect(find.text('General user Host Applications'), findsOneWidget);
       expect(find.byIcon(Icons.event), findsOneWidget);
       expect(find.byIcon(Icons.history), findsOneWidget);
       expect(find.byIcon(Icons.add), findsOneWidget);
@@ -302,7 +302,7 @@ void main() {
     });
 //
 //
-    testWidgets('General User Host Applications is visible for ADMIN role only', (WidgetTester tester) async {
+    testWidgets('General user Host Applications is visible for ADMIN role only', (WidgetTester tester) async {
       when(mockUserProvider.role).thenReturn('ADMIN');
 
       await tester.pumpWidget(
@@ -318,7 +318,7 @@ void main() {
       );
 
 
-      expect(find.text('General User Host Applications'), findsOneWidget);
+      expect(find.text('General user Host Applications'), findsOneWidget);
 
       when(mockUserProvider.role).thenReturn('HOST');
       await tester.pumpWidget(
@@ -334,7 +334,7 @@ void main() {
       );
 
 
-      expect(find.text('General User Host Applications'), findsNothing);
+      expect(find.text('General user Host Applications'), findsNothing);
     });
 
     testWidgets('Renders ManageEvents correctly for non-ADMIN role', (WidgetTester tester) async {

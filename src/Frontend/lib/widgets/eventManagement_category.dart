@@ -5,7 +5,7 @@ import 'package:firstapp/providers/events_providers.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 // import '../main.dart';
 import '../providers/user_provider.dart';
-//import '../screens/FilterScreen.dart';
+import '../screens/FilterScreen.dart';
 import '../screens/HostSearchScreenState.dart';
 
 import 'event_card.dart';
@@ -64,10 +64,11 @@ class _EventmanagementCategoryState extends State<EventmanagementCategory> {
             padding: const EdgeInsets.symmetric(vertical: 8.0),
             child: Center(
               child: Row(
-                //mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Expanded(
-                 child: Container(
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.27,
+                    child: Container(
                       decoration: BoxDecoration(
                         border: Border.all(color: borderColour),
                         borderRadius: BorderRadius.circular(16.0),
@@ -83,6 +84,28 @@ class _EventmanagementCategoryState extends State<EventmanagementCategory> {
                         },
                         icon: Icon(Icons.search, color: textColour),
                         label: Text('Search', style: TextStyle(color: textColour)),
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 35.0),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.27,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: borderColour),
+                        borderRadius: BorderRadius.circular(16.0),
+                      ),
+                      child: TextButton.icon(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => FilterScreen(),
+                            ),
+                          );
+                        },
+                        icon: Icon(Icons.filter_list, color: textColour),
+                        label: Text('Filter', style: TextStyle(color: textColour)),
                       ),
                     ),
                   ),

@@ -2,7 +2,6 @@
 import 'package:firstapp/pages/supabase_signup.dart';
 import 'package:firstapp/providers/notification_providers.dart';
 import 'package:firstapp/providers/user_provider.dart';
-import 'package:firstapp/services/api.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../screens/NotificationDetailScreen.dart';
@@ -66,45 +65,48 @@ class _NotificationsState extends State<Notifications> with TickerProviderStateM
   }
 
   @override
-Widget build(BuildContext context) {
-  userProvider userP = Provider.of<userProvider>(context, listen: false);
-  String userRole = userP.role;
-  final theme = Theme.of(context);
-  final textColour = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
+  Widget build(BuildContext context) {
+    userProvider userP = Provider.of<userProvider>(context, listen: false);
+    String userRole = userP.role;
+    final theme = Theme.of(context);
+    final textColour = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
 
-  if (userRole == "GUEST") {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Notifications',
-          style: TextStyle(
-            fontSize: 32,
-            fontWeight: FontWeight.bold,
-            color: textColour,
+    if (userRole == "GUEST") {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(
+            'Notifications',
+            style: TextStyle(
+              fontSize: 32,
+              fontWeight: FontWeight.bold,
+              color: textColour,
+            ),
           ),
+          backgroundColor: Colors.transparent,
+          automaticallyImplyLeading: false,
         ),
-        backgroundColor: Colors.transparent,
-        automaticallyImplyLeading: false,
-      ),
-      body: _buildGuestView(),
-    );
-  }
+        body: _buildGuestView(),
+      );
+    }
 
-  return Scaffold(
-    appBar: AppBar(
-      title: Text(
-        'Notifications',
-        style: TextStyle(
-          fontSize: 32,
-          fontWeight: FontWeight.bold,
-          color: textColour,
-        ),
+
+    return Scaffold(
+  appBar: AppBar(
+    title: Text(
+      'Notifications',
+      style: TextStyle(
+        fontSize: 32,
+        fontWeight: FontWeight.bold,
+        color: textColour,
       ),
-      backgroundColor: Colors.transparent,
-      automaticallyImplyLeading: false,
     ),
-    body: RefreshIndicator(
-      onRefresh: _refreshNotifications,
+    backgroundColor: Colors.transparent,
+    automaticallyImplyLeading: false,
+  ),
+  body: RefreshIndicator(
+    onRefresh: _refreshNotifications,
+    child: SingleChildScrollView(
+      physics: AlwaysScrollableScrollPhysics(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -130,7 +132,8 @@ Widget build(BuildContext context) {
                 ),
             ],
           ),
-          Expanded( 
+          SizedBox(
+            height: 500, // Set an appropriate height for TabBarView
             child: TabBarView(
               controller: _tabController,
               children: [
@@ -146,8 +149,11 @@ Widget build(BuildContext context) {
         ],
       ),
     ),
-  );
-}
+  ),
+);
+
+  }
+
   Widget _buildGuestView() {
     return Center(
       child: Padding(
@@ -380,13 +386,17 @@ Widget build(BuildContext context) {
               ),
               onTap: () async {
                 final userProvider userP = Provider.of<userProvider>(context, listen: false);
-                final api = Api();
 
                 if (notification.notificationId != null) {
+                  if(notification.seenAt == null){
+                    await notification.markAsSeen(notification.notificationId, userP.JWT);
+                    await notif.refreshNotifications(userP.JWT);
+                  }
+                  print('Notification was seen at: ${notification.seenAt}');
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => NotificationDetailScreen(notification: notification, api: api),
+                      builder: (context) => NotificationDetailScreen(notification: notification),
                     ),
                   ).then((_) {});
                 } else {

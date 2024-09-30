@@ -48,7 +48,7 @@ class _ManageEventsState extends State<ManageEvents> {
       {'text': userP.role == Admin ? 'All Events' : 'My Events', 'route': 'EventManagementCategory', 'icon': Icons.event},
       {'text': 'Past Events', 'route': 'Pastevents', 'icon': Icons.history},
       {'text': 'Create Event', 'route': 'ApplicationEvent', 'icon': Icons.add},
-      if (userP.role == Admin) {'text': 'General User Host Applications', 'route': 'GeneralEventApplications', 'icon': Icons.group},
+      if (userP.role == Admin) {'text': 'General user Host Applications', 'route': 'GeneralEventApplications', 'icon': Icons.group},
     ];
 
     return Scaffold(
