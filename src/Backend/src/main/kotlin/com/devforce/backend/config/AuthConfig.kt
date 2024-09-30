@@ -1,8 +1,8 @@
 package com.devforce.backend.config
 
 import com.devforce.backend.security.CustomUserDetailsService
-import com.devforce.backend.security.JwtAuthFilter
-import com.devforce.backend.security.JwtEntryPoint
+import com.devforce.backend.security.AuthFilter
+import com.devforce.backend.security.EntryPoint
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -27,7 +27,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 class AuthConfig {
 
     @Autowired
-    lateinit var jwtEntryPoint: JwtEntryPoint
+    lateinit var entryPoint: EntryPoint
 
     @Autowired
     lateinit var customUserDetailsService: CustomUserDetailsService
@@ -41,16 +41,17 @@ class AuthConfig {
                 sessionCreationPolicy = SessionCreationPolicy.STATELESS
             }
             exceptionHandling {
-                authenticationEntryPoint = jwtEntryPoint
+                authenticationEntryPoint = entryPoint
             }
             cors {
                 configurationSource = corsConfigurationSource()
+
             }
             csrf {
                 disable()
             }
         }
-        http.addFilterBefore(jwtAuthFilter(), UsernamePasswordAuthenticationFilter::class.java)
+        http.addFilterBefore(authFilter(), UsernamePasswordAuthenticationFilter::class.java)
         return http.build()
     }
 
@@ -66,20 +67,25 @@ class AuthConfig {
     }
 
     @Bean
-    fun jwtAuthFilter(): JwtAuthFilter {
-        return JwtAuthFilter()
+    fun authFilter(): AuthFilter {
+        return AuthFilter()
     }
 
     @Bean
     fun corsConfigurationSource(): CorsConfigurationSource {
         val configuration = CorsConfiguration().apply {
-            allowedOrigins = mutableListOf("http://localhost:3000")
+            allowedOrigins = mutableListOf("https://frontend-1035006743185.us-central1.run.app")
             allowedMethods = mutableListOf("GET", "POST", "PUT", "DELETE", "OPTIONS")
-            allowedHeaders = mutableListOf("*")
+            allowedHeaders = mutableListOf("Content-Type", "Authorization", "X-Requested-With", "Accept", "access-control-allow-origin")
+            exposedHeaders = mutableListOf("Authorization", "Content-Disposition")
             allowCredentials = true
+            maxAge = 3600L  // Cache preflight response for 1 hour to reduce preflight requests
         }
+
         val source = UrlBasedCorsConfigurationSource()
         source.registerCorsConfiguration("/**", configuration)
         return source
     }
+
+
 }

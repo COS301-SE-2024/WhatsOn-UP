@@ -1,7 +1,6 @@
 package com.devforce.backend.controller
 
 import com.devforce.backend.dto.ResponseDto
-import com.devforce.backend.dto.UpdateUserDto
 import com.devforce.backend.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -36,32 +35,73 @@ class UserController {
     }
 
 
-    @PutMapping("rspv_event/{id}")
+    @PutMapping("rsvp_event/{id}")
     @PreAuthorize("isAuthenticated()")
-    fun rspvEvent(@PathVariable id: UUID,): ResponseEntity<ResponseDto> {
+    fun rsvpEvent(@PathVariable id: UUID,): ResponseEntity<ResponseDto> {
         
-        return userService.rspvEvent(id)
+        return userService.rsvpEvent(id)
     }
 
-    @GetMapping("/get_rspv_events")
+    @GetMapping("/get_rsvp_events")
     @PreAuthorize("isAuthenticated()")
-    fun getRspvEvents(): ResponseEntity<ResponseDto> {
+    fun getRsvpEvents(): ResponseEntity<ResponseDto> {
         
-        return userService.getRspvEvents()
+        return userService.getRsvpEvents()
     }
 
-    @DeleteMapping("/delete_rspv_event/{id}")
+    @DeleteMapping("/delete_rsvp_event/{id}")
     @PreAuthorize("isAuthenticated()")
-    fun deleteRspvEvent(@PathVariable id: UUID, ): ResponseEntity<ResponseDto> {
+    fun deleteRsvpEvent(@PathVariable id: UUID, ): ResponseEntity<ResponseDto> {
         
-        return userService.deleteRspvEvent(id)
+        return userService.deleteRsvpEvent(id)
     }
 
     @PutMapping("/update_profile")
     @PreAuthorize("isAuthenticated()")
-    fun updateProfile(@RequestBody userDto: UpdateUserDto, ): ResponseEntity<ResponseDto> {
+    fun updateProfile(@RequestParam fullName: String): ResponseEntity<ResponseDto> {
         
-        return userService.updateProfile(userDto)
+        return userService.updateProfile(fullName)
+    }
+
+    @GetMapping("/get_user")
+    @PreAuthorize("isAuthenticated()")
+    fun getUser(): ResponseEntity<ResponseDto> {
+        return userService.getUser()
+    }
+
+    @PutMapping("/apply_for_host")
+    @PreAuthorize("isAuthenticated()")
+    fun applyHost(
+        @RequestParam howLong: Int,
+        @RequestParam reason: String,
+        @RequestParam studentEmail: String?,
+        @RequestParam fromWhen: String,
+    ): ResponseEntity<ResponseDto> {
+        return userService.applyForHost(howLong, reason, studentEmail, fromWhen)
+    }
+
+    @PostMapping("/acknowledge_application")
+    @PreAuthorize("isAuthenticated()")
+    fun acknowledgeApplication(): ResponseEntity<ResponseDto> {
+        return userService.acknowledgeApplication()
+    }
+
+//    @PostMapping("/dispute_application")
+//    @PreAuthorize("isAuthenticated()")
+//    fun disputeApplication(): ResponseEntity<ResponseDto> {
+//        return userService.disputeApplication()
+//    }
+
+    @GetMapping("/verify_application")
+    @PreAuthorize("permitAll()")
+    fun verifyApplication(@RequestParam veriCode: UUID): ResponseEntity<String> {
+        return userService.verifyApplication(veriCode)
+    }
+
+    @PutMapping("/rate_event/{id}")
+    @PreAuthorize("isAuthenticated()")
+    fun rateEvent(@PathVariable id: UUID, @RequestParam rating: Int, @RequestParam comment: String?): ResponseEntity<ResponseDto> {
+        return userService.rateEvent(id, rating, comment)
     }
 
 }

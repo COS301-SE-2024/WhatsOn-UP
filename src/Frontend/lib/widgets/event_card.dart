@@ -1,44 +1,484 @@
-import 'package:firstapp/pages/home_page.dart';
+import 'package:firstapp/providers/events_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:firstapp/pages/detailed_event_page.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:provider/provider.dart';
+import '../pages/BroadcastEvent.dart';
+import '../pages/Event_Attendance.dart';
+import '../providers/user_provider.dart';
+import '../services/api.dart';
+import '../services/globals.dart' as globals;
 
-class Event {
-  final String nameOfEvent;
-  final String dateAndTime;
-  final String location;
-  final List<String> imageUrls;
-  final String description;
 
-  Event({
-    required this.nameOfEvent,
-    required this.dateAndTime,
-    required this.location,
-    required this.imageUrls,
-    required this.description,
+class Category {
+  final String id;
+  final String name;
+  bool isSelected;
+  String rating;
+  String faculty;
+  Category({
+    required this.id,
+    required this.name,
+    this.isSelected = false,
+    this.rating='0',
+    this.faculty = '',
   });
 
-   factory Event.fromJson(Map<String, dynamic> json) {
-    dynamic j = json['eventMedia']; 
-    return Event(
-      nameOfEvent: json['title'],
-      dateAndTime: json['startTime'],
-      location: json['location'],
-      imageUrls: (json.containsKey('eventMedia') && (json['eventMedia'] as List).isNotEmpty)
-          ? List<String>.from(json['eventMedia'])
-          : ['https://images.pexels.com/photos/1190297/pexels-photo-1190297.jpeg'],
-      description: json['description'],
+  factory Category.fromJson(String json) {
+    final parts = json.split(',');
+    if (parts.length != 2) {
+      throw FormatException('Invalid category format');
+    }
+    return Category(
+      id: parts[0],
+      name: parts[1],
     );
-   }
+  }
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'name': name,
+    'rating': rating,
+    'faculty': faculty,
+  };
+  @override
+  String toString() {
+    return 'Category(id: $id, name: $name, isSelected: $isSelected, rating: $rating, faculty: $faculty)';
+  }
 }
 
-class EventCard extends StatelessWidget {
-  final Event event;
 
-  const EventCard({super.key, required this.event});
+
+
+
+
+class Role {
+  final int id;
+  final String name;
+
+  Role({required this.id, required this.name});
+
+  factory Role.fromJson(Map<String, dynamic> json) {
+    return Role(
+      id: json['id'],
+      name: json['name'],
+    );
+  }
+}
+
+class Attendee {
+  final String userId;
+  final String fullName;
+  final String profileImage;
+  final Role role;
+
+  Attendee({
+    required this.userId,
+    required this.fullName,
+    required this.profileImage,
+    required this.role,
+  });
+  Map<String, dynamic> toJson() {
+    return {
+      'userId': userId,
+      'fullName': fullName,
+      'profileImage': profileImage,
+      'role': role,
+    };
+  }
+
+  factory Attendee.fromJson(Map<String, dynamic> json) {
+    return Attendee(
+      userId: json['userId'] ?? '',
+      fullName: json['fullName']?.toString() ?? 'Unknown',
+      profileImage: json['profileImage'] ?? '',
+      role: Role.fromJson(json['role']),
+    );
+  }
+  @override
+  String toString() {
+    return 'Attendee(id: $userId, name: $fullName, role: $role, profileImage: $profileImage)';
+  }
+}
+
+class Metadata {
+  final List<String> mentors;
+  final List<String> categories;
+  final List<String> sessions;
+
+  Metadata({
+    required this.mentors,
+    required this.categories,
+    required this.sessions,
+  });
+
+  factory Metadata.fromJson(Map<String, dynamic> json) {
+    return Metadata(
+      mentors:
+          json['mentors'] != null ? List<String>.from(json['mentors']) : [],
+      categories: json['categories'] != null
+          ? List<String>.from(json['categories'])
+          : [],
+      sessions:
+          json['sessions'] != null ? List<String>.from(json['sessions']) : [],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'mentors': mentors,
+      'categories': categories,
+      'sessions': sessions,
+    };
+  }
+}
+
+//HERE
+class Campus {
+  final String campusId;
+  final String name;
+  final String location;
+  final bool parking;
+
+  Campus({
+    required this.campusId,
+    required this.name,
+    required this.location,
+    required this.parking,
+  });
+
+  factory Campus.fromJson(Map<String, dynamic> json) {
+    return Campus(
+      campusId: json['campusId'],
+      name: json['name'],
+      location: json['location'],
+      parking: json['parking'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'campusId': campusId,
+      'name': name,
+      'location': location,
+      'parking': parking,
+    };
+  }
+}
+
+class Building {
+  final String buildingId;
+  final String name;
+  final String accessType;
+  final String location;
+  final Campus? campus;
+
+  Building({
+    required this.buildingId,
+    required this.name,
+    required this.accessType,
+    required this.location,
+    this.campus,
+  });
+
+  factory Building.fromJson(Map<String, dynamic> json) {
+    /* print("Printing Building From Json...");
+    print(json['buildingId']);
+    print(json['name']);
+    print(json['accessType']);
+    print(json['location']);
+    print(json['campus'] );
+
+    */
+    Building building;
+    building = Building(
+      buildingId: json['buildingId'],
+      name: json['name'],
+      accessType: json['accessType'],
+      location: json['location'],
+      campus: json['campus'] != null ? Campus.fromJson(json['campus']) : null,
+    );
+    return building;
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'buildingId': buildingId,
+      'name': name,
+      'accessType': accessType,
+      'location': location,
+      'campus': campus?.toJson(),
+    };
+  }
+}
+
+class Venue {
+  final String venueId;
+  final Building? building;
+  late String name;
+  final String? boards;
+  final bool ac;
+  final bool wifi;
+  final int dataProject;
+  final bool docCam;
+  final bool mic;
+  final bool windows;
+  final int capacity;
+  final bool available;
+
+  Venue({
+    required this.venueId,
+    this.building,
+    required this.name,
+    this.boards,
+    required this.ac,
+    required this.wifi,
+    required this.dataProject,
+    required this.docCam,
+    required this.mic,
+    required this.windows,
+    required this.capacity,
+    required this.available,
+  });
+
+  factory Venue.fromJson(Map<String, dynamic> json) {
+    // print("Printing Venue fromJson...");
+
+    Venue venue = Venue(
+      venueId: json['venueId'],
+      building:
+          json['building'] != null ? Building.fromJson(json['building']) : null,
+      name: json['name'],
+      boards: json['boards'],
+      ac: json['ac'],
+      wifi: json['wifi'],
+      dataProject: json['dataProject'],
+      docCam: json['docCam'],
+      mic: json['mic'],
+      windows: json['windows'],
+      capacity: json['capacity'],
+      available: json['available'],
+    );
+    return venue;
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'venueId': venueId,
+      'building': building?.toJson(),
+      'name': name,
+      'boards': boards,
+      'ac': ac,
+      'wifi': wifi,
+      'dataProject': dataProject,
+      'docCam': docCam,
+      'mic': mic,
+      'windows': windows,
+      'capacity': capacity,
+      'available': available,
+    };
+  }
+}
+class Host {
+
+  final String userId;
+
+  final String eventId;
+
+  Host({
+
+    required this.userId,
+
+    required this.eventId,
+
+  });
+
+
+
+
+
+  factory Host.fromJson(Map<String, dynamic> json) {
+
+    return Host(
+
+      userId: json['user_id'],
+
+      eventId: json['event_id'],
+
+
+
+    );
+
+  }
+
+
+
+
+
+  Map<String, dynamic> toJson() {
+
+    return {
+
+      'user_id': userId,
+
+      'event_id': eventId,
+
+    };
+
+  }
+
+}
+
+
+class Event {
+  late String nameOfEvent;
+  // late final String dateAndTime;
+  late final Venue? venue;
+  List<String>? imageUrls;
+  String description;
+  final String id;
+  List<String> hosts;
+  late final String startTime;
+  late final String endTime;
+  late int maxAttendees;
+  late final bool isPrivate;
+  final List<Attendee> attendees;
+  final Metadata metadata;
+  final List<Attendee>? invitees;
+  bool saved;
+  Event({
+    required this.nameOfEvent,
+    this.venue,
+    this.imageUrls,
+    required this.description,
+    required this.id,
+    required this.hosts,
+    required this.startTime,
+    required this.endTime,
+    required this.maxAttendees,
+    required this.isPrivate,
+    required this.attendees,
+    required this.metadata,
+    this.invitees,
+    required this.saved,
+  });
+
+  factory Event.fromJson(Map<String, dynamic> json) {
+
+    var eventVat;
+    eventVat = Event(
+      nameOfEvent: json['title']?.toString() ?? '',
+      startTime: json['startDateTime']?.toString() ?? '',
+      endTime: json['endDateTime']?.toString() ?? '',
+      maxAttendees: json['maxAttendees'] is int ? json['maxAttendees'] : 0,
+      venue: json['location'] != null ? Venue.fromJson(json['location']) : null,
+      isPrivate: json['isPrivate'] ?? false,
+      imageUrls: (json.containsKey('eventMedia') &&
+              (json['eventMedia'] as List).isNotEmpty)
+          ? List<String>.from(
+              json['eventMedia'].map((media) => media?.toString() ?? ''))
+          : [
+              globals.defaultEventURL
+            ],
+      description: json['description']?.toString() ?? '',
+      id: json['id']?.toString() ?? '',
+      hosts: (json.containsKey('hosts') && (json['hosts'] as List).isNotEmpty)
+          ? List<String>.from(
+              json['hosts'].map((host) => host['fullName']?.toString() ?? ''))
+          : [],
+      attendees: (json.containsKey('attendees') &&
+              (json['attendees'] as List).isNotEmpty)
+          ? List<Attendee>.from(
+              json['attendees'].map((attendee) => Attendee.fromJson(attendee)))
+          : [],
+      metadata: json.containsKey('metadata') &&
+              json['metadata'] is Map<String, dynamic>
+          ? Metadata.fromJson(json['metadata'])
+          : Metadata(
+              mentors: [],
+              categories: [],
+              sessions: [],
+            ),
+      invitees:
+          json.containsKey('invitees') && (json['invitees'] as List).isNotEmpty
+              ? List<Attendee>.from(
+                  json['invitees'].map((invitee) => Attendee.fromJson(invitee)))
+              : [],
+      saved: json['saved'] ?? false,
+    );
+    return eventVat;
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': nameOfEvent,
+      'startTime': startTime,
+      'endTime': endTime,
+      'maxAttendees': maxAttendees,
+      'location': venue?.toJson(),
+      'isPrivate': isPrivate,
+      'eventMedia': imageUrls,
+      'description': description,
+      'hosts': hosts.map((host) => {'fullName': host}).toList(),
+      'attendees': attendees.map((attendee) => attendee.toJson()).toList(),
+      'metadata': metadata.toJson(),
+      'invitees': invitees?.map((invitee) => invitee.toJson()).toList(),
+      'saved': saved,
+    };
+  }
+}
+
+class EventCard extends StatefulWidget {
+  final Event event;
+  bool showBookmarkButton;
+  String broadcast;
+  bool recommendations;
+
+  EventCard({Key? key, required this.event, required this.showBookmarkButton ,this.broadcast='',this.recommendations=false})
+      : super(key: key);
+
+  @override
+  _EventCardState createState() => _EventCardState();
+}
+
+String getValidImageUrl(List<String>? imageUrls) {
+  const List<String> validExtensions = ['jpeg', 'jpg', 'png'];
+  const String defaultUrl = globals.defaultEventURL;
+
+  if (imageUrls == null || imageUrls.isEmpty) {
+    return defaultUrl;
+  }
+
+  for (String url in imageUrls) {
+    final extension = url.split('.').last.toLowerCase();
+    if (validExtensions.contains(extension)) {
+      return url;
+    }
+  }
+  return defaultUrl;
+}
+
+class _EventCardState extends State<EventCard> {
+  bool isBookmarked = false;
+  bool isbroadcast=false;
+  bool _isLoading=false;
 
   @override
   Widget build(BuildContext context) {
+    EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
+    userProvider userP = Provider.of<userProvider>(context, listen: false);
+    String userRole = userP.role;
+
+    bool showBookmarkButton = widget.showBookmarkButton && userRole != "GUEST" && widget.broadcast != "EDIT";
+    isbroadcast = widget.broadcast == "EDIT";
+
+
     final theme = Theme.of(context);
+    final backgroundVenueColour =
+        theme.brightness == Brightness.dark ? Color.fromARGB(255, 41, 41, 41) : Colors.grey[200];
+    final bookMarkSavedColour =
+        theme.brightness == Brightness.dark ? Colors.white : Colors.black;
     final cardColour = theme.colorScheme.surface;
     final textColour = theme.colorScheme.onSurface;
 
@@ -47,7 +487,7 @@ class EventCard extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => DetailedEventPage(event: event),
+            builder: (context) => DetailedEventPage(event: widget.event),
           ),
         );
       },
@@ -80,20 +520,23 @@ class EventCard extends StatelessWidget {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(16.0),
                     child: Image.network(
-                      event.imageUrls[0],
+                      getValidImageUrl(widget.event.imageUrls),
                       height: 120.0,
                       width: double.infinity,
                       fit: BoxFit.cover,
                     ),
                   ),
                 ),
+                const SizedBox(height: 10.0),
                 Text(
-                  event.nameOfEvent,
+                  widget.event.nameOfEvent,
                   style: TextStyle(
                     fontSize: 17.0,
                     fontWeight: FontWeight.bold,
                     color: textColour,
                   ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
                 ),
                 const SizedBox(height: 4.0),
                 Row(
@@ -105,29 +548,154 @@ class EventCard extends StatelessWidget {
                       color: textColour,
                     ),
                     Expanded(
-                      child: Text(
-                        event.location,
-                        style: TextStyle(
-                          fontSize: 14.0,
-                          color: textColour,
-                        ),
-                      ),
+                      child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
+                    decoration: BoxDecoration(
+                      color: backgroundVenueColour, // Background color
+                      borderRadius: BorderRadius.circular(16.0), // Rounded corners
                     ),
-                    IconButton(
-                      icon: Icon(
-                        Icons.bookmark_border,
-                        size: 20.0,
+                    child: Text(
+                      widget.event.venue?.name ?? 'No Venue',
+                      style: TextStyle(
+                        fontSize: 14.0,
                         color: textColour,
                       ),
-                      onPressed: () {},
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
                     ),
+                  ),
+                    ),
+                    if (showBookmarkButton)
+                      IconButton(
+                        icon: Icon(
+                          // isBookmarked ? Icons.bookmark : Icons.bookmark_border,
+                          widget.event.saved? Icons.bookmark : Icons.bookmark_border,
+                          size: 20.0,
+                          // color: isBookmarked ? Colors.black : textColour,
+                           color: widget.event.saved? bookMarkSavedColour : textColour,
+                        ),
+                        onPressed: () {
+                          setState(() {
+
+                            widget.event.saved=!widget.event.saved;
+                            if(widget.event.saved==true){
+                              setState(() {
+                                _isLoading = true;
+                              });
+                              eventP.addEventSaved(widget.event,userP.JWT);
+                                        setState(() {
+                                          _isLoading=false;
+                                        });
+
+
+                            }else{
+                              setState(() {
+                                _isLoading = true;
+                              });
+                              eventP.removeEventSaved(widget.event,userP.JWT);
+                              setState(() {
+                                _isLoading=false;
+                              });
+
+                            }
+                          });
+                            // if (isBookmarked == true) {
+                            //   eventP.addEventSaved(widget.event,userP.userId);
+                            //   eventP.refreshEvents();
+                            //
+                            // } else {
+                            //   eventP.removeEventSaved(widget.event,userP.userId);
+                            //   eventP.refreshEvents();
+                            // }
+                          // });
+                        },
+                      ),
+
                   ],
                 ),
+                const SizedBox(height: 10.0),
+                if(isbroadcast)
+                Row(
+
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+
+                      Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        child: TextButton(
+                          onPressed: () {
+
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    EventAttendance(event:widget.event ),
+                              ),
+                            );
+
+                          },
+                          style: TextButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.people, size: 16),
+                              SizedBox(width: 8),
+                              Text('Attendees: ${widget.event.attendees.length}'),
+                            ],
+                          ),
+                        ),
+
+
+                      ),
+                    const SizedBox(height: 10.0),
+                    if(widget.event.attendees.length>0)
+                      Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        child: TextButton(
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return BroadcastEventDialog(event: widget.event);
+                              },
+                            );
+
+                          },
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20.0),
+                          ),
+                          child: Text('Broadcast'),
+                        ),
+                      )
+                  ],
+                ),
+
+                if (_isLoading)
+                  Center(
+                    child: SpinKitPianoWave(
+    color: Color.fromARGB(255, 149, 137, 74),
+    size: 50.0,
+    ),
+                  ),
               ],
             ),
           ),
         ),
       ),
     );
+
+
   }
+
+
+
 }

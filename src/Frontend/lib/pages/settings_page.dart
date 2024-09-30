@@ -4,22 +4,13 @@ import 'package:firstapp/widgets/theme_manager.dart';
 import 'package:firstapp/pages/profilePage.dart';
 import 'dart:typed_data';
 import 'package:url_launcher/url_launcher.dart';
+import '../providers/user_provider.dart';
+import 'notifications.dart';
 
 class SettingsPage extends StatefulWidget {
-  // final String profileImageUrl;
-  final String userName;
-  final String userEmail;
-  final String userId;
-  final String role;
-  final Uint8List? profileImage;
   const SettingsPage({
     Key? key,
     // required this.profileImageUrl,
-    required this.userName,
-    required this.userEmail,
-    required this.userId,
-    required this.role,
-    required this.profileImage,
   }) : super(key: key);
 
   @override
@@ -34,20 +25,29 @@ class _SettingsPageState extends State<SettingsPage> {
     final theme = Theme.of(context);
     final borderColour =
         theme.brightness == Brightness.dark ? Colors.white : Colors.black;
+    final textColour = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
+
+    userProvider userP = Provider.of<userProvider>(context, listen: false);
+    String userRole = userP.role;
 
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+              'Settings',
+              style: TextStyle(
+                fontSize: 32,
+                fontWeight: FontWeight.bold,
+                color: textColour,
+              ),
+          ),
+          backgroundColor: Colors.transparent,
+          automaticallyImplyLeading: false,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Settings',
-              style: TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
             const SizedBox(height: 20),
             Container(
               decoration: BoxDecoration(
@@ -55,72 +55,92 @@ class _SettingsPageState extends State<SettingsPage> {
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Column(
-                children: [
-                  _buildSettingsOption(
-                    icon: Icons.person,
-                    text: 'Profile',
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ProfilePage(
-                            // profileImageUrl: //widget.profileImageUrl,
-                            userName: widget.userName,
-                            userEmail: widget.userEmail,
-                            userId: widget.userId,
-                            role: widget.role,
-                            profileImage: widget.profileImage,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                  _buildDivider(),
-                  _buildSettingsOption(
-                    icon: Icons.notifications,
-                    text: 'Notifications',
-                    onTap: () {
-                      // Handle notifications tap
-                    },
-                  ),
-                  _buildDivider(),
-                  _buildSettingsOption(
-                    icon: Icons.brightness_6,
-                    text: 'Theme',
-                    trailing: _buildThemeToggle(),
-                    onTap: () {
-                      // Handle theme tap
-                    },
-                  ),
-                  _buildDivider(),
-                  _buildSettingsOption(
-                    icon: Icons.vpn_key,
-                    text: 'Account',
-                    onTap: () {
-                      // Handle account tap
-                    },
-                  ),
-                  _buildDivider(),
-                  _buildSettingsOption(
-                    icon: Icons.lock,
-                    text: 'Privacy',
-                    onTap: () {
-                      // Handle privacy tap
-                    },
-                  ),
-                  _buildDivider(),
-                  _buildSettingsOption(
-                    icon: Icons.info,
-                    text: 'Help',
-                    onTap: _launchURL,
-                  ),
-                ],
+                children: _buildSettings(userRole),
               ),
             ),
           ],
         ),
       ),
     );
+  }
+
+  List<Widget> _buildSettings(String userRole) {
+    List<Widget> options = [
+      _buildSettingsOption(
+        icon: Icons.person,
+        text: 'Profile',
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ProfilePage(),
+            ),
+          );
+        },
+      ),
+      _buildDivider(),
+      _buildSettingsOption(
+        icon: Icons.notifications,
+        text: 'Notifications',
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const Notifications()),
+          );
+        },
+      ),
+      _buildDivider(),
+      _buildSettingsOption(
+        icon: Icons.brightness_6,
+        text: 'Theme',
+        trailing: _buildThemeToggle(),
+        onTap: () {
+          // Handle theme tap
+        },
+      ),
+    ];
+
+    if (userRole != "GUEST") {
+      // Only display account option if user is not a guest
+      options.add(_buildDivider());
+      options.add(
+        _buildSettingsOption(
+          icon: Icons.vpn_key,
+          text: 'Account',
+          onTap: () {
+            // Handle account tap
+          },
+        ),
+      );
+    }
+
+    options.add(_buildDivider());
+    options.add(
+      _buildSettingsOption(
+        icon: Icons.lock,
+        text: 'Privacy',
+        onTap: () {
+          // Handle privacy tap
+        },
+      ),
+    );
+
+    options.add(_buildDivider());
+    options.add(
+      _buildSettingsOption(
+        icon: Icons.info,
+        text: 'Help',
+        onTap: () {
+          if(Theme.of(context).platform == TargetPlatform.iOS || Theme.of(context).platform == TargetPlatform.android)
+          Navigator.of(context).pushNamed('/userManual');
+        else
+          _launchURL();
+        },
+      ),
+    );
+
+    return options;
   }
 
   Widget _buildSettingsOption({

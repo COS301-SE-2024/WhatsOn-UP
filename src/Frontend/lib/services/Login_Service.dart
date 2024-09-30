@@ -1,11 +1,11 @@
-import 'package:http/http.dart' as http;
+/*import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'globals.dart' as globals;
 
 Future<Map<String, dynamic>> postRequest(email, password) async {
-  // Define the URL
-  final url = Uri.parse('http://localhost:8080/login');
 
-  // Define the headers and body
+  final url = Uri.parse('http://${globals.domain}:8080/login');
+
   final headers = {"Content-Type": "application/json"};
   final body = jsonEncode({
     'email': email,
@@ -13,7 +13,7 @@ Future<Map<String, dynamic>> postRequest(email, password) async {
   });
 
   try {
-    // Make the POST request
+
     final response = await http.post(url, headers: headers, body: body);
     print(response.body);
 
@@ -26,4 +26,4 @@ Future<Map<String, dynamic>> postRequest(email, password) async {
     print('Error: $e');
     return {'error': e.toString()};
   }
-}
+}*/

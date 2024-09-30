@@ -11,18 +11,18 @@ import java.util.*
 @Data
 @Builder
 @Entity
-@Table(name = "event")
 @NoArgsConstructor
 @AllArgsConstructor
-
-class EventModel {
+@Table(name = "events")
+class EventModel{
     @Id
-    @GeneratedValue
     @Column(name = "event_id", columnDefinition = "UUID")
-    var eventId: UUID = UUID.randomUUID()
+    var eventId: UUID? = null
 
     var title: String = ""
     var description: String = ""
+
+    @Column(name = "metadata", columnDefinition = "TEXT")
     var metadata: String = ""
 
     @ElementCollection
@@ -30,19 +30,30 @@ class EventModel {
     @Column(name = "media_link" , columnDefinition = "TEXT")
     var eventMedia: List<String> = ArrayList()
 
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(name = "created_at", updatable = false)
     private var createdAt: LocalDateTime = LocalDateTime.now()
 
-    @Column(name = "updated_at", nullable = false)
+    @Column(name = "updated_at")
     private var updatedAt: LocalDateTime = LocalDateTime.now()
 
-    var location: String = ""
+    @OneToOne
+    @JoinColumn(name = "created_by")
+    var createdBy: UserModel? = null
 
-    @Column(name = "start_time", nullable = false)
-    var startTime: LocalDateTime = LocalDateTime.now()
+    @OneToOne
+    @JoinColumn(name = "updated_by")
+    var updatedBy: UserModel? = null
 
-    @Column(name = "end_time", nullable = false)
-    var endTime: LocalDateTime = LocalDateTime.now()
+    @OneToOne
+    @JoinColumn(name = "venue_id")
+    var venue: VenueModel? = null
+
+
+    @Column(name = "start_date_time", nullable = false)
+    var startDateTime: LocalDateTime = LocalDateTime.now()
+
+    @Column(name = "end_date_time", nullable = false)
+    var endDateTime: LocalDateTime = LocalDateTime.now()
 
     @Column(name = "max_attendees", nullable = false)
     var maxAttendees: Int = 0
@@ -50,13 +61,16 @@ class EventModel {
     @Column(name = "is_private", nullable = false)
     var isPrivate: Boolean = false
 
+    @Column(name = "available_slots")
+    var availableSlots: Int = 0
+
     @ManyToMany
     @JoinTable(
         name = "event_hosts",
         joinColumns = [JoinColumn(name = "event_id")],
         inverseJoinColumns = [JoinColumn(name = "user_id")]
     )
-    var hosts: Set<UserModel> = HashSet()
+    var hosts: MutableSet<UserModel> = HashSet()
 
     @ManyToMany
     @JoinTable(
@@ -88,6 +102,7 @@ class EventModel {
         updatedAt = LocalDateTime.now()
     }
 
+
     @PreUpdate
     fun preUpdate() {
         updatedAt = LocalDateTime.now()
@@ -95,11 +110,7 @@ class EventModel {
 
 
 
-  /*  fun getEsId(): String {
-        return eventId.toString()
-    }
 
-    fun setEsId(esId: String) {
-        eventId = UUID.fromString(esId)
-    }*/
+
 }
+

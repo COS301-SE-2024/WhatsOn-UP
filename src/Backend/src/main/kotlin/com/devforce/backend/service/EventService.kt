@@ -1,57 +1,121 @@
 package com.devforce.backend.service
 
 import com.devforce.backend.dto.*
+import com.devforce.backend.model.BroadcastModel
 import com.devforce.backend.model.EventModel
+import com.devforce.backend.model.VenueModel
+import com.devforce.backend.repo.BroadcastRepo
 import com.devforce.backend.repo.EventRepo
+import com.devforce.backend.repo.UserRepo
+import com.devforce.backend.repo.VenueRepo
 import com.devforce.backend.security.CustomUser
+import com.fasterxml.jackson.databind.ObjectMapper
+import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
+import org.springframework.web.bind.annotation.RequestBody
 import java.time.*
 import java.util.*
-import java.util.stream.Collectors
 import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeParseException
 
 //FUTURE
 //fun filterEvents(
 @Service
+@Transactional
 class EventService {
+
+    @Autowired
+    private lateinit var objectMapper: ObjectMapper
 
     @Autowired
     lateinit var eventRepo: EventRepo
 
+    @Autowired
+    lateinit var userRepo: UserRepo
+
+    @Autowired
+    lateinit var venueRepo: VenueRepo
+
+    @Autowired
+    lateinit var broadcastRepo: BroadcastRepo
+
+
+
     fun createEvent(createEventDto: CreateEventDto): ResponseEntity<ResponseDto> {
         val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
 
+        val venue = venueRepo.findByVenueId(createEventDto.location)
+            ?: return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "Venue not found")))
+
+        if (!venue.available) {
+            return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "Venue not available")))
+        }
+
+        if (createEventDto.maxParticipants != null && createEventDto.maxParticipants!! < 1) {
+            return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "Max participants must be greater than 0")))
+        }
+
+        if (createEventDto.maxParticipants != null && createEventDto.maxParticipants!! > venue.capacity) {
+            return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "Max participants must be less than venue capacity")))
+        }
+
+        venue.available = false
+
         val event = EventModel().apply {
+            this.eventId = UUID.randomUUID()
             this.title = createEventDto.title
             this.description = createEventDto.description
-            this.startTime = createEventDto.startDate
-            this.endTime = createEventDto.endDate
-            this.location = createEventDto.location
-            this.maxAttendees = createEventDto.maxParticipants ?: 10
-            this.metadata = createEventDto.metadata ?: ""
+            this.startDateTime = createEventDto.startDateTime
+            this.endDateTime = createEventDto.endDateTime
+            this.venue = venue
+            this.maxAttendees = createEventDto.maxParticipants ?: venue.capacity
+            this.metadata = createEventDto.metadata?.let {
+                // Assuming metadata is passed as a Map<String, Any> in DTO
+                ObjectMapper().writeValueAsString(it)
+            } ?: "{}"
             this.isPrivate = createEventDto.isPrivate ?: false
-            this.hosts = setOf(user)
-            this.eventMedia = createEventDto.media ?: this.eventMedia
+            this.availableSlots = createEventDto.maxParticipants ?: 1
+
+            this.hosts = mutableSetOf(user).apply {
+                createEventDto.hosts?.mapNotNull { hostId ->
+                    userRepo.findById(hostId).orElse(null)
+                }?.let { addAll(it) }
+            }
+
+            this.updatedBy = user
+            this.createdBy = user
+
+
+
         }
 
         eventRepo.save(event)
+        
 
-        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Event added successfully"))
+        val eventDto = EventDto(event,true, false)
+
+        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventDto)
         )
     }
 
     // To do: Implement function to retrieve all events
     fun getAllEvents(): ResponseEntity<ResponseDto> {
         // Implementation goes here
-        val events = eventRepo.findAll()
-        val eventsDto = events.map { event -> AllEventsDto(event) }
+        val user = SecurityContextHolder.getContext().authentication.principal
+        var eventsDto: List<EventDto>? = null
+         if (user == "anonymousUser") {
+            val events = eventRepo.findAllByUser(null)
+            eventsDto = events.map { event -> EventDto(event, false, false) }
+        }
+        else {
+            val userModel = (user as CustomUser).userModel
+            val events = eventRepo.findAllByUser(userModel.userId)
+            eventsDto = events.map {
+                event -> EventDto(event, userModel.userId in event.hosts.map { host -> host.userId }, userModel.userId in event.savedEvents.map { savedEvent -> savedEvent.userId })
+            }
+        }
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto)
         )
     }
@@ -59,6 +123,8 @@ class EventService {
     // To do: Implement function to update an existing event
     fun updateEvent(id: UUID, updateEventDto: UpdateEventDto): ResponseEntity<ResponseDto> {
         try {
+            val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
+
             val existing = eventRepo.findById(id)
 
             if (existing.isEmpty) {
@@ -67,32 +133,89 @@ class EventService {
 
             val existingEvent = existing.get()
 
+            if (user.role!!.name != "ADMIN" && existingEvent.hosts.none { host -> host.userId == user.userId }) {
+                return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "You are not authorized to update this event")))
+            }
+
+
+            var v: VenueModel? = null
+
+            if (updateEventDto.location != null) {
+                v = venueRepo.findByVenueId(updateEventDto.location!!)
+                if (v == null) return ResponseEntity.ok(
+                        ResponseDto(
+                            "error",
+                            System.currentTimeMillis(),
+                            mapOf("message" to "Venue not found")
+                        )
+                    )
+
+                if (!v.available) {
+                    return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "Venue not available")))
+                }
+
+                if (updateEventDto.maxParticipants != null && updateEventDto.maxParticipants!! > v.capacity) {
+                    return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "Max participants must be less than venue capacity")))
+                }
+
+                v.available = false
+            }
+            else{
+
+                if (updateEventDto.maxParticipants != null && updateEventDto.maxParticipants!! > existingEvent.venue!!.capacity) {
+                    return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "Max participants must be less than venue capacity")))
+                }
+            }
+
+            if (updateEventDto.maxParticipants != null && updateEventDto.maxParticipants!! < 1) {
+                return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "Max participants must be greater than 0")))
+            }
+
+
+
             existingEvent.apply {
                 updateEventDto.title?.let { title = it }
                 updateEventDto.description?.let { description = it }
-                updateEventDto.metadata?.let { metadata = it }
-                updateEventDto.location?.let { location = it }
-                updateEventDto.startDate?.let { startTime = it }
-                updateEventDto.endDate?.let { endTime = it }
-                updateEventDto.maxParticipants?.let { maxAttendees = it }
+                updateEventDto.metadata?.let { metadata = it.toString() }
+                updateEventDto.location?.let { venue = v}
+                updateEventDto.startDateTime?.let { startDateTime = it }
+                updateEventDto.endDateTime?.let { endDateTime = it }
+                updateEventDto.maxParticipants?.let {
+                    availableSlots += it - maxAttendees
+                    maxAttendees = it
+                }
+                updateEventDto.metadata?.let { ObjectMapper().writeValueAsString(it) } ?: "{}"
                 updateEventDto.isPrivate?.let { isPrivate = it }
+                updateEventDto.hosts?.let { hostIds ->
+                    hosts.clear()
+                    val newHosts = hostIds.mapNotNull { hostId ->
+                        userRepo.findById(hostId).orElse(null)
+                    }
+                    hosts.add(user)
+                    hosts.addAll(newHosts)
+                }
+
+                updatedBy = user
+
+
             }
 
 
             val updatedEvent = eventRepo.save(existingEvent)
+            val eventDto = EventDto(updatedEvent, true, false)
 
-            return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), updatedEvent))
+            return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventDto))
         } catch (e: NoSuchElementException) {
-            return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "Event not found")))
+            return ResponseEntity.status(401).body(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "Event not found")))
         } catch (e: Exception) {
-            return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "Failed to update event:")))
+            return ResponseEntity.status(500).body(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "Failed to update event")))
 
 
     }}
 
 
-    // To do: Implement function to delete an event
     fun deleteEvent(id: UUID): ResponseEntity<ResponseDto> {
+        val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
 
         val event = eventRepo.findById(id)
         if (event.isEmpty) {
@@ -100,7 +223,14 @@ class EventService {
             )
         }
 
-        eventRepo.delete(event.get())
+        if (user.role!!.name != "ADMIN" && event.get().hosts.none { host -> host.userId == user.userId }) {
+            return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "You are not authorized to delete this event"))
+            )
+        }
+
+        event.get().updatedBy = user
+        eventRepo.save(event.get())
+        eventRepo.deleteEvent(id)
 
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Event deleted successfully"))
         )
@@ -112,105 +242,112 @@ class EventService {
         searchString: String
     ): ResponseEntity<ResponseDto> {
 
-        val events = eventRepo.searchEvents(searchString)
-        val eventsDto = events.map { event -> AllEventsDto(event) }
+        val user = SecurityContextHolder.getContext().authentication.principal
+        var eventsDto: List<EventDto>? = null
+        if (user == "anonymousUser") {
+            val events = eventRepo.searchEvents(searchString, null)
+            eventsDto = events.map { event -> EventDto(event, false, false) }
+        }
+        else {
+            val userModel = (user as CustomUser).userModel
+            val events = eventRepo.searchEvents(searchString, userModel.userId)
+            eventsDto = events.map {
+                    event -> EventDto(event, userModel.userId in event.hosts.map { host -> host.userId }, userModel.userId in event.savedEvents.map { savedEvent -> savedEvent.userId })
+            }
+        }
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto)
-        )
+    )
 
 }
-    //the filter for filtering screen
-    fun filteringEvents(startDate: String?, endDate: String?, minCapacity: Int?, maxCapacity: Int?, isPrivate: Boolean?): ResponseEntity<ResponseDto> {
-        try {
-            println("Before anything: $startDate")
-            println("Before anything: $endDate")
-            println("Before anything bool check: $isPrivate")
 
-            val trimmedStartDate = startDate?.trim()
-            val trimmedEndDate = endDate?.trim()
-            println("Before anything2: $trimmedStartDate")
-            println("Before anything2: $trimmedEndDate")
-            var formattedStartDate: String? = null
-            var formattedEndDate: String? = null
-            var emptyMax: Int? = null
-            var emptyMin: Int? = null
-//its currently parsing sanme date for start and end so && will work until i fix that
-            if (trimmedStartDate != null) {
-                if (trimmedEndDate != null) {
-                    if (trimmedStartDate.isNotEmpty() && !trimmedEndDate.isNotEmpty()) {
-                        val parsedStartDate = parseToLocalDateTime(trimmedStartDate)
-                        val parsedEndDate = parseToLocalDateTime(trimmedEndDate)
 
-                        println("Parsed Start Date: $parsedStartDate")
-                        println("Parsed End Date: $parsedEndDate")
-                        println("Parsed Bool: $isPrivate")
-                        println("Min Capacity: $minCapacity")
-                        println("Max Capacity: $maxCapacity")
+    fun getUniqueCategories(): List<String> {
+        return eventRepo.findUniqueCategories()
+    }
+//    private fun extractCategory(metadata: String): String? {
+//        val json = ObjectMapper().readTree(metadata)
+//        return json.get("category")?.asText()
+//    }
 
-                        formattedStartDate = parsedStartDate?.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
-                        formattedEndDate = parsedEndDate?.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+    fun broadcastMessage(message: String, eventId: UUID): ResponseEntity<ResponseDto> {
+        val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
 
-                        println("Formatted Start Date: $formattedStartDate")
-                        println("Formatted End Date: $formattedEndDate")
-                    }
-                }
-            }
-            println("Sending start..: $formattedStartDate")
-            println("Sending end..: $formattedEndDate")
-            println("Sending bool..: $isPrivate")
-            println("Sending max..: $maxCapacity")
-            println("Sending min..: $minCapacity")
-            val filteredEvents = if (minCapacity != null && maxCapacity != null) {
-                eventRepo.filteringEvents(
-                    formattedStartDate,
-                    formattedEndDate,
-                    minCapacity,
-                    maxCapacity,
-                    isPrivate
-                )
-            } else {
-                eventRepo.filteringEvents(
-                    formattedStartDate,
-                    formattedEndDate,
-                    null,  // pass null explicitly
-                    null,  // pass null explicitly
-                    isPrivate
-                )
-            }
-
-            println("Filtered Events: $filteredEvents")
-            return ResponseEntity.ok(ResponseDto("Events filtered successfully", System.currentTimeMillis(), filteredEvents))
-        } catch (e: IllegalArgumentException) {
-            e.printStackTrace()
-            return ResponseEntity.badRequest()
-                .body(ResponseDto("Error filtering events: ${e.message}", System.currentTimeMillis(), null))
-        } catch (e: Exception) {
-            e.printStackTrace()
-            return ResponseEntity.internalServerError()
-                .body(ResponseDto("Error filtering events", System.currentTimeMillis(), null))
+        val event = eventRepo.findById(eventId)
+        if (event.isEmpty) {
+            return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "Event not found"))
+            )
         }
-    }
 
-    fun parseToLocalDateTime(timestamp: String?): LocalDateTime? {
-        return if (timestamp.isNullOrBlank()) {
-            null
-        } else {
-            timestamp.toLongOrNull()?.let { epochMillis ->
-                LocalDateTime.ofInstant(Instant.ofEpochMilli(epochMillis), ZoneOffset.UTC)
-            }
+        if (user.role!!.name != "ADMIN" && event.get().hosts.none { host -> host.userId == user.userId }) {
+            return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "You are not authorized to broadcast to this event"))
+            )
         }
-    }
 
+        val broadcast = BroadcastModel().apply {
+            this.messageId = UUID.randomUUID()
+            this.message = message
+            this.sentAt = Date.from(Instant.now())
+            this.fromId = user.userId
+            this.eventId = eventId
+        }
 
-    /*fun filterEventsByKeyword(keywordFilter: String): List<EventModel> {
-        return eventRepo.filterEventsByKeyword(keywordFilter)
-    }
-*/
-    //FUTURE
-    fun filterEvents(filterBy: FilterByDto): ResponseEntity<ResponseDto>{
-        val events = eventRepo.filterEvents(filterBy)
-        val eventsDto = events.map { event -> AllEventsDto(event) }
-        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto)
+        broadcastRepo.save(broadcast)
+
+        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Broadcast sent successfully"))
         )
+
     }
+
+    fun filterEvents(filterBy: FilterByDto): ResponseEntity<ResponseDto>{
+
+        val user = SecurityContextHolder.getContext().authentication.principal
+        var eventsDto: List<EventDto>? = null
+        if (user == "anonymousUser") {
+            val events = eventRepo.filterEvents(filterBy, null)
+            eventsDto = events.map { event -> EventDto(event, false, false) }
+        }
+        else {
+           val userModel = (user as CustomUser).userModel
+           val events = eventRepo.filterEvents(filterBy, userModel.userId)
+            eventsDto = events.map {
+                   event -> EventDto(event, userModel.userId in event.hosts.map { host -> host.userId }, userModel.userId in event.savedEvents.map { savedEvent -> savedEvent.userId })
+           }
+       }
+       return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventsDto))
+    }
+
+    fun getLocations(): ResponseEntity<ResponseDto> {
+        val locations = venueRepo.findAll()
+        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), locations))
+    }
+
+    fun getAllAttendanceByEventId(eventId: UUID): ResponseEntity<ResponseDto> {
+        val attendanceRecords = eventRepo.findAttendanceByEventId(eventId)
+
+        return if (attendanceRecords.isNotEmpty()) {
+            ResponseEntity.ok(
+                ResponseDto("success", System.currentTimeMillis(), attendanceRecords)
+            )
+        } else {
+            ResponseEntity.ok(
+                ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "No attendance records found for the event"))
+            )
+        }
+    }
+
+    @Transactional
+    fun updateAttendanceStatus(eventId: UUID, userId: UUID, attended: Boolean?): ResponseEntity<ResponseDto> {
+        return try {
+            val updatedRows = eventRepo.updateAttendanceStatus(eventId, userId, attended)
+            if (updatedRows != 0) {
+                ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Attendance status updated successfully")))
+            } else {
+                ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "No rows updated. Check if the event or user exists.")))
+            }
+        } catch (e: Exception) {
+            ResponseEntity.status(500).body(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to e.message)))
+        }
+    }
+
 
 }

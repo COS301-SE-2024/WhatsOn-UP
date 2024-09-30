@@ -3,7 +3,7 @@ package com.devforce.backend.model
 import jakarta.persistence.*
 
 @Entity
-@Table(name = "`role`")
+@Table(name = "roles")
 class RoleModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
