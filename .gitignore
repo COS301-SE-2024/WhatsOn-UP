@@ -41,5 +41,8 @@ secrets.yml
 .git-hooks/
 node_modules
 .env
+public/
+/.vuepress/.temp/
+/.vuepress/.cache/
 
 
