@@ -58,7 +58,7 @@ Widget build(BuildContext context) {
         backgroundColor: Colors.transparent,
         body: Stack(
           children: [
-            Positioned(top: 80, child: _buildTop()),
+            Positioned(top: 80, child: _buildTop()), // 40
             Positioned(bottom: 0, child: _buildBottom(context)),
           ],
         ),
@@ -82,6 +82,14 @@ Widget build(BuildContext context) {
               letterSpacing: 2,
             ),
           ),
+        //   SizedBox(
+        //   width: 200, 
+        //   height: 200,
+        //   child: const Image(
+        //     image: AssetImage('images/whatsonupLogo.png'),
+        //     fit: BoxFit.contain,
+        //   ),
+        // ),
         ],
       ),
     );
@@ -204,38 +212,38 @@ Widget build(BuildContext context) {
               },
 
               child: const Text('Don\'t have an account? Sign Up')),
-          const SizedBox(height: 10),
-          const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const GoogleSignInPage()),
-              );
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: googleButtonBackground,
-              foregroundColor: googleButtonTextColor,
-              side: const BorderSide(color: Colors.grey, width: 1.0),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20.0),
-              ),
-              padding: const EdgeInsets.symmetric(vertical: 12.0),
-              textStyle: const TextStyle(fontSize: 16),
-            ),
-            child: const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image(
-                  width: 24,
-                  height: 24,
-                  image: Svg('assets/images/google-icon.svg'),
-                ),
-                SizedBox(width: 8),
-                Text('Sign in with Google'),
-              ],
-            ),
-          ),
+          // const SizedBox(height: 10),
+          // const SizedBox(height: 20),
+          // ElevatedButton(
+          //   onPressed: () {
+          //     Navigator.push(
+          //       context,
+          //       MaterialPageRoute(builder: (context) => const GoogleSignInPage()),
+          //     );
+          //   },
+          //   style: ElevatedButton.styleFrom(
+          //     backgroundColor: googleButtonBackground,
+          //     foregroundColor: googleButtonTextColor,
+          //     side: const BorderSide(color: Colors.grey, width: 1.0),
+          //     shape: RoundedRectangleBorder(
+          //       borderRadius: BorderRadius.circular(20.0),
+          //     ),
+          //     padding: const EdgeInsets.symmetric(vertical: 12.0),
+          //     textStyle: const TextStyle(fontSize: 16),
+          //   ),
+          //   child: const Row(
+          //     mainAxisAlignment: MainAxisAlignment.center,
+          //     children: [
+          //       Image(
+          //         width: 24,
+          //         height: 24,
+          //         image: Svg('assets/images/google-icon.svg'),
+          //       ),
+          //       SizedBox(width: 8),
+          //       Text('Sign in with Google'),
+          //     ],
+          //   ),
+          // ),
 
           const SizedBox(height: 20),
           TextButton(

@@ -184,6 +184,7 @@ class _HomePageState extends State<HomePage>
                         : const AssetImage('assets/images/user.png')
                             as ImageProvider,
                 radius: 27.0,
+                backgroundColor: Colors.white,
               ),
             ),
             const SizedBox(width: 16.0),
@@ -369,7 +370,6 @@ class _HomePageState extends State<HomePage>
                         style: TextStyle(
                             fontSize: 18.0, fontWeight: FontWeight.bold),
                       ),
-                      const Spacer(),
                       TextButton(
                         onPressed: () {
                           Navigator.push(

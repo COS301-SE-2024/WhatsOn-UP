@@ -44,29 +44,31 @@ class _CalendarPageState extends State<CalendarPage>
 
 
   Future<void> _fetchEvents() async {
-    try {
-      EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
-      userProvider userP = Provider.of<userProvider>(context, listen: false);
+  try {
+    EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
+    userProvider userP = Provider.of<userProvider>(context, listen: false);
 
-      String? userId = userP.role == 'guest' ? null : userP.userId;
-      String JWT = (userId != null) ? userP.JWT : 'guest_user'; //userP.JWT will not set at this point  
-      eventP.fetchfortheFirstTimeRsvp(userId!, JWT);
+    String? userId = userP.role == 'guest' ? "guest" : userP.userId;
+    String JWT = userId == "guest" ? 'guest_user' : userP.JWT;
 
-      List<Event> events = await eventP.eventsRsvp;
-      // final parsedEvents = parseEvents(response);
-      print("EVENTS IN CALENDAR PAGE: $events");
+    eventP.fetchfortheFirstTimeRsvp(userId, JWT); 
 
-      setState(() {
-        _groupedEvents = _groupEventsByDate(events);
-        _isLoading = false;
-      });
-    } catch (e) {
-      print('RSVP Error: $e');
-      setState(() {
-        _isLoading = false;
-      });
-    }
+    List<Event> events = await eventP.eventsRsvp;
+
+    // print("EVENTS IN CALENDAR PAGE: $events");
+
+    setState(() {
+      _groupedEvents = _groupEventsByDate(events);
+      _isLoading = false;
+    });
+  } catch (e) {
+    print('RSVP Error: $e');
+    setState(() {
+      _isLoading = false;
+    });
   }
+}
+
 
   List<Map<String, dynamic>> parseEvents(List<dynamic> events) {
     return events.map((event) {
