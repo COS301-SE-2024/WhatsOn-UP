@@ -6,7 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="ffe5bd8b-130f-4cd6-8230-fbf4c94104d6" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,7 +42,7 @@
     "dart.analysis.tool.window.visible": "false",
     "git-widget-placeholder": "fix/documentation",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/khany/Documents/GitHub/WhatsOn-UP",
+    "last_opened_file_path": "C:/Users/khany/Documents/GitHub/WhatsOn-UP/docs",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -69,7 +68,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1724840669727</updated>
-      <workItem from="1727684899575" duration="1586000" />
+      <workItem from="1727684899575" duration="2490000" />
     </task>
     <servers />
   </component>

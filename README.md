@@ -35,12 +35,13 @@ WhatsOn@UP system aims to be a central hub for all University of Pretoria events
     <td>
      <ul>
        <li><a href="https://docs.google.com/document/d/1VHqM6qYVm655zSy17ZHeF8XD9EKgNwKhp0DaAj5m7LM/edit?usp=drive_link">SRS Document (Google Docs)</a></li>
-       <li><a href="https://docs.google.com/document/d/1hoqGcpMkbaW6cMlomIt7ngt-VoZO51XU/edit?usp=drive_link&ouid=106979401378245433760&rtpof=true&sd=true">SRS Document (GitHub)</a></li>
+       <li><a href="docs/SRS Document - WhatsOn@UP.md">SRS Document (GitHub)</a></li>
        <li><a href="https://docs.google.com/document/d/1SfIxE-KDSOgc1vl41UrfoCZFlWVLJbdIIYWA4zPoOc0/edit?usp=drive_link">Testing Document</a></li>
        <li><a href="https://documenter.getpostman.com/view/33979686/2sA3kaBdjZ">Contracts</a></li>
        <li><a href="https://www.figma.com/design/OjxWQqAXxuycjBsvbRyU0f/WhatsOn%40UP?node-id=0-1&t=rWZnW452JgRBb5ha-0">Wireframes</a></li>
-       <li><a href="https://docs.google.com/document/d/1bzCMPSjUoRPAhiM-I73fGmEfMKprQMG5S6DmbojFVBc/edit?usp=drive_link">Coding Standards</a></li>
-       <li><a href="https://docs.google.com/document/d/1HEqxs-XXnZdjRPnU2jmBJH1JZxUGS5j2ANwfNnK5MBM/edit?usp=drive_link">Technical Installation Manual</a></li>
+       <li><a href="docs/Coding Standards.md">Coding Standards</a></li>
+       <li><a href="docs/Technical Installation Manual.md">Technical Installation Manual</a></li>
+       <li><a href="docs/Help Menu.md">User Manual</a></li>
 
 </ul>
     </td>
