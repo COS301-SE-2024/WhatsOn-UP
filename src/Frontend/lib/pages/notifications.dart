@@ -89,71 +89,64 @@ class _NotificationsState extends State<Notifications> with TickerProviderStateM
       );
     }
 
-
     return Scaffold(
-  appBar: AppBar(
-    title: Text(
-      'Notifications',
-      style: TextStyle(
-        fontSize: 32,
-        fontWeight: FontWeight.bold,
-        color: textColour,
-      ),
-    ),
-    backgroundColor: Colors.transparent,
-    automaticallyImplyLeading: false,
-  ),
-  body: RefreshIndicator(
-    onRefresh: _refreshNotifications,
-    child: SingleChildScrollView(
-      physics: AlwaysScrollableScrollPhysics(),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          TabBar(
-            controller: _tabController,
-            labelColor: Colors.red,
-            indicatorColor: Colors.red,
-            labelPadding: EdgeInsets.symmetric(horizontal: 20),
-            tabs: [
-              const Tab(
-                text: "Unseen",
-              ),
-              const Tab(
-                text: "Seen",
-              ),
-              if (userP.role == "ADMIN")
-                const Tab(
-                  text: "Applications",
-                )
-              else
-                const Tab(
-                  text: "Invitations",
-                ),
-            ],
+      appBar: AppBar(
+        title: Text(
+          'Notifications',
+          style: TextStyle(
+            fontSize: 32,
+            fontWeight: FontWeight.bold,
+            color: textColour,
           ),
-          SizedBox(
-            height: 500, // Set an appropriate height for TabBarView
-            child: TabBarView(
+        ),
+        backgroundColor: Colors.transparent,
+        automaticallyImplyLeading: false,
+      ),
+      body: RefreshIndicator(
+        onRefresh: _refreshNotifications,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            TabBar(
               controller: _tabController,
-              children: [
-                _buildNotificationsView("Unseen"),
-                _buildNotificationsView("Seen"),
+              labelColor: Colors.red,
+              indicatorColor: Colors.red,
+              labelPadding: EdgeInsets.symmetric(horizontal: 20),
+              tabs: [
+                const Tab(
+                  text: "Unseen",
+                ),
+                const Tab(
+                  text: "Seen",
+                ),
                 if (userP.role == "ADMIN")
-                  _buildNotificationsAdminView("Applications")
+                  const Tab(
+                    text: "Applications",
+                  )
                 else
-                  _buildNotificationsView("Invitations"),
+                  const Tab(
+                    text: "Invitations",
+                  ),
               ],
             ),
-          ),
-        ],
+            Expanded( 
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  _buildNotificationsView("Unseen"),
+                  _buildNotificationsView("Seen"),
+                  if (userP.role == "ADMIN")
+                    _buildNotificationsAdminView("Applications")
+                  else
+                    _buildNotificationsView("Invitations"),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
-    ),
-  ),
-);
-
+    );
   }
-
   Widget _buildGuestView() {
     return Center(
       child: Padding(
