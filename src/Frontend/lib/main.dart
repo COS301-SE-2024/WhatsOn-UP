@@ -97,7 +97,7 @@ void main() async{
   await LocalNotifications.init();
   await Supabase.initialize(
     url: 'https://mehgbhiirnmypfgnkaud.supabase.co',
-    anonKey:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1laGdiaGlpcm5teXBmZ25rYXVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjUxODEwNjksImV4cCI6MjA0MDc1NzA2OX0.pGKypDZySuoUTXnzaHmJO8TVdqNt5ond3eoKrp3qD-o'
+    anonKey:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1laGdiaGlpcm5teXBmZ25rYXVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjc2ODg3MzgsImV4cCI6MjA0MzI2NDczOH0.-cAnfcxrcvMXKq75SlieCwjpBVzD4N6XgcTpz6Pjo6g'
   );
   final runnableApp = _buildRunnableApp(
     isWeb: kIsWeb,

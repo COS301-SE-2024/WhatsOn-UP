@@ -66,16 +66,16 @@ class AnalyticsDetailPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 20),
 
-                _buildSectionHeader('Event Duration vs Average Rating', Icons.scatter_plot),
-                Card(
-                  color: isDarkMode ? Colors.grey[800] : Colors.blueGrey.shade50,
-                  elevation: 4,
-                  margin: const EdgeInsets.symmetric(vertical: 8),
-                  child: SizedBox(
-                    height: 300,
-                    child: EventDurationVsRatingChart(monthlySummaries: monthlySummaries), // Event Duration vs Average Rating
-                  ),
-                ),
+                // _buildSectionHeader('Event Duration vs Average Rating', Icons.scatter_plot),
+                // Card(
+                //   color: isDarkMode ? Colors.grey[800] : Colors.blueGrey.shade50,
+                //   elevation: 4,
+                //   margin: const EdgeInsets.symmetric(vertical: 8),
+                //   child: SizedBox(
+                //     height: 300,
+                //     child: EventDurationVsRatingChart(monthlySummaries: monthlySummaries), // Event Duration vs Average Rating
+                //   ),
+                // ),
               ] else
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.6,
