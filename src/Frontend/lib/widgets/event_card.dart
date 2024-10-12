@@ -646,7 +646,7 @@ class _EventCardState extends State<EventCard> {
                         ),
                       ),
                     ),
-                    if (showBookmarkButton)
+                    if (showBookmarkButton && widget.recommendations==false)
                       IconButton(
                         icon: Icon(
                           // isBookmarked ? Icons.bookmark : Icons.bookmark_border,

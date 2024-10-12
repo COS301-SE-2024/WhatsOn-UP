@@ -30,13 +30,20 @@ class FilteredResultScreen extends StatelessWidget {
             child: GestureDetector(
               onTap: () => _openSearchScreen(context),
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 8.0),
+                margin: EdgeInsets.only(top: 16.0, bottom: 16.0),
+                height: 40,
                 decoration: BoxDecoration(
                   color: Colors.grey[200],
                   borderRadius: BorderRadius.circular(50),
+                  border: Border.all(
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : Colors.black,
+                  ),
                 ),
                 child: Row(
                   children: [
+                    SizedBox(width: 8.0),
                     Icon(Icons.search),
                     SizedBox(width: 8.0),
                 Expanded(
