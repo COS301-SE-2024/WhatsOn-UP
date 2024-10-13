@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:firstapp/providers/events_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:firstapp/pages/detailed_event_page.dart';
@@ -346,6 +348,7 @@ class Event {
   final Metadata metadata;
   final List<Attendee>? invitees;
   bool saved;
+  String metadataString = '';
   Event({
     required this.nameOfEvent,
     this.venue,
@@ -361,6 +364,7 @@ class Event {
     required this.metadata,
     this.invitees,
     required this.saved,
+    required this.metadataString,
   });
 
   factory Event.fromJson(Map<String, dynamic> json) {
@@ -405,10 +409,25 @@ class Event {
                   json['invitees'].map((invitee) => Attendee.fromJson(invitee)))
               : [],
       saved: json['saved'] ?? false,
+      metadataString: json['metadata']?.toString() ?? '',
     );
+
     return eventVat;
   }
+  String extractCategoryFromMetadata() {
 
+    if (metadataString.isNotEmpty) {
+      try {
+        final decodedMetadata = jsonDecode(metadataString);
+        print('decodedMetadata: $decodedMetadata');
+        print ('decoded category ${decodedMetadata['category']}');
+        return decodedMetadata['category'] ?? '';
+      } catch (e) {
+        print('Error decoding metadata: $e');
+      }
+    }
+    return '';
+  }
   Map<String, dynamic> toJson() {
     return {
       'id': id,

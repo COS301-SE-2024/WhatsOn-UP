@@ -81,7 +81,7 @@ void main() {
             categories: [],
             sessions: [],
           ),
-          invitees: [], saved: true,
+          invitees: [], saved: true, metadataString: '',
         ),
         Event(
           id: '2',
@@ -100,7 +100,7 @@ void main() {
             categories: [],
             sessions: [],
           ),
-          invitees: [], saved: true,
+          invitees: [], saved: true, metadataString: '',
         ),
       ]);
       when(mockEventProvider.eventsHome).thenAnswer((_) async =>
@@ -122,7 +122,7 @@ void main() {
             categories: [],
             sessions: [],
           ),
-          invitees: [], saved: true,
+          invitees: [], saved: true, metadataString: '',
         ),
         Event(
           id: '2',
@@ -140,7 +140,7 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ), saved: false,
+          ), saved: false, metadataString: '',
 
 
         ),
@@ -161,7 +161,7 @@ void main() {
             categories: [],
             sessions: [],
           ),
-          invitees: [], saved: true,
+          invitees: [], saved: true, metadataString: '',
         ),
       ]);
       when(mockEventProvider.eventsRsvp).thenAnswer((_) async =>
@@ -183,7 +183,7 @@ void main() {
             categories: [],
             sessions: [],
           ),
-          invitees: [], saved: true,
+          invitees: [], saved: true, metadataString: '',
         ),
         Event(
           id: '2',
@@ -202,7 +202,7 @@ void main() {
             categories: [],
             sessions: [],
           ),
-          invitees: [], saved: true,
+          invitees: [], saved: true, metadataString: '',
         ),
         Event(
           id: '3',
@@ -221,7 +221,7 @@ void main() {
             categories: [],
             sessions: [],
           ),
-          invitees: [], saved: false,
+          invitees: [], saved: false, metadataString: '',
         ),
       ]);
     });

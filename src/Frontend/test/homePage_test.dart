@@ -50,7 +50,7 @@ void main() {
                 categories: [],
                 sessions: [],
               ),
-              invitees: [], saved: true,
+              invitees: [], saved: true, metadataString: '',
             ),
             Event(
               id: '2',
@@ -69,7 +69,7 @@ void main() {
                 categories: [],
                 sessions: [],
               ),
-              invitees: [], saved: true,
+              invitees: [], saved: true, metadataString: '',
             ),
             Event(
               id: '3',
@@ -88,7 +88,7 @@ void main() {
                 categories: [],
                 sessions: [],
               ),
-              invitees: [], saved: true,
+              invitees: [], saved: true, metadataString: '',
             ),
           ]);
       // when(mockEventProvider.eventsSaved).thenAnswer((_) async => [
@@ -168,7 +168,7 @@ void main() {
                 categories: [],
                 sessions: [],
               ),
-              invitees: [], saved: true,
+              invitees: [], saved: true, metadataString: '',
             ),
             Event(
               id: '2',
@@ -187,7 +187,7 @@ void main() {
                 categories: [],
                 sessions: [],
               ),
-              invitees: [], saved: true,
+              invitees: [], saved: true, metadataString: '',
             ),
             Event(
               id: '3',
@@ -206,7 +206,7 @@ void main() {
                 categories: [],
                 sessions: [],
               ),
-              invitees: [], saved: true,
+              invitees: [], saved: true, metadataString: '',
             ),
           ]);
 

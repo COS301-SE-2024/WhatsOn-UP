@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:firstapp/providers/events_providers.dart';
 import 'package:firstapp/widgets/event_card.dart';
 import 'package:flutter/material.dart';
 import 'package:firstapp/widgets/SearchImageTile.dart';
@@ -13,7 +14,7 @@ import 'package:firstapp/screens/FilterScreen.dart';
 
 import '../pages/NoEventsFoundScreen.dart';
 import '../providers/user_provider.dart';
-import '../services/api.dart'; // Import the FilterScreen
+import '../services/api.dart';
 
 class SearchScreen extends StatefulWidget {
   final bool showSearchHistoryOnStart;
@@ -37,6 +38,7 @@ class _SearchScreenState extends State<SearchScreen> {
   bool _showSearchHistory = false;
   bool _hasSearched = false;
   Timer? _debounce;
+  List<Event> Teventhome = [];
 
   @override
   void initState() {
@@ -61,10 +63,13 @@ class _SearchScreenState extends State<SearchScreen> {
     });
 
     try {
+      EventProvider eventProvider = Provider.of<EventProvider>(context, listen: false);
       final categories = await _eventService.fetchUniqueCategories();
+      var eventhome = await eventProvider.eventsHome;
       setState(() {
         _categories = categories;
         _isLoading = false;
+        Teventhome = eventhome;
       });
     } catch (e) {
       print('Error fetching categories: $e');
@@ -137,7 +142,10 @@ class _SearchScreenState extends State<SearchScreen> {
       prefs.setStringList('searchHistory', _searchHistory);
     });
   }
+  List<Event> searchEventsByCategory(String category, List<Event> allEvents) {
 
+    return allEvents.where((event) =>  event.extractCategoryFromMetadata() == category).toList();
+  }
   void _onSearchChanged(String query) {
     if (_debounce?.isActive ?? false) _debounce?.cancel();
     _debounce = Timer(const Duration(milliseconds: 500), () {
@@ -160,14 +168,14 @@ class _SearchScreenState extends State<SearchScreen> {
         print("print events");
         print(events);
         return events
-            .where((event) => event.metadata.categories == category)
+            .where((event) => event.extractCategoryFromMetadata() == category)
             .toList();
       } else {
-        // Handle empty or null response
+
         return [];
       }
     } catch (e) {
-      // Handle exceptions and return an empty list or rethrow
+
       print("Error fetching events: $e");
       return [];
     }
@@ -192,10 +200,24 @@ class _SearchScreenState extends State<SearchScreen> {
       });
     }
   }
+  bool hasEventsInCategory(String categoryName, List<Event> events) {
+    return events.any((event) => event.extractCategoryFromMetadata() == categoryName);
+  }
+  List<Category> _getRandomCategories(List<Category> categories, List<Event> eventHOme)  {
 
-  List<Category> _getRandomCategories(List<Category> categories) {
-    categories.shuffle(Random());
-    return categories.toList();
+    List<Category> categoriesWithEvents = [];
+    List<Category> categoriesWithoutEvents = [];
+
+    for (var category in categories) {
+      if (hasEventsInCategory(category.name, eventHOme)) {
+        categoriesWithEvents.add(category);
+      } else {
+        categoriesWithoutEvents.add(category);
+      }
+    }
+    categoriesWithEvents.shuffle(Random());
+    categoriesWithoutEvents.shuffle(Random());
+    return categoriesWithEvents + categoriesWithoutEvents;
   }
 
   @override
@@ -205,7 +227,7 @@ class _SearchScreenState extends State<SearchScreen> {
         title: Text('Search Events'),
         actions: [
           Transform.translate(
-            offset: const Offset(-10, 0), // Move to the left
+            offset: const Offset(-10, 0),
             child: Container(
               child: OutlinedButton.icon(
                 onPressed: _clearSearchResults,
@@ -313,15 +335,16 @@ class _SearchScreenState extends State<SearchScreen> {
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
                   crossAxisCount: 2,
-                  children: _getRandomCategories(_categories).map((category) {
+                  children: _getRandomCategories(_categories,Teventhome).map((category) {
                     String categoryName = category.name;
+
                     return SearchImageTile(
                       title: categoryName,
                       imageUrl: 'assets/images/$categoryName.jpg',
                       onTap: (title) => Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => NoEventsFoundScreen()),
+                            builder: (context) => NoEventsFoundScreen(categoryName: categoryName)),
                       ),
                     );
                   }).toList(),
