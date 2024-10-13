@@ -287,14 +287,14 @@ class _ApplicantState extends State<Applicant> {
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
-                    color: _getStatusColor(widget.user.status.name), // Background color based on status
+                    color: _getStatusColor(widget.user.status.name),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(
-                        _getStatusIcon(widget.user.status.name), // Icon based on status
+                        _getStatusIcon(widget.user.status.name),
                         color: Colors.white,
                       ),
                       SizedBox(width: 8),
