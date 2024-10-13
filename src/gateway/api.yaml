@@ -1419,7 +1419,7 @@ paths:
             description: Forbidden
 
 
-  /api/events/mark_attendance:
+  /api/events/mark_attendance/{eventId}:
       post:
         summary: Mark attendance
         operationId: markAttendance
@@ -1452,7 +1452,7 @@ paths:
             description: Forbidden
 
 
-  /api/events/generate_code:
+  /api/events/generate_code/{eventId}:
       get:
         summary: Generate attendance code
         operationId: generateAttendanceCode
@@ -1478,9 +1478,3 @@ paths:
             description: Unauthorized
           '403':
             description: Forbidden
-
- 
-  
-
-
-  
