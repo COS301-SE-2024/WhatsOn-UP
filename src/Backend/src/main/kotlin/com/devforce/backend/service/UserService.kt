@@ -371,4 +371,29 @@ class UserService {
         )
     }
 
+    fun markAttendance(id: UUID, code: String): ResponseEntity<ResponseDto> {
+        val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
+
+        val optionalEvent = eventRepo.findById(id)
+
+
+        if (optionalEvent.isEmpty) {
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Event not found"))
+        }
+
+        val event = optionalEvent.get()
+
+        if (event.code != code) {
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Invalid code"))
+        }
+
+        println(id)
+        println(user.userId)
+        eventRepo.markAttendance(id, user.userId)
+
+
+        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Attendance marked successfully"))
+        )
+    }
+
 }

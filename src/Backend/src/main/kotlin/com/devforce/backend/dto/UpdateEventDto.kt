@@ -13,4 +13,5 @@ data class UpdateEventDto(
     val metadata: Map<String, String>?,
     val isPrivate: Boolean?,
     val hosts: Set<UUID>?,
+    val recurring: Boolean?
 )

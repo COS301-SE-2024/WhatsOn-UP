@@ -19,6 +19,12 @@ class EventModel{
     @Column(name = "event_id", columnDefinition = "UUID")
     var eventId: UUID? = null
 
+    @Column(name = "code", nullable = false)
+    var code: String = ""
+
+    @Column(name = "recurring", nullable = false)
+    var recurring: Boolean = false
+
     var title: String = ""
     var description: String = ""
 
