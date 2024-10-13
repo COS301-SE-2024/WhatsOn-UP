@@ -260,8 +260,11 @@ class _HomePageState extends State<HomePage>
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (snapshot.hasData) {
-          final eventsHome = snapshot.data![0];
-          final eventsRecommended = snapshot.data![2];
+          var eventsHome = snapshot.data![0];
+          var eventsRecommended = snapshot.data![2];
+          List<Event> filteredRecommendedEvents = eventsHome.where((event) =>
+              eventsRecommended.any((event2) => event.id == event2.id)).toList();
+
 
 
 
@@ -421,16 +424,15 @@ class _HomePageState extends State<HomePage>
                             crossAxisCount: 1,
                             mainAxisSpacing: 8.0,
                           ),
-                          itemCount: eventsRecommended.length,
+                          itemCount:filteredRecommendedEvents.length,
                           itemBuilder: (context, index) {
-                            if (index >= eventsRecommended.length) {
+                            if (index >= filteredRecommendedEvents.length) {
                               return Container();
                             }
 
                             return EventCard(
-                              event: eventsRecommended[index],
+                              event: filteredRecommendedEvents[index],
                               showBookmarkButton: true,
-                              recommendations: true,
                             );
                           },
                         ),
