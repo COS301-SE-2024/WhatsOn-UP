@@ -1419,7 +1419,7 @@ paths:
             description: Forbidden
 
 
-  /api/events/mark_attendance/{eventId}:
+  /api/user/mark_attendance/{eventId}:
       post:
         summary: Mark attendance
         operationId: markAttendance
