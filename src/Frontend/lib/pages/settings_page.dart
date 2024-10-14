@@ -10,7 +10,7 @@ import 'notifications.dart';
 class SettingsPage extends StatefulWidget {
   const SettingsPage({
     Key? key,
-    // required this.profileImageUrl,
+
   }) : super(key: key);
 
   @override
@@ -121,7 +121,7 @@ class _SettingsPageState extends State<SettingsPage> {
         icon: Icons.lock,
         text: 'Privacy',
         onTap: () {
-          // Handle privacy tap
+
         },
       ),
     );

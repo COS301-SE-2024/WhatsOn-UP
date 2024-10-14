@@ -120,7 +120,7 @@ class _EditprofilePageState extends State<EditprofilePage> {
                       children: [
                         _buildTop(),
                         const SizedBox(height: 30),
-                        _buildTextField("Fullname", nameController, false),
+                        _buildTextField("Full Name", nameController, false),
                         const SizedBox(height: 30),
                         SizedBox(
                           width: double.infinity,
