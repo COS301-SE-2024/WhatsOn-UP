@@ -94,7 +94,8 @@ class EventControllerIntegrationTest {
             maxParticipants = 10,
             isPrivate = true,
             hosts = setOf(UUID.fromString("ab3535b8-109b-4b82-b515-2e87f2cc1d17")),
-            metadata = mapOf("category" to "Tech")
+            metadata = mapOf("category" to "Tech"),
+            recurring = null
         )
 
 
@@ -168,7 +169,8 @@ class EventControllerIntegrationTest {
             maxParticipants = null,
             isPrivate = null,
             hosts = null,
-            metadata = null
+            metadata = null,
+            recurring = null
         )
 
         val resultActions = mockMvc.perform(
@@ -253,7 +255,7 @@ class EventControllerIntegrationTest {
             maxAttendees = 10
             isPrivate = true
             venue = location
-            hosts = mutableSetOf(UserModel().apply { userId = UUID.fromString("69ae72bc-8e2b-4400-b608-29f048d4f8c7") })
+            hosts = mutableSetOf(UserModel().apply { userId = UUID.fromString("eca82eaf-fe48-4016-bc87-c24587be7081") })
             metadata = mapOf("category" to "Tech").toString()
 
         }
@@ -422,7 +424,8 @@ class EventControllerIntegrationTest {
             maxParticipants = 10,
             isPrivate = true,
             hosts = setOf(UUID.fromString("ab3535b8-109b-4b82-b515-2e87f2cc1d17")),
-            metadata = mapOf("category" to "Tech")
+            metadata = mapOf("category" to "Tech"),
+            recurring = null
         )
 
         val resultActions = mockMvc.perform(
@@ -498,7 +501,8 @@ class EventControllerIntegrationTest {
             maxParticipants = null,
             isPrivate = null,
             hosts = null,
-            metadata = null
+            metadata = null,
+            recurring = null
         )
 
 

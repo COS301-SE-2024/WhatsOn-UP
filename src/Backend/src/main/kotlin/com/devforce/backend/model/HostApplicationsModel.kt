@@ -48,4 +48,6 @@ class HostApplicationsModel {
     @Column(name = "proof_name")
     var proofName: String? = null
 
+    var alert: Boolean = false
+
 }

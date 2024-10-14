@@ -5,7 +5,8 @@ import java.util.UUID
 
 data class RecommendedVenueDto(
     val venueId: UUID? = null,
-    val venueName: String? = null
+    val venueName: String? = null,
+    val maxAttendees: Int? = null,
 )
 
 

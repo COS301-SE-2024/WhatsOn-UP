@@ -1418,8 +1418,63 @@ paths:
           '403':
             description: Forbidden
 
- 
-  
+
+  /api/user/mark_attendance/{eventId}:
+      post:
+        summary: Mark attendance
+        operationId: markAttendance
+        parameters:
+          - name: eventId
+            in: path
+            description: The ID of the event to mark attendance for
+            required: true
+            type: string
+          - name: code
+            in: query
+            description: The event code
+            required: true
+            type: string
+        x-google-backend:
+          address: https://api-1035006743185.us-central1.run.app
+          path_translation: APPEND_PATH_TO_ADDRESS
+          disable_auth: true
+          deadline: 90.0
+        responses:
+          '200':
+            description: Successful
+          '400':
+            description: Bad request
+          '500':
+            description: Internal server error
+          '401':
+            description: Unauthorized
+          '403':
+            description: Forbidden
 
 
-  
+  /api/events/generate_code/{eventId}:
+      get:
+        summary: Generate attendance code
+        operationId: generateAttendanceCode
+        parameters:
+          - name: eventId
+            in: path
+            description: The ID of the event to generate code for
+            required: true
+            type: string
+        x-google-backend:
+          address: https://api-1035006743185.us-central1.run.app
+          path_translation: APPEND_PATH_TO_ADDRESS
+          disable_auth: true
+          deadline: 90.0
+        responses:
+          '200':
+            description: Successful
+          '400':
+            description: Bad request
+          '500':
+            description: Internal server error
+          '401':
+            description: Unauthorized
+          '403':
+            description: Forbidden
