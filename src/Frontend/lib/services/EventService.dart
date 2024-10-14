@@ -199,12 +199,14 @@ print('categories $jsonResponse');
     }
   }
 
-  Future<List<dynamic>> fetchAttendanceData(String eventId, String userId) async {
+  Future<List<dynamic>> fetchAttendanceData(String eventId, String JWT) async {
     final url = '$baseUrl/api/events/$eventId/attendance';
     final response = await http.get(
       Uri.parse(url),
       headers: {
-        'Authorization': 'Bearer $userId',
+        'Authorization': 'Bearer $JWT',
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
       },
     );
 
@@ -216,13 +218,14 @@ print('categories $jsonResponse');
     }
   }
 
-  Future<void> updateAttendanceStatus(String eventId, String userId, bool? attended, String currUserId) async {
+  Future<void> updateAttendanceStatus(String eventId, String userId, bool? attended, String JWT) async {
     final url = '$baseUrl/api/events/update-attendance';
     final response = await http.put(
       Uri.parse('$url'),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer $currUserId',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $JWT',
       },
       body: jsonEncode({
         'eventId': eventId,

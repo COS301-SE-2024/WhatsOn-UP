@@ -132,7 +132,8 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
       var result = await Api().rsvpEvent(widget.event.id, userP.JWT);
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Successfully RSVP\'d to event!')),
+          const SnackBar(content: Text('Successfully RSVP\'d to event!'),
+            backgroundColor: Colors.green,),
       );
       await eventProvider.refreshRSVPEvents(user!.id, userP.JWT);
       await eventProvider.refreshEvents(userP.JWT);
@@ -144,7 +145,8 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
       Navigator.of(context).pushReplacementNamed('/home');
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to RSVP: ${e.toString()}')),
+        SnackBar(content: Text('Failed to RSVP: ${e.toString()}'),
+          backgroundColor: Colors.red,),
       );
       setState(() {
         _isLoading = false;
@@ -170,7 +172,8 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
           .then((response) {});
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Successfully removed your RSVP from the event!')),
+        const SnackBar(content: Text('Successfully removed your RSVP from the event!'),
+          backgroundColor: Colors.green,),
       );
       await eventProvider.refreshRSVPEvents(user!.id, userP.JWT);
       await eventProvider.refreshEvents(userP.JWT);
@@ -182,7 +185,8 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
       Navigator.of(context).pushReplacementNamed('/home');
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to remove RSVP: ${e.toString()}')),
+        SnackBar(content: Text('Failed to remove RSVP: ${e.toString()}'),
+          backgroundColor: Colors.red,),
       );
       setState(() {
         _isLoading = false;
@@ -265,14 +269,16 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
         if (response['status'] == 'success') {
           print('Event deleted successfully. Response: $response');
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Event deleted successfully')),
+            const SnackBar(content: Text('Event deleted successfully'),
+              backgroundColor: Colors.green,),
           );
           await eventProvider.refreshEvents(userP.JWT);
           Navigator.of(context).pushReplacementNamed('/home');
         } else {
           print('Failed to delete event. Response: $response');
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Failed to delete event')),
+            const SnackBar(content: Text('Failed to delete event'),
+              backgroundColor: Colors.red,),
           );
         }
       });

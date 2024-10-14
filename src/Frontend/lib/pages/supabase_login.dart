@@ -176,7 +176,8 @@ Widget build(BuildContext context) {
                 if (mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       content:
-                          Text("Logged In: ${authResponse.user!.email!}")));
+                          Text("Logged In: ${authResponse.user!.email!}"),backgroundColor: Colors.green));
+
 
                   Provider.of<userProvider>(context, listen: false).JWT = 
                     supabase.auth.currentSession!.accessToken;

@@ -160,13 +160,13 @@ class _SearchScreenState extends State<SearchScreen> {
       var response = await _api.getAllEvents(userP.JWT);
 
       if (response != null) {
-        print(response);
+
         List<Event> events = response
             .map<Event>(
                 (event) => Event.fromJson(event as Map<String, dynamic>))
             .toList();
-        print("print events");
-        print(events);
+
+
         return events
             .where((event) => event.extractCategoryFromMetadata() == category)
             .toList();

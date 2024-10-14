@@ -52,15 +52,16 @@ class _PasteventsState extends State<Pastevents> {
       ),
       body: Column(
         children: [
+          const SizedBox(height: 20.0),
           const SizedBox(width: 35.0),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: Center(
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                // mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.27,
+                  Expanded(
+                    // width: MediaQuery.of(context).size.width * 0.27,
                     child: Container(
                       decoration: BoxDecoration(
                         border: Border.all(color: borderColour),

@@ -473,11 +473,13 @@ class _ApplicantState extends State<Applicant> {
 
     if (response['status'] == 'success') {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('$action successful')),
+        SnackBar(content: Text('$action successful'),
+          backgroundColor: Colors.green,),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to $action')),
+        SnackBar(content: Text('Failed to $action'),
+          backgroundColor: Colors.red,),
       );
     }
 

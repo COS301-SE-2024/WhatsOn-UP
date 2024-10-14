@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../screens/NotificationDetailScreen.dart';
 import '../widgets/notification_card.dart';
+import 'package:firstapp/services/api.dart';
 
 
 class Notifications extends StatefulWidget {
@@ -379,17 +380,17 @@ class _NotificationsState extends State<Notifications> with TickerProviderStateM
               ),
               onTap: () async {
                 final userProvider userP = Provider.of<userProvider>(context, listen: false);
-
+                final api=Api();
                 if (notification.notificationId != null) {
                   if(notification.seenAt == null){
-                    await notification.markAsSeen(notification.notificationId, userP.JWT);
+                    await notification.markAsSeen(notification.notificationId, userP.JWT, api);
                     await notif.refreshNotifications(userP.JWT);
                   }
                   print('Notification was seen at: ${notification.seenAt}');
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => NotificationDetailScreen(notification: notification),
+                        builder: (context) => NotificationDetailScreen(notification: notification, api: api),
                     ),
                   ).then((_) {});
                 } else {

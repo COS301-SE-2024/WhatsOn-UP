@@ -4,22 +4,6 @@ import 'package:flutter/material.dart';
 import '../providers/events_providers.dart';
 import '../widgets/event_card.dart';
 
-// class NoEventsFoundScreen extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         //title: Text('No Events'),
-//       ),
-//       body: Center(
-//         child: Text(
-//           'No events with this category found',
-//           style: TextStyle(fontSize: 18),
-//         ),
-//       ),
-//     );
-//   }
-// }
 import 'package:provider/provider.dart';
 
 class NoEventsFoundScreen extends StatefulWidget {

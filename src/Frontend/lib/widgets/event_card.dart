@@ -588,6 +588,10 @@ class _EventCardState extends State<EventCard> {
     isbroadcast = widget.broadcast == "EDIT";
 
     final theme = Theme.of(context);
+    final backgroundVenueColour =
+    theme.brightness == Brightness.dark ? Color.fromARGB(255, 41, 41, 41) : Colors.grey[200];
+    final bookMarkSavedColour =
+    theme.brightness == Brightness.dark ? Colors.white : Colors.black;
     final cardColour = theme.colorScheme.surface;
     final textColour = theme.colorScheme.onSurface;
 
@@ -657,11 +661,21 @@ class _EventCardState extends State<EventCard> {
                       color: textColour,
                     ),
                     Expanded(
-                      child: Text(
-                        widget.event.venue?.name ?? 'No Venue',
-                        style: TextStyle(
-                          fontSize: 14.0,
-                          color: textColour,
+
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
+                        decoration: BoxDecoration(
+                          color: backgroundVenueColour, // Background color
+                          borderRadius: BorderRadius.circular(16.0), // Rounded corners
+                        ),
+                        child: Text(
+                          widget.event.venue?.name ?? 'No Venue',
+                          style: TextStyle(
+                            fontSize: 14.0,
+                            color: textColour,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
                         ),
                       ),
                     ),
@@ -672,7 +686,7 @@ class _EventCardState extends State<EventCard> {
                           widget.event.saved? Icons.bookmark : Icons.bookmark_border,
                           size: 20.0,
                           // color: isBookmarked ? Colors.black : textColour,
-                           color: widget.event.saved? Colors.black : textColour,
+                           color: widget.event.saved? bookMarkSavedColour : textColour,
                         ),
                         onPressed: () {
                           setState(() {
@@ -714,7 +728,8 @@ class _EventCardState extends State<EventCard> {
                   ],
                 ),
                 const SizedBox(height: 10.0),
-                if(isbroadcast && widget.event.attendees.length>0)
+
+                if(isbroadcast)
                 Row(
 
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -753,7 +768,7 @@ class _EventCardState extends State<EventCard> {
 
                       ),
                     const SizedBox(height: 10.0),
-
+                    if(widget.event.attendees.length>0)
                       Container(
                         decoration: BoxDecoration(
                           border: Border.all(color: Colors.grey),
