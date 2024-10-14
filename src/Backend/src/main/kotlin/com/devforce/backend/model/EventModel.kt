@@ -20,10 +20,10 @@ class EventModel{
     var eventId: UUID? = null
 
     @Column(name = "code", nullable = false)
-    var code: String = ""
+    var code: String? = ""
 
-    @Column(name = "recurring", nullable = false)
-    var recurring: Boolean = false
+    @Column(name = "recurring")
+    var recurring: Int? = 0
 
     var title: String = ""
     var description: String = ""

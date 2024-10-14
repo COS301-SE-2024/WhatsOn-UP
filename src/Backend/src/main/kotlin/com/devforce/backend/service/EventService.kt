@@ -86,7 +86,8 @@ class EventService {
 
             this.updatedBy = user
             this.createdBy = user
-            this.recurring = createEventDto.recurring ?: false
+            this.recurring = createEventDto.recurring ?: 0
+            this.code = UUID.randomUUID().toString().substring(0, 6)
 
 
 
@@ -193,6 +194,8 @@ class EventService {
                 updatedBy = user
 
                 this.recurring = updateEventDto.recurring ?: this.recurring
+
+                this.code = this.code ?: UUID.randomUUID().toString().substring(0, 6)
 
 
             }

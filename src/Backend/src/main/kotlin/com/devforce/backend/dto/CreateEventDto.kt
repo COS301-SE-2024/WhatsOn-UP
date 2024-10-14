@@ -13,5 +13,5 @@ data class CreateEventDto(
     val metadata: Map<String, String>?,
     val isPrivate: Boolean?,
     val hosts: Set<UUID>?,
-    val recurring: Boolean?
+    val recurring: Int?
 )

@@ -95,7 +95,7 @@ class EventControllerIntegrationTest {
             isPrivate = true,
             hosts = setOf(UUID.fromString("ab3535b8-109b-4b82-b515-2e87f2cc1d17")),
             metadata = mapOf("category" to "Tech"),
-            recurring = false
+            recurring = null
         )
 
 
@@ -170,7 +170,7 @@ class EventControllerIntegrationTest {
             isPrivate = null,
             hosts = null,
             metadata = null,
-            recurring = false
+            recurring = null
         )
 
         val resultActions = mockMvc.perform(
@@ -425,7 +425,7 @@ class EventControllerIntegrationTest {
             isPrivate = true,
             hosts = setOf(UUID.fromString("ab3535b8-109b-4b82-b515-2e87f2cc1d17")),
             metadata = mapOf("category" to "Tech"),
-            recurring = false
+            recurring = null
         )
 
         val resultActions = mockMvc.perform(
@@ -502,7 +502,7 @@ class EventControllerIntegrationTest {
             isPrivate = null,
             hosts = null,
             metadata = null,
-            recurring = false
+            recurring = null
         )
 
 

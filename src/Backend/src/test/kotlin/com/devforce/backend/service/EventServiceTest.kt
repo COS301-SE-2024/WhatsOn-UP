@@ -78,7 +78,7 @@ class EventServiceTest {
             metadata = mapOf("key1" to "value1", "key2" to "value2"),
             isPrivate = false,
             null,
-            recurring = false
+            recurring = null
         )
 
         val venueModel = VenueModel().apply {
@@ -114,7 +114,7 @@ class EventServiceTest {
             metadata = mapOf("key1" to "value1", "key2" to "value2"),
             isPrivate = true,
             null,
-            recurring = false
+            recurring = null
         )
 
         val event = EventModel().apply {
@@ -156,7 +156,7 @@ class EventServiceTest {
             metadata = mapOf("key1" to "value1", "key2" to "value2"),
             isPrivate = true,
             null,
-            recurring = false
+            recurring = null
         )
 
         // Mock necessary dependencies and interactions

@@ -22,7 +22,7 @@ data class EventDto(
     val isHost: Boolean,
     val saved: Boolean = false,
     val availableSlots: Int,
-    val recurring: Boolean,
+    val recurring: Int?,
     val code: String?
 ) {
     constructor(event: EventModel, isHost: Boolean, saved: Boolean) : this(
