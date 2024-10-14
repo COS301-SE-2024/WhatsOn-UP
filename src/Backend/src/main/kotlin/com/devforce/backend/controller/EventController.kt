@@ -128,5 +128,11 @@ class EventController {
 
     }
 
+    @GetMapping("/generate_code/{id}")
+    @PreAuthorize("hasAnyRole('HOST', 'ADMIN')")
+    fun generateCode(@PathVariable id: UUID): ResponseEntity<ResponseDto> {
+        return eventService.generateCode(id)
+    }
+
 
 }

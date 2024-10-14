@@ -86,6 +86,8 @@ class EventService {
 
             this.updatedBy = user
             this.createdBy = user
+            this.recurring = createEventDto.recurring ?: 0
+            this.code = UUID.randomUUID().toString().substring(0, 6)
 
 
 
@@ -190,6 +192,10 @@ class EventService {
                 }
 
                 updatedBy = user
+
+                this.recurring = updateEventDto.recurring ?: this.recurring
+
+                this.code = this.code ?: UUID.randomUUID().toString().substring(0, 6)
 
 
             }
@@ -343,5 +349,28 @@ class EventService {
         }
     }
 
+    fun generateCode(id: UUID): ResponseEntity<ResponseDto> {
+        val code = UUID.randomUUID().toString().substring(0, 6)
+
+        val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
+
+        val event = eventRepo.findById(id)
+        if (event.isEmpty) {
+            return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "Event not found"))
+            )
+        }
+
+        if (user.role!!.name != "ADMIN" && event.get().hosts.none { host -> host.userId == user.userId }) {
+            return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "You are not authorized to generate code for this event"))
+            )
+        }
+
+        event.get().code = code
+        eventRepo.save(event.get())
+
+        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("code" to code))
+        )
+
+    }
 
 }

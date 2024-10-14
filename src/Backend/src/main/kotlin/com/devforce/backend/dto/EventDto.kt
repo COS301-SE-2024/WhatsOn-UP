@@ -21,7 +21,9 @@ data class EventDto(
     val invitees: Set<UserModel>,
     val isHost: Boolean,
     val saved: Boolean = false,
-    val availableSlots: Int
+    val availableSlots: Int,
+    val recurring: Int?,
+    val code: String?
 ) {
     constructor(event: EventModel, isHost: Boolean, saved: Boolean) : this(
         id = event.eventId.toString(),
@@ -39,6 +41,8 @@ data class EventDto(
         invitees = event.invitees,
         isHost = isHost,
         saved = saved,
-        availableSlots = event.availableSlots ?: 0
+        availableSlots = event.availableSlots ?: 0,
+        recurring = event.recurring,
+        code = if (isHost) event.code else null
     )
 }
