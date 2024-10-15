@@ -10,6 +10,9 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:firstapp/services/PlacesService.dart';
 import 'package:location/location.dart' as LocationController;
 
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:geolocator/geolocator.dart';
+
 class NavigationPage extends StatefulWidget {
   final String? initSearchQuery;
 
@@ -171,8 +174,46 @@ class _NavigationPageState extends State<NavigationPage> {
     print('\n ${updatedRoute}');
   }
 
-  Future<void>_getLocationUpdates() async {
-    try{
+Future<void> _getLocationUpdates() async {
+  try 
+  {
+    print('HELLO OVER THERE');
+    if (kIsWeb) {
+      // Handle permissions for the web
+      LocationPermission permission = await Geolocator.checkPermission();
+
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          throw Exception("Location permission has not been granted");
+        }
+      }
+
+      // Check if location services are enabled
+      bool locationServiceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!locationServiceEnabled) {
+        throw Exception("Location services are disabled.");
+      }
+
+      // Listen to location updates
+      Geolocator.getPositionStream().listen((Position currentPosition) async {
+        if (currentPosition.latitude != null && currentPosition.longitude != null) {
+          if (mounted) { // Check if the widget is still mounted
+            if (_currentDestination != null && _route != null) {
+              await _updateRoute(_currentDestination!);
+            }
+            print("SETTING STATE");
+            setState(() {
+              _currentLocation = LatLng(currentPosition.latitude, currentPosition.longitude);
+              if (!locationFound) {
+                _cameraToPosition(_currentLocation);
+              }
+            });
+          }
+        }
+      });
+    } else {
+      // Handle permissions for mobile (Android/iOS)
       bool locationServiceEnabled = await locationController.serviceEnabled();
       if (!locationServiceEnabled) {
         locationServiceEnabled = await locationController.requestService();
@@ -189,28 +230,30 @@ class _NavigationPageState extends State<NavigationPage> {
         }
       }
 
+      // Listen to location updates
       locationController.onLocationChanged.listen((currentLocation) async {
-      if(currentLocation.latitude != null && currentLocation.longitude != null){
-        if (mounted) { // Check if the widget is still mounted
-          if(_currentDestination != null && _route != null){
-            await _updateRoute(_currentDestination!);
-            print("CALLED");
-          };
-        setState((){
-          _currentLocation = LatLng(currentLocation.latitude!, currentLocation.longitude!);
-          if (!locationFound) {
-            _cameraToPosition(_currentLocation);
+        if (currentLocation.latitude != null && currentLocation.longitude != null) {
+          if (mounted) { // Check if the widget is still mounted
+            if (_currentDestination != null && _route != null) {
+              await _updateRoute(_currentDestination!);
+              print("CALLED");
+            }
+            setState(() {
+              _currentLocation = LatLng(currentLocation.latitude!, currentLocation.longitude!);
+              if (!locationFound) {
+                _cameraToPosition(_currentLocation);
+              }
+            });
           }
-        });
-      }
-      }
-    });
+        }
+      });
     }
-    catch(e){
-      print(e);
-      rethrow;
-    }
+  } catch (e) {
+    print(e);
+    rethrow;
   }
+}
+
 
   void _loadCustomIcons() async {
     _customOriginIcon = BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure);

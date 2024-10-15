@@ -89,6 +89,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
+import 'dart:js' as js;
 late SupabaseClient supabaseClient;
 void main() async{
   //Initialisations
@@ -99,6 +100,11 @@ void main() async{
     url: 'https://mehgbhiirnmypfgnkaud.supabase.co',
     anonKey:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1laGdiaGlpcm5teXBmZ25rYXVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjc2ODg3MzgsImV4cCI6MjA0MzI2NDczOH0.-cAnfcxrcvMXKq75SlieCwjpBVzD4N6XgcTpz6Pjo6g'
   );
+
+  // Initialise google maps
+  const googleMapsApiKey = String.fromEnvironment('GOOGLE_MAPS_API_KEY');
+  js.context.callMethod('loadGoogleMaps', [googleMapsApiKey]);
+
   final runnableApp = _buildRunnableApp(
     isWeb: kIsWeb,
     webAppWidth: 412.0,
