@@ -35,7 +35,7 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ), invitees: [], saved: false,
+          ), invitees: [], saved: false, metadataString: '',
         ),
         Event(
           id: '2',
@@ -58,7 +58,7 @@ void main() {
             categories: [],
             sessions: [],
           ), invitees: [],
-          saved: false,
+          saved: false, metadataString: '',
         ),
       ]);
 
@@ -105,7 +105,7 @@ void main() {
            categories: [],
            sessions: [],
          ),
-        invitees: [], saved: false,
+        invitees: [], saved: false, metadataString: '',
       );
 
 

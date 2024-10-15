@@ -287,14 +287,14 @@ class _ApplicantState extends State<Applicant> {
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
-                    color: _getStatusColor(widget.user.status.name), // Background color based on status
+                    color: _getStatusColor(widget.user.status.name),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(
-                        _getStatusIcon(widget.user.status.name), // Icon based on status
+                        _getStatusIcon(widget.user.status.name),
                         color: Colors.white,
                       ),
                       SizedBox(width: 8),
@@ -473,11 +473,13 @@ class _ApplicantState extends State<Applicant> {
 
     if (response['status'] == 'success') {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('$action successful')),
+        SnackBar(content: Text('$action successful'),
+          backgroundColor: Colors.green,),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to $action')),
+        SnackBar(content: Text('Failed to $action'),
+          backgroundColor: Colors.red,),
       );
     }
 

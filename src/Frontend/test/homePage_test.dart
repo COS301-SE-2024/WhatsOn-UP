@@ -50,7 +50,7 @@ void main() {
                 categories: [],
                 sessions: [],
               ),
-              invitees: [], saved: true,
+              invitees: [], saved: true, metadataString: '',
             ),
             Event(
               id: '2',
@@ -69,7 +69,7 @@ void main() {
                 categories: [],
                 sessions: [],
               ),
-              invitees: [], saved: true,
+              invitees: [], saved: true, metadataString: '',
             ),
             Event(
               id: '3',
@@ -88,7 +88,7 @@ void main() {
                 categories: [],
                 sessions: [],
               ),
-              invitees: [], saved: true,
+              invitees: [], saved: true, metadataString: '',
             ),
           ]);
       // when(mockEventProvider.eventsSaved).thenAnswer((_) async => [
@@ -168,7 +168,7 @@ void main() {
                 categories: [],
                 sessions: [],
               ),
-              invitees: [], saved: true,
+              invitees: [], saved: true, metadataString: '',
             ),
             Event(
               id: '2',
@@ -187,7 +187,7 @@ void main() {
                 categories: [],
                 sessions: [],
               ),
-              invitees: [], saved: true,
+              invitees: [], saved: true, metadataString: '',
             ),
             Event(
               id: '3',
@@ -206,7 +206,7 @@ void main() {
                 categories: [],
                 sessions: [],
               ),
-              invitees: [], saved: true,
+              invitees: [], saved: true, metadataString: '',
             ),
           ]);
 
@@ -376,9 +376,9 @@ void main() {
 
         await tester.pump();
         expect(find.text('All Events'), findsOneWidget);
-        expect(find.text('Event 1'), findsOneWidget);
+        expect(find.text('Event 1'), findsNWidgets(2));
         expect(find.text('Personalised Events'), findsOneWidget);
-        expect(find.text('Event 2'), findsOneWidget);
+        expect(find.text('Event 2'), findsNWidgets(2));
       });
     });
     testWidgets('Search for events and navigate to SearchScreen',

@@ -301,6 +301,10 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
       targets: targets,
       colorShadow: Colors.black.withOpacity(0.5),
       textSkip: "SKIP",
+      textStyleSkip: const TextStyle(
+        color:Colors.red,
+        fontSize: 18,
+      ),
       paddingFocus: 10,
       opacityShadow: 0.8,
       onFinish: () {
@@ -656,6 +660,7 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                               content: Text(
                                 'Event duration cannot exceed 24 hours',
                               ),
+                              backgroundColor: Colors.red,
                             ),
                           );
                         }
@@ -796,10 +801,11 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                           }
 
 
-                          print("image uploaded");
-                        //  eventP.refreshEvents();
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Event created successfully!')),
+                            const SnackBar(content: Text('Event created successfully!'),
+                              backgroundColor: Colors.green,
+                            ),
+
                           );
 
                           Navigator.of(context).pushReplacement(
@@ -824,7 +830,9 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                     } catch (e) {
 
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Failed to create event: $e')),
+                        SnackBar(content: Text('Failed to create event: $e'),
+                          backgroundColor: Colors.red,
+                        ),
                       );
                     } finally {
                       print("ARRRIVEDDDDD AT FINALLY");

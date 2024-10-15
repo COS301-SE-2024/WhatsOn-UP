@@ -117,6 +117,7 @@ class _CalendarPageState extends State<CalendarPage>
                 sessions: [],
               ),
         'saved': event['saved'] ?? false,
+
       };
     }).toList();
   }
@@ -267,6 +268,8 @@ Widget _buildEventCard(Map<String, dynamic> event) {
         isPrivate: event['isPrivate'],
         metadata: Metadata.fromJson(event['metadata']),
         saved: event['saved'],
+        metadataString: event['metadataString'],
+
 
       );
       Navigator.push(
