@@ -89,7 +89,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
-import 'dart:js' as js;
+import 'services/google_maps_loader_stub.dart'
+    if (dart.library.js) 'services/google_maps_loader_web.dart';
 late SupabaseClient supabaseClient;
 void main() async{
   //Initialisations
@@ -102,8 +103,12 @@ void main() async{
   );
 
   // Initialise google maps
-  const googleMapsApiKey = String.fromEnvironment('GOOGLE_MAPS_API_KEY');
-  js.context.callMethod('loadGoogleMaps', [googleMapsApiKey]);
+  
+
+  if (kIsWeb) {
+    const googleMapsApiKey = String.fromEnvironment('GOOGLE_MAPS_API_KEY');
+    loadGoogleMaps(googleMapsApiKey);
+  }
 
   final runnableApp = _buildRunnableApp(
     isWeb: kIsWeb,

@@ -177,7 +177,6 @@ class _NavigationPageState extends State<NavigationPage> {
 Future<void> _getLocationUpdates() async {
   try 
   {
-    print('HELLO OVER THERE');
     if (kIsWeb) {
       // Handle permissions for the web
       LocationPermission permission = await Geolocator.checkPermission();
@@ -193,6 +192,24 @@ Future<void> _getLocationUpdates() async {
       bool locationServiceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!locationServiceEnabled) {
         throw Exception("Location services are disabled.");
+      }
+
+      // retrieve user's initial position
+      print('Retrieving user position');
+      LocationSettings locationSettings = const LocationSettings(
+        accuracy: LocationAccuracy.low,
+        distanceFilter: 100,
+      );
+      Position currentPosition = await Geolocator.getCurrentPosition(
+         locationSettings: locationSettings
+      );
+      print('Retrieved user position');
+      if (mounted) {
+        setState(() {
+          _currentLocation = LatLng(currentPosition.latitude, currentPosition.longitude);
+          _cameraToPosition(_currentLocation); // Ensure the map centers on the current location
+          locationFound = true;  // Mark location as found to remove loading states
+        });
       }
 
       // Listen to location updates
