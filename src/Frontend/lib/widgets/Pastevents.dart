@@ -4,7 +4,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:firstapp/services/EventService.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import '../screens/FilterScreen.dart';
+//import '../screens/FilterScreen.dart';
 import '../screens/SearchScreen.dart';
 import 'event_card.dart';
 // import 'package:firstapp/main.dart';
@@ -81,7 +81,7 @@ class _PasteventsState extends State<Pastevents> {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 35.0),
+                 /* const SizedBox(width: 35.0),
                   SizedBox(
                     width: MediaQuery.of(context).size.width * 0.27,
                     child: Container(
@@ -102,7 +102,7 @@ class _PasteventsState extends State<Pastevents> {
                         label: Text('Filter', style: TextStyle(color: textColour)),
                       ),
                     ),
-                  ),
+                  ),*/
                 ],
               ),
             ),
