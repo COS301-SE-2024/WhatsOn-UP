@@ -376,9 +376,9 @@ void main() {
 
         await tester.pump();
         expect(find.text('All Events'), findsOneWidget);
-        expect(find.text('Event 1'), findsOneWidget);
+        expect(find.text('Event 1'), findsNWidgets(2));
         expect(find.text('Personalised Events'), findsOneWidget);
-        expect(find.text('Event 2'), findsOneWidget);
+        expect(find.text('Event 2'), findsNWidgets(2));
       });
     });
     testWidgets('Search for events and navigate to SearchScreen',
