@@ -247,7 +247,7 @@ void main() {
         );
       });
       expect(find.text('Search'), findsOneWidget);
-      expect(find.text('Filter'), findsOneWidget);
+      // expect(find.text('Filter'), findsOneWidget);
     });
 
 

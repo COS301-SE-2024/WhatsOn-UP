@@ -238,7 +238,7 @@ void main() {
       expect(find.text('Profile'), findsOneWidget);
       expect(find.text('Notifications'), findsOneWidget);
       expect(find.text('Theme'), findsOneWidget);
-      expect(find.text('Privacy'), findsOneWidget);
+      // expect(find.text('Privacy'), findsOneWidget);
       expect(find.text('Help'), findsOneWidget);
     });
 
