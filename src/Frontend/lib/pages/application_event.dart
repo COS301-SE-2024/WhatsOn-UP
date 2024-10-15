@@ -143,6 +143,7 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
       setState(() {
         _maxAttendees = newValue;
       });
+      _updateCapacityWarning();
     }
   }
 
@@ -151,6 +152,7 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
       _maxAttendees = value;
       _maxAttendeesController.text = _maxAttendees.toString();
     });
+    _updateCapacityWarning();
   }
 
   List<Map<String, dynamic>> selectedMedia = [];
@@ -374,6 +376,46 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
     );
   }
 
+  bool _isWarning = false;
+  bool _isError = false;
+  String _capacityMessage = '';
+
+  void _updateCapacityWarning() {
+    if (_selectedVenue == null || _maxAttendees == 0) {
+      setState(() {
+        _isWarning = false;
+        _isError = false;
+        _capacityMessage = '';
+      });
+      return;
+    }
+
+    double capacityPercentage = _maxAttendees / _selectedVenue!.capacity;
+    
+    if (capacityPercentage < 0.25) {
+      setState(() {
+        _isWarning = false;
+        _isError = true;
+        _capacityMessage = 'Selected attendees is less than 25% of venue capacity. Please increase or choose a smaller venue.';
+      });
+    } else if (capacityPercentage < 0.5) {
+      setState(() {
+        _isWarning = true;
+        _isError = false;
+        _capacityMessage = 'Selected attendees is less than 50% of venue capacity. Consider increasing or choosing a smaller venue.';
+      });
+    } else {
+      setState(() {
+        _isWarning = false;
+        _isError = false;
+        _capacityMessage = '';
+      });
+    }
+  }
+  
+    String? _selectedRecurrence = 'Does not repeat';
+
+
   @override
   Widget build(BuildContext context) {
     bool isLightTheme = Theme.of(context).brightness == Brightness.light;
@@ -383,7 +425,7 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
     EventProvider eventP=Provider.of<EventProvider>(context,listen: false);
     final Duration maxEventDuration = const Duration(hours: 23, minutes: 59);
 
-        return Scaffold(
+    return Scaffold(
       appBar: AppBar(
         title: const Text('Create Event'),
         actions: [
@@ -571,10 +613,57 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                     ),
                     const SizedBox(height: 8.0),
                     _buildNumberPickerWithTextField(),
+                    if (_capacityMessage.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Text(
+                        _capacityMessage,
+                        style: TextStyle(
+                          color: _isError ? Colors.red : Colors.orange,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
               const SizedBox(height: 16.0),
+
+                        DropdownButtonFormField<String>(
+            value: _selectedRecurrence,
+            decoration: const InputDecoration(
+              labelText: 'Recurrence',
+              border: OutlineInputBorder(),
+            ),
+            items: const [
+              DropdownMenuItem(
+                value: 'Does not repeat',
+                child: Text('Does not repeat'),
+              ),
+              DropdownMenuItem(
+                value: 'Weekly',
+                child: Text('Weekly'),
+              ),
+              DropdownMenuItem(
+                value: 'Every 2 weeks',
+                child: Text('Every 2 weeks'),
+              ),
+              DropdownMenuItem(
+                value: 'Monthly',
+                child: Text('Monthly'),
+              ),
+            ],
+            onChanged: (String? newValue) {
+              setState(() {
+                _selectedRecurrence = newValue;
+              });
+            },
+            validator: (value) => value == null
+                ? 'Please select a recurrence option'
+                : null,
+          ),
+          const SizedBox(height: 16.0),
+
               TextFormField(
                 controller: _startDateTimeController,
                 readOnly: true,
@@ -753,7 +842,7 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
 
               const SizedBox(height: 16.0),
               ElevatedButton(
-                onPressed: _isLoading
+                onPressed: (_isLoading || _isError)
                     ? null
                     : () async {
                   if (_formKey.currentState!.validate() &&_selectedVenue != null && _selectedCategory != null) {
@@ -768,6 +857,23 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                         'category': _selectedCategory!,
                       };
 
+
+                      int recurrenceValue = 0;
+                      switch (_selectedRecurrence) {
+                        case 'Does not repeat':
+                          recurrenceValue = 0;
+                          break;
+                        case 'Weekly':
+                          recurrenceValue = 7;
+                          break;
+                        case 'Every 2 weeks':
+                          recurrenceValue = 14;
+                          break;
+                        case 'Monthly':
+                          recurrenceValue = 30;
+                          break;
+                      }
+
                       Map<String, dynamic> response = await Api().createEvent(
                         title: _eventNameController.text,
                         description: _eventDescriptionController.text,
@@ -777,6 +883,7 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
                         maxParticipants: _maxAttendees,
                         metadata: metadata,
                         isPrivate: !_isPublic,
+                        recurring: recurrenceValue,
                         JWT: userP.JWT,
 
                       );
