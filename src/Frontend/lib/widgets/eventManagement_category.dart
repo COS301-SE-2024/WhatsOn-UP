@@ -5,7 +5,7 @@ import 'package:firstapp/providers/events_providers.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 // import '../main.dart';
 import '../providers/user_provider.dart';
-import '../screens/FilterScreen.dart';
+//import '../screens/FilterScreen.dart';
 import '../screens/HostSearchScreenState.dart';
 
 import 'event_card.dart';
@@ -89,7 +89,7 @@ class _EventmanagementCategoryState extends State<EventmanagementCategory> {
                       ),
                     ),
                   ),
-                  SizedBox(width: 35.0),
+                  /*SizedBox(width: 35.0),
                   SizedBox(
                     width: MediaQuery.of(context).size.width * 0.27,
                     child: Container(
@@ -110,7 +110,7 @@ class _EventmanagementCategoryState extends State<EventmanagementCategory> {
                         label: Text('Filter', style: TextStyle(color: textColour)),
                       ),
                     ),
-                  ),
+                  ),*/
                 ],
               ),
             ),
