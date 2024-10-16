@@ -72,7 +72,7 @@ class PastEventModel{
 
     @ManyToMany
     @JoinTable(
-        name = "event_attendees",
+        name = "latest_event_attendees",
         joinColumns = [JoinColumn(name = "event_id")],
         inverseJoinColumns = [JoinColumn(name = "user_id")]
     )
@@ -80,7 +80,7 @@ class PastEventModel{
 
     @ManyToMany
     @JoinTable(
-        name = "event_invitees",
+        name = "latest_event_invitees",
         joinColumns = [JoinColumn(name = "event_id")],
         inverseJoinColumns = [JoinColumn(name = "user_id")]
     )
@@ -88,7 +88,7 @@ class PastEventModel{
 
     @ManyToMany
     @JoinTable(
-        name = "saved_events",
+        name = "latest_saved_events",
         joinColumns = [JoinColumn(name = "event_id")],
         inverseJoinColumns = [JoinColumn(name = "user_id")]
     )

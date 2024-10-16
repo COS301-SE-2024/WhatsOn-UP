@@ -15,7 +15,7 @@ import java.util.UUID
 @Data
 @Builder
 @Entity
-@Table(name = "feedback")
+@Table(name = "latest_feedback")
 @NoArgsConstructor
 @AllArgsConstructor
 class FeedbackModel {
