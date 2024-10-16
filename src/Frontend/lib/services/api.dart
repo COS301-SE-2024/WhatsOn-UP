@@ -308,6 +308,7 @@ class Api {
     int? maxParticipants,
     Map<String, String>? metadata,
     bool? isPrivate,
+    required int recurring,
     //List<String>? media,
     required String JWT,
     //List<String> imageUrls,
@@ -329,6 +330,7 @@ class Api {
       'maxParticipants': maxParticipants,
       'metadata': metadata,
       'isPrivate': isPrivate,
+      'recurring': recurring,
       // 'media': media,
     });
 
@@ -1443,6 +1445,55 @@ else{
       throw Exception(e.toString());
     }
   }
+
+  Future<Map<String, dynamic>> markAttendance(String JWT, String eventId, String code) async {
+    final String markAttendanceURL = 'https://${globals.gatewayDomain}/api/user/mark_attendance/$eventId?code=$code';
+
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $JWT',
+    };
+
+    try {
+      var response = await http.post(Uri.parse(markAttendanceURL), headers: headers);
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } 
+      else {
+        // throw Exception(jsonDecode(response.body));
+        return jsonDecode(response.body);
+      }
+    } 
+    catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  Future<Map<String, dynamic>> generateAttendanceCode(String JWT, String eventId) async {
+    final String generateAttendanceCodeURL = 'https://${globals.gatewayDomain}/api/events/generate_code/$eventId';
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $JWT',
+    };
+
+    try {
+      var response = await http.get(Uri.parse(generateAttendanceCodeURL), headers: headers);
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } 
+      else {
+        return jsonDecode(response.body);
+      }
+    } 
+    catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
 
 
 

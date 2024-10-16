@@ -340,6 +340,7 @@ class Event {
   String description;
   final String id;
   List<String> hosts;
+  List<String> hostIds;
   late final String startTime;
   late final String endTime;
   late int maxAttendees;
@@ -356,6 +357,7 @@ class Event {
     required this.description,
     required this.id,
     required this.hosts,
+    required this.hostIds,
     required this.startTime,
     required this.endTime,
     required this.maxAttendees,
@@ -389,6 +391,10 @@ class Event {
       hosts: (json.containsKey('hosts') && (json['hosts'] as List).isNotEmpty)
           ? List<String>.from(
               json['hosts'].map((host) => host['fullName']?.toString() ?? ''))
+          : [],
+      hostIds: (json.containsKey('hosts') && (json['hosts'] as List).isNotEmpty)
+          ? List<String>.from(
+              json['hosts'].map((host) => host['userId']?.toString() ?? ''))
           : [],
       attendees: (json.containsKey('attendees') &&
               (json['attendees'] as List).isNotEmpty)

@@ -103,6 +103,8 @@ class _CalendarPageState extends State<CalendarPage>
                 (event['hosts'] as List).isNotEmpty)
             ? List<String>.from(event['hosts'].map((host) => host['fullName']))
             : [],
+        'hostIds': (event.containsKey('hosts') &&
+                (event['hosts'] as List).isNotEmpty),
         'attendees': (event.containsKey('attendees') &&
                 (event['attendees'] as List).isNotEmpty)
             ? List<Attendee>.from(event['attendees']
@@ -164,6 +166,7 @@ class _CalendarPageState extends State<CalendarPage>
         'description': event.description ?? '',
         'id': event.id,
         'hosts': event.hosts != null ? List<String>.from(event.hosts!) : [],
+        'hostIds': event.hostIds != null ? List<String>.from(event.hostIds!) : [],
         'attendees': event.attendees != null
             ? List<Attendee>.from(event.attendees!)
             : [],
@@ -261,6 +264,7 @@ Widget _buildEventCard(Map<String, dynamic> event) {
         imageUrls: [event['url']],
         id: event['id'],
         hosts: event['hosts'],
+        hostIds: event['hostIds'],
         attendees: event['attendees'],
         startTime: event['startTime'],
         endTime: event['endTime'],
