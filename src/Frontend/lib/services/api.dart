@@ -1470,6 +1470,29 @@ else{
     }
   }
 
+  Future<Map<String, dynamic>> generateAttendanceCode(String JWT, String eventId) async {
+    final String generateAttendanceCodeURL = 'https://${globals.gatewayDomain}/api/events/generate_code/$eventId';
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $JWT',
+    };
+
+    try {
+      var response = await http.get(Uri.parse(generateAttendanceCodeURL), headers: headers);
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } 
+      else {
+        return jsonDecode(response.body);
+      }
+    } 
+    catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
 
 
 
