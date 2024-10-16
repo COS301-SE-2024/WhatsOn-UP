@@ -118,9 +118,10 @@ class Api {
         Uri.parse(_rsvpEventsURL),
         headers: headers
       );
-  print('response: ${response.body}');
+
       if (response.statusCode == 200) {
-        // Parse the JSON response
+
+
         final Map<String, dynamic> decodedJson = json.decode(response.body);
         final List<dynamic> eventsJson = decodedJson['data'];
 

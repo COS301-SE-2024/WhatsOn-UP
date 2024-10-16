@@ -263,11 +263,6 @@ class _EventAttendanceState extends State<EventAttendance> {
             },
           );
 
-
-          /*  final attendee = widget.event.attendees.firstWhere(
-              (attendee) => attendee.fullName == fullName,
-          orElse: () => Attendee(userId: '', fullName: '', profileImage: '', role: Role(id: 0, name: '')),
-        );*/
           if (attendee != null && attendee.userId.isNotEmpty) {
               bool? status = attendanceStatus == 'Present'
                   ? true

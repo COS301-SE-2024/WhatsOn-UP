@@ -10,7 +10,7 @@ import 'notifications.dart';
 class SettingsPage extends StatefulWidget {
   const SettingsPage({
     Key? key,
-    // required this.profileImageUrl,
+
   }) : super(key: key);
 
   @override
@@ -101,30 +101,30 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
     ];
 
-    if (userRole != "GUEST") {
-      // Only display account option if user is not a guest
-      options.add(_buildDivider());
-      options.add(
-        _buildSettingsOption(
-          icon: Icons.vpn_key,
-          text: 'Account',
-          onTap: () {
-            // Handle account tap
-          },
-        ),
-      );
-    }
+    // if (userRole != "GUEST") {
+    //   // Only display account option if user is not a guest
+    //   // options.add(_buildDivider());
+    //   // options.add(
+    //   //   _buildSettingsOption(
+    //   //     icon: Icons.vpn_key,
+    //   //     text: 'Account',
+    //   //     onTap: () {
+    //   //       // Handle account tap
+    //   //     },
+    //   //   ),
+    //   // );
+    // }
 
-    options.add(_buildDivider());
-    options.add(
-      _buildSettingsOption(
-        icon: Icons.lock,
-        text: 'Privacy',
-        onTap: () {
-          // Handle privacy tap
-        },
-      ),
-    );
+    // options.add(_buildDivider());
+    // options.add(
+    //   _buildSettingsOption(
+    //     icon: Icons.lock,
+    //     text: 'Privacy',
+    //     onTap: () {
+    //
+    //     },
+    //   ),
+    // );
 
     options.add(_buildDivider());
     options.add(

@@ -39,7 +39,7 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ), invitees: [], saved: false,
+          ), invitees: [], saved: false, metadataString: '',
         ),
         Event(
           id: '2',
@@ -59,7 +59,7 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ), invitees: [], saved: false,
+          ), invitees: [], saved: false, metadataString: '',
         ),
       ]);
       when(mockUserProvider.Fullname).thenReturn('User Name');
@@ -83,7 +83,7 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ), invitees: [], saved: false,
+          ), invitees: [], saved: false, metadataString: '',
         ),
         Event(
           id: '2',
@@ -103,7 +103,7 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ), invitees: [], saved: false,
+          ), invitees: [], saved: false, metadataString: '',
         ),
         Event(
           id: '3',
@@ -123,7 +123,7 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ), invitees: [], saved: false,
+          ), invitees: [], saved: false, metadataString: '',
         ),
       ]);
 
@@ -146,7 +146,7 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ), invitees: [], saved: false,
+          ), invitees: [], saved: false, metadataString: '',
         ),
         Event(
           id: '2',
@@ -166,7 +166,7 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ), invitees: [], saved: false,
+          ), invitees: [], saved: false, metadataString: '',
         ),
         Event(
           id: '3',
@@ -186,7 +186,7 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ), invitees: [], saved: false,
+          ), invitees: [], saved: false, metadataString: '',
         ),
       ]);
     });

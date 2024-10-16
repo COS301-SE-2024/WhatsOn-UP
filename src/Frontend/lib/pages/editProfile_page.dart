@@ -48,7 +48,8 @@ class _EditprofilePageState extends State<EditprofilePage> {
           userP.notifyListeners();
 
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Image updated successfully')),
+            SnackBar(content: Text('Image updated successfully'),
+              backgroundColor: Colors.green,),
           );
         } else {
           print('Upload failed: $response');
@@ -60,7 +61,8 @@ class _EditprofilePageState extends State<EditprofilePage> {
     } catch (e) {
       print('Failed to pick or upload image: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to update image: $e')),
+        SnackBar(content: Text('Failed to update image: $e'),
+          backgroundColor: Colors.red,),
       );
     }
   }
@@ -120,7 +122,7 @@ class _EditprofilePageState extends State<EditprofilePage> {
                       children: [
                         _buildTop(),
                         const SizedBox(height: 30),
-                        _buildTextField("Fullname", nameController, false),
+                        _buildTextField("Full Name", nameController, false),
                         const SizedBox(height: 30),
                         SizedBox(
                           width: double.infinity,
