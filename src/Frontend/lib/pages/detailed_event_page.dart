@@ -589,23 +589,13 @@ Future<void> _generateAttendanceCode() async {
                   if (!_thisCurrentEvent.attendees
                       .any((attendee) => attendee.userId == userP.userId)) ...[
                     if (userP.role != "GUEST")
-                      if (userP.userId != _thisCurrentEvent.hostIds[0]) ... [
-                      if (DateTime.now().isAfter(DateTime.parse(_thisCurrentEvent.startTime)) &&
-                          DateTime.now().isBefore(DateTime.parse(_thisCurrentEvent.endTime)))
-                        ElevatedButton.icon(
-                          onPressed: _showAttendancePopup,
-                          icon: const Icon(Icons.numbers),
-                          label: const Text('Enter Attendance Code'),
-                          style: ElevatedButton.styleFrom(
-                            minimumSize: const Size(double.infinity, 48),
-                          ),
-                        ),
-                      ],
+
+
                       if (userP.userId == _thisCurrentEvent.hostIds[0]) ...[
                         if (DateTime.now().isAfter(DateTime.parse(_thisCurrentEvent.startTime)) &&
                             DateTime.now().isBefore(DateTime.parse(_thisCurrentEvent.endTime)))
                           ElevatedButton.icon(
-                            onPressed: _generateCodeLoading ? null : _generateAttendanceCode, // Disable button while loading
+                            onPressed: _generateCodeLoading ? null : _generateAttendanceCode, 
                             icon: _generateCodeLoading
                                 ? const CircularProgressIndicator(
                                     valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
@@ -619,7 +609,9 @@ Future<void> _generateAttendanceCode() async {
                             ),
                           ),
                       ],
+                      if (userP.userId != _thisCurrentEvent.hostIds[0]) ...[
                       const SizedBox(height: 8.0),
+
                       if (_thisCurrentEvent.maxAttendees >
                           _thisCurrentEvent.attendees.length)
                         ElevatedButton(
@@ -639,7 +631,7 @@ Future<void> _generateAttendanceCode() async {
                                     Text('Add to my Calendar'),
                                   ],
                                 ),
-                        ),
+                        ),                     
                     if (_thisCurrentEvent.maxAttendees <=
                         _thisCurrentEvent.attendees.length + 1)
                       ElevatedButton.icon(
@@ -650,9 +642,26 @@ Future<void> _generateAttendanceCode() async {
                           minimumSize: const Size(double.infinity, 48),
                         ),
                       ),
+                      ]
                   ],
                   if (_thisCurrentEvent.attendees
                       .any((attendee) => attendee.userId == userP.userId)) ...[
+                     if (userP.userId != _thisCurrentEvent.hostIds[0]) ... [
+                      if (DateTime.now().isAfter(DateTime.parse(_thisCurrentEvent.startTime)) &&
+                          DateTime.now().isBefore(DateTime.parse(_thisCurrentEvent.endTime)))
+                        ElevatedButton.icon(
+                          onPressed: _showAttendancePopup,
+                          icon: const Icon(Icons.numbers),
+                          label: const Text('Enter Attendance Code'),
+                          style: ElevatedButton.styleFrom(
+                            minimumSize: const Size(double.infinity, 48),
+                          ),
+                        ),
+                        const SizedBox(height: 8.0),
+                      ],
+
+
+
                     ElevatedButton(
                           onPressed: _isLoading ? null : () => _removeFromCalendar(),
                           style: ElevatedButton.styleFrom(
