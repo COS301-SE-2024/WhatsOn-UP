@@ -196,7 +196,7 @@ class _AdminAnalyticsPageState extends State<AdminAnalyticsPage> with SingleTick
           ),
           const SizedBox(height: 20),
           
-          _buildSectionHeader('RSVP and Attendance Ratios', Icons.people),
+          _buildSectionHeader('RSVP, Attendance and Capacity Ratios', Icons.people),
           Card(
             color: isDarkMode ? Colors.grey[800] : Colors.blueGrey.shade50,
             elevation: 4,
@@ -279,14 +279,22 @@ Widget _buildSectionHeader(String title, IconData icon) {
       children: [
         Icon(icon, size: 28, color: Colors.blueGrey),
         const SizedBox(width: 8),
-        Text(
-          title,
-          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        Expanded(
+          child: Text(
+            title,
+            style: const TextStyle(
+              fontSize: 20, 
+              fontWeight: FontWeight.bold,
+            ),
+            overflow: TextOverflow.visible,
+            softWrap: true,
+          ),
         ),
       ],
     ),
   );
 }
+
 
 
   Widget _buildHostData() {
@@ -528,17 +536,24 @@ class CapacityAttendanceChart extends StatelessWidget {
           ),
           series: <CartesianSeries>[
             ColumnSeries<MonthlySummary, String>(
-              name: 'RSVP Ratio',
+              name: 'RSVP',
               dataSource: monthlySummaries,
               xValueMapper: (MonthlySummary summary, _) =>  _getMonthAbbreviation(summary.month),
               yValueMapper: (MonthlySummary summary, _) => summary.rsvpRatio,
               dataLabelSettings: const DataLabelSettings(isVisible: true),
             ),
             ColumnSeries<MonthlySummary, String>(
-              name: 'Attendance Ratio',
+              name: 'Attendance',
               dataSource: monthlySummaries,
               xValueMapper: (MonthlySummary summary, _) =>  _getMonthAbbreviation(summary.month),
               yValueMapper: (MonthlySummary summary, _) => summary.attendanceRatio,
+              dataLabelSettings: const DataLabelSettings(isVisible: true),
+            ),
+            ColumnSeries<MonthlySummary, String>(
+              name: 'Capacity',
+              dataSource: monthlySummaries,
+              xValueMapper: (MonthlySummary summary, _) =>  _getMonthAbbreviation(summary.month),
+              yValueMapper: (MonthlySummary summary, _) => summary.capacityRatio,
               dataLabelSettings: const DataLabelSettings(isVisible: true),
             ),
           ],
