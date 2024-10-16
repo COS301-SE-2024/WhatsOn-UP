@@ -306,7 +306,7 @@ class EventDetailsPage extends StatelessWidget {
                 padding: const EdgeInsets.all(16),
                 child: Container(
                   height: 300,
-                  child: event.feedback.isNotEmpty
+                  child: (event.feedback.isNotEmpty || event.feedback.length > 0 || event.feedback != null)
                       ? ListView.builder(
                           itemCount: event.feedback.length,
                           itemBuilder: (context, index) {
@@ -322,7 +322,7 @@ class EventDetailsPage extends StatelessWidget {
                                         backgroundImage: NetworkImage(profileImage),
                                       )
                                     : CircleAvatar(
-                                        backgroundColor: Color.fromARGB(255, 48, 86, 139),
+                                        backgroundColor: const Color.fromARGB(255, 48, 86, 139),
                                         child: Text(
                                           feedback['userId']['fullName'][0].toUpperCase(),
                                           style: const TextStyle(color: Colors.white),
@@ -343,9 +343,20 @@ class EventDetailsPage extends StatelessWidget {
                                       Icon(Icons.star_border, size: 16, color: iconColor),
                                   ],
                                 ),
-                                subtitle: Text(feedback['comment'], style: TextStyle(color: textColor)),
+                                subtitle: Text(
+                                  feedback['comment'] != null && feedback['comment'].isNotEmpty
+                                      ? feedback['comment']
+                                      : 'No comment',
+                                  style: TextStyle(
+                                    color: textColor,
+                                    fontStyle: feedback['comment'] == null || feedback['comment'].isEmpty
+                                        ? FontStyle.italic
+                                        : FontStyle.normal,
+                                  ),
+                                ),
                               ),
                             );
+
                           },
                         )
                       : const Center(
