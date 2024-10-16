@@ -189,7 +189,8 @@ class EventCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            Text('Attendees: ${event.attendees.length}/${event.maxAttendees}'),
+            // Text('Attendees: ${event.attendees.length}/${event.maxAttendees}'),
+            Text('Attendees: ${event.occupiedSlots}/${event.maxAttendees}'),
             Text('Rating: ${event.averageRating.toStringAsFixed(1)}'),
           ],
         ),
@@ -215,6 +216,13 @@ class EventDetailsPage extends StatelessWidget {
     final textColor = isDarkMode ? Colors.white70 : Colors.black87;
     final iconColor = isDarkMode ? Colors.amber.shade200 : Colors.amber;
 
+
+    // print the comments left by the users
+    print(event.feedback[0]['comment']);
+    for (var i = 0; i < event.feedback.length; i++) {
+      print(event.feedback[i]['comment']);
+    }
+
     return Scaffold(
       appBar: AppBar(title: Text(event.title)),
       body: SingleChildScrollView(
@@ -234,7 +242,8 @@ class EventDetailsPage extends StatelessWidget {
                     Text(event.description, style: TextStyle(fontSize: 16, color: textColor)),
                     const SizedBox(height: 16),
                     _buildDetailRow('Date', DateFormat('dd MMM yyyy, HH:mm').format(event.startDateTime), textColor),
-                    _buildDetailRow('Attendees', '${event.attendees.length}/${event.maxAttendees}', textColor),
+                    // _buildDetailRow('Attendees', '${event.attendees.length}/${event.maxAttendees}', textColor),
+                    _buildDetailRow('Attendees', '${event.occupiedSlots}/${event.maxAttendees}', textColor),
                     _buildDetailRow('Average Rating', event.averageRating.toStringAsFixed(1), textColor),
                   ],
                 ),
@@ -431,6 +440,7 @@ class Event {
   final String description;
   final DateTime startDateTime;
   final int maxAttendees;
+  final int occupiedSlots;
   final List<dynamic> attendees;
   final double averageRating;
   final double medianRating;
@@ -450,6 +460,7 @@ class Event {
     required this.description,
     required this.startDateTime,
     required this.maxAttendees,
+    required this.occupiedSlots,
     required this.attendees,
     required this.averageRating,
     required this.medianRating,
@@ -471,6 +482,7 @@ class Event {
       description: (json['description'] ?? 'Unknown'),
       startDateTime: DateTime.parse(json['startDateTime'] ?? ''),
       maxAttendees: (json['maxAttendees'] ?? 0),
+      occupiedSlots: (json['occupiedSlots'] ?? 0),
       attendees: (json['attendees'] ?? []),
       averageRating: _roundNum((json['averageRating'] ?? 0.0).toDouble()),
       medianRating: _roundNum((json['medianRating'] ?? 0.0).toDouble()),
