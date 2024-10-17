@@ -382,10 +382,6 @@ class _NotificationsState extends State<Notifications> with TickerProviderStateM
                 final userProvider userP = Provider.of<userProvider>(context, listen: false);
                 final api=Api();
                 if (notification.notificationId != null) {
-                  if(notification.seenAt == null){
-                    await notification.markAsSeen(notification.notificationId, userP.JWT, api);
-                    await notif.refreshNotifications(userP.JWT);
-                  }
                   print('Notification was seen at: ${notification.seenAt}');
                   Navigator.push(
                     context,
