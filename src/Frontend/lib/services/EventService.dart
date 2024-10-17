@@ -76,7 +76,7 @@ class EventService {
       if (response.statusCode == 200) {
         print("processing..");
         final List<dynamic> jsonResponse = jsonDecode(response.body)['data'];
-
+print('categories $jsonResponse');
         if (jsonResponse == null || jsonResponse.isEmpty) {
           print('No categories found.');
           return [];
@@ -199,12 +199,14 @@ class EventService {
     }
   }
 
-  Future<List<dynamic>> fetchAttendanceData(String eventId, String userId) async {
+  Future<List<dynamic>> fetchAttendanceData(String eventId, String JWT) async {
     final url = '$baseUrl/api/events/$eventId/attendance';
     final response = await http.get(
       Uri.parse(url),
       headers: {
-        'Authorization': 'Bearer $userId',
+        'Authorization': 'Bearer $JWT',
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
       },
     );
 
@@ -216,17 +218,14 @@ class EventService {
     }
   }
 
-  Future<void> updateAttendanceStatus(String eventId, String userId, bool? attended, String currUserId) async {
-   print("DETAILSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
-   print(eventId);
-   print(userId);
-   print(attended);
+  Future<void> updateAttendanceStatus(String eventId, String userId, bool? attended, String JWT) async {
     final url = '$baseUrl/api/events/update-attendance';
     final response = await http.put(
       Uri.parse('$url'),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer $currUserId',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $JWT',
       },
       body: jsonEncode({
         'eventId': eventId,

@@ -196,14 +196,14 @@ class _AdminAnalyticsPageState extends State<AdminAnalyticsPage> with SingleTick
           ),
           const SizedBox(height: 20),
           
-          _buildSectionHeader('Capacity and Attendance Ratios', Icons.people),
+          _buildSectionHeader('RSVP, Attendance and Capacity Ratios', Icons.people),
           Card(
             color: isDarkMode ? Colors.grey[800] : Colors.blueGrey.shade50,
             elevation: 4,
             margin: const EdgeInsets.symmetric(vertical: 8),
             child: SizedBox(
               height: 300,
-              child: CapacityAttendanceChart(monthlySummaries: monthlySummaries), // Capacity and Attendance Ratios
+              child: CapacityAttendanceChart(monthlySummaries: monthlySummaries), // RSVP and Attendance Ratios
             ),
           ),
           const SizedBox(height: 20),
@@ -218,54 +218,54 @@ class _AdminAnalyticsPageState extends State<AdminAnalyticsPage> with SingleTick
               child: FeedbackChart(monthlySummaries: monthlySummaries), // Feedback Ratio Over Time
             ),
           ),
-          const SizedBox(height: 20),
+          // const SizedBox(height: 20),
           
-          _buildSectionHeader('RSVP Ratio Over Time', Icons.event_available),
-          Card(
-            color: isDarkMode ? Colors.grey[800] : Colors.blueGrey.shade50,
-            elevation: 4,
-            margin: const EdgeInsets.symmetric(vertical: 8),
-            child: SizedBox(
-              height: 300,
-              child: RSVPChart(monthlySummaries: monthlySummaries), // RSVP Ratio Over Time
-            ),
-          ),
-          const SizedBox(height: 20),
+          // _buildSectionHeader('RSVP Ratio Over Time', Icons.event_available),
+          // Card(
+          //   color: isDarkMode ? Colors.grey[800] : Colors.blueGrey.shade50,
+          //   elevation: 4,
+          //   margin: const EdgeInsets.symmetric(vertical: 8),
+          //   child: SizedBox(
+          //     height: 300,
+          //     child: RSVPChart(monthlySummaries: monthlySummaries), // RSVP Ratio Over Time
+          //   ),
+          // ),
+          // const SizedBox(height: 20),
 
-          _buildSectionHeader('Total Event Duration Per Month', Icons.timer),
-          Card(
-            color: isDarkMode ? Colors.grey[800] : Colors.blueGrey.shade50,
-            elevation: 4,
-            margin: const EdgeInsets.symmetric(vertical: 8),
-            child: SizedBox(
-              height: 300,
-              child: DurationChart(monthlySummaries: monthlySummaries), // Event Duration Over Time
-            ),
-          ),
-          const SizedBox(height: 20),
+          // _buildSectionHeader('Total Event Duration Per Month', Icons.timer),
+          // Card(
+          //   color: isDarkMode ? Colors.grey[800] : Colors.blueGrey.shade50,
+          //   elevation: 4,
+          //   margin: const EdgeInsets.symmetric(vertical: 8),
+          //   child: SizedBox(
+          //     height: 300,
+          //     child: DurationChart(monthlySummaries: monthlySummaries), // Event Duration Over Time
+          //   ),
+          // ),
+          // const SizedBox(height: 20),
 
-          _buildSectionHeader('Rating Distribution', Icons.bar_chart),
-          Card(
-            color: isDarkMode ? Colors.grey[800] : Colors.blueGrey.shade50,
-            elevation: 4,
-            margin: const EdgeInsets.symmetric(vertical: 8),
-            child: SizedBox(
-              height: 300,
-              child: RatingDistributionChart(monthlySummaries: monthlySummaries), // Rating Distribution
-            ),
-          ),
-          const SizedBox(height: 20),
+          // _buildSectionHeader('Rating Distribution', Icons.bar_chart),
+          // Card(
+          //   color: isDarkMode ? Colors.grey[800] : Colors.blueGrey.shade50,
+          //   elevation: 4,
+          //   margin: const EdgeInsets.symmetric(vertical: 8),
+          //   child: SizedBox(
+          //     height: 300,
+          //     child: RatingDistributionChart(monthlySummaries: monthlySummaries), // Rating Distribution
+          //   ),
+          // ),
+          // const SizedBox(height: 20),
 
-          _buildSectionHeader('Skewness Over Time', Icons.insights),
-          Card(
-            color: isDarkMode ? Colors.grey[800] : Colors.blueGrey.shade50,
-            elevation: 4,
-            margin: const EdgeInsets.symmetric(vertical: 8),
-            child: SizedBox(
-              height: 300,
-              child: SkewnessChart(monthlySummaries: monthlySummaries), // Skewness Over Time
-            ),
-          ),
+          // _buildSectionHeader('Skewness Over Time', Icons.insights),
+          // Card(
+          //   color: isDarkMode ? Colors.grey[800] : Colors.blueGrey.shade50,
+          //   elevation: 4,
+          //   margin: const EdgeInsets.symmetric(vertical: 8),
+          //   child: SizedBox(
+          //     height: 300,
+          //     child: SkewnessChart(monthlySummaries: monthlySummaries), // Skewness Over Time
+          //   ),
+          // ),
         ],
       ),
     ),
@@ -279,14 +279,22 @@ Widget _buildSectionHeader(String title, IconData icon) {
       children: [
         Icon(icon, size: 28, color: Colors.blueGrey),
         const SizedBox(width: 8),
-        Text(
-          title,
-          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        Expanded(
+          child: Text(
+            title,
+            style: const TextStyle(
+              fontSize: 20, 
+              fontWeight: FontWeight.bold,
+            ),
+            overflow: TextOverflow.visible,
+            softWrap: true,
+          ),
         ),
       ],
     ),
   );
 }
+
 
 
   Widget _buildHostData() {
@@ -528,17 +536,24 @@ class CapacityAttendanceChart extends StatelessWidget {
           ),
           series: <CartesianSeries>[
             ColumnSeries<MonthlySummary, String>(
-              name: 'Capacity Ratio',
+              name: 'RSVP',
               dataSource: monthlySummaries,
               xValueMapper: (MonthlySummary summary, _) =>  _getMonthAbbreviation(summary.month),
-              yValueMapper: (MonthlySummary summary, _) => summary.capacityRatio,
+              yValueMapper: (MonthlySummary summary, _) => summary.rsvpRatio,
               dataLabelSettings: const DataLabelSettings(isVisible: true),
             ),
             ColumnSeries<MonthlySummary, String>(
-              name: 'Attendance Ratio',
+              name: 'Attendance',
               dataSource: monthlySummaries,
               xValueMapper: (MonthlySummary summary, _) =>  _getMonthAbbreviation(summary.month),
               yValueMapper: (MonthlySummary summary, _) => summary.attendanceRatio,
+              dataLabelSettings: const DataLabelSettings(isVisible: true),
+            ),
+            ColumnSeries<MonthlySummary, String>(
+              name: 'Capacity',
+              dataSource: monthlySummaries,
+              xValueMapper: (MonthlySummary summary, _) =>  _getMonthAbbreviation(summary.month),
+              yValueMapper: (MonthlySummary summary, _) => summary.capacityRatio,
               dataLabelSettings: const DataLabelSettings(isVisible: true),
             ),
           ],
@@ -560,10 +575,10 @@ class CapacityAttendanceChart extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Capacity & Attendance Ratios'),
+          title: const Text('RSVP & Attendance Ratios'),
           content: const Text(
-            'This chart compares the capacity ratio and attendance ratio over time for all events. '
-            'The capacity ratio shows how much of the available space was utilised, '
+            'This chart compares the rsvp ratio and attendance ratio over time for all events. '
+            'The RSVP ratio represents the proportion of RSVPs relative to the total number of potential attendees, '
             'while the attendance ratio indicates the proportion of expected attendees who actually showed up.'
           ),
           actions: <Widget>[

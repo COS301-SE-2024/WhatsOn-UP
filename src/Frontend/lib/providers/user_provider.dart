@@ -257,6 +257,7 @@ class Application {
   final String? verificationCode;
   final String? proofUrl;
   final String? proofName;
+  final bool alert;
 
   Application({
     required this.applicationId,
@@ -268,6 +269,7 @@ class Application {
     this.verificationCode,
     this.proofUrl,
     this.proofName,
+    this.alert = false,
   });
 
   factory Application.fromJson(Map<String, dynamic> json) {
@@ -283,6 +285,7 @@ class Application {
       verificationCode: json['verificationCode']?.toString() ?? '',
       proofUrl: json['proofUrl'],
       proofName: json['proofName']?.toString() ?? '',
+      alert: json['alert'] ?? false,
     );
   }
 }

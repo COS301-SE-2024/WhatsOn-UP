@@ -210,6 +210,7 @@ class MockApi extends _i1.Mock implements _i3.Api {
     int? maxParticipants,
     Map<String, String>? metadata,
     bool? isPrivate,
+    required int? recurring,
     required String? JWT,
   }) =>
       (super.noSuchMethod(
@@ -225,6 +226,7 @@ class MockApi extends _i1.Mock implements _i3.Api {
             #maxParticipants: maxParticipants,
             #metadata: metadata,
             #isPrivate: isPrivate,
+            #recurring: recurring,
             #JWT: JWT,
           },
         ),
@@ -801,6 +803,42 @@ class MockApi extends _i1.Mock implements _i3.Api {
             JWT,
             eventName,
             eventDescription,
+          ],
+        ),
+        returnValue:
+            _i5.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
+      ) as _i5.Future<Map<String, dynamic>>);
+
+  @override
+  _i5.Future<Map<String, dynamic>> markAttendance(
+    String? JWT,
+    String? eventId,
+    String? code,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #markAttendance,
+          [
+            JWT,
+            eventId,
+            code,
+          ],
+        ),
+        returnValue:
+            _i5.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
+      ) as _i5.Future<Map<String, dynamic>>);
+
+  @override
+  _i5.Future<Map<String, dynamic>> generateAttendanceCode(
+    String? JWT,
+    String? eventId,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #generateAttendanceCode,
+          [
+            JWT,
+            eventId,
           ],
         ),
         returnValue:

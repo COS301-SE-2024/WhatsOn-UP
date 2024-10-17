@@ -109,7 +109,7 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
           TextFormField(
             controller: _fullnameController,
             decoration: InputDecoration(
-              labelText: 'Fullname',
+              labelText: 'Full Name',
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(20.0),
               ),

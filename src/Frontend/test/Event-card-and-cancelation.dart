@@ -28,4 +28,4 @@
 //
 //   });
 // }
-// // GitHub\WhatsOn-UP\src\Frontend> flutter test test/Event-card-and-cancelation.dart how you should run it
+// GitHub\WhatsOn-UP\src\Frontend> flutter test test/Event-card-and-cancelation.dart how you should run it

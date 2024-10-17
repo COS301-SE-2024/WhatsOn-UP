@@ -1,13 +1,14 @@
-
+import 'package:firstapp/providers/user_provider.dart';
+import 'package:firstapp/services/api.dart';
 import 'package:flutter/material.dart';
-
+import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class AnalyticsDetailPage extends StatelessWidget {
   final String name;
   final Map<String, dynamic> userData;
 
-  const AnalyticsDetailPage({super.key, required this.name, required this.userData});
+  AnalyticsDetailPage({required this.name, required this.userData});
 
   @override
   Widget build(BuildContext context) {
@@ -41,26 +42,26 @@ class AnalyticsDetailPage extends StatelessWidget {
                 ),
               const SizedBox(height: 20),
 
-                _buildSectionHeader('Rating Distrubtion', Icons.bar_chart),
+                _buildSectionHeader('RSVP Ratio', Icons.event_available),
                 Card(
                   color: isDarkMode ? Colors.grey[800] : Colors.blueGrey.shade50,
                   elevation: 4,
                   margin: const EdgeInsets.symmetric(vertical: 8),
                   child: SizedBox(
                     height: 300,
-                    child: RatingDistributionChart(monthlySummaries: monthlySummaries), // Rating Distribution
+                    child: RatingDistributionChart(monthlySummaries: monthlySummaries), // RSVP Ratio
                   ),
                 ),
               const SizedBox(height: 20),
 
-                _buildSectionHeader('Feedback Distribution', Icons.pie_chart),
+                _buildSectionHeader('Feedback Ratio', Icons.reviews),
                 Card(
                   color: isDarkMode ? Colors.grey[800] : Colors.blueGrey.shade50,
                   elevation: 4,
                   margin: const EdgeInsets.symmetric(vertical: 8),
                   child: SizedBox(
                     height: 300,
-                    child: FeedbackDistributionChart(monthlySummaries: monthlySummaries), // Feedback Distribution
+                    child: FeedbackDistributionChart(monthlySummaries: monthlySummaries), // Feedback Ratio
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -133,7 +134,7 @@ String _getMonthAbbreviation(String month) {
 class AnalyticsChartPage extends StatelessWidget {
   final List<MonthlySummary> monthlySummaries;
 
-  const AnalyticsChartPage({super.key, required this.monthlySummaries});
+  AnalyticsChartPage({required this.monthlySummaries});
 
   @override
   Widget build(BuildContext context) {
@@ -165,55 +166,61 @@ class AnalyticsChartPage extends StatelessWidget {
 class RatingDistributionChart extends StatelessWidget {
   final List<MonthlySummary> monthlySummaries;
 
-  const RatingDistributionChart({super.key, required this.monthlySummaries});
+  RatingDistributionChart({required this.monthlySummaries});
 
   @override
   Widget build(BuildContext context) {
     return SfCartesianChart(
-      // title: ChartTitle(text: 'Rating Distribution'),
-      legend: const Legend(isVisible: true),
-      tooltipBehavior: TooltipBehavior(enable: true),
-      primaryXAxis: const CategoryAxis(),
-      series: <ColumnSeries>[
-        ColumnSeries<MonthlySummary, String>(
-          dataSource: monthlySummaries,
-          xValueMapper: (MonthlySummary summary, _) => _getMonthAbbreviation(summary.month),
-          yValueMapper: (MonthlySummary summary, _) => summary.lowestRating,
-          name: 'Lowest Rating',
-        ),
-        ColumnSeries<MonthlySummary, String>(
-          dataSource: monthlySummaries,
-          xValueMapper: (MonthlySummary summary, _) => _getMonthAbbreviation(summary.month),
-          yValueMapper: (MonthlySummary summary, _) => summary.averageRating,
-          name: 'Average Rating',
-        ),
-        ColumnSeries<MonthlySummary, String>(
-          dataSource: monthlySummaries,
-          xValueMapper: (MonthlySummary summary, _) => _getMonthAbbreviation(summary.month),
-          yValueMapper: (MonthlySummary summary, _) => summary.highestRating,
-          name: 'Highest Rating',
-        ),
-      ],
-    );
+          // title: const ChartTitle(text: 'RSVP Ratio Over Time'),
+          legend: const Legend(isVisible: true),
+          tooltipBehavior: TooltipBehavior(enable: true),
+          primaryXAxis: const CategoryAxis(),
+          primaryYAxis: const NumericAxis(
+            minimum: 0,
+            maximum: 100,
+            interval: 10,
+            title: AxisTitle(text: 'Feedback Ratio (%)'),
+          ),
+          series: <LineSeries<MonthlySummary, String>>[
+            LineSeries<MonthlySummary, String>(
+              name: 'RSVP Ratio',
+              dataSource: monthlySummaries,
+              xValueMapper: (MonthlySummary summary, _) =>  _getMonthAbbreviation(summary.month),
+              yValueMapper: (MonthlySummary summary, _) => summary.rsvpRatio,
+              markerSettings: const MarkerSettings(isVisible: true),
+              dataLabelSettings: const DataLabelSettings(isVisible: true),
+            ),
+          ],
+        );
   }
 }
 
 class FeedbackDistributionChart extends StatelessWidget {
   final List<MonthlySummary> monthlySummaries;
 
-  const FeedbackDistributionChart({super.key, required this.monthlySummaries});
+  FeedbackDistributionChart({required this.monthlySummaries});
 
   @override
   Widget build(BuildContext context) {
-    return SfCircularChart(
-      // title: ChartTitle(text: 'Feedback Distribution'),
+    return SfCartesianChart(
+      // title: const ChartTitle(text: 'Feedback Ratio Over Time'),
       legend: const Legend(isVisible: true),
-      series: <CircularSeries>[
-        PieSeries<MonthlySummary, String>(
+      tooltipBehavior: TooltipBehavior(enable: true),
+      primaryXAxis: const CategoryAxis(),
+      primaryYAxis: const NumericAxis(
+        minimum: 0,
+        maximum: 100,
+        interval: 10,
+        title: AxisTitle(text: 'Feedback Ratio (%)'),
+      ),
+      series: <LineSeries<MonthlySummary, String>>[
+        LineSeries<MonthlySummary, String>(
+          name: 'Feedback Ratio',
           dataSource: monthlySummaries,
-          xValueMapper: (MonthlySummary summary, _) => _getMonthAbbreviation(summary.month),
+          xValueMapper: (MonthlySummary summary, _) =>  _getMonthAbbreviation(summary.month),
           yValueMapper: (MonthlySummary summary, _) => summary.feedbackRatio,
-          dataLabelSettings: DataLabelSettings(isVisible: true),
+          markerSettings: const MarkerSettings(isVisible: true),
+          dataLabelSettings: const DataLabelSettings(isVisible: true),
         ),
       ],
     );
