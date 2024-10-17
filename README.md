@@ -33,15 +33,14 @@ WhatsOn@UP system aims to be a central hub for all University of Pretoria events
     <th>Documentation</th>
     <td>
      <ul>
-       <li><a href="https://docs.google.com/document/d/1Ja-Ev1ghWPG8koCJdV99sALttg2e2dUh/edit">SRS Document (Google Docs)</a></li>
-       <li><a href="https://docs.google.com/document/d/1hoqGcpMkbaW6cMlomIt7ngt-VoZO51XU/edit?usp=drive_link&ouid=106979401378245433760&rtpof=true&sd=true">SRS Document (GitHub)</a></li>
-       <li><a href="https://docs.google.com/document/d/1SfIxE-KDSOgc1vl41UrfoCZFlWVLJbdIIYWA4zPoOc0/edit?usp=sharing">Testing Document</a></li>
-       <li><a href="./docs/Contracts/Contracts.md">Contracts</a></li>
+       <li><a href="https://docs.google.com/document/d/1VHqM6qYVm655zSy17ZHeF8XD9EKgNwKhp0DaAj5m7LM/edit?usp=drive_link">SRS Document (Google Docs)</a></li>
+       <li><a href="docs/SRS Document - WhatsOn@UP.md">SRS Document (GitHub)</a></li>
+       <li><a href="https://docs.google.com/document/d/1SfIxE-KDSOgc1vl41UrfoCZFlWVLJbdIIYWA4zPoOc0/edit?usp=drive_link">Testing Document</a></li>
+       <li><a href="https://documenter.getpostman.com/view/33979686/2sA3kaBdjZ">Contracts</a></li>
        <li><a href="https://www.figma.com/design/OjxWQqAXxuycjBsvbRyU0f/WhatsOn%40UP?node-id=0-1&t=rWZnW452JgRBb5ha-0">Wireframes</a></li>
-       <li><a href="https://docs.google.com/document/d/1_oVeZqWZemT3urwrFUN708oN37bDlg5WAx-VP4TaVw4/edit?usp=drive_link">Coding Standards</a></li>
-       <li><a href="https://github.com/COS301-SE-2024/WhatsOn-UP/blob/main/docs/SRS-document.md">Technical Installation Manual</a></li> 
-
-       
+       <li><a href="https://drive.google.com/file/d/10-OrIXk1rBOuNOWb6jvfj_pGQHFMImIo/view?usp=drive_link">Coding Standards</a></li>
+       <li><a href="https://drive.google.com/file/d/1qGKKdZhQw85iT-A8td8lj-tHhCINlkJw/view?usp=drive_link">Technical Installation Manual</a></li>
+       <li><a href="https://cos301-se-2024.github.io/WhatsOn-UP/">User Manual</a></li>
 
 </ul>
     </td>
