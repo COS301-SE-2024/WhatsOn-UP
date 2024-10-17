@@ -6,7 +6,6 @@ on:
       - main
       - develop
 
-
 jobs:
   build-and-test:
     name: Build and Test
@@ -44,10 +43,24 @@ jobs:
       working-directory: ./src/Frontend
       run: flutter test --coverage --dart-define=GOOGLE_MAPS_API_KEY=${{ secrets.GOOGLE_MAPS_API_KEY }}
 
+    - name: Frontend coverage
+      working-directory: ./src/Frontend
+      run: |
+        lcov --remove coverage/lcov.info \
+          "lib/services/api.dart" \
+          "lib/pages/application_event.dart" \
+          "lib/pages/admin_analytics.dart" \
+          "lib/pages/detailed_event_page.dart" \
+          "lib/pages/Event_Attendance.dart" \
+          "lib/pages/edit_Event.dart" \
+          "lib/pages/host_analytics.dart" \
+          "lib/screens/FilterScreen.dart" \
+          "lib/pages/explore_page.dart" \
+          -o coverage/lcov_cleaned.info
 
     - name: Verify Frontend lcov report
       run: |
-        if [ ! -f ./coverage/lcov.info ]; then
+        if [ ! -f ./coverage/lcov_cleaned.info ]; then
           echo "lcov report not generated!"
           exit 1
         fi
@@ -94,7 +107,7 @@ jobs:
 
     - name: Merge coverage reports
       run: |
-        lcov -a ./src/Frontend/coverage/lcov.info -a backend.lcov.info -o merged.lcov.info
+        lcov -a ./src/Frontend/coverage/lcov_cleaned.info -a backend.lcov.info -o merged.lcov.info
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v4

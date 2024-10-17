@@ -122,17 +122,29 @@ export class NotificationGateway implements OnModuleInit {
       
       let token: string = socket.handshake.query.token.toString();
 
-      if (token) {
-        const secret = process.env.JWT_SECRET
-        await this.jwtService.verifyAsync(token, { secret });
-        const decoded = this.jwtService.decode(token);
-        token = decoded['sub'];
-        console.log('Client connected:', token);
-        this.clients[socket.id] = { socket, token };
-      } else {
+      
+      try{
+        if (token) {
+          const secret = process.env.JWT_SECRET
+          await this.jwtService.verifyAsync(token, { secret });
+          const decoded = this.jwtService.decode(token);
+          token = decoded['sub'];
+          console.log('Client connected:', token);
+          this.clients[socket.id] = { socket, token };
+        } else {
+          socket.emit('error', {
+            status: 'error',
+            message: 'No token provided',
+            timestamp: new Date().toISOString(),
+          });
+          socket.disconnect();
+        }
+      }
+      catch(error){
+        console.error('JWT verification failed:', error.message);
         socket.emit('error', {
           status: 'error',
-          message: 'No token provided',
+          message: 'Malformed or expired token',
           timestamp: new Date().toISOString(),
         });
         socket.disconnect();
