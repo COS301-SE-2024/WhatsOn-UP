@@ -1,12 +1,11 @@
 
-import 'package:firstapp/providers/user_provider.dart';
+
 import 'package:flutter/material.dart';
 import 'package:firstapp/widgets/event_card.dart';
-import 'package:provider/provider.dart';
-import 'package:supabase_auth_ui/supabase_auth_ui.dart';
-import '../main.dart';
+
+
 import '../services/api.dart';
-import 'dart:convert';
+
 
 class EventProvider with ChangeNotifier {
   late final Api api;

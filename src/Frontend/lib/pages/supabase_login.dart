@@ -47,17 +47,17 @@ Widget build(BuildContext context) {
   MediaQueryData mediaQuery = MediaQuery.of(context);
   mediaSize = kIsWeb ? Size(412.0, mediaQuery.size.height) : mediaQuery.size;
   
-  // Wrap everything in Center to ensure width restriction is respected on the web
+
   return Center(
     child: Container(
-      width: mediaSize.width, // Respect width limitation on web
+      width: mediaSize.width,
       color: const Color.fromARGB(255, 149, 137, 74),
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: Colors.transparent,
         body: Stack(
           children: [
-            Positioned(top: 80, child: _buildTop()), // 40
+            Positioned(top: 80, child: _buildTop()),
             Positioned(bottom: 0, child: _buildBottom(context)),
           ],
         ),
