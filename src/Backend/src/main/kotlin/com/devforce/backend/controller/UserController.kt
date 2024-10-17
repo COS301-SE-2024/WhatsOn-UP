@@ -104,4 +104,10 @@ class UserController {
         return userService.rateEvent(id, rating, comment)
     }
 
+    @PostMapping("/mark_attendance/{id}")
+    @PreAuthorize("isAuthenticated()")
+    fun markAttendance(@PathVariable id: UUID, @RequestParam code: String): ResponseEntity<ResponseDto> {
+        return userService.markAttendance(id, code)
+    }
+
 }

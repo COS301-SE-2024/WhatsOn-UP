@@ -44,29 +44,31 @@ class _CalendarPageState extends State<CalendarPage>
 
 
   Future<void> _fetchEvents() async {
-    try {
-      EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
-      userProvider userP = Provider.of<userProvider>(context, listen: false);
+  try {
+    EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
+    userProvider userP = Provider.of<userProvider>(context, listen: false);
 
-      String? userId = userP.role == 'guest' ? null : userP.userId;
-      String JWT = (userId != null) ? userP.JWT : 'guest_user'; //userP.JWT will not set at this point  
-      eventP.fetchfortheFirstTimeRsvp(userId!, JWT);
+    String? userId = userP.role == 'guest' ? "guest" : userP.userId;
+    String JWT = userId == "guest" ? 'guest_user' : userP.JWT;
 
-      List<Event> events = await eventP.eventsRsvp;
-      // final parsedEvents = parseEvents(response);
-      print("EVENTS IN CALENDAR PAGE: $events");
+    eventP.fetchfortheFirstTimeRsvp(userId, JWT); 
 
-      setState(() {
-        _groupedEvents = _groupEventsByDate(events);
-        _isLoading = false;
-      });
-    } catch (e) {
-      print('RSVP Error: $e');
-      setState(() {
-        _isLoading = false;
-      });
-    }
+    List<Event> events = await eventP.eventsRsvp;
+
+    // print("EVENTS IN CALENDAR PAGE: $events");
+
+    setState(() {
+      _groupedEvents = _groupEventsByDate(events);
+      _isLoading = false;
+    });
+  } catch (e) {
+    print('RSVP Error: $e');
+    setState(() {
+      _isLoading = false;
+    });
   }
+}
+
 
   List<Map<String, dynamic>> parseEvents(List<dynamic> events) {
     return events.map((event) {
@@ -101,6 +103,8 @@ class _CalendarPageState extends State<CalendarPage>
                 (event['hosts'] as List).isNotEmpty)
             ? List<String>.from(event['hosts'].map((host) => host['fullName']))
             : [],
+        'hostIds': (event.containsKey('hosts') &&
+                (event['hosts'] as List).isNotEmpty),
         'attendees': (event.containsKey('attendees') &&
                 (event['attendees'] as List).isNotEmpty)
             ? List<Attendee>.from(event['attendees']
@@ -115,6 +119,7 @@ class _CalendarPageState extends State<CalendarPage>
                 sessions: [],
               ),
         'saved': event['saved'] ?? false,
+
       };
     }).toList();
   }
@@ -161,6 +166,7 @@ class _CalendarPageState extends State<CalendarPage>
         'description': event.description ?? '',
         'id': event.id,
         'hosts': event.hosts != null ? List<String>.from(event.hosts!) : [],
+        'hostIds': event.hostIds != null ? List<String>.from(event.hostIds!) : [],
         'attendees': event.attendees != null
             ? List<Attendee>.from(event.attendees!)
             : [],
@@ -258,6 +264,7 @@ Widget _buildEventCard(Map<String, dynamic> event) {
         imageUrls: [event['url']],
         id: event['id'],
         hosts: event['hosts'],
+        hostIds: event['hostIds'],
         attendees: event['attendees'],
         startTime: event['startTime'],
         endTime: event['endTime'],
@@ -265,6 +272,8 @@ Widget _buildEventCard(Map<String, dynamic> event) {
         isPrivate: event['isPrivate'],
         metadata: Metadata.fromJson(event['metadata']),
         saved: event['saved'],
+        metadataString: event['metadataString'],
+
 
       );
       Navigator.push(

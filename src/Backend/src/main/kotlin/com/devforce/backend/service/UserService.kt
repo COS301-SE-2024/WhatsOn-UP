@@ -306,14 +306,9 @@ class UserService {
         val applicationModel = application[0]
             ?: return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Application not found"))
 
-        if (applicationModel.status!!.name == "ACKNOWLEDGED"){
-            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Application already acknowledged"))
-        }
-
         if (applicationModel.status!!.name != "ACCEPTED") {
             return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Application not accepted yet"))
         }
-
 
         if (applicationModel.expiryDateTime!!.isBefore(LocalDateTime.now())) {
             return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Application expired"))
@@ -373,6 +368,31 @@ class UserService {
         feedbackRepo.save(feedBack)
 
         return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Event rated successfully"))
+        )
+    }
+
+    fun markAttendance(id: UUID, code: String): ResponseEntity<ResponseDto> {
+        val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
+
+        val optionalEvent = eventRepo.findById(id)
+
+
+        if (optionalEvent.isEmpty) {
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Event not found"))
+        }
+
+        val event = optionalEvent.get()
+
+        if (event.code != code) {
+            return ResponseEntity.badRequest().body(ResponseDto("error", System.currentTimeMillis(), "Invalid code"))
+        }
+
+        println(id)
+        println(user.userId)
+        eventRepo.markAttendance(id, user.userId)
+
+
+        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("message" to "Attendance marked successfully"))
         )
     }
 

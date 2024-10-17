@@ -76,7 +76,7 @@ class EventService {
       if (response.statusCode == 200) {
         print("processing..");
         final List<dynamic> jsonResponse = jsonDecode(response.body)['data'];
-
+print('categories $jsonResponse');
         if (jsonResponse == null || jsonResponse.isEmpty) {
           print('No categories found.');
           return [];
@@ -199,7 +199,6 @@ class EventService {
     }
   }
 
-
   Future<List<dynamic>> fetchAttendanceData(String eventId, String JWT) async {
     final url = '$baseUrl/api/events/$eventId/attendance';
     final response = await http.get(
@@ -219,12 +218,7 @@ class EventService {
     }
   }
 
-
   Future<void> updateAttendanceStatus(String eventId, String userId, bool? attended, String JWT) async {
-  // print("DETAILSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
-   //print(eventId);
-   //print(userId);
-   //print(attended);
     final url = '$baseUrl/api/events/update-attendance';
     final response = await http.put(
       Uri.parse('$url'),

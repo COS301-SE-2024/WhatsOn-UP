@@ -12,8 +12,11 @@ import '../widgets/notification_card.dart';
 
 class NotificationDetailScreen extends StatefulWidget {
   final AppNotification notification;
-
-  NotificationDetailScreen({required this.notification});
+  final Api api;
+  NotificationDetailScreen({
+    required this.notification,
+    required this.api
+  });
   
 
   @override
@@ -55,13 +58,34 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
             SnackBar(content: Text("This invite has been already accepted"), backgroundColor: Colors.red));
       } else {
         ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text("An error occurred: $e")));
+            .showSnackBar(SnackBar(content: Text("An error occurred: $e"),
+          backgroundColor: Colors.red,));
+
       }
     } finally {
       setState(() {
         isLoading = false;
       });
     }
+  }
+  @override
+  void initState() {
+    super.initState();
+
+    _markNotificationAsSeen();
+  }
+
+  Future<void> _markNotificationAsSeen() async {
+    var notification = widget.notification;
+    var api = widget.api;
+    userProvider userP = Provider.of<userProvider>(context, listen: false);
+    notificationProvider notif = Provider.of<notificationProvider>(context, listen: false);
+
+    if(notification.seenAt == null){
+      await notification.markAsSeen(notification.notificationId, userP.JWT, api);
+      await notif.refreshNotifications(userP.JWT);
+    }
+    print('Notification was seen at: ${notification.seenAt}');
   }
 
   Future<void> _Acknowledge() async {
@@ -81,8 +105,8 @@ userProvider userP = Provider.of<userProvider>(context, listen: false);
       }
     } catch (e) {
 
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text("This application has been already acknowledged"), backgroundColor: Colors.red));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("This application has been already acknowledged"), backgroundColor: Colors.red));
 
     } finally {
       Navigator.of(context).pushReplacementNamed('/notifications');
@@ -121,8 +145,10 @@ userProvider userP = Provider.of<userProvider>(context, listen: false);
         ),
       );
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Unable to rate event. Missing information.")),
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Unable to rate event. Missing information."),
+              backgroundColor: Colors.red,),
       );
     }
   }
@@ -180,7 +206,7 @@ userProvider userP = Provider.of<userProvider>(context, listen: false);
       Navigator.of(context).pop();
     } 
     catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("An error occurred while deleting the notification")));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("An error occurred while deleting the notification"),  backgroundColor: Colors.red,));
       print("Error deleting notification: $e");
     } 
   }
@@ -188,7 +214,8 @@ userProvider userP = Provider.of<userProvider>(context, listen: false);
   @override
   Widget build(BuildContext context) {
     String formattedDateSentAt = formatDateTime(widget.notification.sentAt);
-
+    ThemeData theme = Theme.of(context);
+    final acknowledgedBorderColour = theme.colorScheme.primary;
     return Scaffold(
       appBar: AppBar(
         title: Text(capitalize(widget.notification.notificationTypes)),
@@ -250,29 +277,30 @@ userProvider userP = Provider.of<userProvider>(context, listen: false);
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        if (widget.notification.message.contains('###'))...[
+                      if (widget.notification.message.contains('###'))...[
                           TextButton(
-                            onPressed: () {
-                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                  content: Text(
-                                      "This invite has been accepted")));
-                            },
+    onPressed: () {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    content: Text(
+    "This invite has been accepted"),
+    backgroundColor: Colors.green,));
+    },
                             style: TextButton.styleFrom(
-                              foregroundColor: Colors.white,
-                              backgroundColor: Color.fromARGB(255, 0, 128, 132),
+    foregroundColor: Colors.white,
+
+    backgroundColor: Color.fromARGB(255, 0, 128, 132),
                               side: BorderSide(color: Colors.black),
                               padding: EdgeInsets.symmetric(
                                   vertical: 12.0, horizontal: 20.0),
                             ),
                             child: Text('Already Accepted'),
                           ),
-                        ]else ...[
+                        ]else...[
                           TextButton(
-                            onPressed: () {
-                              _Accept();
-                            },
+                            onPressed: _Accept,
                             style: TextButton.styleFrom(
-                              foregroundColor: Colors.white,
+                            foregroundColor: Colors.white,
+
                               backgroundColor: Color.fromARGB(255, 0, 128, 132),
                               side: BorderSide(color: Colors.black),
                               padding: EdgeInsets.symmetric(
@@ -280,8 +308,7 @@ userProvider userP = Provider.of<userProvider>(context, listen: false);
                             ),
                             child: Text('Accept invite'),
                           ),
-                          ],
-
+    ],
                       ],
                     ),
                   ],
@@ -299,14 +326,14 @@ userProvider userP = Provider.of<userProvider>(context, listen: false);
                     ),
                     SizedBox(height: 20.0),
                   ],
-
                   if (widget.notification.notificationTypes ==
                       'application') ...[
                     TextButton(
                       onPressed: _Acknowledge,
                       style: TextButton.styleFrom(
-                        foregroundColor: Colors.black,
-                        side: BorderSide(color: Colors.black),
+
+                        side: BorderSide(color: acknowledgedBorderColour),
+
                         padding: EdgeInsets.symmetric(
                             vertical: 12.0, horizontal: 20.0),
                       ),

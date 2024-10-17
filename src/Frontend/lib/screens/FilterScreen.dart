@@ -44,7 +44,7 @@ class _FilterScreenState extends State<FilterScreen> with SingleTickerProviderSt
     TextStyle whiteTextTheme = Theme.of(context).textTheme.labelLarge!.copyWith(color: Colors.white);
 
     bool isSelectionMade = selectedDateRange.isNotEmpty || selectedCapacityRange.isNotEmpty || selectedEventType.isNotEmpty;
-
+print('selection is made $isSelectionMade');
     return Scaffold(
       appBar: AppBar(
         title: Text('Event Filter'),
@@ -101,6 +101,7 @@ class _FilterScreenState extends State<FilterScreen> with SingleTickerProviderSt
                             "Filter Events",
                             style: whiteTextTheme,
                           ),
+
                           onPressed: isSelectionMade ? _filterEvents : null,
                         ),
                       ),
@@ -192,7 +193,7 @@ class _FilterScreenState extends State<FilterScreen> with SingleTickerProviderSt
 
   void _filterEvents() async {
     List<Event> filteredEvents = widget.searchResults ?? [];
-    if (widget.searchResults != null && widget.searchResults!.isNotEmpty) {
+    if (widget.searchResults != null || widget.searchResults!.isNotEmpty) {
 
       filteredEvents = _applyFiltersLocally(widget.searchResults!);
 
@@ -288,25 +289,32 @@ class _FilterScreenState extends State<FilterScreen> with SingleTickerProviderSt
       }
 
       // Capacity filtering
+      int? minCapacity;
       int? maxCapacity;
 
       switch (selectedCapacityRange) {
         case "0 - 50":
+          minCapacity = 0;
           maxCapacity = 50;
           break;
         case "50 - 100":
+          minCapacity = 50;
           maxCapacity = 100;
           break;
         case "100 - 200":
+          minCapacity = 100;
           maxCapacity = 200;
           break;
         case "200 - 300":
+          minCapacity = 200;
           maxCapacity = 300;
           break;
         case "300 - 400":
+          minCapacity = 300;
           maxCapacity = 400;
           break;
         case "400 - 500":
+          minCapacity = 400;
           maxCapacity = 500;
           break;
         default:
@@ -318,13 +326,17 @@ class _FilterScreenState extends State<FilterScreen> with SingleTickerProviderSt
       bool isPrivate = selectedEventType == "Private";
 
       return events.where((event) {
-        bool matchesDate = true;
-        if (startDate != null && endDate != null) {
-          DateTime eventDate = DateTime.parse(event.startTime);
-          matchesDate = eventDate.isAfter(startDate) && eventDate.isBefore(endDate);
-        }
+        // bool matchesDate = true;
+        // if (startDate != null && endDate != null) {
+        //   DateTime eventDate = DateTime.parse(event.startTime);
+        //   matchesDate = eventDate.isAfter(startDate) && eventDate.isBefore(endDate);
+        // }
+        DateTime eventDate = DateTime.parse(event.startTime);
+        bool matchesDate = (startDate == null || eventDate.isAfter(startDate)) && (endDate == null || eventDate.isBefore(endDate));
 
-        bool matchesCapacity = maxCapacity == null || event.maxAttendees <= maxCapacity;
+        bool matchesCapacity = (minCapacity == null || event.maxAttendees >= minCapacity) &&
+            (maxCapacity == null || event.maxAttendees <= maxCapacity);
+
         bool matchesType = selectedEventType.isEmpty || (isPrivate ? event.isPrivate : !event.isPrivate);
 
         return matchesDate && matchesCapacity && matchesType;

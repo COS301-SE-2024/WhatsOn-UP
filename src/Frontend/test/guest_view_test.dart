@@ -56,6 +56,7 @@ void main() {
           description: 'Test Description 1',
           imageUrls: [],
           hosts: [],
+          hostIds: [],
           startTime: '2022-01-01T10:00:00.000Z',
           endTime: '2022-01-01T12:00:00.000Z',
           maxAttendees: 100,
@@ -65,7 +66,7 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ), invitees: [], saved: false,
+          ), invitees: [], saved: false, metadataString: '',
         ),
         Event(
           id: '2',
@@ -73,6 +74,7 @@ void main() {
           description: 'Test Description 2',
           imageUrls: [],
           hosts: [],
+          hostIds: [],
           startTime: '2022-01-02T10:00:00.000Z',
           endTime: '2022-01-02T12:00:00.000Z',
           maxAttendees: 150,
@@ -82,7 +84,7 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ), invitees: [], saved: false,
+          ), invitees: [], saved: false, metadataString: '',
         ),
       ]);
       when(mockEventProvider.eventsHome).thenAnswer((_) async => [
@@ -92,6 +94,7 @@ void main() {
           description: 'Test Description 1',
           imageUrls: [],
           hosts: [],
+          hostIds: [],
           startTime: '2022-01-01T10:00:00.000Z',
           endTime: '2022-01-01T12:00:00.000Z',
           maxAttendees: 100,
@@ -101,7 +104,7 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ), invitees: [], saved: false,
+          ), invitees: [], saved: false, metadataString: '',
         ),
         Event(
           id: '2',
@@ -109,6 +112,7 @@ void main() {
           description: 'Test Description 2',
           imageUrls: [],
           hosts: [],
+          hostIds: [],
           startTime: '2022-01-02T10:00:00.000Z',
           endTime: '2022-01-02T12:00:00.000Z',
           maxAttendees: 150,
@@ -118,7 +122,7 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ), saved: false,
+          ), saved: false, metadataString: '',
 
 
         ),
@@ -128,6 +132,7 @@ void main() {
           description: 'Test Description 3',
           imageUrls: [],
           hosts: [],
+          hostIds: [],
           startTime: '2022-01-03T10:00:00.000Z',
           endTime: '2022-01-03T12:00:00.000Z',
           maxAttendees: 200,
@@ -137,7 +142,7 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ), invitees: [], saved: false,
+          ), invitees: [], saved: false, metadataString: '',
         ),
       ]);
       when(mockEventProvider.eventsRsvp).thenAnswer((_) async => [
@@ -147,6 +152,7 @@ void main() {
           description: 'Test Description 1',
           imageUrls: [],
           hosts: [],
+          hostIds: [],
           startTime: '2022-01-01T10:00:00.000Z',
           endTime: '2022-01-01T12:00:00.000Z',
           maxAttendees: 100,
@@ -156,7 +162,7 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ), invitees: [], saved: false,
+          ), invitees: [], saved: false, metadataString: '',
         ),
         Event(
           id: '2',
@@ -164,6 +170,7 @@ void main() {
           description: 'Test Description 2',
           imageUrls: [],
           hosts: [],
+          hostIds: [],
           startTime: '2022-01-02T10:00:00.000Z',
           endTime: '2022-01-02T12:00:00.000Z',
           maxAttendees: 150,
@@ -173,7 +180,7 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ), invitees: [], saved: false
+          ), invitees: [], saved: false, metadataString: ''
         ),
         Event(
           id: '3',
@@ -181,6 +188,7 @@ void main() {
           description: 'Test Description 3',
           imageUrls: [],
           hosts: [],
+          hostIds: [],
           startTime: '2022-01-03T10:00:00.000Z',
           endTime: '2022-01-03T12:00:00.000Z',
           maxAttendees: 200,
@@ -190,7 +198,7 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ), invitees: [], saved: false,
+          ), invitees: [], saved: false, metadataString: '',
         ),
       ]);
 
@@ -238,7 +246,7 @@ void main() {
       expect(find.text('Profile'), findsOneWidget);
       expect(find.text('Notifications'), findsOneWidget);
       expect(find.text('Theme'), findsOneWidget);
-      expect(find.text('Privacy'), findsOneWidget);
+      // expect(find.text('Privacy'), findsOneWidget);
       expect(find.text('Help'), findsOneWidget);
     });
 

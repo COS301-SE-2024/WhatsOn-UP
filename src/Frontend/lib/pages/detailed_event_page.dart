@@ -30,6 +30,8 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
   final user = supabase.auth.currentUser;
   late Event _thisCurrentEvent;
   bool _isLoading = false;
+  bool _markAttendanceLoading = false;
+  bool _generateCodeLoading = false;
   List<Widget> _mediaWidgets = [];
 
   @override
@@ -57,7 +59,8 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
       borderRadius: BorderRadius.circular(16.0),
       child: Image.network(
         url,
-        fit: BoxFit.cover,
+        // fit: BoxFit.cover,
+        fit: BoxFit.contain,
         width: double.infinity,
       ),
     );
@@ -131,7 +134,8 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
       var result = await Api().rsvpEvent(widget.event.id, userP.JWT);
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Successfully RSVP\'d to event!')),
+          const SnackBar(content: Text('Successfully RSVP\'d to event!'),
+            backgroundColor: Colors.green,),
       );
       await eventProvider.refreshRSVPEvents(user!.id, userP.JWT);
       await eventProvider.refreshEvents(userP.JWT);
@@ -143,7 +147,8 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
       Navigator.of(context).pushReplacementNamed('/home');
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to RSVP: ${e.toString()}')),
+        SnackBar(content: Text('Failed to RSVP: ${e.toString()}'),
+          backgroundColor: Colors.red,),
       );
       setState(() {
         _isLoading = false;
@@ -169,7 +174,8 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
           .then((response) {});
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Successfully removed your RSVP from the event!')),
+        const SnackBar(content: Text('Successfully removed your RSVP from the event!'),
+          backgroundColor: Colors.green,),
       );
       await eventProvider.refreshRSVPEvents(user!.id, userP.JWT);
       await eventProvider.refreshEvents(userP.JWT);
@@ -181,7 +187,8 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
       Navigator.of(context).pushReplacementNamed('/home');
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to remove RSVP: ${e.toString()}')),
+        SnackBar(content: Text('Failed to remove RSVP: ${e.toString()}'),
+          backgroundColor: Colors.red,),
       );
       setState(() {
         _isLoading = false;
@@ -264,19 +271,205 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
         if (response['status'] == 'success') {
           print('Event deleted successfully. Response: $response');
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Event deleted successfully')),
+            const SnackBar(content: Text('Event deleted successfully'),
+              backgroundColor: Colors.green,),
           );
           await eventProvider.refreshEvents(userP.JWT);
           Navigator.of(context).pushReplacementNamed('/home');
         } else {
           print('Failed to delete event. Response: $response');
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Failed to delete event')),
+            const SnackBar(content: Text('Failed to delete event'),
+              backgroundColor: Colors.red,),
           );
         }
       });
     }
   }
+
+  Future<void> _submitAttendanceCode(String code) async {
+    userProvider userP = Provider.of<userProvider>(context, listen: false);
+    String JWT = userP.JWT;
+
+    setState(() {
+      _markAttendanceLoading = true;
+    });
+
+    try {
+      final response = await Api().markAttendance(JWT, _thisCurrentEvent.id, code);
+
+      if (response['status'] == 'success') {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(response['data']['message']),
+            backgroundColor: Colors.green,
+          ),
+        );
+      } else if (response['status'] == 'error') {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: ${response['data']}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } finally {
+      setState(() {
+        _markAttendanceLoading = false;
+      });
+    }
+  }
+
+  void _showAttendancePopup() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        String enteredCode = '';
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: const Text('Enter Attendance Code'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  const Text(
+                    'Please enter the code provided by the event host to mark your attendance. '
+                    'Make sure the code is correct and submit it below.',
+                    style: TextStyle(fontSize: 14, color: Colors.grey),
+                  ),
+                  const SizedBox(height: 20),
+                  TextField(
+                    onChanged: (value) {
+                      enteredCode = value;
+                    },
+                    decoration: const InputDecoration(
+                      hintText: 'Enter code',
+                    ),
+                  ),
+                ],
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text('CANCEL'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                TextButton(
+                  child: _markAttendanceLoading
+                      ? const CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color>(Colors.grey),
+                        )
+                      : const Text('SUBMIT'),
+                  onPressed: () async {
+                    if (enteredCode.isNotEmpty) {
+                      setState(() {
+                        _markAttendanceLoading = true;
+                      });
+
+                      await _submitAttendanceCode(enteredCode);
+
+                      setState(() {
+                        _markAttendanceLoading = false;
+                      });
+
+                      Navigator.of(context).pop();
+                    }
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+String? _attendanceCode;
+
+void _showEventCodePopup(String code) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Attendance Code'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            const Text(
+              'Please give this code to your attendees and have them press the "Enter Attendance Code" button on the event page to mark their attendance. '
+              'Note that only the code that was generated last will be valid.',
+              style: TextStyle(fontSize: 14, color: Colors.grey),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              'Attendance Code: $code',
+              style: const TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: Color.fromARGB(255, 48, 86, 139),
+              ),
+            ),
+          ],
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: const Text('OK'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
+Future<void> _generateAttendanceCode() async {
+  userProvider userP = Provider.of<userProvider>(context, listen: false);
+  String JWT = userP.JWT;
+
+  setState(() {
+    _generateCodeLoading = true;
+  });
+
+  try {
+    final response = await Api().generateAttendanceCode(JWT, _thisCurrentEvent.id);
+
+    if (response['status'] == 'success') {
+      setState(() {
+        _attendanceCode = response['data']['code'];
+      });
+      _showEventCodePopup(_attendanceCode!);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error: ${response['data']['message']}'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Error: $e'),
+        backgroundColor: Colors.red,
+      ),
+    );
+  } finally {
+    setState(() {
+      _generateCodeLoading = false;
+    });
+  }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -287,7 +480,7 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
         : Colors.grey;
     final activeDotColour =
         theme.brightness == Brightness.dark ? Colors.white : Colors.black;
-
+    DateTime eventEndTime = DateTime.parse(_thisCurrentEvent.endTime);
     return Scaffold(
       appBar: AppBar(
         title: Text(_thisCurrentEvent.nameOfEvent),
@@ -402,6 +595,29 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
                   if (!_thisCurrentEvent.attendees
                       .any((attendee) => attendee.userId == userP.userId)) ...[
                     if (userP.role != "GUEST")
+
+
+                      if (userP.userId == _thisCurrentEvent.hostIds[0]) ...[
+                        if (DateTime.now().isAfter(DateTime.parse(_thisCurrentEvent.startTime)) &&
+                            DateTime.now().isBefore(DateTime.parse(_thisCurrentEvent.endTime)))
+                          ElevatedButton.icon(
+                            onPressed: _generateCodeLoading ? null : _generateAttendanceCode, 
+                            icon: _generateCodeLoading
+                                ? const CircularProgressIndicator(
+                                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                  )
+                                : const Icon(Icons.numbers),
+                            label: _generateCodeLoading
+                                ? const Text('Generating...')
+                                : const Text('Get Event Attendance Code'),
+                            style: ElevatedButton.styleFrom(
+                              minimumSize: const Size(double.infinity, 48),
+                            ),
+                          ),
+                      ],
+                      if (userP.userId != _thisCurrentEvent.hostIds[0]) ...[
+                      const SizedBox(height: 8.0),
+
                       if (_thisCurrentEvent.maxAttendees >
                           _thisCurrentEvent.attendees.length)
                         ElevatedButton(
@@ -421,7 +637,7 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
                                     Text('Add to my Calendar'),
                                   ],
                                 ),
-                        ),
+                        ),                     
                     if (_thisCurrentEvent.maxAttendees <=
                         _thisCurrentEvent.attendees.length + 1)
                       ElevatedButton.icon(
@@ -432,9 +648,26 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
                           minimumSize: const Size(double.infinity, 48),
                         ),
                       ),
+                      ]
                   ],
                   if (_thisCurrentEvent.attendees
                       .any((attendee) => attendee.userId == userP.userId)) ...[
+                     if (userP.userId != _thisCurrentEvent.hostIds[0]) ... [
+                      if (DateTime.now().isAfter(DateTime.parse(_thisCurrentEvent.startTime)) &&
+                          DateTime.now().isBefore(DateTime.parse(_thisCurrentEvent.endTime)))
+                        ElevatedButton.icon(
+                          onPressed: _showAttendancePopup,
+                          icon: const Icon(Icons.numbers),
+                          label: const Text('Enter Attendance Code'),
+                          style: ElevatedButton.styleFrom(
+                            minimumSize: const Size(double.infinity, 48),
+                          ),
+                        ),
+                        const SizedBox(height: 8.0),
+                      ],
+
+
+
                     ElevatedButton(
                           onPressed: _isLoading ? null : () => _removeFromCalendar(),
                           style: ElevatedButton.styleFrom(
@@ -481,24 +714,26 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
                               _thisCurrentEvent!.hosts[0] == userP.Fullname ||
                           userP.role == 'ADMIN')) ...[
                     const SizedBox(height: 8.0),
-                    ElevatedButton.icon(
-                      onPressed: _editEvent,
-                      icon: const Icon(Icons.edit),
-                      label: const Text('Edit Event'),
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: const Size(double.infinity, 48),
+                    if (eventEndTime.isAfter(DateTime.now())) ...[
+                      ElevatedButton.icon(
+                        onPressed: _editEvent,
+                        icon: const Icon(Icons.edit),
+                        label: const Text('Edit Event'),
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: const Size(double.infinity, 48),
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 8.0),
-                    ElevatedButton.icon(
-                      onPressed: _DeleteEvent,
-                      icon: const Icon(Icons.delete),
-                      label: const Text('Remove Event'),
-                      style: ElevatedButton.styleFrom(
-                        side: const BorderSide(color: Colors.red),
-                        minimumSize: const Size(double.infinity, 48),
+                      const SizedBox(height: 8.0),
+                      ElevatedButton.icon(
+                        onPressed: _DeleteEvent,
+                        icon: const Icon(Icons.delete),
+                        label: const Text('Remove Event'),
+                        style: ElevatedButton.styleFrom(
+                          side: const BorderSide(color: Colors.red),
+                          minimumSize: const Size(double.infinity, 48),
+                        ),
                       ),
-                    ),
+                    ],
                   ],
                 ],
               ),

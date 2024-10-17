@@ -35,7 +35,7 @@ void main() {
 
       await Supabase.initialize(
         url: 'https://mehgbhiirnmypfgnkaud.supabase.co',
-        anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1laGdiaGlpcm5teXBmZ25rYXVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjI5NDMyMzYsImV4cCI6MjAzODUxOTIzNn0.g_oLlSZE3AH_nBntVe_hBPdthFDQHZqn0wxzS23kyrc',
+        anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1laGdiaGlpcm5teXBmZ25rYXVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjc2ODg3MzgsImV4cCI6MjA0MzI2NDczOH0.-cAnfcxrcvMXKq75SlieCwjpBVzD4N6XgcTpz6Pjo6g',
       );
        mockSupabase = MockSupabase();
       final mockSupabaseClient = MockSupabaseClient();
@@ -71,6 +71,7 @@ void main() {
           description: 'Test Description 1',
           imageUrls: [],
           hosts: [],
+          hostIds: [],
           startTime: '2022-01-01T10:00:00.000Z',
           endTime: '2022-01-01T12:00:00.000Z',
           maxAttendees: 100,
@@ -81,7 +82,7 @@ void main() {
             categories: [],
             sessions: [],
           ),
-          invitees: [], saved: true,
+          invitees: [], saved: true, metadataString: '',
         ),
         Event(
           id: '2',
@@ -90,6 +91,7 @@ void main() {
           description: 'Test Description 2',
           imageUrls: [],
           hosts: [],
+          hostIds: [],
           startTime: '2022-01-02T10:00:00.000Z',
           endTime: '2022-01-02T12:00:00.000Z',
           maxAttendees: 150,
@@ -100,7 +102,7 @@ void main() {
             categories: [],
             sessions: [],
           ),
-          invitees: [], saved: true,
+          invitees: [], saved: true, metadataString: '',
         ),
       ]);
       when(mockEventProvider.eventsHome).thenAnswer((_) async =>
@@ -112,6 +114,7 @@ void main() {
           description: 'Test Description 1',
           imageUrls: [],
           hosts: [],
+          hostIds: [],
           startTime: '2022-01-01T10:00:00.000Z',
           endTime: '2022-01-01T12:00:00.000Z',
           maxAttendees: 100,
@@ -122,7 +125,7 @@ void main() {
             categories: [],
             sessions: [],
           ),
-          invitees: [], saved: true,
+          invitees: [], saved: true, metadataString: '',
         ),
         Event(
           id: '2',
@@ -131,6 +134,7 @@ void main() {
           description: 'Test Description 2',
           imageUrls: [],
           hosts: [],
+          hostIds: [],
           startTime: '2022-01-02T10:00:00.000Z',
           endTime: '2022-01-02T12:00:00.000Z',
           maxAttendees: 150,
@@ -140,7 +144,7 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ), saved: false,
+          ), saved: false, metadataString: '',
 
 
         ),
@@ -151,6 +155,7 @@ void main() {
           description: 'Test Description 3',
           imageUrls: [],
           hosts: [],
+          hostIds: [],
           startTime: '2022-01-03T10:00:00.000Z',
           endTime: '2022-01-03T12:00:00.000Z',
           maxAttendees: 200,
@@ -161,7 +166,7 @@ void main() {
             categories: [],
             sessions: [],
           ),
-          invitees: [], saved: true,
+          invitees: [], saved: true, metadataString: '',
         ),
       ]);
       when(mockEventProvider.eventsRsvp).thenAnswer((_) async =>
@@ -173,6 +178,7 @@ void main() {
           description: 'Test Description 1',
           imageUrls: [],
           hosts: [],
+          hostIds: [],
           startTime: '2022-01-01T10:00:00.000Z',
           endTime: '2022-01-01T12:00:00.000Z',
           maxAttendees: 100,
@@ -183,7 +189,7 @@ void main() {
             categories: [],
             sessions: [],
           ),
-          invitees: [], saved: true,
+          invitees: [], saved: true, metadataString: '',
         ),
         Event(
           id: '2',
@@ -192,6 +198,7 @@ void main() {
           description: 'Test Description 2',
           imageUrls: [],
           hosts: [],
+          hostIds: [],
           startTime: '2022-01-02T10:00:00.000Z',
           endTime: '2022-01-02T12:00:00.000Z',
           maxAttendees: 150,
@@ -202,7 +209,7 @@ void main() {
             categories: [],
             sessions: [],
           ),
-          invitees: [], saved: true,
+          invitees: [], saved: true, metadataString: '',
         ),
         Event(
           id: '3',
@@ -211,6 +218,7 @@ void main() {
           description: 'Test Description 3',
           imageUrls: [],
           hosts: [],
+          hostIds: [],
           startTime: '2022-01-03T10:00:00.000Z',
           endTime: '2022-01-03T12:00:00.000Z',
           maxAttendees: 200,
@@ -221,7 +229,7 @@ void main() {
             categories: [],
             sessions: [],
           ),
-          invitees: [], saved: false,
+          invitees: [], saved: false, metadataString: '',
         ),
       ]);
     });

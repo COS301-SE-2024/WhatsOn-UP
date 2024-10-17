@@ -25,7 +25,7 @@ interface PastEventsRepo: JpaRepository<PastEventModel, UUID> {
                 "LEFT JOIN FETCH e.venue v " +
                 "LEFT JOIN FETCH v.building b " +
                 "LEFT JOIN FETCH b.campus c " +
-                "LEFT JOIN Fetch e.feedback f " +
+                "RIGHT JOIN Fetch e.feedback f " +
                 "LEFT JOIN FETCH f.user fu " +
                 "LEFT JOIN FETCH fu.role fur " +
                 "LEFT JOIN FETCH e.analytics an " +

@@ -24,31 +24,19 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
   final _emailController = TextEditingController();
   final _fullnameController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+  
   late final StreamSubscription<AuthState> _authSubscription;
   late Color myColor;
   late Size mediaSize;
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _authSubscription = supabase.auth.onAuthStateChange.listen((event) {
-  //     final session = event.session;
-  //     if (session != null) {
-  //       Navigator.of(context).pushReplacementNamed('/login');
-  //     }
-  //   });
-  // }
+  bool _isPasswordVisible = false;
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
-    // _authSubscription.cancel();
-
-     _fullnameController.dispose();
-
-    // _authSubscription.cancel();
-
+    _fullnameController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
   }
 
@@ -107,7 +95,6 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
       height: mediaSize.height * 0.6,
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        // color: Colors.white,
         color: Theme.of(context).colorScheme.surface,
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(30.0),
@@ -122,7 +109,7 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
           TextFormField(
             controller: _fullnameController,
             decoration: InputDecoration(
-              labelText: 'Fullname',
+              labelText: 'Full Name',
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(20.0),
               ),
@@ -141,33 +128,75 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
           const SizedBox(height: 20),
           TextFormField(
             controller: _passwordController,
+            obscureText: !_isPasswordVisible,
             decoration: InputDecoration(
               labelText: 'Password',
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(20.0),
               ),
+              suffixIcon: IconButton(
+                icon: Icon(
+                  _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _isPasswordVisible = !_isPasswordVisible;
+                  });
+                },
+              ),
             ),
           ),
           const SizedBox(height: 20),
-          // TextButton(
+          TextFormField(
+            controller: _confirmPasswordController,
+            obscureText: !_isPasswordVisible,
+            decoration: InputDecoration(
+              labelText: 'Confirm Password',
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(20.0),
+              ),
+              suffixIcon: IconButton(
+                icon: Icon(
+                  _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _isPasswordVisible = !_isPasswordVisible;
+                  });
+                },
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
           ElevatedButton(
             onPressed: () async {
+              final email = _emailController.text.trim();
+              final password = _passwordController.text.trim();
+              final confirmPassword = _confirmPasswordController.text.trim();
+
+              if (password != confirmPassword) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: const Text("Passwords do not match"),
+                    backgroundColor: Theme.of(context).colorScheme.error,
+                  ),
+                );
+                return;
+              }
+
               try {
-                final email = _emailController.text.trim();
-                final password = _passwordController.text.trim();
                 final AuthResponse res = await supabase.auth
                     .signUp(email: email, password: password);
                 if (mounted) {
-                  print("CALLING USERNAME INPUT");
+                  // print("CALLING USERNAME INPUT");
                   Provider.of<userProvider>(context, listen: false).JWT =
                       supabase.auth.currentSession!.accessToken;
 
-                  Provider.of<userProvider>(context, listen: false).JWT =
-                      supabase.auth.currentSession!.accessToken;
                   await _usernameInput(); // Ensure the username is saved
                   ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Signed up successfully")));
-
+                      const SnackBar(
+                        content: Text("Signed up successfully"),
+                        backgroundColor: Colors.green,));
                 }
               } on AuthException catch (error) {
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -191,45 +220,36 @@ class _SupabaseSignupState extends State<SupabaseSignup> {
   Future<void> _usernameInput() async {
     final user = supabase.auth.currentUser;
     String name = _fullnameController.text;
-    print('Username: $name');
     userProvider userP = Provider.of<userProvider>(context, listen: false);
     EventProvider eventP = Provider.of<EventProvider>(context, listen: false);
     Api api = Api();
-    user!;
+
     api.postUsername(name, userP.JWT).then((response) {
       if (response['error'] != null) {
         print('An error occurred: ${response['error']}');
       } else {
-        print('Username added successfully');
-        String userEmail = user.userMetadata?['email'];
-        String UserId = user.id;
-        String role = response['data']['user']['role'] ?? 'Unknown';
-        String profileImage =
-            response['data']['user']['profileImage'] ?? 'Unknown';
-
+        String userEmail = user!.userMetadata?['email'];
         userP.userId = user.id;
         userP.Fullname = name;
         userP.email = userEmail;
-        userP.role = role;
-        userP.profileImage = profileImage;
+        userP.role = response['data']['user']['role'] ?? 'Unknown';
+        userP.profileImage = response['data']['user']['profileImage'] ?? 'Unknown';
+        
         eventP.refreshEvents(userP.JWT);
         eventP.refreshRecommendations(userP.JWT);
-        // eventP.refreshSavedEvents(userP.JWT);
+        
         notificationProvider _notificationProvider =
-        Provider.of<notificationProvider>(context, listen: false);
-
+            Provider.of<notificationProvider>(context, listen: false);
         _notificationProvider.refreshNotifications(userP.JWT);
-        SocketService('https://${globals.liveNotificationService}',_notificationProvider, userP.JWT, context);
+        
+        SocketService('https://${globals.liveNotificationService}', _notificationProvider, userP.JWT, context);
         userP.Generalusers(userP.JWT);
-
-
+        
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => SurveyScreen()),
         );
       }
     });
-
-    print('signup successful');
   }
 }

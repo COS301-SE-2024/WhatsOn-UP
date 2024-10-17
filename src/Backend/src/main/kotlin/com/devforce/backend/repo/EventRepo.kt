@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.data.jpa.repository.query.Procedure
 import org.springframework.data.repository.query.Param
 import java.util.*
+
+
 //FUTURE - filterEvents
 
 interface EventRepo: JpaRepository<EventModel, UUID> {
@@ -160,6 +162,10 @@ interface EventRepo: JpaRepository<EventModel, UUID> {
     @Modifying
     @Query("UPDATE EventAttendanceModel a SET a.attended = :attended WHERE a.eventId = :eventId AND a.userId = :userId")
     fun updateAttendanceStatus(eventId: UUID, userId: UUID, attended: Boolean?): Int
+
+
+    @Query(value = "SELECT mark_attendance(:userId, :eventId)", nativeQuery = true)
+    fun markAttendance(@Param("eventId") eventId: UUID?, @Param("userId") userId: UUID?)
 
 
 }

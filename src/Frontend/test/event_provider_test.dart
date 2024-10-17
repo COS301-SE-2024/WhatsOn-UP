@@ -25,6 +25,7 @@ void main() {
           description: 'Test Description 1',
           imageUrls: [],
           hosts: [],
+          hostIds: [],
           startTime: '2022-01-01T10:00:00.000Z',
           endTime: '2022-01-01T12:00:00.000Z',
           maxAttendees: 100,
@@ -35,7 +36,7 @@ void main() {
             mentors: [],
             categories: [],
             sessions: [],
-          ), invitees: [], saved: false,
+          ), invitees: [], saved: false, metadataString: '',
         ),
         Event(
           id: '2',
@@ -47,6 +48,7 @@ void main() {
           description: 'Test Description 2',
           imageUrls: [],
           hosts: [],
+          hostIds: [],
           startTime: '2022-01-02T10:00:00.000Z',
           endTime: '2022-01-02T12:00:00.000Z',
           maxAttendees: 150,
@@ -58,7 +60,7 @@ void main() {
             categories: [],
             sessions: [],
           ), invitees: [],
-          saved: false,
+          saved: false, metadataString: '',
         ),
       ]);
 
@@ -94,6 +96,7 @@ void main() {
         description: 'Test Description',
         imageUrls: [],
         hosts: [],
+        hostIds: [],
         startTime: '2022-01-01T10:00:00.000Z',
         endTime: '2022-01-01T12:00:00.000Z',
         maxAttendees: 100,
@@ -105,7 +108,7 @@ void main() {
            categories: [],
            sessions: [],
          ),
-        invitees: [], saved: false,
+        invitees: [], saved: false, metadataString: '',
       );
 
 

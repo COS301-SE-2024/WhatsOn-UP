@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../screens/NotificationDetailScreen.dart';
 import '../widgets/notification_card.dart';
+import 'package:firstapp/services/api.dart';
 
 
 class Notifications extends StatefulWidget {
@@ -65,13 +66,30 @@ class _NotificationsState extends State<Notifications> with TickerProviderStateM
   }
 
   @override
-Widget build(BuildContext context) {
-  userProvider userP = Provider.of<userProvider>(context, listen: false);
-  String userRole = userP.role;
-  final theme = Theme.of(context);
-  final textColour = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
+  Widget build(BuildContext context) {
+    userProvider userP = Provider.of<userProvider>(context, listen: false);
+    String userRole = userP.role;
+    final theme = Theme.of(context);
+    final textColour = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
 
-  if (userRole == "GUEST") {
+    if (userRole == "GUEST") {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(
+            'Notifications',
+            style: TextStyle(
+              fontSize: 32,
+              fontWeight: FontWeight.bold,
+              color: textColour,
+            ),
+          ),
+          backgroundColor: Colors.transparent,
+          automaticallyImplyLeading: false,
+        ),
+        body: _buildGuestView(),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -85,68 +103,51 @@ Widget build(BuildContext context) {
         backgroundColor: Colors.transparent,
         automaticallyImplyLeading: false,
       ),
-      body: _buildGuestView(),
-    );
-  }
-
-  return Scaffold(
-    appBar: AppBar(
-      title: Text(
-        'Notifications',
-        style: TextStyle(
-          fontSize: 32,
-          fontWeight: FontWeight.bold,
-          color: textColour,
-        ),
-      ),
-      backgroundColor: Colors.transparent,
-      automaticallyImplyLeading: false,
-    ),
-    body: RefreshIndicator(
-      onRefresh: _refreshNotifications,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          TabBar(
-            controller: _tabController,
-            labelColor: Colors.red,
-            indicatorColor: Colors.red,
-            labelPadding: EdgeInsets.symmetric(horizontal: 20),
-            tabs: [
-              const Tab(
-                text: "Unseen",
-              ),
-              const Tab(
-                text: "Seen",
-              ),
-              if (userP.role == "ADMIN")
-                const Tab(
-                  text: "Applications",
-                )
-              else
-                const Tab(
-                  text: "Invitations",
-                ),
-            ],
-          ),
-          Expanded( 
-            child: TabBarView(
+      body: RefreshIndicator(
+        onRefresh: _refreshNotifications,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            TabBar(
               controller: _tabController,
-              children: [
-                _buildNotificationsView("Unseen"),
-                _buildNotificationsView("Seen"),
+              labelColor: Colors.red,
+              indicatorColor: Colors.red,
+              labelPadding: EdgeInsets.symmetric(horizontal: 20),
+              tabs: [
+                const Tab(
+                  text: "Unseen",
+                ),
+                const Tab(
+                  text: "Seen",
+                ),
                 if (userP.role == "ADMIN")
-                  _buildNotificationsAdminView("Applications")
+                  const Tab(
+                    text: "Applications",
+                  )
                 else
-                  _buildNotificationsView("Invitations"),
+                  const Tab(
+                    text: "Invitations",
+                  ),
               ],
             ),
-          ),
-        ],
+            Expanded( 
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  _buildNotificationsView("Unseen"),
+                  _buildNotificationsView("Seen"),
+                  if (userP.role == "ADMIN")
+                    _buildNotificationsAdminView("Applications")
+                  else
+                    _buildNotificationsView("Invitations"),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
-    ),
-  );
-}
+    );
+  }
   Widget _buildGuestView() {
     return Center(
       child: Padding(
@@ -379,17 +380,17 @@ Widget build(BuildContext context) {
               ),
               onTap: () async {
                 final userProvider userP = Provider.of<userProvider>(context, listen: false);
-
+                final api=Api();
                 if (notification.notificationId != null) {
                   if(notification.seenAt == null){
-                    await notification.markAsSeen(notification.notificationId, userP.JWT);
+                    await notification.markAsSeen(notification.notificationId, userP.JWT, api);
                     await notif.refreshNotifications(userP.JWT);
                   }
                   print('Notification was seen at: ${notification.seenAt}');
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => NotificationDetailScreen(notification: notification),
+                        builder: (context) => NotificationDetailScreen(notification: notification, api: api),
                     ),
                   ).then((_) {});
                 } else {

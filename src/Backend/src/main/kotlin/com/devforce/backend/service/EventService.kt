@@ -53,11 +53,11 @@ class EventService {
             return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "Venue not available")))
         }
 
-        if (createEventDto.maxParticipants != null && createEventDto.maxParticipants!! < 1) {
+        if (createEventDto.maxParticipants != null && createEventDto.maxParticipants < 1) {
             return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "Max participants must be greater than 0")))
         }
 
-        if (createEventDto.maxParticipants != null && createEventDto.maxParticipants!! > venue.capacity) {
+        if (createEventDto.maxParticipants != null && createEventDto.maxParticipants > venue.capacity) {
             return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "Max participants must be less than venue capacity")))
         }
 
@@ -86,6 +86,8 @@ class EventService {
 
             this.updatedBy = user
             this.createdBy = user
+            this.recurring = createEventDto.recurring ?: 0
+            this.code = UUID.randomUUID().toString().substring(0, 6)
 
 
 
@@ -125,6 +127,11 @@ class EventService {
         try {
             val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
 
+            if (user.role!!.name != "ADMIN" && eventRepo.findById(id).get().hosts.none { host -> host.userId == user.userId }) {
+                return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "You are not authorized to update this event")))
+            }
+
+
             val existing = eventRepo.findById(id)
 
             if (existing.isEmpty) {
@@ -133,15 +140,10 @@ class EventService {
 
             val existingEvent = existing.get()
 
-            if (user.role!!.name != "ADMIN" && existingEvent.hosts.none { host -> host.userId == user.userId }) {
-                return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "You are not authorized to update this event")))
-            }
-
-
             var v: VenueModel? = null
 
             if (updateEventDto.location != null) {
-                v = venueRepo.findByVenueId(updateEventDto.location!!)
+                v = venueRepo.findByVenueId(updateEventDto.location)
                 if (v == null) return ResponseEntity.ok(
                         ResponseDto(
                             "error",
@@ -154,21 +156,15 @@ class EventService {
                     return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "Venue not available")))
                 }
 
-                if (updateEventDto.maxParticipants != null && updateEventDto.maxParticipants!! > v.capacity) {
+                if (updateEventDto.maxParticipants != null && updateEventDto.maxParticipants < 1) {
+                    return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "Max participants must be greater than 0")))
+                }
+
+                if (updateEventDto.maxParticipants != null && updateEventDto.maxParticipants > v.capacity) {
                     return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "Max participants must be less than venue capacity")))
                 }
 
                 v.available = false
-            }
-            else{
-
-                if (updateEventDto.maxParticipants != null && updateEventDto.maxParticipants!! > existingEvent.venue!!.capacity) {
-                    return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "Max participants must be less than venue capacity")))
-                }
-            }
-
-            if (updateEventDto.maxParticipants != null && updateEventDto.maxParticipants!! < 1) {
-                return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "Max participants must be greater than 0")))
             }
 
 
@@ -197,6 +193,10 @@ class EventService {
 
                 updatedBy = user
 
+                this.recurring = updateEventDto.recurring ?: this.recurring
+
+                this.code = this.code ?: UUID.randomUUID().toString().substring(0, 6)
+
 
             }
 
@@ -206,9 +206,9 @@ class EventService {
 
             return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), eventDto))
         } catch (e: NoSuchElementException) {
-            return ResponseEntity.status(401).body(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "Event not found")))
+            return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "Event not found")))
         } catch (e: Exception) {
-            return ResponseEntity.status(500).body(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "Failed to update event")))
+            return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "Failed to update event")))
 
 
     }}
@@ -264,10 +264,10 @@ class EventService {
     fun getUniqueCategories(): List<String> {
         return eventRepo.findUniqueCategories()
     }
-//    private fun extractCategory(metadata: String): String? {
-//        val json = ObjectMapper().readTree(metadata)
-//        return json.get("category")?.asText()
-//    }
+    private fun extractCategory(metadata: String): String? {
+        val json = ObjectMapper().readTree(metadata)
+        return json.get("category")?.asText()
+    }
 
     fun broadcastMessage(message: String, eventId: UUID): ResponseEntity<ResponseDto> {
         val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
@@ -349,5 +349,28 @@ class EventService {
         }
     }
 
+    fun generateCode(id: UUID): ResponseEntity<ResponseDto> {
+        val code = UUID.randomUUID().toString().substring(0, 6)
+
+        val user = (SecurityContextHolder.getContext().authentication.principal as CustomUser).userModel
+
+        val event = eventRepo.findById(id)
+        if (event.isEmpty) {
+            return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "Event not found"))
+            )
+        }
+
+        if (user.role!!.name != "ADMIN" && event.get().hosts.none { host -> host.userId == user.userId }) {
+            return ResponseEntity.ok(ResponseDto("error", System.currentTimeMillis(), mapOf("message" to "You are not authorized to generate code for this event"))
+            )
+        }
+
+        event.get().code = code
+        eventRepo.save(event.get())
+
+        return ResponseEntity.ok(ResponseDto("success", System.currentTimeMillis(), mapOf("code" to code))
+        )
+
+    }
 
 }

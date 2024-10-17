@@ -90,7 +90,7 @@ class _ForgotPassState extends State<ForgotPass> {
       height: mediaSize.height * 0.6,
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(30.0),
           topRight: Radius.circular(30.0),

@@ -23,7 +23,7 @@ void main() {
       await Supabase.initialize(
         url: 'https://mehgbhiirnmypfgnkaud.supabase.co',
         anonKey:
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1laGdiaGlpcm5teXBmZ25rYXVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjI5NDMyMzYsImV4cCI6MjAzODUxOTIzNn0.g_oLlSZE3AH_nBntVe_hBPdthFDQHZqn0wxzS23kyrc',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1laGdiaGlpcm5teXBmZ25rYXVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjc2ODg3MzgsImV4cCI6MjA0MzI2NDczOH0.-cAnfcxrcvMXKq75SlieCwjpBVzD4N6XgcTpz6Pjo6g',
       );
     });
     late MockuserProvider mockUserProvider;
@@ -40,6 +40,7 @@ void main() {
               description: 'Test Description 1',
               imageUrls: [],
               hosts: [],
+              hostIds: [],
               startTime: '2022-01-01T10:00:00.000Z',
               endTime: '2022-01-01T12:00:00.000Z',
               maxAttendees: 100,
@@ -50,7 +51,7 @@ void main() {
                 categories: [],
                 sessions: [],
               ),
-              invitees: [], saved: true,
+              invitees: [], saved: true, metadataString: '',
             ),
             Event(
               id: '2',
@@ -59,6 +60,7 @@ void main() {
               description: 'Test Description 2',
               imageUrls: [],
               hosts: [],
+              hostIds: [],
               startTime: '2022-01-02T10:00:00.000Z',
               endTime: '2022-01-02T12:00:00.000Z',
               maxAttendees: 150,
@@ -69,7 +71,7 @@ void main() {
                 categories: [],
                 sessions: [],
               ),
-              invitees: [], saved: true,
+              invitees: [], saved: true, metadataString: '',
             ),
             Event(
               id: '3',
@@ -78,6 +80,7 @@ void main() {
               description: 'Test Description 3',
               imageUrls: [],
               hosts: [],
+              hostIds: [],
               startTime: '2022-01-03T10:00:00.000Z',
               endTime: '2022-01-03T12:00:00.000Z',
               maxAttendees: 200,
@@ -88,7 +91,7 @@ void main() {
                 categories: [],
                 sessions: [],
               ),
-              invitees: [], saved: true,
+              invitees: [], saved: true, metadataString: '',
             ),
           ]);
       // when(mockEventProvider.eventsSaved).thenAnswer((_) async => [
@@ -158,6 +161,7 @@ void main() {
               description: 'Test Description 1',
               imageUrls: [],
               hosts: [],
+              hostIds: [],
               startTime: '2022-01-01T10:00:00.000Z',
               endTime: '2022-01-01T12:00:00.000Z',
               maxAttendees: 100,
@@ -168,7 +172,7 @@ void main() {
                 categories: [],
                 sessions: [],
               ),
-              invitees: [], saved: true,
+              invitees: [], saved: true, metadataString: '',
             ),
             Event(
               id: '2',
@@ -177,6 +181,7 @@ void main() {
               description: 'Test Description 2',
               imageUrls: [],
               hosts: [],
+              hostIds: [],
               startTime: '2022-01-02T10:00:00.000Z',
               endTime: '2022-01-02T12:00:00.000Z',
               maxAttendees: 150,
@@ -187,7 +192,7 @@ void main() {
                 categories: [],
                 sessions: [],
               ),
-              invitees: [], saved: true,
+              invitees: [], saved: true, metadataString: '',
             ),
             Event(
               id: '3',
@@ -196,6 +201,7 @@ void main() {
               description: 'Test Description 3',
               imageUrls: [],
               hosts: [],
+              hostIds: [],
               startTime: '2022-01-03T10:00:00.000Z',
               endTime: '2022-01-03T12:00:00.000Z',
               maxAttendees: 200,
@@ -206,7 +212,7 @@ void main() {
                 categories: [],
                 sessions: [],
               ),
-              invitees: [], saved: true,
+              invitees: [], saved: true, metadataString: '',
             ),
           ]);
 
@@ -376,9 +382,9 @@ void main() {
 
         await tester.pump();
         expect(find.text('All Events'), findsOneWidget);
-        expect(find.text('Event 1'), findsOneWidget);
+        expect(find.text('Event 1'), findsNWidgets(2));
         expect(find.text('Personalised Events'), findsOneWidget);
-        expect(find.text('Event 2'), findsOneWidget);
+        expect(find.text('Event 2'), findsNWidgets(2));
       });
     });
     testWidgets('Search for events and navigate to SearchScreen',

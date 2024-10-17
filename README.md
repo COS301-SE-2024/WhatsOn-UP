@@ -9,7 +9,7 @@
 ![GitHub Languages](https://img.shields.io/github/languages/count/COS301-SE-2024/WhatsOn-UP)
 ![GitHub Last Commit](https://img.shields.io/github/last-commit/COS301-SE-2024/WhatsOn-UP)
 ![GitHub RepoSize](https://img.shields.io/github/repo-size/COS301-SE-2024/WhatsOn-UP)
-[![Testing Pipeline](https://github.com/COS301-SE-2024/WhatsOn-UP/actions/workflows/testing-workflow.yml/badge.svg)](https://github.com/COS301-SE-2024/WhatsOn-UP/actions/workflows/testing-workflow.yml)
+[![CI Pipeline](https://github.com/COS301-SE-2024/WhatsOn-UP/actions/workflows/ci.yml/badge.svg)](https://github.com/COS301-SE-2024/WhatsOn-UP/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/github/COS301-SE-2024/WhatsOn-UP/branch/develop/graph/badge.svg?token=NCfwbRRGxD)](https://codecov.io/github/COS301-SE-2024/WhatsOn-UP)
 ## Project description
 WhatsOn@UP system aims to be a central hub for all University of Pretoria events, providing a centralized platform for students and guests to easily find and manage events.
@@ -19,16 +19,11 @@ WhatsOn@UP system aims to be a central hub for all University of Pretoria events
 <table align="center">
   <tr>
     <th>Demo Videos</th>
-
-<td>
-<ul><li><a href="https://whatson-up-zgz1.vercel.app/">Documentation Website</a></li></ul>
-
-<ul><li><a href="https://drive.google.com/file/d/1NjTF3Wyfv0JfyUvZUSzZ3Qs84BKFjVUM/view?usp=sharing">Demo 1 Video</a></li></ul>
+    <td><ul><li><a href="https://drive.google.com/file/d/1NjTF3Wyfv0JfyUvZUSzZ3Qs84BKFjVUM/view?usp=sharing">Demo 1 Video</a></li></ul>
     <ul><li><a href="https://drive.google.com/file/d/1tH-Z4wL-U17SL5ecBKT7rOWEyJ3HX0MR/view?usp=drive_link">Demo 2 Video</a></li></ul>
-     <ul><li><a href="https://drive.google.com/file/d/1MWEgor5A3dLAVuCLGt-PwdRHh4tB8tA6/view?usp=drive_link">Demo 3 Video</a></li></ul>
-     <ul><li><a href="https://drive.google.com/file/d/1MWEgor5A3dLAVuCLGt-PwdRHh4tB8tA6/view?usp=drive_link">Demo 4 Video</a></li></ul>
-
-</td>
+    <ul><li><a href="https://drive.google.com/file/d/1jufZqv2I1tDsxXeS3s8CfAVFaipOE4yG/view?usp=drive_link">Demo 3 Video</a></li></ul>
+    <ul><li><a href="https://drive.google.com/file/d/1dyO0ntkuDqWVzxnX7p3_yr3XzCZ3buZF/view?usp=drive_link">Demo 4 Video</a></li></ul>
+    </td>
   </tr>
   <tr>
     <th>Project Board</th>

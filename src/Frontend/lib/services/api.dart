@@ -118,9 +118,10 @@ class Api {
         Uri.parse(_rsvpEventsURL),
         headers: headers
       );
-  print('response: ${response.body}');
+
       if (response.statusCode == 200) {
-        // Parse the JSON response
+
+
         final Map<String, dynamic> decodedJson = json.decode(response.body);
         final List<dynamic> eventsJson = decodedJson['data'];
 
@@ -217,7 +218,7 @@ class Api {
     }
   }
 
-  Future<List<dynamic>> getRSVPEvents(String JWT) async {
+  Future<List<Event>> getRSVPEvents(String JWT) async {
     try {
       final String _rsvpEventsURL =
           'https://${globals.gatewayDomain}/api/user/get_rsvp_events';
@@ -231,7 +232,13 @@ class Api {
           await http.get(Uri.parse(_rsvpEventsURL), headers: headers);
 
       if (response.statusCode == 200) {
-        return jsonDecode(response.body)['data'];
+        // return jsonDecode(response.body)['data'];
+        final List<dynamic> decodedJson = jsonDecode(response.body)['data'];
+        final List<Event> events = decodedJson
+            .map((jsonEvent) => Event.fromJson(jsonEvent as Map<String, dynamic>))
+            .toList();
+        
+        return events;
       } else {
         throw Exception(jsonDecode(response.body));
       }
@@ -301,6 +308,7 @@ class Api {
     int? maxParticipants,
     Map<String, String>? metadata,
     bool? isPrivate,
+    required int recurring,
     //List<String>? media,
     required String JWT,
     //List<String> imageUrls,
@@ -322,6 +330,7 @@ class Api {
       'maxParticipants': maxParticipants,
       'metadata': metadata,
       'isPrivate': isPrivate,
+      'recurring': recurring,
       // 'media': media,
     });
 
@@ -651,23 +660,12 @@ class Api {
   }
 
   Future<List<Event>> getAllEventsGuest() async {
-    // try {
     final _rsvpEventsURL = 'https://${globals.gatewayDomain}/api/events/get_all';
       var headers = {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
       };
-    //
-    //   var response =
-    //       await http.get(Uri.parse(_rsvpEventsURL), headers: headers);
-    //
-    //   if (response.statusCode == 200) {
-    //     var decodedJson = jsonDecode(response.body)['data'];
-    //     return decodedJson;
-    //   } else {
-    //     throw Exception(jsonDecode(response.body));
-    //   }
-    // }
+
     try {
       var response = await http.get(
         Uri.parse(_rsvpEventsURL),
@@ -1341,7 +1339,8 @@ else{
       var response = await http.get(Uri.parse(getHostEventAnalyticsURL), headers: headers);
 
       if (response.statusCode == 200) {
-        return jsonDecode(response.body);
+        return jsonDecode(utf8.decode(response.bodyBytes));
+        // return jsonDecode(response.body);
       } 
       else {
         throw Exception(jsonDecode(response.body));
@@ -1390,7 +1389,8 @@ else{
       var response = await http.get(Uri.parse(getHostPopularEventsURL), headers: headers);
 
       if (response.statusCode == 200) {
-        return jsonDecode(response.body);
+        // return jsonDecode(response.body);
+        return jsonDecode(utf8.decode(response.bodyBytes));
       } 
       else {
         throw Exception(jsonDecode(response.body));
@@ -1448,10 +1448,58 @@ else{
     }
   }
 
+  Future<Map<String, dynamic>> markAttendance(String JWT, String eventId, String code) async {
+    final String markAttendanceURL = 'https://${globals.gatewayDomain}/api/user/mark_attendance/$eventId?code=$code';
+
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $JWT',
+    };
+
+    try {
+      var response = await http.post(Uri.parse(markAttendanceURL), headers: headers);
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } 
+      else {
+        // throw Exception(jsonDecode(response.body));
+        return jsonDecode(response.body);
+      }
+    } 
+    catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  Future<Map<String, dynamic>> generateAttendanceCode(String JWT, String eventId) async {
+    final String generateAttendanceCodeURL = 'https://${globals.gatewayDomain}/api/events/generate_code/$eventId';
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $JWT',
+    };
+
+    try {
+      var response = await http.get(Uri.parse(generateAttendanceCodeURL), headers: headers);
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } 
+      else {
+        return jsonDecode(response.body);
+      }
+    } 
+    catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+
 
 
 }
-
 
 
 

@@ -20,7 +20,7 @@ class HostSearchScreen extends StatefulWidget {
 }
 
 class _HostSearchScreenState extends State<HostSearchScreen> {
-  final Api _api = Api(); // Use the Api class
+  final Api _api = Api();
   List<Event> _searchResults = [];
   List<String> _searchHistory = [];
   bool _isLoading = false;
@@ -45,7 +45,7 @@ class _HostSearchScreenState extends State<HostSearchScreen> {
 
     try {
       userProvider userP = Provider.of<userProvider>(context, listen: false);
-      final results = await _api.getAllEvents(userP.JWT); // Fetch all events
+      final results = await _api.getAllEvents(userP.JWT);
       final hostEvents = results.where((event) {
         if (event.hosts is List<Map<String, dynamic>>) {
           return (event.hosts as List<Map<String, dynamic>>)

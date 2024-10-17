@@ -72,7 +72,7 @@ class _AllrecommendedEventsState extends State<AllrecommendedEvents> {
                       horizontal: 22.0,
                       vertical: 8.0,
                     ),
-                      child: EventCard(event: events[index], showBookmarkButton: true,),
+                      child: EventCard(event: events[index], showBookmarkButton: true,recommendations: true,),
                     );
                   },
                 ),
