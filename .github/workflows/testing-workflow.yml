@@ -109,10 +109,15 @@ jobs:
       run: |
         lcov -a ./src/Frontend/coverage/lcov_cleaned.info -a backend.lcov.info -o merged.lcov.info
 
+    - name: Clean up raw LCOV reports
+      run: |
+        rm -f ./src/Frontend/coverage/lcov.info
+        rm -f ./src/Backend/build/reports/jacoco/report.xml
+
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v4
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-        files: merged.lcov.info
+        files: ./merged.lcov.info
         flags: unittests
         name: codecov-umbrella
