@@ -94,6 +94,15 @@
       document.body.style.background = "transparent";
     }
   </script>
+  </script>
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+  <script async>
+     function loadGoogleMaps(apiKey) {
+        var script = document.createElement('script');
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=drawing,visualization,places`;
+        document.head.appendChild(script);
+      }
+  </script>
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
 </head>
 <body>
