@@ -21,7 +21,7 @@ import 'package:firstapp/pages/application_event.dart';
 import 'allHome_events.dart';
 import 'notifications.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
-import 'dart:math';
+
 
 const Color pantone159 = Color(0xFFF67F46); // humanities
 const Color pantone2718 = Color(0xFF2671AF); //health science
@@ -44,32 +44,13 @@ class _HomePageState extends State<HomePage>
   int _selectedIndex = 0;
   late TabController _tabController;
   final TextEditingController _searchController = TextEditingController();
-  //late AnimationController _controller;
- // late Animation<double> _animation;
-  //bool isGradientBorder = true;
+
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
 
-    /*_controller = AnimationController(
-      vsync: this,
-      //ANIMATION TIMER CHANGED HERE
-      duration: const Duration(seconds: 5),
-    )..repeat();
-    //_animation = Tween<double>(begin: 0, end: 1).animate(_controller);
-   // _controller.forward();
-    _animation = CurvedAnimation(
-      parent: Tween<double>(begin: 0, end: 1).animate(_controller),
-      curve: Curves.easeInOut,
-    );
-    Timer.periodic(const Duration(seconds: 20), (timer) {
-      setState(() {
-        isGradientBorder = !isGradientBorder;
-      });
-    });
-  //  _controller.forward();*/
   }
 
   @override

@@ -1,4 +1,4 @@
-import 'dart:io';
+
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,20 +14,20 @@ import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
-import 'package:firstapp/pages/home_page.dart';
+
 import 'package:flutter/foundation.dart';
-import 'package:firstapp/pages/profilePage.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'dart:typed_data';
 import 'package:firstapp/widgets/theme_manager.dart';
-import 'package:firstapp/services/api.dart';
-import '../main.dart';
-import 'package:multi_select_flutter/multi_select_flutter.dart';
-import 'package:firstapp/widgets/theme_manager.dart';
-//import 'package:firstapp/screens/InviteUsers.dart';
-import '../providers/user_provider.dart';
+
+
+
+
+
+
 import '../screens/InviteUsers.dart';
-import 'package:cupertino_icons/cupertino_icons.dart';
+
 
 
 class ApplicationEvent extends StatefulWidget {
@@ -68,18 +68,10 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
   List<dynamic> autoFillData = [];
   List<AutofillOption> autoFillOptions = [];
 
-  // final List<Str> predefinedCategories = [
-  //   'Clubs & Organizations',
-  //   'Sports & Fitness',
-  //   'Academic',
-  //   'Social',
-  //   'Cultural',
-  //   'Career & Professional Development'
-  // ];
 
   List<Uint8List> imageBytesList = [];
-  // Uint8List? imageBytesList;
-  final _multiSelectKey = GlobalKey<FormFieldState>();
+
+
 
   @override
   void initState() {
@@ -113,7 +105,7 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
   }
 
   late Color myColor;
-  String? _imageName;
+
   late Size mediaSize;
 
   //List<XFile>? selectedImages;
@@ -857,7 +849,7 @@ class _ApplicationEventPageState extends State<ApplicationEvent> {
 
                     try {
 
-                      String userId = userP.userId;
+
                       Map<String, String> metadata = {
                         'category': _selectedCategory!,
                       };

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
-import 'dart:typed_data';
+
 import 'dart:convert';
 import '../widgets/event_card.dart';
 import 'dart:io';
 import 'package:csv/csv.dart';
-import 'package:path_provider/path_provider.dart';
+
 import '../services/EventService.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:permission_handler/permission_handler.dart';

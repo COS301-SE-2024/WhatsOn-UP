@@ -237,7 +237,7 @@ void main() {
                 ChangeNotifierProvider<EventProvider>(
                     create: (_) => mockEventProvider),
               ],
-              child: MaterialApp(
+              child: const MaterialApp(
                 home: HomePage(),
               ),
             ),
@@ -260,7 +260,7 @@ void main() {
                 ChangeNotifierProvider<EventProvider>(
                     create: (_) => mockEventProvider),
               ],
-              child: MaterialApp(home: HomePage()),
+              child: const MaterialApp(home: HomePage()),
             ),
           ),
         );
@@ -292,7 +292,7 @@ void main() {
                 ChangeNotifierProvider<EventProvider>(
                     create: (_) => mockEventProvider),
               ],
-              child: MaterialApp(home: HomePage()),
+              child: const MaterialApp(home: HomePage()),
             ),
           ),
         );
@@ -311,7 +311,7 @@ void main() {
               ChangeNotifierProvider<EventProvider>(
                   create: (_) => mockEventProvider),
             ],
-            child: MaterialApp(home: HomePage()),
+            child: const MaterialApp(home: HomePage()),
           ),
         ),
       );
@@ -331,7 +331,7 @@ void main() {
                 ChangeNotifierProvider<EventProvider>(
                     create: (_) => mockEventProvider),
               ],
-              child: MaterialApp(home: HomePage()),
+              child: const MaterialApp(home: HomePage()),
             ),
           ),
         );
@@ -353,7 +353,7 @@ void main() {
                 ChangeNotifierProvider<EventProvider>(
                     create: (_) => mockEventProvider),
               ],
-              child: MaterialApp(home: HomePage()),
+              child: const MaterialApp(home: HomePage()),
             ),
           ),
         );
@@ -375,7 +375,7 @@ void main() {
                 ChangeNotifierProvider<EventProvider>(
                     create: (_) => mockEventProvider),
               ],
-              child: MaterialApp(home: HomePage()),
+              child: const MaterialApp(home: HomePage()),
             ),
           ),
         );
@@ -399,7 +399,7 @@ void main() {
                 ChangeNotifierProvider<EventProvider>(
                     create: (_) => mockEventProvider),
               ],
-              child: MaterialApp(home: HomePage()),
+              child: const MaterialApp(home: HomePage()),
             ),
           ),
         );

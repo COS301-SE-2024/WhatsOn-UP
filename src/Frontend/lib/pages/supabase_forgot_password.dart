@@ -118,11 +118,7 @@ class _ForgotPassState extends State<ForgotPass> {
               try {
                 final email = _emailController.text.trim();
 
-                // await supabase.auth.signInWithOtp(
-                //   email: email,
-                //   emailRedirectTo:
-                //   'io.supabase.flutterquickstart://login-callback/',
-                // );
+
                 await supabase.auth.resetPasswordForEmail(
                   email,
                   redirectTo: 'https://recommendations-1035006743185.us-central1.run.app/reset-password',
@@ -144,14 +140,7 @@ class _ForgotPassState extends State<ForgotPass> {
                 ));
               }
             },
-            // style: TextButton.styleFrom(
-            //   foregroundColor: Colors.black, padding: const EdgeInsets.symmetric(vertical: 10.0),
-            //   shape: RoundedRectangleBorder(
-            //     borderRadius: BorderRadius.circular(20.0),
-            //     side: BorderSide(color: Colors.black),
-            //   ), // Text color
-            //   backgroundColor: Colors.transparent,
-            // ),
+
             child: const Text('Reset Password'),
           ),
         ],
@@ -159,8 +148,5 @@ class _ForgotPassState extends State<ForgotPass> {
     );
   }
 
-  Future<void> _sendVerificationEmail(String email) async {
-    //API endpoint
-    print('Sending verification email to $email');
-  }
+
 }

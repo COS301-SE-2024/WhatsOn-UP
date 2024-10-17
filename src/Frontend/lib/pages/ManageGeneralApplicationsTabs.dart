@@ -163,7 +163,6 @@ class _ApplicantState extends State<Applicant> {
         return Icons.hourglass_empty;
       case 'VERIFIED':
         return Icons.verified;
-        return Icons.thumb_up;
       case 'REJECTED':
         return Icons.cancel;
       case 'DISPUTED':
@@ -227,7 +226,7 @@ class _ApplicantState extends State<Applicant> {
                 size: 50.0,
               ),
             )
-          : SingleChildScrollView( 
+          : SingleChildScrollView(
               child: Column(
                 children: [
                   Padding(
@@ -437,7 +436,6 @@ class _ApplicantState extends State<Applicant> {
 
     Api api = Api();
     userProvider userP = Provider.of<userProvider>(context, listen: false);
-    final userId = userP.userId;
     final applicationId = widget.user.applicationId;
     final response = action == 'Accept'
         ? await api.AcceptApplication(

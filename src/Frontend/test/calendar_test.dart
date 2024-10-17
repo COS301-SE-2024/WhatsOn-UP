@@ -29,7 +29,7 @@ void main() {
             ChangeNotifierProvider<EventProvider>(create: (_) => mockEventProvider),
             ChangeNotifierProvider<userProvider>(create: (_) => mockUserProvider),
           ],
-          child: MaterialApp(
+          child: const MaterialApp(
             home: CalendarPage(),
           ),
         ),
@@ -49,7 +49,7 @@ void main() {
             ChangeNotifierProvider<EventProvider>(create: (_) => mockEventProvider),
             ChangeNotifierProvider<userProvider>(create: (_) => mockUserProvider),
           ],
-          child: MaterialApp(
+          child: const MaterialApp(
             home: CalendarPage(),
           ),
         ),

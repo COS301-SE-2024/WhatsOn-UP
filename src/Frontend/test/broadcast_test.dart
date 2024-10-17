@@ -40,7 +40,7 @@ void main() {
   }
   testWidgets('SpinKitPianoWave renders correctly', (WidgetTester tester) async {
     await tester.pumpWidget(
-      MaterialApp(
+      const MaterialApp(
         home: Scaffold(
           body: SpinKitPianoWave(
             color: Colors.blue,

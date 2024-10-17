@@ -1,10 +1,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+
 import 'package:firstapp/pages/application_event.dart';
 import 'ManageGeneralApplicationsTabs.dart';
-import 'attendee.dart';
+
 import 'package:provider/provider.dart';
 import '../providers/user_provider.dart';
 import '../widgets/eventManagement_category.dart';
@@ -29,7 +29,7 @@ class _ManageEventsState extends State<ManageEvents> {
   String Admin = 'ADMIN';
   String Host = 'HOST';
   String? _selectedOption;
-  var _hoveredIndex;
+
   void setLoading(bool isLoading) {
     setState(() {
       _isLoading = isLoading;
@@ -39,10 +39,10 @@ class _ManageEventsState extends State<ManageEvents> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final borderColour = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
+
     final textColour = theme.colorScheme.onSurface;
     userProvider userP = Provider.of<userProvider>(context);
-    SupabaseClient supabaseClient = widget.supabaseClient;
+
 
     final List<Map<String, dynamic>>  options = [
       {'text': userP.role == Admin ? 'All Events' : 'My Events', 'route': 'EventManagementCategory', 'icon': Icons.event},

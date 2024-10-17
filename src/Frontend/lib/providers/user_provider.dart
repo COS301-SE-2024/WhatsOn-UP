@@ -5,7 +5,7 @@ import 'package:supabase_flutter/supabase_flutter.dart' as Supabase;
 import '../pages/editProfile_page.dart';
 import '../services/api.dart';
 
-//will let the listeners know when the state has changed
+
 
 class userProvider extends ChangeNotifier {
   late Api api = Api();
@@ -111,16 +111,7 @@ class userProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // void clearUser() {
-  //   _userId = '';
-  //   _Fullname = '';
-  //   _Email = '';
-  //   _Password = '';
-  //   _Role = '';
-  //   profileImage = null;
-  //   _isGuest = false;
-  //   notifyListeners();
-  // }
+
   void clearUser() {
     bool hasChanges = false;
 

@@ -1,5 +1,5 @@
 import 'dart:typed_data';
-import 'package:firstapp/utils.dart';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
@@ -40,7 +40,7 @@ class _HostApplicationPageState extends State<HostApplicationPage> {
   @override
   Widget build(BuildContext context) {
     userProvider user = Provider.of<userProvider>(context);
-    String userId = user.userId;
+
 
     return Scaffold(
       appBar: AppBar(

@@ -33,7 +33,7 @@ class _SplashPageState extends State<SplashPage> {
     if (!mounted) return;
     if (session != null) {
 
-      userP.JWT=session?.accessToken;
+      userP.JWT=session.accessToken;
       await _login();
     } else {
 
@@ -77,18 +77,17 @@ class _SplashPageState extends State<SplashPage> {
       } else {
         String fullName = response['data']['user']['fullName'] ?? 'Unknown';
         String userEmail = user?.userMetadata!['email'];
-        String UserId = user!.id;
+
         String role = response['data']['user']['role'] ?? 'Unknown';
         String profileImage = response['data']['user']['profileImage'] ?? 'Unknown';
 
-        userP.userId = user.id;
+        userP.userId = user!.id;
         userP.Fullname = fullName;
         userP.email = userEmail;
         userP.role = role;
         userP.profileImage = profileImage;
         eventP.refreshEvents(userP.JWT);
         eventP.refreshRecommendations(userP.JWT);
-        // eventP.refreshSavedEvents(userP.JWT);
         notificationProvider _notificationProvider =
         Provider.of<notificationProvider>(context, listen: false);
         _notificationProvider.refreshNotifications(userP.JWT);
