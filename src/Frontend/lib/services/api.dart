@@ -1339,7 +1339,8 @@ else{
       var response = await http.get(Uri.parse(getHostEventAnalyticsURL), headers: headers);
 
       if (response.statusCode == 200) {
-        return jsonDecode(response.body);
+        return jsonDecode(utf8.decode(response.bodyBytes));
+        // return jsonDecode(response.body);
       } 
       else {
         throw Exception(jsonDecode(response.body));
@@ -1388,7 +1389,8 @@ else{
       var response = await http.get(Uri.parse(getHostPopularEventsURL), headers: headers);
 
       if (response.statusCode == 200) {
-        return jsonDecode(response.body);
+        // return jsonDecode(response.body);
+        return jsonDecode(utf8.decode(response.bodyBytes));
       } 
       else {
         throw Exception(jsonDecode(response.body));

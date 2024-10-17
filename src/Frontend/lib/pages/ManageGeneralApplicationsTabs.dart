@@ -227,200 +227,208 @@ class _ApplicantState extends State<Applicant> {
                 size: 50.0,
               ),
             )
-          : Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 20.0),
-                  child: CircleAvatar(
-                    radius: 60.0,
-                    backgroundImage:
-                        NetworkImage(widget.user.user.profileImage),
+          : SingleChildScrollView( 
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20.0),
+                    child: Center(
+                      child: CircleAvatar(
+                        radius: 60.0,
+                        backgroundImage:
+                            NetworkImage(widget.user.user.profileImage),
+                      ),
+                    ),
                   ),
-                ),
-                SizedBox(height: 20.0),
-                Text(
-                  widget.user.user.fullName ?? "Unknown",
-                  style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 20.0),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Container(
-                    padding: const EdgeInsets.all(16.0),
+                  SizedBox(height: 20.0),
+                  Center(
+                    child: Text(
+                      widget.user.user.fullName ?? "Unknown",
+                      style:
+                          TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  SizedBox(height: 20.0),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Container(
+                      padding: const EdgeInsets.all(16.0),
+                      decoration: BoxDecoration(
+                        color: Colors.blue.shade100,
+                        borderRadius: BorderRadius.circular(12.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.3),
+                            spreadRadius: 2,
+                            blurRadius: 5,
+                            offset: Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  ApplicantDetailsPage(user: widget.user),
+                            ),
+                          );
+                        },
+                        child: const Text(
+                          'Click here to view the application details',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.blue),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 20.0),
+                  if (widget.user.alert)
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Container(
+                        padding: const EdgeInsets.all(16.0),
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.warning,
+                              color: Colors.white,
+                              size: 24.0,
+                            ),
+                            SizedBox(width: 8.0),
+                            Expanded(
+                              child: Text(
+                                'This person has a history of creating events that receive consistently low ratings. Please review the application carefully before accepting.',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
-                      color: Colors.blue.shade100,
-                      borderRadius: BorderRadius.circular(12.0),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.3),
-                          spreadRadius: 2,
-                          blurRadius: 5,
-                          offset: Offset(0, 3),
+                      color: _getStatusColor(widget.user.status.name), // Background color based on status
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          _getStatusIcon(widget.user.status.name), // Icon based on status
+                          color: Colors.white,
+                        ),
+                        SizedBox(width: 8),
+                        Text(
+                          'Status: ${widget.user.status.name}',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                        SizedBox(width: 8),
+                        IconButton(
+                          icon: Icon(
+                            Icons.info_outline,
+                            color: Colors.white,
+                          ),
+                          onPressed: () {
+                            _showStatusInfo(widget.user.status.name);
+                          },
                         ),
                       ],
                     ),
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                ApplicantDetailsPage(user: widget.user),
-                          ),
-                        );
-                      },
-                      child: const Text(
-                        'Click here to view the application details',
+                  ),
+
+                  SizedBox(height: 40.0),
+                  if (widget.user.status.name == 'PENDING')
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Text(
+                        'This person is yet to be verified.',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontSize: 18.0,
                             fontWeight: FontWeight.w600,
-                            color: Colors.blue),
+                            color: Colors.red),
                       ),
-                    ),
-                  ),
-                ),
-
-                SizedBox(height: 20.0),
-                if (widget.user.alert)
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Container(
+                    )
+                  else if (widget.user.status.name == 'ACKNOWLEDGED') ...[
+                    Padding(
                       padding: const EdgeInsets.all(16.0),
-                      decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      child: const Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Icon(
-                            Icons.warning,
-                            color: Colors.white,
-                            size: 24.0,
-                          ),
-                          SizedBox(width: 8.0),
-                          Expanded(
-                            child: Text(
-                              'This person has a history of creating events that receive consistently low ratings. Please review the application carefully before accepting.',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white,
-                              ),
+                          ElevatedButton(
+                            onPressed: () {
+                              _updateApplication(context, 'Demote');
+                            },
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 20.0),
                             ),
+                            child: Text('Demote'),
                           ),
                         ],
                       ),
                     ),
-                  ),
-
-
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: _getStatusColor(widget.user.status.name),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        _getStatusIcon(widget.user.status.name),
-                        color: Colors.white,
-                      ),
-                      SizedBox(width: 8),
-                      Text(
-                        'Status: ${widget.user.status.name}',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                      SizedBox(width: 8),
-                      IconButton(
-                        icon: Icon(
-                          Icons.info_outline,
-                          color: Colors.white,
-                        ),
-                        onPressed: () {
-                          _showStatusInfo(widget.user.status.name);
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 40.0),
-                 if (widget.user.status.name == 'PENDING')
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Text(
-                      'This person is yet to be verified.',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.red),
-                    ),
-
-                  )
-                else if (widget.user.status.name == 'ACKNOWLEDGED') ...[
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            _updateApplication(context, 'Demote');
-                          },
-                          style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 20.0),
+                  ] else if (widget.user.status.name == 'VERIFIED' ||
+                      (widget.user.proofUrl != null &&
+                          widget.user.status.name == 'PENDING') ||
+                      (widget.user.proofUrl != null &&
+                          widget.user.status.name == 'VERIFIED')) ...[
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          ElevatedButton(
+                            onPressed: () {
+                              _updateApplication(context, 'Reject');
+                            },
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 20.0),
+                            ),
+                            child: Text('Reject'),
                           ),
-                          child: Text('Demote'),
-                        ),
-                      ],
-                    ),
-                  ),
-                ] else if (widget.user.status.name == 'VERIFIED' || (widget.user.proofUrl != null && widget.user.status.name == 'PENDING')|| (widget.user.proofUrl != null && widget.user.status.name =='VERIFIED')) ...[
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            _updateApplication(context, 'Reject');
-                          },
-                          style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 20.0),
+                          ElevatedButton(
+                            onPressed: () {
+                              _updateApplication(context, 'Accept');
+                            },
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 20.0),
+                            ),
+                            child: Text('Accept'),
                           ),
-                          child: Text('Reject'),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            _updateApplication(context, 'Accept');
-                          },
-                          style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 20.0),
-                          ),
-                          child: Text('Accept'),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
+                  ],
                 ],
-              ],
+              ),
             ),
     );
   }
+
 
   Future<void> _updateApplication(BuildContext context, String action) async {
     setState(() {
