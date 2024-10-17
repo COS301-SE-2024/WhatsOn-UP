@@ -6,7 +6,7 @@ class NoEventsFoundScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        //title: Text('No Events'),
+
       ),
       body: Center(
         child: Text(

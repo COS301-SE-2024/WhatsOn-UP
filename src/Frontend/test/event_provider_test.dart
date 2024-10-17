@@ -75,7 +75,7 @@ void main() {
     test('Fetch eventsHome should return a list of events', () async {
       await eventProvider.refreshEvents('JWT');
       var events = await eventProvider.eventsHome;
-      print(events);
+
       expect(events.isNotEmpty, true);
 
     });
@@ -83,7 +83,7 @@ void main() {
 
     test('Add and remove event from eventsHome', () async {
       var initialEvents = await eventProvider.eventsHome;
-      print(initialEvents);
+
        var eventToAdd = Event(
          id: '3',
          nameOfEvent: 'Test Event 3',

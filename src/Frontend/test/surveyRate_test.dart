@@ -17,7 +17,7 @@ void main() {
 
     testWidgets('Categories are parsed and displayed correctly', (WidgetTester tester) async {
       await tester.pumpWidget(
-        MaterialApp(
+        const MaterialApp(
           home: SurveyratecatScreen(jsonCategories: jsonCategories),
         ),
       );
@@ -28,7 +28,7 @@ void main() {
     testWidgets('Rating is updated correctly', (WidgetTester tester) async {
 
       await tester.pumpWidget(
-        MaterialApp(
+        const MaterialApp(
           home: SurveyratecatScreen(jsonCategories: jsonCategories),
         ),
       );
@@ -45,7 +45,7 @@ void main() {
     testWidgets('saveSelectedCategories works and navigates to next screen', (WidgetTester tester) async {
 
       await tester.pumpWidget(
-        MaterialApp(
+        const MaterialApp(
           home: SurveyratecatScreen(jsonCategories: jsonCategories),
         ),
       );
@@ -66,14 +66,14 @@ void main() {
     testWidgets('Handles empty or malformed JSON gracefully', (WidgetTester tester) async {
 
       await tester.pumpWidget(
-        MaterialApp(
+        const MaterialApp(
           home: SurveyratecatScreen(jsonCategories: '[]'),
         ),
       );
       expect(find.byType(ListTile), findsNothing);
 
       await tester.pumpWidget(
-        MaterialApp(
+        const MaterialApp(
           home: SurveyratecatScreen(jsonCategories: 'invalid-json'),
         ),
       );

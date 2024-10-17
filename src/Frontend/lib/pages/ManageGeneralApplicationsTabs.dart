@@ -163,7 +163,6 @@ class _ApplicantState extends State<Applicant> {
         return Icons.hourglass_empty;
       case 'VERIFIED':
         return Icons.verified;
-        return Icons.thumb_up;
       case 'REJECTED':
         return Icons.cancel;
       case 'DISPUTED':
@@ -382,66 +381,7 @@ class _ApplicantState extends State<Applicant> {
                     ),
                   ),
                 ],
-                // if (widget.user.proofUrl != null && widget.user.status.name == 'PENDING') ...[
-                //   Padding(
-                //     padding: const EdgeInsets.all(16.0),
-                //     child: Row(
-                //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                //       children: [
-                //         ElevatedButton(
-                //           onPressed: () {
-                //             _updateApplication(context, 'Reject');
-                //           },
-                //           style: ElevatedButton.styleFrom(
-                //             padding: const EdgeInsets.symmetric(
-                //                 horizontal: 20.0),
-                //           ),
-                //           child: Text('Reject'),
-                //         ),
-                //         ElevatedButton(
-                //           onPressed: () {
-                //             _updateApplication(context, 'Accept');
-                //           },
-                //           style: ElevatedButton.styleFrom(
-                //             padding: const EdgeInsets.symmetric(
-                //                 horizontal: 20.0),
-                //           ),
-                //           child: Text('Accept'),
-                //         ),
-                //       ],
-                //     ),
-                //   ),
-                // ],
-                // if (widget.user.proofUrl != null && widget.user.status.name =='VERIFIED') ...[
-                //   Padding(
-                //     padding: const EdgeInsets.all(16.0),
-                //     child: Row(
-                //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                //       children: [
-                //         ElevatedButton(
-                //           onPressed: () {
-                //             _updateApplication(context, 'Reject');
-                //           },
-                //           style: ElevatedButton.styleFrom(
-                //             padding: const EdgeInsets.symmetric(
-                //                 horizontal: 20.0),
-                //           ),
-                //           child: Text('Reject'),
-                //         ),
-                //         ElevatedButton(
-                //           onPressed: () {
-                //             _updateApplication(context, 'Accept');
-                //           },
-                //           style: ElevatedButton.styleFrom(
-                //             padding: const EdgeInsets.symmetric(
-                //                 horizontal: 20.0),
-                //           ),
-                //           child: Text('Accept'),
-                //         ),
-                //       ],
-                //     ),
-                //   ),
-                // ],
+
               ],
             ),
     );
@@ -454,7 +394,6 @@ class _ApplicantState extends State<Applicant> {
 
     Api api = Api();
     userProvider userP = Provider.of<userProvider>(context, listen: false);
-    final userId = userP.userId;
     final applicationId = widget.user.applicationId;
     final response = action == 'Accept'
         ? await api.AcceptApplication(

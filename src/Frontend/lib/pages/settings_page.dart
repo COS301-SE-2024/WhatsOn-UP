@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firstapp/widgets/theme_manager.dart';
 import 'package:firstapp/pages/profilePage.dart';
-import 'dart:typed_data';
+
 import 'package:url_launcher/url_launcher.dart';
 import '../providers/user_provider.dart';
 import 'notifications.dart';
@@ -10,7 +10,6 @@ import 'notifications.dart';
 class SettingsPage extends StatefulWidget {
   const SettingsPage({
     Key? key,
-    // required this.profileImageUrl,
   }) : super(key: key);
 
   @override

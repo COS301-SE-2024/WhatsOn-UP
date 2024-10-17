@@ -6,8 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../main.dart';
-import 'package:flutter_svg_provider/flutter_svg_provider.dart';
-import 'package:firstapp/pages/google_signin.dart';
+
 import 'package:firstapp/pages/home_page.dart';
 import 'package:firstapp/services/api.dart';
 import '../providers/events_providers.dart';
@@ -27,7 +26,7 @@ class _SupabaseLoginState extends State<SupabaseLogin> {
   final _emailController = TextEditingController();
 
   final _passwordController = TextEditingController();
-  late final StreamSubscription<AuthState> _authSubscription;
+
   late Color myColor;
   late Size mediaSize;
   bool _obscurePassword = true;
@@ -97,8 +96,7 @@ Widget build(BuildContext context) {
 
   Widget _buildBottom(BuildContext context) {
     ThemeData theme = Theme.of(context);
-    final googleButtonBackground = theme.brightness == Brightness.dark ? const Color.fromARGB(255, 20, 20, 20) : Colors.white;
-    final googleButtonTextColor = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
+
 
     return Container(
       width: mediaSize.width,
@@ -304,7 +302,7 @@ Widget build(BuildContext context) {
           });
 
 
-          final response = await api.getUser(userP.JWT!);
+          final response = await api.getUser(userP.JWT);
           if (response['error'] != null) {
             print('An error occurred: ${response['error']}');
           } else {

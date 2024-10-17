@@ -7,7 +7,7 @@ import 'package:firstapp/pages/editProfile_page.dart';
 import 'package:provider/provider.dart';
 import '../main.dart';
 import '../providers/user_provider.dart';
-import '../services/api.dart';
+
 import 'notifications.dart';
 
 class ProfilePage extends StatefulWidget {

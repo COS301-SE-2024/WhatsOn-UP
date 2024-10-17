@@ -1,14 +1,13 @@
-import 'package:firstapp/providers/user_provider.dart';
-import 'package:firstapp/services/api.dart';
+
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class AnalyticsDetailPage extends StatelessWidget {
   final String name;
   final Map<String, dynamic> userData;
 
-  AnalyticsDetailPage({required this.name, required this.userData});
+  const AnalyticsDetailPage({super.key, required this.name, required this.userData});
 
   @override
   Widget build(BuildContext context) {
@@ -66,16 +65,6 @@ class AnalyticsDetailPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 20),
 
-                // _buildSectionHeader('Event Duration vs Average Rating', Icons.scatter_plot),
-                // Card(
-                //   color: isDarkMode ? Colors.grey[800] : Colors.blueGrey.shade50,
-                //   elevation: 4,
-                //   margin: const EdgeInsets.symmetric(vertical: 8),
-                //   child: SizedBox(
-                //     height: 300,
-                //     child: EventDurationVsRatingChart(monthlySummaries: monthlySummaries), // Event Duration vs Average Rating
-                //   ),
-                // ),
               ] else
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.6,
@@ -144,7 +133,7 @@ String _getMonthAbbreviation(String month) {
 class AnalyticsChartPage extends StatelessWidget {
   final List<MonthlySummary> monthlySummaries;
 
-  AnalyticsChartPage({required this.monthlySummaries});
+  const AnalyticsChartPage({super.key, required this.monthlySummaries});
 
   @override
   Widget build(BuildContext context) {
@@ -176,15 +165,15 @@ class AnalyticsChartPage extends StatelessWidget {
 class RatingDistributionChart extends StatelessWidget {
   final List<MonthlySummary> monthlySummaries;
 
-  RatingDistributionChart({required this.monthlySummaries});
+  const RatingDistributionChart({super.key, required this.monthlySummaries});
 
   @override
   Widget build(BuildContext context) {
     return SfCartesianChart(
       // title: ChartTitle(text: 'Rating Distribution'),
-      legend: Legend(isVisible: true),
+      legend: const Legend(isVisible: true),
       tooltipBehavior: TooltipBehavior(enable: true),
-      primaryXAxis: CategoryAxis(),
+      primaryXAxis: const CategoryAxis(),
       series: <ColumnSeries>[
         ColumnSeries<MonthlySummary, String>(
           dataSource: monthlySummaries,
@@ -212,13 +201,13 @@ class RatingDistributionChart extends StatelessWidget {
 class FeedbackDistributionChart extends StatelessWidget {
   final List<MonthlySummary> monthlySummaries;
 
-  FeedbackDistributionChart({required this.monthlySummaries});
+  const FeedbackDistributionChart({super.key, required this.monthlySummaries});
 
   @override
   Widget build(BuildContext context) {
     return SfCircularChart(
       // title: ChartTitle(text: 'Feedback Distribution'),
-      legend: Legend(isVisible: true),
+      legend: const Legend(isVisible: true),
       series: <CircularSeries>[
         PieSeries<MonthlySummary, String>(
           dataSource: monthlySummaries,

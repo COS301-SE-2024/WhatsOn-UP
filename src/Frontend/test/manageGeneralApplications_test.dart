@@ -156,7 +156,7 @@ void main() {
     await tester.pumpWidget(
       ChangeNotifierProvider<userProvider>.value(
         value: mockUserProvider,
-        child: MaterialApp(
+        child: const MaterialApp(
           home: Scaffold(
             body: UserList(statusFilter: null),
           ),

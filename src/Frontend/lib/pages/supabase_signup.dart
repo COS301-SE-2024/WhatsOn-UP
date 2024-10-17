@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../main.dart';
 import 'package:firstapp/services/api.dart';
-import '../providers/events_providers.dart';
+
 import '../providers/notification_providers.dart';
 import '../surveys/SurveyChooseCat_screen.dart';
 import '../services/socket_client.dart';

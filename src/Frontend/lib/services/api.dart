@@ -348,25 +348,7 @@ class Api {
     }
   }
 
-  /*Future<void> _uploadEventImage(String eventId, String imagePath, String userId) async {
-    final String _uploadUrl = 'http://$domain:8083/media/upload?event_id=$eventId';
 
-    var request = http.MultipartRequest('POST', Uri.parse(_uploadUrl));
-
-    request.headers['Authorization'] = 'Bearer $userId';
-    request.files.add(await http.MultipartFile.fromPath(
-      'file',
-      imagePath,
-    ));
-
-    var response = await request.send();
-
-    if (response.statusCode != 201) {
-      throw Exception('Failed to upload image');
-    }
-  }
-
-*/
   Future<Map<String, dynamic>> rsvpEvent(String eventId, String JWT) async {
     final String _rsvpEventUrl =
         'https://${globals.gatewayDomain}/api/user/rsvp_event/$eventId';
@@ -808,25 +790,7 @@ else{
     }
   }
 
-/*Future<void> _uploadProofImage(String applicationId, Uint8List imageBytes, String userId) async {
 
-    final String _uploadUrl = 'http://$domain:8083/media/proof?application_id=$applicationId';
-
-    var request = http.MultipartRequest('POST', Uri.parse(_uploadUrl));
-
-    request.headers['Authorization'] = 'Bearer $userId';
-    request.files.add(http.MultipartFile.fromBytes(
-      'file',
-      imageBytes,
-      filename: 'proof_image.jpg',
-    ));
-
-    var response = await request.send();
-
-    if (response.statusCode != 201) {
-      throw Exception('Failed to upload proof image');
-    }
-  }*/
   Future<Map<String, dynamic>> eventUploadImage(Uint8List mediaBytes,
       String JWT, String eventId, String originalFilename) async {
     String generateFilename(String eventId, String originalFilename) {
