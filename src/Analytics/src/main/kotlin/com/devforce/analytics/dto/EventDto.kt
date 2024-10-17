@@ -37,6 +37,7 @@ data class EventDto(
     val capacityRatio: Double,
     val attendanceRatio: Double,
     val feedbackRatio: Double,
+    val occupiedSlots: Int,
 
     ) {
     constructor(event: PastEventModel) : this(
@@ -80,7 +81,8 @@ data class EventDto(
         rsvpRatio = event.analytics!!.rsvpRatio,
         capacityRatio = event.analytics!!.capacityRatio,
         attendanceRatio = event.analytics!!.attendanceRatio,
-        feedbackRatio = event.analytics!!.feedbackRatio
+        feedbackRatio = event.analytics!!.feedbackRatio,
+        occupiedSlots = event.occupiedSlots
     )
 }
 

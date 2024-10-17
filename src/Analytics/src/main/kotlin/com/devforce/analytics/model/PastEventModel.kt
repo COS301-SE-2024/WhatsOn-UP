@@ -7,6 +7,7 @@ import lombok.Data
 import lombok.NoArgsConstructor
 import java.time.LocalDateTime
 import java.util.*
+import kotlin.collections.HashSet
 
 @Data
 @Builder
@@ -55,10 +56,10 @@ class PastEventModel{
     var isPrivate: Boolean = false
 
     @Column(name = "occupied_slots")
-    var availableSlots: Int = 0
+    var occupiedSlots: Int = 0
 
     @OneToMany(mappedBy = "event")
-    var feedback: MutableList<FeedbackModel> = ArrayList()
+    var feedback: MutableSet<FeedbackModel> = HashSet()
 
     var status: String = ""
 
@@ -80,7 +81,7 @@ class PastEventModel{
 
     @ManyToMany
     @JoinTable(
-        name = "latest_event_invitees",
+        name = "event_invitees",
         joinColumns = [JoinColumn(name = "event_id")],
         inverseJoinColumns = [JoinColumn(name = "user_id")]
     )
