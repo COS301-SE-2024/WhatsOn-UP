@@ -1,14 +1,14 @@
 import 'dart:async';
 import 'package:firstapp/pages/edit_Event.dart';
 import 'package:firstapp/pages/explore_page.dart';
-import 'package:firstapp/pages/rate_event.dart';
+
 import 'package:firstapp/providers/events_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firstapp/widgets/event_card.dart';
 import 'package:firstapp/services/api.dart';
 import 'package:provider/provider.dart';
-import 'package:socket_io_client/socket_io_client.dart';
+
 import '../main.dart';
 import '../providers/user_provider.dart';
 import 'package:intl/intl.dart';
@@ -59,7 +59,7 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
       borderRadius: BorderRadius.circular(16.0),
       child: Image.network(
         url,
-        // fit: BoxFit.cover,
+
         fit: BoxFit.contain,
         width: double.infinity,
       ),
@@ -112,7 +112,7 @@ class _DetailedEventPageState extends State<DetailedEventPage> {
           _thisCurrentEvent = event!;
         });
       } else {
-        print('Event with ID ${widget.event.id} not found.');
+
       }
     } catch (e) {
       print('Error fetching event: $e');

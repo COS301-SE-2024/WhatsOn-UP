@@ -1,6 +1,6 @@
-import 'package:firstapp/pages/home_page.dart';
+
 import 'package:flutter/material.dart';
-import 'package:firstapp/pages/profilePage.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'dart:typed_data';
@@ -110,9 +110,9 @@ class _EditEventState extends State<EditEvent> {
   }
 
   Widget _buildForm() {
-    String maxAttendees = _thisCurrentEvent.maxAttendees.toString();
 
-    EventProvider eventP = Provider.of<EventProvider>(context);
+
+
     return Form(
       key: _formKey,
       child: Padding(
@@ -355,22 +355,10 @@ class _EditEventState extends State<EditEvent> {
       setState(() {
         isLoading = true;
       });
-      // if (eventNameController.text.isNotEmpty) {
-      //   print('updating to ${eventNameController.text}');
-      //   eventP.EditEventName(_thisCurrentEvent.id, eventNameController.text);
-      // }
-      // if (eventDescriptionController.text.isNotEmpty) {
-      //   eventP.EditEventDescription(
-      //       _thisCurrentEvent.id, eventDescriptionController.text);
-      // }
-      // if (venueController.text.isNotEmpty) {
-      //   eventP.EditEventLocation(_thisCurrentEvent.id, venueController.text);
-      // }
+
 
       final maxAttendees = int.tryParse(maxAttendeesController.text);
-      // if (maxAttendeesController.text.isNotEmpty) {
-      //   eventP.EditEventMaxParticipants(_thisCurrentEvent.id, maxAttendees!);
-      // }
+
 
       DateTime startDateTime = DateTime(startDate.year, startDate.month,
           startDate.day, startTime.hour, startTime.minute);
@@ -379,10 +367,7 @@ class _EditEventState extends State<EditEvent> {
 
       List<String>? mediaUrls =
       selectedImages?.map((file) => file.path).toList();
-
-
-      //   eventP.EditEventLocation(_thisCurrentEvent.id, venueController.text);
-      // })
+      
       Event? event = await eventP.getEventById(widget.eventId);
       if (event != null) {
         setState(() {

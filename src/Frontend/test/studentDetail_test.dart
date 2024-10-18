@@ -39,7 +39,7 @@ void main() {
       await tester.pumpWidget(
         ChangeNotifierProvider<userProvider>.value(
           value: mockUserProvider,
-          child: MaterialApp(
+          child: const MaterialApp(
             home: StudentdetailSurvey(jsonCategories: jsonCategories),
           ),
         ),
@@ -56,7 +56,7 @@ void main() {
       await tester.pumpWidget(
         ChangeNotifierProvider<userProvider>.value(
           value: mockUserProvider,
-          child: MaterialApp(
+          child: const MaterialApp(
             home: StudentdetailSurvey(jsonCategories: jsonCategories),
           ),
         ),
@@ -75,7 +75,7 @@ void main() {
       await tester.tap(find.text('Select a faculty'));
       await tester.tap(find.text('Select a faculty'), warnIfMissed: false);
       await tester.pumpAndSettle();
-      final facultyOption = find.byKey(Key('Faculty of Education'));
+      final facultyOption = find.byKey(const Key('Faculty of Education'));
       await tester.tap(facultyOption);
 
       expect(find.text('Faculty of Education'), findsOneWidget);

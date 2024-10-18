@@ -53,7 +53,7 @@ void main() {
           home: Scaffold(
             body: ChangeNotifierProvider<userProvider>.value(
               value: mockUserProvider,
-              child: TabGeneral(),
+              child: const TabGeneral(),
             ),
           ),
         )

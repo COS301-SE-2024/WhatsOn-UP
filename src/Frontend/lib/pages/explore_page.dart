@@ -34,7 +34,7 @@ class _NavigationPageState extends State<NavigationPage> {
   MapRoute? _route;
 
   late BitmapDescriptor _customOriginIcon;
-  late BitmapDescriptor _customDestinationIcon;
+
 
   // late CameraPosition _initialCameraPosition;
 
@@ -274,14 +274,7 @@ Future<void> _getLocationUpdates() async {
 
   void _loadCustomIcons() async {
     _customOriginIcon = BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure);
-    // _customIcon = await BitmapDescriptor.asset(const ImageConfiguration(size: Size(512,512)), 'assets/images/target.png');
-    // print(_customIcon.toJson());
 
-    // _origin = Marker(
-    //   markerId: const MarkerId("origin"),
-    //   icon: _customIcon,
-    //   position: initPos
-    // );
   }
 
   ////////////////////////////////////////////////Searchbar logic///////////////////////////////////////////////
@@ -290,7 +283,7 @@ Future<void> _getLocationUpdates() async {
     List<Location> foundLocations = await places.findLocationFromQuery(query: query);
 
     if(foundLocations.isEmpty){
-      print("location not found"); //alter to be a popup
+      print("location not found");
     }
     else{
       print("LOCATION: ${foundLocations[0].location}");
@@ -299,16 +292,16 @@ Future<void> _getLocationUpdates() async {
         _route = null;
       }
       
-      //Choose closest matching location
+
       Location foundLocation = foundLocations[0];
 
-      //change the camera angle
+
       setState(() {
         currentTilt = 0;
         currentZoom = farZoom;
       });
 
-      //locate place
+
       _setDestination(foundLocation.location);
       _cameraToPosition(foundLocation.location);
       _showPlaceInfo(context, foundLocation);

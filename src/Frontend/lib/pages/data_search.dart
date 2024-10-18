@@ -71,7 +71,7 @@ class DataSearch extends SearchDelegate<String> {
               children: [
                 TextSpan(
                     text: suggetionList[index].substring(query.length),
-                    style: TextStyle(color: Colors.grey))
+                    style: const TextStyle(color: Colors.grey))
               ]),
         ),
       ),

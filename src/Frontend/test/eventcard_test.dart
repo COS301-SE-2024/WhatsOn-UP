@@ -19,7 +19,7 @@ void main() {
   group('Category', () {
     test('fromJson and toJson should work correctly', () {
 
-      final json = '1,Technology';
+      const json = '1,Technology';
 
 
       final category = Category.fromJson(json);

@@ -24,21 +24,7 @@ class notificationProvider extends ChangeNotifier {
     await fetchNotifications(JWT);
   }
 
-  void addNotification(var eventData) {
-    try {
-      Map<String, dynamic> eventJson;
-      if (eventData is String) {
-        eventJson = json.decode(eventData);
-      } else {
-        eventJson = eventData;
-      }
-      AppNotification newNotification = AppNotification.fromJson(eventJson['data']);
-      _notifications.add(newNotification);
-      notifyListeners();
-    } catch (e) {
-      throw Exception('Failed to add notification: $e');
-    }
-  }
+
 
   void removeNotification(String notificationId) {
     _notifications.removeWhere((notification) => notification.notificationId == notificationId);

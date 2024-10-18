@@ -50,7 +50,7 @@ void main() {
       await tester.pumpWidget(
         ChangeNotifierProvider<userProvider>(
           create: (context) => mockUserProvider,
-          child: MaterialApp(
+          child: const MaterialApp(
             home: UserList(statusFilter: null),
 
           ),
